@@ -86,6 +86,24 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Beste ${object.partner_name or ''}<br/>\n"
+"    We zijn blij je te kunnen meedelen dat je voorstel ${object.name} is    geaccepteerd en bevestigd voor het evenement ${object.event_id.name}.\n"
+"     <br/>\n"
+"      Hier vind je meer details:\n"
+"      <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"           <a href=\"/event/${object.event_id.id}/track/${object.id}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"              Bekijk presentatie\n"
+"            </a>\n"
+"         </div>\n"
+"         <br/><br/>\n"
+"          Dankjewel,\n"
+"          % if user.signature\n"
+"               <br/>\n"
+"                 ${user.signature | safe}\n"
+"             % endif\n"
+"</div>     "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -120,7 +138,7 @@ msgstr "<i class=\"fa fa-ban mr-2\"/>Niet gepubliceerd"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Wishlisted Talks"
-msgstr ""
+msgstr "Gewenste presentaties"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -609,7 +627,7 @@ msgstr "Samenvatting van dag 2"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
-msgstr ""
+msgstr "Omgaan met OpenWood-meubels."
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
@@ -728,7 +746,7 @@ msgstr "Dropdown menu"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
 msgid "Duration"
-msgstr "Tijdsduur"
+msgstr "Duur"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_3
@@ -865,12 +883,12 @@ msgstr "Samenvatting van het evenement."
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
 msgid "Events App Name"
-msgstr ""
+msgstr "Naam van de evenementen-app"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Events PWA"
-msgstr ""
+msgstr "Evenementen Progressive Web Apps"
 
 #. module: website_event_track
 #. openerp-web
@@ -948,7 +966,7 @@ msgstr "Toekomstige activiteiten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "Bereidt je voor en"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -988,12 +1006,12 @@ msgstr "Groepeer op"
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_9
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_1
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Blij om sponsor te zijn"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
 msgid "Happy with OpenWood"
-msgstr ""
+msgstr "Blij met OpenWood"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
@@ -1119,6 +1137,9 @@ msgid ""
 "If set, the talk will be starred for each attendee registered to the event. "
 "The attendee won't be able to un-star this talk."
 msgstr ""
+"Indien ingesteld, krijgt de lezing een ster voor elke deelnemer die voor het"
+" evenement is geregistreerd. De deelnemer kan de ster van deze presentatie "
+"niet verwijderen."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
@@ -1144,12 +1165,13 @@ msgstr "In"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_15
 msgid "In this video we will see how lumber is made in a sawmill factory."
-msgstr ""
+msgstr "In deze video laten we zien hoe hout wordt gemaakt in een zagerij."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "In this video, I covered 6 tips and tricks to help out beginners:"
 msgstr ""
+"In deze video heb ik 6 tips en trucs behandeld om beginners te helpen:"
 
 #. module: website_event_track
 #. openerp-web
@@ -1163,12 +1185,12 @@ msgstr "Installeren"
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install Application"
-msgstr ""
+msgstr "Installeer de applicatie."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Interactivity"
-msgstr ""
+msgstr "Interactiviteit"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1181,22 +1203,22 @@ msgstr "Introductie"
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
 msgid "Inventory and Warehouse management"
-msgstr ""
+msgstr "Voorraad- en magazijnbeheer"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_accepted
 msgid "Is Accepted"
-msgstr ""
+msgstr "is geaccepteerd."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
 msgid "Is CTA Live"
-msgstr ""
+msgstr "Is live call-to-action."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "Is gedaan."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_is_follower
@@ -1247,7 +1269,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
 msgid "Is reminder off"
-msgstr ""
+msgstr "Is herinnering van"
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_2
@@ -1259,6 +1281,11 @@ msgid ""
 "                    series) and encourages \"training in research through\n"
 "                    research\"."
 msgstr ""
+"Het biedt postdoctoraal onderwijs in vloeistofdynamica\n"
+"                     (onderzoeksmaster in vloeistofdynamica, voormalig \"Diploma\n"
+"                     Cursus \", doctoraatsprogramma, stagiaireprogramma en lezing\n"
+"                     serie) en moedigt \"opleiding in onderzoek door\n"
+"                     Onderzoek\" aan."
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_2
@@ -1274,11 +1301,20 @@ msgid ""
 "                    mainly by governmental and international agencies as well\n"
 "                    as industries."
 msgstr ""
+"Het verricht en bevordert onderzoek op het gebied van vloeistof\n"
+"                    dynamiek. Het bezit ongeveer vijftig verschillende windtunnels,\n"
+"                    turbomachines en andere gespecialiseerde testfaciliteiten, sommige\n"
+"                     die uniek of de grootste ter wereld zijn. Uitgebreid\n"
+"                     onderzoek naar experimentele, computatertechnische en                  theoretische\n"
+"                      aspecten van gas- en vloeistofstromen wordt uitgevoerd onder de\n"
+"                     richting van de faculteit en onderzoekingenieurs, gesponsord\n"
+"                     voornamelijk door zowel gouvernementele en internationale instanties\n"
+"                     als industrieën."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
 msgid "Job Position"
-msgstr "Vacature"
+msgstr "Functie"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
@@ -1293,7 +1329,7 @@ msgstr "Sleutel succesfactoren bij het verkopen van onze meubels"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_9
 msgid "Kitchens for the Future"
-msgstr ""
+msgstr "Keukens van de toekomst"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event____last_update
@@ -1351,7 +1387,7 @@ msgstr "Laatste trends"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_26
 msgid "Less Furniture is More Furniture"
-msgstr ""
+msgstr "Minder meubels is meer meubels"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_kanban
@@ -1380,17 +1416,17 @@ msgstr "Live"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Live Now"
-msgstr ""
+msgstr "Nu live"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_10
 msgid "Live Testimonial"
-msgstr ""
+msgstr "Live testimonial"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_25
 msgid "Live Testimonials"
-msgstr ""
+msgstr "Live testimonials"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
@@ -1427,7 +1463,7 @@ msgstr "Lunch"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
 msgid "Magic Button"
-msgstr ""
+msgstr "Magische knoppen"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_main_attachment_id
@@ -1446,7 +1482,7 @@ msgstr ""
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
 msgid "Materials Management"
-msgstr ""
+msgstr "Materiaalmanagement"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1478,7 +1514,7 @@ msgstr "Minimaal maar efficiënt design"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr ""
+msgstr "minuten voordat de call-to-action start"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
@@ -1527,7 +1563,7 @@ msgstr "Naam"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name of your website's Events Progressive Web Application"
-msgstr ""
+msgstr "Naam van de evenementen Progressive Web Application van je website."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -1586,7 +1622,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
 msgid "Not Accepted"
-msgstr ""
+msgstr "Niet geaccepteerd"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
@@ -1626,12 +1662,12 @@ msgstr "Aantal ongelezen berichten"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
 msgid "Old is New"
-msgstr ""
+msgstr "Oud is nieuw"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together !"
-msgstr ""
+msgstr "Onze laatste dagen samen!"
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
@@ -1663,7 +1699,7 @@ msgstr "Partnership programma's"
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
 msgid "Personnel Administration"
-msgstr ""
+msgstr "Personeelsadministratie"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_phone

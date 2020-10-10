@@ -2,17 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* payment_sips
 # 
-# Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,79 +18,85 @@ msgstr ""
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "؛ تم العثور على طلبات متعددة"
+msgid "Currency not supported by Wordline: %s"
+msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; لم يُعثر على طلبات"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:0
-#, python-format
-msgid "Currency not supported by Wordline"
-msgstr "Wordline لا يدعم هذه العملة"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Incorrect payment acquirer provider"
-msgstr "خطأ بمزود معالج السداد"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
-msgstr "إصدار الواجهة"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
-msgstr "معرف التاجر"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "معالج السداد"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "معاملة السداد"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
 msgid "Production url"
-msgstr "رابط الإنتاج"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "المزود"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
-msgstr "مفتاح سري"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+msgid "Secret Key Version"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
 msgid "Sips"
-msgstr "Sips"
+msgstr ""
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "Sips: received data for reference %s"
-msgstr "Sips: البيانات المستلمة لرقم الإشارة %s"
+msgid "Sips: received data for reference %s; no order found"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test url"
-msgstr "رابط الاختبار"
-
-#. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
-msgid "Used for production only"
-msgstr "يستخدم للإنتاج فقط"
+msgstr ""

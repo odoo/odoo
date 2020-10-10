@@ -2,27 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* utm
 # 
-# Translators:
-# Martin Trigaux, 2019
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
-# Mariusz, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
-# Karol Rybak <karolrybak85@gmail.com>, 2019
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
-# Maja Stawicka <mjstwck@wp.pl>, 2019
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Andrzej Donczew <a.donczew@hadron.eu.com>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +18,12 @@ msgstr ""
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
-msgstr "Aktywne"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Add a new tag"
-msgstr "Dodaj nowy tag"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_website
@@ -46,20 +31,42 @@ msgid "Allows us to filter relevant Campaign"
 msgstr ""
 
 #. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Approval-based Flow"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Approved"
+msgstr ""
+
+#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Archived"
-msgstr "Archiwalne"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Audience-driven Flow"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
 msgid "Campaign"
-msgstr "Kampania"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "Campaign Name"
-msgstr "Nazwa kampanii"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_stage
@@ -77,23 +84,49 @@ msgstr ""
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns"
-msgstr "Kampanie"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
-msgstr "Promocja świąteczna"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Collect ideas, design creative content and publish it once reviewed."
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
 #: model:ir.model.fields,field_description:utm.field_utm_tag__color
 msgid "Color Index"
-msgstr "Indeks kolorów"
+msgstr ""
 
 #. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
-msgid "Colour"
-msgstr "Kolor"
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Copywriting"
+msgstr ""
+
+#. module: utm
+#: model:utm.source,name:utm.utm_source_craigslist
+msgid "Craigslist"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid "Create a campaign"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
@@ -107,7 +140,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_stage__create_uid
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__create_date
@@ -116,11 +149,13 @@ msgstr "Utworzona przez"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__create_date
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_date
 msgid "Created on"
-msgstr "Data utworzenia"
+msgstr ""
 
 #. module: utm
-#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Define a new UTM campaign"
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Creative Flow"
 msgstr ""
 
 #. module: utm
@@ -136,14 +171,33 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Delete"
-msgstr "Usuń"
+msgstr ""
 
 #. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Deploy"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Deployed"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
+#, python-format
 msgid "Design"
-msgstr "Wygląd"
+msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_ir_http__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_medium__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__display_name
@@ -151,39 +205,77 @@ msgstr "Wygląd"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
 msgid "Display Name"
-msgstr "Nazwa wyświetlana"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Done"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Dropdown menu"
-msgstr "Menu typu dropdown"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr "Kampania email - Produkty"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "Kampania email - Usługi"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Event-driven Flow"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr "Facebook"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Gather Data"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
+msgstr ""
+
+#. module: utm
+#: model:utm.source,name:utm.utm_source_glassdoor
+msgid "Glassdoor"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Group By"
-msgstr "Grupuj wg"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
 msgid "HTTP Routing"
-msgstr "Wytyczanie HTTP"
+msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_ir_http__id
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__id
 #: model:ir.model.fields,field_description:utm.field_utm_medium__id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__id
@@ -191,7 +283,15 @@ msgstr "Wytyczanie HTTP"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__id
 #: model:ir.model.fields,field_description:utm.field_utm_tag__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Ideas"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__is_website
@@ -199,6 +299,7 @@ msgid "Is Website"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_ir_http____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_campaign____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_medium____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_mixin____last_update
@@ -206,7 +307,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_stage____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_tag____last_update
 msgid "Last Modified on"
-msgstr "Data ostatniej modyfikacji"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -215,7 +316,7 @@ msgstr "Data ostatniej modyfikacji"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__write_uid
 #: model:ir.model.fields,field_description:utm.field_utm_tag__write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_date
@@ -224,7 +325,14 @@ msgstr "Ostatnio aktualizowane przez"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__write_date
 #: model:ir.model.fields,field_description:utm.field_utm_tag__write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Later"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
@@ -234,18 +342,30 @@ msgstr ""
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "Śledzenie źródeł"
+msgstr ""
+
+#. module: utm
+#: model:utm.source,name:utm.utm_source_linkedin
+msgid "LinkedIn"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "List-Building"
+msgstr ""
 
 #. module: utm
 #: model:utm.tag,name:utm.utm_tag_1
 msgid "Marketing"
-msgstr "Marketing"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "Medium"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -260,36 +380,86 @@ msgid "Mediums"
 msgstr ""
 
 #. module: utm
+#: model:utm.source,name:utm.utm_source_monster
+msgid "Monster"
+msgstr ""
+
+#. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_stage__name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
 msgid "Name"
-msgstr "Nazwa"
+msgstr ""
 
 #. module: utm
 #: model:utm.stage,name:utm.default_utm_stage
 msgid "New"
-msgstr "Nowa"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
-msgstr "Biuletyn"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Pre-Launch"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Prepare Campaigns and get them approved before making them go live."
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Report"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__user_id
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Responsible"
-msgstr "Odpowiedzialny"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Review"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Running"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr "Sprzedaż"
+msgstr ""
 
 #. module: utm
 #: model:utm.stage,name:utm.campaign_stage_1
 msgid "Schedule"
-msgstr "Planowanie"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
@@ -299,52 +469,78 @@ msgstr ""
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
 msgid "Search engine"
-msgstr "Wyszukiwarka"
+msgstr ""
 
 #. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Send"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
+#, python-format
 msgid "Sent"
-msgstr "Wysłane"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
 msgid "Sequence"
-msgstr "Numeracja"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Settings"
-msgstr "Ustawienia"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Soft-Launch"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Soft-Launch Flow"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Źródło"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
 msgid "Source Name"
-msgstr "Nazwa źródła"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
 #: model:ir.ui.menu,name:utm.menu_utm_source
 msgid "Sources"
-msgstr "Źródła"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__stage_id
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Stage"
-msgstr "Etap"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_search
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_tree
 msgid "Stages"
-msgstr "Etapy"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
@@ -356,12 +552,26 @@ msgstr ""
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Nazwa znacznika już istnieje!"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
 msgid "Tags"
-msgstr "Znaczniki"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Month"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Week"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
@@ -369,25 +579,39 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"To nazwa, która pomaga ci w śledzeniu swoich różnych działań promocyjnych, "
-"np. Fall_Drive, Christmas_Special"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "To metoda dostawy, np. pocztówka,, e-mail lub baner reklamowy"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "To źródło linku, np. wyszukiwarka, inna domena lub nazwa listy e-mail"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "To be Approved"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Track incoming events (e.g. : Christmas, Black Friday, ...) and publish "
+"timely content."
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
 msgid "Twitter"
-msgstr "Twitter"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -429,9 +653,22 @@ msgstr ""
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm
 msgid "UTMs"
-msgstr "UTMs"
+msgstr ""
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Use This For My Campaigns"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Use tags to organize campaigns and easily filter them."
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
+msgid "e.g. Black Friday"
 msgstr ""

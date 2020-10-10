@@ -52,7 +52,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
 msgid "Account"
-msgstr "Account"
+msgstr "Rekening"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
@@ -92,7 +92,7 @@ msgstr "Aanvullende kosten"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "Aanvullende kosten"
+msgstr "Aanvullende logistieke kosten"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__allowed_picking_ids
@@ -191,7 +191,7 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
-"Kosten en aanpassing regels komen niet overeen. De extra kosten moeten "
+"Kosten en aanpassing regels komen niet overeen. De logistieke kosten moeten "
 "misschien opnieuw berekend worden."
 
 #. module: stock_landed_costs
@@ -202,7 +202,7 @@ msgstr "Maak kostenposten aan"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr "Maak een nieuwe kostenpost"
+msgstr "Maak een nieuwe logistieke kost"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -241,13 +241,13 @@ msgstr "Standaard dagboek"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "Standaard splitmethode"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Standaard splitsingsmethode bij gebruik voor logistieke kosten"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -370,7 +370,7 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Indicates whether the product is a landed cost."
-msgstr "Geeft aan of het product een extra kosten product is."
+msgstr "Geeft aan of het product een logistieke kosten product is."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -386,7 +386,7 @@ msgstr "Is kostenregel"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr "Is extra kosten"
+msgstr "Zijn logistieke kosten"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
@@ -415,12 +415,12 @@ msgstr "Boekingsregel"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost"
-msgstr "Extra kosten"
+msgstr "Logistieke kosten"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Extra kosten naam"
+msgstr "Logistieke kostennaam"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -435,19 +435,19 @@ msgstr "Extra kosten naam"
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree2
 msgid "Landed Costs"
-msgstr "Totale kosten"
+msgstr "Logistieke kosten"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr "Extra kosten zichtbaar"
+msgstr "Logistieke kosten zichtbaar"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Extra kosten bevestigd"
+msgstr "Logistieke kosten bevestigd"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move____last_update
@@ -564,7 +564,7 @@ msgstr "Aantal ongelezen berichten"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Alleen concept extra kosten kunnen bevestigd worden"
+msgstr "Alleen concept logistieke kosten kunnen bevestigd worden"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
@@ -574,7 +574,7 @@ msgstr "Originele waarde"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Picking"
-msgstr "Picken"
+msgstr "Picking"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
@@ -587,6 +587,7 @@ msgstr "U dient een voorraad kosten rekening te definiëren voor product: %s"
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
 msgstr ""
+"Definieer de %s waarop die logistieke kosten van toepassing moeten zijn."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -632,12 +633,12 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
 msgid "Split Method"
-msgstr "Split methode"
+msgstr "Splitmethode"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "Staat / Provincie"
+msgstr "Status"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -660,12 +661,12 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "Voorraad extra kosten"
+msgstr "Voorraad logistieke kosten"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr "Voorraad extra kostenregel"
+msgstr "Logistieke kostenregel"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -721,7 +722,7 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Bevestigde extra kosten kunnen niet geannuleerd worden, maar u kan een "
+"Bevestigde logistieke kosten kunnen niet geannuleerd worden, maar u kan een "
 "negatieve extra kost aanmaken om ze om te keren"
 
 #. module: stock_landed_costs
@@ -773,3 +774,6 @@ msgid ""
 "applied for products with automated inventory valuation and FIFO or average "
 "costing method."
 msgstr ""
+"U kunt geen logistieke kosten toepassen op de gekozen %s(en). Logistieke "
+"kosten kunnen alleen worden toegepast voor producten met geautomatiseerde "
+"voorraadwaardering en FIFO of gemiddelde kostprijsberekeningsmethode."

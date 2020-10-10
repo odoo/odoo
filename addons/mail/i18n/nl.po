@@ -10,9 +10,9 @@
 # Alice Van Goethem <vga@odoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Martin Trigaux, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,13 +37,13 @@ msgstr "Dit kanaal is privé. Mensen moeten uitgenodigd zijn om toe te treden."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "${object.partner_id.lang}"
-msgstr ""
+msgstr "${object.partner_id.lang}"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)s aan jou toegewezen"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -92,21 +92,21 @@ msgstr "(origineel toegewezen aan"
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid ", due on"
-msgstr ", vervalt op"
+msgstr ",vervalt op"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "0 Future"
-msgstr "0 Toekomst"
+msgstr "0 In de toekomst"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "0 Late"
-msgstr "0 Laat"
+msgstr "0 Te laat"
 
 #. module: mail
 #. openerp-web
@@ -181,7 +181,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. openerp-web
@@ -243,7 +243,7 @@ msgstr "<p>Maak hier een kanaal aan.</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>Maak een publiek of privé kanaal aan.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -666,7 +666,7 @@ msgstr "Alias domein"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_model_id
 msgid "Aliased Model"
-msgstr "Aliased Model"
+msgstr "Aliased model"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
@@ -688,7 +688,7 @@ msgstr "Altijd toestaan"
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "Een email is vereist om zoek_of_creëer te laten functioneren"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -788,7 +788,7 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Bijlages zijn gelinkt aan het document via het model / res_id en aan het "
+"Bijlagen zijn gelinkt aan het document via het model / res_id en aan het "
 "bericht via dit veld."
 
 #. module: mail
@@ -888,7 +888,7 @@ msgstr "Blacklist datum"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Blacklisted e-mail adressen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -977,7 +977,7 @@ msgstr "CC ontvangers van het bericht"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "CC ontvangers"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
@@ -988,7 +988,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
 msgid "Catchall"
-msgstr ""
+msgstr "Catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
@@ -1021,12 +1021,12 @@ msgstr "Kanaal"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_message_ids
 msgid "Channel Message"
-msgstr "Kanaal bericht"
+msgstr "Kanaalbericht"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_moderation_menu
 msgid "Channel Moderation"
-msgstr "Kanaal moderatie"
+msgstr "Kanaalmoderatie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
@@ -1058,7 +1058,7 @@ msgstr "Kanalen/Relatie"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__chat
 msgid "Chat Discussion"
-msgstr "Chat discussie"
+msgstr "Chatdiscussie"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1160,7 +1160,7 @@ msgstr "Stel uw activiteitssoorten in"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr ""
+msgstr "Configureer uw eigen e-mail servers"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -1233,13 +1233,14 @@ msgstr "Aanmaak uid"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr ""
+msgstr "Maak een nieuw %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
 msgstr ""
+"Maak een nieuw %(document)sdoor een e-mail te verzenden naar %(email_link)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -1426,7 +1427,7 @@ msgstr "Definieer een nieuwe chat shortcode"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
 msgid "Delay Label"
-msgstr ""
+msgstr "Vertraag label"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
@@ -1455,7 +1456,7 @@ msgstr "Verwijderen e-mails"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
 msgid "Delete Message Copy"
-msgstr "Verwijder bericht kopie"
+msgstr "Verwijder kopie bericht"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -1605,7 +1606,7 @@ msgstr "Document volgers"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
 msgid "Document Model"
-msgstr "Document model"
+msgstr "Documentmodel"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
@@ -1840,7 +1841,7 @@ msgstr "E-mail bericht"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__email
 msgid "Email of the related partner (if exist) or False"
-msgstr ""
+msgstr "E-mail van de gerelateerde partner (indien aanwezig) of False"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -1962,13 +1963,13 @@ msgstr "Mislukt"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s"
-msgstr ""
+msgstr "Mislukt om template te renderen : %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s (%d)"
-msgstr ""
+msgstr "Mislukt om template te renderen : %s (%d)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -2160,7 +2161,7 @@ msgstr "Van"
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "Future"
-msgstr "Toekomst"
+msgstr "In de toekomst"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2278,6 +2279,9 @@ msgid ""
 "The following email sent to %s cannot be accepted because this is a private email address.\n"
 "Only allowed people can contact us at this address."
 msgstr ""
+"Hallo,<br/>\n"
+"De volgende e-mail verzonden naar %s kan niet worden geaccepteerd omdat dit een privé-e-mailadres is.\n"
+"Alleen toegelaten personen kunnen op dit adres contact met ons opnemen.."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
@@ -2295,6 +2299,8 @@ msgstr "Verberg het subtype in de volgers opties"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
+"Verbergen voor publieke / portaal gebruikers, onafhankelijk van de "
+"configuratie van het subtype."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__id
@@ -2470,6 +2476,8 @@ msgstr ""
 msgid ""
 "If the related partner is active (if exist) or if related channel exist"
 msgstr ""
+"Als de gerelateerde partner actief is (indien bestaand) of als er een "
+"gerelateerd kanaal bestaat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -2592,7 +2600,7 @@ msgstr "Foutief primair e-mailadres op model %s"
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
-msgstr ""
+msgstr "Uitnodiging om te volgen %(document_model)s: %(document_name)s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2607,7 +2615,7 @@ msgstr "Alleen uitgenodigde mensen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
 msgid "Is Active"
-msgstr ""
+msgstr "Is Actief"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
@@ -2948,7 +2956,7 @@ msgstr "Mailkanaal formulier"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "E-mail Render Mixin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -2992,7 +3000,7 @@ msgstr "Mailbox onbeschikbaar - %s"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_ids
 msgid "Mails"
-msgstr "Mails"
+msgstr "E-mails"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_main_attachment_id
@@ -3302,7 +3310,7 @@ msgstr "Moderatie"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation List"
-msgstr ""
+msgstr "Moderatie lijst"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
@@ -3425,12 +3433,12 @@ msgstr "Nieuwe waarde float"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_integer
 msgid "New Value Integer"
-msgstr "Nieuwe waarde integer"
+msgstr "Nieuwe waarde geheel getal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_monetary
 msgid "New Value Monetary"
-msgstr "Niuewe waarde valuta"
+msgstr "Nieuwe waarde valuta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_text
@@ -3694,7 +3702,7 @@ msgstr "Oude waarde float"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_integer
 msgid "Old Value Integer"
-msgstr "Oude waarde integer"
+msgstr "Oude waarde geheel getal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_monetary
@@ -3775,6 +3783,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_id
 msgid "Optional mail_mail ID. Used mainly to optimize searches."
 msgstr ""
+"Optioneel mail_mail ID. Wordt voornamelijk gebruikt om zoekopdrachten te "
+"optimaliseren."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__mail_server_id
@@ -3931,7 +3941,7 @@ msgstr "Relatie alleen lezen"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr ""
+msgstr "Relatie met aanvullende informatie voor e-mail opnieuw verzenden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
@@ -4031,7 +4041,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
 msgid "Post on Multiple Documents"
-msgstr ""
+msgstr "Plaats op meerdere documenten"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -4065,7 +4075,7 @@ msgstr "Voorkeur antwoord adres"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
 msgid "Preferred response address"
-msgstr ""
+msgstr "Voorkeur antwoord adres"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -4234,17 +4244,17 @@ msgstr "Gerelateerde document ID"
 #: model:ir.model.fields,field_description:mail.field_mail_template__model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_model
 msgid "Related Document Model"
-msgstr "Gerelateerde document model"
+msgstr "Gerelateerde documentmodel"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
 msgid "Related Document Model Name"
-msgstr "Gerelateerde document model naam"
+msgstr "Gerelateerde documentmodel naam"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__mail_template_id
 msgid "Related Mail Template"
-msgstr ""
+msgstr "Gerelateerd E-mailsjabloon"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4264,7 +4274,7 @@ msgstr "Gerelateerd veld"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr ""
+msgstr "Verwijder email van blacklist wizard"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4305,7 +4315,7 @@ msgstr "Bestandsnaam overzicht"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr ""
+msgstr "Aanvragende partner"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -4410,7 +4420,7 @@ msgstr "Plan activiteit"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr ""
+msgstr "Plan activiteiten om u te helpen dingen voor elkaar te krijgen."
 
 #. module: mail
 #. openerp-web
@@ -4582,6 +4592,7 @@ msgstr "Serveractie"
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
 msgstr ""
+"Zet actief naar onwaar om het kanaal te verbergen zonder het te verwijderen."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -4604,7 +4615,7 @@ msgstr "Afkorting"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Show a helper message"
-msgstr ""
+msgstr "Geef een help bericht weer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -4624,7 +4635,7 @@ msgid ""
 "document model"
 msgstr ""
 "Navigatiekolom-actie om dit sjabloon beschikbaar te maken op de regels van "
-"het gerelateerde document model"
+"het gerelateerde documentmodel"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -4655,7 +4666,7 @@ msgstr "Met ster"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
 msgid "State"
-msgstr "Staat / Provincie"
+msgstr "Status"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__state
@@ -4755,7 +4766,7 @@ msgstr "Systeem melding"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
-msgstr ""
+msgstr "Doelmodel"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -4780,6 +4791,8 @@ msgid ""
 "Technical field to keep track of the model at the start of editing to "
 "support UX related behaviour"
 msgstr ""
+"Technisch veld om het model aan het begin van bewerken te volgen voor UX "
+"gerelateerd gedrag"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
@@ -4802,6 +4815,7 @@ msgstr "Sjabloon voorbeeld taal"
 #, python-format
 msgid "Template rendering for language should be called with a list of IDs."
 msgstr ""
+"Sjabloon Weergave voor taal moet worden aangeroepen met een lijst ID's."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -4813,7 +4827,7 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering supports only jinja or qweb."
-msgstr ""
+msgstr "Template rendering ondersteunt enkel jinja or qweb."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -4844,7 +4858,7 @@ msgstr "De waarde 'Vervaldatum in' kan niet negatief zijn."
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "The e-mail alias is already used. Please enter another one."
-msgstr ""
+msgstr "Helaas is deze e-mail alias al in gebruik. Kies een unieke alias."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
@@ -4910,7 +4924,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr ""
+msgstr "De wachtrij manager zal de e-mail na de datum verzenden."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -4989,6 +5003,9 @@ msgid ""
 "from the Technical menu in the Settings, in order to preserve storage space "
 "of your Odoo database."
 msgstr ""
+"Deze optie verwijdert permanent elk spoor van e-mail na verzending, "
+"inclusief vanuit het Technisch menu in Instellingen, dit om opslagruimte van"
+" uw Odoo-database vrij te houden."
 
 #. module: mail
 #. openerp-web
@@ -5170,13 +5187,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "Verwijder uit blacklist"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr ""
+msgstr "Reden voor het verwijderen uit blacklist:: %s"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_alias_unique
@@ -5318,7 +5335,7 @@ msgstr "Gebruikers"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Users in this channel: %(members)s %(dots)s and you."
-msgstr ""
+msgstr "Gebruikers in dit kanaal: %(members)s %(dots)s en u."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5399,7 +5416,7 @@ msgid ""
 "select the target field within the destination document model (sub-model)."
 msgstr ""
 "Wanneer een relatie veld is geselecteerd als eerste veld, dan kunt u een "
-"doelveld selecteren binnen de bestemming document model (sub-model)."
+"doelveld selecteren binnen de bestemming documentmodel (sub-model)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__sub_object
@@ -5503,6 +5520,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address."
 msgstr ""
+"U kan niets anders gebruiken dan niet-geaccentueerde Latijnse tekens in het "
+"alias adres."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -5589,7 +5608,7 @@ msgstr "na controledatum"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "alias %(name)s: %(error)s"
-msgstr ""
+msgstr "alias %(name)s: %(error)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -5683,7 +5702,7 @@ msgstr "foutief geconfigureerde alias (onbekend gelinkt record)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "mail_blacklist_removal"
-msgstr ""
+msgstr "mail_blacklist_removal"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5805,7 +5824,7 @@ msgstr "gebruikende"
 #: code:addons/mail/static/src/xml/many2one_avatar_user.xml:0
 #, python-format
 msgid "value"
-msgstr ""
+msgstr "waarde"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks

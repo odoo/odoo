@@ -7,8 +7,8 @@
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Martin Trigaux, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,7 +173,7 @@ msgstr "Beschikbaar"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available in stock"
-msgstr ""
+msgstr "Beschikbaar in voorraad"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -203,7 +203,7 @@ msgstr "Datum:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr ""
+msgstr "Standaard magazijn"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -298,7 +298,7 @@ msgstr "Documentatie"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
 msgid "Draft SO"
-msgstr ""
+msgstr "Concept SO"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -341,7 +341,7 @@ msgstr "Verwacht:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "Prognose datum verwacht"
 
 #. module: sale_stock
 #. openerp-web
@@ -358,7 +358,7 @@ msgstr "Gratis hvh vandaag"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "Heeft te late picking"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
@@ -497,7 +497,7 @@ msgstr "Maak op order"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "Handmatige acties zijn mogelijk nodig"
+msgstr "Handmatige acties zijn mogelijk nodig."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -538,14 +538,14 @@ msgstr "Verschuif geplande leverdatum vooruit met"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr ""
+msgstr "Geen voldoende beschikbaarheid in de toekomst"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No future availaibility"
-msgstr ""
+msgstr "Geen voldoende toekomstige beschikbaarheid"
 
 #. module: sale_stock
 #. openerp-web
@@ -601,7 +601,7 @@ msgstr "Hvh te leveren"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Resterende vraag beschikbaar op"
 
 #. module: sale_stock
 #. openerp-web
@@ -735,6 +735,8 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
+"Sommige producten zijn al geleverd. Retourzendingen kunnen worden gemaakt op"
+" basis van de uitgaande leveringen."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -750,7 +752,7 @@ msgstr "Voorraadmutaties"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Voorraadaanvullen rapportage"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -793,6 +795,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"Dit product is verpakt door %(pack_size).2f %(pack_name)s. U kunt beter "
+"%(quantity).2f %(unit)s verkopen."
 
 #. module: sale_stock
 #. openerp-web
@@ -896,7 +900,7 @@ msgstr "dagen"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "of"
-msgstr "of"
+msgstr "van"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -913,4 +917,4 @@ msgstr "verwerkt in plaats van"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "will be late."
-msgstr ""
+msgstr "zat te laat zijn."

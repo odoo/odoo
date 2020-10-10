@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Cas Vissers <casvissers@brahoo.nl>, 2020
-# Maxim Vandenbroucke <mxv@odoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Wynand Tastenhoye <wta@odoo.com>, 2020
@@ -911,7 +910,7 @@ msgstr "Aantal bijlagen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Attributen"
+msgstr "Kenmerken"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
@@ -1017,7 +1016,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "Kies tussen elektronische handtekeningen of online betalingen."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1034,7 +1033,7 @@ msgstr "Klik hier om producten of diensten toe te voegen aan uw offerte."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define an invoicing target"
-msgstr "Klik om een facturatie doel in te stellen"
+msgstr "Klik om een facturatiedoel in te stellen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1537,7 +1536,7 @@ msgstr "Soort weergave"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr "Wilt u deze korting toepassing op alle orderlijnen?"
+msgstr "Wilt u deze korting toepassing op alle orderregels?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1926,7 +1925,8 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Importeren van Amazon bestellingen en synchroniseren van leveringen"
+msgstr ""
+"Importeren van Amazon bestellingen en het synchroniseren van leveringen"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -2044,7 +2044,7 @@ msgstr "Gefactureerd"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 msgid "Invoiced Quantity"
-msgstr "Gefactureerde hvh."
+msgstr "Gefactureerde hvh"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2999,7 +2999,7 @@ msgstr "Aantal geleverd"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Hvh gefactureerd"
+msgstr "Gefactureerde hvh"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
@@ -3269,7 +3269,7 @@ msgstr "Verkooppromotie 1"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr "Verkoop waarschuwingen"
+msgstr "Verkoopwaarschuwingen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
@@ -3419,7 +3419,7 @@ msgstr "Verkoopteams"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
-msgstr "Verkoop waarschuwingen"
+msgstr "Verkoopwaarschuwingen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
@@ -3497,7 +3497,7 @@ msgstr "Selecteer een product, of maak direct een nieuw product aan."
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
 msgstr ""
-"Selecteer product attributen en optionele producten vanuit het verkooporder"
+"Selecteer product kenmerken en optionele producten vanuit het verkooporder"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3533,8 +3533,8 @@ msgstr "Verkoop producten per meervoud van eenheid # per verpakking"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
-"Verkoop varianten van een product door middel van attributen (grootte, "
-"kleur, enz.)"
+"Verkoop varianten van een product door middel van kenmerken (grootte, kleur,"
+" enz.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4225,12 +4225,12 @@ msgstr "UTM-campagne"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
@@ -4496,6 +4496,9 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Uw offerte bevat producten van het bedrijf %(product_company)s terwijl uw "
+"offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van uw"
+" offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

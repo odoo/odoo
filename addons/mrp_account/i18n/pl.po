@@ -2,22 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* mrp_account
 # 
-# Translators:
-# Martin Trigaux, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
-# Maja Stawicka <mjstwck@wp.pl>, 2019
-# Maciej Stawicki <ms@3lance.pl>, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Maciej Stawicki <ms@3lance.pl>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +18,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 msgid "Analytic Account"
-msgstr "Konto analityczne"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -37,7 +27,7 @@ msgstr "Konto analityczne"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Oblicz cenę z zestawienia materiałowego"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -47,13 +37,20 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"Oblicz cenę produktu przy użyciu produktów i operacji na powiązanych "
-"składnikach z zestawienia materiałowego, tylko dla wytworzonych produktów."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr "Zaewidencjonowane Koszty"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -71,23 +68,44 @@ msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
-"Wypełnij to, jeśli chcesz automatyczną księgowość analityczną do zamówień "
-"produkcji."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+msgid "ID"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_product_product____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_product_template____last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product"
-msgstr "Produkt"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product Template"
-msgstr "Szablon produktu"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
 msgid "Production Order"
-msgstr "Zamówienie produkcji"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
@@ -99,24 +117,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp_account
-#: code:addons/mrp_account/models/product.py:40
-#, python-format
-msgid ""
-"The inventory valuation of some products %s is automated. You can only "
-"update their cost from the product form."
-msgstr ""
-"Wycena zapasów niektórych produktów %s jest zautomatyzowana. Możesz "
-"aktualizować swój koszt tylko z formularza produktu."
-
-#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "Valuation"
-msgstr "Wycena"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
-msgstr "Gniazdo produkcyjne"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity

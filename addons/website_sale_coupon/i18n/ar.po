@@ -2,16 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* website_sale_coupon
 # 
-# Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,19 +16,36 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_sale_coupon
+#: model:ir.model,name:website_sale_coupon.model_coupon_program
+msgid "Coupon Program"
+msgstr ""
+
+#. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.res_config_settings_view_form
 msgid "Coupon Programs"
-msgstr "برامج الكوبونات"
+msgstr ""
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.cart_discount
 msgid "Discount:"
-msgstr "الخصم:"
+msgstr ""
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.cart_discount
 msgid "Discounted amount"
+msgstr ""
+
+#. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__id
+#: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__id
+msgid "ID"
 msgstr ""
 
 #. module: website_sale_coupon
@@ -41,25 +54,36 @@ msgid "Invalid or expired promo code."
 msgstr ""
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.res_config_settings_view_form
 msgid "Promotion Programs"
-msgstr "البرامج الترويجية"
+msgstr ""
 
 #. module: website_sale_coupon
-#: model:ir.model,name:website_sale_coupon.model_sale_coupon_program
-msgid "Sales Coupon Program"
-msgstr "برنامج كوبون المبيعات"
+#: model:ir.model.fields,help:website_sale_coupon.field_coupon_program__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
 
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_sale_order
 msgid "Sales Order"
-msgstr "أمر البيع"
+msgstr ""
 
 #. module: website_sale_coupon
-#: code:addons/website_sale_coupon/models/sale_coupon_program.py:23
+#: code:addons/website_sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "The program code must be unique by website!"
+msgstr ""
+
+#. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__website_id
+msgid "Website"
 msgstr ""
 
 #. module: website_sale_coupon
