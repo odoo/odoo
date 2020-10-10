@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="wechatpay_pay" name="WeChatPay">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Pay - Pay with WeChatPay</t>
+            <t t-set="no_footer">1</t>
+
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                    <div class="row">
+                        <div class='col-12'>
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="40" />
+                            </t>
+                        </div>
+                        <div class="col-12" t-if="errors">
+                            <t t-foreach="errors" t-as="error">
+                                <div class="alert alert-danger" t-if="error" role="alert">
+                                    <h4>
+                                        <t t-esc="error[0]" />
+                                    </h4>
+                                    <t t-esc="error[1]" />
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                            <div class="card">
+                                <div class="card-body" id="shipping_and_billing">
+                                    <div t-if="not error">
+                                      <b>Order:  <span class="order" t-esc="order"/> </b>
+                                      <b>Amount: <span t-esc="amount"/></b>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="payment_method" class="mt-3" >
+                                <h3 class="mb24">Pay with WeChatPay</h3>
+                                <t t-if="not error">
+                                    <center><img src="/payment_wechatpay/static/src/image/wechat_pay.png" height="30%" width="30%"/></center>
+                                    <center><img t-att-src="qrcode"/></center>
+                                    <center><img src="/payment_wechatpay/static/src/image/desc.png"/></center>
+                                </t>
+                                <t t-if="error">
+                                    <span><t t-esc="error"/></span>
+                                </t>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
+            </div>
+
+            <script type="text/javascript" src="/payment_wechatpay/static/src/js/wechatpay.js"></script>
+        </t>
+    </template>
+</odoo>
