@@ -39,7 +39,7 @@ class AcquirerWeChatPay(models.Model):
                                   mch_key=self.wechatpay_mch_key)
             return wechatpay
         except Exception as err:
-            _logger.exception(_(f"generate wechatpay client error:{err}"))
+            _logger.exception(_(f"generate wechatpay client error"))
 
     def _get_qrcode_url(self, kw):
         """get wechatpay qrcode"""
