@@ -1487,6 +1487,11 @@ class CheckIdentity(models.TransientModel):
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
     password = fields.Char()
+    reset_password_enabled = fields.Boolean(compute="_compute_reset_password_enabled")
+
+    def _compute_reset_password_enabled(self):
+        self.reset_password_enabled = self.env["ir.config_parameter"].sudo().get_param("auth_signup.reset_password",
+                                                                                       False)
 
     def run_check(self):
         assert request, "This method can only be accessed over HTTP"

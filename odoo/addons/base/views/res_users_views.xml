@@ -41,6 +41,7 @@
             <field name="arch" type="xml">
                 <form string="Security Control">
                     <sheet clas="bg-primary">
+                        <field name="reset_password_enabled" invisible="1"/>
                         <h3><strong>Please confirm your password to continue</strong></h3>
                         <p>This is necessary for security-related changes. The authorization will last for a few minutes.</p>
                         <div>
@@ -51,7 +52,7 @@
                     <footer>
                         <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary"/>
                         <button string="Cancel" special="cancel" class="btn btn-secondary"/>
-                        <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
+                        <a attrs="{'invisible': [('reset_password_enabled', '=', False)]}" href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </footer>
                 </form>
             </field>
