@@ -2,24 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* account_payment
 # 
-# Translators:
-# Martin Trigaux, 2019
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
-# Tomasz Leppich <t.leppich@gmail.com>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Patryk Openglobe <patryk.walentowicz@openglobe.pl>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
-# Maksym <ms@myodoo.pl>, 2019
-# Natalia Gros <nag@odoo.com>, 2019
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Natalia Gros <nag@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +18,12 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr "<b>Komunikacja: </b>"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -65,8 +53,6 @@ msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
 msgstr ""
-"<i class=\"fa fa-info\"/> Masz zarejestrowaną kartę kredytową, możesz się "
-"zalogować, aby móc z niej korzystać."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -105,6 +91,11 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
@@ -112,27 +103,36 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-"Jeśli przechowujemy informacje dotyczące płatności na naszym serwerze, "
-"płatności za subskrypcję będą dokonywane automatycznie."
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "Pay & Confirm"
-msgstr "Zapłać i potwierdź"
+msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:21
+#: code:addons/account_payment/models/payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
-msgstr "Zapłać teraz"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -142,22 +142,22 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
-msgstr "Zapłać przez"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transakcja płatności"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr "Wystąpił błąd podczas przetwarzania płatności: nieprawidłowa faktura."
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -165,19 +165,13 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"Podczas przetwarzania Państwa płatności wystąpił błąd: problem z weryfikacją"
-" numeru karty kredytowej."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
-"Podczas przetwarzania płatności wystąpił błąd: transakcja nie powiodła "
-"się.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-"Wystąpił błąd podczas przetwarzania płatności: nieprawidłowy identyfikator "
-"karty kredytowej."

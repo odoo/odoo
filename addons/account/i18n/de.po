@@ -3,7 +3,6 @@
 # 	* account
 # 
 # Translators:
-# Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Bettina Pfeifer <betzilla@web.de>, 2020
 # Stephan Schulze <stephan.schulze@bmfgroup.de>, 2020
 # Oliver Roch <oliver.roch@d9t.de>, 2020
@@ -30,6 +29,9 @@
 # Philip Kuß <p.kuss@enno.de>, 2020
 # Jan Meyer, 2020
 # Florian Pose <fp@igh.de>, 2020
+# Achraf Azzouz <abz@odoo.com>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2020
+# Employee manaTec <visessa+github@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -37,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Florian Pose <fp@igh.de>, 2020\n"
+"Last-Translator: Employee manaTec <visessa+github@gmail.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,8 +363,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible'\\: ['|', ('state', '!=', 'draft'), ('name', '!=',"
-" '/')]}\">Entwurf</span>"
+"<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
+"'/')]}\">Entwurf</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -1624,7 +1626,7 @@ msgstr "Eintrag hinzufügen"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
-msgstr ""
+msgstr "Eine Zeile zu Ihrer Rechnung hinzufügen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -1639,7 +1641,7 @@ msgstr "Notiz hinzufügen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR-code to your invoices"
-msgstr ""
+msgstr "Fügen Sie Ihrer Rechnung einen QR-Zahlungscode hinzu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
@@ -1679,7 +1681,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Adjusting Amount"
-msgstr ""
+msgstr "Betrag anpassen"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1696,7 +1698,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry"
-msgstr ""
+msgstr "Eintrag anpassen"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1803,7 +1805,7 @@ msgstr "Alle gebuchten Positionen"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "All accounts on the lines must be of the same type."
-msgstr ""
+msgstr "Alle Konten in den Zeilen müssen vom gleichen Typ sein."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
@@ -2004,12 +2006,12 @@ msgstr "Betrag in Währung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
 msgid "Amount to Pay (company currency)"
-msgstr ""
+msgstr "Zahlungsbetrag (Firmenwährung)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount_currency
 msgid "Amount to Pay (foreign currency)"
-msgstr ""
+msgstr "Zahlungsbetrag (Fremdwährung)"
 
 #. module: account
 #. openerp-web
@@ -3017,7 +3019,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income Account"
-msgstr ""
+msgstr "Bargelddifferenz-Erlöskonto"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3229,6 +3231,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
+"Aktivieren Sie dieses Feld, um den absoluten Wert des Saldos der mit diesem "
+"Tag verknüpften Zeilen bei der Berechnung des Steuerberichts zu verhindern."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -3466,7 +3470,7 @@ msgstr "Vollständige Liste der Steuern"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__name
 msgid "Complete name for this report line, to be used in report."
-msgstr ""
+msgstr "Vollständiger Name der Report Zeile, die im Report verwendet wird."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
@@ -3562,7 +3566,7 @@ msgstr "Glückwunsch. Alle Einstellungen vorgenommen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -9772,12 +9776,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
 msgid "Repartition for Invoices"
-msgstr ""
+msgstr "Berechnung für Rechnungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition for Refund Invoices"
-msgstr ""
+msgstr "Berechnung für Rückerstattungsrechnung"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template__refund_repartition_line_ids

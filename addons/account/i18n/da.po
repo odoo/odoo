@@ -14,7 +14,7 @@
 # JonathanStein <jstein@image.dk>, 2020
 # Kenneth Hansen <kenneth@vkdata.dk>, 2020
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
 # Martin Trigaux, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
@@ -1540,7 +1540,7 @@ msgstr "Aktivér andre valutaer"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr ""
+msgstr "Aktiver for at oprette indkøbs kvittering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -1746,6 +1746,9 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Justering af posteringer er blevet oprettet for denne faktura: "
+"<ul><li>%(link1)s annullerer {percent:f}%% af {amount}</li><li>%(link0)s "
+"udsætter til {new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -5091,7 +5094,7 @@ msgstr "Rediger"
 #: model:ir.model.fields,help:account.field_account_move__amount_by_group
 #: model:ir.model.fields,help:account.field_account_payment__amount_by_group
 msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr ""
+msgstr "Rediger moms mængder hvis du støder på afrundings problemer."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
@@ -8343,6 +8346,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo gør det muligt for dig at afstemme en udtogs linje direkte med\n"
+"                 de pågældende salgs- eller indkøbs faktura."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -11950,6 +11955,9 @@ msgid ""
 "conversion tooltip. The tooltip informs a currency conversion will be "
 "performed with the transfer."
 msgstr ""
+"Teknisk felt. Anvendes til at indikere hvorvidt valuta konverterings "
+"værktøjstippet skal vises eller ej. Værktøjstippet informere at en valuta "
+"konvertering vil blive udført med overførslen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -11958,6 +11966,9 @@ msgid ""
 "warning. The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Teknisk felt. Anvendes til at bestemme hvorvidt en afrundings advarsel skal "
+"vises eller ej. Advarslen fortæller, at en ændring af afrundings faktoren på"
+" formular visningen for res.currency kan være farlig."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount
@@ -12457,7 +12468,7 @@ msgid ""
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
 "Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
-"For at være konsistent, skal alle afskrevne journalartikler dele den samme konto. "
+"For at være konsistent, skal alle afskrevne journalartikler have den samme konto. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12474,7 +12485,7 @@ msgstr ""
 "For at være konsistent, skal journalposteringen altid indeholde:\n"
 "- en journalartikel der involverer udestående betalings/kvitterings kontoen.\n"
 "- en journalartikel der involverer en tilgodehavende/betalbar konto.\n"
-"- valgfri journalartikler, som alle deler samme konto.\n"
+"- valgfri journalartikler, som alle har samme konto.\n"
 "\n"
 
 #. module: account
@@ -12485,7 +12496,7 @@ msgid ""
 "To be consistent, the journal items must share the same currency."
 msgstr ""
 "Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
-"For at være konsistent, skal journalartiklerne dele samme valuta."
+"For at være konsistent, skal journalartiklerne bruge samme valuta."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12494,6 +12505,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same partner."
 msgstr ""
+"Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
+"For at være konsistent, skal journalaktiverne have den samme partner."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -12512,6 +12525,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
+"Journalposteringen hvorfra denne kontantbasis moms journalpostering er "
+"blevet oprettet."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12520,6 +12535,8 @@ msgid ""
 "The journal of a bank statement line must always be the same as the bank "
 "statement one."
 msgstr ""
+"Journalen for en kontoudtogs linjen skal altid være den samme som "
+"kontoudtogets."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12528,6 +12545,8 @@ msgid ""
 "The journal of a statement line must always be the same as the bank "
 "statement one."
 msgstr ""
+"Journalen for en kontoudtogs linje skal altid være den samme som "
+"kontoudtogets."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -12556,7 +12575,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
 msgid "The length of the starting and the ending code prefix must be the same"
-msgstr ""
+msgstr "Længden på start og slut kode præfikset skal være ens"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -12566,6 +12585,10 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"Kortlægningen bruger almene udtryk.\n"
+"- For at sammenligne teksten i begyndelsen af linjen (i mærkater og notater), skal du blot angive din tekst.\n"
+"- For at sammenligne teksten hvor som helst (i mærkater og notater), skal du angive din tekst i mellem .*\n"
+"f.eks.: .*N°48748 abc123.* "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -12620,12 +12643,16 @@ msgid ""
 " properly, invoice distribution lines should be arranged in the same order "
 "as the credit note distribution lines they correspond to."
 msgstr ""
+"Rækkefølgen som distributions linjer skal vises og sammenlignes. For at "
+"refunderinger kan fungere korrekt, skal faktura distributions linjer være "
+"arrangeret i samme rækkefølge som kreditnota distributions linjerne de "
+"svarer til."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__report_id
 msgid "The parent tax report of this line"
-msgstr ""
+msgstr "Den oprindelige moms rapport for denne linje"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -12660,7 +12687,7 @@ msgstr "Betalings referencens der skal angives på journalposter."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "Betalingen der oprettede denne postering"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -12668,7 +12695,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
-msgstr ""
+msgstr "Betalingens valuta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12775,7 +12802,7 @@ msgstr "Afstemnings modellen vil kun blive anvendt på valgte journaler."
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The regex is not valid"
-msgstr ""
+msgstr "Regex'en er ikke gyldig"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -12784,6 +12811,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"Betalingsregistrerings guiden bør kun kaldes for account.move eller "
+"account.move.line datasæt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
@@ -12811,6 +12840,8 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
+"Den valgte destinations konto er sat til at bruge en specifik valuta. Samtlige posteringer overført til den, vil blive konverteret til denne valuta, hvilket vil forårsage\n"
+"                        tabet af nogen forudeksisterende udenlandsk valuta mængde."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -12829,6 +12860,8 @@ msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
+"Sekvens regex'en bør mindst indeholde seq grupperings nøglerne. For eksempel:\n"
+"^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -12837,6 +12870,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you"
 " selected some of both types."
 msgstr ""
+"Sekvensen for denne journal er forskellig for Faktura og Refusioner, men du "
+"valgte nogle af begge typer."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -12844,17 +12879,19 @@ msgid ""
 "The starting balance <b>doesn't match</b> with the ending balance of the "
 "previous bank statement."
 msgstr ""
+"Den begyndende saldo <b>stemmer ikke overens</b> med den afsluttende saldo "
+"på det forudgående kontoudtog."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The statement line has already been reconciled."
-msgstr ""
+msgstr "Udtogs linjen er allerede blevet afstemt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "Udtogs linjen der oprettede denne postering"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount_param
@@ -12884,12 +12921,16 @@ msgid ""
 "The tags associated with tax report line objects should all have the same "
 "country set as the tax report containing these lines."
 msgstr ""
+"Tagsne associeret med moms rapport linje objekter bør alle have samme land "
+"angivet som moms rapporten der indeholder disse linjer."
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
 #, python-format
 msgid "The tags linked to a tax report line should always match its tag name."
 msgstr ""
+"Tagsne forbundet til en moms rapport linje bør altid stemme overens med dets"
+" tag navn."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
@@ -12903,6 +12944,8 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
+"Momsen angivet til at anvende denne distribution på faktura. Uforenelig med "
+"refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -12911,6 +12954,8 @@ msgid ""
 "The tax set to apply this distribution on refund invoices. Mutually "
 "exclusive with invoice_tax_id"
 msgstr ""
+"Momsen angivet til at anvende denne distribution på faktura. Uforenelig med "
+"invoice_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -12955,6 +13000,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
+"Der er stadig ikke-afstemte kontoudtogs linjer i perioden du vil låse. Du "
+"bør enten afstemme eller slette dem."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -12963,6 +13010,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"Der er ingen kontant basis moms journal defineret for virksomheden '%s'.\n"
+"Konfigurér den i Regnskab/Konfiguration/Indstillinger"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -13076,6 +13125,8 @@ msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
 msgstr ""
+"Denne postering overfører følgende mængder til "
+"<strong>%(destination)s</strong><ul>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
@@ -13144,12 +13195,14 @@ msgstr "Denne bevægelse er konfigureret til at blive auto-posteret den %s"
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
+"Denne bevægelse er konfigureret til at blive posteret automatisk på "
+"regnskabs datoen:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "Denne bevægelse vil blive posteret på regnskabs datoen: %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -13159,6 +13212,9 @@ msgid ""
 "from the Technical menu in the Settings, in order to preserve storage space "
 "of your Odoo database."
 msgstr ""
+"Denne indstilling fjerne permanent ethvert spor af en email efter "
+"afsendelse, inklusiv fra Teknisk menu i Indstillinger, for at vedligeholde "
+"lagerplads på din Odoo database."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -13209,7 +13265,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr ""
+msgstr "Denne afstemnings model har endnu ikke oprettet nogen postering"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -13243,6 +13299,8 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
+"Råd: Ingen grund til at printe ud, lægge i en konvolut, og afsende sine "
+"faktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -13293,7 +13351,7 @@ msgstr "Beløb i alt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Total Balance"
-msgstr ""
+msgstr "Samlet Saldo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
@@ -13342,7 +13400,7 @@ msgstr "Samlet underskrevet"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr ""
+msgstr "Samlet mængde påvirket af den automatiske postering."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -13404,13 +13462,13 @@ msgstr "Overførsel dato"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr ""
+msgstr "Overfør modpart"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
-msgstr ""
+msgstr "Overfør postering til %s"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13466,6 +13524,9 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"Type QR-kode som bliver genereret til at betal af denne faktura ved "
+"udprintning. Hvis den er tom, vil først tilgængelige og brugbare metode "
+"blive brugt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -13487,6 +13548,8 @@ msgid ""
 "Unable to create an open balance for a statement line because the receivable"
 " / payable accounts are missing on the partner."
 msgstr ""
+"Kunne ikke oprette en åben saldo for en kontoudtogs linje da tilgodehavende "
+"/ betalbar konti mangler for partneren."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13494,6 +13557,8 @@ msgstr ""
 msgid ""
 "Unable to create an open balance for a statement line without a partner set."
 msgstr ""
+"Kunne ikke oprette en åben saldo for en kontoudtogs linje som ikke har en "
+"partner angivet."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -13536,7 +13601,7 @@ msgstr "Enhed"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
-msgstr ""
+msgstr "Afmarker som Sendt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -13689,6 +13754,11 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
+"Brug \"<i>Send per Post</>\" muligheden for at sende faktura med posten "
+"automatisk. For prisen på et lokalt frimærke, gør vi alt det manuelle "
+"arbejde: din faktura vil blive printet i det rigtige land, lagt i en "
+"konvolut, og sent med posten. Brug denne funktion fra liste visningen for at"
+" afsende hundredvis af faktura ad en omgang."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -13726,7 +13796,7 @@ msgstr "Bruges til at sortere journaler i dashboardet"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_method__sequence
 msgid "Used to order Methods in the form view"
-msgstr ""
+msgstr "Bruges til at sortere Metoder i formular visningen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -13797,7 +13867,7 @@ msgstr "Godkend erklæringen automatisk (afstemning baseret på din regel)."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "Valider."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -13821,6 +13891,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Værdi for mængden på afskrivningslinjen\n"
+"    * Procent: Procentdel af saldoen, mellem 0 og 100.\n"
+"    * Fast: Den faste værdi på afskrivningen. Mængden vil gælde som et debit hvis den er negativ, som et kredit hvis den er positiv.\n"
+"    * Fra Mærkat: Der er ikke behov for en regex delimiter, kun regex'en er nødvendig. For eksempel, hvis du vil udtrække mængden fra\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Kan du skrive\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -13886,7 +13963,7 @@ msgstr "Leverandørbetalinger"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "Tilbagebetaling af leverandør"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -13956,6 +14033,8 @@ msgid ""
 "We process bills automatically so that you only have to validate them. "
 "Choose how you want to test our artificial intelligence engine:"
 msgstr ""
+"Vi behandler automatisk regninger, så du blot skal validere dem. Vælg "
+"hvordan du vil teste vores kunstige intelligensmotor:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -14018,7 +14097,7 @@ msgstr "Med valuta"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to records bills manually"
-msgstr ""
+msgstr "Med Odoo behøver du ikke registrere regninger manuelt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -14031,13 +14110,14 @@ msgstr "Inkl. moms"
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
+"Skriv et virksomhedsnavn for at <b>oprette en</b> eller <b>se foreslag</b>."
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
+msgstr "Skriv <b>din egen email adresse</b> her, for at afprøve flowet."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -14084,6 +14164,7 @@ msgstr ""
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
+"Du kan ikke sortere sekvens ud fra dato, når journalen er låst med et hash."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14092,42 +14173,43 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
+"Du kan kun ændre perioden/kontoen for genstande, der endnu ikke er afstemt."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
+msgstr "Du kan kun ændre perioden/kontoen for posteret journalartikler."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "You can only create statement line in open bank statements."
-msgstr ""
+msgstr "Du kan kun oprette udtogs linjer i åbne kontoudtog."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "Du kan kun afstemme indskrevne posteringer."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr ""
+msgstr "Du kan kun registrere betaling for indsendte journalposteringer."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "Du kan kun resekvensere genstande fra den samme journal"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Du kan kun tilbageføre posteret bevægelser."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -14203,6 +14285,8 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "accounts set on the %s journal."
 msgstr ""
+"Du kan ikke oprette en ny betaling uden en udestående betalings/kvitterings-"
+"konto angivet for %s journalen."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14211,6 +14295,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"Du kan ikke oprette en ny udtogs linje uden en spændingskonto angivet for %s"
+" journalen."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14219,6 +14305,8 @@ msgstr ""
 msgid ""
 "You can't create payments for entries belonging to different companies."
 msgstr ""
+"Du kan ikke oprette betalinger for posteringer der tilhører forskellige "
+"virksomheder."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14227,6 +14315,8 @@ msgid ""
 "You can't manually change the state of journal entry %s, as it has been "
 "created by bank statement %s."
 msgstr ""
+"Du kan ikke manuelt ændre stadiet for journalposteringen %s, eftersom den er"
+" blevet oprettet af kontoudtog %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14235,6 +14325,8 @@ msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
 msgstr ""
+"Du kan ikke åbne betalings registrerings guiden uden mindst én "
+"tilgodehavende/betalbar linje."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14243,6 +14335,8 @@ msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
 msgstr ""
+"Du kan ikke angive en mængde i udenlandsk valuta uden at specificere en "
+"udenlandsk valuta."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14251,6 +14345,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Du kan ikke registrere en betaling, fordi der er intet tilbage at betale, i "
+"de valgte journalartikler."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14259,6 +14355,8 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
+"Du kan ikke registrere betalinger for journalartikler der enten alle er "
+"indgående eller udgående."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -14338,7 +14436,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "Du kan ikke slette en artikel forbundet til en indskreven postering."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -14464,6 +14562,9 @@ msgid ""
 "already been used to make accounting entries. If you really need to do that,"
 " please contact tech support."
 msgstr ""
+"Du kan ikke reducere antallet af decimaler for en valuta, som allerede er "
+"blevet brugt til at foretage regnskabs posteringer. Hvis du virkelig har "
+"behov for at gøre dette, kontakt da venligst IT support."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14478,6 +14579,8 @@ msgid ""
 "You cannot remove/deactivate the account %s which is set on a customer or "
 "vendor."
 msgstr ""
+"Du kan ikke fjerne/deaktivere kontoen %s, som er angivet for en kunde eller "
+"leverandør."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14531,6 +14634,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
+"Du kan ikke bruge denne konto (%s) i denne journal, tjek feltet 'Tilladte "
+"Journaler' i den relaterede konto."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14539,6 +14644,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section "
 "'Control-Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
+"Du kan ikke bruge denne konto (%s) i denne journal, tjek sektionen 'Kontrol-"
+"Adgang' under fanen 'Avanceret Indstillinger' i den relaterede journal."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14547,6 +14654,8 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
+"Du kan ikke bruge denne guide til journal posteringer der tilhører "
+"forskellige virksomheder."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14595,6 +14704,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du bør konfigurere 'Vekslings Gevinst og Tab Journalen' i din virksomheds "
+"indstillinger, for at administrere bogføringen af regnskabs posteringer "
+"relateret til differencen mellem vekselrater automatisk."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14604,6 +14716,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du bør konfigurere 'Gevinst Vekslings Rate Kontoen' i din virksomheds "
+"indstillinger, for at administrere bogføringen af regnskabs postering "
+"relateret til differencen mellem vekselrater automatisk."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14613,6 +14728,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du bør konfigurere 'Tab Vekslings Rate Kontoen' i din virksomheds "
+"indstillinger, for at administrere bogføringen af regnskabs postering "
+"relateret til differencen mellem vekselrater automatisk."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -14636,14 +14754,14 @@ msgstr "Postnr. område til"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[Ikke angivet]"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/grouped_view_widget.xml:0
 #, python-format
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "vises ikke i forhåndsvisning"
 
 #. module: account
 #. openerp-web
@@ -14666,7 +14784,7 @@ msgstr "kode"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__after_invoice_month
 msgid "days after the end of the invoice month"
-msgstr ""
+msgstr "dage efter afslutningen på faktura måneden"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
@@ -14686,7 +14804,7 @@ msgstr "f.eks. Bank of America"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g GEBABEBB"
-msgstr ""
+msgstr "f.eks. GEBABEBB"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -14701,7 +14819,7 @@ msgstr "f.eks. GAAP, IFRS, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr ""
+msgstr "f.eks. Foretag en opringning, tjek med andre, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14714,6 +14832,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
+"for denne leverandør. Du kan allokere dem for at markere denne regning som "
+"betalt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
@@ -14770,7 +14890,7 @@ msgstr "teknisk felt for widget tax-group-custom-field"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
-msgstr ""
+msgstr "teknisk felt brugt til at udregne start saldo korrekt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -14791,7 +14911,7 @@ msgstr "at tjekke"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
-msgstr ""
+msgstr "med en PDF af faktura som vedhæftelse."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
