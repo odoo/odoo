@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, _
 from odoo.http import request, redirect_with_hash
 import logging
 import qrcode
@@ -66,7 +66,8 @@ class WeChatPay(http.Controller):
     @http.route('/payment/wechatpay/notify', csrf=False, type="http", auth='none', method=["POST"])
     def wechatpay_notify(self, **kwargs):
         """receive message from wechatpay server"""
-        _logger.debug("Receive data from wechatpay server:{}".format(request.httprequest.data))
+        _logger.debug("Receive data from wechatpay server:{}".format(
+            request.httprequest.data))
         payment = request.env["payment.acquirer"].sudo().search(
             [('provider', '=', 'wechatpay')], limit=1)
 
