@@ -277,9 +277,9 @@
             <pivot string="Operations" sample="1">
                 <field name="date_start"/>
                 <field name="operation_id"/>
-                <field name="duration" type="measure" string="Duration (minutes)"/>
-                <field name="duration_unit" type="measure"/>
-                <field name="duration_expected" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)" widget="float_time"/>
+                <field name="duration_unit" type="measure" widget="float_time"/>
+                <field name="duration_expected" type="measure" widget="float_time"/>
             </pivot>
         </field>
     </record>
