@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import http, _
+from odoo import http
 from odoo.http import request, redirect_with_hash
 import logging
 import qrcode
@@ -56,11 +56,11 @@ class WeChatPay(http.Controller):
     @http.route('/payment/wechatpay/validate', type="http", auth="none", methods=['POST', 'GET'], csrf=False)
     def wechatpay_validate(self, **kwargs):
         """validate payment result"""
-        _logger.info(_("validating payment result..."))
+        _logger.info("validating payment result...")
         try:
             res = self.validate_pay_data(**kwargs)
         except ValidationError:
-            _logger.exception(_("payment validate failed"))
+            _logger.exception("payment validate failed")
         return redirect_with_hash("/payment/process")
 
     @http.route('/payment/wechatpay/notify', csrf=False, type="http", auth='none', method=["POST"])

@@ -39,7 +39,7 @@ class AcquirerWeChatPay(models.Model):
                                   mch_key=self.wechatpay_mch_key)
             return wechatpay
         except Exception as err:
-            _logger.exception(_(f"generate wechatpay client error"))
+            _logger.exception("generate wechatpay client error")
 
     def _get_qrcode_url(self, kw):
         """get wechatpay qrcode"""
@@ -57,7 +57,7 @@ class AcquirerWeChatPay(models.Model):
             if res['return_code'] == "SUCCESS":
                 # 预生成订单成功
                 return True, res['code_url']
-            _logger.error(_("wechatpay pre order error：{}".format(res)))
+            _logger.error("wechatpay pre order error：{}".format(res))
             raise ValidationError(_("wechatpay pre order error"))
         except Exception as err:
             return False, err
@@ -74,7 +74,7 @@ class AcquirerWeChatPay(models.Model):
         """
         wechatpay = self._get_wechatpay()
         res = wechatpay.order.query(out_trade_no=order)
-        _logger.info(_("Result form wechatpay server:{}".format(res)))
+        _logger.info("Result form wechatpay server:{}".format(res))
         if res["return_code"] == "SUCCESS" and res["result_code"] == "SUCCESS":
             if res["trade_state"] == "SUCCESS":
                 transaction = self.env["payment.transaction"].sudo().search(
