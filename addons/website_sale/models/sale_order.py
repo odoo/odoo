@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
         abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
         abandoned_domain = expression.normalize_domain([
             ('date_order', '<=', abandoned_datetime),
-            ('website_id', '!=', False),
+            ('website_id', '=', self.website_id.id),
             ('state', '=', 'draft'),
             ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)
