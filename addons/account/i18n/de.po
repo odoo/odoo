@@ -22,7 +22,6 @@
 # Andreas Perhab <a.perhab@wtioit.at>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Jan Dillmann <derjan@devzero.de>, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Philipp Fürstos <pfu@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
@@ -52,6 +51,7 @@
 # Serkan Oezcan <serkan.oezcan@braintec-group.com>, 2020
 # Damian Bürgin <damian.buergin@braintec-group.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -59,7 +59,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Florian Pose <fp@igh.de>, 2020\n"
+"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"- Steuergruppe: Die Steuer setzt sich aus einer Reihe von Nebensteuern zusammen.\n"
+"- Steuergruppe: Die Steuer setzt sich aus einer Reihe von Einzelsteuern zusammen.\n"
 "- Fix: Der Steuerbetrag bleibt gleich, unabhängig vom Preis.\n"
 "- Prozentsatz des Preises: Der Steuerbetrag ist ein % des Preises:\n"
 "Beispiel: 100 * 10% = 110 (nicht im Preis inbegriffen)\n"
@@ -160,12 +160,12 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> Abgleichen"
+msgstr "-> Abstimmen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> teilweise abgeglichene Buchungen anzeigen"
+msgstr "-> teilweise abgestimmte Buchungen anzeigen"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -195,7 +195,7 @@ msgstr "30% im Voraus zum Ende des Folgemonats"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "30% jetzt, Rest in 60 Tagen"
+msgstr "30% sofort, Rest in 60 Tagen"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -234,7 +234,7 @@ msgstr ""
 "Sehr geehrte(r) ${object.partner_id.name}<br/><br/>\n"
 "Wir haben Ihre Zahlung dankend erhalten\n"
 "Anbei übersenden wir Ihnen die Zahlungsbestätigung<strong>${(object.name or '').replace('/','-')} </strong>\n"
-"für<strong>${format_amount(object.amount, object.currency_id)}</strong>von ${object.company_id.name}.\n"
+"über ${format_amount(object.amount, object.currency_id)}</strong>von ${object.company_id.name}.\n"
 "<br/><br/>\n"
 "Bei Rückfragen stehen wir Ihnen jederzeit zur Verfügung.\n"
 "<br/><br/>\n"
@@ -281,31 +281,31 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear\n"
+"        Sehr geehrte(r) \n"
 "        % if object.partner_id.parent_id:\n"
 "            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
 "        % else:\n"
 "            ${object.partner_id.name},\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Here is your\n"
+"        Anbei finden Sie Ihre\n"
 "        % if object.name:\n"
-"            invoice <strong>${object.name}</strong>\n"
+"            Rechnung <strong>${object.name}</strong>\n"
 "        % else:\n"
-"            invoice\n"
+"            Rechnung\n"
 "        %endif\n"
 "        % if object.invoice_origin:\n"
-"            (with reference: ${object.invoice_origin})\n"
+"            (Referenz: ${object.invoice_origin})\n"
 "        % endif\n"
-"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        from ${object.company_id.name}.\n"
+"       in Höhe von <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        von ${object.company_id.name}.\n"
 "        % if object.invoice_payment_state == 'paid':\n"
-"            This invoice is already paid.\n"
+"            Den Rechnungsbetrag haben wir dankend erhalten.\n"
 "        % else:\n"
-"            Please remit payment at your earliest convenience.\n"
+"            Bitte überweisen Sie die Zahlung zum frühestmöglichen Zeitpunkt.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
+"        Bei Rückfragen stehen wir Ihnen jederzeit zur Verfügung.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -580,7 +580,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr "<span name=\"button_import_placeholder\"/> Statements"
+msgstr "<span name=\"button_import_placeholder\"/> Auszüge"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -635,7 +635,7 @@ msgstr "<span>Beschreibung</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr "Rabatt %"
+msgstr "<span>Rabatt %</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -778,7 +778,7 @@ msgstr "<strong>Fällig am:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr "Endsaldo"
+msgstr "<strong>Endsaldo</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -828,7 +828,7 @@ msgstr "<strong>Quelle:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr "Eröffnungssaldo"
+msgstr "<strong>Eröffnungssaldo</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -975,7 +975,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Eine steuerliche Position kann nur einmalig für gleiche Steuern definiert "
+"Eine Steuerzuordnung kann nur einmalig für die selben Steuern definiert "
 "werden."
 
 #. module: account
@@ -987,15 +987,15 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Ein Benutzer kann nicht sowohl Tax B2B als auch Tax B2C haben.\n"
+"Ein Benutzer kann nicht Steueranzeige B2B und Steueranzeige B2C haben.\n"
 "Sie sollten in den Allgemeinen Einstellungen gehen und wählen, ob die Produktpreise\n"
-"entweder im Modus 'Steuer inbegriffen' oder 'Steuer ausgeschlossen' \n"
+"entweder im Modus 'Steuer inbegriffen' oder 'Steuer ausgeschlossen' angezeigt werden sollten\n"
 "(oder wechseln Sie den Modus zwei Mal, wenn Sie sich bereits im gewünschten Modus befinden)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "Eine Warnung kann auf einem Partner (Konto) gelegt werden"
+msgstr "Eine Warnung kann auf einem Partner (Konto) gesetzt werden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_warning
@@ -1092,7 +1092,7 @@ msgstr "Kontoinhaber"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr "Konto-Rechnung senden"
+msgstr "Rechnung senden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1178,12 +1178,12 @@ msgstr "Statistische Auswertungen"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Konto-Schlagwort"
+msgstr "Konten Tag"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr "Konten-Tags"
+msgstr "Konten Tags"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -1269,7 +1269,7 @@ msgstr "Zugelassene Kontoarten"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Abgleich Stornieren"
+msgstr "Abstimmung Stornieren"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
@@ -1322,7 +1322,7 @@ msgid ""
 "used to keep track of the tax base amount."
 msgstr ""
 "Konto, welches bei Positionen des Journals nach vereinnahmten Entgelten "
-"eingesetzt wird und zum Fixieren des Steuerbasisbetrags verwendet wird."
+"eingesetzt wird und zur Fixierung des Steuerbasisbetrags verwendet wird."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1367,7 +1367,8 @@ msgstr "Konto mit Buchungen"
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid "Account; Post draft entries with auto_post set to True up to today"
 msgstr ""
-"Konto; Buchung von Beitragsentwürfe mit auto_post bis heute auf True gesetzt"
+"Konto; Buchung von Entwürfen mit auto_post bis heute, werden auf wahr "
+"gesetzt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1467,7 +1468,7 @@ msgstr "Abgrenzungsberichtigungsbuchung ({percent}% erkannt) für Rechnung:"
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,field_description:account.field_res_company__accrual_default_journal_id
 msgid "Accrual Default Journal"
-msgstr "Abgrenzungsvorgaben Journal"
+msgstr "Standard Abgrenzugsbuchungen Journal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
@@ -1647,7 +1648,7 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "financial reports"
 msgstr ""
-"Zusätzliche Tags, die von dieser Verteilungslinie zur Verwendung in "
+"Zusätzliche Tags, die von dieser Verteilungszeile zur Verwendung in "
 "Finanzberichten zugewiesen werden"
 
 #. module: account
@@ -2855,7 +2856,7 @@ msgstr "Bargelddifferenz-Aufwandskonto"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income Account"
-msgstr ""
+msgstr "Bargelddifferenz-Erlöskonto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3055,6 +3056,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
+"Aktivieren Sie dieses Feld, um den absoluten Wert des Saldos der mit diesem "
+"Tag verknüpften Zeilen bei der Berechnung des Steuerberichts zu verhindern."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -3324,7 +3327,7 @@ msgstr "Vollständige Liste der Steuern"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__name
 msgid "Complete name for this report line, to be used in report."
-msgstr ""
+msgstr "Vollständiger Name der Report Zeile, die im Report verwendet wird."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
@@ -9082,20 +9085,20 @@ msgstr "Zugehöriges Dokumenten-Modell"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Credit Notes"
-msgstr ""
+msgstr "Berechnung für Gutschriften"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Invoices"
-msgstr ""
+msgstr "Berechnung für Rechnungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_repartition_line_ids
 msgid "Repartition for Refund Invoices"
-msgstr ""
+msgstr "Berechnung für Rückerstattungsrechnungen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids

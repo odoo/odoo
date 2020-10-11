@@ -1,17 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_vat
+# 	* base_vat
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Dharmraj Jhala <dja@openerp.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Dharmraj Jhala <dja@openerp.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,9 +16,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "<span class=\"o_vat_label\">VAT</span>"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "કંપનીઓ"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
@@ -32,7 +41,7 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr "સંપર્ક"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -42,7 +51,7 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:154
+#: code:addons/base_vat/models/res_partner.py:188
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -50,7 +59,7 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:153
+#: code:addons/base_vat/models/res_partner.py:187
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "

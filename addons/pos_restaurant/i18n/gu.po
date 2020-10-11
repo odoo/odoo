@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_restaurant
+# 	* pos_restaurant
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Ajay Chauhan, 2018
-# Ranjit Pillai <rpi@odoo.com>, 2018
-# Turkesh Patel <turkesh4friends@gmail.com>, 2018
-# viki chavada <vikic@emiprotechnologies.com>, 2018
-# Dharmraj Jhala <dja@openerp.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Dharmraj Jhala <dja@openerp.com>, 2018\n"
+"POT-Creation-Date: 2019-10-07 07:11+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: gu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
+msgid " Use a printer connected to the IoT Box"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -41,6 +38,13 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "$ 8.50"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
+msgid ""
+"<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
+"role=\"img\" aria-label=\"For bars and restaurants\"/>"
 msgstr ""
 
 #. module: pos_restaurant
@@ -98,25 +102,20 @@ msgid ""
 msgstr ""
 
 #. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Accept customer tips or convert their change to a tip"
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
+msgid "Active"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
-msgid "Active"
-msgstr "સક્રિય"
-
-#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:113
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Add"
-msgstr "ઉમેરો"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/notes.js:54
+#: code:addons/pos_restaurant/static/src/js/notes.js:0
 #, python-format
 msgid "Add Note"
 msgstr ""
@@ -133,7 +132,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Add button"
 msgstr ""
@@ -180,22 +179,22 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:562
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Are you sure ?"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:9
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "Back"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:82
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Back to floor"
 msgstr ""
@@ -211,15 +210,21 @@ msgid "Background Image"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_bacon
+#: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
+msgid "Bacon Burger"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:31
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #, python-format
 msgid "Bill"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:12
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 #, python-format
 msgid "Bill Printing"
@@ -227,7 +232,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:64
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
 #, python-format
 msgid "Bill Splitting"
@@ -235,35 +240,51 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:136
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:150
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Blue"
-msgstr "વાદળી"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:39
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "CANCELLED"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:270
-#: code:addons/pos_restaurant/static/src/js/floors.js:309
-#: code:addons/pos_restaurant/static/src/js/floors.js:425
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Changes could not be saved"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_cheeseburger
+#: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
+msgid "Cheese Burger"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_chicken
+#: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
+msgid "Chicken Curry Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:131
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:145
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Close"
-msgstr "બંધ કરો"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_club
+#: model:product.template,name:pos_restaurant.pos_food_club_product_template
+msgid "Club Sandwich"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.coke
@@ -274,14 +295,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
 msgid "Color"
-msgstr "રંગ"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
 msgid "Created by"
-msgstr "બનાવનાર"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_date
@@ -292,10 +313,10 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:160
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Delete"
-msgstr "કાઢી નાંખો"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -303,25 +324,11 @@ msgid "Desk Organizer"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
-#, python-format
-msgid "Discount:"
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:140
-#, python-format
-msgid "Discounts"
-msgstr "ડિસ્કાઉન્ટ"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
-msgstr "પ્રદર્શન નામ"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.drinks
@@ -330,7 +337,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:116
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Duplicate"
 msgstr ""
@@ -346,10 +353,10 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:110
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Edit"
-msgstr "ફેરફાર કરો"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -373,29 +380,46 @@ msgid "Floor Plans"
 msgstr ""
 
 #. module: pos_restaurant
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+#, python-format
+msgid "Floor: %s - PoS Config: %s \n"
+msgstr ""
+
+#. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.food
+msgid "Food"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_funghi
+#: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
+msgid "Funghi"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:135
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:149
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Green"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:140
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:154
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Grey"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:28
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__customer_count
 #, python-format
 msgid "Guests"
@@ -403,15 +427,15 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:946
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Guests ?"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:10
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:21
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Guests:"
 msgstr ""
@@ -431,7 +455,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__id
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__id
 msgid "ID"
-msgstr "ઓળખ"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -473,22 +497,39 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:141
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:155
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Light grey"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:39
-#, python-format
-msgid "Logo"
-msgstr "લોગો"
+#: model:product.product,name:pos_restaurant.pos_food_maki
+#: model:product.template,name:pos_restaurant.pos_food_maki_product_template
+msgid "Lunch Maki 18pc"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_salmon
+#: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
+msgid "Lunch Salmon 20pc"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_temaki
+#: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
+msgid "Lunch Temaki mix 3pc"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_margherita
+#: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
+msgid "Margherita"
 msgstr ""
 
 #. module: pos_restaurant
@@ -503,31 +544,49 @@ msgid "Monitor Stand"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_mozza
+#: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
+msgid "Mozzarella Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:62
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "NEW"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:50
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:73
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "NOTE"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/notes.xml:8
-#: code:addons/pos_restaurant/static/src/xml/notes.xml:16
+#: code:addons/pos_restaurant/static/src/xml/notes.xml:0
+#: code:addons/pos_restaurant/static/src/xml/notes.xml:0
 #, python-format
 msgid "Note"
-msgstr "નોંધ"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
+msgid "Note added by the waiter."
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:495
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "Nothing to Print"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Number of Seats ?"
 msgstr ""
@@ -539,22 +598,22 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:13
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #, python-format
 msgid "Ok"
-msgstr "બરાબર"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:137
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:151
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Orange"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "Order"
 msgstr ""
@@ -590,14 +649,28 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:78
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #, python-format
-msgid "Payment"
+msgid "PRO FORMA"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:product.category,name:pos_restaurant.product_category_pos
-msgid "PoS"
+#: model:product.product,name:pos_restaurant.pos_food_4formaggi
+#: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
+msgid "Pasta 4 formaggi "
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_bolo
+#: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
+msgid "Pasta Bolognese"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
+#, python-format
+msgid "Payment"
 msgstr ""
 
 #. module: pos_restaurant
@@ -611,6 +684,11 @@ msgid "Point of Sale Configuration"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
 msgstr ""
@@ -618,14 +696,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "Price"
-msgstr "કિંમત"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
 #, python-format
 msgid "Print"
-msgstr "છાપો"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -643,6 +721,11 @@ msgid "Printer Name"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__printer_type
+msgid "Printer Type"
+msgstr ""
+
+#. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Printers"
 msgstr ""
@@ -654,8 +737,8 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:139
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:153
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Purple"
 msgstr ""
@@ -663,26 +746,26 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "Quantity"
-msgstr "જથ્થો"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:134
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:148
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Red"
-msgstr "લાલ"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:563
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:119
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Rename"
 msgstr ""
@@ -716,20 +799,26 @@ msgid "Restaurant Table"
 msgstr ""
 
 #. module: pos_restaurant
-#: selection:restaurant.table,shape:0
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
 msgid "Round"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:126
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Round Shape"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_chirashi
+#: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
+msgid "Salmon and Avocado"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:122
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
 #, python-format
 msgid "Seats"
@@ -738,13 +827,6 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
 msgid "Sequence"
-msgstr "ક્રમ"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
-#, python-format
-msgid "Served by"
 msgstr ""
 
 #. module: pos_restaurant
@@ -753,8 +835,19 @@ msgid "Shape"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
+msgid "Skip line when sending ticket to kitchen printers."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_tuna
+#: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
+msgid "Spicy Tuna Sandwich"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:6
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "Split"
 msgstr ""
@@ -765,29 +858,15 @@ msgid "Split total or order lines"
 msgstr ""
 
 #. module: pos_restaurant
-#: selection:restaurant.table,shape:0
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__square
 msgid "Square"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:125
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Square Shape"
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:118
-#, python-format
-msgid "Subtotal"
-msgstr "પેટાસરવાળો"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:131
-#, python-format
-msgid "TOTAL"
 msgstr ""
 
 #. module: pos_restaurant
@@ -807,7 +886,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:483
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
 msgid "Table Name ?"
 msgstr ""
@@ -816,13 +895,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:54
-#, python-format
-msgid "Tel:"
 msgstr ""
 
 #. module: pos_restaurant
@@ -893,44 +965,36 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "There are no order lines"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr ""
 
 #. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "This product is used as reference on customer receipts."
-msgstr ""
-
-#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:129
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Tint"
 msgstr ""
 
 #. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tip Product"
-msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tips"
-msgstr ""
-
-#. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:37
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Transfer"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:142
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:156
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Turquoise"
 msgstr ""
@@ -938,16 +1002,52 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.product,uom_name:pos_restaurant.coke
 #: model:product.product,uom_name:pos_restaurant.minute_maid
+#: model:product.product,uom_name:pos_restaurant.pos_food_4formaggi
+#: model:product.product,uom_name:pos_restaurant.pos_food_bacon
+#: model:product.product,uom_name:pos_restaurant.pos_food_bolo
+#: model:product.product,uom_name:pos_restaurant.pos_food_cheeseburger
+#: model:product.product,uom_name:pos_restaurant.pos_food_chicken
+#: model:product.product,uom_name:pos_restaurant.pos_food_chirashi
+#: model:product.product,uom_name:pos_restaurant.pos_food_club
+#: model:product.product,uom_name:pos_restaurant.pos_food_funghi
+#: model:product.product,uom_name:pos_restaurant.pos_food_maki
+#: model:product.product,uom_name:pos_restaurant.pos_food_margherita
+#: model:product.product,uom_name:pos_restaurant.pos_food_mozza
+#: model:product.product,uom_name:pos_restaurant.pos_food_salmon
+#: model:product.product,uom_name:pos_restaurant.pos_food_temaki
+#: model:product.product,uom_name:pos_restaurant.pos_food_tuna
+#: model:product.product,uom_name:pos_restaurant.pos_food_vege
 #: model:product.product,uom_name:pos_restaurant.water
 #: model:product.template,uom_name:pos_restaurant.coke_product_template
 #: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_4formaggi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_bacon_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_bolo_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_cheeseburger_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_chicken_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_chirashi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_club_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_funghi_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_maki_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_margherita_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_mozza_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_salmon_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_temaki_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_tuna_product_template
+#: model:product.template,uom_name:pos_restaurant.pos_food_vege_product_template
 #: model:product.template,uom_name:pos_restaurant.water_product_template
-msgid "Unit(s)"
+msgid "Units"
 msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.pos_food_vege
+#: model:product.template,name:pos_restaurant.pos_food_vege_product_template
+msgid "Vegetarian"
 msgstr ""
 
 #. module: pos_restaurant
@@ -973,63 +1073,63 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "With a"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:138
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:152
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Yellow"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:271
-#: code:addons/pos_restaurant/static/src/js/floors.js:310
-#: code:addons/pos_restaurant/static/src/js/floors.js:426
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
-msgid "You must be connected to the internet to save your changes."
+msgid ""
+"You cannot remove a floor that is used in a PoS session, close the "
+"session(s) first: \n"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
+#: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
-msgid "at"
-msgstr "એટ"
+msgid ""
+"You must be connected to the internet to save your changes.\n"
+"\n"
+"Changes made to previously synced orders will get lost at the next sync.\n"
+"Orders that where not synced before will be synced next time you open and close the same table."
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:6
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:17
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
+#, python-format
+msgid "at"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "at table"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:46
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "discount"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:product.product,weight_uom_name:pos_restaurant.coke
-#: model:product.product,weight_uom_name:pos_restaurant.minute_maid
-#: model:product.product,weight_uom_name:pos_restaurant.water
-#: model:product.template,weight_uom_name:pos_restaurant.coke_product_template
-#: model:product.template,weight_uom_name:pos_restaurant.minute_maid_product_template
-#: model:product.template,weight_uom_name:pos_restaurant.water_product_template
-msgid "kg"
 msgstr ""

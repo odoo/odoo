@@ -690,6 +690,13 @@ msgid "Free Product - Large Cabinet"
 msgstr "Үнэгүй бараа - Том түүшээ"
 
 #. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_coupon.py:0
+#: code:addons/sale_coupon/models/sale_coupon_program.py:0
+#, python-format
+msgid "Free shipping has already been applied."
+msgstr ""
+
+#. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "GET %s FREE %s ON YOUR NEXT ORDER!"
 msgstr ""
@@ -938,6 +945,9 @@ msgid ""
 "Cheapest product - Discount on cheapest product of the order\n"
 "Specific products - Discount on selected specific products"
 msgstr ""
+"Захиалгад - Хөнгөлөлт нь бүтэн захиалгын дүнд хэрэгжинэ\n"
+"Хамгийн хямд бараа - Хөнгөлөлт нь тухайн захиалгын хамгийн бага үнэтэй мөр дээр хэрэгжинэ\n"
+"Тухайлсан бараа - Хөнгөлөлт хэрэгжих бараануудыг шүүж сонгох боломжтой"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_products_domain
@@ -948,7 +958,7 @@ msgstr ""
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "Тухайлсан бараануудад"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
@@ -1016,7 +1026,7 @@ msgstr "Бараа"
 msgid ""
 "Products that will be discounted if the discount is applied on specific "
 "products"
-msgstr ""
+msgstr "Зөвхөн эдгээр тухайлан шүүсэн бараануудад хөнгөлөлт хэрэгжих болно"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__program_id
