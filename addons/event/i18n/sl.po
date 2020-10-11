@@ -7,9 +7,9 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2018
 # Martin Trigaux, 2018
 # Grega Vavtar <grega@hbs.si>, 2019
-# Jasmina Macur <jasmina@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
+# Jasmina Macur <jasmina@hbs.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
 "PO-Revision-Date: 2017-09-20 10:17+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -369,7 +369,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -448,7 +448,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>do</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -545,13 +545,13 @@ msgstr ""
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After each registration"
-msgstr ""
+msgstr "Po vsaki registraciji"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "Po dogodku"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -604,7 +604,7 @@ msgstr "Udeleženec"
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "Ime udeleženca"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -619,7 +619,7 @@ msgstr "Udeleženci"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "Samopotrditev registracij"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
@@ -1033,7 +1033,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "Logotip dogodka"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
@@ -1155,7 +1155,7 @@ msgstr "Pričakovano"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "Pričakovani udeleženci"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1173,6 +1173,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
+"Za vsak dogodek lahko določite največjo dovoljeno število sedežev (število "
+"udeležencev). Nad tem številom pa prijave ne bodo sprejete."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1365,12 +1367,12 @@ msgstr "Zadnjič posodobljeno"
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Omejeno"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Omejena mesta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
@@ -1393,7 +1395,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "Registracija po e-pošti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
@@ -1419,7 +1421,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "E-pošta poslana"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
@@ -1439,12 +1441,12 @@ msgstr "Upravitelj"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "Maksimalno število udeležencev"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "Število maksimalnih udeležencev"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
@@ -1457,11 +1459,13 @@ msgstr ""
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"Maksimalno število udeležencev mora biti večje od minimalnega števila "
+"udeležencev. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
-msgstr ""
+msgstr "Minimalno število udeležencev"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
@@ -1773,7 +1777,7 @@ msgstr "Prodaja vstopnic s prodajnimi nalogi"
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "Seminar"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2092,7 +2096,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: code:addons/event/models/event.py:508
@@ -2104,13 +2108,13 @@ msgstr "v %d dneh"
 #: code:addons/event/models/event.py:512
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "naslednji mesec"
 
 #. module: event
 #: code:addons/event/models/event.py:510
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "naslednji teden"
 
 #. module: event
 #: code:addons/event/models/event.py:514
@@ -2127,7 +2131,7 @@ msgstr "res.config.settings"
 #: code:addons/event/models/event.py:504
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "danes"
 
 #. module: event
 #: code:addons/event/models/event.py:506
