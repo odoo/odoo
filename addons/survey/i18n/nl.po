@@ -10,6 +10,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 13:09+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "%s (kopie)"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s challenge certification"
-msgstr ""
+msgstr "%s uitdaging voor certificering"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
@@ -125,6 +126,8 @@ msgid ""
 "<br/>\n"
 "                        <span>Score:</span>"
 msgstr ""
+"<br/>\n"
+"                       <span>Score:</span>"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -154,6 +157,29 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"       Beste ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"       % if object.survey_id.certification:\n"
+"          Je bent uitgenodigd om een nieuwe certificering te behalen.\n"
+"       % else:\n"
+"           We voeren een enquête uit en je reactie wordt op prijs gesteld.\n"
+"       % endif\n"
+"       <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"           <a href=\"${(object.get_start_url()) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"              % if object.survey_id.certification:\n"
+"                 Start certificatie\n"
+"         % else:\n"
+"             Start onderzoek\n"
+"         % endif\n"
+"     </a>\n"
+"  </div>\n"
+"   % if object.deadline:\n"
+"       Beantwoord de enquête voor ${format_date(object.deadline)}.<br/> <br/>\n"
+"        % endif\n"
+"        Hartelijk dank voor uw deelname.\n"
+"      </p>\n"
+"</div>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form

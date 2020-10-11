@@ -75,7 +75,7 @@ msgstr "% endif"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% if record and record.alias_domain"
-msgstr ""
+msgstr "% if record and record.alias_domain"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -83,6 +83,8 @@ msgid ""
 "% set record = object.env['crm.team'].search([('alias_name', '!=', "
 "'False')], limit=1)"
 msgstr ""
+"% set record = object.env['crm.team'].search([('alias_name', '!=', "
+"'False')], limit=1)"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -287,7 +289,7 @@ msgstr "Soorten activiteiten"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Activity by"
-msgstr ""
+msgstr "Activiteit door"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -334,7 +336,7 @@ msgstr "Alias model"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "All set. Let’s <b>Schedule</b> it."
-msgstr ""
+msgstr "Helemaal gereed. Laten we het <b>plannen</b> ."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2401,7 +2403,7 @@ msgstr "Terugzetten"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__ribbon_message
 msgid "Ribbon message"
-msgstr ""
+msgstr "Lintbericht"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
@@ -3154,6 +3156,8 @@ msgstr "team_count"
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
 msgstr ""
+"naar uw CRM. Dit e-mailadres kan worden geconfigureerd door leden van het "
+"verkoopteam."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0

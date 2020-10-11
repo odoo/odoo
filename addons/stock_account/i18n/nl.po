@@ -5,9 +5,9 @@
 # Translators:
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 13:09+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,11 +49,13 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">Gebruik een negatieve toegevoegde waarde om een daling van de productwaarde vast te leggen</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Stel andere inkomende/uitgaande rekeningen in op specifiek </b>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -95,7 +97,7 @@ msgstr "Boekhoudinformatie"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Voeg handmatige waardering toe"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -219,6 +221,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Tegenrekening boekingen voor alle inkomende voorraadbewegingen worden op deze rekening geboekt, tenzij er een specifieke waarderingsrekening is\n"
+"ingesteld op de bronlocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct op elk product worden ingesteld."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -475,7 +479,7 @@ msgstr "Nieuwe waarde"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "Nieuwe waarde per hoeveelheid"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -521,7 +525,7 @@ msgstr "Productmutaties (voorraadmutatieregels)"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Productherwaardering"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -559,7 +563,7 @@ msgstr "Reden"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Reden van herwaardering"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
@@ -590,12 +594,12 @@ msgstr "Retour pickingregel"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "Herwaardering van %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Herwaardering"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -706,12 +710,14 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"De actie leidt tot het aanmaken van een financiële boeking, waarvoor u geen "
+"toegangsrechten heeft."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "De toegevoegde waarde heeft geen invloed op de voorraadwaardering"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -892,18 +898,19 @@ msgstr ""
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr ""
+"Wizard-model om een voorraadvoorraad voor een product opnieuw te evalueren"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "U kunt een product niet herwaarderen met een standaardkostenmethode."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "U kunt een product met geen of negatieve voorraad niet herwaarderen."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -913,6 +920,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"U kunt de kosten van een product niet bijwerken bij geautomatiseerde "
+"waardering, omdat dit leidt tot het creëren van een financiële boeking "
+"waarvoor u geen toegangsrechten heeft."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -951,7 +961,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "U moet een tegenrekening instellen voor uw productcategorie."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

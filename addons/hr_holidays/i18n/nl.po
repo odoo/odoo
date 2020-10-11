@@ -11,9 +11,9 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 13:09+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,13 +127,13 @@ msgstr "%s op %s: %.2f uren op %s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f day(s)"
-msgstr ""
+msgstr "%s verlof: %.2f dag(en)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f hour(s)"
-msgstr ""
+msgstr "%s verlof: %.2f u(u)r(en)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -169,7 +169,7 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "(Expire on"
-msgstr ""
+msgstr "(Vervallen op"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0_5
@@ -615,6 +615,8 @@ msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
 msgstr ""
+"Afwezige werknemer(s), wiens verlofverzoeken vandaag zijn bevestigd of "
+"gevalideerd"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -767,7 +769,7 @@ msgstr "Verlof goedkeuring"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__private_name
 msgid "Allocation Description"
-msgstr ""
+msgstr "Toewijzing Beschrijving"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -826,7 +828,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
 msgid "Allocation Validation"
-msgstr ""
+msgstr "Toewijzing Validatie"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -892,7 +894,7 @@ msgstr "Toewijzingen"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed_allocation
 msgid "Allow Employees Requests"
-msgstr ""
+msgstr "Sta verzoeken van werknemers toe"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -1040,13 +1042,13 @@ msgstr "Per werknemer label"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Manager"
-msgstr ""
+msgstr "Door de manager van de werknemer"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr ""
+msgstr "Door de manager van de werknemer en de personeelsverantwoordelijke"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1062,7 +1064,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr ""
+msgstr "Door de verlofaanvraag beheerder"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1089,12 +1091,12 @@ msgstr "Annuleer"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel Future Leaves"
-msgstr ""
+msgstr "Annuleer toekomstige afwezigheden"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
 msgid "Cancel all time off after this date"
-msgstr ""
+msgstr "Annuleer alle verlofaanvragen na deze datum"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1145,7 +1147,7 @@ msgstr "Bedrijf"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__mode_company_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__mode_company_id
 msgid "Company Mode"
-msgstr ""
+msgstr "Bedrijfsmodus"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_comp
@@ -1452,7 +1454,7 @@ msgstr "Iedereen"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Extra days"
-msgstr ""
+msgstr "Extra dagen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
@@ -2044,7 +2046,7 @@ msgstr "Volgende activiteit type"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__no
 msgid "No Limit"
-msgstr ""
+msgstr "Geen beperking"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__no_validation
@@ -2167,24 +2169,31 @@ msgstr ""
 #, python-format
 msgid "Only a Time Off Manager can approve/refuse its own requests."
 msgstr ""
+"Alleen een personeelsverantwoordelijke kan zijn eigen verzoeken goedkeuren /"
+" weigeren."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr ""
+"Alleen een personeelsverantwoordelijke kan een afgewezen verlofaanvraag "
+"resetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a started leave."
 msgstr ""
+"Alleen een personeelsverantwoordelijke kan een gestarte verlof resetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset other people leaves."
 msgstr ""
+"Alleen een personeelsverantwoordelijke kan de verloven van andere mensen "
+"resetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2193,6 +2202,8 @@ msgid ""
 "Only a Time off Approver can apply the second approval on allocation "
 "requests."
 msgstr ""
+"Alleen een personeelsverantwoordelijke kan de tweede goedkeuring voor "
+"verlofaanvragen toepassen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2213,6 +2224,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
+"Alleen een Personeelsverantwoordelijke of managers kunnen verlofaanvragen "
+"goedkeuren of weigeren."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2293,7 +2306,7 @@ msgstr "Geweigerd"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
 msgid "Regular Allocation"
-msgstr ""
+msgstr "Regelmatige toewijzing"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
@@ -2451,7 +2464,7 @@ msgstr "Volgorde"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr ""
+msgstr "Ingesteld door Personeelsverantwoordelijke"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2511,7 +2524,7 @@ msgstr "Som"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_leaves_taken
 msgid "Sum of validated and non validated time off requests."
-msgstr ""
+msgstr "Som van gevalideerde en niet gevalideerde verlofaanvragen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -2597,6 +2610,8 @@ msgstr "De verlofaanvraag werd automatisch goedgekeurd"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr ""
+"De soort met de kleinste sequentie is de standaardwaarde in de verlof "
+"aanvraag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -2612,12 +2627,17 @@ msgid ""
 "This area is automatically filled by the user who validate the time off with"
 " second level (If time off type need second validation)"
 msgstr ""
+"Dit gebied wordt automatisch ingevuld door de gebruiker die het verlof "
+"goedkeurt op het tweede niveau (als verlofsoort tweede goedkeuring nodig "
+"heeft)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
 msgstr ""
+"Dit gedeelte wordt automatisch ingevuld door de gebruiker die het verlof "
+"toewijst."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -2625,6 +2645,9 @@ msgid ""
 "This area is automaticly filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
+"Dit gebied wordt automatisch ingevuld door de gebruiker die het verlof "
+"goedkeurt op het tweede niveau (als verlofsoort tweede goedkeuring nodig "
+"heeft)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2654,6 +2677,8 @@ msgid ""
 "This user will be responsible for approving this type of time off. This is "
 "only used when validation is 'hr' or 'both'"
 msgstr ""
+"Deze gebruiker is verantwoordelijk voor het goedkeuren van dit type verlof. "
+"Dit wordt alleen gebruikt als validatie 'uur' of 'beide' is"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -2697,7 +2722,7 @@ msgstr "Afwezigheid"
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "Time Off : %s"
-msgstr ""
+msgstr "Verlof : %s"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
@@ -2725,7 +2750,7 @@ msgstr "Vrije tijd Kalender"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
 msgid "Time Off Description"
-msgstr ""
+msgstr "Verlof omschrijving"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
@@ -3133,13 +3158,13 @@ msgstr "Jaren"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You can allocate %s only before %s."
-msgstr ""
+msgstr "U kan %salleen toewijzen voor %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can not have 2 time off that overlaps on the same day."
-msgstr ""
+msgstr "U kunt geen twee verloven hebben die overlappen op dezelfde dag."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3148,6 +3173,8 @@ msgid ""
 "You can not set 2 time off that overlaps on the same day for the same "
 "employee."
 msgstr ""
+"U kan geen 2 verloven hebben die overlappen op dezelfde dag voor dezelfde "
+"werknemer."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3159,7 +3186,7 @@ msgstr "U kan geen afwezigheid verwijderen die zich in de fase %s bevind"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr ""
+msgstr "U kunt geen verlof verwijderen welke zich in de %s status bevind."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3168,6 +3195,8 @@ msgid ""
 "You cannot first approve a time off for %s, because you are not his time off"
 " manager"
 msgstr ""
+"U kan niet eerst aan afwezigheid goedkeuren voor %s, omdat u niet de "
+"verantwoordelijke bent voor deze persoon"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3175,6 +3204,8 @@ msgstr ""
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr ""
+"Alleen een personeelsverantwoordelijke kan de tweede goedkeuring voor "
+"verlofaanvragen toepassen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3272,7 +3303,7 @@ msgstr "van de"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "refused"
-msgstr ""
+msgstr "Geweigerd"
 
 #. module: hr_holidays
 #. openerp-web

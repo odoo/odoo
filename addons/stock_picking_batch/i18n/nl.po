@@ -75,7 +75,7 @@ msgstr "Activiteitensoort icoon"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr ""
+msgstr "Voeg picking toe"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -493,7 +493,7 @@ msgstr "Voorraad batchverwerking"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
-msgstr ""
+msgstr "Verplaatsingsregels"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
@@ -521,6 +521,9 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
+"De volgende leveringen kunnen niet worden toegevoegd aan batchpicking %s. Controleer hun status en bewerkingstypes als het geen directe pickings  zijn of als ze niet al deel uitmaken van een andere batchpicking.\n"
+"\n"
+"Onmogelijkheden: %s"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -539,7 +542,7 @@ msgstr ""
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
-msgstr ""
+msgstr "De geselecteerde pickings moeten van een uniek bedrijf zijn."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -608,20 +611,20 @@ msgstr "Website communicatie geschiedenis"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You can only delete draft batch transfers."
-msgstr ""
+msgstr "You can only delete draft batchpickings."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr ""
+msgstr "U moet een aantal pickings instellen op batch."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr ""
+msgstr "een nieuwe batchpicking"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "een bestaande batchpicking"
