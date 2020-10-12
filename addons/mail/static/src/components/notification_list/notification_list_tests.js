@@ -240,6 +240,7 @@ QUnit.test('thread notifications are not re-ordered on receiving a new transient
     );
     this.data['mail.message'].records.push(
         {
+            body: "I'm the initial message of channel 2019",
             channel_ids: [100],
             date: "2019-01-01 00:00:00",
             id: 42,
@@ -247,6 +248,7 @@ QUnit.test('thread notifications are not re-ordered on receiving a new transient
             res_id: 100,
         },
         {
+            body: "I'm the initial message of channel 2020",
             channel_ids: [200],
             date: "2020-01-01 00:00:00",
             id: 43,
