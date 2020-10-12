@@ -446,12 +446,14 @@ class Project(models.Model):
         late_tasks_domain = [('project_id', 'in', self.ids), ('date_deadline', '<', fields.Date.to_string(fields.Date.today())), ('date_end', '=', False)]
         overtime_tasks_domain = [('project_id', 'in', self.ids), ('overtime', '>', 0), ('planned_hours', '>', 0)]
 
-        # filter out all the projects that have no tasks
-        task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
-        task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+        if len(self) == 1:
+            tasks_context = {**tasks_context, 'default_project_id': self.id}
+        elif len(self):
+            task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+            task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+            if len(task_projects_ids) == 1:
+                tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
 
-        if len(task_projects_ids) == 1:
-            tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
         stat_buttons.append({
             'name': _('Tasks'),
             'count': sum(self.mapped('task_count')),
