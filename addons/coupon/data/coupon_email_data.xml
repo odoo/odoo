@@ -64,7 +64,7 @@
     <tr style="margin-top: 16px"><td valign="top" style="text-align: center; font-size: 14px;">
         Use this promo code
         % if object.expiration_date:
-            before ${object.expiration_date}
+            before ${format_date(object.expiration_date)}
         % endif
         <p style="margin-top: 16px;">
             <strong style="padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;">
