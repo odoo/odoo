@@ -305,6 +305,17 @@ var Wysiwyg = Widget.extend({
             this._setupTranslation();
         }
 
+        // Make sure to warn the user if they're about to leave the page and
+        // they have changes that would be lost if they did.
+        let flag = false;
+        window.onbeforeunload = () => {
+            if (this.isDirty() && !flag) {
+                flag = true;
+                _.defer(() => (flag = false));
+                return _t('This document is not saved!');
+            }
+        };
+
         if (this.options.snippets) {
             document.body.classList.add('editor_has_snippets');
             this.$webEditorToolbar = $('<div id="web_editor-toolbars">');
@@ -645,13 +656,26 @@ var Wysiwyg = Widget.extend({
         return this.$editor;
     },
     /**
+     * Return dirty Odoo structure nodes and Odoo field nodes.
+     *
+     * @returns {Array<OdooStructureNode | OdooFieldNode>}
+     */
+    getDirtyNodes: function() {
+        return this.zoneMain.descendants(node => {
+            if (node instanceof JWEditorLib.OdooStructureNode) {
+                return node.dirty;
+            } else if (node instanceof JWEditorLib.OdooFieldNode) {
+                return node.fieldInfo.originalValue !== node.fieldInfo.value.get();
+            }
+        });
+    },
+    /**
      * Return true if the content has changed.
      *
-     * @returns {Boolean}
+     * @returns {boolean}
      */
-    isDirty: async function () {
-        // todo: use jweditor memory to know if it's dirty.
-        return true;
+    isDirty: function () {
+        return !!this.getDirtyNodes().length;
     },
     /**
      * Set the focus on the element.
