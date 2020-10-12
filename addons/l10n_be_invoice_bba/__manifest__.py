@@ -29,5 +29,5 @@ Three algorithms are suggested:
         'data/mail_template_data.xml',
         'views/res_config_settings_views.xml',
     ],
-    'auto-install': True,
+    'auto_install': True,
 }
