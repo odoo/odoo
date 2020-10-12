@@ -946,6 +946,7 @@ var SnippetsMenu = Widget.extend({
     tabs: {
         BLOCKS: 'blocks',
         OPTIONS: 'options',
+        THEME: 'theme',
     },
 
     /**
@@ -2149,7 +2150,6 @@ var SnippetsMenu = Widget.extend({
     _updateRightPanelContent: function ({content, tab}) {
         clearTimeout(this._textToolsSwitchingTimeout);
         this._closeWidgets();
-
         tab = tab || this.tabs.BLOCKS;
 
         this.wysiwyg.$toolbar.detach();
@@ -2163,6 +2163,11 @@ var SnippetsMenu = Widget.extend({
                 const isImage = $(this.customizePanel).find('we-customizeblock-option.snippet-option-ImageOptimize').length > 0
                 this._addJabberwockToolbar(isImage ? 'image' : 'text');
             }
+        }
+
+        if (tab === this.tabs.THEME) {
+            // Ensure the toolbar container is not in the side bar when we select the themes options tab.
+            $("#o_we_jw_toolbar_container").remove();
         }
 
         this.$('.o_snippet_search_filter').toggleClass('d-none', tab !== this.tabs.BLOCKS);
@@ -2205,7 +2210,7 @@ var SnippetsMenu = Widget.extend({
                 titleText = _t("Icon Formatting");
                 break;
         }
-        const customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS />');
+        const customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_jw_toolbar_container"/>');
         const $title = $("<we-title><span>" + titleText + "</span></we-title>");
         if (toolbarMode === "text") {
             const $removeFormatButton = $('<we-button/>', {
