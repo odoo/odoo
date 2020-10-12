@@ -71,7 +71,7 @@
                     </t>
                 </div>
                 <div class="o_cp_pager" role="search" t-ref="pager">
-                    <Pager t-if="props.pager and props.pager.limit" t-props="props.pager"/>
+                    <Pager t-if="props.pager and props.pager.value.get().limit" t-props="props.pager"/>
                 </div>
                 <nav t-if="props.views.length gt 1" class="btn-group o_cp_switch_buttons" role="toolbar" aria-label="View switcher">
                     <t t-foreach="props.views" t-as="view" t-key="view.type">
@@ -513,11 +513,11 @@
 <t t-name="web.Pager" owl="1">
     <nav class="o_pager" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">
-            <input t-if="state.editing" type="text"
+            <input t-if="state.isEditing" type="text"
                 class="o_pager_value o_input"
                 autofocus=""
                 t-att-value="value"
-                t-on-blur="state.editing = false"
+                t-on-blur="state.isEditing = false"
                 t-on-change="_onValueChange"
                 t-on-keydown.stop="_onValueKeydown"
             />
@@ -533,7 +533,7 @@
             <!-- accesskeys not wanted in X2Many widgets -->
             <button type="button"
                 class="fa fa-chevron-left btn btn-secondary o_pager_previous"
-                t-att-disabled="state.disabled || singlePage"
+                t-att-disabled="props.value.isLocked || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
                 aria-label="Previous"
                 title="Previous"
@@ -542,7 +542,7 @@
             />
             <button type="button"
                 class="fa fa-chevron-right btn btn-secondary o_pager_next"
-                t-att-disabled="state.disabled || singlePage"
+                t-att-disabled="props.value.isLocked || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
                 aria-label="Next"
                 title="Next"
