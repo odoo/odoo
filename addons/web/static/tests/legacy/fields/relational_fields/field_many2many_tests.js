@@ -269,7 +269,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('many2many kanban(editable): properly handle create_text node option', async function (assert) {
+        QUnit.test('many2many kanban(editable): properly handle add-label node attribute', async function (assert) {
             assert.expect(1);
 
             this.data.partner.records[0].timmy = [12];
@@ -279,7 +279,7 @@ QUnit.module('fields', {}, function () {
                 model: 'partner',
                 data: this.data,
                 arch: '<form string="Partners">' +
-                    '<field name="timmy" options="{\'create_text\': \'Add timmy\'}" mode="kanban">' +
+                    '<field name="timmy" add-label="Add timmy" mode="kanban">' +
                     '<kanban>' +
                     '<templates>' +
                     '<t t-name="kanban-box">' +

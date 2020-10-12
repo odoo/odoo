@@ -147,7 +147,7 @@ TRANSLATED_ELEMENTS = {
 # Which attributes must be translated. This is a dict, where the value indicates
 # a condition for a node to have the attribute translatable.
 TRANSLATED_ATTRS = dict.fromkeys({
-    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
+    'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
     'value_label',
 }, lambda e: True)
