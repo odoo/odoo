@@ -35,7 +35,7 @@ odoo.define('web.DropdownMenu', function (require) {
             this.dropdownMenu = useRef('dropdown');
             this.state = useState({ open: false });
 
-            useExternalListener(window, 'click', this._onWindowClick);
+            useExternalListener(window, 'click', this._onWindowClick, true);
             useExternalListener(window, 'keydown', this._onWindowKeydown);
         }
 
@@ -147,6 +147,13 @@ odoo.define('web.DropdownMenu', function (require) {
                 !this.el.contains(ev.target) &&
                 !this.el.contains(document.activeElement)
             ) {
+                if (document.body.classList.contains("modal-open")) {
+                    // retrieve the active modal and check if the dropdown is a child of this modal
+                    const modal = document.querySelector('.modal:not(.o_inactive_modal)');
+                    if (!modal.contains(this.el)) {
+                        return;
+                    }
+                }
                 this.state.open = false;
             }
         }

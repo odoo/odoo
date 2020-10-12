@@ -68,6 +68,62 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             dropdown.destroy();
         });
 
+        QUnit.test('only one dropdown rendering at same time (owl vs bootstrap dropdown)', async function (assert) {
+            assert.expect(12);
+
+            const bsDropdown = document.createElement('div');
+            bsDropdown.innerHTML = `<div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" 
+                        data-toggle="dropdown" aria-expanded="false">
+                    BS Dropdown button
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">BS Action</a>
+                </div>
+            </div>`;
+            document.body.append(bsDropdown);
+
+            const dropdown = await createComponent(DropdownMenu, {
+                props: {
+                    items: this.items,
+                    title: "Dropdown",
+                },
+            });
+
+            await testUtils.dom.click(dropdown.el.querySelector('button'));
+
+            assert.hasClass(dropdown.el.querySelector('.dropdown-menu'), 'show');
+            assert.doesNotHaveClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
+
+            assert.isVisible(dropdown.el.querySelector('.dropdown-menu'),
+                "owl dropdown menu should be visible");
+            assert.isNotVisible(bsDropdown.querySelector('.dropdown-menu'),
+                "bs dropdown menu should not be visible");
+
+            await testUtils.dom.click(bsDropdown.querySelector('.btn.dropdown-toggle'));
+
+            assert.doesNotHaveClass(dropdown.el, 'show');
+            assert.containsNone(dropdown.el, '.dropdown-menu',
+                "owl dropdown menu should not be set inside the dom");
+
+            assert.hasClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
+            assert.isVisible(bsDropdown.querySelector('.dropdown-menu'),
+                "bs dropdown menu should be visible");
+
+            await testUtils.dom.click(document.body);
+
+            assert.doesNotHaveClass(dropdown.el, 'show');
+            assert.containsNone(dropdown.el, '.dropdown-menu',
+                "owl dropdown menu should not be set inside the dom");
+
+            assert.doesNotHaveClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
+            assert.isNotVisible(bsDropdown.querySelector('.dropdown-menu'),
+                "bs dropdown menu should not be visible");
+
+            bsDropdown.remove();
+            dropdown.destroy();
+        });
+
         QUnit.test('click on an item without options should toggle it', async function (assert) {
             assert.expect(7);
 
