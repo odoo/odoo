@@ -7,7 +7,6 @@ import logging
 
 from odoo import http
 from odoo.http import request
-from odoo.tools.mimetypes import neuter_mimetype
 from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
@@ -21,7 +20,7 @@ class MrpDocumentRoute(http.Controller):
         result = {'success': _("All files uploaded")}
         for ufile in files:
             try:
-                mimetype = neuter_mimetype(ufile.content_type, http.request.env.user)
+                mimetype = ufile.content_type
                 request.env['mrp.document'].create({
                     'name': ufile.filename,
                     'res_model': kwargs.get('res_model'),
