@@ -460,6 +460,11 @@ class Picking(models.Model):
             if self.state == 'draft':
                 self.location_id = location_id
                 self.location_dest_id = location_dest_id
+
+            for move in self.move_lines:
+                if not move.description_picking:
+                    move.description_picking = move.product_id._get_description(self.picking_type_id)
+
         # TDE CLEANME move into onchange_partner_id
         if self.partner_id and self.partner_id.picking_warn:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
