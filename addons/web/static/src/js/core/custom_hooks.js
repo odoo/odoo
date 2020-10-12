@@ -2,7 +2,7 @@ odoo.define('web.custom_hooks', function () {
     "use strict";
 
     const { Component, hooks } = owl;
-    const { onMounted, onPatched, onWillUnmount } = hooks;
+    const { onMounted, onPatched, onWillUnmount, useState } = hooks;
 
     /**
      * Focus a given selector as soon as it appears in the DOM and if it was not
@@ -111,8 +111,66 @@ odoo.define('web.custom_hooks', function () {
         });
     }
 
+    /**
+     * @param {any} initialValue
+     * @param {(newValue: any) => any} [processFn=(x=>x)] Called to process
+     *      and return the new value (can be async).
+     * @returns {Object}
+     */
+    function useSharedValue(initialValue, processFn = x => x) {
+        let value = initialValue;
+        let state = { isLocked: false };
+        return {
+            /**
+             * @returns {Boolean}
+             */
+            get isLocked() {
+                return state.isLocked;
+            },
+            /**
+             * Binds the current component to render it on state changes.
+             */
+            bindComponent() {
+                state = useState(state);
+            },
+            /**
+             * @returns {any}
+             */
+            get() {
+                return value;
+            },
+            /**
+             * Updates the value of the hook. This is done in 3 steps:
+             * 1. The "locked" flag is set to true. The bound component is then
+             *  re-rendered to reflect these changes and be displayed in a
+             *  locked state.
+             * 2. The "process" function given to the hook is then called with
+             *  the same arguments as the "update" method (typically: the new
+             *  value calculated by the pager). Its result is awaited and will
+             *  be assigned as the new "value" value.
+             * 3. Finally the "locked" flag is reset to false and the bound
+             *  component is once again re-rendered to be allowed to display an
+             *  unlocked state.
+             * Note that this whole process is bypassed if the "locked" flag is
+             * true (value is already being updated).
+             * @param {...any} args Typically holds a single argument which is
+             *      the new value.
+             * @returns {Promise}
+             */
+            async update(...args) {
+                if (state.isLocked) {
+                    return;
+                }
+                state.isLocked = true;
+                value = await processFn(...args);
+                state.isLocked = false;
+            },
+        };
+    }
+
     return {
         useAutofocus,
         useListener,
+        useSharedValue,
     };
 });
