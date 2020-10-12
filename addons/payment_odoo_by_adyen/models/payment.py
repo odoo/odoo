@@ -23,6 +23,12 @@ class AcquirerOdooByAdyen(models.Model):
     odoo_adyen_account_id = fields.Many2one('adyen.account', required_if_provider='odoo_adyen', related='company_id.adyen_account_id')
     odoo_adyen_payout_id = fields.Many2one('adyen.payout', required_if_provider='odoo_adyen', string='Adyen Payout', domain="[('adyen_account_id', '=', odoo_adyen_account_id)]")
 
+    @api.constrains('provider', 'state')
+    def _check_odoo_adyen_test(self):
+        for payment_acquirer in self:
+            if payment_acquirer.provider == 'odoo_adyen' and payment_acquirer.state == 'test':
+                raise ValidationError(_('Odoo Payments by Adyen is not available in test mode.'))
+
     def _get_feature_support(self):
         res = super(AcquirerOdooByAdyen, self)._get_feature_support()
         res['tokenize'].append('odoo_adyen')
