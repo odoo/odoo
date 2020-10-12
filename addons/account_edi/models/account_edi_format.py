@@ -231,7 +231,7 @@ class AccountEdiFormat(models.Model):
         if attachments:
             # Add the attachments to the pdf file
             reader_buffer = io.BytesIO(pdf_content)
-            reader = OdooPdfFileReader(reader_buffer)
+            reader = OdooPdfFileReader(reader_buffer, strict=False)
             writer = OdooPdfFileWriter()
             writer.cloneReaderDocumentRoot(reader)
             for vals in attachments:
@@ -289,7 +289,7 @@ class AccountEdiFormat(models.Model):
         to_process = []
         try:
             buffer = io.BytesIO(content)
-            pdf_reader = OdooPdfFileReader(buffer)
+            pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:
             # Malformed pdf
             _logger.exception("Error when reading the pdf: %s" % e)
