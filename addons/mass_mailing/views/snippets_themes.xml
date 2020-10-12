@@ -2,9 +2,6 @@
 <odoo>
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
-    <xpath expr="//div[@id='snippets_menu']" position="inside">
-        <button type="button" disabled="disabled">Select a template</button>
-    </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">
         <t id="default_snippets">
             <t t-set="company_id" t-value="res_company"/>
