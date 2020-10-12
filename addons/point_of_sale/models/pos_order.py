@@ -168,10 +168,11 @@ class PosOrder(models.Model):
         Prepare the dict of values to create the new invoice for a pos order.
         """
         invoice_type = 'out_invoice' if self.amount_total >= 0 else 'out_refund'
+        account_id = self.fiscal_position_id.map_account(self.partner_id.property_account_receivable_id)
         return {
             'name': self.name,
             'origin': self.name,
-            'account_id': self.partner_id.property_account_receivable_id.id,
+            'account_id': account_id,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'company_id': self.company_id.id,
             'type': invoice_type,
@@ -303,6 +304,7 @@ class PosOrder(models.Model):
             account_def = IrProperty.get(
                 'property_account_receivable_id', 'res.partner')
             order_account = order.partner_id.property_account_receivable_id.id or account_def and account_def.id
+            order_account = order.fiscal_position_id.map_account(self.env['account.account'].browse(order_account)).id
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
             if move is None:
                 # Create an entry for the sale
@@ -371,6 +373,8 @@ class PosOrder(models.Model):
                     raise UserError(_('Please define income '
                                       'account for this product: "%s" (id:%d).')
                                     % (line.product_id.name, line.product_id.id))
+                
+                income_account = order.fiscal_position_id.map_account(self.env['account.account'].browse(income_account)).id
 
                 name = line.product_id.name
                 if line.notice:
@@ -958,7 +962,10 @@ class PosOrder(models.Model):
         # use the company of the journal and not of the current user
         company_cxt = dict(self.env.context, force_company=journal.company_id.id)
         account_def = self.env['ir.property'].with_context(company_cxt).get('property_account_receivable_id', 'res.partner')
-        args['account_id'] = (self.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
+        account_id = (self.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
+        account_id = self.fiscal_position_id.map_account(self.env['account.account'].browse(account_id)).id
+
+        args['account_id'] = account_id
 
         if not args['account_id']:
             if not args['partner_id']:
