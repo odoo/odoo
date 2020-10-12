@@ -414,7 +414,156 @@ var Wysiwyg = Widget.extend({
             return _super.apply(this, arguments);
         }
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.editor.stop();
+        this._super();
+    },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
 
+    /**
+     * Return the editable area.
+     *
+     * @returns {jQuery}
+     */
+    getEditable: function () {
+        return this.$editor;
+    },
+    /**
+     * Return dirty Odoo structure nodes and Odoo field nodes.
+     *
+     * @returns {Array<OdooStructureNode | OdooFieldNode>}
+     */
+    getDirtyNodes: function () {
+        return this.zoneMain.descendants(node => {
+            if (node instanceof JWEditorLib.OdooStructureNode) {
+                return node.dirty;
+            } else if (node instanceof JWEditorLib.OdooFieldNode) {
+                return node.fieldInfo.originalValue !== node.fieldInfo.value.get();
+            }
+        });
+    },
+    /**
+     * Return true if the content has changed.
+     *
+     * @returns {boolean}
+     */
+    isDirty: function () {
+        return !!this.getDirtyNodes().length;
+    },
+    /**
+     * Set the focus on the element.
+     */
+    focus: function () {
+        // todo: handle tab that need to go to next field if the editor does not
+        //       catch it.
+        this.$el.find('[contenteditable="true"]').focus();
+    },
+    /**
+     * Get the value of the editable element.
+     *
+     * @param {object} [options]
+     * @param {jQueryElement} [options.$layout]
+     * @returns {String}
+     */
+    getValue: async function (format) {
+        return this.editor.getValue(format || 'text/html');
+    },
+    /**
+     * @param {String} value
+     * @param {Object} options
+     * @param {Boolean} [options.notifyChange]
+     * @returns {String}
+     */
+    setValue: function (value, options) {
+        this._value = value;
+    },
+    saveToServer: async function (context = this.editor, reload = true) {
+        const defs = [];
+        this.trigger_up('edition_will_stopped');
+        this.trigger_up('ready_to_save', {defs: defs});
+        await Promise.all(defs);
+
+        if (this.snippetsMenu) {
+            await this.snippetsMenu.cleanForSave();
+        }
+
+        return this._saveWebsiteContent(context)
+            .then(() => {
+                this.trigger_up('edition_was_stopped');
+                if (reload) window.location.reload();
+            }).catch(error => {
+                console.error('Impossible to save.', error);
+            });
+    },
+    discardEditions: async function () {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
+                confirm_callback: resolve,
+            });
+            confirm.on('closed', self, reject);
+        }).then(function () {
+            window.onbeforeunload = null;
+            window.location.reload();
+        });
+    },
+    cropImage: async function (params) {
+        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
+        const imageNode = imageNodes.length === 1 && imageNodes[0];
+        if (imageNode) {
+            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
+            const $node = $(domEngine.getDomNodes(imageNode)[0]);
+            $node.off('image_cropped');
+            $node.on('image_cropped', () => this._updateAttributes($node[0]));
+            new weWidgets.ImageCropWidget(this, $node[0]).appendTo($('#wrap'));
+        }
+    },
+    transformImage: async function (params) {
+        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
+        const imageNode = imageNodes.length === 1 && imageNodes[0];
+        if (imageNode) {
+            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
+            const $node = $(domEngine.getDomNodes(imageNode)[0]);
+            this._transform($node);
+        }
+    },
+    describeImage: async function (params) {
+        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
+        const imageNode = imageNodes.length === 1 && imageNodes[0];
+        if (imageNode) {
+            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
+            const node = domEngine.getDomNodes(imageNode)[0];
+            var altDialog = new weWidgets.AltDialog(this, {}, node);
+            altDialog.on('save', this, () => this._updateAttributes(node));
+            altDialog.open();
+        }
+    },
+    getFormatInfo: function() {
+        return this.editor.plugins.get(JWEditorLib.Odoo).formatInfo;
+    },
+    async updateChanges($target) {
+        const updateChanges = async (context) => {
+            const html = $target.html();
+            $target.html('');
+            const attributes = [...$target[0].attributes].reduce( (acc, attribute) => {
+                acc[attribute.name] = attribute.value;
+                return acc
+            }, {})
+            await this.editorHelpers.updateAttributes(context, $target[0], attributes);
+            await this.editorHelpers.empty(context, $target[0]);
+            await this.editorHelpers.insertHtml(context, html, $target[0], 'INSIDE');
+        };
+        await this.editor.execCommand(updateChanges);
+    },
+    withDomMutationsObserver ($target, callback) {
+        callback();
+        this.updateChanges($target);
+    },
     async openLinkDialog(params) {
         const range = this.editor.selection.range;
         const Link = JWEditorLib.Link;
@@ -576,22 +725,6 @@ var Wysiwyg = Widget.extend({
             await this.saveToServer(context);
         }
     },
-    _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
-        if(color === "") {
-            this.editor.execCommand(unsetCommandId);
-        } else {
-            if (colorpicker.colorNames.indexOf(color) !== -1) {
-                // todo : find a better way to detect and send css variable
-                color = "var(--" + color + ")";
-            }
-            this.editor.execCommand(setCommandId, {color: color});
-        }
-        const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
-        $jwButton.css("background-color", color);
-        if(closeColorPicker) {
-            $jwButton.dropdown("toggle");
-        }
-    },
     async initColorPicker($dropdownNode, setCommandId, unsetCommandId) {
         if (!$dropdownNode.hasClass("colorpicker-initalized")) {
             $dropdownNode.addClass("colorpicker-initalized");
@@ -635,189 +768,6 @@ var Wysiwyg = Widget.extend({
             "uncolorBackground");
 
         $backgroundColorDropdown.find(".dropdown-toggle").dropdown("toggle");
-    },
-
-    /**
-     * @override
-     */
-    destroy: function () {
-        this.editor.stop();
-        this._super();
-    },
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-    /**
-     * Return the editable area.
-     *
-     * @returns {jQuery}
-     */
-    getEditable: function () {
-        return this.$editor;
-    },
-    /**
-     * Return dirty Odoo structure nodes and Odoo field nodes.
-     *
-     * @returns {Array<OdooStructureNode | OdooFieldNode>}
-     */
-    getDirtyNodes: function() {
-        return this.zoneMain.descendants(node => {
-            if (node instanceof JWEditorLib.OdooStructureNode) {
-                return node.dirty;
-            } else if (node instanceof JWEditorLib.OdooFieldNode) {
-                return node.fieldInfo.originalValue !== node.fieldInfo.value.get();
-            }
-        });
-    },
-    /**
-     * Return true if the content has changed.
-     *
-     * @returns {boolean}
-     */
-    isDirty: function () {
-        return !!this.getDirtyNodes().length;
-    },
-    /**
-     * Set the focus on the element.
-     */
-    focus: function () {
-        // todo: handle tab that need to go to next field if the editor does not
-        //       catch it.
-        this.$el.find('[contenteditable="true"]').focus();
-    },
-    /**
-     * Get the value of the editable element.
-     *
-     * @param {object} [options]
-     * @param {jQueryElement} [options.$layout]
-     * @returns {String}
-     */
-    getValue: async function (format) {
-        return this.editor.getValue(format || 'text/html');
-    },
-    /**
-     * @param {String} value
-     * @param {Object} options
-     * @param {Boolean} [options.notifyChange]
-     * @returns {String}
-     */
-    setValue: function (value, options) {
-        this._value = value;
-    },
-    saveToServer: async function (context = this.editor, reload = true) {
-        const defs = [];
-        this.trigger_up('edition_will_stopped');
-        this.trigger_up('ready_to_save', {defs: defs});
-        await Promise.all(defs);
-
-        if (this.snippetsMenu) {
-            await this.snippetsMenu.cleanForSave();
-        }
-
-        return this._saveWebsiteContent(context)
-            .then(() => {
-                this.trigger_up('edition_was_stopped');
-                if (reload) window.location.reload();
-            }).catch(error => {
-                console.error('Impossible to save.', error);
-            });
-    },
-    discardEditions: async function () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
-                confirm_callback: resolve,
-            });
-            confirm.on('closed', self, reject);
-        }).then(function () {
-            window.onbeforeunload = null;
-            window.location.reload();
-        });
-    },
-    cropImage: async function (params) {
-        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
-        const imageNode = imageNodes.length === 1 && imageNodes[0];
-        if (imageNode) {
-            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-            const $node = $(domEngine.getDomNodes(imageNode)[0]);
-            $node.off('image_cropped');
-            $node.on('image_cropped', () => this._updateAttributes($node[0]));
-            new weWidgets.ImageCropWidget(this, $node[0]).appendTo($('#wrap'));
-        }
-    },
-    _updateAttributes(node) {
-        const attributes = {}
-        for (const attr of node.attributes){
-            attributes[attr.name] = attr.value;
-        }
-        this.editorHelpers.updateAttributes(this.editor, node, attributes);
-    },
-    transformImage: async function (params) {
-        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
-        const imageNode = imageNodes.length === 1 && imageNodes[0];
-        if (imageNode) {
-            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-            const $node = $(domEngine.getDomNodes(imageNode)[0]);
-            this._transform($node);
-        }
-    },
-    _transform($image) {
-        if ($image.data('transfo-destroy')) {
-            $image.removeData('transfo-destroy');
-            return;
-        }
-
-        $image.transfo();
-
-        const mouseup = (event) => {
-            $('.note-popover button[data-event="transform"]').toggleClass('active', $image.is('[style*="transform"]'));
-        };
-        $(document).on('mouseup', mouseup);
-
-        const mousedown = (event) => {
-            if (!$(event.target).closest('.transfo-container').length) {
-                $image.transfo('destroy');
-                $(document).off('mousedown', mousedown).off('mouseup', mouseup);
-            }
-            if ($(event.target).closest('.note-popover').length) {
-                $image.data('transfo-destroy', true).attr('style', ($image.attr('style') || '').replace(/[^;]*transform[\w:]*;?/g, ''));
-            }
-            this._updateAttributes($image[0])
-        };
-        $(document).on('mousedown', mousedown);
-    },
-    describeImage: async function (params) {
-        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
-        const imageNode = imageNodes.length === 1 && imageNodes[0];
-        if (imageNode) {
-            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-            const node = domEngine.getDomNodes(imageNode)[0];
-            var altDialog = new weWidgets.AltDialog(this, {}, node);
-            altDialog.on('save', this, () => this._updateAttributes(node));
-            altDialog.open();
-        }
-    },
-
-    getFormatInfo: function() {
-        return this.editor.plugins.get(JWEditorLib.Odoo).formatInfo;
-    },
-    async updateChanges($target) {
-        const updateChanges = async (context) => {
-            const html = $target.html();
-            $target.html('');
-            const attributes = [...$target[0].attributes].reduce( (acc, attribute) => {
-                acc[attribute.name] = attribute.value;
-                return acc
-            }, {})
-            await this.editorHelpers.updateAttributes(context, $target[0], attributes);
-            await this.editorHelpers.empty(context, $target[0]);
-            await this.editorHelpers.insertHtml(context, html, $target[0], 'INSIDE');
-        };
-        await this.editor.execCommand(updateChanges);
-    },
-    withDomMutationsObserver ($target, callback) {
-        callback();
-        this.updateChanges($target);
     },
 
     //--------------------------------------------------------------------------
@@ -1336,6 +1286,54 @@ var Wysiwyg = Widget.extend({
             $editable.filter(':has(' + selector + ')').attr('data-oe-readonly', true);
         }
         return $editable.not('[data-oe-readonly]')
+    },
+    _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
+        if(color === "") {
+            this.editor.execCommand(unsetCommandId);
+        } else {
+            if (colorpicker.colorNames.indexOf(color) !== -1) {
+                // todo : find a better way to detect and send css variable
+                color = "var(--" + color + ")";
+            }
+            this.editor.execCommand(setCommandId, {color: color});
+        }
+        const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
+        $jwButton.css("background-color", color);
+        if(closeColorPicker) {
+            $jwButton.dropdown("toggle");
+        }
+    },
+    _updateAttributes(node) {
+        const attributes = {}
+        for (const attr of node.attributes){
+            attributes[attr.name] = attr.value;
+        }
+        this.editorHelpers.updateAttributes(this.editor, node, attributes);
+    },
+    _transform($image) {
+        if ($image.data('transfo-destroy')) {
+            $image.removeData('transfo-destroy');
+            return;
+        }
+
+        $image.transfo();
+
+        const mouseup = (event) => {
+            $('.note-popover button[data-event="transform"]').toggleClass('active', $image.is('[style*="transform"]'));
+        };
+        $(document).on('mouseup', mouseup);
+
+        const mousedown = (event) => {
+            if (!$(event.target).closest('.transfo-container').length) {
+                $image.transfo('destroy');
+                $(document).off('mousedown', mousedown).off('mouseup', mouseup);
+            }
+            if ($(event.target).closest('.note-popover').length) {
+                $image.data('transfo-destroy', true).attr('style', ($image.attr('style') || '').replace(/[^;]*transform[\w:]*;?/g, ''));
+            }
+            this._updateAttributes($image[0])
+        };
+        $(document).on('mousedown', mousedown);
     },
     /**
      * Additional binding after start.
