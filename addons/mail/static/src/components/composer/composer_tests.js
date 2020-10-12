@@ -676,7 +676,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
         {
-            channel_types: ["channel"],
+            channel_types: ['channel'],
             help: "List users in the current channel",
             name: "who",
         },
@@ -714,7 +714,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
         {
-            channel_types: ["channel"],
+            channel_types: ['channel'],
             help: "List users in the current channel",
             name: "who",
         },
@@ -767,7 +767,7 @@ QUnit.test("commands are not displayed when channel types don't match", async fu
     this.data['mail.channel'].records.push({ channel_type: 'chat', id: 20 });
     this.data['mail.channel_command'].records.push(
         {
-            channel_types: ["livechat"],
+            channel_types: ['livechat'],
             help: "See 15 last visited pages",
             name: "history",
         },
@@ -784,20 +784,19 @@ QUnit.test("commands are not displayed when channel types don't match", async fu
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector('.o_ComposerTextInput_textarea').value,
         "",
         "text content of composer should be empty initially"
     );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.querySelector('.o_ComposerTextInput_textarea').focus();
         document.execCommand('insertText', false, "/");
     });
     await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        const composer_text_input = document.querySelector('.o_ComposerTextInput_textarea');
+        composer_text_input.dispatchEvent(new window.KeyboardEvent('keydown'));
+        composer_text_input.dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsNone(
         document.body,
@@ -812,7 +811,7 @@ QUnit.test('use a command after some text', async function (assert) {
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
         {
-            channel_types: ["channel"],
+            channel_types: ['channel'],
             help: "List users in the current channel",
             name: "who",
         },
@@ -872,7 +871,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
         {
-            channel_types: ["channel"],
+            channel_types: ['channel'],
             help: "List users in the current channel",
             name: "who",
         },

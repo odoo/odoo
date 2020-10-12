@@ -682,11 +682,9 @@ function factory(dependencies) {
          * @param {string} mentionKeyword
          */
         _updateSuggestedChannelCommands(mentionKeyword) {
-            const commands = this.env.messaging.commands.filter(
-                command => {
-                    if (!this.thread) {
-                        return false;
-                    }
+            let commands = [];
+            if (this.thread) {
+                commands = this.env.messaging.commands.filter(command => {
                     if (!command.name.includes(mentionKeyword)) {
                         return false;
                     }
@@ -694,8 +692,8 @@ function factory(dependencies) {
                         return command.channel_types.includes(this.thread.channel_type);
                     }
                     return true;
-                }
-            );
+                });
+            }
 
             this.update({
                 suggestedChannelCommands: [['replace', commands]],

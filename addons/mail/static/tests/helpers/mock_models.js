@@ -95,9 +95,10 @@ class MockModels {
                 },
                 records: [],
             },
+            // Fake model to simulate "hardcoded" commands from python
             'mail.channel_command': {
                 fields: {
-                    channel_types: { type: 'array' },
+                    channel_types: { type: 'binary' }, // array is expected
                     help: { type: 'char' },
                     name: { type: 'char' },
                 },

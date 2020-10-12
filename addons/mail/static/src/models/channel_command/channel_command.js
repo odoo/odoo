@@ -10,7 +10,8 @@ function factory(dependencies) {
 
     ChannelCommand.fields = {
         /**
-         * Makes only sense for threads on model 'mail.channel'. Type of the channel (e.g. 'chat', 'channel' or 'groups')
+         * Determines on which channel types `this` is available.
+         * Type of the channel (e.g. 'chat', 'channel' or 'groups')
          */
         channel_types: attr(),
         /**
