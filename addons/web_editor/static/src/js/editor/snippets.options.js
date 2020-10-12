@@ -3174,7 +3174,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             case 'glFilter':
                 return img.dataset.glFilter || "";
             case 'setQuality':
-                return img.dataset.quality || 95;
+                return img.dataset.quality || 75;
             case 'customFilter': {
                 const {filterProperty} = params;
                 const options = JSON.parse(img.dataset.filterOptions || "{}");
@@ -3269,6 +3269,18 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.originalSrc = img.dataset.originalSrc;
     },
     /**
+     * Sets the image's width to its suggested size.
+     *
+     * @private
+     */
+    async _autoOptimizeImage() {
+        await this._loadImageInfo();
+        await this._rerenderXML();
+        this._getImg().dataset.resizeWidth = this.optimizedWidth;
+        await this._applyOptions();
+        await this.updateUI();
+    },
+    /**
      * Returns the image that is currently being modified.
      *
      * @private
@@ -3348,11 +3360,7 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      */
     async _onImageChanged(ev) {
         this.trigger_up('snippet_edition_request', {exec: async () => {
-            await this._loadImageInfo();
-            await this._rerenderXML();
-            this._getImg().dataset.resizeWidth = this.optimizedWidth;
-            await this._applyOptions();
-            await this.updateUI();
+            await this._autoOptimizeImage();
             this.trigger_up('cover_update');
         }});
     },
@@ -3453,8 +3461,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     async _onBackgroundChanged(ev, previewMode) {
         if (!previewMode) {
             this.trigger_up('snippet_edition_request', {exec: async () => {
-                await this._loadImageInfo();
-                await this._rerenderXML();
+                await this._autoOptimizeImage();
             }});
         }
     },
@@ -4194,6 +4201,12 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         // Create empty clone of $target with same display size, make it draggable and give it a tooltip.
         this.$bgDragger = this.$target.clone().empty();
+        // Some CSS child selector rules will not be applied since the clone has a different container from $target.
+        // The background-attachment property should be the same in both $target & $bgDragger, this will keep the
+        // preview more "wysiwyg" instead of getting different result when bg position saved (e.g. parallax snippet)
+        // TODO: improve this to copy all style from $target and override it with overlay related style (copying all
+        // css into $bgDragger will not work since it will change overlay content style too).
+        this.$bgDragger.css('background-attachment', this.$target.css('background-attachment'));
         this.$bgDragger.on('mousedown', this._onDragBackgroundStart.bind(this));
         this.$bgDragger.tooltip({
             title: 'Click and drag the background to adjust its position!',

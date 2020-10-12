@@ -19,7 +19,8 @@
                  t-raw="widget.title"/>
             <t t-raw="closeButton"/>
         </div>
-        <div t-if="widget.message or widget.subtitle or widget.buttons.length" class="toast-body d-flex">
+        <div t-if="widget.message or widget.subtitle or widget.buttons.length" class="toast-body">
+            <t t-if="!widget.title" t-raw="closeButton"/>
             <strong t-if="widget.subtitle" t-raw="widget.subtitle"
                  class="o_notification_subtitle"/>
             <div t-if="widget.message" t-raw="widget.message"
@@ -34,7 +35,6 @@
                     <span t-esc="button.text"/>
                 </button>
             </div>
-            <t t-if="!widget.title" t-raw="closeButton"/>
         </div>
     </div>
 </t>

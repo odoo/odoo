@@ -418,6 +418,7 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
  */
 publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
 
     /**
      * @override
@@ -440,7 +441,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
                 $window.trigger('resize');
             });
 
-            dom.initAutoMoreMenu(this.$topMenu, {unfoldable: '.divider, .divider ~ li'});
+            dom.initAutoMoreMenu(this.$topMenu, {unfoldable: '.divider, .divider ~ li, .o_no_autohide_item'});
         }
         this.$topMenu.removeClass('o_menu_loading');
         this.$topMenu.trigger('menu_loaded');
