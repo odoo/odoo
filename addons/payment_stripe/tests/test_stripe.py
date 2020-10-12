@@ -29,6 +29,13 @@ class StripeCommon(PaymentAcquirerCommon):
             'partner_id': cls.buyer.id,
             'verified': True,
         })
+        cls.ideal_icon = cls.env.ref("payment.payment_icon_cc_ideal")
+        cls.bancontact_icon = cls.env.ref("payment.payment_icon_cc_bancontact")
+        cls.p24_icon = cls.env.ref("payment.payment_icon_cc_p24")
+        cls.eps_icon = cls.env.ref("payment.payment_icon_cc_eps")
+        cls.giropay_icon = cls.env.ref("payment.payment_icon_cc_giropay")
+        cls.all_icons = [cls.ideal_icon, cls.bancontact_icon, cls.p24_icon, cls.eps_icon, cls.giropay_icon]
+        cls.stripe.write({'payment_icon_ids': [(5, 0, 0)]})
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
@@ -87,7 +94,8 @@ class StripeTest(StripeCommon):
         self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
 
-    def test_add_available_payment_method_types(self):
+    def test_add_available_payment_method_types_local_enabled(self):
+        self.stripe.payment_icon_ids = [(6, 0, [i.id for i in self.all_icons])]
         tx_values = {
             'billing_partner_country': self.env.ref('base.be'),
             'currency': self.env.ref('base.EUR'),
@@ -99,6 +107,61 @@ class StripeTest(StripeCommon):
 
         actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
         self.assertEqual({'card', 'bancontact'}, actual)
+
+    def test_add_available_payment_method_types_local_enabled_2(self):
+        self.stripe.payment_icon_ids = [(6, 0, [i.id for i in self.all_icons])]
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.pl'),
+            'currency': self.env.ref('base.PLN'),
+            'type': 'form'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card', 'p24'}, actual)
+
+    def test_add_available_payment_method_types_pmt_does_not_exist(self):
+        self.bancontact_icon.unlink()
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card', 'bancontact'}, actual)
+
+    def test_add_available_payment_method_types_local_disabled(self):
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card'}, actual)
+
+    def test_add_available_payment_method_types_local_all_but_bancontact(self):
+        self.stripe.payment_icon_ids = [(4, icon.id) for icon in self.all_icons if icon.name.lower() != 'bancontact']
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card'}, actual)
 
     def test_add_available_payment_method_types_recurrent(self):
         tx_values = {
@@ -114,8 +177,7 @@ class StripeTest(StripeCommon):
         self.assertEqual({'card'}, actual)
 
     def test_discarded_webhook(self):
-        with self.assertRaises(ValidationError):
-            self.env['payment.acquirer']._handle_stripe_webhook(dict(type='payment.intent.succeeded'))
+        self.assertFalse(self.env['payment.acquirer']._handle_stripe_webhook(dict(type='payment.intent.succeeded')))
 
     def test_handle_checkout_webhook_no_secret(self):
         self.stripe.stripe_webhook_secret = None
