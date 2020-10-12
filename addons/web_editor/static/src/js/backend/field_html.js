@@ -182,6 +182,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             }
             main = '<t-shadow style="width: 100%;">' + style + '\n' + main + '</t-shadow>';
         }
+        const scrollAuto = !this.needShadow;
 
         return Object.assign({}, this.nodeOptions, {
             recordInfo: {
@@ -193,20 +194,21 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             snippets: this.nodeOptions.snippets,
             value: this.value || '',
             location: [this.el, 'append'],
-            wrapperClass: 'note-editable',
+            wrapperClass: 'note-editable o_editable',
             interface: `
                 <t-dialog><t t-zone="default"/></t-dialog>
-                <t-range><t t-zone="tools"/></t-range>
+                ` + (this.nodeOptions.snippets ? '' : '<t-range><t t-zone="tools"/></t-range>') + `
                 <div class="d-flex flex-column flex-grow-1">
-                    <div class="d-flex flex-row overflow-auto">
+                    ` + (this.nodeOptions.snippets ? '<t t-zone="tools"/>' : '') + `
+                    <div class="d-flex flex-row overflow-auto ` + (scrollAuto ? '' : 'overflow-hidden') + `">
                         <t t-zone="container">
-                            <t t-zone="main_sidebar"/>
-                            <div class="d-flex flex-column overflow-auto o_editor_center">
-                                <div class="d-flex overflow-auto note-editing-area d-flex flex-grow-1">
+                            <div class="d-flex flex-column ` + (scrollAuto ? 'overflow-auto ' : '') + `o_editor_center">
+                                <div class="d-flex ` + (scrollAuto ? 'overflow-auto ' : '') + `note-editing-area d-flex flex-grow-1">
                                     <t t-zone="snippetManipulators"/>
                                     ` + main + `
                                 </div>
                             </div>
+                            <t t-zone="main_sidebar"/>
                         </t>
                     </div>
                     <div class="o_debug_zone">
