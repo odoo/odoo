@@ -6,8 +6,9 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_details_wizard"/>
         <field name="arch" type="xml">
             <field name="end_date" position="after">
-                <field name="include_products" attrs="{'invisible': [('country_code', '!=', 'CO')]}"/>
+                <field name="include_products" attrs="{'invisible': ['|', ('country_code', '!=', 'CO'), ('config_len', '!=', 1)]}"/>
                 <field name="country_code" invisible="1"/>
+                <field name="config_len" invisible="1"/>
             </field>
         </field>
     </record>

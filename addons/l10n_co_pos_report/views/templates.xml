@@ -3,7 +3,7 @@
     <data>
         <template id="l10n_co_pos_report.report_saledetails" inherit_id="point_of_sale.report_saledetails">
             <xpath expr="//div[hasclass('page')]/div/h2" position="before">
-                <h2><t t-esc="config_name"/></h2>
+                <h2 t-if="pos_config"><t t-esc="config_name"/></h2>
             </xpath>
             <xpath expr="//div[hasclass('page')]/h3[1]" position="attributes">
                 <attribute name="t-if">include_products</attribute>
@@ -12,16 +12,18 @@
                 <attribute name="t-if">include_products</attribute>
             </xpath>
             <xpath expr="//div[hasclass('page')]/table[2]/thead/tr/th[1]" position="after">
-                <th>No. Transaction</th>
+                <th t-if="pos_config">No. Transaction</th>
             </xpath>
             <xpath expr="//div[hasclass('page')]/table[2]/tbody/tr/td[1]" position="after">
-                <td><t t-esc="payment['count']" /></td>
+                <td t-if="pos_config"><t t-esc="payment['count']" /></td>
             </xpath>
             <xpath expr="//div[hasclass('page')]/strong" position="after">
-                <br/>
-                <strong>Total number of Transactions: <t t-esc='total_payment_count'/></strong><br/>
-                <strong t-if='first_ref'>From: <t t-esc='first_ref'/> to <t t-esc='last_ref'/><br/></strong>
-                <strong>POS Serial Number: <t t-esc='pos_config.pos_serial_number'/></strong>
+                <t t-if="pos_config">
+                    <br/>
+                    <strong>Total number of Transactions: <t t-esc='total_payment_count'/></strong><br/>
+                    <strong t-if='first_ref'>From: <t t-esc='first_ref'/> to <t t-esc='last_ref'/><br/></strong>
+                    <strong>POS Serial Number: <t t-esc='pos_config.pos_serial_number'/></strong>
+                </t>
             </xpath>
         </template>
     </data>

@@ -908,14 +908,13 @@ class ReportSaleDetails(models.AbstractModel):
                           [('date_order', '>=', fields.Datetime.to_string(date_start)),
                            ('date_order', '<=', fields.Datetime.to_string(date_stop))]
                           ])
-
-        return self.prepare_sale_details(domain, date_start, date_stop, config_ids, session_ids, include_products)
-
-    def prepare_sale_details(self, domain, date_start, date_stop, config_ids, session_ids, include_products):
         if not session_ids and config_ids:
             domain = AND([domain, [('config_id', 'in', config_ids)]])
 
         orders = self.env['pos.order'].search(domain)
+        return self.prepare_sale_details(orders, domain, date_start, date_stop, config_ids, session_ids, include_products)
+
+    def prepare_sale_details(self, orders, domain, date_start, date_stop, config_ids, session_ids, include_products):
 
         user_currency = self.env.company.currency_id
 
