@@ -1718,6 +1718,20 @@ options.registry.collapse = options.Class.extend({
 options.registry.HeaderNavbar = options.Class.extend({
 
     //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add the 'o_hoverable_dropdown' class on the header to show the effect in
+     * editor mode before the view add the class when the page is saved.
+     *
+     * @see this.selectClass for parameters
+     */
+    headerHoverableDropdown: function (previewMode, widgetValue, params) {
+        $('#wrapwrap > header').toggleClass('o_hoverable_dropdown', !!widgetValue);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -1731,6 +1745,17 @@ options.registry.HeaderNavbar = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'option_logo_height_scrolled') {
             return !this.$('.navbar-brand').hasClass('d-none');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'headerHoverableDropdown': {
+                return $('#wrapwrap > header')[0].classList.contains('o_hoverable_dropdown') || '';
+            }
         }
         return this._super(...arguments);
     },
