@@ -2497,7 +2497,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('one2many kanban (editable): properly handle create_text node option', async function (assert) {
+        QUnit.test('one2many kanban (editable): properly handle add-label node attribute', async function (assert) {
             assert.expect(1);
 
             var form = await createView({
@@ -2505,7 +2505,7 @@ QUnit.module('fields', {}, function () {
                 model: 'partner',
                 data: this.data,
                 arch: '<form string="Partners">' +
-                    '<field name="turtles" options="{\'create_text\': \'Add turtle\'}" mode="kanban">' +
+                    '<field name="turtles" add-label="Add turtle" mode="kanban">' +
                     '<kanban>' +
                     '<templates>' +
                     '<t t-name="kanban-box">' +
