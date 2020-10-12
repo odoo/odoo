@@ -175,6 +175,7 @@
                             />
                             <field name="partner_ref"/>
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
+                            <field name="id" invisible="1"/>
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
@@ -197,7 +198,7 @@
                                 <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
                                     <field name="reminder_date_before_receipt" class="oe_inline"/>
                                     days before 
-                                    <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself."/>
+                                    <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." attrs="{'invisible': [('id', '=', False)]}"/>
                                 </div>
                             </div>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
