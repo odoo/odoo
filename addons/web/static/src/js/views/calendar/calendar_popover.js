@@ -193,6 +193,9 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                     FieldClass = fieldRegistry.getAny([field.widget, field.type]);
                     fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
                 }
+                if (fieldWidget.attrs && !_.isObject(fieldWidget.attrs.modifiers)) {
+                    fieldWidget.attrs.modifiers = fieldWidget.attrs.modifiers ? JSON.parse(fieldWidget.attrs.modifiers) : {};
+                }
                 self._registerWidget(recordID, field.name, fieldWidget);
 
                 var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
