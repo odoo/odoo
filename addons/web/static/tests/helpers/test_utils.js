@@ -97,6 +97,25 @@ odoo.define('web.test_utils', async function (require) {
         return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
+    /**
+     * Awaits for an additionnal rendering frame initiated by the Owl
+     * compatibility layer processing.
+     *
+     * By default a simple "nextTick" will handle the rendering of any widget/
+     * component stuctures having at most 1 switch between the type of
+     * entities (Component > Widget or Widget > Component). However more time
+     * must be spent rendering in case we have additionnal switches. In such
+     * cases this function must be used (1 call for each additionnal switch)
+     * since it will be removed along with the compatiblity layer once the
+     * framework has been entirely converted, and using this helper will make
+     * it easier to wipe it from the code base.
+     *
+     * @returns {Promise}
+     */
+    async function owlCompatibilityExtraNextTick() {
+        return testUtilsDom.returnAfterNextAnimationFrame();
+    }
+
     // Loading static files cannot be properly simulated when their real content is
     // really needed. This is the case for static XML files so we load them here,
     // before starting the qunit test suite.
@@ -248,6 +267,7 @@ odoo.define('web.test_utils', async function (require) {
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
+        owlCompatibilityExtraNextTick,
         prepareTarget: testUtilsCreate.prepareTarget,
         returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 
