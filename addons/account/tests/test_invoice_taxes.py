@@ -475,32 +475,19 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'credit': 10100.63,             # tax_base_amount * 0.21
         }])
 
-    def test_foreign_currency_01(self):
-        ''' Test:
-        Foreign currency with rate of 0.654065014 with currency rounding set to 0.05.
-
-        price_unit | Taxes
-        ------------------
-        5          | 5% incl
-        10         | 5% incl
-        50         | 5% incl
-
-        '''
-        company = self.env.ref('base.main_company')
-        currency_usd_id = self.env.ref("base.USD")
-        currency_chf_id = self.env.ref("base.CHF")
-        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [currency_usd_id.id, company.id])
-        currency_chf_id.rounding = 0.05
-        
-        self.env['res.currency.rate'].search([]).unlink()
+    def test_ensure_no_unbalanced_entry(self):
+        ''' Ensure to not create an unbalanced journal entry when saving. '''
         self.env['res.currency.rate'].create({
-            'currency_id': currency_chf_id.id,
+            'name': '2018-01-01',
             'rate': 0.654065014,
-            'name': '2001-01-01'})
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.05
 
         invoice = self._create_invoice([
             (5, self.percent_tax_3_incl),
             (10, self.percent_tax_3_incl),
             (50, self.percent_tax_3_incl),
-        ], currency_id=currency_chf_id, invoice_payment_term_id=self.pay_terms_a)
+        ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
         invoice.post()
