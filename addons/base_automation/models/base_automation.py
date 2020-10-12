@@ -194,8 +194,9 @@ class BaseAutomation(models.Model):
 
     def _filter_pre(self, records):
         """ Filter the records that satisfy the precondition of action ``self``. """
-        if self.filter_pre_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self.filter_pre_domain, self._get_eval_context())
+        self_sudo = self.sudo()
+        if self_sudo.filter_pre_domain and records:
+            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
             return records.sudo().search(domain).with_env(records.env)
         else:
             return records
@@ -205,8 +206,9 @@ class BaseAutomation(models.Model):
 
     def _filter_post_export_domain(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
-        if self.filter_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self.filter_domain, self._get_eval_context())
+        self_sudo = self.sudo()
+        if self_sudo.filter_domain and records:
+            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
             return records.sudo().search(domain).with_env(records.env), domain
         else:
             return records, None
@@ -262,7 +264,8 @@ class BaseAutomation(models.Model):
 
     def _check_trigger_fields(self, record):
         """ Return whether any of the trigger fields has been modified on ``record``. """
-        if not self.trigger_field_ids:
+        self_sudo = self.sudo()
+        if not self_sudo.trigger_field_ids:
             # all fields are implicit triggers
             return True
 
@@ -280,7 +283,7 @@ class BaseAutomation(models.Model):
                 field.convert_to_cache(record[name], record, validate=False) !=
                 field.convert_to_cache(old_vals[name], record, validate=False)
             )
-        return any(differ(field.name) for field in self.trigger_field_ids)
+        return any(differ(field.name) for field in self_sudo.trigger_field_ids)
 
     def _register_hook(self):
         """ Patch models that should trigger action rules based on creation,
@@ -389,7 +392,7 @@ class BaseAutomation(models.Model):
             def base_automation_onchange(self):
                 action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
-                server_action = action_rule.action_server_id.with_context(active_model=self._name, onchange_self=self)
+                server_action = action_rule.sudo().action_server_id.with_context(active_model=self._name, onchange_self=self)
                 try:
                     res = server_action.run()
                 except Exception as e:
