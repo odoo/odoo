@@ -293,6 +293,7 @@ class ProductProduct(models.Model):
 
     @api.depends_context('partner_id')
     def _compute_partner_ref(self):
+<<<<<<< HEAD
         for product in self:
             for supplier_info in product.seller_ids:
                 if supplier_info.name.id == product._context.get('partner_id'):
@@ -303,6 +304,96 @@ class ProductProduct(models.Model):
                 product.partner_ref = product.display_name
 
     def _compute_variant_item_count(self):
+=======
+        for supplier_info in self.seller_ids:
+            if supplier_info.name.id == self._context.get('partner_id'):
+                product_name = supplier_info.product_name or self.default_code or self.name
+                self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
+                break
+        else:
+            self.partner_ref = self.name_get()[0][1]
+
+    @api.one
+    @api.depends('image_variant', 'product_tmpl_id.image')
+    def _compute_images(self):
+        if self._context.get('bin_size'):
+            self.image_medium = self.image_variant
+            self.image_small = self.image_variant
+            self.image = self.image_variant
+        else:
+            resized_images = tools.image_get_resized_images(self.image_variant, return_big=True, avoid_resize_medium=True)
+            self.image_medium = resized_images['image_medium']
+            self.image_small = resized_images['image_small']
+            self.image = resized_images['image']
+        if not self.image_medium:
+            self.image_medium = self.product_tmpl_id.image_medium
+        if not self.image_small:
+            self.image_small = self.product_tmpl_id.image_small
+        if not self.image:
+            self.image = self.product_tmpl_id.image
+
+    @api.one
+    def _set_image(self):
+        self._set_image_value(self.image)
+
+    @api.one
+    def _set_image_medium(self):
+        self._set_image_value(self.image_medium)
+
+    @api.one
+    def _set_image_small(self):
+        self._set_image_value(self.image_small)
+
+    @api.one
+    def _set_image_value(self, value):
+        if isinstance(value, pycompat.text_type):
+            value = value.encode('ascii')
+        image = tools.image_resize_image_big(value)
+
+        # This is needed because when there is only one variant, the user
+        # doesn't know there is a difference between template and variant, he
+        # expects both images to be the same.
+        if self.product_tmpl_id.image and self.product_variant_count > 1:
+            self.image_variant = image
+        else:
+            self.image_variant = False
+            self.product_tmpl_id.image = image
+
+    @api.depends('product_tmpl_id', 'attribute_value_ids')
+    def _compute_product_template_attribute_value_ids(self):
+        # Fetch and pre-map the values first for performance. It assumes there
+        # won't be too many values, but there might be a lot of products.
+        values = self.env['product.template.attribute.value'].search([
+            ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids),
+            ('product_attribute_value_id', 'in', self.mapped('attribute_value_ids').ids),
+        ])
+
+        values_per_template = {}
+        for ptav in values:
+            pt_id = ptav.product_tmpl_id.id
+            if pt_id not in values_per_template:
+                values_per_template[pt_id] = {}
+            values_per_template[pt_id][ptav.product_attribute_value_id.id] = ptav.id
+
+        for product in self:
+            value_ids = []
+            for pav in product.attribute_value_ids:
+                if product.product_tmpl_id.id not in values_per_template or pav.id not in values_per_template[product.product_tmpl_id.id]:
+                    _logger.warning("A matching product.template.attribute.value was not found for the product.attribute.value #%s on the template #%s" % (pav.id, product.product_tmpl_id.id))
+                else:
+                    value_ids.append(values_per_template[product.product_tmpl_id.id][pav.id])
+            product.product_template_attribute_value_ids = value_ids
+
+    @api.one
+    def _get_pricelist_items(self):
+        self.pricelist_item_ids = self.env['product.pricelist.item'].search([
+            '|',
+            ('product_id', '=', self.id),
+            ('product_tmpl_id', '=', self.product_tmpl_id.id)]).ids
+
+    @api.constrains('attribute_value_ids')
+    def _check_attribute_value_ids(self):
+>>>>>>> b24dd740a40... temp
         for product in self:
             domain = ['|',
                 '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
