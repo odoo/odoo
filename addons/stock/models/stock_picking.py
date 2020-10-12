@@ -640,6 +640,10 @@ class Picking(models.Model):
         if vals.get('partner_id'):
             for picking in res.filtered(lambda p: p.location_id.usage == 'supplier' or p.location_dest_id.usage == 'customer'):
                 picking.message_subscribe([vals.get('partner_id')])
+        if vals.get('picking_type_id'):
+            for move in res.move_lines:
+                if not move.description_picking:
+                    move.description_picking = move.product_id._get_description(move.picking_id.picking_type_id)
 
         return res
 
@@ -667,6 +671,7 @@ class Picking(models.Model):
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):
             self._autoconfirm_picking()
+
         return res
 
     def unlink(self):
