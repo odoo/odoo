@@ -18,6 +18,7 @@ var concurrency = require('web.concurrency');
 const { ComponentWrapper } = require('web.OwlCompatibility');
 var mvc = require('web.mvc');
 var session = require('web.session');
+const { useSharedValue } = require("web.custom_hooks");
 
 
 var AbstractController = mvc.Controller.extend(ActionMixin, {
@@ -225,7 +226,8 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this.importState(params.controllerState);
             Object.assign(params, this.searchModel.get('query'));
         }
-        return this.update(params, {});
+        const options = params.initiator === "pager" ? { reload: false } : {};
+        return this.update(params, options);
     },
     /**
      * This is the main entry point for the controller.  Changes from the search
@@ -244,7 +246,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     async update(params, options = {}) {
         const shouldReload = 'reload' in options ? options.reload : true;
         if (shouldReload) {
-            this.handle = await this.dp.add(this.model.reload(this.handle, params));
+            await this._reloadModel(params);
         }
         const localState = this.renderer.getLocalState();
         const state = this.model.get(this.handle, { withSampleData: true });
@@ -267,19 +269,19 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     /**
      * Meant to be overriden to return a proper object.
      * @private
-     * @param {Object} [state]
-     * @return {(Object|null)}
+     * @param {Object} state
+     * @return {(Object | null)}
      */
-    _getPagingInfo: function (state) {
+    _getPagingInfo: function () {
         return null;
     },
     /**
      * Meant to be overriden to return a proper object.
      * @private
      * @param {Object} [state]
-     * @return {(Object|null)}
+     * @return {(Object | null)}
      */
-    _getActionMenuItems: function (state) {
+    _getActionMenuItems: function () {
         return null;
     },
     /**
@@ -304,6 +306,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             controllerID: this.controllerID,
             state: this.getState(),
         });
+    },
+    /**
+     * Calls a reload on the model
+     * @private
+     */
+    async _reloadModel(params) {
+        this.handle = await this.dp.add(this.model.reload(this.handle, params));
     },
     /**
      * @private
@@ -406,6 +415,15 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                     this.controlPanelProps.breadcrumbs = params.breadcrumbs;
                 }
                 promises.push(this.updateControlPanel());
+                if (params.initiator !== "pager") {
+                    const pagingInfo = this._getPagingInfo(state);
+                    if (pagingInfo) {
+                        const { currentMinimum, limit } = pagingInfo;
+                        const { value } = this.controlPanelProps.pager;
+                        const noReload = true;
+                        promises.push(value.update({ currentMinimum, limit }, noReload));
+                    }
+                }
             }
             if (this.withSearchPanel) {
                 this._updateSearchPanel();
@@ -427,24 +445,61 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (this.$buttons) {
             this.controlPanelProps.cp_content.$buttons = this.$buttons;
         }
-        Object.assign(this.controlPanelProps, {
+        const cpProps = {
             actionMenus: this._getActionMenuItems(state),
-            pager: this._getPagingInfo(state),
+            pager: null,
             title: this.getTitle(),
-        });
+        };
+        const pagingInfo = this._getPagingInfo(state);
+        if (pagingInfo) {
+            const { currentMinimum, limit } = pagingInfo;
+
+            delete pagingInfo.currentMinimum;
+            delete pagingInfo.limit;
+
+            if (this.controlPanelProps.pager) {
+                pagingInfo.value = this.controlPanelProps.pager.value;
+            } else {
+                const process = this._updatePager.bind(this);
+                pagingInfo.value = useSharedValue({ currentMinimum, limit }, process);
+            }
+            cpProps.pager = pagingInfo;
+        }
+        Object.assign(this.controlPanelProps, cpProps);
     },
     /**
      * @private
-     * @param {Object} state
-     * @param {Object} newProps
-     * @returns {Promise}
+     * @param {Object} newValue
+     * @param {boolean} [noReload=false]
+     * @returns {Promise<Object>}
      */
-    _updatePaging: async function (state, newProps) {
-        const pagingInfo = this._getPagingInfo(state);
-        if (pagingInfo) {
-            Object.assign(pagingInfo, newProps);
-            return this.updateControlPanel({ pager: pagingInfo });
+    async _updatePager(newValue, noReload = false) {
+        if (noReload) {
+            return newValue;
         }
+        const state = this.model.get(this.handle, { raw: true });
+        const reloadParams = state.groupedBy && state.groupedBy.length ? {
+                // Grouped
+                groupsLimit: newValue.limit,
+                groupsOffset: newValue.currentMinimum - 1,
+            } : {
+                // Ungrouped
+                limit: newValue.limit,
+                offset: newValue.currentMinimum - 1,
+            };
+        const currentValue = this._getPagingInfo(state);
+        reloadParams.limitChanged = currentValue.limit === newValue.limit;
+        reloadParams.initiator = "pager";
+
+        // We only need to wait for the model to be reloaded to have the right
+        // information. We then start a reload (without reloading the model)
+        // that will not be awaited.
+        await this._reloadModel(reloadParams);
+        this.reload(reloadParams);
+
+        const updatedState = this.model.get(this.handle, { raw: true });
+        const { currentMinimum, limit } = this._getPagingInfo(updatedState);
+        return { currentMinimum, limit };
     },
     /**
      * Updates the state of the renderer (handle both Widget and Component

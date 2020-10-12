@@ -1005,7 +1005,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
                 "should have the 3 rows in the correct order");
 
@@ -1023,7 +1023,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_cell').text(), "blurpkawablip", "should display to record in 'turtle_int' order");
 
             await testUtils.form.clickSave(form);
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
             assert.strictEqual(form.$('.o_data_cell:not(.o_handle_cell)').text(), "blurpkawablip",
                 "should display to record in 'turtle_int' order");
@@ -1184,7 +1184,7 @@ QUnit.module('fields', {}, function () {
             });
 
             await testUtils.form.clickEdit(form);
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
             await testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) td:first'));
             await testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) input:first'), 'value 1');
@@ -1259,7 +1259,7 @@ QUnit.module('fields', {}, function () {
             });
 
             await testUtils.form.clickEdit(form);
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
             await testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) td:first'));
             await testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) input:first'), 'value 1');
@@ -1766,7 +1766,7 @@ QUnit.module('fields', {}, function () {
 
             // move to the second page of the o2m: 1 RPC should have been done to fetch
             // the 2 subrecords of page 2, and those records should now be displayed
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_x2m_control_panel'));
             assert.strictEqual(count, 7, 'one RPC should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 2,
                 'one2many kanban should contain 2 cards for record 1 at page 2');
@@ -1781,7 +1781,7 @@ QUnit.module('fields', {}, function () {
             // been correctly reloaded
             await cpHelpers.pagerPrevious(form);
             assert.strictEqual(count, 11, 'two RPCs should have been done');
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_x2m_control_panel'));
             assert.strictEqual(count, 12, 'one RPC should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 2,
                 'one2many kanban should contain 2 cards for record 1 at page 2');
@@ -1935,7 +1935,7 @@ QUnit.module('fields', {}, function () {
             assert.deepEqual(readIDs, [51],
                 "should have read a record (to display 40 records on page 1)");
             // add and delete a record in page 2
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_x2m_control_panel'));
             assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 52)').length,
                 1, 'first record should be the one with id 52 (next checks rely on that)');
             checkRead = true;
@@ -2956,7 +2956,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // go on next page. The new record is not valid and should be discarded
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
             assert.containsOnce(form, 'tr.o_data_row');
 
             form.destroy();
@@ -2991,7 +2991,7 @@ QUnit.module('fields', {}, function () {
 
             // go to next page. The new record is not valid, but dirty. we should
             // see a confirm dialog
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 4',
                 "pager should still display the correct total");
@@ -3033,7 +3033,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // go on next page
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
             // discard
             await testUtils.form.clickDiscard(form);
@@ -6695,8 +6695,8 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.editInput(form.$('.o_data_row input[name="turtle_foo"]'), 'rainbow dash');
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_x2m_control_panel'));
+            await cpHelpers.pagerNext(form.$('.o_x2m_control_panel'));
 
             assert.containsN(form, 'tr.o_data_row', 3,
                 "should have 3 data rows on the current page");
@@ -6740,7 +6740,7 @@ QUnit.module('fields', {}, function () {
 
 
             await testUtils.form.clickEdit(form);
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
             assert.containsN(form, 'tr.o_data_row', 2);
 

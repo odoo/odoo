@@ -1122,7 +1122,8 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
                 'there should be 40 records displayed on page 1');
 
-            await testUtils.dom.click(form.$('.o_field_widget[name=timmy] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=timmy]'));
+
             assert.verifySteps(['read']);
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '41-45 / 45', "pager should be correct");
@@ -1136,13 +1137,15 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
                 'there should be 40 records displayed on page 1');
 
-            await testUtils.dom.click(form.$('.o_field_widget[name=timmy] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=timmy]'));
+
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '41-45 / 45', "pager should be correct");
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
                 'there should be 5 records displayed on page 2');
 
-            await testUtils.dom.click(form.$('.o_field_widget[name=timmy] .o_pager_next'));
+            await cpHelpers.pagerNext(form.$('.o_field_widget[name=timmy]'));
+
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '1-40 / 45', "pager should be correct");
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,

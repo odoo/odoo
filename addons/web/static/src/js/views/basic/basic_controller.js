@@ -21,7 +21,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     }),
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
-        pager_changed: '_onPagerChanged',
         reload: '_onReload',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
@@ -456,6 +455,18 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
+     * Return the new actionMenus props.
+     *
+     * @override
+     * @private
+     */
+    _getActionMenuItems: function (state) {
+        return {
+            activeIds: this.getSelectedIds(),
+            context: state.getContext(),
+        };
+    },
+    /**
      * Compute the optional fields local storage key using the given parts.
      *
      * @param {Object} keyParts
@@ -499,11 +510,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return viewIdentifier;
     },
     /**
-     * Return the params (currentMinimum, limit and size) to pass to the pager,
-     * according to the current state.
-     *
-     * @private
-     * @returns {Object}
+     * @override
      */
     _getPagingInfo: function (state) {
         const isGrouped = state.groupedBy && state.groupedBy.length;
@@ -511,18 +518,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             currentMinimum: (isGrouped ? state.groupsOffset : state.offset) + 1,
             limit: isGrouped ? state.groupsLimit : state.limit,
             size: isGrouped ? state.groupsCount : state.count,
-        };
-    },
-    /**
-     * Return the new actionMenus props.
-     *
-     * @override
-     * @private
-     */
-    _getActionMenuItems: function (state) {
-        return {
-            activeIds: this.getSelectedIds(),
-            context: state.getContext(),
         };
     },
     /**
@@ -642,20 +637,29 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return false;
     },
     /**
+     * @override
+     */
+    async _update(state, params) {
+        await this._super(...arguments);
+        if (params.initiator === "pager" && params.limitChanged) {
+            // reset the scroll position to the top on page changed only
+            this.trigger_up('scrollTo', { top: 0 });
+        }
+    },
+    /**
      * Helper method, to get the current environment variables from the model
      * and notifies the component chain (by bubbling an event up)
      *
      * @private
-     * @param {Object} [newProps={}]
+     * @returns {Promise}
      */
-    _updateControlPanel: function (newProps = {}) {
-        const state = this.model.get(this.handle);
-        const props = Object.assign(newProps, {
-            actionMenus: this._getActionMenuItems(state),
-            pager: this._getPagingInfo(state),
-            title: this.getTitle(),
-        });
-        return this.updateControlPanel(props);
+    _updateControlPanel() {
+        if (!this.withControlPanel) {
+            return;
+        }
+        const state = this.model.get(this.handle, { raw: true });
+        this._updateControlPanelProps(state);
+        return this.updateControlPanel();
     },
 
     //--------------------------------------------------------------------------
@@ -710,27 +714,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onPagerChanged: async function (ev) {
-        ev.stopPropagation();
-        const { currentMinimum, limit } = ev.data;
-        const state = this.model.get(this.handle, { raw: true });
-        const reloadParams = state.groupedBy && state.groupedBy.length ? {
-                groupsLimit: limit,
-                groupsOffset: currentMinimum - 1,
-            } : {
-                limit,
-                offset: currentMinimum - 1,
-            };
-        await this.reload(reloadParams);
-        // reset the scroll position to the top on page changed only
-        if (state.limit === limit) {
-            this.trigger_up('scrollTo', { top: 0 });
-        }
     },
     /**
      * When a reload event triggers up, we need to reload the full view.

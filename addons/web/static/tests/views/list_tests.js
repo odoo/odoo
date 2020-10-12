@@ -1618,7 +1618,7 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_data_row',
             "list should contain one record (and thus 3 empty rows)");
 
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-1',
+        assert.strictEqual(cpHelpers.getPagerValue(list), '1',
             "pager should be correct");
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
@@ -1636,7 +1636,7 @@ QUnit.module('Views', {
             "list should still contain 4 rows");
         assert.containsOnce(list, '.o_data_row',
             "list should contain one record (and thus 3 empty rows)");
-        assert.strictEqual(cpHelpers.getPagerValue(list), '1-1',
+        assert.strictEqual(cpHelpers.getPagerValue(list), '1',
             "pager should be correct");
         assert.verifySteps(['destroy'],
             "should have destroyed the widget of the removed line");
@@ -5379,7 +5379,7 @@ QUnit.module('Views', {
 
         // go to next page
         await cpHelpers.pagerNext('.o_group_header');
-        assert.strictEqual(cpHelpers.getPagerValue('.o_group_header'), '4-4',
+        assert.strictEqual(cpHelpers.getPagerValue('.o_group_header'), '4',
             "pager's value should be correct");
         assert.containsOnce(list, '.o_data_row',
             "open group should display 1 record");
@@ -8778,16 +8778,16 @@ QUnit.module('Views', {
         assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1-3 / 4');
         assert.containsN(actionManager, '.o_group_header', 3); // page 1
 
-        await testUtils.dom.click(actionManager.$('.o_pager_next')); // switch to page 2
+        await cpHelpers.pagerNext(actionManager); // switch to page 2
 
-        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '4-4 / 4');
+        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '4 / 4');
         assert.containsN(actionManager, '.o_group_header', 1); // page 2
 
         // toggle a filter -> there should be only one group left (on page 1)
         await cpHelpers.toggleFilterMenu(actionManager);
         await cpHelpers.toggleMenuItem(actionManager, 0);
 
-        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1-1 / 1');
+        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1 / 1');
         assert.containsN(actionManager, '.o_group_header', 1); // page 1
 
         assert.verifySteps([

@@ -246,7 +246,7 @@ QUnit.module('fields', {}, function () {
             // save form
             await testUtils.form.clickSave(form);
             // click next on pager
-            await testUtils.dom.click(form.el.querySelector('.o_pager .o_pager_next'));
+            await cpHelpers.pagerNext(form);
 
             // this checks that the view did not ask for confirmation that the
             // record is dirty
@@ -318,7 +318,7 @@ QUnit.module('fields', {}, function () {
             // save form
             await testUtils.form.clickSave(form);
             // click next on pager
-            await testUtils.dom.click(form.el.querySelector('.o_pager .o_pager_next'));
+            await cpHelpers.pagerNext(form);
 
             // this checks that the view did not ask for confirmation that the
             // record is dirty
@@ -1583,7 +1583,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('td.o_data_cell').first().next().text(),
                 "first record", "should show display_name of trululu of 1st record");
 
-            await testUtils.dom.click(form.$('button.o_pager_next'));
+            await cpHelpers.pagerNext(form);
 
             assert.strictEqual(form.$('td.o_data_cell').first().text(),
                 "record2", "should show display_name of 2nd record");

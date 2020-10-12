@@ -28,6 +28,7 @@ var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
 const { sprintf, toBoolElse } = require("web.utils");
+const { useSharedValue } = require("web.custom_hooks");
 
 const { escape } = owl.utils;
 var _t = core._t;
@@ -1041,7 +1042,6 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         navigation_move: '_onNavigationMove',
         save_optional_fields: '_onSaveOrLoadOptionalFields',
         load_optional_fields: '_onSaveOrLoadOptionalFields',
-        pager_changed: '_onPagerChanged',
     }),
 
     // We need to trigger the reset on every changes to be aware of the parent changes
@@ -1068,13 +1068,16 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         this.isMany2Many = this.field.type === 'many2many' || this.attrs.widget === 'many2many';
         this.activeActions = {};
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
+
         // The limit is fixed so it cannot be changed by adding/removing lines in
         // the widget. It will only change through a hard reload or when manually
-        // changing the pager (see _onPagerChanged).
-        this.pagingState = {
-            currentMinimum: this.value.offset + 1,
-            limit: this.value.limit,
+        // changing the pager (see _updatePager).
+        const currentMinimum = this.value.offset + 1;
+        const limit = this.value.limit;
+        const process = this._updatePager.bind(this);
+        this.pagerProps = {
             size: this.value.count,
+            value: useSharedValue({ currentMinimum, limit }, process),
             validate: () => {
                 // TODO: we should have some common method in the basic renderer...
                 return this.view.arch.tag === 'tree' ?
@@ -1083,6 +1086,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
             },
             withAccessKey: false,
         };
+
         var arch = this.view && this.view.arch;
         if (arch) {
             this.activeActions.create = arch.attrs.create ?
@@ -1107,7 +1111,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
             this._renderButtons();
             this._controlPanelWrapper = new ComponentWrapper(this, ControlPanelX2Many, {
                 cp_content: { $buttons: this.$buttons },
-                pager: this.pagingState,
+                pager: this.pagerProps,
             });
             await this._controlPanelWrapper.mount(this.el, { position: 'first-child' });
         }
@@ -1458,15 +1462,18 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * The only mutable element in X2Many fields will be the pager.
      *
      * @private
+     * @param {Object} pagerProps
+     * @returns {Promise}
      */
-    _updateControlPanel: function (pagingState) {
-        if (this._controlPanelWrapper) {
-            const newProps = {
-                cp_content: { $buttons: this.$buttons },
-                pager: Object.assign(this.pagingState, pagingState),
-            };
-            return this._controlPanelWrapper.update(newProps);
+    async _updateControlPanel(pagerProps) {
+        if (!this._controlPanelWrapper) {
+            return;
         }
+        const newProps = {
+            cp_content: { $buttons: this.$buttons },
+            pager: Object.assign(this.pagerProps, pagerProps),
+        };
+        return this._controlPanelWrapper.update(newProps);
     },
     /**
      * Parses the 'columnInvisibleFields' attribute to search for the domains
@@ -1627,23 +1634,26 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @see field_manager_mixin for concurrency handling.
      *
      * @private
-     * @param {OdooEvent} ev
+     * @param {Object} newValue
+     * @returns {Promise<Object>}
      */
-    _onPagerChanged: function (ev) {
-        ev.stopPropagation();
-        const { currentMinimum, limit } = ev.data;
-        this._updateControlPanel({ currentMinimum, limit });
-        this.trigger_up('load', {
-            id: this.value.id,
-            limit,
-            offset: currentMinimum - 1,
-            on_success: value => {
-                this.value = value;
-                this.pagingState.limit = value.limit;
-                this.pagingState.size = value.count;
-                this._render();
-            },
+    async _updatePager(newValue) {
+        const { currentMinimum, limit } = newValue;
+        this.value = await new Promise(resolve => {
+            this.trigger_up('load', {
+                id: this.value.id,
+                limit,
+                offset: currentMinimum - 1,
+                on_success: resolve,
+            });
         });
+
+        this._render();
+
+        return {
+            currentMinimum: this.value.offset + 1,
+            limit: this.value.limit,
+        };
     },
     /**
      * Called when the renderer ask to save a line (the user tries to leave it)

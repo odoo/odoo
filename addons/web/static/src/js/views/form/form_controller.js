@@ -170,10 +170,7 @@ var FormController = BasicController.extend({
     /**
      * The form view has to prevent a click on the pager if the form is dirty
      *
-     * @override method from BasicController
-     * @param {jQueryElement} $node
-     * @param {Object} options
-     * @returns {Promise}
+     * @override
      */
     _getPagingInfo: function () {
         // Only display the pager if we are not on a new record.

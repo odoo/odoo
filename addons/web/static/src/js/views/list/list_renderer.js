@@ -8,6 +8,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
+const { useSharedValue } = require("web.custom_hooks");
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
@@ -801,13 +802,15 @@ var ListRenderer = BasicRenderer.extend({
         const currentMinimum = group.offset + 1;
         const limit = group.limit;
         const size = group.count;
+
         if (!this._shouldRenderPager(currentMinimum, limit, size)) {
             return;
         }
-        const pager = new ComponentWrapper(this, Pager, { currentMinimum, limit, size });
+
+        const process = this._updatePager.bind(this, group);
+        const pagerValue = useSharedValue({ currentMinimum, limit }, process);
+        const pager = new ComponentWrapper(this, Pager, { size, value: pagerValue });
         const pagerMounting = pager.mount(target).then(() => {
-            // Event binding is done here to get the related group and wrapper.
-            pager.el.addEventListener('pager-changed', ev => this._onPagerChanged(ev, group));
             // Prevent pager clicks to toggle the group.
             pager.el.addEventListener('click', ev => ev.stopPropagation());
         });
@@ -1165,6 +1168,30 @@ var ListRenderer = BasicRenderer.extend({
         this.$('tfoot').replaceWith(this._renderFooter());
     },
     /**
+     * @private
+     * @param {Object} group
+     * @param {Object} newValue
+     * @returns {Promise<Object>}
+     */
+    async _updatePager(group, newValue) {
+        const reloadedGroup = await new Promise(resolve => {
+            this.trigger_up('load', {
+                id: group.id,
+                limit: newValue.limit,
+                offset: newValue.currentMinimum - 1,
+                on_success: resolve,
+            });
+        });
+        Object.assign(group, reloadedGroup);
+
+        await this._render();
+
+        const currentMinimum = group.offset + 1;
+        const limit = group.limit;
+
+        return { currentMinimum, limit };
+    },
+    /**
      * Whenever we change the state of the selected rows, we need to call this
      * method to keep the this.selection variable in sync, and also to recompute
      * the aggregates.
@@ -1355,24 +1382,6 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onMouseDown: function () {
         $('.o_keyboard_navigation').removeClass('o_keyboard_navigation');
-    },
-    /**
-     * @private
-     * @param {OwlEvent} ev
-     * @param {Object} group
-     */
-    _onPagerChanged: async function (ev, group) {
-        ev.stopPropagation();
-        const { currentMinimum, limit } = ev.detail;
-        this.trigger_up('load', {
-            id: group.id,
-            limit: limit,
-            offset: currentMinimum - 1,
-            on_success: reloadedGroup => {
-                Object.assign(group, reloadedGroup);
-                this._render();
-            },
-        });
     },
     /**
      * @private

@@ -233,7 +233,7 @@ var ListController = BasicController.extend({
         if ((recordID || this.handle) !== this.handle) {
             var state = this.model.get(this.handle);
             this.renderer.removeLine(state, recordID);
-            this._updatePaging(state);
+            this._updateControlPanel();
         }
     },
     /**
@@ -260,7 +260,7 @@ var ListController = BasicController.extend({
                         self.renderer.editRecord(recordID);
                     })
                     .then(() => {
-                        self._updatePaging(state);
+                        self._updateControlPanel();
                     });
             }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
         });
@@ -946,7 +946,13 @@ var ListController = BasicController.extend({
         ev.stopPropagation();
         var state = this.model.get(this.handle);
         if (!state.groupedBy) {
-            this._updatePaging(state, { currentMinimum: 1 });
+            this._updateControlPanelProps(state);
+            const { pager } = this.controlPanelProps;
+            if (pager) {
+                const { limit } = pager.value.get();
+                const noReload = true;
+                pager.value.update({ currentMinimum: 1, limit }, noReload);
+            }
         }
         var self = this;
         this.model.setSort(state.id, ev.data.name).then(function () {

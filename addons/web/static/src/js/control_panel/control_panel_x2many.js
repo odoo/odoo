@@ -1,4 +1,5 @@
 odoo.define('web.ControlPanelX2Many', function (require) {
+    "use strict";
 
     const ControlPanel = require('web.ControlPanel');
 
@@ -19,10 +20,14 @@ odoo.define('web.ControlPanelX2Many', function (require) {
          * @returns {boolean}
          */
         _shouldShowPager() {
-            if (!this.props.pager || !this.props.pager.limit) {
+            if (!this.props.pager) {
                 return false;
             }
-            const { currentMinimum, limit, size } = this.props.pager;
+            const { value, size } = this.props.pager;
+            const { currentMinimum, limit } = value.get();
+            if (!limit) {
+                return false;
+            }
             const maximum = Math.min(currentMinimum + limit - 1, size);
             const singlePage = (1 === currentMinimum) && (maximum === size);
             return !singlePage;

@@ -1,7 +1,13 @@
 odoo.define('web.test_utils_control_panel', function (require) {
     "use strict";
 
-    const { click, findItem, getNode, triggerEvent } = require('web.test_utils_dom');
+    const {
+        click,
+        findItem,
+        getNode,
+        returnAfterNextAnimationFrame,
+        triggerEvent,
+    } = require('web.test_utils_dom');
     const { editInput, editSelect, editAndTrigger } = require('web.test_utils_fields');
 
     //-------------------------------------------------------------------------
@@ -255,6 +261,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      */
     async function pagerPrevious(el) {
         await click(getNode(el).querySelector(`.o_pager button.o_pager_previous`));
+        await returnAfterNextAnimationFrame();
     }
 
     /**
@@ -263,6 +270,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      */
     async function pagerNext(el) {
         await click(getNode(el).querySelector(`.o_pager button.o_pager_next`));
+        await returnAfterNextAnimationFrame();
     }
 
     /**

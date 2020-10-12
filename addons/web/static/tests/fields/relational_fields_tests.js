@@ -181,18 +181,20 @@ QUnit.module('relational_fields', {
 
         await testUtils.fields.many2one.clickOpenDropdown('trululu');
         await testUtils.fields.many2one.clickItem('trululu','Search');
-        await testUtils.dom.click($('.modal .o_pager_next'));
+        await cpHelpers.pagerNext(".modal");
 
-        assert.strictEqual($('.o_pager_limit').text(), "1173", "there should be 173 records");
-        assert.strictEqual($('.o_pager_value').text(), "181-160", "should display the second page");
+        assert.strictEqual(cpHelpers.getPagerSize(".modal"), "173", "there should be 173 records");
+        assert.strictEqual(cpHelpers.getPagerValue(".modal"), "81-160", "should display the second page");
         assert.strictEqual($('tr.o_data_row').length, 80, "should display 80 record");
 
         await cpHelpers.editSearch('.modal', "first");
         await cpHelpers.validateSearch('.modal');
+        await testUtils.nextTick();
 
-        assert.strictEqual($('.o_pager_limit').text(), "11", "there should be 1 record");
-        assert.strictEqual($('.o_pager_value').text(), "11-1", "should display the first page");
+        assert.strictEqual(cpHelpers.getPagerSize(".modal"), "1", "there should be 1 record");
+        assert.strictEqual(cpHelpers.getPagerValue(".modal"), "1", "should display the first page");
         assert.strictEqual($('tr.o_data_row').length, 1, "should display 1 record");
+
         form.destroy();
     });
 
@@ -671,8 +673,8 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
-        await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+        await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
+        await cpHelpers.pagerNext(form.$('.o_field_widget[name=turtles]'));
 
         readDefs[1].resolve();
         await testUtils.nextTick();
@@ -681,7 +683,7 @@ QUnit.module('relational_fields', {
         readDefs[2].resolve();
         await testUtils.nextTick();
 
-        assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_data_cell').text(), 'raphael');
+        assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_data_cell').text(), 'donatello');
 
         form.destroy();
     });
@@ -1721,7 +1723,9 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('.modal tbody:nth(1) .o_data_row').length, 7,
             "should display 7 records in the first page");
-        await testUtils.dom.click($('.modal .o_group_header:first .o_pager_next'));
+
+        await cpHelpers.pagerNext($('.modal .o_group_header:first'));
+
         assert.strictEqual($('.modal tbody:nth(1) .o_data_row').length, 1,
             "should display 1 record in the second page");
 
