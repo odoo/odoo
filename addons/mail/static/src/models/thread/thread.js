@@ -668,12 +668,13 @@ function factory(dependencies) {
          */
         async notifyPinStateToServer() {
             if (this.isPendingPinned) {
-                return this.env.models['mail.thread'].performRpcChannelPin(this.uuid, true);
+                await this.env.models['mail.thread'].performRpcChannelPin(this.uuid, true);
+            } else {
+                await this.env.models['mail.thread'].performRpcExecuteCommand({
+                    ids: [this.id],
+                    command: 'leave',
+                });
             }
-            return this.env.models['mail.thread'].performRpcExecuteCommand({
-                ids: [this.id],
-                command: 'leave',
-            });
         }
 
         /**
@@ -728,7 +729,7 @@ function factory(dependencies) {
          */
         async pin() {
             this.update({ isPendingPinned: true });
-            return this.notifyPinStateToServer();
+            await this.notifyPinStateToServer();
         }
 
         /**
@@ -903,7 +904,7 @@ function factory(dependencies) {
          */
         async unpin() {
             this.update({ isPendingPinned: false });
-            return this.notifyPinStateToServer();
+            await this.notifyPinStateToServer();
         }
 
         /**
