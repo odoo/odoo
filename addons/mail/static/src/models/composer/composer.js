@@ -103,17 +103,16 @@ function factory(dependencies) {
         }
 
         /**
-         * Focus a specific composer and remove focus from all others.
-         * @param {mail.composer} composer
+         * Focus this composer and remove focus from all others.
          */
-        static focus(composer) {
+        focus() {
             const allComposers = this.env.models['mail.composer'].all();
             for (const otherComposer of allComposers) {
-                if (otherComposer !== composer && otherComposer.hasFocus) {
+                if (otherComposer !== this && otherComposer.hasFocus) {
                     otherComposer.update({ hasFocus: false });
                 }
             }
-            composer.update({ hasFocus: true });
+            this.update({ hasFocus: true });
         }
 
         /**

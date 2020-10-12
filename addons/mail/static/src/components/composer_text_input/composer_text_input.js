@@ -153,11 +153,11 @@ class ComposerTextInput extends Component {
      * @private
      */
     _update() {
-        // Needed to ensure the right composer is focused when the composer changes.
-        // For example when changing channel in discuss component is reused but composer model
-        // changes so the textarea is still focused but associated composer model is not
         if (document.activeElement === this._textareaRef.el && !this.composer.hasFocus) {
-            this.env.models['mail.composer'].focus(this.composer);
+            // Needed to ensure the right composer is focused when the composer changes.
+            // For example when changing channel in discuss component is reused but composer model
+            // changes so the textarea is still focused but associated composer model is not.
+            this.composer.focus();
         }
         this._textareaRef.el.value = this.composer.textInputContent;
         this._textareaRef.el.setSelectionRange(
@@ -185,7 +185,7 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onFocusinTextarea() {
-        this.env.models['mail.composer'].focus(this.composer);
+        this.composer.focus();
     }
 
     /**
