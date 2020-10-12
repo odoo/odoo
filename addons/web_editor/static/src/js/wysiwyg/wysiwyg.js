@@ -421,17 +421,52 @@ var Wysiwyg = Widget.extend({
         this.editor.stop();
         this._super();
     },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    cropImage: async function (params) {
+        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
+        const imageNode = imageNodes.length === 1 && imageNodes[0];
+        if (imageNode) {
+            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
+            const $node = $(domEngine.getDomNodes(imageNode)[0]);
+            $node.off('image_cropped');
+            $node.on('image_cropped', () => this._updateAttributes($node[0]));
+            new weWidgets.ImageCropWidget(this, $node[0]).appendTo($('#wrap'));
+        }
+    },
+    describeImage: async function (params) {
+        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
+        const imageNode = imageNodes.length === 1 && imageNodes[0];
+        if (imageNode) {
+            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
+            const node = domEngine.getDomNodes(imageNode)[0];
+            var altDialog = new weWidgets.AltDialog(this, {}, node);
+            altDialog.on('save', this, () => this._updateAttributes(node));
+            altDialog.open();
+        }
+    },
+    discardEditions: async function () {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
+                confirm_callback: resolve,
+            });
+            confirm.on('closed', self, reject);
+        }).then(function () {
+            window.onbeforeunload = null;
+            window.location.reload();
+        });
+    },
     /**
-     * Return the editable area.
-     *
-     * @returns {jQuery}
+     * Set the focus on the element.
      */
-    getEditable: function () {
-        return this.$editor;
+    focus: function () {
+        // todo: handle tab that need to go to next field if the editor does not
+        //       catch it.
+        this.$el.find('[contenteditable="true"]').focus();
     },
     /**
      * Return dirty Odoo structure nodes and Odoo field nodes.
@@ -448,20 +483,15 @@ var Wysiwyg = Widget.extend({
         });
     },
     /**
-     * Return true if the content has changed.
+     * Return the editable area.
      *
-     * @returns {boolean}
+     * @returns {jQuery}
      */
-    isDirty: function () {
-        return !!this.getDirtyNodes().length;
+    getEditable: function () {
+        return this.$editor;
     },
-    /**
-     * Set the focus on the element.
-     */
-    focus: function () {
-        // todo: handle tab that need to go to next field if the editor does not
-        //       catch it.
-        this.$el.find('[contenteditable="true"]').focus();
+    getFormatInfo: function() {
+        return this.editor.plugins.get(JWEditorLib.Odoo).formatInfo;
     },
     /**
      * Get the value of the editable element.
@@ -473,96 +503,35 @@ var Wysiwyg = Widget.extend({
     getValue: async function (format) {
         return this.editor.getValue(format || 'text/html');
     },
+    async initColorPicker($dropdownNode, setCommandId, unsetCommandId) {
+        if (!$dropdownNode.hasClass("colorpicker-initalized")) {
+            $dropdownNode.addClass("colorpicker-initalized");
+            // Init the colorPalete for this color picker Dropdown.
+            const colorpicker = new ColorPaletteWidget(this, {});
+
+            // Prevent the dropdown to be closed when click inside it
+            $dropdownNode.on('click', (e)=> {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            })
+            $dropdownNode.find('.dropdown-menu').empty();
+            await colorpicker.appendTo($dropdownNode.find('.dropdown-menu'));
+            // Events listeners to trigger color changes
+            colorpicker.on('custom_color_picked', this, (e) => {
+                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode);
+            });
+            colorpicker.on('color_picked', this, (e) => {
+                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode, true);
+            });
+        }
+    },
     /**
-     * @param {String} value
-     * @param {Object} options
-     * @param {Boolean} [options.notifyChange]
-     * @returns {String}
+     * Return true if the content has changed.
+     *
+     * @returns {boolean}
      */
-    setValue: function (value, options) {
-        this._value = value;
-    },
-    saveToServer: async function (context = this.editor, reload = true) {
-        const defs = [];
-        this.trigger_up('edition_will_stopped');
-        this.trigger_up('ready_to_save', {defs: defs});
-        await Promise.all(defs);
-
-        if (this.snippetsMenu) {
-            await this.snippetsMenu.cleanForSave();
-        }
-
-        return this._saveWebsiteContent(context)
-            .then(() => {
-                this.trigger_up('edition_was_stopped');
-                if (reload) window.location.reload();
-            }).catch(error => {
-                console.error('Impossible to save.', error);
-            });
-    },
-    discardEditions: async function () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
-                confirm_callback: resolve,
-            });
-            confirm.on('closed', self, reject);
-        }).then(function () {
-            window.onbeforeunload = null;
-            window.location.reload();
-        });
-    },
-    cropImage: async function (params) {
-        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
-        const imageNode = imageNodes.length === 1 && imageNodes[0];
-        if (imageNode) {
-            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-            const $node = $(domEngine.getDomNodes(imageNode)[0]);
-            $node.off('image_cropped');
-            $node.on('image_cropped', () => this._updateAttributes($node[0]));
-            new weWidgets.ImageCropWidget(this, $node[0]).appendTo($('#wrap'));
-        }
-    },
-    transformImage: async function (params) {
-        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
-        const imageNode = imageNodes.length === 1 && imageNodes[0];
-        if (imageNode) {
-            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-            const $node = $(domEngine.getDomNodes(imageNode)[0]);
-            this._transform($node);
-        }
-    },
-    describeImage: async function (params) {
-        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
-        const imageNode = imageNodes.length === 1 && imageNodes[0];
-        if (imageNode) {
-            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-            const node = domEngine.getDomNodes(imageNode)[0];
-            var altDialog = new weWidgets.AltDialog(this, {}, node);
-            altDialog.on('save', this, () => this._updateAttributes(node));
-            altDialog.open();
-        }
-    },
-    getFormatInfo: function() {
-        return this.editor.plugins.get(JWEditorLib.Odoo).formatInfo;
-    },
-    async updateChanges($target) {
-        const updateChanges = async (context) => {
-            const html = $target.html();
-            $target.html('');
-            const attributes = [...$target[0].attributes].reduce( (acc, attribute) => {
-                acc[attribute.name] = attribute.value;
-                return acc
-            }, {})
-            await this.editorHelpers.updateAttributes(context, $target[0], attributes);
-            await this.editorHelpers.empty(context, $target[0]);
-            await this.editorHelpers.insertHtml(context, html, $target[0], 'INSIDE');
-        };
-        await this.editor.execCommand(updateChanges);
-    },
-    withDomMutationsObserver ($target, callback) {
-        callback();
-        this.updateChanges($target);
+    isDirty: function () {
+        return !!this.getDirtyNodes().length;
     },
     async openLinkDialog(params) {
         const range = this.editor.selection.range;
@@ -725,38 +694,32 @@ var Wysiwyg = Widget.extend({
             await this.saveToServer(context);
         }
     },
-    async initColorPicker($dropdownNode, setCommandId, unsetCommandId) {
-        if (!$dropdownNode.hasClass("colorpicker-initalized")) {
-            $dropdownNode.addClass("colorpicker-initalized");
-            // Init the colorPalete for this color picker Dropdown.
-            const colorpicker = new ColorPaletteWidget(this, {});
+    saveToServer: async function (context = this.editor, reload = true) {
+        const defs = [];
+        this.trigger_up('edition_will_stopped');
+        this.trigger_up('ready_to_save', {defs: defs});
+        await Promise.all(defs);
 
-            // Prevent the dropdown to be closed when click inside it
-            $dropdownNode.on('click', (e)=> {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-            })
-            $dropdownNode.find('.dropdown-menu').empty();
-            await colorpicker.appendTo($dropdownNode.find('.dropdown-menu'));
-            // Events listeners to trigger color changes
-            colorpicker.on('custom_color_picked', this, (e) => {
-                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode);
-            });
-            colorpicker.on('color_picked', this, (e) => {
-                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode, true);
-            });
+        if (this.snippetsMenu) {
+            await this.snippetsMenu.cleanForSave();
         }
-    },
-    async toggleTextColorPicker() {
-        // event.target equal the current toggle button clicked.
-        // window.event can be undefined during Qunit test
-        const $textColorDropdown = event ? $(event.target).parent() : $(".jw-dropdown-textcolor");
-        await this.initColorPicker(
-            $textColorDropdown,
-            "colorText",
-            "uncolorText");
 
-        $textColorDropdown.find(".dropdown-toggle").dropdown("toggle");
+        return this._saveWebsiteContent(context)
+            .then(() => {
+                this.trigger_up('edition_was_stopped');
+                if (reload) window.location.reload();
+            }).catch(error => {
+                console.error('Impossible to save.', error);
+            });
+    },
+    /**
+     * @param {String} value
+     * @param {Object} options
+     * @param {Boolean} [options.notifyChange]
+     * @returns {String}
+     */
+    setValue: function (value, options) {
+        this._value = value;
     },
     async toggleBackgroundColorPicker() {
         // event.target equal the current toggle button clicked.
@@ -769,31 +732,82 @@ var Wysiwyg = Widget.extend({
 
         $backgroundColorDropdown.find(".dropdown-toggle").dropdown("toggle");
     },
+    async toggleTextColorPicker() {
+        // event.target equal the current toggle button clicked.
+        // window.event can be undefined during Qunit test
+        const $textColorDropdown = event ? $(event.target).parent() : $(".jw-dropdown-textcolor");
+        await this.initColorPicker(
+            $textColorDropdown,
+            "colorText",
+            "uncolorText");
+
+        $textColorDropdown.find(".dropdown-toggle").dropdown("toggle");
+    },
+    transformImage: async function (params) {
+        const imageNodes = params.context.range.targetedNodes(JWEditorLib.ImageNode);
+        const imageNode = imageNodes.length === 1 && imageNodes[0];
+        if (imageNode) {
+            const domEngine = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
+            const $node = $(domEngine.getDomNodes(imageNode)[0]);
+            this._transform($node);
+        }
+    },
+    async updateChanges($target) {
+        const updateChanges = async (context) => {
+            const html = $target.html();
+            $target.html('');
+            const attributes = [...$target[0].attributes].reduce( (acc, attribute) => {
+                acc[attribute.name] = attribute.value;
+                return acc
+            }, {})
+            await this.editorHelpers.updateAttributes(context, $target[0], attributes);
+            await this.editorHelpers.empty(context, $target[0]);
+            await this.editorHelpers.insertHtml(context, html, $target[0], 'INSIDE');
+        };
+        await this.editor.execCommand(updateChanges);
+    },
+    withDomMutationsObserver ($target, callback) {
+        callback();
+        this.updateChanges($target);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
-     * Save after any cleaning has been done and before reloading
-     * the page.
+     * Additional binding after start.
+     *
+     * Meant to be overridden
      */
-    async _saveWebsiteContent(context = this.editor) {
-        return new Promise((resolve, reject) => {
-            const wysiwygSaveContent = async (context)=> {
-                await this._saveModifiedImages(context);
-                await this._saveViewBlocks();
-                await this._saveCoverPropertiesBlocks(context);
-                await this._saveMegaMenuClasses();
-            };
-            context.execCommand(wysiwygSaveContent).then(params => {
-                if (params && params.error) {
-                    reject(params.error.message);
-                } else {
-                    resolve();
-                }
-            });
-        });
+    _bindAfterStart() {},
+    /**
+     * Returns the editable areas on the page.
+     *
+     * @param {JQuery} $element
+     * @returns {JQuery}
+     */
+    _getEditable($element) {
+        const $editable = $element.find('[data-oe-model]')
+            .not('.o_not_editable')
+            .filter(function () {
+                var $parent = $(this).closest('.o_editable, .o_not_editable');
+                return !$parent.length || $parent.hasClass('o_editable');
+            })
+            .not('link, script')
+            .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
+            .not('.oe_snippet_editor')
+            .not('hr, br, input, textarea')
+            .add('.o_editable');
+        if (this.options.enableTranslation) {
+            const selector = '[data-oe-translation-id], '+
+                '[data-oe-model][data-oe-id][data-oe-field], ' +
+                '[placeholder*="data-oe-translation-id="], ' +
+                '[title*="data-oe-translation-id="], ' +
+                '[alt*="data-oe-translation-id="]';
+            $editable.filter(':has(' + selector + ')').attr('data-oe-readonly', true);
+        }
+        return $editable.not('[data-oe-readonly]')
     },
     /**
      * Gets jQuery cloned element with internal text nodes escaped for XML
@@ -880,78 +894,81 @@ var Wysiwyg = Widget.extend({
         });
     },
     /**
-     * Return a promise resulting from a rpc to 'ir.ui.view' to save the given
-     * view to the given viewId.
-     *
-     * @param {JQuery} $elem
-     * @param {number} viewId
-     * @param {string} [xpath]
-     */
-    _saveViewTo($elem, viewId, xpath = null) {
-        const $escapedElement = this._getEscapedElement($elem);
-        return this._rpc({
-            model: 'ir.ui.view',
-            method: 'save',
-            args: [
-                viewId,
-                $escapedElement.prop('outerHTML'),
-                xpath,
-            ],
-            context: this.options.recordInfo.context,
-        });
-    },
-    /**
-     * Return a promise resulting from a rpc to 'ir.translation' to save the
-     * given view to the given translationId.
-     *
-     * @param {JQuery} $elem
-     * @param {number} translationId
-     * @param {string} [xpath]
-     */
-    _saveTranslationTo($elem, translationId) {
-        const $escapedElement = this._getEscapedElement($elem);
-        return this._rpc({
-            model: 'ir.translation',
-            method: 'save_html',
-            args: [
-                [translationId],
-                $escapedElement.html() || $escapedElement.text() || '',
-            ],
-            context: this.options.recordInfo.context,
-        });
-    },
-    /**
-     * Save all "view" blocks.
+     * Save all translation blocks.
      *
      * @private
      */
-    _saveViewBlocks: async function () {
+    _onSaveTranslation: async function (context) {
+        const defs = [];
+        this.trigger_up('edition_will_stopped');
+        this.trigger_up('ready_to_save', {defs: defs});
+        await Promise.all(defs);
+
         const promises = [];
-        const nodes = this.zoneMain.descendants(node => {
-            return (
-                node instanceof JWEditorLib.OdooStructureNode ||
-                node instanceof JWEditorLib.OdooFieldNode
-            );
-        });
-        for (const node of nodes) {
+        const translationContainers = {};
+        const getTranslationNodes = () => {
+            let previousTranslationId;
+            this.zoneMain.descendants(descendant => {
+                const format = descendant.modifiers.find(JWEditorLib.OdooTranslationFormat);
+                const formatAttributes = format && format.modifiers.find(JWEditorLib.Attributes);
+                const translationId = format && (format.translationId || +formatAttributes.get('data-oe-id'));
+                if (this.editor.mode.is(descendant, 'editable')) {
+                    translationContainers[translationId] = translationContainers[translationId] || [];
+                    const containers = translationContainers[translationId];
+                    if (previousTranslationId !== translationId) {
+                        containers.push(new JWEditorLib.ContainerNode());
+                    }
+                    const lastContainer = containers[containers.length-1];
+                    lastContainer.append(descendant.clone());
+                }
+                previousTranslationId = translationId;
+            });
+        }
+        await context.execCommand(getTranslationNodes);
+
+        // Save the odoo translation formats.
+        for (const id of Object.keys(translationContainers)) {
+            const containers = translationContainers[id];
+            // todo: check that all container render the same way otherwise
+            // inform the user that there is conflict between the same
+            // traduction.
+            const lastContainer = containers[containers.length-1];
+            const translationNode = lastContainer.children()[0];
             const renderer = this.editor.plugins.get(JWEditorLib.Renderer);
-            const renderedNode = (await renderer.render('dom/html', node))[0];
-            $(renderedNode).find('.o_snippet_editor_updated').addBack().removeClass('o_snippet_editor_updated');
-            let $saveNode = $(renderedNode).find('[data-oe-expression][data-oe-id]');
-            if ($saveNode.length === 0) {
-                $saveNode = $(renderedNode)
+
+            const renderedNode = (await renderer.render('dom/html', lastContainer))[0].firstChild;
+            const translationFormat = translationNode.modifiers.find(JWEditorLib.OdooTranslationFormat);
+
+            let $renderedTranslation = $(renderedNode);
+            if (!$renderedTranslation.data('oe-translation-state')) {
+                $renderedTranslation = $renderedTranslation.find('[data-oe-translation-state]');
             }
-            const isStructureDirty = node instanceof JWEditorLib.OdooStructureNode && node.dirty;
-            const isFieldDirty = node instanceof JWEditorLib.OdooFieldNode && node.fieldInfo.originalValue !== node.fieldInfo.value.get();
-            if (isStructureDirty || isFieldDirty) {
-                const promise = this._saveViewTo($saveNode, +$saveNode[0].dataset.oeId, node.xpath);
-                promise.catch(() => { console.error('Fail to save:', $saveNode[0]); });
-                promises.push(promise);
+
+            if (translationFormat.translationId) {
+                promises.push(this._saveTranslationTo($renderedTranslation, +translationFormat.translationId));
+            } else {
+                const attributes = translationFormat.modifiers.find(JWEditorLib.Attributes);
+                promises.push(this._saveViewTo(
+                    $renderedTranslation,
+                    attributes.get('data-oe-id'),
+                    attributes.get('data-oe-xpath')
+                ));
             }
         }
-        return Promise.all(promises);
-    },
 
+        // Save attributes
+        for (const attribute_translation of this.$attribute_translations) {
+            const $attribute_translations = $(attribute_translation);
+            promises.push(this._saveTranslationTo(
+                $attribute_translations,
+                +$attribute_translations.data('oe-translation-id')
+            ));
+        }
+
+        await Promise.all(promises);
+        this.trigger_up('edition_was_stopped');
+        window.location.reload();
+    },
     /**
      * Save all "cover properties" blocks.
      *
@@ -1046,33 +1063,6 @@ var Wysiwyg = Widget.extend({
         await Promise.all(promises);
     },
     /**
-     * Save all "newsletter" blocks.
-     *
-     * @private
-     */
-    _saveNewsletterBlocks: async function () {
-        const defs = [];
-        const wysiwygSaveNewsletterBlocks = async () => {
-            defs.push(this._super.apply(this, arguments));
-            const $popups = $(this.editorEditable).find('.o_newsletter_popup');
-            for (const popup of $popups) {
-                const $popup = $(popup);
-                const content = $popup.data('content');
-                if (content) {
-                    defs.push(this._rpc({
-                        route: '/website_mass_mailing/set_content',
-                        params: {
-                            'newsletter_id': parseInt($popup.attr('data-list-id')),
-                            'content': content,
-                        },
-                    }));
-                }
-            }
-        };
-        await this.editor.execCommand(wysiwygSaveNewsletterBlocks);
-        return Promise.all(defs);
-    },
-    /**
      * Save all modified images.
      *
      * @private
@@ -1109,6 +1099,142 @@ var Wysiwyg = Widget.extend({
             await Promise.all(defs);
         };
         return context.execCommand(wysiwygSaveModifiedImages);
+    },
+    /**
+     * Save all "newsletter" blocks.
+     *
+     * @private
+     */
+    _saveNewsletterBlocks: async function () {
+        const defs = [];
+        const wysiwygSaveNewsletterBlocks = async () => {
+            defs.push(this._super.apply(this, arguments));
+            const $popups = $(this.editorEditable).find('.o_newsletter_popup');
+            for (const popup of $popups) {
+                const $popup = $(popup);
+                const content = $popup.data('content');
+                if (content) {
+                    defs.push(this._rpc({
+                        route: '/website_mass_mailing/set_content',
+                        params: {
+                            'newsletter_id': parseInt($popup.attr('data-list-id')),
+                            'content': content,
+                        },
+                    }));
+                }
+            }
+        };
+        await this.editor.execCommand(wysiwygSaveNewsletterBlocks);
+        return Promise.all(defs);
+    },
+    /**
+     * Return a promise resulting from a rpc to 'ir.translation' to save the
+     * given view to the given translationId.
+     *
+     * @param {JQuery} $elem
+     * @param {number} translationId
+     * @param {string} [xpath]
+     */
+    _saveTranslationTo($elem, translationId) {
+        const $escapedElement = this._getEscapedElement($elem);
+        return this._rpc({
+            model: 'ir.translation',
+            method: 'save_html',
+            args: [
+                [translationId],
+                $escapedElement.html() || $escapedElement.text() || '',
+            ],
+            context: this.options.recordInfo.context,
+        });
+    },
+    /**
+     * Save all "view" blocks.
+     *
+     * @private
+     */
+    _saveViewBlocks: async function () {
+        const promises = [];
+        const nodes = this.zoneMain.descendants(node => {
+            return (
+                node instanceof JWEditorLib.OdooStructureNode ||
+                node instanceof JWEditorLib.OdooFieldNode
+            );
+        });
+        for (const node of nodes) {
+            const renderer = this.editor.plugins.get(JWEditorLib.Renderer);
+            const renderedNode = (await renderer.render('dom/html', node))[0];
+            $(renderedNode).find('.o_snippet_editor_updated').addBack().removeClass('o_snippet_editor_updated');
+            let $saveNode = $(renderedNode).find('[data-oe-expression][data-oe-id]');
+            if ($saveNode.length === 0) {
+                $saveNode = $(renderedNode)
+            }
+            const isStructureDirty = node instanceof JWEditorLib.OdooStructureNode && node.dirty;
+            const isFieldDirty = node instanceof JWEditorLib.OdooFieldNode && node.fieldInfo.originalValue !== node.fieldInfo.value.get();
+            if (isStructureDirty || isFieldDirty) {
+                const promise = this._saveViewTo($saveNode, +$saveNode[0].dataset.oeId, node.xpath);
+                promise.catch(() => { console.error('Fail to save:', $saveNode[0]); });
+                promises.push(promise);
+            }
+        }
+        return Promise.all(promises);
+    },
+    /**
+     * Return a promise resulting from a rpc to 'ir.ui.view' to save the given
+     * view to the given viewId.
+     *
+     * @param {JQuery} $elem
+     * @param {number} viewId
+     * @param {string} [xpath]
+     */
+    _saveViewTo($elem, viewId, xpath = null) {
+        const $escapedElement = this._getEscapedElement($elem);
+        return this._rpc({
+            model: 'ir.ui.view',
+            method: 'save',
+            args: [
+                viewId,
+                $escapedElement.prop('outerHTML'),
+                xpath,
+            ],
+            context: this.options.recordInfo.context,
+        });
+    },
+    /**
+     * Save after any cleaning has been done and before reloading
+     * the page.
+     */
+    async _saveWebsiteContent(context = this.editor) {
+        return new Promise((resolve, reject) => {
+            const wysiwygSaveContent = async (context)=> {
+                await this._saveModifiedImages(context);
+                await this._saveViewBlocks();
+                await this._saveCoverPropertiesBlocks(context);
+                await this._saveMegaMenuClasses();
+            };
+            context.execCommand(wysiwygSaveContent).then(params => {
+                if (params && params.error) {
+                    reject(params.error.message);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    },
+    _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
+        if(color === "") {
+            this.editor.execCommand(unsetCommandId);
+        } else {
+            if (colorpicker.colorNames.indexOf(color) !== -1) {
+                // todo : find a better way to detect and send css variable
+                color = "var(--" + color + ")";
+            }
+            this.editor.execCommand(setCommandId, {color: color});
+        }
+        const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
+        $jwButton.css("background-color", color);
+        if(closeColorPicker) {
+            $jwButton.dropdown("toggle");
+        }
     },
     /**
      * Initialize the editor for a translation.
@@ -1183,133 +1309,6 @@ var Wysiwyg = Widget.extend({
                 $(this).tooltip('hide');
             });
     },
-    /**
-     * Save all translation blocks.
-     *
-     * @private
-     */
-    _onSaveTranslation: async function (context) {
-        const defs = [];
-        this.trigger_up('edition_will_stopped');
-        this.trigger_up('ready_to_save', {defs: defs});
-        await Promise.all(defs);
-
-        const promises = [];
-        const translationContainers = {};
-        const getTranslationNodes = () => {
-            let previousTranslationId;
-            this.zoneMain.descendants(descendant => {
-                const format = descendant.modifiers.find(JWEditorLib.OdooTranslationFormat);
-                const formatAttributes = format && format.modifiers.find(JWEditorLib.Attributes);
-                const translationId = format && (format.translationId || +formatAttributes.get('data-oe-id'));
-                if (this.editor.mode.is(descendant, 'editable')) {
-                    translationContainers[translationId] = translationContainers[translationId] || [];
-                    const containers = translationContainers[translationId];
-                    if (previousTranslationId !== translationId) {
-                        containers.push(new JWEditorLib.ContainerNode());
-                    }
-                    const lastContainer = containers[containers.length-1];
-                    lastContainer.append(descendant.clone());
-                }
-                previousTranslationId = translationId;
-            });
-        }
-        await context.execCommand(getTranslationNodes);
-
-        // Save the odoo translation formats.
-        for (const id of Object.keys(translationContainers)) {
-            const containers = translationContainers[id];
-            // todo: check that all container render the same way otherwise
-            // inform the user that there is conflict between the same
-            // traduction.
-            const lastContainer = containers[containers.length-1];
-            const translationNode = lastContainer.children()[0];
-            const renderer = this.editor.plugins.get(JWEditorLib.Renderer);
-
-            const renderedNode = (await renderer.render('dom/html', lastContainer))[0].firstChild;
-            const translationFormat = translationNode.modifiers.find(JWEditorLib.OdooTranslationFormat);
-
-            let $renderedTranslation = $(renderedNode);
-            if (!$renderedTranslation.data('oe-translation-state')) {
-                $renderedTranslation = $renderedTranslation.find('[data-oe-translation-state]');
-            }
-
-            if (translationFormat.translationId) {
-                promises.push(this._saveTranslationTo($renderedTranslation, +translationFormat.translationId));
-            } else {
-                const attributes = translationFormat.modifiers.find(JWEditorLib.Attributes);
-                promises.push(this._saveViewTo(
-                    $renderedTranslation,
-                    attributes.get('data-oe-id'),
-                    attributes.get('data-oe-xpath')
-                ));
-            }
-        }
-
-        // Save attributes
-        for (const attribute_translation of this.$attribute_translations) {
-            const $attribute_translations = $(attribute_translation);
-            promises.push(this._saveTranslationTo(
-                $attribute_translations,
-                +$attribute_translations.data('oe-translation-id')
-            ));
-        }
-
-        await Promise.all(promises);
-        this.trigger_up('edition_was_stopped');
-        window.location.reload();
-    },
-    /**
-     * Returns the editable areas on the page.
-     *
-     * @param {JQuery} $element
-     * @returns {JQuery}
-     */
-    _getEditable($element) {
-        const $editable = $element.find('[data-oe-model]')
-            .not('.o_not_editable')
-            .filter(function () {
-                var $parent = $(this).closest('.o_editable, .o_not_editable');
-                return !$parent.length || $parent.hasClass('o_editable');
-            })
-            .not('link, script')
-            .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
-            .not('.oe_snippet_editor')
-            .not('hr, br, input, textarea')
-            .add('.o_editable');
-        if (this.options.enableTranslation) {
-            const selector = '[data-oe-translation-id], '+
-                '[data-oe-model][data-oe-id][data-oe-field], ' +
-                '[placeholder*="data-oe-translation-id="], ' +
-                '[title*="data-oe-translation-id="], ' +
-                '[alt*="data-oe-translation-id="]';
-            $editable.filter(':has(' + selector + ')').attr('data-oe-readonly', true);
-        }
-        return $editable.not('[data-oe-readonly]')
-    },
-    _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
-        if(color === "") {
-            this.editor.execCommand(unsetCommandId);
-        } else {
-            if (colorpicker.colorNames.indexOf(color) !== -1) {
-                // todo : find a better way to detect and send css variable
-                color = "var(--" + color + ")";
-            }
-            this.editor.execCommand(setCommandId, {color: color});
-        }
-        const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
-        $jwButton.css("background-color", color);
-        if(closeColorPicker) {
-            $jwButton.dropdown("toggle");
-        }
-    },
-    _updateAttributes(node) {
-        const attributes = {}
-        for (const attr of node.attributes){
-            attributes[attr.name] = attr.value;
-        }
-        this.editorHelpers.updateAttributes(this.editor, node, attributes);
-    },
     _transform($image) {
         if ($image.data('transfo-destroy')) {
             $image.removeData('transfo-destroy');
@@ -1335,12 +1334,13 @@ var Wysiwyg = Widget.extend({
         };
         $(document).on('mousedown', mousedown);
     },
-    /**
-     * Additional binding after start.
-     *
-     * Meant to be overridden
-     */
-    _bindAfterStart() {},
+    _updateAttributes(node) {
+        const attributes = {}
+        for (const attr of node.attributes){
+            attributes[attr.name] = attr.value;
+        }
+        this.editorHelpers.updateAttributes(this.editor, node, attributes);
+    },
 });
 
 //--------------------------------------------------------------------------
