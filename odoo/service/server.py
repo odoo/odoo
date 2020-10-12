@@ -1164,7 +1164,7 @@ def load_test_file_py(registry, test_file):
         for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
             for mod_mod in get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-                if test_path == mod_path:
+                if test_path == config._normalize(mod_path):
                     suite = unittest.TestSuite()
                     for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                         suite.addTest(t)
