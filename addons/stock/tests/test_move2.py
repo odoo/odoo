@@ -5,8 +5,8 @@ from datetime import timedelta
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
 
+from odoo.tests.common import Form
 
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
@@ -2829,3 +2829,27 @@ class TestAutoAssign(TestStockCommon):
         move.lot_ids = [(4, lot2.id)]
         move.lot_ids = [(4, lot3.id)]
         self.assertEqual(move.quantity_done, 3.0/12.0)
+
+    def test_update_description(self):
+        """ Create an empty picking. Adds a move on product1, select the picking type, add
+        again a move on product1. Confirm the picking. The two stock moves should be merged. """
+        product1 = self.env['product.product'].create({
+            'name': 'product',
+            'type':'product',
+        })
+        picking_form = Form(self.env['stock.picking'])
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product1
+            move.product_uom_qty = 10
+            move.location_id = self.env.ref('stock.stock_location_suppliers')
+            move.location_dest_id = self.env.ref('stock.stock_location_stock')
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product1
+            move.product_uom_qty = 15
+
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        self.assertEqual(len(picking.move_lines), 1)
+        self.assertEqual(picking.move_lines.product_uom_qty, 25)
