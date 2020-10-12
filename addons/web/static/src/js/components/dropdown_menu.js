@@ -36,7 +36,7 @@ odoo.define('web.DropdownMenu', function (require) {
 
             this.symbol = this.env.device.isMobile ? 'fa fa-chevron-right float-right mt4' : false;
 
-            useExternalListener(window, 'click', this._onWindowClick);
+            useExternalListener(window, 'click', this._onWindowClick, true);
             useExternalListener(window, 'keydown', this._onWindowKeydown);
         }
 
@@ -105,6 +105,13 @@ odoo.define('web.DropdownMenu', function (require) {
          */
         _onWindowClick(ev) {
             if (this.state.open && !this.el.contains(ev.target)) {
+                if (document.body.classList.contains("modal-open")) {
+                    // retrieve the active modal and check if the dropdown is a child of this modal
+                    const modal = document.querySelector('.modal:not(.o_inactive_modal)');
+                    if (!modal.contains(this.el)) {
+                        return;
+                    }
+                }
                 this.state.open = false;
             }
         }
