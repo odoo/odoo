@@ -387,8 +387,8 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         self.ensure_one()
         account_dest = self.env['account.account']
         if self.payment_mode == 'company_account':
-            if not self.sheet_id.bank_journal_id.default_credit_account_id:
-                raise UserError(_("No credit account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
+            if not self.sheet_id.bank_journal_id.payment_credit_account_id:
+                raise UserError(_("No Outstanding Payments Account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
             account_dest = self.sheet_id.bank_journal_id.payment_credit_account_id.id
         else:
             if not self.employee_id.sudo().address_home_id:
