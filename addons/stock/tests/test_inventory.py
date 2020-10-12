@@ -890,3 +890,49 @@ class TestInventory(TransactionCase):
         Inventory._run_conflict_inventory_tasks()
         neg_qty_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
         self.assertEqual(len(neg_qty_inventories), 0)
+
+    def test_dupe_sn_conflict_inventory(self):
+        """ Check that auto-created duplicated serial number inventories work correctly.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'dupe_sn1',
+            'product_id': self.product2.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = lot1.copy(default={'name': 'dupe_sn2'})
+
+        Inventory = self.env['stock.inventory']
+        # check that duplicted SN will auto-generate inventory
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.pack_location, 1, lot_id=lot1)
+        Inventory._run_conflict_inventory_tasks()
+        dupe_sn_inventories = Inventory.search([('is_conflict_inventory', '=', True), ('lot_ids', "!=", False)])
+        self.assertEqual(len(dupe_sn_inventories), 1)
+        self.assertEqual(len(dupe_sn_inventories.lot_ids), 1)
+        self.assertEqual(len(dupe_sn_inventories.product_ids), 1)
+
+        # check that inventory auto-updates correctly when still in draft
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot2)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.pack_location, 1, lot_id=lot2)
+        Inventory._run_conflict_inventory_tasks()
+        self.assertEqual(len(dupe_sn_inventories.lot_ids), 2, "New duplicate SN should be auto-added to existing draft inventory")
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, -1, lot_id=lot2)
+        Inventory._run_conflict_inventory_tasks()
+        self.assertEqual(len(dupe_sn_inventories.lot_ids), 1)
+        self.assertEqual(len(dupe_sn_inventories.product_ids), 1, "Only removing 1 of 3 duplicated SNs shouldn't remove product from inventory")
+
+        # check that inventory does not auto-update/auto-generate when inventory is in progress
+        dupe_sn_inventories.action_start()
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot2)
+        Inventory._run_conflict_inventory_tasks()
+        dupe_sn_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
+        self.assertEqual(len(dupe_sn_inventories), 1)
+        self.assertEqual(len(dupe_sn_inventories.lot_ids), 1)
+
+        # check that inventory auto-deletes when no more dupe SNs
+        dupe_sn_inventories.action_cancel_draft()
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, -1, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, -1, lot_id=lot2)
+        Inventory._run_conflict_inventory_tasks()
+        neg_qty_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
+        self.assertEqual(len(neg_qty_inventories), 0)

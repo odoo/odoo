@@ -67,6 +67,8 @@ class Inventory(models.Model):
         help="Include also products with quantity of 0")
     is_conflict_inventory = fields.Boolean(string="Is Auto-generated From Conflict", readonly=True,
         help="Technical flag to indicate this inventory was auto-generated due to a conflicting inventory. This allows us to auto-add/remove products when inventory is still in draft.")
+    lot_ids = fields.Many2many('stock.production.lot', string='Duplicate Serial Numbers', readonly=True,
+        help="Technical field to support auto-generated conflicting inventory from a duplicated SN. This value is expected to never be viewed/edited except by conflicting inventory checks.")
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -246,8 +248,10 @@ class Inventory(models.Model):
                   ('location_id', 'in', locations_ids)]
         if self.prefill_counted_quantity == 'zero':
             domain.append(('product_id.active', '=', True))
-        if self.is_conflict_inventory:
-            domain.append(('quantity', '<', 0))
+        if self.lot_ids:
+            domain = expression.AND([domain, [('lot_id', 'in', self.lot_ids.ids)]])
+        if self.is_conflict_inventory and not self.lot_ids:
+            domain = expression.AND([domain, [('quantity', '<', 0)]])
         else:
             domain.append(('quantity', '!=', 0))
         if self.product_ids:
@@ -385,7 +389,7 @@ class Inventory(models.Model):
             company_domain = [('company_id', '=', company_id)]
         # negative quantity check
         inventory_vals_to_create = []
-        updated_neg_invs = self.env['stock.inventory']
+        updated_invs = self.env['stock.inventory']
         existing_conflict_invs = self.search(expression.AND([
             [
                 ('state', 'in', ['draft', 'confirm']),
@@ -416,7 +420,7 @@ class Inventory(models.Model):
                     if draft_inv:
                         # only write in in first draft in case there are duplicates due to function being called while its already
                         draft_inv[0].write({'product_ids': warehouse_quants.mapped('product_id')})
-                        updated_neg_invs |= draft_inv[0]
+                        updated_invs |= draft_inv[0]
                     else:
                         inventory_vals_to_create.append({
                             'name': "Negative Quantity Inventory: " + warehouse.name,
@@ -425,9 +429,40 @@ class Inventory(models.Model):
                             'is_conflict_inventory': True,
                             'location_ids': warehouse.view_location_id.child_ids
                         })
+
+        # conflicting SN check
+        domain = expression.AND([[('location_id.usage', 'in', ['internal', 'transit']),
+                                  ('lot_id', '!=', False),
+                                  ('product_id.tracking', '=', 'serial'),
+                                  ('quantity', '!=', 0.0)],
+                                 company_domain])
+        quants = self.env['stock.quant'].read_group(domain, ['lot_id', 'company_id', 'product_id'], ['lot_id', 'company_id', 'product_id'], lazy=False)
+        company_to_sn_conflicts = defaultdict(lambda: ([], []))
+        for quant in quants:
+            if quant['__count'] > 1:
+                company_to_sn_conflicts[quant['company_id'][0]][0].append(quant['lot_id'][0])
+                company_to_sn_conflicts[quant['company_id'][0]][1].append(quant['product_id'][0])
+
+        for company_id, (lot_ids, product_ids) in company_to_sn_conflicts.items():
+            # avoid conflicting inventories! Wait until the next time this is run after the previous conflicting SN inventory is completed
+            if existing_conflict_invs.filtered(lambda i: i.state == 'confirm' and i.lot_ids and i.company_id.id == company_id):
+                continue
+            draft_inv = existing_conflict_invs.filtered(lambda i: i.state == 'draft' and i.lot_ids and i.company_id.id == company_id)
+            if draft_inv:
+                draft_inv.write({'lot_ids': lot_ids,
+                                 'product_ids': product_ids})
+                updated_invs |= draft_inv
+            else:
+                inventory_vals_to_create.append({
+                    'name': "Duplicate SN Inventory",
+                    'company_id': company_id,
+                    'lot_ids': lot_ids,
+                    'product_ids': product_ids,
+                    'is_conflict_inventory': True
+                })
         self.create(inventory_vals_to_create)
         # remove all obsolete conflict inventories
-        (existing_conflict_invs.filtered(lambda i: i.state == 'draft') - updated_neg_invs).unlink()
+        (existing_conflict_invs.filtered(lambda i: i.state == 'draft') - updated_invs).unlink()
 
     @api.model
     def action_open_inventory_view(self):
