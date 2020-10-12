@@ -305,15 +305,16 @@ class ProductProduct(models.Model):
             pt_id = ptav.product_tmpl_id.id
             if pt_id not in values_per_template:
                 values_per_template[pt_id] = {}
-            values_per_template[pt_id][ptav.product_attribute_value_id.id] = ptav
+            values_per_template[pt_id][ptav.product_attribute_value_id.id] = ptav.id
 
         for product in self:
-            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']
+            value_ids = []
             for pav in product.attribute_value_ids:
                 if product.product_tmpl_id.id not in values_per_template or pav.id not in values_per_template[product.product_tmpl_id.id]:
                     _logger.warning("A matching product.template.attribute.value was not found for the product.attribute.value #%s on the template #%s" % (pav.id, product.product_tmpl_id.id))
                 else:
-                    product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
+                    value_ids.append(values_per_template[product.product_tmpl_id.id][pav.id])
+            product.product_template_attribute_value_ids = value_ids
 
     @api.one
     def _get_pricelist_items(self):
