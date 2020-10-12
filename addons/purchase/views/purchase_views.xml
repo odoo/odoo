@@ -208,6 +208,7 @@
                             <field name="order_line"
                                 widget="section_and_note_one2many"
                                 mode="tree,kanban"
+                                context="{'default_state': 'draft'}"
                                 attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
                                 <tree string="Purchase Order Lines" editable="bottom">
                                     <control>
