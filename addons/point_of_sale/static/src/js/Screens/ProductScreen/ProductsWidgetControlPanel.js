@@ -9,7 +9,6 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     class ProductsWidgetControlPanel extends PosComponent {
         constructor() {
             super(...arguments);
-            this.searchTimeout = null;
             this.searchWordInput = useRef('search-word-input');
             this.updateSearch = debounce(this.updateSearch, 100);
         }
@@ -19,6 +18,11 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
         }
         updateSearch(event) {
             this.trigger('update-search', event.target.value);
+            if (event.key === 'Enter') {
+                // We are passing the searchWordInput ref so that when necessary,
+                // it can be modified by the parent.
+                this.trigger('try-add-product', { searchWordInput: this.searchWordInput });
+            }
         }
     }
     ProductsWidgetControlPanel.template = 'ProductsWidgetControlPanel';
