@@ -466,6 +466,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
  */
 publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     selector: 'header .navbar .nav',
+    disabledInEditableMode: false,
     events: {
         'show.bs.dropdown': '_onDropdownShow',
     },
@@ -488,12 +489,13 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @param {integer} liOffset
      * @param {integer} liWidth
      * @param {integer} menuWidth
+     * @param {integer} pageWidth
      * @returns {boolean}
      */
-    _checkOpening: function (alignment, liOffset, liWidth, menuWidth, windowWidth) {
+    _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
         if (alignment === 'left') {
             // Check if ok to open the dropdown to the right (no window overflow)
-            return (liOffset + menuWidth <= windowWidth);
+            return (liOffset + menuWidth <= pageWidth);
         } else {
             // Check if ok to open the dropdown to the left (no window overflow)
             return (liOffset + liWidth - menuWidth >= 0);
@@ -513,7 +515,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         var liOffset = $li.offset().left;
         var liWidth = $li.outerWidth();
         var menuWidth = $menu.outerWidth();
-        var windowWidth = $(window).outerWidth();
+        var pageWidth = $('#wrapwrap').outerWidth();
 
         $menu.removeClass('dropdown-menu-left dropdown-menu-right');
 
@@ -524,10 +526,10 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         }
 
         // If can't open in the current direction because it would overflow the
-        // window, change the direction. But if the other direction would do the
+        // page, change the direction. But if the other direction would do the
         // same, change back the direction.
         for (var i = 0; i < 2; i++) {
-            if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, windowWidth)) {
+            if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, pageWidth)) {
                 alignment = (alignment === 'left' ? 'right' : 'left');
             }
         }
