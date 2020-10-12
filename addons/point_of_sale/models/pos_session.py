@@ -460,7 +460,7 @@ class PosSession(models.Model):
 
                 if self.company_id.anglo_saxon_accounting and order.picking_ids.ids:
                     # Combine stock lines
-                    stock_moves = self.env['stock.move'].search([
+                    stock_moves = self.env['stock.move'].sudo().search([
                         ('picking_id', 'in', order.picking_ids.ids),
                         ('company_id.anglo_saxon_accounting', '=', True),
                         ('product_id.categ_id.property_valuation', '=', 'real_time')
@@ -485,7 +485,7 @@ class PosSession(models.Model):
         if self.company_id.anglo_saxon_accounting:
             global_session_pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
             if global_session_pickings:
-                stock_moves = self.env['stock.move'].search([
+                stock_moves = self.env['stock.move'].sudo().search([
                     ('picking_id', 'in', global_session_pickings.ids),
                     ('company_id.anglo_saxon_accounting', '=', True),
                     ('product_id.categ_id.property_valuation', '=', 'real_time'),
