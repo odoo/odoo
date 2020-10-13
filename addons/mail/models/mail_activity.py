@@ -669,6 +669,7 @@ class MailActivityMixin(models.AbstractModel):
         ('today', 'Today'),
         ('planned', 'Planned')], string='Activity State',
         compute='_compute_activity_state',
+        search='_search_activity_state',
         groups="base.group_user",
         help='Status based on activities\nOverdue: Due date is already passed\n'
              'Today: Activity date is today\nPlanned: Future activities.')
@@ -734,6 +735,71 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'planned'
             else:
                 record.activity_state = False
+
+    def _search_activity_state(self, operator, value):
+        all_states = {'overdue', 'today', 'planned', False}
+        if operator == '=':
+            search_states = {value}
+        elif operator == '!=':
+            search_states = all_states - {value}
+        elif operator == 'in':
+            search_states = set(value)
+        elif operator == 'not in':
+            search_states = all_states - set(value)
+
+        reverse_search = False
+        if False in search_states:
+            # If we search "activity_state = False", they might be a lot of records
+            # (million for some models), so instead of returning the list of IDs
+            # [(id, 'in', ids)] we will reverse the domain and return something like
+            # [(id, 'not in', ids)], so the list of ids is as small as possible
+            reverse_search = True
+            search_states = all_states - search_states
+
+        # Use number in the SQL query for performance purpose
+        integer_state_value = {
+            'overdue': -1,
+            'today': 0,
+            'planned': 1,
+            False: None,
+        }
+
+        search_states_int = {integer_state_value.get(s or False) for s in search_states}
+
+        query = """
+          SELECT res_id
+            FROM (
+                SELECT res_id,
+                       -- Global activity state
+                       MIN(
+                            -- Compute the state of each individual activities
+                            -- -1: overdue
+                            --  0: today
+                            --  1: planned
+                           SIGN(EXTRACT(day from (
+                                mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE res_partner.tz)
+                           )))
+                        )::INT AS activity_state
+                  FROM mail_activity
+             LEFT JOIN res_users
+                    ON res_users.id = mail_activity.user_id
+             LEFT JOIN res_partner
+                    ON res_partner.id = res_users.partner_id
+                 WHERE mail_activity.res_model = %(res_model_table)s
+              GROUP BY res_id
+            ) AS res_record
+          WHERE %(search_states_int)s @> ARRAY[activity_state]
+        """
+
+        self._cr.execute(
+            query,
+            {
+                'today_utc': pytz.UTC.localize(datetime.utcnow()),
+                'res_model_table': self._name,
+                'search_states_int': list(search_states_int)
+            },
+        )
+        return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
