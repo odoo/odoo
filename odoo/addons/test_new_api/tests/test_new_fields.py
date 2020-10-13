@@ -1826,6 +1826,10 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.image, image_h)
         self.assertEqual(new_record.image, image_h)
 
+        # assignment to new record with origin should not do any query
+        with self.assertQueryCount(0):
+            new_record.image = image_w
+
     def test_95_binary_bin_size(self):
         binary_value = base64.b64encode(b'content')
         binary_size = b'7.00 bytes'
