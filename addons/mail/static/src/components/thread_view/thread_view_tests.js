@@ -1138,6 +1138,49 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     );
 });
 
+QUnit.test('Post a message containing an email address followed by a mention on another line', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['res.partner'].records.push({
+        id: 25,
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "email@odoo.com\n"));
+    await afterNextRender(() => {
+        ["@", "T", "e"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        })
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerSuggestion').click()
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        "Conversation should have a message that has been posted, which contains partner mention"
+    );
+});
+
 });
 });
 });
