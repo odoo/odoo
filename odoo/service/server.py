@@ -212,7 +212,8 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
 #----------------------------------------------------------
 class FSWatcherBase(object):
     def handle_file(self, path):
-        if path.endswith('.py') and not os.path.basename(path).startswith('.~'):
+        filename = os.path.basename(path)
+        if path.endswith('.py') and not filename.startswith('.~') and not filename.startswith('.#'):
             try:
                 source = open(path, 'rb').read() + b'\n'
                 compile(source, path, 'exec')
