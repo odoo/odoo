@@ -309,7 +309,7 @@ var Wysiwyg = Widget.extend({
         // they have changes that would be lost if they did.
         let flag = false;
         window.onbeforeunload = () => {
-            if (this.isDirty() && !flag) {
+            if (!flag) {
                 flag = true;
                 _.defer(() => (flag = false));
                 return _t('This document is not saved!');
