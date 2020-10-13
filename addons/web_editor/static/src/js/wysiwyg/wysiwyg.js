@@ -449,12 +449,20 @@ var Wysiwyg = Widget.extend({
         }
     },
     discardEditions: async function () {
-        var self = this;
+        let self = this;
         return new Promise(function (resolve, reject) {
-            var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
-                confirm_callback: resolve,
-            });
-            confirm.on('closed', self, reject);
+            // Only show an alert if there is a risk that changes would be lost.
+            if (self.isDirty()) {
+                const confirmMessage = `If you discard the current edits, all
+                    unsaved changes will be lost. You can cancel to return to
+                    edit mode.`.replace(/[\n\s]+/g, ' ');
+                const confirm = Dialog.confirm(this, _t(confirmMessage), {
+                    confirm_callback: resolve,
+                });
+                confirm.on('closed', self, reject);
+            } else {
+                resolve();
+            }
         }).then(function () {
             window.onbeforeunload = null;
             window.location.reload();
