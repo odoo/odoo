@@ -55,7 +55,7 @@ class MessageList extends Component {
          * Snapshot computed during willPatch, which is used by patched.
          */
         this._willPatchSnapshot = undefined;
-        this._onScroll = _.throttle(this._onScroll.bind(this), 100);
+        this.onScroll = _.throttle(this.onScroll.bind(this), 100);
     }
 
     mounted() {
@@ -560,7 +560,7 @@ class MessageList extends Component {
      * @private
      * @param {ScrollEvent} ev
      */
-    _onScroll(ev) {
+    onScroll(ev) {
         if (!this.el) {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
