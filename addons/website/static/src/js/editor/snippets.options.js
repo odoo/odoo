@@ -1781,6 +1781,18 @@ snippetOptions.registry.collapse = snippetOptions.SnippetOptionWidget.extend({
 });
 
 snippetOptions.registry.HeaderNavbar = snippetOptions.SnippetOptionWidget.extend({
+    /**
+     * Particular case: we want the option to be associated on the header navbar
+     * in XML so that the related options only appear on navbar click (not
+     * header), in a different section, etc... but we still want the target to
+     * be the header itself.
+     *
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this.setTarget(this.$target.closest('#wrapwrap > header'));
+    },
 
     //--------------------------------------------------------------------------
     // Private
