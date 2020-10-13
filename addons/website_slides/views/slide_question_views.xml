@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="slide_question_action" model="ir.actions.act_window">
-        <field name="name">Quizzes</field>
-        <field name="res_model">slide.question</field>
-        <field name="view_mode">tree</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Quizzes
-            </p>
-        </field>
-    </record>
     <record id="slide_question_view_form" model="ir.ui.view">
         <field name="name">slide.question.view.form</field>
         <field name="model">slide.question</field>
@@ -39,28 +29,13 @@
         <field name="model">slide.question</field>
         <field name="arch" type="xml">
             <tree string="Quizzes" create="0">
-                <field name="question"/>
-                <field name="slide_id"/>
-                <field name="attempts_count"/>
-                <field name="attempts_avg"/>
-                <field name="done_count"/>
-                <field name="create_date" />
-            </tree>
-        </field>
-    </record>
-
-    <record id="slide_question_view_tree_report" model="ir.ui.view">
-        <field name="name">slide.question.view.tree.report</field>
-        <field name="model">slide.question</field>
-        <field name="priority">20</field>
-        <field name="arch" type="xml">
-            <tree string="Quizzes" create="0">
                 <field name="sequence" widget="handle"/>
                 <field name="question"/>
                 <field name="slide_id"/>
                 <field name="attempts_count"/>
                 <field name="attempts_avg"/>
                 <field name="done_count"/>
+                <field name="create_date" />
             </tree>
         </field>
     </record>
@@ -86,6 +61,21 @@
                 <field name="slide_id" type="row" />
                 <field name="attempts_count" type="measure" />
             </graph>
+        </field>
+    </record>
+
+    <record id="slide_question_action" model="ir.actions.act_window">
+        <field name="name">Quizzes</field>
+        <field name="res_model">slide.question</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="view_id" ref="slide_question_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                There are no quizzes
+            </p>
+            <p>
+                Add quizzes at the end of your lessons to evaluate what your students understood.
+            </p>
         </field>
     </record>
 

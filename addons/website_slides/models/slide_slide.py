@@ -41,7 +41,9 @@ class SlidePartnerRelation(models.Model):
         if completed:
             completed._set_completed_callback()
 
-        self.slide_id.question_ids._recompute_attempts_count()
+        with_attempts = res.filtered('quiz_attempts_count')
+        if with_attempts:
+            with_attempts._update_attempts_count_callback()
 
         return res
 
@@ -49,9 +51,8 @@ class SlidePartnerRelation(models.Model):
         res = super(SlidePartnerRelation, self).write(values)
         if values.get('completed'):
             self._set_completed_callback()
-
         if values.get('quiz_attempts_count'):
-            self.slide_id.question_ids._recompute_attempts_count()
+            self._update_attempts_count_callback()
 
         return res
 
@@ -60,6 +61,19 @@ class SlidePartnerRelation(models.Model):
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
         ])._recompute_completion()
+
+    def _update_attempts_count_callback(self):
+        slide_partners = self.env['slide.slide.partner'].search([
+            ('slide_id', 'in', self.slide_id.ids),
+            ('quiz_attempts_count', '>', 0),
+        ])
+
+        slide_stats = dict.fromkeys(slide_partners.slide_id, 0)
+        for slide_partner in slide_partners:
+            slide_stats[slide_partner.slide_id] += slide_partner.quiz_attempts_count
+
+        for slide in slide_stats.keys():
+            slide.question_ids.attempts_count = slide_stats[slide_partner.slide_id]
 
 
 class SlideLink(models.Model):
