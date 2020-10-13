@@ -1716,6 +1716,19 @@ options.registry.collapse = options.Class.extend({
 });
 
 options.registry.HeaderNavbar = options.Class.extend({
+    /**
+     * Particular case: we want the option to be associated on the header navbar
+     * in XML so that the related options only appear on navbar click (not
+     * header), in a different section, etc... but we still want the target to
+     * be the header itself.
+     *
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        // Don't use setTarget, we want it to be set directly at initialization.
+        this.$target = this.$target.closest('#wrapwrap > header');
+    },
 
     //--------------------------------------------------------------------------
     // Private
