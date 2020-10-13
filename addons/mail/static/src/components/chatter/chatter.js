@@ -41,6 +41,10 @@ class Chatter extends Component {
          * Reference of the composer. Useful to focus it.
          */
         this._composerRef = useRef('composer');
+        /**
+         * Reference of the message list. Useful to trigger the scroll event on it.
+         */
+        this._threadRef = useRef('thread');
     }
 
     mounted() {
@@ -101,6 +105,17 @@ class Chatter extends Component {
      */
     _onComposerMessagePosted() {
         this.chatter.update({ isComposerVisible: false });
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onScrollPanelScroll(ev) {
+        if (!this._threadRef.comp) {
+            return;
+        }
+        this._threadRef.comp.onScroll(ev);
     }
 
 }
