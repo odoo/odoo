@@ -32,11 +32,11 @@ function factory(dependencies) {
             if ('is_connected' in data) {
                 data2.is_connected = data.is_connected;
             }
-            if ('lang' in data) {
-                data2.lang = data.lang;
+            if ('lang_name' in data) {
+                data2.lang_name = data.lang_name;
             }
-            if ('name' in data) {
-                data2.name = data.name;
+            if ('display_name' in data) {
+                data2.display_name = data.display_name;
             }
             if ('partner_id' in data) {
                 if (data.partner_id) {
@@ -45,8 +45,8 @@ function factory(dependencies) {
                     data2.partner = [['unlink']];
                 }
             }
-            if ('website' in data) {
-                data2.website = data.website;
+            if ('website_name' in data) {
+                data2.website_name = data.website_name;
             }
             return data2;
         }
@@ -88,7 +88,7 @@ function factory(dependencies) {
             if (this.partner) {
                 return this.partner.nameOrDisplayName;
             }
-            return this.name;
+            return this.display_name;
         }
     }
 
@@ -114,6 +114,10 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * Display name of the visitor.
+         */
+        display_name: attr(),
+        /**
          * Browsing history of the visitor as a string.
          */
         history: attr(),
@@ -124,15 +128,11 @@ function factory(dependencies) {
         /**
          * Name of the language of the visitor. (Ex: "English")
          */
-        lang: attr(),
-        /**
-         * Name of the visitor.
-         */
-        name: attr(),
+        lang_name: attr(),
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
             dependencies: [
-                'name',
+                'display_name',
                 'partnerNameOrDisplayName',
             ],
         }),
@@ -156,7 +156,7 @@ function factory(dependencies) {
         /**
          * Name of the website on which the visitor is connected. (Ex: "Website 1")
          */
-        website: attr(),
+        website_name: attr(),
     };
 
     Visitor.modelName = 'website_livechat.visitor';
