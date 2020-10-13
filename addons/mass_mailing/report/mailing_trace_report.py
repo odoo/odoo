@@ -25,6 +25,10 @@ class MailingTraceReport(models.Model):
     replied = fields.Integer(readonly=True)
     clicked = fields.Integer(readonly=True)
     bounced = fields.Integer(readonly=True)
+    # automation
+    use_in_marketing_automation = fields.Boolean(
+        string='Specific mailing used in marketing campaign', default=False,
+        help='Marketing campaigns use mass mailings with some specific behavior; this field is used to indicate its statistics may be suspicious.')
 
     def init(self):
         """Mass Mail Statistical Report: based on mailing.trace that models the various
