@@ -277,7 +277,7 @@ function factory(dependencies) {
                     model: 'mail.message',
                     method: 'message_format',
                     args: [[messageId]],
-                }));
+                }, { shadow: true }));
                 this.env.models['mail.message'].insert(Object.assign(
                     {},
                     this.env.models['mail.message'].convertData(messageData),
