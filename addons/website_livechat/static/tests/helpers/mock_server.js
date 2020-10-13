@@ -30,14 +30,14 @@ MockServer.include({
                 const visitor = this._getRecords('website.visitor', [['id', '=', channelInfo.livechat_visitor_id]])[0];
                 const country = this._getRecords('res.country', [['id', '=', visitor.country_id]])[0];
                 channelInfo.visitor = {
-                    name: visitor.display_name,
                     country_code: country && country.code,
                     country_id: country && country.id,
-                    is_connected: visitor.is_connected,
+                    display_name: visitor.display_name,
                     history: visitor.history, // TODO should be computed
-                    website: visitor.website,
-                    lang: visitor.lang,
+                    is_connected: visitor.is_connected,
+                    lang_name: visitor.lang_name,
                     partner_id: visitor.partner_id,
+                    website_name: visitor.website_name,
                 }
             }
         }
