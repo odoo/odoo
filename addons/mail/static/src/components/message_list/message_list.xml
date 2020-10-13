@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageList" owl="1">
-        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0, 'o-has-message-selection': props.selectedMessageLocalId }" t-on-scroll="_onScroll">
+        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0, 'o-has-message-selection': props.selectedMessageLocalId }" t-on-scroll="onScroll">
             <t t-if="threadView">
                 <!-- No result messages -->
                 <t t-if="threadView.nonEmptyMessages.length === 0">
