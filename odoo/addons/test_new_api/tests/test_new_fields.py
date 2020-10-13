@@ -573,16 +573,6 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             foo.with_user(user).display_name = 'Forbidden'
 
-    def test_13_inverse_access(self):
-        """ test access rights on inverse fields """
-        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
-        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
-        self.assertFalse(user.has_group('base.group_system'))
-        # add group on non-stored inverse field
-        self.patch(type(foo).display_name, 'groups', 'base.group_system')
-        with self.assertRaises(AccessError):
-            foo.with_user(user).display_name = 'Forbidden'
-
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')
