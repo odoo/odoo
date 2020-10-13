@@ -53,7 +53,7 @@ tour.register('account_tour', {
     }, {
         trigger: "div[name=invoice_line_ids] textarea[name=name]",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Fill in the details of the line.<br><i>Tip: all the details can be set automatically if you configure your <b>products</b>.</i>"),
+        content: _t("Fill in the details of the line."),
         position: "bottom",
     }, {
         trigger: "div[name=invoice_line_ids] input[name=price_unit]",
