@@ -1,10 +1,16 @@
-.o_graph {
-    .o_graph_container {
+// To fix height issue in studio mode
+.o_graph_container {
+    height: 100%;
+    .o_graph_svg_container {
         height: 100%;
+    }
+}
+.o_graph {
+    height: 100%;
+    .o_graph_container {
         overflow: auto;
         .o_graph_svg_container {
             direction: ltr#{"/*rtl:ignore*/"};
-            height: 100%;
             overflow: auto;
             svg {
                 background-color: $o-view-background-color;
