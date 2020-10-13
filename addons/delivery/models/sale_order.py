@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
             carrier = self.carrier_id
         else:
             name = _('Add a shipping method')
-            carrier = self.partner_id.property_delivery_carrier_id
+            carrier = self.partner_shipping_id.property_delivery_carrier_id
         return {
             'name': name,
             'type': 'ir.actions.act_window',
