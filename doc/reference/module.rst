@@ -141,8 +141,7 @@ Available manifest fields are:
     These hooks should only be used when setup/cleanup required for this module
     is either extremely difficult or impossible through the api.
 ``active`` (``bool``)
-    This indicates whether this module is to be used or not.
-    It is generally used to archive obsolete modules.
+    This indicates whether this module must install automatically or not.
 
 .. _semantic versioning: https://semver.org
 .. _existing categories:
