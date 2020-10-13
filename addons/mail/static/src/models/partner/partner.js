@@ -129,7 +129,7 @@ function factory(dependencies) {
                 kwargs: {
                     context: { active_test: false },
                 },
-            }));
+            }, { shadow: true }));
             this.update({ hasCheckedUser: true });
             if (userIds.length > 0) {
                 this.update({ user: [['insert', { id: userIds[0] }]] });
