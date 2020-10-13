@@ -102,7 +102,6 @@ response = res_products
             <field name="field_names">display_name,description_sale,image_512,list_price</field>
             <field name="limit" eval="16"/>
             <field name="name">Products</field>
-            <field name="website_id" ref="website.default_website"/>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>sale.order</value>
