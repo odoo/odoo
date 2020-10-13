@@ -9,7 +9,7 @@ from odoo import http, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
-from odoo.addons.mail.controllers.main import MailController
+from odoo.addons.mail.controllers import main
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.exceptions import AccessError, MissingError, UserError
 
@@ -208,7 +208,7 @@ class PortalChatter(http.Controller):
         return message.is_internal
 
 
-class MailController(MailController):
+class MailController(main.MailController):
 
     @classmethod
     def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):

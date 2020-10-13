@@ -4,10 +4,10 @@
 from odoo.http import request
 from odoo.osv import expression
 
-from odoo.addons.account.controllers.portal import PortalAccount
+from odoo.addons.account.controllers import portal
 
 
-class PortalAccount(PortalAccount):
+class PortalAccount(portal.PortalAccount):
 
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = super(PortalAccount, self)._invoice_get_page_view_values(invoice, access_token, **kwargs)

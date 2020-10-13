@@ -7,10 +7,10 @@ from odoo import http
 from odoo.tools import formatLang
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
-from odoo.addons.sale.controllers.portal import CustomerPortal
+from odoo.addons.sale.controllers import portal
 
 
-class CustomerPortal(CustomerPortal):
+class CustomerPortal(portal.CustomerPortal):
 
     def _get_portal_order_details(self, order_sudo, order_line=False):
         currency = order_sudo.currency_id

@@ -14,7 +14,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
-from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
 _logger = logging.getLogger(__name__)
@@ -118,7 +118,7 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
-class Website(Website):
+class Website(main.Website):
     @http.route()
     def get_switchable_related_views(self, key):
         views = super(Website, self).get_switchable_related_views(key)
