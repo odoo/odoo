@@ -20,7 +20,7 @@ class WebsiteSnippetFilter(models.Model):
     field_names = fields.Char(help="A list of comma-separated field names", required=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
     limit = fields.Integer(help='The limit is the maximum number of records retrieved', required=True)
-    website_id = fields.Many2one('website', string='Website', ondelete='cascade', required=True)
+    website_id = fields.Many2one('website', string='Website', ondelete='cascade')
 
     @api.model
     def escape_falsy_as_empty(self, s):
@@ -51,7 +51,7 @@ class WebsiteSnippetFilter(models.Model):
         self.ensure_one()
         assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
 
-        if self.env['website'].get_current_website() != self.website_id:
+        if self.website_id and self.env['website'].get_current_website() != self.website_id:
             return ''
 
         records = self._prepare_values(limit, search_domain)
