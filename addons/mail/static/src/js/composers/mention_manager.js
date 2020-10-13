@@ -52,7 +52,7 @@ var MentionManager = Widget.extend({
     getListenerSelection: function (delimiter) {
         var listener = _.findWhere(this._listeners, { delimiter: delimiter });
         if (listener) {
-            var escapedVal = _.escape(this._composer.$input.val());
+            var escapedVal = _.escape(this._composer.$input.val().replace('\n', '\n '));
             var inputMentions = escapedVal.match(new RegExp(delimiter+'[^ ]+(?= |&nbsp;|$)', 'g'));
             return this._validateSelection(listener.selection, inputMentions);
         }
