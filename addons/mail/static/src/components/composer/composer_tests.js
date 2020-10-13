@@ -1078,6 +1078,129 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     await nextAnimationFrame();
 });
 
+QUnit.test('add a partner mention after an email + break line', async function (assert) {
+    assert.expect(13);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['res.partner'].records.push({
+        id: 25,
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+                console.log(args)
+                assert.strictEqual(
+                    args.args[0],
+                    20,
+                    "should post message to channel Id 20"
+                );
+                assert.strictEqual(
+                    args.kwargs.body,
+                    "email@odoo.com<br><a href=\"/web#model=res.partner&amp;id=25\" class=\"o_mail_redirect\" data-oe-id=\"25\" data-oe-model=\"res.partner\" target=\"_blank\">@TestPartner</a>",
+                    "should post with provided content in composer input"
+                );
+                assert.strictEqual(
+                    args.kwargs.message_type,
+                    "comment",
+                    "should set message type as 'comment'"
+                );
+                assert.strictEqual(
+                    args.kwargs.subtype_xmlid,
+                    "mail.mt_comment",
+                    "should set subtype_xmlid as 'comment'"
+                );
+                assert.strictEqual(
+                    args.kwargs.partner_ids.length,
+                    1,
+                    "should have partner_ids and set to partner id 25"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    const thread = this.env.models['mail.thread'].find(thread =>
+        thread.id === 20 &&
+        thread.model === 'mail.channel'
+    );
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['ctrl-enter'],
+    });
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "email@odoo.com\n")
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "email@odoo.com\n",
+        "text content of composer should have content"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "email@odoo.com\n@TestPartner ",
+        "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
+    );
+
+
+    // Send message
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    assert.verifySteps(['message_post']);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "should have no content in composer input after posting message"
+    );
+});
+
 QUnit.test('composer: add an attachment', async function (assert) {
     assert.expect(2);
 
