@@ -147,7 +147,7 @@ function factory(dependencies) {
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [this.id],
-            }));
+            }, { shadow: true }));
             this.update(this.constructor.convertData(data));
             this.thread.refresh();
         }

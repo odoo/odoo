@@ -67,7 +67,7 @@ function factory(dependencies) {
                     context,
                     fields,
                 },
-            });
+            }, { shadow: true });
             return this.env.models['mail.user'].insert(usersData.map(userData =>
                 this.env.models['mail.user'].convertData(userData)
             ));
