@@ -32,14 +32,16 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group/field[@name='mobility_card']" position="before">    
+            <xpath expr="//group[@name='details_group']" position="inside">   
                <group>
                     <group name="timesheet" groups="hr_timesheet.group_timesheet_manager">
+                        <field name="next_appraisal_date" groups="base.group_no_one"/>
                         <label for="timesheet_cost"/>
                         <div>
                             <field name="timesheet_cost" class="oe_inline"/> per hour
                             <field name="currency_id" invisible="1"/>
                         </div>
+                        <field name="mobility_card" string="Fleet Mobility Card"/> 
                     </group>
                 </group>
             </xpath>
