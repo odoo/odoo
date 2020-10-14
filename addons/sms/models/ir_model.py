@@ -28,6 +28,8 @@ class IrModel(models.Model):
         thread_models = self.search([('is_mail_thread', '=', True)])
         valid_models = self.env['ir.model']
         for model in thread_models:
+            if model.model not in self.env:
+                continue
             ModelObject = self.env[model.model]
             potential_fields = ModelObject._sms_get_number_fields() + ModelObject._sms_get_partner_fields()
             if any(fname in ModelObject._fields for fname in potential_fields):
