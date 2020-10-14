@@ -105,6 +105,8 @@ class TestMailAlias(TestMailCommon):
                 'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
             })
 
+        with self.assertRaises(exceptions.ValidationError):
+            record.write({'alias_defaults': "{'custom_field': brokendict"})
 
     def test_alias_setup(self):
         alias = self.env['mail.alias'].create({
@@ -112,6 +114,9 @@ class TestMailAlias(TestMailCommon):
             'alias_name': 'b4r+_#_R3wl$$',
         })
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+
+        with self.assertRaises(exceptions.ValidationError):
+            alias.write({'alias_defaults': "{'custom_field': brokendict"})
 
     def test_alias_name_unique(self):
         alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
@@ -377,6 +382,29 @@ class TestMailgateway(TestMailCommon):
         self.assertFalse(record, 'message_process: should have bounced')
         # Check if default (hardcoded) value is in the mail content
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='The following email sent to')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_alias_defaults(self):
+        """ Test alias defaults and inner values """
+        self.alias.write({
+            'alias_user_id': self.user_employee.id,
+            'alias_defaults': "{'custom_field': 'defaults_custom'}"
+        })
+
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Specific')
+        self.assertEqual(len(record), 1)
+        res = record.get_metadata()[0].get('create_uid') or [None]
+        self.assertEqual(res[0], self.user_employee.id)
+        self.assertEqual(record.name, 'Specific')
+        self.assertEqual(record.custom_field, 'defaults_custom')
+
+        self.alias.write({'alias_defaults': '""'})
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Specific2')
+        self.assertEqual(len(record), 1)
+        res = record.get_metadata()[0].get('create_uid') or [None]
+        self.assertEqual(res[0], self.user_employee.id)
+        self.assertEqual(record.name, 'Specific2')
+        self.assertFalse(record.custom_field)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_user_id(self):
