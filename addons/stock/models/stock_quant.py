@@ -53,6 +53,15 @@ class StockQuant(models.Model):
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
 
+    @api.model_cr
+    def init(self):
+        # Create multi-column index to optimize quant merges
+        self._cr.execute("""
+            CREATE INDEX IF NOT EXISTS stock_quant__merge_quants_index
+            ON stock_quant (product_id, company_id, location_id, lot_id, package_id, owner_id, in_date)
+        """)
+        return super().init()
+
     def action_view_stock_moves(self):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
