@@ -67,6 +67,12 @@ def rotate_pdf(pdf):
         writer.write(_buffer)
         return _buffer.getvalue()
 
+# by default PdfFileReader will overwrite warnings.showwarning which is what
+# logging.captureWarnings does, meaning it essentially reverts captureWarnings
+# every time it's called which is undesirable
+old_init = PdfFileReader.__init__
+PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
+    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
 
 class OdooPdfFileReader(PdfFileReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
