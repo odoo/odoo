@@ -822,12 +822,14 @@ header {
         .navbar .dropdown-menu {
             max-height: 60vh;
             overflow-y: auto;
+            overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
         }
     }
     // ... but we limit the navbar-collapse height
     .navbar-collapse.show {
         max-height: 80vh;
         overflow-y: auto;
+        overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
     }
 
     &:not(.o_header_is_scrolled) {
