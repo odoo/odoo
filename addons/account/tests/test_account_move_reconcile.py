@@ -1761,7 +1761,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ],
         })
 
-        misc_move.post()
+        misc_move.action_post()
 
         lines_to_reconcile = (misc_move + caba_move).mapped('line_ids').filtered(lambda x: x.account_id == self.tax_account_1)
         lines_to_reconcile.reconcile()
