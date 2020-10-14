@@ -15,6 +15,7 @@
         <div t-att-style="typeof color === 'string' ? ('background-color:' + color) + ';' : ''" t-attf-class="#{record.is_highlighted ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : 'o_calendar_color_1'}">
             <span t-if="showTime" class="fc-time"/>
             <div class="o_event_title" t-esc="record.display_name"/>
+            <div t-if="showLocation and record.location" t-esc="record.location"/>
         </div>
     </t>
 
@@ -91,9 +92,6 @@
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
-            <span class="o_calendar_add_button">
-                <t t-call="CalendarView.navigation_add_button" />
-            </span>
             <span class="o_calendar_navigation_buttons">
                 <t t-call="CalendarView.navigation_buttons" />
             </span>
@@ -105,9 +103,6 @@
         </div>
     </t>
 
-    <t t-name="CalendarView.navigation_add_button">
-        <button class="o_calendar_button_new btn btn-primary">Add</button>
-    </t>
 
     <t t-name="CalendarView.navigation_buttons">
         <button class="o_calendar_button_prev btn btn-primary" aria-label="Previous" title="Previous"><span class="fa fa-arrow-left"/></button>

@@ -5,7 +5,7 @@ from ast import literal_eval
 
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import html2plaintext
 
 
@@ -125,7 +125,11 @@ class SendSMS(models.TransientModel):
                 composer.recipient_single_number = ''
                 composer.recipient_single_number_itf = ''
                 continue
-            records.ensure_one()
+            try:
+                records.ensure_one()
+            except ValueError:
+                raise  ValidationError(_('You cannot select multiple recipients.'))
+
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
             composer.recipient_single_description = res[records.id]['partner'].name or records.display_name
             composer.recipient_single_number = res[records.id]['number'] or ''

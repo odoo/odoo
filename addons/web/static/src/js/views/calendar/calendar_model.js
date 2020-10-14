@@ -554,7 +554,7 @@ return AbstractModel.extend({
                         'id': record.id,
                         'value': value,
                         'label': formater(_value, field),
-                        'active': !f || f.active,
+                        'active': f && f.active,
                     };
                 });
                 records.sort(function (f1,f2) {

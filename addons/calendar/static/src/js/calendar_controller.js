@@ -58,10 +58,6 @@ odoo.define('calendar.CalendarController', function (require) {
             _super.apply(this, arguments);
         },
 
-        _onButtonNew() {
-            this.trigger_up('switch_view', {view_type: 'form'});
-        },
-
     });
 
     return CalendarController;

@@ -66,19 +66,19 @@
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <tree string="Meetings" multi_edit="1" sample="1" editable="bottom">
-                <field name="name" string="Subject" decoration-bf="1" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}'/>
+                <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}"/>
                 <field name="start" string="Start Date" readonly="1"/>
                 <field name="stop" string="End Date" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
-                <field name="partner_ids" widget="many2many_tags" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="show"/>
-                <field name="alarm_ids" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
-                <field name="categ_ids" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
+                <field name="partner_ids" widget="many2many_tags" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="show"/>
+                <field name="alarm_ids" widget="many2many_tags" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
+                <field name="categ_ids" widget="many2many_tags" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
                 <field name="recurrency" readonly="1" optional="hide"/>
-                <field name="privacy" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
-                <field name="show_as" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
-                <field name="location" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="show"/>
+                <field name="privacy" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
+                <field name="show_as" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
+                <field name="location" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="show"/>
                 <field name="duration" widget="float_time" readonly="1"/>
-                <field name="description" attrs='{"readonly": ["|", ("recurrency", "=", True), ("privacy", "=", "private")]}' optional="hide"/>
+                <field name="description" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
                 <field name="allday" invisible="True"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
@@ -111,14 +111,22 @@
                         <h1>
                             <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
-                        <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
-                        <div>
-                            <field name="partner_ids" widget="many2manyattendee"
-                                placeholder="Select attendees..."
-                                context="{'force_email':True}"
-                                class="oe_inline"/>
-                        </div>
                     </div>
+                    <div>
+                        <group>
+                            <group>
+                                <field name="partner_ids" widget="many2manyattendee"
+                                    placeholder="Select attendees..."
+                                    context="{'force_email':True}"
+                                    class="o_field_widget o_field_many2one"/>
+                            </group>
+                            <group class="o_group_col_3">
+                                <button name="%(mail.action_email_compose_message_wizard)d" context="{'partner_ids': partner_ids}" type="action" string="Mail" icon="fa-envelope"/>
+                                <!--<button name="%(sms.sms_composer_view_form)d" type="action" string="SMS" icon="fa-mobile"/>-->
+                            </group>
+                        </group>
+                    </div>
+
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group>

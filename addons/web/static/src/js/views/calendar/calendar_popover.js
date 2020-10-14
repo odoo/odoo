@@ -7,6 +7,7 @@ const FieldWrapper = require('web.FieldWrapper');
 var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var Widget = require('web.Widget');
 const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+var session = require('web.session');
 
 var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMixin, {
     template: 'CalendarView.event.popover',
@@ -75,8 +76,16 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
     /**
      * @return {boolean}
      */
+    isButtonVisible() {
+        var isUserEventResponsible = this.event.extendedProps.record.user_id[0] === session.user_id[0];
+        return (this.displayFields.privacy === "Public" || isUserEventResponsible);
+    },
+
+    /**
+     * @return {boolean}
+     */
     isEventDeletable() {
-        return this._canDelete;;
+        return this._canDelete && this.isButtonVisible();
     },
     /**
      * @return {boolean}
@@ -88,7 +97,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
      * @return {boolean}
      */
     isEventEditable() {
-        return true;
+        return this.isButtonVisible();
     },
 
     //--------------------------------------------------------------------------
