@@ -316,7 +316,7 @@
 <div>
     <p>
         <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
-        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
+        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.sudo().name"/>)</t>
         <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
     <div t-if="feedback" t-esc="feedback"/>
