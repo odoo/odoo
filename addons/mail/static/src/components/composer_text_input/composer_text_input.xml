@@ -7,6 +7,7 @@
                 <t t-if="composer.hasSuggestions">
                     <ComposerSuggestionList
                         composerLocalId="props.composerLocalId"
+                        isBelow="props.hasMentionSuggestionsBelowPosition"
                     />
                 </t>
                 <textarea class="o_ComposerTextInput_textarea" t-att-class="{ 'o-composer-is-compact': props.isCompact }" t-esc="composer.textInputContent" t-att-placeholder="textareaPlaceholder" t-on-focusin="_onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
