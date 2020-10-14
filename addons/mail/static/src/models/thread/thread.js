@@ -341,7 +341,6 @@ function factory(dependencies) {
             return channels;
         }
 
-
         /**
          * Performs the `channel_seen` RPC on `mail.channel`.
          *
@@ -450,6 +449,42 @@ function factory(dependencies) {
             return this.env.models['mail.thread'].insert(
                 this.env.models['mail.thread'].convertData(data)
             );
+        }
+
+        /**
+         * Performs the `execute_command` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer} param0.channelId
+         * @param {string} param0.command
+         */
+        static async performRpcExecuteCommand({ channelId, command }) {
+            await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'execute_command',
+                args: [[ channelId ]],
+                kwargs: { command },
+            }, { shadow: true });
+        }
+
+        /**
+         * Performs the `execute_command` RPC on `mail.thread`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer} param0.threadId
+         * @param {string} param0.threadModel
+         * @param {Object} param0.postData
+         * @return {integer} the posted message id
+         */
+        static async performRpcMessagePost({threadId, threadModel, postData}) {
+            return this.env.services.rpc({
+                model: threadModel,
+                method: 'message_post',
+                args: [threadId],
+                kwargs: postData,
+            });
         }
 
         /**
@@ -644,11 +679,10 @@ function factory(dependencies) {
                     },
                 }, { shadow: true });
             } else {
-                this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'execute_command',
-                    args: [[this.id], 'leave']
-                }, { shadow: true });
+                this.env.models['mail.thread'].performRpcExecuteCommand({
+                    channelId: this.id,
+                    command: 'leave',
+                });
             }
         }
 
@@ -1747,12 +1781,18 @@ function factory(dependencies) {
             dependencies: ['messages'],
         }),
         /**
+         * Is transient trait for all messages ordered like they are displayed.
+         */
+        orderedMessagesIsTransient: attr({
+            related: 'orderedMessages.isTransient',
+        }),
+        /**
          * All messages ordered like they are displayed. This field does not
          * contain transient messages which are not "real" records.
          */
         orderedNonTransientMessages: many2many('mail.message', {
             compute: '_computeOrderedNonTransientMessages',
-            dependencies: ['orderedMessages'],
+            dependencies: ['orderedMessages', 'orderedMessagesIsTransient'],
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.

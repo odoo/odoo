@@ -237,58 +237,54 @@ function factory(dependencies) {
             body = this._generateMentionsLinks(body);
             body = parseAndTransform(body, addLink);
             body = this._generateEmojisOnHtml(body);
-            let postData = {
-                attachment_ids: this.attachments.map(attachment => attachment.id),
-                body,
-                channel_ids: this.mentionedChannels.map(channel => channel.id),
-                context: {
-                    mail_post_autofollow: true,
-                },
-                message_type: 'comment',
-                partner_ids: this.recipients.map(partner => partner.id),
-            };
-            if (this.subjectContent) {
-                postData.subject = this.subjectContent;
-            }
-            let messageId;
-            if (thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(body);
-                Object.assign(postData, {
+            const command = this._getCommandFromText(body);
+            if (thread.model === 'mail.channel' && command) {
+                await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                    channelId: thread.id,
                     command,
-                    subtype_xmlid: 'mail.mt_comment'
-                });
-                messageId = await this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: command ? 'execute_command' : 'message_post',
-                    args: [thread.id],
-                    kwargs: postData,
                 }));
             } else {
-                Object.assign(postData, {
-                    subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                });
-                messageId = await this.async(() => this.env.services.rpc({
-                    model: thread.model,
-                    method: 'message_post',
-                    args: [thread.id],
-                    kwargs: postData,
-                }));
-                const [messageData] = await this.async(() => this.env.services.rpc({
-                    model: 'mail.message',
-                    method: 'message_format',
-                    args: [[messageId]],
-                }));
-                this.env.models['mail.message'].insert(Object.assign(
-                    {},
-                    this.env.models['mail.message'].convertData(messageData),
-                    {
-                        originThread: [['insert', {
-                            id: thread.id,
-                            model: thread.model,
-                        }]],
+                let postData = {
+                    attachment_ids: this.attachments.map(attachment => attachment.id),
+                    body,
+                    channel_ids: this.mentionedChannels.map(channel => channel.id),
+                    context: {
+                        mail_post_autofollow: true,
+                    },
+                    message_type: 'comment',
+                    partner_ids: this.recipients.map(partner => partner.id),
+                    subtype_xmlid: thread.model !== 'mail.channel' && this.isLog
+                        ? 'mail.mt_note'
+                        : 'mail.mt_comment',
+                };
+                if (this.subjectContent) {
+                    postData.subject = this.subjectContent;
+                }
+                const messageId = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcMessagePost({
+                        postData,
+                        threadId: thread.id,
+                        threadModel: thread.model,
                     })
                 );
-                thread.loadNewMessages();
+                if (thread.model !== 'mail.channel') {
+                    const [messageData] = await this.async(() => this.env.services.rpc({
+                        model: 'mail.message',
+                        method: 'message_format',
+                        args: [[messageId]],
+                    }));
+                    this.env.models['mail.message'].insert(Object.assign(
+                        {},
+                        this.env.models['mail.message'].convertData(messageData),
+                        {
+                            originThread: [['insert', {
+                                id: thread.id,
+                                model: thread.model,
+                            }]],
+                        })
+                    );
+                    thread.loadNewMessages();
+                }
             }
             for (const threadView of this.thread.threadViews) {
                 // Reset auto scroll to be able to see the newly posted message.
