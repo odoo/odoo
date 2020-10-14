@@ -82,6 +82,7 @@ class Company(models.Model):
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
+    mobile = fields.Char(related='partner_id.mobile', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
     company_registry = fields.Char()
