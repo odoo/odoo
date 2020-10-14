@@ -7,7 +7,7 @@ from odoo import api, fields, models
 from odoo import tools, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
-
+import re
 _logger = logging.getLogger(__name__)
 
 
@@ -186,9 +186,13 @@ class Employee(models.Model):
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     # employee in company
-    job_id = fields.Many2one('hr.job', 'Job Position')
+
     department_id = fields.Many2one('hr.department', 'Department')
-    parent_id = fields.Many2one('hr.employee', 'Manager')
+    job_id = fields.Many2one('hr.job', 'Job Position', domain="[('department_id', '=', department_id)]")
+    parent_id = fields.Many2one('hr.employee', 'Manager', domain="[('job_id', '=', job_id)]")
+
+
+
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
     coach_id = fields.Many2one('hr.employee', 'Coach')
     category_ids = fields.Many2many(
@@ -214,6 +218,57 @@ class Employee(models.Model):
     def _onchange_address(self):
         self.work_phone = self.address_id.phone
         self.mobile_phone = self.address_id.mobile
+
+    @api.onchange('work_email')
+    def validate_mail(self):
+        if self.work_email:
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.work_email)
+            if match == None:
+                return {
+                    'value': {
+                        'work_email': "",
+                    },
+                    'domain': {},
+                    'warning': {
+                        'title': 'warning',
+                        'message': 'Not a valid E-mail ID.'
+                    },
+                }
+
+    @api.onchange('work_phone')
+    def _onchange_work_phone(self):
+        print(self.work_phone)
+        print(type(self.work_phone))
+
+        if len(str(self.work_phone)) > 10:
+            return {
+                'value': {
+                    'work_phone': "",
+                },
+                'domain': {},
+                'warning': {
+                    'title': 'warning',
+                    'message': 'Phone more than 10 numbers.'
+                },
+            }
+        for rec in self:
+            if rec.work_phone and not str(rec.work_phone).isdigit():
+                cheak = True
+            else:
+                cheak = False
+
+            print(cheak)
+            if cheak == True:
+                return {
+                    'value': {
+                        'work_phone': "",
+                    },
+                    'domain': {},
+                    'warning': {
+                        'title': 'warning',
+                        'message': 'Phone numbers are numbers only.'
+                    },
+                }
 
     @api.onchange('company_id')
     def _onchange_company(self):

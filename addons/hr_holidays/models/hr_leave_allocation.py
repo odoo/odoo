@@ -7,12 +7,14 @@ import logging
 
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
-
+import math
 from odoo import api, fields, models
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
+import json
+import requests
 
 _logger = logging.getLogger(__name__)
 
@@ -24,8 +26,12 @@ class HolidaysAllocation(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
+    Channel_secret = "aa7a35b08380992ee06312f1209a9d6e"
+    Channel_access_token = "r4ClYhA/byseGzn02jnFV6WIlB73p8UmbCE7iSQ6aHzlwcoaFRFheLWG9NWJJ2GK6Tx55j41syQPPxF1rGWUDQ/3wFdRDmK2onrL29Ck/pTBSoJi1bH9k2aKUE83OMBU9WnaDUTr9b6U+gwSlaYajAdB04t89/1O/w1cDnyilFU="
+
     def _default_employee(self):
-        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search(
+            [('user_id', '=', self.env.uid)], limit=1)
 
     def _default_holiday_status_id(self):
         if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
@@ -42,11 +48,11 @@ class HolidaysAllocation(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+    ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
         help="The status is set to 'To Submit', when a leave request is created." +
-        "\nThe status is 'To Approve', when leave request is confirmed by user." +
-        "\nThe status is 'Refused', when leave request is refused by manager." +
-        "\nThe status is 'Approved', when leave request is approved by manager.")
+             "\nThe status is 'To Approve', when leave request is confirmed by user." +
+             "\nThe status is 'Refused', when leave request is refused by manager." +
+             "\nThe status is 'Approved', when leave request is approved by manager.")
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
@@ -59,21 +65,26 @@ class HolidaysAllocation(models.Model):
         domain=[('valid', '=', True)], default=_default_holiday_status_id)
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
-    notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee,
+        track_visibility='onchange')
+    notes = fields.Text('Reasons', readonly=True,
+                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
+
     number_of_days = fields.Float(
-        'Number of Days', track_visibility='onchange',
+        'Number of Days', track_visibility='onchange', default=1, required=True,
         help='Duration in days. Reference field to use when necessary.')
+
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1.0, required=True,
         help="UX field allowing to see and modify the allocation duration, computed in days.")
     number_of_hours_display = fields.Float(
-        'Duration (hours)', compute='_compute_number_of_hours_display',
+        'Duration (hours)', compute='_compute_number_of_hours_display', default=1.0, required=True,
         help="UX field allowing to see and modify the allocation duration, computed in hours.")
+
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
-        help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
+                                   help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     # details
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
@@ -112,18 +123,25 @@ class HolidaysAllocation(models.Model):
     accrual = fields.Boolean(
         "Accrual", readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    accrual_limit = fields.Integer('Balance limit', default=0, help="Maximum of allocation for accrual; 0 means no maximum.")
-    number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
-    interval_number = fields.Integer("Number of unit between two intervals", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
+    accrual_limit = fields.Integer('Balance limit', default=0,
+                                   help="Maximum of allocation for accrual; 0 means no maximum.")
+    number_per_interval = fields.Float("Number of unit per interval", readonly=True,
+                                       states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                                       default=1)
+    interval_number = fields.Integer("Number of unit between two intervals", readonly=True,
+                                     states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                                     default=1)
     unit_per_interval = fields.Selection([
         ('hours', 'Hour(s)'),
         ('days', 'Day(s)')
-        ], string="Unit of time added at each interval", default='hours', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    ], string="Unit of time added at each interval", default='hours', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     interval_unit = fields.Selection([
         ('weeks', 'Week(s)'),
         ('months', 'Month(s)'),
         ('years', 'Year(s)')
-        ], string="Unit of time between two intervals", default='weeks', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    ], string="Unit of time between two intervals", default='weeks', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
 
     _sql_constraints = [
@@ -134,7 +152,8 @@ class HolidaysAllocation(models.Model):
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('duration_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
-        ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
+        ('number_per_interval_check', "CHECK(number_per_interval > 0)",
+         "The number per interval should be greater than 0"),
         ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
     ]
 
@@ -146,7 +165,8 @@ class HolidaysAllocation(models.Model):
         """
         today = fields.Date.from_string(fields.Date.today())
 
-        holidays = self.search([('accrual', '=', True), ('employee_id.active', '=', True), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
+        holidays = self.search([('accrual', '=', True), ('employee_id.active', '=', True), ('state', '=', 'validate'),
+                                ('holiday_type', '=', 'employee'),
                                 '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
                                 '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
 
@@ -179,8 +199,12 @@ class HolidaysAllocation(models.Model):
             if period_start <= start_date:
                 period_start = start_date
 
-            worked = holiday.employee_id.get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-            left = holiday.employee_id.get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+            worked = holiday.employee_id.get_work_days_data(period_start, period_end,
+                                                            domain=[('holiday_id.holiday_status_id.unpaid', '=', True),
+                                                                    ('time_type', '=', 'leave')])['days']
+            left = holiday.employee_id.get_leave_days_data(period_start, period_end,
+                                                           domain=[('holiday_id.holiday_status_id.unpaid', '=', True),
+                                                                   ('time_type', '=', 'leave')])['days']
             prorata = worked / (left + worked) if worked else 0
 
             days_to_give = holiday.number_per_interval
@@ -209,7 +233,8 @@ class HolidaysAllocation(models.Model):
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
             else:
-                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_hours_display = allocation.number_of_days * (
+                            allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.multi
     @api.depends('number_of_hours_display', 'number_of_days_display')
@@ -217,8 +242,8 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.duration_display = '%g %s' % (
                 (float_round(allocation.number_of_hours_display, precision_digits=2)
-                if allocation.type_request_unit == 'hour'
-                else float_round(allocation.number_of_days_display, precision_digits=2)),
+                 if allocation.type_request_unit == 'hour'
+                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
 
     @api.multi
@@ -249,13 +274,48 @@ class HolidaysAllocation(models.Model):
     @api.onchange('number_of_hours_display')
     def _onchange_number_of_hours_display(self):
         for allocation in self:
-            allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+            allocation.number_of_days = allocation.number_of_hours_display / (
+                        allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+            print(allocation.number_of_days)
+            number = allocation.number_of_days
+            number = math.ceil(number)
+            print(number)
+            if number <= 0:
+                return {
+                    'value': {
+                        'title': 'warning',
+                        'number_of_days': '1'
+                    },
+                    'domain': {},
+                    'warning': {
+                        'title': 'warning',
+                        'message': 'Duration is not equal to 0'
+                    },
+                }
 
     @api.multi
     @api.onchange('number_of_days_display')
     def _onchange_number_of_days_display(self):
+        print('onchange2', self)
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
+            number = allocation.number_of_days
+            print(type(number))
+            print(allocation.number_of_days)
+            number = math.ceil(number)
+            print(number)
+            if number == 0:
+                return {
+                    'value': {
+                        'title': 'warning',
+                        'number_of_days': '1'
+                    },
+                    'domain': {},
+                    'warning': {
+                        'title': 'warning',
+                        'message': 'Duration is not equal to 0'
+                    },
+                }
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
@@ -348,21 +408,233 @@ class HolidaysAllocation(models.Model):
                 today = fields.Date.today()
 
                 if vstart > today or vstop < today:
-                    raise UserError(_('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
-                                                                                  allocation.holiday_status_id.validity_start, allocation.holiday_status_id.validity_stop))
+                    raise UserError(
+                        _('You can allocate %s only between %s and %s') % (allocation.holiday_status_id.display_name,
+                                                                           allocation.holiday_status_id.validity_start,
+                                                                           allocation.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):
+        print(self)
+        print(values)
         """ Override to avoid automatic logging of creation """
         if values.get('accrual', False):
             values['date_from'] = fields.Datetime.now()
         employee_id = values.get('employee_id', False)
+        print(employee_id)
         if not values.get('department_id'):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-        holiday = super(HolidaysAllocation, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        holiday = super(HolidaysAllocation,
+                        self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
         if not self._context.get('import_file'):
             holiday.activity_update()
+        print(holiday)
+
+        Channel_secret = "aa7a35b08380992ee06312f1209a9d6e"
+        Channel_access_token = "r4ClYhA/byseGzn02jnFV6WIlB73p8UmbCE7iSQ6aHzlwcoaFRFheLWG9NWJJ2GK6Tx55j41syQPPxF1rGWUDQ/3wFdRDmK2onrL29Ck/pTBSoJi1bH9k2aKUE83OMBU9WnaDUTr9b6U+gwSlaYajAdB04t89/1O/w1cDnyilFU="
+
+        LINE_API = 'https://api.line.me/v2/bot/message/push'
+        Authorization = 'Bearer {}'.format(Channel_access_token)
+        headers = {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': Authorization
+        }
+
+        for allocation_leave_emp in holiday:
+            state = 'รอการตรวจสอบ'
+            state = 'สถานะ: ' + state
+
+            holiday_status_id = allocation_leave_emp.holiday_status_id.name
+            holiday_status_id = str(holiday_status_id)
+            if holiday_status_id == 'False':
+                holiday_status_id = 'ว่าง'
+            holiday_status_id = 'ประเภทการลา: ' + holiday_status_id
+
+            name = allocation_leave_emp.name
+            name = str(name)
+            if name == 'False':
+                name = 'ว่าง'
+            name = 'คำอธิบาย ' + name
+
+            employee_id = allocation_leave_emp.employee_id.name
+            employee_id = str(employee_id)
+            if employee_id == 'False':
+                employee_id = 'ว่าง'
+            employee_id = 'By  ' + employee_id
+
+            emp_line = allocation_leave_emp.employee_id.x_line
+            emp_line = str(emp_line)
+            if emp_line == 'False':
+                emp_line = 'ว่าง'
+
+            job_id = allocation_leave_emp.employee_id.job_id.name
+            job_id = str(job_id)
+            if job_id == 'False':
+                job_id = 'ว่าง'
+
+            department_id = allocation_leave_emp.employee_id.department_id.name
+            department_id = str(department_id)
+            if department_id == 'False':
+                department_id = 'ว่าง'
+
+            name_manager = allocation_leave_emp.employee_id.parent_id.name
+            name_manager = str(name_manager)
+            if name_manager == 'False':
+                name_manager = 'ว่าง'
+            name_manager = 'ผู้จัดการ ' + name_manager
+
+            manager_line = allocation_leave_emp.employee_id.parent_id.x_line
+            manager_line = str(manager_line)
+            if manager_line == 'False':
+                manager_line = 'ว่าง'
+
+            number_of_days = allocation_leave_emp.number_of_days
+            check_float = (number_of_days).is_integer()
+            if check_float == False:
+                print(check_float)
+                total = number_of_days / 0.125
+                print(total)
+                number_of_days = 'จำนวน ' + str(math.ceil(total)) + ' ชั่วโมง'
+            else:
+                number_of_days = 'จำนวน ' + str(math.ceil(number_of_days)) + ' วัน'
+
+            note = allocation_leave_emp.notes
+            note = str(note)
+            if note == 'False':
+                note = 'เหตุผลเพิ่มเติม: ว่าง'
+
+            data = {
+                "to": manager_line,
+                "messages": [{
+                    "type": "flex",
+                    "altText": "แจ้งเตือนการขอวันลาเพิ่ม",
+                    "contents": {
+                        "type": "bubble",
+                        "size": "giga",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "Trinity Roots Co.,Ltd.",
+                                    "weight": "bold",
+                                    "color": "#1DB446",
+                                    "size": "sm"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "แจ้งเตือนการขอวันลาเพิ่ม",
+                                    "weight": "bold",
+                                    "size": "xl",
+                                    "margin": "md"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": employee_id,
+                                    "size": "xs",
+                                    "color": "#aaaaaa",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "margin": "xxl",
+                                    "spacing": "sm",
+                                    "contents": [
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": name,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": holiday_status_id,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": number_of_days,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": state,
+                                                    "size": "sm",
+                                                    "color": "#c9cd0a",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "margin": "md",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": name_manager,
+                                            "size": "xs",
+                                            "color": "#aaaaaa",
+                                            "flex": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "styles": {
+                            "footer": {
+                                "separator": True
+                            }
+
+                        }
+
+                    }
+
+                }]
+            }
+            data = json.dumps(data)
+            requests.post(LINE_API, headers=headers, data=data)
+
         return holiday
 
     @api.multi
@@ -372,6 +644,215 @@ class HolidaysAllocation(models.Model):
             self._check_approval_update(values['state'])
         result = super(HolidaysAllocation, self).write(values)
         self.add_follower(employee_id)
+        status = (values.get('state'))
+        print(status)
+        Channel_secret = "aa7a35b08380992ee06312f1209a9d6e"
+        Channel_access_token = "r4ClYhA/byseGzn02jnFV6WIlB73p8UmbCE7iSQ6aHzlwcoaFRFheLWG9NWJJ2GK6Tx55j41syQPPxF1rGWUDQ/3wFdRDmK2onrL29Ck/pTBSoJi1bH9k2aKUE83OMBU9WnaDUTr9b6U+gwSlaYajAdB04t89/1O/w1cDnyilFU="
+
+        LINE_API = 'https://api.line.me/v2/bot/message/push'
+        Authorization = 'Bearer {}'.format(Channel_access_token)
+        headers = {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': Authorization
+        }
+
+        for allocation_leave_emp in self:
+            state = 'รอการตรวจสอบ'
+            state = 'สถานะ: ' + state
+
+            holiday_status_id = allocation_leave_emp.holiday_status_id.name
+            holiday_status_id = str(holiday_status_id)
+            if holiday_status_id == 'False':
+                holiday_status_id = 'ว่าง'
+            holiday_status_id = 'ประเภทการลา: ' + holiday_status_id
+
+            name = allocation_leave_emp.name
+            name = str(name)
+            if name == 'False':
+                name = 'ว่าง'
+            name = 'คำอธิบาย ' + name
+
+            employee_id = allocation_leave_emp.employee_id.name
+            employee_id = str(employee_id)
+            if employee_id == 'False':
+                employee_id = 'ว่าง'
+            employee_id = 'By  ' + employee_id
+
+            emp_line = allocation_leave_emp.employee_id.x_line
+            emp_line = str(emp_line)
+            if emp_line == 'False':
+                emp_line = 'ว่าง'
+
+            job_id = allocation_leave_emp.employee_id.job_id.name
+            job_id = str(job_id)
+            if job_id == 'False':
+                job_id = 'ว่าง'
+
+            department_id = allocation_leave_emp.employee_id.department_id.name
+            department_id = str(department_id)
+            if department_id == 'False':
+                department_id = 'ว่าง'
+
+            name_manager = allocation_leave_emp.employee_id.parent_id.name
+            name_manager = str(name_manager)
+            if name_manager == 'False':
+                name_manager = 'ว่าง'
+            name_manager = 'ผู้จัดการ ' + name_manager
+
+            manager_line = allocation_leave_emp.employee_id.parent_id.x_line
+            manager_line = str(manager_line)
+            if manager_line == 'False':
+                manager_line = 'ว่าง'
+
+            number_of_days = allocation_leave_emp.number_of_days
+            check_float = (number_of_days).is_integer()
+            if check_float == False:
+                print(check_float)
+                total = number_of_days / 0.125
+                print(total)
+                number_of_days = 'จำนวน ' + str(math.ceil(total)) + ' ชั่วโมง'
+            else:
+                number_of_days = 'จำนวน ' + str(math.ceil(number_of_days)) + ' วัน'
+
+            note = allocation_leave_emp.notes
+            note = str(note)
+            if note == 'False':
+                note = 'เหตุผลเพิ่มเติม: ว่าง'
+
+            data = {
+                "to": manager_line,
+                "messages": [{
+                    "type": "flex",
+                    "altText": "แจ้งเตือนการขอวันลาเพิ่ม(แก้ไข)",
+                    "contents": {
+                        "type": "bubble",
+                        "size": "giga",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "Trinity Roots Co.,Ltd.",
+                                    "weight": "bold",
+                                    "color": "#1DB446",
+                                    "size": "sm"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "แจ้งเตือนการขอวันลาเพิ่ม(แก้ไข)",
+                                    "weight": "bold",
+                                    "size": "xl",
+                                    "margin": "md"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": employee_id,
+                                    "size": "xs",
+                                    "color": "#aaaaaa",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "margin": "xxl",
+                                    "spacing": "sm",
+                                    "contents": [
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": name,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": holiday_status_id,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": number_of_days,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": state,
+                                                    "size": "sm",
+                                                    "color": "#c9cd0a",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "margin": "md",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": name_manager,
+                                            "size": "xs",
+                                            "color": "#aaaaaa",
+                                            "flex": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "styles": {
+                            "footer": {
+                                "separator": True
+                            }
+
+                        }
+
+                    }
+
+                }]
+            }
+            data = json.dumps(data)
+            if status == 'draft' or status == 'confirm' or status == 'validate1' or status == 'validate' or status == 'refuse' or status == None:
+                print('ไม่เข้าเงือนไข')
+            else:
+                requests.post(LINE_API, headers=headers, data=data)
+
         return result
 
     @api.multi
@@ -410,6 +891,7 @@ class HolidaysAllocation(models.Model):
 
     @api.multi
     def action_draft(self):
+        print('draft')
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
             raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
         self.write({
@@ -426,6 +908,7 @@ class HolidaysAllocation(models.Model):
 
     @api.multi
     def action_confirm(self):
+        print('confirm')
         if self.filtered(lambda holiday: holiday.state != 'draft'):
             raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
         res = self.write({'state': 'confirm'})
@@ -434,6 +917,18 @@ class HolidaysAllocation(models.Model):
 
     @api.multi
     def action_approve(self):
+        print('approve')
+        print(self)
+        Channel_secret = "aa7a35b08380992ee06312f1209a9d6e"
+        Channel_access_token = "r4ClYhA/byseGzn02jnFV6WIlB73p8UmbCE7iSQ6aHzlwcoaFRFheLWG9NWJJ2GK6Tx55j41syQPPxF1rGWUDQ/3wFdRDmK2onrL29Ck/pTBSoJi1bH9k2aKUE83OMBU9WnaDUTr9b6U+gwSlaYajAdB04t89/1O/w1cDnyilFU="
+
+        LINE_API = 'https://api.line.me/v2/bot/message/push'
+        Authorization = 'Bearer {}'.format(Channel_access_token)
+        headers = {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': Authorization
+        }
+
         # if validation_type == 'both': this method is the first approval approval
         # if validation_type != 'both': this method calls action_validate() below
         if any(holiday.state != 'confirm' for holiday in self):
@@ -441,13 +936,225 @@ class HolidaysAllocation(models.Model):
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-        self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
+        self.filtered(lambda hol: hol.validation_type == 'both').write(
+            {'state': 'validate1', 'first_approver_id': current_employee.id})
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         self.activity_update()
+
+        leave_allocation = self
+        for LA in leave_allocation:
+            state = 'อนุมัติ'
+            state = 'สถานะ: ' + state
+
+            holiday_status_id = LA.holiday_status_id.name
+            holiday_status_id = str(holiday_status_id)
+            if holiday_status_id == 'False':
+                holiday_status_id = 'ว่าง'
+            holiday_status_id = 'ประเภทการลา: ' + holiday_status_id
+
+            name = LA.name
+            name = str(name)
+            if name == 'False':
+                name = 'ว่าง'
+            name = 'คำอธิบาย ' + name
+
+            employee_id = LA.employee_id.name
+            employee_id = str(employee_id)
+            if employee_id == 'False':
+                employee_id = 'ว่าง'
+            employee_id = 'By  ' + employee_id
+
+            emp_line = LA.employee_id.x_line
+            emp_line = str(emp_line)
+            if emp_line == 'False':
+                emp_line = 'ว่าง'
+
+            job_id = LA.employee_id.job_id.name
+            job_id = str(job_id)
+            if job_id == 'False':
+                job_id = 'ว่าง'
+
+            department_id = LA.employee_id.department_id.name
+            department_id = str(department_id)
+            if department_id == 'False':
+                department_id = 'ว่าง'
+
+            name_manager = LA.employee_id.parent_id.name
+            name_manager = str(name_manager)
+            if name_manager == 'False':
+                name_manager = 'ว่าง'
+            name_manager = 'ผู้จัดการ ' + name_manager
+
+            manager_line = LA.employee_id.parent_id.x_line
+            manager_line = str(manager_line)
+            if manager_line == 'False':
+                manager_line = 'ว่าง'
+
+            number_of_days = LA.number_of_days
+            check_float = (number_of_days).is_integer()
+            if check_float == False:
+                print(check_float)
+                total = number_of_days / 0.125
+                print(total)
+                number_of_days = 'จำนวน ' + str(math.ceil(total)) + ' ชั่วโมง'
+            else:
+                number_of_days = 'จำนวน ' + str(math.ceil(number_of_days)) + ' วัน'
+
+            note = LA.notes
+            note = str(note)
+            if note == 'False':
+                note = 'เหตุผลเพิ่มเติม: ว่าง'
+
+            data = {
+                "to": emp_line,
+                "messages": [{
+                    "type": "flex",
+                    "altText": "แจ้งเตือนผลการขอลา",
+                    "contents": {
+                        "type": "bubble",
+                        "size": "giga",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "Trinity Roots Co.,Ltd.",
+                                    "weight": "bold",
+                                    "color": "#1DB446",
+                                    "size": "sm"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "แจ้งเตือนผลการขอวันลาเพิ่ม",
+                                    "weight": "bold",
+                                    "size": "xl",
+                                    "margin": "md"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": employee_id,
+                                    "size": "xs",
+                                    "color": "#aaaaaa",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "margin": "xxl",
+                                    "spacing": "sm",
+                                    "contents": [
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": name,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": holiday_status_id,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": number_of_days,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": state,
+                                                    "size": "sm",
+                                                    "color": "#1DB446",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": note,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        }
+
+                                    ]
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "margin": "md",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": name_manager,
+                                            "size": "xs",
+                                            "color": "#aaaaaa",
+                                            "flex": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "styles": {
+                            "footer": {
+                                "separator": True
+                            }
+
+                        }
+
+                    }
+
+                }]
+            }
+            data = json.dumps(data)
+            requests.post(LINE_API, headers=headers, data=data)
+
         return True
 
     @api.multi
     def action_validate(self):
+        print('validate')
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
@@ -486,6 +1193,18 @@ class HolidaysAllocation(models.Model):
 
     @api.multi
     def action_refuse(self):
+        print('refuse')
+        print(self)
+        Channel_secret = "aa7a35b08380992ee06312f1209a9d6e"
+        Channel_access_token = "r4ClYhA/byseGzn02jnFV6WIlB73p8UmbCE7iSQ6aHzlwcoaFRFheLWG9NWJJ2GK6Tx55j41syQPPxF1rGWUDQ/3wFdRDmK2onrL29Ck/pTBSoJi1bH9k2aKUE83OMBU9WnaDUTr9b6U+gwSlaYajAdB04t89/1O/w1cDnyilFU="
+
+        LINE_API = 'https://api.line.me/v2/bot/message/push'
+        Authorization = 'Bearer {}'.format(Channel_access_token)
+        headers = {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': Authorization
+        }
+
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
             raise UserError(_('Leave request must be confirmed or validated in order to refuse it.'))
@@ -498,6 +1217,216 @@ class HolidaysAllocation(models.Model):
         if linked_requests:
             linked_requests.action_refuse()
         self.activity_update()
+
+        leave_allocation = self
+        for LA in leave_allocation:
+            state = 'ปฏิเสธ'
+            state = 'สถานะ: ' + state
+
+            holiday_status_id = LA.holiday_status_id.name
+            holiday_status_id = str(holiday_status_id)
+            if holiday_status_id == 'False':
+                holiday_status_id = 'ว่าง'
+            holiday_status_id = 'ประเภทการลา: ' + holiday_status_id
+
+            name = LA.name
+            name = str(name)
+            if name == 'False':
+                name = 'ว่าง'
+            name = 'คำอธิบาย ' + name
+
+            employee_id = LA.employee_id.name
+            employee_id = str(employee_id)
+            if employee_id == 'False':
+                employee_id = 'ว่าง'
+            employee_id = 'By  ' + employee_id
+
+            emp_line = LA.employee_id.x_line
+            emp_line = str(emp_line)
+            if emp_line == 'False':
+                emp_line = 'ว่าง'
+
+            job_id = LA.employee_id.job_id.name
+            job_id = str(job_id)
+            if job_id == 'False':
+                job_id = 'ว่าง'
+
+            department_id = LA.employee_id.department_id.name
+            department_id = str(department_id)
+            if department_id == 'False':
+                department_id = 'ว่าง'
+
+            name_manager = LA.employee_id.parent_id.name
+            name_manager = str(name_manager)
+            if name_manager == 'False':
+                name_manager = 'ว่าง'
+            name_manager = 'ผู้จัดการ ' + name_manager
+
+            manager_line = LA.employee_id.parent_id.x_line
+            manager_line = str(manager_line)
+            if manager_line == 'False':
+                manager_line = 'ว่าง'
+
+            number_of_days = LA.number_of_days
+            check_float = (number_of_days).is_integer()
+            if check_float == False:
+                print(check_float)
+                total = number_of_days / 0.125
+                print(total)
+                number_of_days = 'จำนวน ' + str(math.ceil(total)) + ' ชั่วโมง'
+            else:
+                number_of_days = 'จำนวน ' + str(math.ceil(number_of_days)) + ' วัน'
+
+            note = LA.notes
+            note = str(note)
+            if note == 'False':
+                note = 'เหตุผลเพิ่มเติม: ว่าง'
+
+            data = {
+                "to": emp_line,
+                "messages": [{
+                    "type": "flex",
+                    "altText": "แจ้งเตือนผลการขอวันลาเพิ่ม",
+                    "contents": {
+                        "type": "bubble",
+                        "size": "giga",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "Trinity Roots Co.,Ltd.",
+                                    "weight": "bold",
+                                    "color": "#1DB446",
+                                    "size": "sm"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": "แจ้งเตือนผลการขอวันลาเพิ่ม",
+                                    "weight": "bold",
+                                    "size": "xl",
+                                    "margin": "md"
+                                },
+                                {
+                                    "type": "text",
+                                    "text": employee_id,
+                                    "size": "xs",
+                                    "color": "#aaaaaa",
+                                    "wrap": True
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "margin": "xxl",
+                                    "spacing": "sm",
+                                    "contents": [
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": name,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": holiday_status_id,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": number_of_days,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": state,
+                                                    "size": "sm",
+                                                    "color": "#eb3124",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "box",
+                                            "layout": "horizontal",
+                                            "contents": [
+                                                {
+                                                    "type": "text",
+                                                    "text": note,
+                                                    "size": "sm",
+                                                    "color": "#555555",
+                                                    "flex": 0
+                                                }
+                                            ]
+                                        }
+
+                                    ]
+                                },
+                                {
+                                    "type": "separator",
+                                    "margin": "xxl"
+                                },
+                                {
+                                    "type": "box",
+                                    "layout": "horizontal",
+                                    "margin": "md",
+                                    "contents": [
+                                        {
+                                            "type": "text",
+                                            "text": name_manager,
+                                            "size": "xs",
+                                            "color": "#aaaaaa",
+                                            "flex": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "styles": {
+                            "footer": {
+                                "separator": True
+                            }
+
+                        }
+
+                    }
+
+                }]
+            }
+
+            data = json.dumps(data)
+            requests.post(LINE_API, headers=headers, data=data)
         return True
 
     def _check_approval_update(self, state):
@@ -527,8 +1456,10 @@ class HolidaysAllocation(models.Model):
 
             if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):
                 manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-                if (manager and manager != current_employee) and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('You must be either %s\'s manager or Leave manager to approve this leave') % (holiday.employee_id.name))
+                if (manager and manager != current_employee) and not self.env.user.has_group(
+                        'hr_holidays.group_hr_holidays_manager'):
+                    raise UserError(_('You must be either %s\'s manager or Leave manager to approve this leave') % (
+                        holiday.employee_id.name))
 
             if state == 'validate' and val_type == 'both':
                 if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
@@ -564,9 +1495,11 @@ class HolidaysAllocation(models.Model):
             elif allocation.state == 'refuse':
                 to_clean |= allocation
         if to_clean:
-            to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval', 'hr_holidays.mail_act_leave_allocation_second_approval'])
+            to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval',
+                                      'hr_holidays.mail_act_leave_allocation_second_approval'])
         if to_do:
-            to_do.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval', 'hr_holidays.mail_act_leave_allocation_second_approval'])
+            to_do.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval',
+                                     'hr_holidays.mail_act_leave_allocation_second_approval'])
 
     ####################################################
     # Messaging methods
@@ -597,7 +1530,8 @@ class HolidaysAllocation(models.Model):
 
         holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id
         new_group = (
-            'group_hr_holidays_user', lambda pdata: pdata['type'] == 'user' and holiday_user_group_id in pdata['groups'], {
+            'group_hr_holidays_user',
+            lambda pdata: pdata['type'] == 'user' and holiday_user_group_id in pdata['groups'], {
                 'actions': hr_actions,
             })
 
@@ -609,5 +1543,8 @@ class HolidaysAllocation(models.Model):
         if self.state in ['validate', 'validate1']:
             self.check_access_rights('read')
             self.check_access_rule('read')
-            return super(HolidaysAllocation, self.sudo()).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
-        return super(HolidaysAllocation, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+            return super(HolidaysAllocation, self.sudo()).message_subscribe(partner_ids=partner_ids,
+                                                                            channel_ids=channel_ids,
+                                                                            subtype_ids=subtype_ids)
+        return super(HolidaysAllocation, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids,
+                                                                 subtype_ids=subtype_ids)
