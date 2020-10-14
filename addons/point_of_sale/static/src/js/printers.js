@@ -3,6 +3,7 @@ odoo.define('point_of_sale.Printer', function (require) {
 
 var Session = require('web.Session');
 var core = require('web.core');
+const { Gui } = require('point_of_sale.Gui');
 var _t = core._t;
 
 // IMPROVEMENT: This is too much. We can get away from this class.
