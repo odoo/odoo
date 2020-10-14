@@ -3929,7 +3929,7 @@ class AccountMoveLine(models.Model):
             if 'account_id' in default_fields and not values.get('account_id'):
                 if len(move.line_ids[-2:]) == 2 and  move.line_ids[-1].account_id == move.line_ids[-2].account_id != False:
                     values['account_id'] = move.line_ids[-2:].mapped('account_id').id
-        if values.get('display_type'):
+        if values.get('display_type') or self.display_type:
             values.pop('account_id', None)
         return values
 
