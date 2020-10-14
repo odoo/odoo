@@ -17,7 +17,7 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
         for x in range(0, 4):
             cls.leads += cls.env['crm.lead'].create({
                 'name': 'Test %s' % x,
-                'email_from': 'test_mail_%s@example.com' % x
+                'email_from': 'test_mail_%s@megaexample.com' % x
             })
 
     @classmethod
