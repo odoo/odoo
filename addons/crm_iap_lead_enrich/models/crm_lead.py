@@ -5,16 +5,11 @@ import datetime
 import logging
 from psycopg2 import OperationalError
 
-
 from odoo import _, api, fields, models, tools
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
-EMAIL_PROVIDERS = ['gmail.com', 'hotmail.com', 'yahoo.com', 'qq.com',
-                   'outlook.com', '163.com', 'yahoo.fr', 'live.com',
-                   'hotmail.fr', 'icloud.com', '126.com', 'me.com',
-                   'free.fr', 'ymail.com', 'msn.com', 'mail.com']
 
 class Lead(models.Model):
     _inherit = 'crm.lead'
@@ -70,7 +65,7 @@ class Lead(models.Model):
 
                         email_domain = normalized_email.split('@')[1]
                         # Discard domains of generic email providers as it won't return relevant information
-                        if email_domain in EMAIL_PROVIDERS:
+                        if email_domain in iap_tools._MAIL_DOMAIN_BLACKLIST:
                             lead.write({'iap_enrich_done': True})
                             lead.message_post_with_view(
                                 'crm_iap_lead_enrich.mail_message_lead_enrich_notfound',
