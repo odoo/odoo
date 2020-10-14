@@ -341,7 +341,7 @@ class MailActivity(models.Model):
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
                 self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    (self._cr.dbname, 'res.partner', activity.user_id.sudo().partner_id.id),
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self.sudo()).unlink()
 
