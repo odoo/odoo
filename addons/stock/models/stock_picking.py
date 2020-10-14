@@ -848,8 +848,8 @@ class Picking(models.Model):
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
-                        # TODO: in master, move package field in `stock` and clean code.
-                        if pack._allowed_to_move_between_transfers():
+                        # Propagate the result package in the next move for disposable packages only.
+                        if pack.package_use == 'disposable':
                             move_lines_to_pack.write({
                                 'result_package_id': pack.id,
                             })
