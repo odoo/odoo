@@ -201,7 +201,7 @@ class IrAttachment(models.Model):
     def _compute_raw(self):
         for attach in self:
             if attach.store_fname:
-                attach.raw = self._file_read(attach.store_fname)
+                attach.raw = attach._file_read(attach.store_fname)
             else:
                 attach.raw = attach.db_datas
 
