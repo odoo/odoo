@@ -937,55 +937,6 @@ class StockMove(SavepointCase):
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2_location.id)
 
-    def test_putaway_7(self):
-        """ Checks parents locations are also browsed when looking for putaways.
-
-        WH/Stock > WH/Stock/Floor1> WH/Stock/Floor1/Rack1 > WH/Stock/Floor1/Rack1/Shelf2
-        The putaway is on Floor1 to send to Shelf2
-        A move from supplier to Rack1 should send to shelf2
-        """
-        floor1 = self.env['stock.location'].create({
-            'name': 'floor1',
-            'usage': 'internal',
-            'location_id': self.stock_location.id,
-        })
-        rack1 = self.env['stock.location'].create({
-            'name': 'rack1',
-            'usage': 'internal',
-            'location_id': floor1.id,
-        })
-        shelf2 = self.env['stock.location'].create({
-            'name': 'shelf2',
-            'usage': 'internal',
-            'location_id': rack1.id,
-        })
-
-        # putaway floor1 -> shelf2
-        putaway = self.env['stock.putaway.rule'].create({
-            'product_id': self.product.id,
-            'location_in_id': floor1.id,
-            'location_out_id': shelf2.id,
-        })
-        floor1.write({
-            'putaway_rule_ids': [(4, putaway.id, 0)],
-        })
-
-        # stock move supplier -> rack1
-        move1 = self.env['stock.move'].create({
-            'name': 'test_putaway_6',
-            'location_id': self.supplier_location.id,
-            'location_dest_id': rack1.id,
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 100.0,
-        })
-        move1._action_confirm()
-        self.assertEqual(move1.state, 'assigned')
-        self.assertEqual(len(move1.move_line_ids), 1)
-
-        # check if the putaway was rightly applied
-        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2.id)
-
     def test_availability_1(self):
         """ Check that the `availability` field on a move is correctly computed when there is
         more than enough products in stock.

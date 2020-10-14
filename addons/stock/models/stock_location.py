@@ -134,23 +134,20 @@ class Location(models.Model):
 
     def _get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
-        current_location = self
         putaway_location = self.env['stock.location']
-        while current_location and not putaway_location:
-            # Looking for a putaway about the product.
-            putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.product_id == product)
-            if putaway_rules:
-                putaway_location = putaway_rules[0].location_out_id
-            # If not product putaway found, we're looking with category so.
-            else:
-                categ = product.categ_id
-                while categ:
-                    putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
-                    if putaway_rules:
-                        putaway_location = putaway_rules[0].location_out_id
-                        break
-                    categ = categ.parent_id
-            current_location = current_location.location_id
+        # Looking for a putaway about the product.
+        putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
+        if putaway_rules:
+            putaway_location = putaway_rules[0].location_out_id
+        # If not product putaway found, we're looking with category so.
+        else:
+            categ = product.categ_id
+            while categ:
+                putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
+                if putaway_rules:
+                    putaway_location = putaway_rules[0].location_out_id
+                    break
+                categ = categ.parent_id
         return putaway_location
 
     @api.returns('stock.warehouse', lambda value: value.id)
