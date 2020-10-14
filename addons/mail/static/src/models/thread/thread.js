@@ -332,7 +332,7 @@ function factory(dependencies) {
                 model: 'mail.channel',
                 method: 'channel_info',
                 args: [ids],
-            });
+            }, { shadow: true });
             const channels = this.env.models['mail.thread'].insert(
                 channelInfos.map(channelInfo => this.env.models['mail.thread'].convertData(channelInfo))
             );
@@ -467,7 +467,7 @@ function factory(dependencies) {
                     model,
                     res_ids,
                 },
-            });
+            }, { shadow: true });
             for (const id in data) {
                 const recipientInfoList = data[id].map(recipientInfoData => {
                     const [partner_id, emailInfo, reason] = recipientInfoData;
@@ -516,7 +516,7 @@ function factory(dependencies) {
                 ],
                 fields: ['id', 'name', 'mimetype'],
                 orderBy: [{ name: 'id', asc: false }],
-            }));
+            }, { shadow: true }));
             this.update({
                 originThreadAttachments: [['insert-and-replace',
                     attachmentsData.map(data =>
@@ -736,12 +736,12 @@ function factory(dependencies) {
                 model: this.model,
                 method: 'read',
                 args: [this.id, ['activity_ids']]
-            }));
+            }, { shadow: true }));
             const activitiesData = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [newActivityIds]
-            }));
+            }, { shadow: true }));
             const activities = this.env.models['mail.activity'].insert(activitiesData.map(
                 activityData => this.env.models['mail.activity'].convertData(activityData)
             ));
@@ -762,7 +762,7 @@ function factory(dependencies) {
                     res_id: this.id,
                     res_model: this.model,
                 },
-            }));
+            }, { shadow: true }));
             if (followers.length > 0) {
                 this.update({
                     followers: [['insert-and-replace', followers.map(data =>

@@ -1557,6 +1557,14 @@ var SnippetsMenu = Widget.extend({
         var $html = $(html);
         var $scroll = $html.siblings('#o_scroll');
 
+        // TODO remove me in master: introduced in a 14.0 fix to allow users to
+        // customize their navbar with 'Boxed' website header, which they could
+        // not because of a wrong XML selector they may not update.
+        const $headerNavFix = $html.find('[data-js="HeaderNavbar"][data-selector="#wrapwrap > header > nav"]');
+        if ($headerNavFix.length) {
+            $headerNavFix[0].dataset.selector = '#wrapwrap > header nav.navbar';
+        }
+
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
