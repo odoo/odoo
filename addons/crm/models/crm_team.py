@@ -95,7 +95,12 @@ class Team(models.Model):
     def write(self, vals):
         result = super(Team, self).write(vals)
         if 'use_leads' in vals or 'use_opportunities' in vals:
-            self.filtered(lambda team: not team.use_leads and not team.use_opportunities).alias_name = False
+            for team in self:
+                alias_vals = team._alias_get_creation_values()
+                team.write({
+                    'alias_name': alias_vals.get('alias_name', team.alias_name),
+                    'alias_defaults': alias_vals.get('alias_defaults'),
+                })
         return result
 
     # ------------------------------------------------------------
