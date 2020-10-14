@@ -220,6 +220,22 @@ class Field(MetaField('DummyField', (object,), {})):
         computation gives the expected value. Note that a computed field without
         an inverse method is readonly by default.
 
+        .. warning::
+
+            While it is possible to use the same compute method for multiple
+            fields, it is not recommended to do the same for the inverse
+            method.
+
+            During the computation of the inverse, **all** fields that use
+            said inverse are protected, meaning that they can't be computed,
+            even if their value is not in the cache.
+
+            If any of those fields is accessed and its value is not in cache,
+            the ORM will simply return a default value of `False` for these fields.
+            This means that the value of the inverse fields (other than the one
+            triggering the inverse method) may not give their correct value and
+            this will probably break the expected behavior of the inverse method.
+
         The search method is invoked when processing domains before doing an
         actual search on the model. It must return a domain equivalent to the
         condition: ``field operator value``.
