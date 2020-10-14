@@ -1,0 +1,199 @@
+jw-editor {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+jw-editor {
+    display: flex;
+    flex-direction: column;
+}
+
+.jw-dropdown {
+    display: inline-block;
+}
+.jw-dropdown .dropdown-menu {
+    min-width: 250px;
+    border: 1px solid #000;
+    background-color: #141217;
+}
+
+jw-toolbar input {
+    color: #C6C6C6;
+}
+table.table-picker {
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
+}
+table.table-picker tr {
+    height: 1em;
+    padding: 0;
+}
+table.table-picker td {
+    width: 1em;
+    border: 1px solid black;
+    padding: 0;
+}
+table.table-picker td.highlight {
+    background-color: #875A7B;
+}
+#jw-device-preview {
+    border-width: 80px 14px 40px;
+    border-radius: 16px;
+    border-style: solid;
+    border-color: #000;
+    background-color: white;
+    width: 400px;
+    height: 700px;
+    margin: auto;
+    display: block;
+}
+ul.checklist > li {
+    list-style: none;
+    position: relative;
+}
+ul.checklist > li.unchecked:before, ul.checklist > li.checked:before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    display: block;
+    height: 13px;
+    width: 13px;
+    border: 1px solid;
+    cursor: pointer;
+}
+ul.checklist > li:after {
+    content: '';
+    position: absolute;
+    left: -17px;
+    top: -1px;
+    font-size: 13px;
+    opacity: 0;
+    cursor: pointer;
+}
+ul.checklist > li.checked:after {
+    content: "✓";
+    transition: opacity .5s;
+    opacity: 1;
+}
+jw-dialog-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+jw-dialog-container jw-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: #000000;
+}
+jw-dialog-container jw-dialog {
+    position: absolute;
+    display: flex;
+    max-width: 80%;
+}
+jw-dialog-container jw-dialog > jw-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #F7F7F7;
+    padding: 10px;
+    border-radius: 10px;
+}
+jw-dialog-container jw-dialog > jw-content > jw-button.close {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    cursor: pointer;
+}
+jw-dialog-container jw-dialog table.form-table {
+    border: none;
+}
+jw-dialog-container jw-dialog table.form-table td {
+    border: none;
+}
+jw-follow-range {
+    position: absolute;
+}
+.jw-fullscreen .jw-fullscreen {
+    display: block;
+    position: fixed;
+    transform: none;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #ffffff;
+}
+.jw-fullscreen jw-follow-range {
+    z-index: 1;
+}
+jw-group[name="templates"] .label {
+    width: 90px;
+}
+jw-templates {
+    width: 100%;
+    font-size: 12px;
+    color: black;
+    background-color: #ffffff;
+    padding: 3px;
+    display: block;
+}
+jw-templates ~ * {
+    display: none !important;
+    position: absolute !important;
+    z-index: -1 !important;
+}
+jw-templates > jw-label {
+    display: block;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 600;
+}
+jw-templates jw-template {
+    position: relative;
+    padding: 10px 10px;
+    margin: 0;
+    float: left;
+    clear: none;
+    width: 100%;
+    max-width: 25%;
+    transition: all 0.3s ease 0s;
+}
+jw-templates jw-template jw-label {
+    display: block;
+    position: absolute;
+}
+jw-templates jw-template jw-thumb {
+    display: block;
+    padding-top: 107%;
+    cursor: pointer;
+    border: 1px solid #4e525b;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+    will-change: transform;
+    backface-visibility: hidden;
+    transition: all 0.3s ease 0s;
+    background-size: cover;
+}
+jw-templates jw-template:hover jw-thumb {
+    box-shadow: 0 5px 30px 1px rgba(0, 0, 0, 0.6);
+}
+
+jw-templates jw-template img {
+    width: 100%;
+}

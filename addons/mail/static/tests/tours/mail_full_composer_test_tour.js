@@ -60,7 +60,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     content: "Check composer content is kept",
     trigger: '.oe_form_field[name="body"]',
     run() {
-        const bodyContent = document.querySelector('.oe_form_field[name="body"] textarea').textContent;
+        const bodyContent = document.querySelector('.oe_form_field[name="body"] jw-shadow').shadowRoot.textContent;
         if (!bodyContent.includes("blahblah")) {
             console.error(
                 `Full composer should contain text from small composer ("blahblah") in body input (actual: ${bodyContent})`

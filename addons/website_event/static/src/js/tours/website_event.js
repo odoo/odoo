@@ -31,10 +31,9 @@ odoo.define("website_event.tour", function (require) {
         position: "bottom",
         run: "drag_and_drop",
     }, {
-        trigger: "button[data-action=save]",
+        trigger: "button[name=save]",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
-        extra_trigger: ".o_dirty",
     }, {
         trigger: ".js_publish_management .js_publish_btn",
         extra_trigger: "body:not(.editor_enable)",

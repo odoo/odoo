@@ -20,7 +20,7 @@ $-editor-messages-margin-x: 2%;
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):hover,
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover,
         &.o_editable_date_field_linked {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
         }
@@ -36,9 +36,6 @@ $-editor-messages-margin-x: 2%;
             min-width: 0;
         }
     }
-    &.o_is_inline_editable {
-        display: inline-block;
-    }
     .btn, &.btn {
         -webkit-user-select: auto;
         -moz-user-select: auto;
@@ -46,7 +43,8 @@ $-editor-messages-margin-x: 2%;
         user-select: auto;
         cursor: text!important;
     }
-    /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+    /* The placeholder text will only be visible before the 1st edition,
+       after edition JW will add a br in empty boxes and break this selector */
     &[placeholder]:empty:not(:focus):before {
         content: attr(placeholder);
         opacity: 0.3;

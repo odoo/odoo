@@ -27,7 +27,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
         run: "text",
     }, {
-        trigger: "we-button[data-background]:nth(1)",
+        trigger: ".snippet-option-CoverProperties we-button[data-background]:nth(0)",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "right",
@@ -49,7 +49,7 @@ odoo.define("website_blog.tour", function (require) {
             actions.text("Blog content", this.$anchor.find("p"));
         },
     }, {
-        trigger: "button[data-action=save]",
+        trigger: "button[name=save]",
         extra_trigger: "#o_wblog_post_content .o_wblog_post_content_field p:first:not(:containsExact(" + _t("Start writing here...") + "))",
         content: _t("<b>Click on Save</b> to record your changes."),
         position: "bottom",

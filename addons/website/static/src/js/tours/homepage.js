@@ -40,7 +40,7 @@ tour.register("homepage", {
     position: "bottom",
     run: "drag_and_drop #wrap",
 }, {
-    trigger: "button[data-action=save]",
+    trigger: "button[name=save]",
     content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {
@@ -73,7 +73,7 @@ tour.register("homepage", {
     position: "bottom",
     run: "drag_and_drop #wrap",
 }, {
-    trigger: "button[data-action=save]",
+    trigger: "button[name=save]",
     content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {
