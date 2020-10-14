@@ -139,4 +139,10 @@ options.registry.background = options.registry.background.extend({
         }
     }
 });
+
+// Note: forward-port of fix https://github.com/odoo/odoo/commit/7bd7bc2513b72f5ffc006758c4bf4eb42ae6ed67#
+// was skipped for saas-12.3 as trying to fix the bug in that version is not
+// worth it. This comment is added for log and to ease forward-port to 13.0 by
+// keeping the same forward-porting chain (which will conflict in 13.0).
+
 });
