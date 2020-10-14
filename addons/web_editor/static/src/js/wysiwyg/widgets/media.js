@@ -878,11 +878,12 @@ var ImageWidget = FileWidget.extend({
             img.style.position = 'fixed';
             // Make invisible so the image doesn't briefly appear on the screen
             img.style.opacity = '0';
-            // Image needs to be visible for dimensions to be correct after render
-            cell.classList.remove('d-none');
-            cell.classList.add('d-flex');
+            // Image needs to be in the DOM for dimensions to be correct after render
+            const originalParent = img.parentElement;
+            document.body.appendChild(img);
 
             aspectRatio = img.width / img.height;
+            originalParent.appendChild(img);
             img.removeAttribute('width');
             img.style.removeProperty('position');
             img.style.removeProperty('opacity');
