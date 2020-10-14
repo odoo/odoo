@@ -9,31 +9,12 @@ import odoo
 import requests
 import werkzeug
 
-import odoo.addons.iap.tools.iap_tools
 from odoo import http, tools
+from odoo.addons.iap.tools import iap_tools
 from odoo.http import request
 from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
-
-# The top 100 email providers as I'm writing this comment.
-# We don't want to attempt matching companies in the database based on those domains, or we will end up with multiple
-# and/or the wrong company. This solution won't work all the time, the goal is to cover most cases.
-_DOMAIN_BLACKLIST = {'gmail.com', 'yahoo.com', 'hotmail.com', 'aol.com', 'hotmail.co.uk', 'hotmail.fr', 'msn.com',
-                     'yahoo.fr', 'wanadoo.fr', 'orange.fr', 'comcast.net', 'yahoo.co.uk', 'yahoo.com.br', 'yahoo.co.in',
-                     'live.com', 'rediffmail.com', 'free.fr', 'gmx.de', 'web.de', 'yandex.ru', 'ymail.com', 'libero.it',
-                     'outlook.com', 'uol.com.br', 'bol.com.br', 'mail.ru', 'cox.net', 'hotmail.it', 'sbcglobal.net',
-                     'sfr.fr', 'live.fr', 'verizon.net', 'live.co.uk', 'googlemail.com', 'yahoo.es', 'ig.com.br',
-                     'live.nl', 'bigpond.com', 'terra.com.br', 'yahoo.it', 'neuf.fr', 'yahoo.de', 'alice.it',
-                     'rocketmail.com', 'att.net', 'laposte.net', 'facebook.com', 'bellsouth.net', 'yahoo.in',
-                     'hotmail.es', 'charter.net', 'yahoo.ca', 'yahoo.com.au', 'rambler.ru', 'hotmail.de', 'tiscali.it',
-                     'shaw.ca', 'yahoo.co.jp', 'sky.com', 'earthlink.net', 'optonline.net', 'freenet.de', 't-online.de',
-                     'aliceadsl.fr', 'virgilio.it', 'home.nl', 'qq.com', 'telenet.be', 'me.com', 'yahoo.com.ar',
-                     'tiscali.co.uk', 'yahoo.com.mx', 'voila.fr', 'gmx.net', 'mail.com', 'planet.nl', 'tin.it',
-                     'live.it', 'ntlworld.com', 'arcor.de', 'yahoo.co.id', 'frontiernet.net', 'hetnet.nl',
-                     'live.com.au', 'yahoo.com.sg', 'zonnet.nl', 'club-internet.fr', 'juno.com', 'optusnet.com.au',
-                     'blueyonder.co.uk', 'bluewin.ch', 'skynet.be', 'sympatico.ca', 'windstream.net', 'mac.com',
-                     'centurytel.net', 'chello.nl', 'live.ca', 'aim.com', 'bigpond.net.au'}
 
 
 class MailClientExtensionController(http.Controller):
@@ -116,7 +97,7 @@ class MailClientExtensionController(http.Controller):
         try:
             response = request.env['iap.enrich.api']._request_enrich({domain: domain}) # The key doesn't matter
         #except odoo.addons.iap.models.iap.InsufficientCreditError as ice:
-        except odoo.addons.iap.tools.iap_tools.InsufficientCreditError:
+        except iap_tools.InsufficientCreditError:
             enriched_data['enrichment_info'] = {'type': 'insufficient_credit', 'info': request.env['iap.account'].get_credits_url('reveal')}
         except Exception as e:
             enriched_data["enrichment_info"] = {'type': 'other', 'info': 'Unknown reason'}
@@ -132,7 +113,7 @@ class MailClientExtensionController(http.Controller):
 
     # Find an existing company based on the email.
     def _find_existing_company(self, domain):
-        if domain in _DOMAIN_BLACKLIST:
+        if domain in iap_tools._MAIL_DOMAIN_BLACKLIST:
             return
         return request.env['res.partner'].search([('is_company', '=', True), ('email', '=ilike', '%' + domain)], limit=1)
 
