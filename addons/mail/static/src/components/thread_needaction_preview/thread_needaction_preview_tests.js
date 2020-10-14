@@ -341,7 +341,8 @@ QUnit.test('preview should display last needaction message preview', async funct
     );
     assert.strictEqual(
         document.querySelector('.o_ThreadNeedactionPreview_inlineText').textContent,
-        'I am the oldest but needaction'
+        'I am the oldest but needaction',
+        "the displayed message should be the one that needs action"
     )
 });
 

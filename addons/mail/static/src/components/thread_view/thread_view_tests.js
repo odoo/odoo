@@ -1001,8 +1001,11 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     );
 });
 
-QUnit.test('[technical] new messages separator on posting command', async function (assert) {
-    // technical as we need to remove focus from text input to avoid `channel_seen` call
+QUnit.test('new message separator is not shown on receiving new transient message even when composer is not focused [REQUIRE FOCUS]', async function (assert) {
+    // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+    // Indeed that would trigger channel_seen no matter what, which is already covered by other tests.
+    // The goal of this test is to cover the conditions specific to transient messages,
+    // and the conditions from focus would otherwise shadow them.
     assert.expect(4);
 
     this.data['mail.channel'].records = [{
@@ -1057,6 +1060,97 @@ QUnit.test('[technical] new messages separator on posting command', async functi
         document.body,
         '.o_MessageList_separatorNewMessages',
         "still no separator shown when current partner posted a command"
+    );
+});
+
+QUnit.skip('new messages separator on receiving a message after having posted a command while composer is not focus [REQUIRE FOCUS]', async function (assert) {
+    // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+    // Indeed that would trigger channel_seen no matter what, which is already covered by other tests.
+    // The goal of this test is to cover the conditions specific to transient messages,
+    // and the conditions from focus would otherwise shadow them.
+    assert.expect(5);
+
+    // Needed partner & user to allow simulation of message reception
+    this.data['res.partner'].records.push({
+        id: 11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        seen_message_id: 10,
+        name: "General",
+        uuid: 'channel20uuid',
+    }];
+    this.data['mail.message'].records.push({
+        body: "first message",
+        channel_ids: [20],
+        id: 10,
+    });
+    await this.start({ debug: true });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display one message in thread initially"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator"
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await afterNextRender(() => {
+        // need to remove focus from text area to avoid channel_seen
+        document.querySelector('.o_Composer_buttonSend').focus();
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    // simulate receiving a message
+    await afterNextRender(() => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: 'channel20uuid',
+            message_content: "test",
+        },
+    }));
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        3,
+        "should display 3 messages (initial, the transient & the received message), after posting a command"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "separator should be shown as a message has been received"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_MessageList_separatorNewMessages + .o_Message[data-message-local-id="${
+            this.env.models['mail.message'].find(m => m.author.id === 11).localId
+        }"]`,
+        "separator should be shown just before received message"
     );
 });
 

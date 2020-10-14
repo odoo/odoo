@@ -1977,8 +1977,11 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
 });
 
-QUnit.test('[technical] unread counter in a chat window is not shown on receiving new transient message [REQUIRE FOCUS]', async function (assert) {
-    // technical as we need to remove focus from text input to avoid `channel_seen` call
+QUnit.test('unread counter in a chat window is not shown on receiving new transient message even when composer is not focused [REQUIRE FOCUS]', async function (assert) {
+    // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+    // Indeed that would remove the unread counter no matter what, which is already covered by other tests.
+    // The goal of this test is to cover the conditions specific to transient messages,
+    // and the conditions from focus would otherwise shadow them.
     assert.expect(3);
 
     this.data['mail.channel'].records = [
@@ -1991,6 +1994,12 @@ QUnit.test('[technical] unread counter in a chat window is not shown on receivin
         },
     ];
     await this.start();
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "a chat window should be visible"
+    );
+
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "/who"));
     await afterNextRender(() => {
@@ -2000,11 +2009,6 @@ QUnit.test('[technical] unread counter in a chat window is not shown on receivin
         document.querySelector('.o_Composer_buttonEmojis').focus();
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ChatWindow',
-        "a chat window should be visible after receiving a new message from a chat"
-    );
     assert.containsOnce(
         document.body,
         '.o_Message',

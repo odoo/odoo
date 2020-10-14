@@ -227,7 +227,7 @@ QUnit.test('last message of thread preview cannot be a transient one', async fun
     assert.strictEqual(
         document.querySelector('.o_ThreadPreview_inlineText').textContent,
         "Stranger: this is the last message",
-        "the last message displayed should remain unchanged as new message is transient should be ignored"
+        "the last message displayed should remain unchanged as new transient message should be ignored"
     );
 });
 

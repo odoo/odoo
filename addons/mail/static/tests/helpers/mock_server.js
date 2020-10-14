@@ -846,13 +846,8 @@ MockServer.include({
      * @private
      */
     _mockMailChannelExecuteCommand(args) {
-        let ids, commandName;
-        if (args.kwargs && args.kwargs.command) {
-            ids = args.args;
-            commandName = args.kwargs.command;
-        } else {
-            [ids, commandName] = args.args;
-        }
+        const ids = args.args[0];
+        const commandName = args.kwargs.command || args.args[1];
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         if (commandName === 'leave') {
             for (const channel of channels) {
