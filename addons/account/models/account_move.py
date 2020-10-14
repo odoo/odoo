@@ -1023,7 +1023,10 @@ class AccountMove(models.Model):
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
         for m in self:
-            domain = [('company_id', '=', m.company_id.id), ('type', '=?', m.invoice_filter_type_domain)]
+            if m.move_type == 'entry':
+                domain = [('company_id', '=', m.company_id.id), ('type', 'not in', ['purchase', 'sale', 'bank'])]
+            else:
+                domain = [('company_id', '=', m.company_id.id), ('type', '=?', m.invoice_filter_type_domain)]
             m.suitable_journal_ids = self.env['account.journal'].search(domain)
 
     @api.depends('posted_before', 'state', 'journal_id', 'date')
