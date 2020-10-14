@@ -2331,7 +2331,8 @@ class AccountMove(models.Model):
     def post(self):
         warnings.warn(
             "RedirectWarning method 'post()' is a deprecated alias to 'action_post()' or _post()",
-            DeprecationWarning
+            DeprecationWarning,
+            stacklevel=2
         )
         return self.action_post()
 
