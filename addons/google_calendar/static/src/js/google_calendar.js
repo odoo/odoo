@@ -142,13 +142,18 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
         this.$googleButton = $();
         if (this.model === "calendar.event") {
             if (this.state.google_is_sync) {
-                this.$googleButton = $('<span/>', {html: _t("Synched with Google")})
-                                .addClass('o_google_sync badge badge-pill badge-success')
+                this.$googleButton = $('<span/>', {
+                                    html: _t("Synched with Google"),
+                                    class: 'w-100 badge badge-pill badge-success border-0'
+                                })
                                 .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
                                 .appendTo(self.$sidebar);
             } else {
-                this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
-                                .addClass('o_google_sync_button oe_button btn btn-secondary')
+                this.$googleButton = $('<button/>', {
+                                    type: 'button',
+                                    html: _t("Sync with <b>Google</b>"),
+                                    class: 'o_google_sync_button w-100 m-auto btn btn-secondary'
+                                })
                                 .appendTo(self.$sidebar);
             }
         }

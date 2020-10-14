@@ -139,13 +139,18 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
         this.$microsoftButton = $();
         if (this.model === "calendar.event") {
             if (this.state.microsoft_is_sync) {
-                this.$microsoftButton = $('<span/>', {html: _t("Synched with Outlook")})
-                                .addClass('o_microsoft_sync badge badge-pill badge-success')
+                this.$microsoftButton = $('<span/>', {
+                                    html: _t("Synched with Outlook"),
+                                    class: 'w-100  badge badge-pill badge-success border-0'
+                                })
                                 .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
                                 .appendTo(self.$sidebar);
             } else {
-                this.$microsoftButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Outlook</b>")})
-                                .addClass('o_microsoft_sync_button oe_button btn btn-secondary')
+                this.$microsoftButton = $('<button/>', {
+                                    type: 'button',
+                                    html: _t("Sync with <b>Outlook</b>"),
+                                    class: 'o_microsoft_sync_button w-100 m-auto btn btn-secondary'
+                                })
                                 .appendTo(self.$sidebar);
             }
         }

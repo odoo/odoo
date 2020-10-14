@@ -62,7 +62,7 @@
                                     <tr>
                                         <td></td>
                                         <td name="td_mrp_bom_f"></td>
-                                        <td class="text-right"><span><strong>Unit Cost</strong></span></td>
+                                        <td t-if="data['report_structure'] != 'bom_structure'" class="text-right o_mrp_prod_cost"><span><strong>Unit Cost</strong></span></td>
                                         <td groups="uom.group_uom"></td>
                                         <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right">
                                             <span><t t-esc="data['price']/data['bom_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>

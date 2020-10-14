@@ -111,7 +111,8 @@ class PosConfig(models.Model):
         'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
-        default=_default_sale_journal)
+        default=_default_sale_journal,
+        ondelete='restrict')
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
         domain=[('type', '=', 'sale')],
@@ -349,7 +350,7 @@ class PosConfig(models.Model):
     @api.constrains('company_id', 'payment_method_ids')
     def _check_company_payment(self):
         if self.env['pos.payment.method'].search_count([('id', 'in', self.payment_method_ids.ids), ('company_id', '!=', self.company_id.id)]):
-            raise ValidationError(_("The method payments and the point of sale must belong to the same company."))
+            raise ValidationError(_("The payment methods and the point of sale must belong to the same company."))
 
     @api.constrains('pricelist_id', 'use_pricelist', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):

@@ -17,8 +17,10 @@ BasicView.include({
             hasRecordReloadOnAttachmentsChanged: post_refresh === 'always',
             hasRecordReloadOnMessagePosted: !!post_refresh,
             hasRecordReloadOnFollowersUpdate: !!followers_post_refresh,
-            isAttachmentBoxVisible: this._getFieldOption('message_ids', 'open_attachments', false)
-                                    || this._getFieldOption('message_follower_ids', 'open_attachments', false),
+            isAttachmentBoxVisibleInitially: (
+                this._getFieldOption('message_ids', 'open_attachments', false) ||
+                this._getFieldOption('message_follower_ids', 'open_attachments', false)
+            ),
         };
         const fieldsInfo = this.fieldsInfo[this.viewType];
         this.rendererParams.chatterFields = this.chatterFields;

@@ -318,6 +318,7 @@ class Picking(models.Model):
         readonly=True)
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
         readonly=True)
+    hide_picking_type = fields.Boolean(compute='_compute_hide_pickign_type')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
         check_company=True,
@@ -341,13 +342,13 @@ class Picking(models.Model):
         help='Check the existence of destination packages on move lines')
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
-        help='Technical field used to compute whether the check availability button should be shown.')
+        help='Technical field used to compute whether the button "Check Availability" should be displayed.')
     show_mark_as_todo = fields.Boolean(
         compute='_compute_show_mark_as_todo',
-        help='Technical field used to compute whether the mark as todo button should be shown.')
+        help='Technical field used to compute whether the button "Mark as Todo" should be displayed.')
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
-        help='Technical field used to compute whether the validate should be shown.')
+        help='Technical field used to decide whether the button "Validate" should be displayed.')
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
     owner_id = fields.Many2one(
         'res.partner', 'Assign Owner',
@@ -387,6 +388,9 @@ class Picking(models.Model):
     def _compute_has_deadline_issue(self):
         for picking in self:
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
+
+    def _compute_hide_pickign_type(self):
+        self.hide_picking_type = self.env.context.get('default_picking_type_id', False)
 
     @api.depends('move_lines.delay_alert_date')
     def _compute_delay_alert_date(self):

@@ -65,12 +65,12 @@ class ImLivechatChannel(models.Model):
         }
         for record in self:
             values["channel_id"] = record.id
-            record.script_external = view._render(values)
+            record.script_external = view._render(values) if record.id else False
 
     def _compute_web_page_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
+            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id) if record.id else False
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):

@@ -29,7 +29,9 @@ odoo.define('purchase.ToasterButton', function (require) {
                 model: this.model,
                 args: [[this.id]],
             }).then(res => {
-                this.do_notify(false, res.toast_message);
+                if (res) {
+                    this.do_notify(false, res.toast_message);
+                }
             })
         },
     });

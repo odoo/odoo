@@ -246,6 +246,15 @@ var InputField = DebouncedField.extend({
         return this.$input.val();
     },
     /**
+     * By default this only calls a debounced method to notify the outside world
+     * of the changes if the actual value is not the same than the previous one.
+     * @see _doDebouncedAction
+     */
+    _notifyChanges() {
+        this.isDirty = !this._isLastSetValue(this.$input.val());
+        this._doDebouncedAction();
+    },
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
@@ -319,15 +328,13 @@ var InputField = DebouncedField.extend({
         this.lastChangeEvent = event;
     },
     /**
-     * Called when the user is typing text -> By default this only calls a
-     * debounced method to notify the outside world of the changes.
-     * @see _doDebouncedAction
+     * Called when the user is typing text
+     * @see _notifyChanges
      *
      * @private
      */
-    _onInput: function () {
-        this.isDirty = !this._isLastSetValue(this.$input.val());
-        this._doDebouncedAction();
+    _onInput() {
+        this._notifyChanges();
     },
     /**
      * Stops the left/right navigation move event if the cursor is not at the
@@ -508,6 +515,43 @@ var NumericField = InputField.extend({
         }
         return this._super(value, options);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replace the decimal separator of the numpad decimal key
+     * by the decimal separator from the user's language setting.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown(ev) {
+        const kbdEvt = ev.originalEvent;
+        if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
+            const inputField = this.$input[0];
+            const curVal = inputField.value;
+            const from = inputField.selectionStart;
+            const to = inputField.selectionEnd;
+            const point = _t.database.parameters.decimal_point;
+
+            // Make sure the correct decimal separator
+            // from the user's settings is inserted
+            inputField.value = curVal.slice(0, from) + point + curVal.slice(to);
+
+            // Put the user caret at the right place
+            inputField.selectionStart = inputField.selectionEnd = from + point.length;
+
+            // Tell the world we made some changes and
+            // return preventing event default behaviour.
+            this._notifyChanges();
+            kbdEvt.preventDefault();
+            return;
+        }
+
+        return this._super(...arguments);
+    },
 });
 
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
@@ -637,6 +681,15 @@ var FieldDateRange = InputField.extend({
             window.removeEventListener('scroll', this._onScroll, true);
         }
         this._super.apply(this, arguments);
+    },
+    /**
+     * Return the date written in the input, in UTC.
+     *
+     * @private
+     * @returns {Moment|false}
+     */
+    _getValue: function () {
+        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
     },
 
     //--------------------------------------------------------------------------
@@ -2268,8 +2321,10 @@ var PriorityWidget = AbstractField.extend({
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
         this.$el.attr('aria-label', this.string);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
         _.each(this.field.selection.slice(1), function (choice, index) {
-            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1], index_value));
+            const tag = isReadonly ? '<span>' : '<a href="#">';
+            self.$el.append(self._renderStar(tag, index_value >= index + 1, index + 1, choice[1], index_value));
         });
     },
 

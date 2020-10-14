@@ -224,7 +224,13 @@ function _getBgImageURL(el) {
     if (!match) {
         return '';
     }
-    return match[2];
+    const matchedURL = match[2];
+    // Make URL relative if possible
+    const fullURL = new URL(matchedURL, window.location.origin);
+    if (fullURL.origin === window.location.origin) {
+        return fullURL.href.slice(fullURL.origin.length);
+    }
+    return matchedURL;
 }
 
 return {

@@ -106,7 +106,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_default_invoice_date(self):
-        return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') else False
+        return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in self.get_purchase_types(include_receipts=True) else False
 
     @api.model
     def _get_default_currency(self):
@@ -217,7 +217,7 @@ class AccountMove(models.Model):
         compute='_compute_amount', currency_field='company_currency_id')
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
-        help='Edit Tax amounts if you encounter rouding issues.')
+        help='Edit Tax amounts if you encounter rounding issues.')
     payment_state = fields.Selection(selection=[
         ('not_paid', 'Not Paid'),
         ('in_payment', 'In Payment'),
@@ -951,7 +951,7 @@ class AccountMove(models.Model):
 
         existing_terms_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
         others_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type not in ('receivable', 'payable'))
-        company_currency_id = self.company_id.currency_id
+        company_currency_id = (self.company_id or self.env.company).currency_id
         total_balance = sum(others_lines.mapped(lambda l: company_currency_id.round(l.balance)))
         total_amount_currency = sum(others_lines.mapped('amount_currency'))
 
@@ -1326,7 +1326,7 @@ class AccountMove(models.Model):
                         res = True
             r.invoice_has_matching_suspense_amount = res
 
-    @api.depends('partner_id', 'invoice_source_email')
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
     def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.display_name
@@ -3571,12 +3571,18 @@ class AccountMoveLine(models.Model):
             if account_currency and account_currency != line.company_currency_id and account_currency != line.currency_id:
                 raise UserError(_('The account selected on your journal entry forces to provide a secondary currency. You should remove the secondary currency on the account.'))
 
-            control_journal_failed = account.allowed_journal_ids and journal not in account.allowed_journal_ids
-            control_type_failed = journal.type_control_ids and account.user_type_id not in journal.type_control_ids
-            control_account_failed = journal.account_control_ids and account not in journal.account_control_ids
-            if control_journal_failed:
+            if account.allowed_journal_ids and journal not in account.allowed_journal_ids:
                 raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.', account.display_name))
-            if control_type_failed or control_account_failed:
+
+            failed_check = False
+            if journal.type_control_ids or journal.account_control_ids:
+                failed_check = True
+                if journal.type_control_ids:
+                    failed_check = account.user_type_id not in journal.type_control_ids
+                if failed_check and journal.account_control_ids:
+                    failed_check = account not in journal.account_control_ids
+
+            if failed_check:
                 raise UserError(_('You cannot use this account (%s) in this journal, check the section \'Control-Access\' under tab \'Advanced Settings\' on the related journal.', account.display_name))
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
@@ -4666,7 +4672,7 @@ class AccountMoveLine(models.Model):
         [action] = self.env.ref('account.account_automatic_entry_wizard_action').read()
         # Force the values of the move line in the context to avoid issues
         ctx = dict(self.env.context)
-        ctx['active_id'] = self.id
+        ctx.pop('active_id', None)
         ctx['active_ids'] = self.ids
         ctx['active_model'] = 'account.move.line'
         action['context'] = ctx

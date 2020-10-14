@@ -29,6 +29,8 @@ class AccountTestInvoicingCommon(SavepointCase):
         else:
             chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
         if not chart_template:
+            cls.tearDownClass()
+            # skipTest raises exception
             cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
 
         # Create user.
@@ -368,12 +370,14 @@ class AccountTestInvoicingCommon(SavepointCase):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.product_id = product
                 if taxes:
+                    line_form.tax_ids.clear()
                     line_form.tax_ids.add(taxes)
 
         for amount in amounts:
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.price_unit = amount
                 if taxes:
+                    line_form.tax_ids.clear()
                     line_form.tax_ids.add(taxes)
 
         rslt = move_form.save()

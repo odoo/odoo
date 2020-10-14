@@ -12,7 +12,6 @@ from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
 
 
-
 from werkzeug.urls import url_encode
 
 
@@ -109,7 +108,11 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms or ''
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        if use_invoice_terms and self.env.company.terms_type == "html":
+            baseurl = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            return _('Terms & Conditions: %s/terms', baseurl)
+        return use_invoice_terms and self.env.company.invoice_terms or ''
 
     @api.model
     def _get_default_team(self):
@@ -207,6 +210,7 @@ class SaleOrder(models.Model):
         ], string='Invoice Status', compute='_get_invoice_status', store=True, readonly=True)
 
     note = fields.Text('Terms and conditions', default=_default_note)
+    terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=5)
     amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
@@ -305,6 +309,10 @@ class SaleOrder(models.Model):
             else:
                 order.expected_date = False
 
+    @api.onchange('expected_date')
+    def _onchange_commitment_date(self):
+        self.commitment_date = self.expected_date
+
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
         for trans in self:
@@ -377,8 +385,11 @@ class SaleOrder(models.Model):
         if user_id and self.user_id.id != user_id:
             values['user_id'] = user_id
 
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
-            values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            if self.terms_type == 'html' and self.env.company.invoice_terms_html:
+                values['note'] = _('Terms & Conditions: %s/terms', self.get_base_url())
+            elif self.env.company.invoice_terms:
+                values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
         if not self.env.context.get('not_self_saleperson') or not self.team_id:
             values['team_id'] = self.env['crm.team']._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)],user_id=user_id)
         self.update(values)
@@ -450,7 +461,11 @@ class SaleOrder(models.Model):
             )
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
                 line._get_display_price(product), line.product_id.taxes_id, line.tax_id, line.company_id)
-            lines_to_update.append((1, line.id, {'price_unit': price_unit}))
+            if self.pricelist_id.discount_policy == 'without_discount':
+                discount = max(0, (price_unit - product.price) * 100 / price_unit)
+            else:
+                discount = 0
+            lines_to_update.append((1, line.id, {'price_unit': price_unit, 'discount': discount}))
         self.update({'order_line': lines_to_update})
         self.show_update_pricelist = False
         self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
@@ -844,7 +859,13 @@ Reason(s) of this behavior could be:
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
         self.write(self._prepare_confirmation_values())
-        self._action_confirm()
+
+        # Context key 'default_name' is sometimes propagated up to here.
+        # We don't need it and it creates issues in the creation of linked records.
+        context = self._context.copy()
+        context.pop('default_name', None)
+
+        self.with_context(context)._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_done()
         return True
@@ -1488,8 +1509,26 @@ class SaleOrderLine(models.Model):
                     price_subtotal = line.price_reduce * line.qty_delivered
                 else:
                     price_subtotal = line.price_reduce * line.product_uom_qty
+                if len(line.tax_id.filtered(lambda tax: tax.price_include)) > 0:
+                    # As included taxes are not excluded from the computed subtotal, `compute_all()` method
+                    # has to be called to retrieve the subtotal without them.
+                    # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
+                    price_subtotal = line.tax_id.compute_all(price_subtotal)['total_excluded']
 
-                amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+                if any(line.invoice_lines.mapped(lambda l: l.discount != line.discount)):
+                    # In case of re-invoicing with different discount we try to calculate manually the
+                    # remaining amount to invoice
+                    amount = 0
+                    for l in line.invoice_lines:
+                        if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
+                            amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
+                        else:
+                            amount += l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity
+
+                    amount_to_invoice = max(price_subtotal - amount, 0)
+                else:
+                    amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+
             line.untaxed_amount_to_invoice = amount_to_invoice
 
     def _prepare_invoice_line(self, **optional_values):

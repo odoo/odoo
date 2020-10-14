@@ -25,11 +25,11 @@ class ResPartner(models.Model):
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += sum(line.mapped('move_ids').filtered(lambda m: m.state == 'done' and m.date <= datetime.combine(m.purchase_line_id.date_planned, time.min)).mapped('quantity_done'))
+            on_time += sum(line.mapped('move_ids').filtered(lambda m: m.state == 'done' and m.date.date() <= m.purchase_line_id.date_planned.date()).mapped('quantity_done'))
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():
             seen_partner |= partner
             on_time, ordered = numbers
-            partner.on_time_rate = on_time / ordered * 100 if ordered else 100
-        (self - seen_partner).on_time_rate = 100
+            partner.on_time_rate = on_time / ordered * 100 if ordered else -1   # use negative number to indicate no data
+        (self - seen_partner).on_time_rate = -1

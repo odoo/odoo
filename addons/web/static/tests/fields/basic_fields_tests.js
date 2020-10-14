@@ -479,6 +479,91 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldNumeric');
+
+    QUnit.test('numeric field: fields with keydown on numpad decimal key', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.float_factor_field = { string: "Float Factor", type: 'float_factor' };
+        this.data.partner.records[0].float_factor_field = 9.99;
+
+        this.data.partner.fields.float_time_field = { string: "Float Time", type: 'float_time' };
+        this.data.partner.records[0].float_time_field = 9.99;
+
+        this.data.partner.fields.monetary = { string: "Monetary", type: 'monetary' };
+        this.data.partner.records[0].monetary = 9.99;
+        this.data.partner.records[0].currency_id = 1;
+
+        this.data.partner.fields.percentage = { string: "Percentage", type: 'percentage' };
+        this.data.partner.records[0].percentage = .99;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="float_factor_field" options="{'factor': 0.5}"/>
+                    <field name="qux"/>
+                    <field name="float_time_field"/>
+                    <field name="int_field"/>
+                    <field name="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="percentage"/>
+                </form>
+            `,
+            res_id: 1,
+            translateParameters: {
+                decimal_point: "🇧🇪",
+            },
+        });
+
+        // Record edit mode
+        await testUtilsDom.click(form.el.querySelector('.o_form_button_edit'));
+
+        // Get all inputs
+        const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
+        const floatInput = form.el.querySelector('.o_input[name="qux"]');
+        const floatTimeInput = form.el.querySelector('.o_input[name="float_time_field"]');
+        const integerInput = form.el.querySelector('.o_input[name="int_field"]');
+        const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
+        const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
+
+        // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
+        // Numpad "comma" is specific to some countries (Brazil...)
+        floatFactorField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatFactorField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatFactorField.value.endsWith('🇧🇪🇧🇪'));
+
+        floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatInput.value.endsWith('🇧🇪🇧🇪'));
+
+        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatTimeInput.value.endsWith('🇧🇪🇧🇪'));
+
+        integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(integerInput.value.endsWith('🇧🇪🇧🇪'));
+
+        monetaryInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        monetaryInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(monetaryInput.querySelector('input.o_input') .value.endsWith('🇧🇪🇧🇪'));
+
+        percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(percentageInput.querySelector('input.o_input').value.endsWith('🇧🇪🇧🇪'));
+
+        form.destroy();
+    });
+
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', async function (assert) {
@@ -3483,6 +3568,54 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Datetime field manually input value should send utc value to server', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.datetime_end = { string: 'Datetime End', type: 'datetime' };
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+            session: {
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], { datetime: '2017-02-08 06:00:00' });
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // check date display correctly in readonly
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 15:30:00',
+            "the start date should be correctly displayed in readonly");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '03/13/2017 05:30:00',
+            "the end date should be correctly displayed in readonly");
+
+        // edit form
+        await testUtils.form.clickEdit(form);
+        // update input for Datetime
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), '02/08/2017 11:30:00');
+        // save form
+        await testUtils.form.clickSave(form);
+
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 11:30:00',
+            "the start date should be correctly displayed in readonly after manual update");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {
@@ -5830,6 +5963,25 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('priority widget with readonly attribute', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="selection" widget="priority" readonly="1"/>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_widget.o_priority span', 2,
+            "stars of priority widget should rendered with span tag if readonly");
+
+        form.destroy();
+    });
 
     QUnit.module('StateSelection Widget');
 

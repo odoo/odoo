@@ -97,7 +97,7 @@ class HrExpense(models.Model):
     ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     reference = fields.Char("Bill Reference")
-    is_refused = fields.Boolean("Explicitely Refused by manager or acccountant", readonly=True, copy=False)
+    is_refused = fields.Boolean("Explicitly Refused by manager or accountant", readonly=True, copy=False)
 
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
@@ -387,9 +387,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         self.ensure_one()
         account_dest = self.env['account.account']
         if self.payment_mode == 'company_account':
-            if not self.sheet_id.bank_journal_id.default_account_id:
-                raise UserError(_("No account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
-            account_dest = self.sheet_id.bank_journal_id.default_account_id.id
+            if not self.sheet_id.bank_journal_id.payment_credit_account_id:
+                raise UserError(_("No Outstanding Payments Account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
+            account_dest = self.sheet_id.bank_journal_id.payment_credit_account_id.id
         else:
             if not self.employee_id.sudo().address_home_id:
                 raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))

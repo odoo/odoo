@@ -747,6 +747,7 @@ QUnit.test('as author, sent message accepted in moderated channel', async functi
         name: "general", // random name, will be asserted in the test
     });
     this.data['mail.message'].records.push({
+        body: "not empty",
         id: 100, // random unique id, will be referenced in the test
         model: 'mail.channel', // expected value to link message to channel
         moderation_status: 'pending_moderation', // message is expected to be pending
@@ -820,6 +821,7 @@ QUnit.test('as author, sent message rejected in moderated channel', async functi
         name: "general", // random name, will be asserted in the test
     });
     this.data['mail.message'].records.push({
+        body: "not empty",
         id: 100, // random unique id, will be referenced in the test
         model: 'mail.channel', // expected value to link message to channel
         moderation_status: 'pending_moderation', // message is expected to be pending
@@ -884,6 +886,7 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
         moderation: true, // channel must be moderated to test the feature
     });
     this.data['mail.message'].records.push({
+        body: "not empty",
         id: 100, // random unique id, will be referenced in the test
         model: 'mail.channel', // expected value to link message to channel
         moderation_status: 'pending_moderation', // message is expected to be pending
@@ -936,6 +939,7 @@ QUnit.test('as author, pending moderation message should appear in origin thread
     });
     this.data['mail.message'].records.push({
         author_id: this.data.currentPartnerId, // test as author of message
+        body: "not empty",
         id: 100, // random unique id, will be referenced in the test
         model: 'mail.channel', // expected value to link message to channel
         moderation_status: 'pending_moderation', // message is expected to be pending
@@ -983,6 +987,7 @@ QUnit.test('as moderator, new pending moderation message posted by someone else'
     // simulate receiving the message
     const messageData = {
         author_id: 10, // random id, different than current partner
+        body: "not empty",
         channel_ids: [], // server do NOT return channel_id of the message if pending moderation
         id: 1, // random unique id
         model: 'mail.channel', // expected value to link message to channel
@@ -1027,16 +1032,19 @@ QUnit.test('accept multiple moderation messages', async function (assert) {
     });
     this.data['mail.message'].records.push(
         {
+            body: "not empty",
             model: 'mail.channel',
             moderation_status: 'pending_moderation',
             res_id: 20,
         },
         {
+            body: "not empty",
             model: 'mail.channel',
             moderation_status: 'pending_moderation',
             res_id: 20,
         },
         {
+            body: "not empty",
             model: 'mail.channel',
             moderation_status: 'pending_moderation',
             res_id: 20,
@@ -1100,16 +1108,19 @@ QUnit.test('accept multiple moderation messages after having accepted other mess
     });
     this.data['mail.message'].records.push(
         {
+            body: "not empty",
             model: 'mail.channel',
             moderation_status: 'pending_moderation',
             res_id: 20,
         },
         {
+            body: "not empty",
             model: 'mail.channel',
             moderation_status: 'pending_moderation',
             res_id: 20,
         },
         {
+            body: "not empty",
             model: 'mail.channel',
             moderation_status: 'pending_moderation',
             res_id: 20,

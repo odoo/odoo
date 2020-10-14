@@ -502,15 +502,6 @@ class Website(Home):
         request.env['web_editor.assets'].make_scss_customization(url, values)
         return True
 
-    @http.route(['/website/update_visitor_timezone'], type='json', auth="public", website=True)
-    def update_visitor_timezone(self, timezone):
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
-        if visitor_sudo:
-            if timezone in pytz.all_timezones:
-                visitor_sudo.write({'timezone': timezone})
-                return True
-        return False
-
     # ------------------------------------------------------
     # Server actions
     # ------------------------------------------------------
