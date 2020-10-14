@@ -1254,7 +1254,8 @@ var Wysiwyg = Widget.extend({
             this.editor.execCommand(setCommandId, {color: color});
         }
         const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
-        $jwButton.css("background-color", color);
+        // Only adapt the color preview in the toolbar for the web_editor.
+        if(this.options.snippets) $jwButton.css("background-color", color);
         if(closeColorPicker) {
             $jwButton.dropdown("toggle");
             colorpicker.selectedColor = '';
