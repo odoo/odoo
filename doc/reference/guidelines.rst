@@ -411,6 +411,9 @@ source code tries to respect Python standard, but some of them can be ignored.
 - E301: expected 1 blank line, found 0
 - E302: expected 2 blank lines, found 1
 
+.. note:: While E501 can be ignored, it is still bad practice to have long lines; some reviewers
+  will ask to have shorter lines. A max length of 99 char is preferred.
+
 Imports
 -------
 The imports are ordered as
@@ -562,7 +565,7 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     for key, value in my_dict.items():
             "do something..."
 
-- Use dict.setdefault
+- Use ``dict.setdefault`` or ``collections.defaultdict``
 
 .. code-block:: python
 
@@ -578,6 +581,12 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     for element in iterable:
         values.setdefault(element, []).append(other_value)
 
+    # good also.. use defaultdict
+    from collections import defaultdict
+    values = defaultdict(list)
+    for element in iterable:
+        values[element].append(other_value)
+
 - As a good developer, document your code (docstring on methods, simple
   comments for tricky part of code)
 - In additions to these guidelines, you may also find the following link
@@ -589,7 +598,7 @@ Programming in Odoo
 
 - Avoid to create generators and decorators: only use the ones provided by
   the Odoo API.
-- As in python, use ``filtered``, ``mapped``, ``sorted``, ... methods to
+- As in python, use ``filtered`` (or ``filtered_domain``), ``mapped``, ``sorted``, ... methods to
   ease code reading and performance.
 
 
@@ -616,6 +625,29 @@ is recommended to use ``read_group`` method, to compute all value in only one re
         mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in equipment_data])
         for category in self:
             category.equipment_count = mapped_data.get(category.id, 0)
+
+The same thing is applicable for the ``create`` method: try to take advantage of the
+``@api.model_create_multi`` decorator. If you define a ``create`` method without it, all the
+records of that model will be created one by one instead of in batch.
+
+Use this:
+
+.. code-block:: python
+
+  @api.model_create_multi
+  def create(self, vals_list):
+      for vals in vals_list:
+          do_something(vals)
+      return super().create(vals_list)
+
+Not this:
+
+.. code-block:: python
+
+  @api.model
+  def create(self, vals):
+      do_something(vals)
+      return super().create(vals)
 
 
 Propagate the context
@@ -739,14 +771,15 @@ Here is the very simple rule:
 
 And contrary to popular belief, you do not even need to call ``cr.commit()``
 in the following situations:
+
 - in the ``_auto_init()`` method of an *models.Model* object: this is taken
-care of by the addons initialization method, or by the ORM transaction when
-creating custom models
+  care of by the addons initialization method, or by the ORM transaction when
+  creating custom models
 - in reports: the ``commit()`` is handled by the framework too, so you can
-update the database even from within a report
+  update the database even from within a report
 - within *models.Transient* methods: these methods are called exactly like
-regular *models.Model* ones, within a transaction and with the corresponding
-``cr.commit()/rollback()`` at the end
+  regular *models.Model* ones, within a transaction and with the corresponding
+  ``cr.commit()/rollback()`` at the end
 - etc. (see general rule above if you have in doubt!)
 
 All ``cr.commit()`` calls outside of the server framework from now on must
@@ -842,6 +875,62 @@ In general in Odoo, when manipulating strings, prefer ``%`` over ``.format()``
 (when only one variable to replace in a string), and prefer ``%(varname)`` instead
 of position (when multiple variables have to be replaced). This makes the
 translation easier for the community translators.
+
+Use the Date and Datetime correctly
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two ways to get the time/date: depending on the user's locale or depending on the server
+(UTC).
+
+- ``fields.Date.today()`` and ``fields.Datetime.now()`` should be used when you are comparing with
+  the server, for instance in a CRON. It should also be used when the time should be the same for
+  everyone, like a deadline, answers to a quizz, etc.
+- ``fields.Date.context_today(self)`` and ``fields.Datetime.context_timestamp(self, timestamp)``
+  should be used when you are dependent on the locale, for instance for attendances. The user
+  checking in wants to see it in his timezone, not on the server timezone. A user in China checking
+  in at 7am shouldn't see that he checked in at 11pm the day before.
+
+When creating a document you will most likely use the context dependent version.
+
+
+Onchange/Compute/Default/Create/Write
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You should use ``compute`` as much as possible.
+
+* ``create`` and ``write`` should often have the same behavior, leading to duplicated code if you
+  want to do something based on the values you are writing. Having all the logic in those methods
+  makes it also more complex to understand.
+* ``onchange`` are only executed in the Form view. If you want to be sure data is changed
+  correctly, you should use a Form emulator when you write on a record directly in python. This
+  exists with ``odoo.tests.common.Form``, but it is slow. The onchange is also slower than compute
+  methods because it needs to compare snapshots instead of simply invalidating the cache.
+* ``default`` is limited because sometimes you have defaults that depend on other values.
+  Sometimes, you can deduce this value from the context with a ``default_*`` but then that value
+  might change, or that value could be computed from something else. It will also be ignored if
+  the value it is depending on is put in the ``create`` dict. So ``default`` should only be used
+  for simple values.
+* ``compute`` is your bread and butter. It can set default values depending on the values of the
+  record, it is always executed -- no need for an emulator, and it is faster than a ``onchange``.
+
+
+Keep metadata as metadata
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO? https://github.com/odoo/technical-training-solutions/pull/45
+
+Extending ``create`` and ``write``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In most of the cases, you should only manipulate the dictionary of values.
+
+- If you are trying to do a check, you most likely want to use a ``@api.constrains`` function
+  instead, because the invalid state you want to prevent when creating the record is probably
+  invalid when changing the value afterwards too. This way you don't have to do it both in
+  ``create`` and ``write``.
+- If you are trying to change the value of another record in the create, you most likely want to
+  use a computed field instead. Keep the logic of that record in its own class and no need to
+  implement it in both ``create`` and ``write``.
 
 
 Symbols and Conventions
@@ -981,7 +1070,7 @@ The convention is to organize the code according to the following structure:
     - *static/src/js*
 
       - *static/src/js/tours*: end user tour files (tutorials, not tests)
-      
+
     - *static/src/scss*: scss files
     - *static/src/xml*: all qweb templates that will be rendered in JS
 
@@ -1140,12 +1229,16 @@ Finally here are some examples of correct commit messages :
   This replaces the former modified preorder tree traversal (MPTT) with the
   fields `parent_left`/`parent_right`[...]
 
+.. code-block:: text
+
  [FIX] account: remove frenglish
 
   [...]
 
   Closes #22793
   Fixes #22769
+
+.. code-block:: text
 
  [FIX] website: remove unused alert div, fixes look of input-group-btn
 
