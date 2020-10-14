@@ -105,10 +105,10 @@ class ResPartner(models.Model):
             return False, 'Insufficient Credit'
 
     @api.model
-    def autocomplete(self, query):
+    def autocomplete(self, query, timeout=15):
         suggestions, error = self._rpc_remote_api('search', {
             'query': query,
-        })
+        }, timeout=timeout)
         if suggestions:
             results = []
             for suggestion in suggestions:
@@ -118,12 +118,12 @@ class ResPartner(models.Model):
             return []
 
     @api.model
-    def enrich_company(self, company_domain, partner_gid, vat):
+    def enrich_company(self, company_domain, partner_gid, vat, timeout=15):
         response, error = self._rpc_remote_api('enrich', {
             'domain': company_domain,
             'partner_gid': partner_gid,
             'vat': vat,
-        })
+        }, timeout=timeout)
         if response and response.get('company_data'):
             result = self._format_data_company(response.get('company_data'))
         else:
@@ -143,10 +143,10 @@ class ResPartner(models.Model):
         return result
 
     @api.model
-    def read_by_vat(self, vat):
+    def read_by_vat(self, vat, timeout=15):
         vies_vat_data, error = self._rpc_remote_api('search_vat', {
             'vat': vat,
-        })
+        }, timeout=timeout)
         if vies_vat_data:
             return [self._format_data_company(vies_vat_data)]
         else:
