@@ -24,4 +24,12 @@
         </div>
     </t>
 
+    <t t-name="im_livechat.OpenChatButton">
+        <div class="openerp o_livechat_button d-print-none row">
+            <div class="o_livechat_open">
+                <t t-esc="widget.options.button_text" />
+            </div>
+            <button type="button" class="close o_livechat_hide mx-2 d-md-none" data-dismiss="alert" aria-label="Close"><span title="Close" class="fa fa-times"></span></button>
+        </div>
+    </t>
 </templates>
