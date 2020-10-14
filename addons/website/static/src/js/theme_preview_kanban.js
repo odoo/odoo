@@ -14,7 +14,11 @@ var ThemePreviewKanbanController = KanbanController.extend(ThemePreviewControlle
      */
     start: async function () {
         await this._super(...arguments);
+
+        // hide pager
         this.el.classList.add('o_view_kanban_theme_preview_controller');
+
+        // update breacrumb
         const websiteLink = Object.assign(document.createElement('a'), {
             className: 'btn btn-secondary ml-3 text-black-75',
             href: '/',
@@ -45,7 +49,7 @@ var ThemePreviewKanbanController = KanbanController.extend(ThemePreviewControlle
 });
 
 var ThemePreviewKanbanView = KanbanView.extend({
-    searchMenuTypes: [],
+    withSearchBar: false,  // hide searchBar
 
     config: _.extend({}, KanbanView.prototype.config, {
         Controller: ThemePreviewKanbanController,
