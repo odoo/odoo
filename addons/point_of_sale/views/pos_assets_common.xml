@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/point_of_sale/static/src/css/pos_receipts.css"/>
     <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overridden.scss"/>
 
+    <script type="text/javascript" src="/point_of_sale/static/lib/html2canvas.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/lib/backbone/backbone.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/lib/waitfont.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/lib/sha1.js"></script>
@@ -22,6 +23,7 @@
     <script type="text/javascript" src="/point_of_sale/static/src/js/models.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/src/js/keyboard.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/src/js/barcode_reader.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/printers.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/src/js/Gui.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/src/js/PopupControllerMixin.js"></script>
     <script type="text/javascript" src="/point_of_sale/static/src/js/ControlButtonsMixin.js"></script>
@@ -107,10 +109,7 @@
 <template id="point_of_sale.assets_backend" name="hr assets" inherit_id="web.assets_backend">
     <xpath expr="." position="inside">
         <link rel="stylesheet" type="text/scss" href="/point_of_sale/static/src/scss/pos_dashboard.scss"/>
-        <link rel="stylesheet" href="/point_of_sale/static/src/css/pos_receipts.css"/>
         <script type="text/javascript" src="/point_of_sale/static/src/js/tours/point_of_sale.js"></script>
-        <script type="text/javascript" src="/point_of_sale/static/src/js/printers.js"></script>
-        <script type="text/javascript" src="/point_of_sale/static/lib/html2canvas.js"></script>
         <script type="text/javascript" src="/point_of_sale/static/src/js/debug_manager.js"></script>
         <script type="text/javascript" src="/point_of_sale/static/src/js/web_overrides/pos_config_form.js"></script>
     </xpath>
