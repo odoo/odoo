@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Extended Addresses',
@@ -17,7 +16,7 @@ with the street name, the house number, and room number.
         """,
     'data': [
         'views/base_address_extended.xml',
-        'data/base_address_extended_data.xml',
     ],
     'depends': ['base'],
+    "pre_init_hook": "pre_init_hook",
 }
