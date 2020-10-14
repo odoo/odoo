@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Import/Export base for UBL',
+    'name': 'Import/Export invoices with generic UBL',
     'description': '''
-    Parent module of modules that import/export in UBL.
+    Support for Export/Import in UBL format (2.1).
     ''',
     'version': '1.0',
     'category': 'Accounting/Accounting',
-    'depends': ['account_edi'],
+    'depends': ['account_edi_ubl'],
     'data': [
-        'data/ubl_templates.xml',
+        'data/account_edi_data.xml',
     ],
     'installable': True,
     'application': False,

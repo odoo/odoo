@@ -16,6 +16,49 @@ _logger = logging.getLogger(__name__)
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
+    ####################################################
+    # Helpers
+    ####################################################
+
+    def _is_generic_ubl(self, filename, tree):
+        return tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice'
+
+    ####################################################
+    # Hooks
+    ####################################################
+
+    def _is_ubl(self, filename, tree):
+        ''' Checks if the xml can be imported with this UBL implementation. See `_is_generic_ubl`.
+            Note that you need to override _create_invoice_from_xml_tree/_update_invoice_from_xml_tree or _import_ubl
+            if you want to customize import, otherwise generic import will be used.
+
+            TO OVERRIDE
+        '''
+        return False  # we must check self.code which does not exist here because we're in an abstract format.
+
+    def _get_ubl_values(self, invoice):
+        ''' Get the necessary values to generate the XML. These values will be used in the qweb template when rendering.
+        Needed values differ depending on the implementation of the UBL, as (sub)template can be overriden or called dynamically.
+        TO OVERRIDE
+
+        :returns:   a dictionary with the value used in the template has key and the value as value.
+        '''
+        def format_monetary(amount):
+            # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
+            return float_repr(amount, invoice.currency_id.decimal_places)
+
+        return {
+            'invoice': invoice,
+            'ubl_version': 2.1,
+            'type_code': 380 if invoice.move_type == 'out_invoice' else 381,
+            'payment_means_code': 42 if invoice.journal_id.bank_account_id else 31,
+            'format_monetary': format_monetary,
+        }
+
+    ####################################################
+    # Import
+    ####################################################
+
     def _import_ubl(self, tree, invoice):
         """ Decodes an UBL invoice into an invoice.
 
@@ -159,3 +202,19 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.tax_ids.add(tax)
 
         return invoice_form.save()
+
+    ####################################################
+    # Account.edi.format override
+    ####################################################
+
+    def _create_invoice_from_xml_tree(self, filename, tree):
+        self.ensure_one()
+        if self._is_ubl(filename, tree):
+            return self._import_ubl(tree, self.env['account.move'])
+        return super()._create_invoice_from_xml_tree(filename, tree)
+
+    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
+        self.ensure_one()
+        if self._is_ubl(filename, tree):
+            return self._import_ubl(tree, invoice)
+        return super()._update_invoice_from_xml_tree(filename, tree, invoice)
