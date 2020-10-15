@@ -262,9 +262,9 @@ var WebsiteRoot = BodyManager.extend({
         })
         .fail(function (err, data) {
             return new Dialog(self, {
-                title: data.data ? data.data.arguments[0] : "",
+                title: data.data ? data.data.arguments[0] : err.data.name,
                 $content: $('<div/>', {
-                    html: (data.data ? data.data.arguments[1] : data.statusText)
+                    html: (data.data ? data.data.arguments[1] : err.data.message)
                         + '<br/>'
                         + _.str.sprintf(
                             _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
