@@ -160,6 +160,15 @@ function factory(dependencies) {
         }
 
         /**
+         *
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeNonEmptyMessages() {
+            return [['replace', this.messages.filter(message => !message.isEmpty)]]
+        }
+
+        /**
          * @private
          * @returns {mail.message[]}
          */
@@ -424,6 +433,23 @@ function factory(dependencies) {
             dependencies: [
                 'fetchedMessages',
                 'threadMessages',
+            ],
+        }),
+        /**
+         * IsEmpty trait of all messages.
+         * Serves as compute dependency.
+         */
+        messagesAreEmpty: attr({
+            related: 'messages.isEmpty'
+        }),
+        /**
+         * List of non empty messages linked to this cache.
+         */
+        nonEmptyMessages: many2many('mail.message', {
+            compute: '_computeNonEmptyMessages',
+            dependencies: [
+                'messages',
+                'messagesAreEmpty',
             ],
         }),
         /**
