@@ -306,6 +306,7 @@ class ModelManager {
                             'default',
                             'dependencies',
                             'fieldType',
+                            'readonly',
                             'related',
                             'required',
                         ].includes(key)
@@ -323,6 +324,7 @@ class ModelManager {
                             'fieldType',
                             'inverse',
                             'isCausal',
+                            'readonly',
                             'related',
                             'relationType',
                             'required',
@@ -610,7 +612,7 @@ class ModelManager {
                     this._registerToComputeField(record, field);
                 }
             }
-            this._update(record, data2);
+            this._update(record, data2, { allowWriteReadonly: true });
             /**
              * 5. Register post processing operation that are to be delayed at
              * the end of the update cycle.
@@ -670,11 +672,11 @@ class ModelManager {
                         // delete at every step to avoid recursion
                         fields.delete(field);
                         if (field.compute) {
-                            this._update(record, { [field.fieldName]: record[field.compute]() });
+                            this._update(record, { [field.fieldName]: record[field.compute]() }, { allowWriteReadonly: true });
                             continue;
                         }
                         if (field.related) {
-                            this._update(record, { [field.fieldName]: field.computeRelated(record) });
+                            this._update(record, { [field.fieldName]: field.computeRelated(record) }, { allowWriteReadonly: true });
                             continue;
                         }
                         throw new Error("No compute method defined on this field definition");
@@ -1071,12 +1073,14 @@ class ModelManager {
      * @param {mail.model} record
      * @param {Object} data
      * @param {Object} [options]
+     * @param [options.allowWriteReadonly=false]
      * @returns {boolean} whether any value changed for the current record
      */
-    _update(record, data, options) {
+    _update(record, data, options = {}) {
         if (!record.exists()) {
             throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
+        const { allowWriteReadonly = false } = options;
         if (!this._toUpdateAfters.has(record)) {
             // queue updateAfter before calling field.set to ensure previous
             // contains the value at the start of update cycle
@@ -1091,7 +1095,10 @@ class ModelManager {
             }
             const field = Model.__fieldMap[fieldName];
             if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
+                throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record.localId}", non-field attempted update: "${fieldName}")`);
+            }
+            if (field.readonly && !allowWriteReadonly) {
+                throw new Error(`Can't update "${field.fieldName}" (record: "${record.localId}") because it's readonly.`);
             }
             const newVal = data[fieldName];
             if (!field.parseAndExecuteCommands(record, newVal, options)) {

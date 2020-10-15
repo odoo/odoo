@@ -493,10 +493,11 @@ function factory(dependencies) {
         }),
         /**
          * The composer to display for the reply feature in Inbox. It depends
-         * on the message set to be replied, and should be considered read-only.
+         * on the message set to be replied.
          */
         replyingToMessageOriginThreadComposer: one2one('mail.composer', {
             inverse: 'discussAsReplying',
+            readonly: true,
             related: 'replyingToMessageOriginThread.composer',
         }),
         /**
@@ -547,6 +548,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'discuss',
             isCausal: true,
+            readonly: true,
         }),
     };
 

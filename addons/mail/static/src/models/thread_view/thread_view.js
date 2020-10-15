@@ -294,6 +294,7 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             inverse: 'threadViews',
+            readonly: true,
             related: 'threadViewer.thread',
         }),
         /**
@@ -301,6 +302,7 @@ function factory(dependencies) {
          */
         threadCache: many2one('mail.thread_cache', {
             inverse: 'threadViews',
+            readonly: true,
             related: 'threadViewer.threadCache',
         }),
         threadCacheInitialScrollHeight: attr({
@@ -356,6 +358,7 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
+            readonly: true,
         }),
         uncheckedMessages: many2many('mail.message', {
             related: 'threadCache.uncheckedMessages',
