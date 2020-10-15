@@ -49,7 +49,7 @@ msgstr "Aktywne"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "Dodaj nowe konto analityczne"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
@@ -76,7 +76,7 @@ msgstr "Konto analityczne"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "Analytic Account Distribution"
-msgstr ""
+msgstr "Dystrybucja Konta Analitycznego"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
@@ -93,7 +93,7 @@ msgstr "Księgowość analityczna"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "Znaczniki Księgowości Analitycznej"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -105,7 +105,7 @@ msgstr "Konta analityczne"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "Kategorie Analityczne "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -195,12 +195,12 @@ msgstr "Plan kont analitycznych"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "Podrzędne "
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "Kliknij aby dodać  nową grupę kont analitycznych "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -377,6 +377,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"W Odoo, zamówienia sprzedaży i projekty są implementowane z użyciem\n"
+"kont analitycznych. Możesz śledzić koszty i przychody aby łatwo\n"
+"analizować swoje założenia."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -435,12 +438,12 @@ msgstr "Nazwa"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "Jeszcze brak aktywności."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "Nie ma jeszcze aktywności na tym koncie"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -480,7 +483,7 @@ msgstr "Ścieżka rodzica"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "Znacznik Nadrzędny "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
@@ -512,6 +515,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"Przychody będą utworzone automatycznie, gdy utworzysz\n"
+"faktury sprzedażowe. Faktury mogą być tworzone na podstawie\n"
+"zamówień sprzedaży, ewidencji czasu pracy (rozliczany czaspracy)\n"
+" lub wydatków (np. księgowanie kosztów delegacji)."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -521,12 +528,14 @@ msgstr "Przeszukaj pozycje analityczne"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 msgid "Search Analytic Tags"
-msgstr ""
+msgstr "Szukaj Znaczników Analitycznych"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
+"Zmień stan z aktywnego na nieaktywny aby ukryć znacznik analityczny bez "
+"usuwania go."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
@@ -538,6 +547,7 @@ msgstr "Znaczniki"
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
 msgstr ""
+"Procent rozkładu analitycznego powinien znajdować się pomiędzy 0 i 100."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
@@ -546,11 +556,13 @@ msgid ""
 "The selected account belongs to another company that the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"Wybrane konto należy do innej firmy niż to dla którego próbujesz stworzyć "
+"przedmiot analityczny dla"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
-msgstr ""
+msgstr "To pozwala klasyfikować twoje konta analityczne."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree

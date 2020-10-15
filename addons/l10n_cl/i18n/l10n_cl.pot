@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-08 00:58+0000\n"
-"PO-Revision-Date: 2020-06-08 00:58+0000\n"
+"POT-Creation-Date: 2020-09-05 16:22+0000\n"
+"PO-Revision-Date: 2020-09-05 16:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,63 @@ msgid ""
 "2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n"
 "3 - End consumer (only receipts)\n"
 "4 - Foreigner"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"\n"
+"                <strong>Customer:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
+msgid ""
+"<br/>\n"
+"                                            <span style=\"line-height: 180%;\">RUT:</span>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
+msgid ""
+"<br/>\n"
+"                                            <span>Nº:</span>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"                    <strong>Incoterm:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"                <strong>Address:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document_with_payments
+msgid "<span>Taxes</span>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>Due Date:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>GIRO:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>Payment Terms:</strong>"
 msgstr ""
 
 #. module: l10n_cl
@@ -107,11 +164,6 @@ msgid "Companies"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__3
-msgid "Consumidor final"
-msgstr ""
-
-#. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -162,6 +214,11 @@ msgid "DNI"
 msgstr ""
 
 #. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "Date:"
+msgstr ""
+
+#. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
 msgid "Datos adic. dirección y Ciudad"
 msgstr ""
@@ -181,16 +238,13 @@ msgstr ""
 #, python-format
 msgid ""
 "Document types for foreign customers must be export type (codes 110, 111 or "
-"112)"
-msgstr ""
-
-#. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__2
-msgid "Emisor de boleta 2da categoría"
+"112) or you                             should define the customer as an end"
+" consumer and use receipts (codes 39 or 41)"
 msgstr ""
 
 #. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__3
 #, python-format
 msgid "End Consumer"
 msgstr ""
@@ -201,12 +255,8 @@ msgid "Energía"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__4
-msgid "Extranjero"
-msgstr ""
-
-#. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__2
 #, python-format
 msgid "Fees Receipt Issuer (2nd category)"
 msgstr ""
@@ -218,6 +268,7 @@ msgstr ""
 
 #. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__4
 #, python-format
 msgid "Foreigner"
 msgstr ""
@@ -238,11 +289,6 @@ msgid "IVA 19%"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__1
-msgid "IVA afecto 1ª categoría"
-msgstr ""
-
-#. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_account_move__partner_id_vat
 msgid "Identification Number for selected type"
 msgstr ""
@@ -250,14 +296,6 @@ msgstr ""
 #. module: l10n_cl
 #: model:account.tax.group,name:l10n_cl.tax_group_impuestos_especificos
 msgid "Impuestos Específicos"
-msgstr ""
-
-#. module: l10n_cl
-#: code:addons/l10n_cl/models/account_move.py:0
-#, python-format
-msgid ""
-"In Chilean localization, you need to use documents in the sales journalin "
-"order to register your sales properly"
 msgstr ""
 
 #. module: l10n_cl
@@ -308,6 +346,11 @@ msgstr ""
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_l10n_latam_document_type
 msgid "Latam Document Type"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
+msgid "Logo"
 msgstr ""
 
 #. module: l10n_cl
@@ -430,6 +473,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_import_journal_creation__l10n_cl_sequence_ids
 #: model:ir.model.fields,field_description:l10n_cl.field_account_journal__l10n_cl_sequence_ids
 msgid "Sequences (cl)"
 msgstr ""
@@ -544,6 +588,7 @@ msgstr ""
 
 #. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__1
 #, python-format
 msgid "VAT Affected (1st Category)"
 msgstr ""

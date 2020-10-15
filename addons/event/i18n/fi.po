@@ -41,7 +41,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -54,12 +54,14 @@ msgstr "%s (kopio)"
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
 msgstr ""
+"'Tapahtuman rekisteröinti - %s' % (object.name or "
+"'Osallistuja').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -67,6 +69,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        -</b>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -134,6 +138,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -148,6 +154,8 @@ msgid ""
 "<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Attended the Event\"/>"
 msgstr ""
+"<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Attended the Event\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -155,6 +163,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -162,6 +172,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel Registration\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -176,6 +188,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        -\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -183,6 +198,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">PUHUJA</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -619,12 +636,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "Lisää uusi osallistuja"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "Lisää uusi tapahtuma"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -646,7 +663,7 @@ msgstr "Tapahtuman jälkeen"
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "Lisää julkaisematon tapahtuma"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -660,6 +677,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Oletko varma että haluat perua tapahtuman? Kaikki liittyvät osallistumiset "
+"perutaan myös."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -725,17 +744,17 @@ msgstr "Osallistujat"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "Vahvista rekisteröitymiset automaattisesti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "Vahvista rekisteröitymiset automaattisesti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "Lähetä sähköpostia automaattisesti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -1056,7 +1075,7 @@ msgstr "Tapahtuma"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Tapahtuman automatisoitu postitus"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1163,7 +1182,7 @@ msgstr "Tapahtumatyyppi"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "Tapahtuma: sähköpostien ajastus"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1435,7 +1454,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr ""
+msgstr "Matti Meikäläinen"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1494,7 +1513,7 @@ msgstr "Rajattu"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Rajattu määrä paikkoja"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1522,7 +1541,7 @@ msgstr "Sähköposti"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "Sähköpostirekisteröityminen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
@@ -1579,7 +1598,7 @@ msgstr "Osallistujia max"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Rekisteröitymisiä enintään"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -1608,7 +1627,7 @@ msgstr "Osallistujia min"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_min
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "Rekisteröitymisiä vähintään"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mobile
@@ -1718,7 +1737,7 @@ msgstr "Paikalla"
 #: model:ir.model.fields,field_description:event.field_event_type__is_online
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Online Event"
-msgstr ""
+msgstr "Verkkotapahtuma"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1728,7 +1747,7 @@ msgstr "Virtuaalitapahtumat"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
-msgstr ""
+msgstr "Verkkolipunosto"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1743,6 +1762,8 @@ msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
 msgstr ""
+"Verkkotapahtumat, kuten webinaarit, eivät tarvitse tiettyä sijaintia, koska "
+"ne järjestetään verkossa."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1785,7 +1806,7 @@ msgstr "Kassapääte (POS), raporttien kustomintiin tutustuminen."
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "Program"
-msgstr ""
+msgstr "Ohjelma"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1890,7 +1911,7 @@ msgstr "Skannaa lippuja vahvistaaksesi kävijät"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "Aikataulu ja esitykset"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -1912,12 +1933,12 @@ msgstr "Ajoitettu aika"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "Myy lippuja verkkosivuilla"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Myy lippuja myyntitilauksilla"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -2091,7 +2112,7 @@ msgstr "Liipaisin"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "Liipaisin"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__twitter_hashtag
@@ -2156,17 +2177,17 @@ msgstr "Tulevia tapahtumia tänään"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Tulossa/Meneillään"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "Käytä oletus-hashtagia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_timezone
 msgid "Use Default Timezone"
-msgstr ""
+msgstr "Käytä oletusaikavyöhykettä"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -2210,7 +2231,7 @@ msgstr "Viikot"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "Mikä on uutta?"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2242,18 +2263,18 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "vielä %d päivää"
 
 #. module: event
 #: code:addons/event/models/event.py:0

@@ -3428,6 +3428,31 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('Do not display nocontent when it is an empty html tag', async function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [];
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            viewOptions: {
+                action: {
+                    help: '<p class="hello"></p>'
+                }
+            },
+        });
+
+        assert.containsNone(list, '.o_view_nocontent',
+            "should not display the no content helper");
+
+        assert.containsOnce(list, 'table', "should have a table in the dom");
+
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, without data', async function (assert) {
         assert.expect(12);
 
@@ -5633,6 +5658,57 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('reference field batched in grouped list', async function (assert) {
+        assert.expect(7);
+
+        this.data.foo.records= [
+            // group 1
+            {id: 1, foo: '1', reference: 'bar,1'},
+            {id: 2, foo: '1', reference: 'bar,2'},
+            {id: 3, foo: '1', reference: 'res_currency,1'},
+            //group 2
+            {id: 4, foo: '2', reference: 'bar,2'},
+            {id: 5, foo: '2', reference: 'bar,3'},
+        ];
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree expand="1">
+                       <field name="foo" invisible="1"/>
+                       <field name="reference"/>
+                   </tree>`,
+            groupBy: ['foo'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'name_get') {
+                    if (args.model === 'bar') {
+                        assert.deepEqual(args.args[0], [1, 2 ,3]);
+                    }
+                    if (args.model === "res.currency") {
+                        assert.deepEqual(args.args[0], [1]);
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps([
+            'web_read_group',
+            'name_get',
+            'name_get',
+        ]);
+        assert.containsN(list, '.o_group_header', 2);
+        const allNames = Array.from(list.el.querySelectorAll('.o_data_cell'), node => node.textContent);
+        assert.deepEqual(allNames, [
+            'Value 1',
+            'Value 2',
+            'USD',
+            'Value 2',
+            'Value 3',
+        ]);
+        list.destroy();
+    });
+
     QUnit.test('editable list view: contexts are correctly sent', async function (assert) {
         assert.expect(6);
 
@@ -5938,6 +6014,45 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal .btn-primary'));
         assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), 'yop10', "changes should be discarded");
         assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        list.destroy();
+    });
+
+    QUnit.test('multi edition: many2many_tags in many2many field', async function (assert) {
+        assert.expect(5);
+
+        for (let i = 4; i <= 10; i++) {
+            this.data.bar.records.push({ id: i, display_name: "Value" + i});
+        }
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="m2m" widget="many2many_tags"/></tree>',
+            archs: {
+                'bar,false,list': '<tree><field name="name"/></tree>',
+                'bar,false,search': '<search></search>',
+            },
+        });
+
+        assert.containsN(list, '.o_list_record_selector input:enabled', 5);
+
+        // select two records and enter edit mode
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell'));
+
+        await testUtils.fields.many2one.clickOpenDropdown("m2m");
+        await testUtils.fields.many2one.clickItem("m2m", "Search More");
+        assert.containsOnce(document.body, '.modal .o_list_view', "should have open the modal");
+
+        await testUtils.dom.click($('.modal .o_list_view .o_data_row:first'));
+
+        assert.containsOnce(document.body, ".modal [role='alert']", "should have open the confirmation modal");
+        assert.containsN(document.body, ".modal .o_field_many2manytags .badge", 3);
+        assert.strictEqual($(".modal .o_field_many2manytags .badge:last").text().trim(), "Value 3",
+            "should have display_name in badge");
 
         list.destroy();
     });
@@ -8385,7 +8500,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with optional fields rendering', async function (assert) {
-        assert.expect(11);
+        assert.expect(12);
 
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
@@ -8415,9 +8530,12 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        var $optionalFieldsToggler = list.$('table *:last()');
-        assert.ok($optionalFieldsToggler.hasClass('o_optional_columns_dropdown_toggle'),
-            'The optional fields toggler is the last element');
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
+            'The optional fields toggler is the second last element');
+        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
+            'The optional fields dropdown is the last element');
 
         assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-right'),
             'In LTR, the dropdown should be anchored to the right and expand to the left');
@@ -8453,7 +8571,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with optional fields rendering in RTL mode', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
@@ -8480,9 +8598,12 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        var $optionalFieldsToggler = list.$('table *:last()');
-        assert.ok($optionalFieldsToggler.hasClass('o_optional_columns_dropdown_toggle'),
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the last element');
+        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
+            'The optional fields is the last element');
 
         assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-left'),
             'In RTL, the dropdown should be anchored to the left and expand to the right');

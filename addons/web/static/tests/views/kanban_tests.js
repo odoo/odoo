@@ -2293,6 +2293,56 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('close a column while quick creating a record', async function (assert) {
+        assert.expect(6);
+
+        const def = testUtils.makeTestPromise();
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
+            archs: {
+                'partner,some_view_ref,form': '<form><field name="int_field"/></form>',
+            },
+            groupBy: ['product_id'],
+            async mockRPC(route, args) {
+                const result = this._super(...arguments);
+                if (args.method === 'load_views') {
+                    await def;
+                }
+                return result;
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.containsNone(kanban, '.o_column_folded');
+
+        // click to quick create a new record in the first column (this operation is delayed)
+        await testUtils.dom.click(kanban.$('.o_kanban_group:first .o_kanban_quick_add'));
+
+        assert.containsNone(kanban, '.o_form_view');
+
+        // click to fold the first column
+        await testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:first'));
+        await testUtils.dom.click(kanban.$('.o_kanban_group:first .o_kanban_toggle_fold'));
+
+        assert.containsOnce(kanban, '.o_column_folded');
+
+        def.resolve();
+        await testUtils.nextTick();
+
+        assert.containsNone(kanban, '.o_form_view');
+        assert.containsOnce(kanban, '.o_column_folded');
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record: open on a column while another column has already one', async function (assert) {
         assert.expect(6);
 
@@ -3518,6 +3568,44 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'ged',
             'title of the column should be "ged"');
         assert.strictEqual(nbRPCs, 4, 'should have done 1 write, 1 read_group and 2 search_read');
+        kanban.destroy();
+    });
+
+    QUnit.test('edit a column propagates right context', async function (assert) {
+        assert.expect(4);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            archs: {
+                'product,false,form': '<form string="Product"><field name="display_name"/></form>',
+            },
+            session: {user_context: {lang: 'brol'}},
+            mockRPC: function (route, args) {
+                let context;
+                if (route === '/web/dataset/search_read' && args.model === 'partner') {
+                    context = args.context;
+                    assert.strictEqual(context.lang, 'brol',
+                        'lang is present in context for partner operations');
+                }
+                if (args.model === 'product') {
+                    context = args.kwargs.context;
+                    assert.strictEqual(context.lang, 'brol',
+                        'lang is present in context for product operations');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group[data-id=5]'));
+        await testUtils.dom.click(kanban.$('.o_kanban_group[data-id=5] .o_column_edit'));
         kanban.destroy();
     });
 

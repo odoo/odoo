@@ -3,10 +3,11 @@
 import time
 import math
 import re
+import logging
 
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round, float_compare
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, remove_accents
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _, tools
 from odoo.tests.common import Form
@@ -16,6 +17,9 @@ TYPE_TAX_USE = [
     ('purchase', 'Purchases'),
     ('none', 'None'),
 ]
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAccountType(models.Model):
@@ -222,7 +226,7 @@ class AccountAccount(models.Model):
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)') % account.code)
 
     @api.constrains('user_type_id')
-    def _check_user_type_id(self):
+    def _check_user_type_id_unique_current_year_earning(self):
         data_unaffected_earnings = self.env.ref('account.data_unaffected_earnings')
         result = self.read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
         for res in result:
@@ -287,7 +291,7 @@ class AccountAccount(models.Model):
             raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
 
     @api.constrains('user_type_id')
-    def _check_user_type_id(self):
+    def _check_user_type_id_sales_purchase_journal(self):
         if not self:
             return
 
@@ -878,6 +882,18 @@ class AccountJournal(models.Model):
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
                 alias_name += '-' + str(self.company_id.name)
+        try:
+            remove_accents(alias_name).encode('ascii')
+        except UnicodeEncodeError:
+            try:
+                remove_accents(self.code).encode('ascii')
+                safe_alias_name = self.code
+            except UnicodeEncodeError:
+                safe_alias_name = self.type
+            _logger.warning("Cannot use '%s' as email alias, fallback to '%s'",
+                alias_name, safe_alias_name)
+            alias_name = safe_alias_name
+
         return {
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
@@ -1191,7 +1207,7 @@ class AccountJournal(models.Model):
                         'suffix': '',
                         'padding': 0,
                         'company_id': journal.company_id.id}
-                    seq = self.env['ir.sequence'].create(vals)
+                    seq = self.env['ir.sequence'].sudo().create(vals)
                     vals_write[seq_field] = seq.id
             if vals_write:
                 journal.write(vals_write)
@@ -1566,7 +1582,7 @@ class AccountTax(models.Model):
         # precision when we round the tax amount for each line (we use
         # the 'Account' decimal precision + 5), and that way it's like
         # rounding after the sum of the tax amounts of each line
-        prec = currency.decimal_places
+        prec = currency.rounding
 
         # In some cases, it is necessary to force/prevent the rounding of the tax and the total
         # amounts. For example, in SO/PO line, we don't want to round the price unit at the
@@ -1579,7 +1595,7 @@ class AccountTax(models.Model):
             round_total = bool(self.env.context['round'])
 
         if not round_tax:
-            prec += 5
+            prec *= 1e-5
 
         # 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
         #     tax  |  base  |  amount  |
@@ -1602,9 +1618,9 @@ class AccountTax(models.Model):
 
             # if base_amount = 145, the new base is computed as:
             # (145 - 15) / (1.0 + 30%) * 90% = 130 / 1.3 * 90% = 90
-            return round((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100, prec)
+            return round((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100, precision_rounding=prec)
 
-        base = round(price_unit * quantity, prec)
+        base = round(price_unit * quantity, precision_rounding=prec)
 
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
@@ -1682,8 +1698,8 @@ class AccountTax(models.Model):
                     base, sign * price_unit, quantity, product, partner)
 
             # Round the tax_amount multiplied by the computed repartition lines factor.
-            tax_amount = round(tax_amount, prec)
-            factorized_tax_amount = round(tax_amount * sum_repartition_factor, prec)
+            tax_amount = round(tax_amount, precision_rounding=prec)
+            factorized_tax_amount = round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
             if price_include and not total_included_checkpoints.get(i):
                 cumulated_tax_included_amount += factorized_tax_amount
@@ -1705,10 +1721,10 @@ class AccountTax(models.Model):
             # The factorized_tax_amount will be 0.06 (200% x 0.03). However, each line taken independently will compute
             # 50% * 0.03 = 0.01 with rounding. It means there is 0.06 - 0.04 = 0.02 as total_rounding_error to dispatch
             # in lines as 2 x 0.01.
-            repartition_line_amounts = [round(tax_amount * line.factor, prec) for line in tax_repartition_lines]
-            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), prec)
+            repartition_line_amounts = [round(tax_amount * line.factor, precision_rounding=prec) for line in tax_repartition_lines]
+            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), precision_rounding=prec)
             nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
-            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, prec)
+            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, precision_rounding=prec)
 
             for repartition_line, line_amount in zip(tax_repartition_lines, repartition_line_amounts):
 
@@ -1720,7 +1736,7 @@ class AccountTax(models.Model):
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
                     'amount': sign * line_amount,
-                    'base': round(sign * base, prec),
+                    'base': round(sign * base, precision_rounding=prec),
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
                     'analytic': tax.analytic,

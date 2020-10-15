@@ -32,6 +32,14 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount': 12,
             'sequence': 30,
         })
+        cls.percent_tax_3_incl = cls.env['account.tax'].create({
+            'name': '5% incl',
+            'amount_type': 'percent',
+            'amount': 5,
+            'price_include': True,
+            'include_base_amount': True,
+            'sequence': 40,
+        })
         cls.group_tax = cls.env['account.tax'].create({
             'name': 'group 12% + 21%',
             'amount_type': 'group',
@@ -60,12 +68,12 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         cls.base_tag_pos = cls.base_tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
         cls.base_tag_neg = cls.base_tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
 
-    def _create_invoice(self, taxes_per_line, inv_type='out_invoice'):
+    def _create_invoice(self, taxes_per_line, inv_type='out_invoice', currency_id=False, invoice_payment_term_id=False):
         ''' Create an invoice on the fly.
 
         :param taxes_per_line: A list of tuple (price_unit, account.tax recordset)
         '''
-        return self.env['account.move'].create({
+        vals = {
             'type': inv_type,
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [(0, 0, {
@@ -74,7 +82,12 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'price_unit': amount,
                 'tax_ids': [(6, 0, taxes.ids)],
             }) for amount, taxes in taxes_per_line],
-        })
+        }
+        if currency_id:
+            vals['currency_id'] = currency_id.id
+        if invoice_payment_term_id:
+            vals['invoice_payment_term_id'] = invoice_payment_term_id.id
+        return self.env['account.move'].create(vals)
 
     def test_one_tax_per_line(self):
         ''' Test:
@@ -427,3 +440,54 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids},
             {'balance': 1100.0,     'tax_ids': [],              'tag_ids': []},
         ])
+
+    def test_tax_calculation_foreign_currency_large_quantity(self):
+        ''' Test:
+        Foreign currency with rate of 1.1726 and tax of 21%
+        price_unit | Quantity  | Taxes
+        ------------------
+        2.82       | 20000     | 21% not incl
+        '''
+        self.env['res.currency.rate'].create({
+            'name': '2018-01-01',
+            'rate': 1.1726,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.05
+
+        invoice = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 20000,
+                'price_unit': 2.82,
+                'tax_ids': [(6, 0, self.percent_tax_1.ids)],
+            })]
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 48098.24,    # 20000 * 2.82 / 1.1726
+            'credit': 10100.63,             # tax_base_amount * 0.21
+        }])
+
+    def test_ensure_no_unbalanced_entry(self):
+        ''' Ensure to not create an unbalanced journal entry when saving. '''
+        self.env['res.currency.rate'].create({
+            'name': '2018-01-01',
+            'rate': 0.654065014,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.05
+
+        invoice = self._create_invoice([
+            (5, self.percent_tax_3_incl),
+            (10, self.percent_tax_3_incl),
+            (50, self.percent_tax_3_incl),
+        ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
+        invoice.post()

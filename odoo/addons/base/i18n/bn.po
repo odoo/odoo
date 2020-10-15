@@ -3,6 +3,7 @@
 # 	* base
 # 
 # Translators:
+# Martin Trigaux, 2020
 # Abu Zafar <azmikbal@gmail.com>, 2020
 # 
 msgid ""
@@ -113,6 +114,10 @@ msgid ""
 "Allow cashier to reprint receipts\n"
 "\n"
 msgstr ""
+"\n"
+" \n"
+"ক্যাশিয়ারকে রিসিপ্টগুলি পুনরায় মুদ্রণের অনুমতি দিন\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -288,6 +293,72 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"ডোমিনিকান প্রজাতন্ত্রের স্থানীয়করণ মডিউল\n"
+"===========================================\n"
+"\n"
+" ডোমিনিকান প্রজাতন্ত্রের জন্য অ্যাকাউন্টস এবং ট্যাক্সের ক্যাটালগ, এর জন্য উপযুক্ত\n"
+"** আন্তর্জাতিকীকরণ ** ** আইএফআরএস ** এর সাথে এবং নিয়মকানুনে প্রান্তিককরণ\n"
+"অভ্যন্তরীণ করের সাধারণ অধিদপ্তরের (** ডিজিআইআই **)। \n"
+"\n"
+"** এই মডিউলটি সমন্বিত: **\n"
+" \n"
+"- স্ট্যান্ডার্ড অ্যাকাউন্টের ক্যাটালগ (ডিজিআইআই এবং আইএফআরএসের সাথে সংযুক্ত)\n"
+"- বেশিরভাগ প্রাক-কনফিগার করা শুল্ক সহ কর ক্যাটালগ\n"
+"        - ক্রয় এবং বিক্রয় জন্য ITBIS\n"
+"        - আইটিবিআইএস রিটেনশনস\n"
+"        - আইএসআর প্রতিবন্ধকতা\n"
+"        - কর এবং হোল্ডিং গ্রুপ:\n"
+"                - টেলিযোগাযোগ\n"
+"                - নির্মাণ সামগ্রী সরবরাহকারী\n"
+"                - পরিষেবাগুলির শারীরিক সরবরাহকারী\n"
+"        - অন্যান্য কর\n"
+"- সমস্ত এনসিএফ পরিচালনা করার জন্য পূর্ব-কনফিগার করা ক্রম\n"
+"        - আর্থিক মূল্য সহ চালান (বিক্রয় জন্য)\n"
+"        - চূড়ান্ত গ্রাহকদের জন্য চালান\n"
+"        - ডেবিট এবং ক্রেডিট নোটস\n"
+"        - অনানুষ্ঠানিক সরবরাহকারীর নিবন্ধন\n"
+"        - একক আয়ের নিবন্ধন\n"
+"        - ক্ষুদ্র ব্যয়ের রেকর্ড\n"
+"        - সরকার\n"
+"- ট্যাক্স এবং হোল্ডিংগুলি অটোমেশনের জন্য করের অবস্থান\n"
+"        - করের ছাড়সমূহে পরিবর্তন (যেমন রাজ্যের বিক্রয়)\n"
+"        - ট্যাক্স হোল্ডিংগুলি পরিবর্তন (বিদেশে ক্রয় পরিষেবাদি বিদেশে)\n"
+"        - অন্যদের মধ্যে\n"
+" \n"
+"** দ্রষ্টব্য: **\n"
+"এই অবস্থানটি, যদিও এটিতে এনসিএফের ক্রম রয়েছে, তারা পারবে না\n"
+"তৃতীয় পক্ষের মডিউল বা উন্নয়ন ছাড়া ব্যবহার করা হবে used\n"
+"অতিরিক্ত।\n"
+"\n"
+"অ্যাকাউন্ট ক্যাটালগের কোডিং কাঠামো:\n"
+"================================================== =\n"
+"\n"
+"** একটি ডিজিট ** আর্থিক বিবরণীর বিভাগ / ধরণের অ্যাকাউন্টের প্রতিনিধিত্ব করে।\n"
+"** 1 ** - সক্রিয় ** 4 ** - আয় এবং আয় অ্যাকাউন্ট\n"
+"** 2 ** - দায় ** 5 ** - ব্যয়, ব্যয় এবং ক্ষতি\n"
+"** 3 ** - মূলধন ** 6 ** - ফলাফল নিষ্পত্তি অ্যাকাউন্টগুলি\n"
+"\n"
+"** দুটি অঙ্ক ** গ্রুপিং আইটেমগুলি উপস্থাপন করে:\n"
+"11- বর্তমান সম্পদ\n"
+"21- বর্তমান দায়\n"
+"31- স্টকহোল্ডারদের ইক্যুইটি\n"
+"\n"
+"** চারটি সংখ্যা ** প্রধান অ্যাকাউন্টগুলিতে বরাদ্দ করা হয়: প্রথম অর্ডার অ্যাকাউন্টগুলি\n"
+"1101- নগদ এবং নগদ সমতুল্য\n"
+"2101- অ্যাকাউন্ট এবং ডকুমেন্টস প্রদেয়\n"
+"3101- সামাজিক মূলধন\n"
+"\n"
+"** ছয় ডিজিট ** উপ-অ্যাকাউন্টগুলিতে বরাদ্দ করা হয়: দ্বিতীয় আদেশের অ্যাকাউন্টসমূহ\n"
+"110101 - বক্স\n"
+"210101 - স্থানীয় সরবরাহকারী\n"
+"\n"
+"** আট সংখ্যা ** তৃতীয় অর্ডার অ্যাকাউন্টের জন্য (প্রদর্শিত হবে)\n"
+"ওডুতে):\n"
+"1101- নগদ এবং সমতুল্য\n"
+"110101- বক্স\n"
+"11010101 সাধারণ বাক্স"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -525,6 +596,9 @@ msgid ""
 "        App to upload and manage your documents.\n"
 "    "
 msgstr ""
+"\n"
+" \n"
+"আপনার দস্তাবেজগুলি আপলোড এবং পরিচালনা করতে অ্যাপ্লিকেশন।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -533,6 +607,8 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+" বিল টাইমশিটগুলি হেল্পডেস্কের টিকিটে লগইন হয়েছে।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -540,6 +616,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"এইচআর এবং রক্ষণাবেক্ষণের মধ্যে ব্রিজ।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_intrastat
@@ -965,6 +1043,8 @@ msgid ""
 "\n"
 "        This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+" এই মডিউলটি অনলাইন ব্যাংক সিঙ্ক্রোনাইজেশনের জন্য ব্যবহৃত হয়।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_sync
@@ -973,6 +1053,8 @@ msgid ""
 "        This module is used for Online bank synchronization. It provides basic methods to synchronize bank statement.\n"
 "    "
 msgstr ""
+"\n"
+"এই মডিউলটি অনলাইন ব্যাংক সিঙ্ক্রোনাইজেশনের জন্য ব্যবহৃত হয়। এটি ব্যাংক স্টেটমেন্টকে সিঙ্ক্রোনাইজ করার জন্য প্রাথমিক পদ্ধতি সরবরাহ করে।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -981,6 +1063,8 @@ msgid ""
 "        This module provides the core of the Odoo Mobile App.\n"
 "        "
 msgstr ""
+"\n"
+" এই মডিউলটি ওডু মোবাইল অ্যাপের মূল সরবরাহ করে।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -988,6 +1072,8 @@ msgid ""
 "\n"
 "        Track equipments and maintenance requests"
 msgstr ""
+"\n"
+"সরঞ্জাম এবং রক্ষণাবেক্ষণের অনুরোধগুলি ট্র্যাক করুন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -995,6 +1081,8 @@ msgid ""
 "\n"
 "        Use Plaid.com to retrieve bank statements"
 msgstr ""
+"\n"
+"ব্যাঙ্কের বিবৃতি পুনরুদ্ধার করতে প্লেড ডট কম ব্যবহার করুন"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_plaid
@@ -1003,6 +1091,8 @@ msgid ""
 "        Use Plaid.com to retrieve bank statements.\n"
 "    "
 msgstr ""
+"\n"
+"ব্যাঙ্কের বিবৃতি পুনরুদ্ধার করতে প্লেড.কম ব্যবহার করুন।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -1013,6 +1103,10 @@ msgid ""
 "        to allow you to define interviews for different jobs.\n"
 "    "
 msgstr ""
+"\n"
+"নিয়োগ প্রক্রিয়া চলাকালীন সাক্ষাত্কার ফর্ম ব্যবহার করুন।\n"
+"এই মডিউলটি সমীক্ষা মডিউলটির সাথে একীভূত হয়েছে\n"
+"আপনাকে বিভিন্ন কাজের জন্য সাক্ষাত্কার সংজ্ঞায়িত করার অনুমতি দেওয়ার জন্য।"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_ponto
@@ -1029,6 +1123,9 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+"টাইমশিট চালনা করার সময়, সমস্ত টাইমশিটগুলিতে চালানের অনুমতি দেয়\n"
+"কোনও এসও, বা কেবলমাত্র বৈধ টাইমশিটগুলির সাথে যুক্ত"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
@@ -1104,6 +1201,8 @@ msgid ""
 "    syntax-checked and tested.\n"
 "    "
 msgstr ""
+"\n"
+"কোডের টুকরা রয়েছে এমন পরিস্থিতিতে প্রযুক্তিগত ডকুমেন্টেশন উদাহরণ হিসাবে ব্যবহার করতে (আক্ষরিক নির্দেশের মাধ্যমে) যেখানে সিনট্যাক্স-পরীক্ষা করা ও পরীক্ষা করা যেতে পারে।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -1124,6 +1223,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"লকের তারিখটি অপরিবর্তনীয় করে তুলুন:\n"
+"\n"
+"আপনি পরামর্শদাতাদের চেয়ে কড়া শর্তগুলি ব্যবহারকারীর চেয়ে সংজ্ঞা দিতে পারবেন না। তারপরে, পরামর্শদাতাদের লক ডেট অবশ্যই ব্যবহারকারীদের জন্য লক তারিখের আগে সেট করতে হবে।\n"
+"* আপনি এমন একটি সময়কে লক করতে পারবেন না যা এখনও শেষ হয়নি। তারপরে, উপদেষ্টাদের জন্য লক ডেট অবশ্যই পূর্ববর্তী মাসের শেষ দিনের আগে নির্ধারণ করা উচিত।\n"
+"* উপদেষ্টাদের জন্য নতুন লক তারিখটি অবশ্যই পূর্ববর্তী লক তারিখের পরে নির্ধারণ করতে হবে।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -1168,6 +1273,8 @@ msgid ""
 "    Module linking the attendance module to the timesheet app.\n"
 "    "
 msgstr ""
+"\n"
+"উপস্থিতি মডিউলটি টাইমশিট অ্যাপ্লিকেশনটির সাথে সংযোগকারী মডিউল।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_saft
@@ -2966,6 +3073,9 @@ msgid ""
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
 "    "
 msgstr ""
+"\n"
+" \n"
+"চালানের উপর ভিত্তি করে ঘোষণার জন্য নেদারল্যান্ডসের ইন্টারস্ট্যাট প্রতিবেদন তৈরি করে।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -5625,6 +5735,8 @@ msgid ""
 "Visitors can join public mail channels managed in the Discuss app in order to get regular updates or reach out with your community.\n"
 "    "
 msgstr ""
+"\n"
+"নিয়মিত আপডেট পেতে বা আপনার সম্প্রদায়ের সাথে যোগাযোগ করার জন্য দর্শনার্থীরা আলোচনা অ্যাপে পরিচালিত সর্বজনীন মেল চ্যানেলগুলিতে যোগদান করতে পারেন।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -5797,7 +5909,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%Y - Year with century.\""
-msgstr ""
+msgstr "% Y - শতবর্ষ সহ বছর। \""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6150,6 +6262,8 @@ msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code> লগ (বার্তা, স্তর = 'তথ্য')</code> : ডিবাগ তথ্য রেকর্ড করতে লগিং "
+"ফাংশন<code> আইআর.লগিং</code>ছক"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -6872,7 +6986,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "হিসাব ধারী"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
@@ -6952,7 +7066,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_accountant
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Accounting"
-msgstr ""
+msgstr "অ্যাকাউন্টিং"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
@@ -7012,7 +7126,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.action_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_search
 msgid "Action"
-msgstr ""
+msgstr "ক্রিয়া"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__help
@@ -7024,7 +7138,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__help
 #: model:ir.model.fields,field_description:base.field_ir_cron__help
 msgid "Action Description"
-msgstr ""
+msgstr "কর্ম বিবরণ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__name
@@ -7033,7 +7147,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:base.field_ir_cron__name
 msgid "Action Name"
-msgstr ""
+msgstr "কর্ম নাম"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__target
@@ -7044,7 +7158,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:base.field_ir_cron__state
 msgid "Action To Do"
-msgstr ""
+msgstr "কর্ম করতে"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__type
@@ -7057,7 +7171,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__type
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Action Type"
-msgstr ""
+msgstr "কর্ম প্রকার"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_url
@@ -7827,7 +7941,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.module_tree
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Apps"
-msgstr ""
+msgstr "অ্যাপস"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__modules
@@ -7847,12 +7961,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "আর্চ ব্লব"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "আর্চ ফাইলের নাম"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -7968,7 +8082,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
-msgstr ""
+msgstr "এটাচমেন্ট"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -8120,7 +8234,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_automation
 msgid "Automation"
-msgstr ""
+msgstr "স্বয়ংক্রিয়তা"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
@@ -8213,7 +8327,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__b6
 msgid "B6  20  125 x 176 mm"
-msgstr ""
+msgstr "বি 6 20 125 এক্স 176 মিমি"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__b7
@@ -8317,7 +8431,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_barcodes
 #: model:ir.module.module,shortdesc:base.module_stock_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "বারকোড"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
@@ -8352,7 +8466,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Base"
-msgstr ""
+msgstr "ভিত্তি"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
@@ -8384,7 +8498,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "ভিত্তি স্থাপত্য দেখুন"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -8406,7 +8520,7 @@ msgstr ""
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr ""
+msgstr "বেস: অটো-ভ্যাকুয়াম অভ্যন্তরীণ ডেটা"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
@@ -8533,7 +8647,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bm
 msgid "Bermuda"
-msgstr ""
+msgstr "বারমুডা"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_12
@@ -8578,7 +8692,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "বাঁধাই মডিউল"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_type
@@ -8590,7 +8704,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "বাঁধাই ধরণ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_view_types
@@ -8719,7 +8833,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
-msgstr ""
+msgstr "স্বয়ংক্রিয় মেলিং প্রচারগুলি তৈরি করুন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form
@@ -8820,7 +8934,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__calendar
 #: model:ir.module.module,shortdesc:base.module_calendar
 msgid "Calendar"
-msgstr ""
+msgstr "পুঞ্জিকা"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_calendar_sms
@@ -8889,7 +9003,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Cancel"
-msgstr ""
+msgstr "বাতিল"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -8995,7 +9109,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
 #: model_terms:ir.ui.view,arch_db:base.change_password_wizard_view
 msgid "Change Password"
-msgstr ""
+msgstr "অনুমোদন শব্দ পরিবর্তন করুন"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
@@ -9088,7 +9202,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "গৌণ কর্ম "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
@@ -9103,7 +9217,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__field_parent
 msgid "Child Field"
-msgstr ""
+msgstr "শিশু ফিল্ড"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__child_id
@@ -9201,7 +9315,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
-msgstr ""
+msgstr "শহর ঠিকানা"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
@@ -9225,7 +9339,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
-msgstr ""
+msgstr "বদ্ধ"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -9407,7 +9521,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 #, python-format
 msgid "Company"
-msgstr ""
+msgstr "কোম্পানি"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -9435,7 +9549,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__company_name
 #: model:ir.model.fields,field_description:base.field_res_users__company_name
 msgid "Company Name"
-msgstr ""
+msgstr "কোমপানির নাম"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_company_name
@@ -9557,7 +9671,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "রূপরেখা নির্ধারণ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -9574,7 +9688,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Configuration"
-msgstr ""
+msgstr "রূপরেখা"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -9612,7 +9726,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Confirm"
-msgstr ""
+msgstr "নিশ্চিত করুন"
 
 #. module: base
 #: model:res.country,name:base.cg
@@ -9693,7 +9807,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "Contact"
-msgstr ""
+msgstr "যোগাযোগ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -9718,13 +9832,13 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr ""
+msgstr "যোগাযোগ ট্যাগ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr ""
+msgstr "যোগাযোগ ট্যাগ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -9736,7 +9850,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_contacts
 #: model_terms:ir.ui.view,arch_db:base.view_partner_tree
 msgid "Contacts"
-msgstr ""
+msgstr "পরিচিতদের তালিকা"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -9873,7 +9987,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "দেশজ গোষ্ঠীসমূহ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
@@ -9931,7 +10045,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create Menu"
-msgstr ""
+msgstr "মেনু তৈরি করুন"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -9986,7 +10100,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Create a new contact tag"
-msgstr ""
+msgstr "একটি নতুন পরিচিতি ট্যাগ তৈরি করুন"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
@@ -10059,7 +10173,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Views"
-msgstr ""
+msgstr "তৈরী করা হয়েছে দেখাচ্ছে"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__create_uid
@@ -10338,7 +10452,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
 msgid "Current Line"
-msgstr ""
+msgstr "কারেন্ট লাইন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate
@@ -10356,7 +10470,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Custom"
-msgstr ""
+msgstr "পছন্দসই"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__custom_colors
@@ -10484,7 +10598,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Data to Write"
-msgstr ""
+msgstr "লেখার জন্য ডেটা"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -10586,7 +10700,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__days
 msgid "Days"
-msgstr ""
+msgstr "দিন"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
@@ -10780,7 +10894,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__dependencies_id
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Dependencies"
-msgstr ""
+msgstr "নির্ভরতাগুলি"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__depends
@@ -10803,7 +10917,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Description"
-msgstr ""
+msgstr "বিবরণ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__description_html
@@ -10870,7 +10984,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__diagram
 msgid "Diagram"
-msgstr ""
+msgstr "নকশা"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
@@ -10905,7 +11019,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
-msgstr ""
+msgstr "বাতিল"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
@@ -10916,7 +11030,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Display"
-msgstr ""
+msgstr "প্রদর্শন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__display_name
@@ -11024,7 +11138,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "প্রদর্শন নাম"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
@@ -11230,7 +11344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__domain
 #: model:ir.model.fields,field_description:base.field_ir_rule__domain_force
 msgid "Domain"
-msgstr ""
+msgstr "ডোমেইন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__domain
@@ -11283,7 +11397,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "ড্রপডাউন মেনু"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
@@ -11446,7 +11560,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_email
 #: model_terms:ir.ui.view,arch_db:base.contact
 msgid "Email"
-msgstr ""
+msgstr "ই-মেইল"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -11665,7 +11779,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_events
 #: model:ir.module.module,shortdesc:base.module_website_event
 msgid "Events"
-msgstr ""
+msgstr "ঘটনাবলী"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
@@ -11746,7 +11860,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute several actions"
-msgstr ""
+msgstr "বেশ কয়েকটি ক্রিয়া সম্পাদন করুন"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -11791,7 +11905,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_exports_line__export_id
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export"
-msgstr ""
+msgstr "বহিরায়ন করুন"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -11880,7 +11994,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__xml_id
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "External ID"
-msgstr ""
+msgstr "বাহ্যিক আইডি"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__name
@@ -11914,7 +12028,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Extra"
-msgstr ""
+msgstr "অতিরিক্ত"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_usability
@@ -12136,7 +12250,7 @@ msgstr ""
 #: code:addons/model.py:0
 #, python-format
 msgid "Field:"
-msgstr ""
+msgstr "ক্ষেত্র:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -12271,12 +12385,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Filters"
-msgstr ""
+msgstr "পরিশোধকগুলি"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters created by myself"
-msgstr ""
+msgstr "আমার নিজের দ্বারা তৈরি ফিল্টার"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -12365,7 +12479,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
-msgstr ""
+msgstr "ভাসমান"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -12443,7 +12557,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Form"
-msgstr ""
+msgstr "ফর্ম "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
@@ -12455,7 +12569,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users__email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "ফর্ম্যাট করা ইমেল"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -12535,7 +12649,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
 msgid "Friday"
-msgstr ""
+msgstr "শুক্রবার"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
@@ -12571,7 +12685,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__fullscreen
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__fullscreen
 msgid "Full Screen"
-msgstr ""
+msgstr "পূর্ণ পর্দা"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp_workorder_quality
@@ -12658,7 +12772,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__gantt
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__gantt
 msgid "Gantt"
-msgstr ""
+msgstr "জ্ঞান্ট"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt
@@ -12697,7 +12811,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "অনুপস্থিত শর্তাদি তৈরি করুন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -12925,7 +13039,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
 msgid "Google Maps"
-msgstr ""
+msgstr "গুগল মানচিত্র"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
@@ -12941,7 +13055,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
-msgstr ""
+msgstr "লেখচিত্র"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -12973,7 +13087,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Group"
-msgstr ""
+msgstr "দল"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -12991,7 +13105,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Group By"
-msgstr ""
+msgstr "গ্রুপ দ্বারা"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__full_name
@@ -13036,7 +13150,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #, python-format
 msgid "Groups"
-msgstr ""
+msgstr "গ্রুপ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13121,7 +13235,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "এইচটিটিপি রাউটিং"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -13250,7 +13364,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_operations_timesheets
 msgid "Helps you manage the timesheets."
-msgstr ""
+msgstr "আপনাকে টাইমশিট পরিচালনা করতে সহায়তা করে।"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
@@ -13285,7 +13399,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_expenses
 msgid "Helps you manage your expenses."
-msgstr ""
+msgstr " আপনাকে আপনার ব্যয় পরিচালনা করতে সহায়তা করে।"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_operations_inventory
@@ -13293,6 +13407,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+" আপনাকে আপনার জায় এবং প্রধান স্টক ক্রিয়াকলাপ পরিচালনা করতে সহায়তা করে: "
+"বিতরণ আদেশ, অভ্যর্থনা ইত্যাদি"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
@@ -13447,7 +13563,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Human Resources"
-msgstr ""
+msgstr "জনসম্পদ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
@@ -13575,13 +13691,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
-msgstr ""
+msgstr "আইডি "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:base.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr ""
+msgstr "একটি এক্সএমএল ফাইল সংজ্ঞায়িত কার্য আইডি"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -13591,7 +13707,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__xml_id
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "এক্সএমএল ফাইল সংজ্ঞায়িত ভিউ আইডি"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
@@ -13628,7 +13744,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Icon"
-msgstr ""
+msgstr "আইকন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__icon
@@ -13700,6 +13816,8 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"এই ক্ষেত্রটি খালি থাকলে, দৃশ্যটি সমস্ত ব্যবহারকারীর জন্য প্রযোজ্য। অন্যথা, "
+"দৃশ্য শুধুমাত্র সেই সব গোষ্ঠীর ব্যবহারকারীদের ক্ষেত্রে প্রযোজ্য।"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__active
@@ -13709,6 +13827,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"এই দৃশ্য উত্তরাধিকারী হয়,\n"
+"* সত্য হলে, দৃশ্য সবসময় তার পিতামাতার প্রসারিত\n"
+"* মিথ্যা হলে, দৃশ্যটি বর্তমানে তার পিতামাতার প্রসারিত করে না তবে সক্ষম করা যাবে"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13933,7 +14054,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr ""
+msgstr "ইন-অ্যাপ ক্রয়"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -13949,7 +14070,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
 msgid "Indexed"
-msgstr ""
+msgstr "সূচিবদ্ধ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__index_content
@@ -14067,7 +14188,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
 msgid "Inherited View"
-msgstr ""
+msgstr "উত্তরাধিকার দেখুন"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -14110,7 +14231,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 #, python-format
 msgid "Install"
-msgstr ""
+msgstr "ইনস্টল"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -14120,7 +14241,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
 msgid "Install Language"
-msgstr ""
+msgstr "ভাষা ইনস্টল"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
@@ -14218,7 +14339,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "অভ্যন্তরীণ মন্তব্য"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__src
@@ -14560,7 +14681,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__function
 #: model:ir.model.fields,field_description:base.field_res_users__function
 msgid "Job Position"
-msgstr ""
+msgstr "পদ"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -14597,7 +14718,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__kanban
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Kanban"
-msgstr ""
+msgstr "কানবান"
 
 #. module: base
 #: model:res.country,name:base.kz
@@ -14620,7 +14741,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__key
 #: model_terms:ir.ui.view,arch_db:base.view_ir_config_search
 msgid "Key"
-msgstr ""
+msgstr "কী"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_config_parameter_key_uniq
@@ -14753,7 +14874,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_lang_search
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Languages"
-msgstr ""
+msgstr "ভাষাসমূহ"
 
 #. module: base
 #: model:res.country,name:base.la
@@ -14871,7 +14992,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard____last_update
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "সর্বশেষ সংশোধিত"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__write_uid
@@ -14951,7 +15072,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__write_uid
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "সর্বশেষ আপডেট করেছেন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__write_date
@@ -15029,7 +15150,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__write_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "সর্বশেষ আপডেট হয়েছে"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
@@ -15066,7 +15187,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Layout"
-msgstr ""
+msgstr "বিন্যাস"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_format
@@ -15185,7 +15306,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.lr
 msgid "Liberia"
-msgstr ""
+msgstr "লাইবেরিয়া"
 
 #. module: base
 #: model:res.country,name:base.ly
@@ -15247,7 +15368,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
-msgstr ""
+msgstr "বিক্রয় এবং বিক্রয় পয়েন্ট অফ লিংক"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
@@ -15447,7 +15568,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "এমআরপি II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -15484,7 +15605,7 @@ msgstr ""
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "মেইল বিতরণ ব্যর্থ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_enterprise
@@ -15636,6 +15757,44 @@ msgid ""
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
 msgstr ""
+" \n"
+"নিয়োগ এবং কাজের অ্যাপ্লিকেশন পরিচালনা করুন\n"
+"---------------------------------------\n"
+"ওডু দিয়ে আপনার কাজের অফারগুলি প্রকাশ করুন, প্রচার করুন এবং সংগঠিত করুন\n"
+"<a href=\"https://www.odoo.com/page/recruitment\"> ওপেন সোর্স নিয়োগের আবেদন</a>\n"
+" \n"
+"আপনার কাজের বোর্ডকে সংগঠিত করুন, আপনার কাজের ঘোষণার প্রচার করুন এবং ট্র্যাক রাখুন\n"
+"সহজেই আবেদন জমা দিন। প্রতিটি আবেদনকারীকে অনুসরণ করুন এবং একটি ডাটাবেস তৈরি করুন\n"
+"ইনডেক্সড ডকুমেন্ট সহ দক্ষতা এবং প্রোফাইলগুলি।\n"
+"\n"
+"সেরা কাজ বোর্ডে আপনার কাজ পোস্ট করুন\n"
+" ---------------------------------\n"
+"\n"
+"সর্বাধিক বিখ্যাত জব বোর্ডের ওয়েবসাইটে স্বয়ংক্রিয়ভাবে সংযোগ স্থাপন করুন; লিঙ্কযুক্ত, মনস্টার,\n"
+"ক্রেগলিস্ট, ... প্রতিটি কাজের অবস্থানের স্বয়ংক্রিয়ভাবে একটি নতুন ইমেল ঠিকানা থাকে\n"
+"সঠিক কাজের অবস্থানে স্বয়ংক্রিয়ভাবে রুট অ্যাপ্লিকেশনগুলিকে নিয়োগ করা হয়েছে।\n"
+"\n"
+"আবেদনকারীরা ইমেলের মাধ্যমে আপনার সাথে যোগাযোগ করুন বা একটি অনলাইন ফর্ম ব্যবহার করুন না কেন, আপনি সবই পেয়ে যান\n"
+"ডেটা স্বয়ংক্রিয়ভাবে সূচিকৃত (পুনরায় শুরু, প্রেরণা পত্র) এবং আপনি উত্তর দিতে পারেন\n"
+"কেবলমাত্র একটি ক্লিকে, উত্তরের টেমপ্লেট পুনরায় ব্যবহার করে।\n"
+"\n"
+"আপনার নিয়োগ প্রক্রিয়াটি কাস্টমাইজ করুন\n"
+"----------------------------------\n"
+"কানবান ভিউ ব্যবহার করুন এবং আপনার নিয়োগ প্রক্রিয়াটির পদক্ষেপগুলি কাস্টমাইজ করুন;\n"
+"প্রাক-যোগ্যতা, প্রথম সাক্ষাত্কার, দ্বিতীয় সাক্ষাত্কার, মুখোমুখি, ...\n"
+"\n"
+"আপনার নিয়োগ পাইপলাইনে সঠিক পরিসংখ্যান পান। তুলনা করার জন্য প্রতিবেদনগুলি পান\n"
+"বাহ্যিক কাজের বোর্ডগুলিতে আপনার বিভিন্ন বিনিয়োগের পারফরম্যান্স।\n"
+"\n"
+"আপনার নিয়োগ প্রক্রিয়াটি স্ট্রিমলাইন করুন\n"
+"-----------------------------------\n"
+"\n"
+"স্মার্ট কানবান ভিউ সহ আপনার নিয়োগ প্রক্রিয়াতে আবেদনকারীদের অনুসরণ করুন। সংরক্ষণ করুন\n"
+"ইমেল টেমপ্লেটগুলির সাথে কিছু যোগাযোগ স্বয়ংক্রিয় করে time\n"
+"\n"
+"পুনঃসূচনা এবং অনুপ্রেরণা পত্রগুলির মতো নথিগুলি স্বয়ংক্রিয়ভাবে ইনডেক্স করা হয়,\n"
+"আপনাকে সহজেই নির্দিষ্ট দক্ষতা সন্ধান করতে এবং একটি ডাটাবেস তৈরি করতে সহায়তা করে\n"
+"প্রোফাইলের।\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -15942,7 +16101,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
 #: model_terms:ir.ui.view,arch_db:base.view_menu
 msgid "Menu"
-msgstr ""
+msgstr "মেনু"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
@@ -15959,7 +16118,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__menus_by_module
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Menus"
-msgstr ""
+msgstr "মেনু সমূহ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -16075,7 +16234,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
 msgid "MinID"
-msgstr ""
+msgstr "ন্যূনতমআইডি"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -16158,7 +16317,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__minutes
 msgid "Minutes"
-msgstr ""
+msgstr "মিনিট"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -16242,7 +16401,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
 msgid "Model"
-msgstr ""
+msgstr "মডেল"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -16284,7 +16443,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_model_data
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model_data_id
 msgid "Model Data"
-msgstr ""
+msgstr "মডেল তথ্য"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__name
@@ -16351,7 +16510,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.ir_model_model_menu
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Models"
-msgstr ""
+msgstr "মডেল সমূহ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -16424,7 +16583,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
-msgstr ""
+msgstr "মডিউল বাদ"
 
 #. module: base
 #: code:addons/convert.py:0
@@ -16433,6 +16592,8 @@ msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
 msgstr ""
+"মডিউল লোড করা %sব্যর্থ হয়েছে: ফাইল %sপ্রক্রিয়া করা যায়নি:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__module
@@ -16552,7 +16713,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mm
 msgid "Myanmar"
-msgstr ""
+msgstr "মায়ানমার"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
@@ -16658,14 +16819,14 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user__new_passwd
 msgid "New Password"
-msgstr ""
+msgstr "নতুন পাসওয়ার্ড"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__new
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__new
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__new
 msgid "New Window"
-msgstr ""
+msgstr "নতুন উইন্ডো"
 
 #. module: base
 #: model:res.country,name:base.nz
@@ -16765,7 +16926,7 @@ msgstr ""
 #: code:addons/fields.py:0
 #, python-format
 msgid "No inverse field %r found for %r"
-msgstr ""
+msgstr "% r এর জন্য কোনও বিপরীত ক্ষেত্র % r পাওয়া যায়নি"
 
 #. module: base
 #: code:addons/base/wizard/base_update_translations.py:0
@@ -16830,7 +16991,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__none
 msgid "None"
-msgstr ""
+msgstr "কিছুই না"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -16930,7 +17091,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__added
 msgid "Number of modules added"
-msgstr ""
+msgstr "সংযুক্ত মডিউল সংখ্যা"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__updated
@@ -16987,7 +17148,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Object:"
-msgstr ""
+msgstr "জিনিস:"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -18129,7 +18290,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
-msgstr ""
+msgstr "বেশ"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -18245,6 +18406,9 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"কেবলমাত্র প্রযোজ্য যদি ইহা অন্য একটি উত্তরিধিকার থেকে হয়(উত্তরিধিকার_আইডি মিথ্যা/খালি না হয়)\n"
+"*এক্সটেনশান যদি(ডিফল্ট), যদি এই ভিউর নিকটতম প্রাথমিক ভিউ অনুরোধ করা হয়  ভিউ'স মডেল প্রয়োগ করা হয়\n"
+"*যদি প্রাথমিক, নিকটতম প্রাথমিক ভিউ সম্পূর্ণরূপে সমাধান করা হয় ( ইহার চেয়ে এমনকি যদি বিভিন্ন মডেল ব্যবহার করে),  তারপর এই ভিউ এর উত্তরাধিকার স্পেসিফিকেশন(<xpath/>)প্রয়োগ করা হয়, ফলাফল এই ভিউ হিসাবে ব্যবহার করা হয় প্রকৃত তোরনে।\n"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -18316,7 +18480,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
 msgid "Option"
-msgstr ""
+msgstr "বিকল্প"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__domain
@@ -18356,7 +18520,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Options"
-msgstr ""
+msgstr "বিকল্প সমূহ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -18760,7 +18924,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.py
 msgid "Paraguay"
-msgstr ""
+msgstr "প্যারাগুয়ে"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_ir_property
@@ -18800,13 +18964,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr ""
+msgstr "মূল মেনু"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "মূল পথ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -18865,7 +19029,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "ব্যবহারকারীর অংশীদার সম্পর্কিত তথ্য"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
@@ -18884,13 +19048,13 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: "
-msgstr ""
+msgstr "সহযোগীদের:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
 #: model:ir.model.fields,field_description:base.field_res_users__password
 msgid "Password"
-msgstr ""
+msgstr "শব্দচাবি"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy
@@ -18931,7 +19095,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "পেমেন্ট অর্জিত"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -19256,7 +19420,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Preferences"
-msgstr ""
+msgstr "পছন্দসমূহ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__prefix
@@ -19276,7 +19440,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__preview
 msgid "Preview"
-msgstr ""
+msgstr "পূর্বরূপ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
@@ -19600,7 +19764,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Public"
-msgstr ""
+msgstr "পাবলিক"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_O
@@ -19622,7 +19786,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "ইভেন্ট প্রকাশ করুন, টিকিট বিক্রয় করুন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
@@ -19706,7 +19870,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__equation
 msgid "Python expression"
-msgstr ""
+msgstr "পাইথন এক্সপ্রেশন"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
@@ -19717,7 +19881,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__qweb
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "QWeb"
-msgstr ""
+msgstr "কিউওয়েব"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -19738,7 +19902,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_manufacturing_quality
 #: model:ir.module.module,shortdesc:base.module_quality_control
 msgid "Quality"
-msgstr ""
+msgstr "গুণমান"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
@@ -19796,7 +19960,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "কিউওয়েব"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
@@ -19811,7 +19975,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "কিউওয়েব যোগাযোগ ক্ষেত্র "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
@@ -19965,7 +20129,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
-msgstr ""
+msgstr "রেকর্ড নিয়ম"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -20042,13 +20206,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__reference
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Reference"
-msgstr ""
+msgstr "রেফারেন্স"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Reference date"
-msgstr ""
+msgstr "রেফারেন্স তারিখ"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_referrals
@@ -20126,7 +20290,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove"
-msgstr ""
+msgstr "সরিয়ে ফেলুন"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -20423,7 +20587,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
-msgstr ""
+msgstr "বিধি সংজ্ঞা (ডোমেন ফিল্টার)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
@@ -20450,7 +20614,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run"
-msgstr ""
+msgstr "চালাও"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -20515,7 +20679,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "এসএমএস গেটওয়ে"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_sms
@@ -20565,7 +20729,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "সেন্ট কিটস ও নেভিস"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -20745,7 +20909,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Save"
-msgstr ""
+msgstr "সংরক্ষণ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
@@ -20817,7 +20981,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Search"
-msgstr ""
+msgstr "অনুসন্ধান"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
@@ -20867,7 +21031,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Search..."
-msgstr ""
+msgstr "অনুসন্ধান..."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__secondary_color
@@ -21100,7 +21264,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_tree
 msgid "Sequence"
-msgstr ""
+msgstr "ক্রম"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__code
@@ -21147,7 +21311,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr ""
+msgstr "সার্ভার অ্যাকশন"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -21224,7 +21388,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr ""
+msgstr "সেটিংস"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -21265,7 +21429,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show active currencies"
-msgstr ""
+msgstr "সক্রিয় মুদ্রা দেখান"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -21331,7 +21495,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__size
 msgid "Size"
-msgstr ""
+msgstr "আকার"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_size_gt_zero
@@ -21412,7 +21576,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "Social Media"
-msgstr ""
+msgstr "সামাজিক যোগাযোগ মাধ্যম"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
@@ -21535,7 +21699,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gs
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "দক্ষিণ জর্জিয়া এবং দক্ষিণ স্যান্ডউইচ দ্বীপপুঞ্জ"
 
 #. module: base
 #: model:res.country,name:base.kr
@@ -21859,7 +22023,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__7
 msgid "Sunday"
-msgstr ""
+msgstr "রবিবার"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__params
@@ -21978,7 +22142,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.st
 msgid "São Tomé and Príncipe"
-msgstr ""
+msgstr "সাও টম এবং প্রিন্সিপেট"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_T
@@ -22230,6 +22394,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"দুটি অক্ষরে আইএসও দেশের কোড।\n"
+"আপনি দ্রুত অনুসন্ধানের জন্য এই ক্ষেত্রটি ব্যবহার করতে পারেন।"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
@@ -22463,6 +22629,8 @@ msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
 "to all menus for this model."
 msgstr ""
+"এই ফিল্টারটি প্রয়োগ করে মেনু ক্রিয়া। খালি রেখে গেলে ফিল্টারটি এই মডেলের "
+"জন্য সমস্ত মেনুতে প্রযোজ্য।"
 
 #. module: base
 #: code:addons/base/models/res_company.py:0
@@ -22515,7 +22683,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_module_module_name_uniq
 msgid "The name of the module must be unique!"
-msgstr ""
+msgstr "মডিউলটির নামটি অবশ্যই অনন্য হতে হবে!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_increment
@@ -22713,7 +22881,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme
 msgid "Theme"
-msgstr ""
+msgstr "থিম"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_theme_store
@@ -22771,7 +22939,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
 msgid "This field is used to set/get locales for user"
-msgstr ""
+msgstr "এই ক্ষেত্র ব্যবহারকারীর জন্য লোকেল সেট/গেট ব্যবহৃত হয়"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch
@@ -22936,6 +23104,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_sequence.py:56
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr ""
@@ -23011,7 +23187,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__tz
 #: model:ir.model.fields,field_description:base.field_res_users__tz
 msgid "Timezone"
-msgstr ""
+msgstr "টাইমজোন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__tz_offset
@@ -23029,7 +23205,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_title__name
 #: model:ir.model.fields,field_description:base.field_res_users__title
 msgid "Title"
-msgstr ""
+msgstr "শিরোনাম"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_to
@@ -23302,7 +23478,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__tree
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Tree"
-msgstr ""
+msgstr "শাখী"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -23317,7 +23493,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tn
 msgid "Tunisia"
-msgstr ""
+msgstr "টিউনিস্"
 
 #. module: base
 #: model:res.country,name:base.tr
@@ -23371,7 +23547,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
-msgstr ""
+msgstr "ধরণ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__state
@@ -23396,7 +23572,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
-msgstr ""
+msgstr "ধরণ:"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -23741,7 +23917,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
 msgid "Url"
-msgstr ""
+msgstr "ইউআরএল"
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -23813,6 +23989,10 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
+"গেমিফিকেশন প্রক্রিয়াটির জন্য এইচআর সংস্থানগুলি ব্যবহার করুন।\n"
+"এইচআর অফিসার এখন চ্যালেঞ্জ এবং ব্যাজ পরিচালনা করতে পারেন।\n"
+" এটি ব্যবহারকারীকে সাধারণ ব্যবহারকারীর পরিবর্তে ব্যাজগুলি কর্মচারীদের কাছে পাঠাতে দেয়।\n"
+" প্রাপ্ত ব্যাজটি ব্যবহারকারী প্রোফাইলে প্রদর্শিত হয়।\n"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -23928,7 +24108,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
 msgid "Username"
-msgstr ""
+msgstr "ব্যবহারকারীর নাম"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
@@ -24032,7 +24212,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__value
 #: model_terms:ir.ui.view,arch_db:base.ir_property_view
 msgid "Value"
-msgstr ""
+msgstr "মান"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -24084,7 +24264,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
-msgstr ""
+msgstr "ভানুয়াতু"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -24139,7 +24319,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr ""
+msgstr "দৃশ্য"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -24148,7 +24328,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View Architecture"
-msgstr ""
+msgstr "আর্কিটেকচার দেখুন"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -24164,7 +24344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_name
 msgid "View Name"
-msgstr ""
+msgstr "নাম দেখুন"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_id
@@ -24175,7 +24355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__type
 msgid "View Type"
-msgstr ""
+msgstr "প্রকার দেখুন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
@@ -24185,7 +24365,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "উত্তরাধিকারের মোড দেখুন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
@@ -24224,7 +24404,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "এই এক থেকে উত্তরাধিকারী দর্শন"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -24239,7 +24419,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__visible
 msgid "Visible"
-msgstr ""
+msgstr "দৃশ্যমান"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
@@ -24268,13 +24448,13 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0 code:addons/models.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "সতর্কীকরণ"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "সতর্কবাণী!"
 
 #. module: base
 #: code:addons/models.py:0
@@ -24480,7 +24660,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
 msgid "Wednesday"
-msgstr ""
+msgstr "বুধবার"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__weeks
@@ -25027,12 +25207,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr ""
+msgstr "উদাহরণস্বরূপ অর্ডার পরিমাণ আপডেট করুন"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. en_US"
-msgstr ""
+msgstr "উদাহরণস্বরূপ en_US"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -25204,7 +25384,7 @@ msgstr ""
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "name"
-msgstr ""
+msgstr "নাম"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -25215,7 +25395,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "উপর"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__one2many
@@ -25367,7 +25547,7 @@ msgstr ""
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "yes"
-msgstr ""
+msgstr "হাঁ"
 
 #. module: base
 #: model:res.country,name:base.ax

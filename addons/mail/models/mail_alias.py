@@ -164,6 +164,7 @@ class Alias(models.Model):
         # when an alias name appears to already be an email, we keep the local part only
         name = remove_accents(name).lower().split('@')[0]
         name = re.sub(r'[^\w+.]+', '-', name)
+        name = name.encode('ascii', errors='replace').decode()
         return self._find_unique(name, alias_ids=alias_ids)
 
     def open_document(self):

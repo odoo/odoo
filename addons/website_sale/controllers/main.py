@@ -1227,7 +1227,7 @@ class WebsiteSale(http.Controller):
         if visitor:
             excluded_products = request.website.sale_get_order().mapped('order_line.product_id.id')
             products = request.env['website.track'].sudo().read_group(
-                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
+                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id.website_published', '=', True), ('product_id', 'not in', excluded_products)],
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:

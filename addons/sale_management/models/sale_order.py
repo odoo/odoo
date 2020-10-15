@@ -155,7 +155,7 @@ class SaleOrderLine(models.Model):
         if self.product_id and self.order_id.sale_order_template_id:
             for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
                 if line.product_id == self.product_id:
-                    self.name = line.name
+                    self.name = line.name + self._get_sale_order_line_multiline_description_variants()
                     break
         return domain
 
@@ -224,6 +224,9 @@ class SaleOrderOption(models.Model):
         order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
+        if sale_order:
+            sale_order.add_option_to_order_with_taxcloud()
+
 
     def _get_values_to_add_to_order(self):
         self.ensure_one()

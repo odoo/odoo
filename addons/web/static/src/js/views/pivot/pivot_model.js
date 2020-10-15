@@ -324,6 +324,7 @@ var PivotModel = AbstractModel.extend({
     closeGroup: function (groupId, type) {
         var groupBys;
         var expandedGroupBys;
+        let keyPart;
         var group;
         var tree;
         if (type === 'row') {
@@ -331,12 +332,35 @@ var PivotModel = AbstractModel.extend({
             expandedGroupBys = this.data.expandedRowGroupBys;
             tree = this.rowGroupTree;
             group = this._findGroup(this.rowGroupTree, groupId[0]);
+            keyPart = 0;
         } else {
             groupBys = this.data.colGroupBys;
             expandedGroupBys = this.data.expandedColGroupBys;
             tree = this.colGroupTree;
             group = this._findGroup(this.colGroupTree, groupId[1]);
+            keyPart = 1;
         }
+
+        const groupIdPart = groupId[keyPart];
+        const range = groupIdPart.map((_, index) => index);
+        function keep(key) {
+            const idPart = JSON.parse(key)[keyPart];
+            return range.some(index => groupIdPart[index] !== idPart[index]) ||
+                    idPart.length ===  groupIdPart.length;
+        }
+        function omitKeys(object) {
+            const newObject = {};
+            for (const key in object) {
+                if (keep(key)) {
+                    newObject[key] = object[key];
+                }
+            }
+            return newObject;
+        }
+        this.measurements = omitKeys(this.measurements);
+        this.counts = omitKeys(this.counts);
+        this.groupDomains = omitKeys(this.groupDomains);
+
         group.directSubTrees.clear();
         delete group.sortedKeys;
         var newGroupBysLength = this._getTreeHeight(tree) - 1;

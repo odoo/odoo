@@ -823,6 +823,74 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertEqual(sum(workorder_1.finished_workorder_line_ids.mapped('qty_done')), 2)
         self.assertEqual(workorder_1.finished_workorder_line_ids.mapped('lot_id'), lot_1 | lot_2)
 
+    def test_wo_status_during_production_with_serial_number_and_production_uom(self):
+        """ Check the workorder status while producing units with serial number
+        when the production uom is different from the product uom.
+        """
+        laptop = self.env.ref("product.product_product_25")
+        graphics_card = self.env.ref("product.product_product_24")
+        unit = self.env.ref("uom.product_uom_unit")
+        categ_unit_id = self.env.ref('uom.product_uom_categ_unit')
+        pair = self.env['uom.uom'].create({
+            'name': 'trio',
+            'factor_inv': 2,
+            'uom_type': 'bigger',
+            'rounding': 0.001,
+            'category_id': categ_unit_id.id
+        })
+        routing = self.env.ref("mrp.mrp_routing_0")
+        laptop.tracking = 'serial'
+        bom_laptop = self.env['mrp.bom'].create({
+            'product_tmpl_id': laptop.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': unit.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': graphics_card.id,
+                'product_qty': 1,
+                'product_uom_id': unit.id
+            })],
+            'routing_id': routing.id
+        })
+
+        mo_laptop_form = Form(self.env['mrp.production'])
+        mo_laptop_form.product_id = laptop
+        mo_laptop_form.bom_id = bom_laptop
+        mo_laptop_form.product_qty = 2
+        mo_laptop_form.product_uom_id = pair
+        mo_laptop = mo_laptop_form.save()
+
+        mo_laptop.action_confirm()
+        mo_laptop.button_plan()
+        workorders = mo_laptop.workorder_ids
+        self.assertEqual(len(workorders), 1)
+
+        workorders[0].button_start()
+        self.assertAlmostEqual(workorders[0].qty_producing, 1)
+        serial_a = self.env['stock.production.lot'].create({'product_id': laptop.id, 'company_id': self.env.company.id})
+        workorders[0].finished_lot_id = serial_a
+        workorders[0].record_production()
+        self.assertEqual(workorders[0].state, 'progress')
+        self.assertAlmostEqual(workorders[0].qty_producing, 1)
+        serial_b = self.env['stock.production.lot'].create({'product_id': laptop.id, 'company_id': self.env.company.id})
+        workorders[0].finished_lot_id = serial_b
+        workorders[0].record_production()
+        self.assertEqual(workorders[0].state, 'progress')
+        self.assertAlmostEqual(workorders[0].qty_producing, 1)
+        serial_c = self.env['stock.production.lot'].create({'product_id': laptop.id, 'company_id': self.env.company.id})
+        workorders[0].finished_lot_id = serial_c
+        workorders[0].record_production()
+        self.assertEqual(workorders[0].state, 'progress')
+        self.assertAlmostEqual(workorders[0].qty_producing, 1)
+        serial_d = self.env['stock.production.lot'].create({'product_id': laptop.id, 'company_id': self.env.company.id})
+        workorders[0].finished_lot_id = serial_d
+        workorders[0].record_production()
+        self.assertEqual(workorders[0].state, 'done')
+        self.assertAlmostEqual(workorders[0].qty_producing, 0)
+
+        mo_laptop.button_mark_done()
+        self.assertAlmostEqual(mo_laptop.move_finished_ids.quantity_done, 2)
+        self.assertEqual(mo_laptop.move_finished_ids.product_uom.id, pair.id)
+
     def test_04_test_planning_date(self):
         """ Test that workorder are planned at the correct time. """
         # The workcenter is working 24/7

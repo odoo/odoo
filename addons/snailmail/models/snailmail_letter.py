@@ -333,14 +333,16 @@ class SnailmailLetter(models.Model):
         self.env['bus.bus'].sendmany(notifications)
 
     def snailmail_print(self):
-        self._snailmail_print()
+        self.write({'state': 'pending'})
+        if len(self) == 1:
+            self._snailmail_print()
 
     def cancel(self):
         self.write({'state': 'canceled', 'error_code': False})
         self.send_snailmail_update()
 
     @api.model
-    def _snailmail_cron(self):
+    def _snailmail_cron(self, autocommit=True):
         letters_send = self.search([
             '|',
             ('state', '=', 'pending'),
@@ -348,7 +350,11 @@ class SnailmailLetter(models.Model):
             ('state', '=', 'error'),
             ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
         ])
-        letters_send._snailmail_print()
+        for letter in letters_send:
+            letter._snailmail_print()
+            # Commit after every letter sent to avoid to send it again in case of a rollback
+            if autocommit:
+                self.env.cr.commit()
 
     @api.model
     def fetch_failed_letters(self):

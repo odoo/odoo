@@ -6,7 +6,6 @@
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
 # Moshe Flam <pashute@gmail.com>, 2019
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # Mor Kir <morki@013.net.il>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
@@ -16,6 +15,7 @@
 # Martin Trigaux, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
 # דודי מלכה <Dudimalka6@gmail.com>, 2020
+# hed shefetr <hed@laylinetech.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2020\n"
+"Last-Translator: hed shefetr <hed@laylinetech.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17511,7 +17511,7 @@ msgstr "אין מספיק הרשאות במזהה החיצוני:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr ""
+msgstr "הערה: שגיאה זו עשויה להיות קשורה לבין-חברתי"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -23269,6 +23269,10 @@ msgid ""
 "%(multi_company_warning)s\n"
 "(Records: %(example_records)s, User: %(user_id)s)"
 msgstr ""
+"התהליך המבוקש (\"%(operation)s\" על \"%(document_kind)s\" (%(document_model)s)) נחסם בעקבות החוקים הבאים:\n"
+"%(rules_list)s\n"
+"%(multi_company_warning)s\n"
+"(רשומות: %(example_records)s, משתמש: %(user_id)s)"
 
 #. module: base
 #: code:addons/models.py:0
@@ -23634,6 +23638,14 @@ msgstr "מודול זה יפעיל את הסרת ההתקנה של המודול�
 msgid ""
 "This operation is allowed for the groups:\n"
 "%(groups_list)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_sequence.py:56
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
 msgstr ""
 
 #. module: base

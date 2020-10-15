@@ -25,6 +25,19 @@ class AccountMove(models.Model):
             move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
         return move_vals
 
+    def copy_data(self, default=None):
+        # OVERRIDE
+        # Don't keep anglo-saxon lines when copying a journal entry.
+        res = super().copy_data(default=default)
+
+        if not self._context.get('move_reverse_cancel'):
+            for copy_vals in res:
+                if 'line_ids' in copy_vals:
+                    copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
+                                             if line_vals[0] != 0 or not line_vals[2]['is_anglo_saxon_line']]
+
+        return res
+
     def post(self):
         # OVERRIDE
 
@@ -110,6 +123,11 @@ class AccountMove(models.Model):
                 )
                 debit_interim_account = accounts['stock_output']
                 credit_expense_account = accounts['expense']
+                if not credit_expense_account:
+                    if self.type == 'out_refund':
+                        credit_expense_account = self.journal_id.default_credit_account_id
+                    else: # out_invoice/out_receipt
+                        credit_expense_account = self.journal_id.default_debit_account_id
                 if not debit_interim_account or not credit_expense_account:
                     continue
 

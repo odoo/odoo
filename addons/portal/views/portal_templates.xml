@@ -215,7 +215,7 @@
                         <span class="small mr-1 navbar-text">Filter By:</span>
                         <div class="btn-group">
                             <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
-                                <t t-esc="searchbar_filters[filterby].get('label', 'All')"/>
+                                <t t-esc="searchbar_filters.get(filterby,searchbar_filters.get('all')).get('label', 'All')"/>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
                                 <t t-foreach="searchbar_filters" t-as="option">

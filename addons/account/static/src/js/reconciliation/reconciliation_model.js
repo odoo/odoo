@@ -393,7 +393,9 @@ var StatementModel = BasicModel.extend({
             args: [ids, excluded_ids],
             context: self.context,
         })
-        .then(self._formatLine.bind(self));
+        .then(function(res){
+            return self._formatLine(res['lines']);
+        })
     },
     /**
      * Reload all data
@@ -956,7 +958,7 @@ var StatementModel = BasicModel.extend({
                 });
                 var args = [prop.tax_ids.map(function(el){return el.id;}), prop.base_amount, formatOptions.currency_id];
                 var add_context = {'round': true};
-                if(prop.tax_ids.length === 1 && line.createForm.force_tax_included)
+                if(prop.tax_ids.length === 1 && line.createForm && line.createForm.force_tax_included)
                     add_context.force_price_include = true;
                 tax_defs.push(self._rpc({
                         model: 'account.tax',

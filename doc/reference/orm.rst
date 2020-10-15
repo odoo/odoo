@@ -293,6 +293,22 @@ it uses the values of other *fields*, it should specify those fields using
             record.discount_value = discount
             record.total = record.value - discount
 
+.. warning::
+
+    While it is possible to use the same compute method for multiple
+    fields, it is not recommended to do the same for the inverse
+    method.
+
+    During the computation of the inverse, **all** fields that use
+    said inverse are protected, meaning that they can't be computed,
+    even if their value is not in the cache.
+
+    If any of those fields is accessed and its value is not in cache,
+    the ORM will simply return a default value of `False` for these fields.
+    This means that the value of the inverse fields (other than the one
+    triggering the inverse method) may not give their correct value and
+    this will probably break the expected behavior of the inverse method.
+
 .. _reference/fields/related:
 
 Related fields
@@ -322,6 +338,28 @@ fields. Related fields are automatically recomputed when their
 dependencies are modified.
 
 .. note:: The related fields are computed in sudo mode.
+
+.. warning::
+
+    You cannot chain :class:`~odoo.fields.Many2many` or :class:`~odoo.fields.One2many` fields in ``related`` fields dependencies.
+
+    ``related`` can be used to refer to a :class:`~odoo.fields.One2many` or
+    :class:`~odoo.fields.Many2many` field on another model on the
+    condition that it's done through a ``Many2one`` relation on the current model.
+    ``One2many`` and ``Many2many`` are not supported and the results will not be
+    aggregated correctly::
+
+      m2o_id = fields.Many2one()
+      m2m_ids = fields.Many2many()
+      o2m_ids = fields.One2many()
+
+      # Supported
+      d_ids = fields.Many2many(related="m2o_id.m2m_ids")
+      e_ids = fields.One2many(related="m2o_id.o2m_ids")
+
+      # Won't work: use a custom Many2many computed field instead
+      f_ids = fields.Many2many(related="m2m_ids.m2m_ids")
+      g_ids = fields.One2many(related="o2m_ids.o2m_ids")
 
 .. _reference/fields/automatic:
 

@@ -127,15 +127,18 @@ class Survey(http.Controller):
             return request.render("survey.survey_void", {'survey': survey_sudo, 'answer': answer_sudo})
         elif error_key == 'survey_closed' and access_data['can_answer']:
             return request.render("survey.survey_expired", {'survey': survey_sudo})
-        elif error_key == 'survey_auth' and answer_sudo.token:
-            if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
-                if answer_sudo.partner_id.user_ids:
-                    answer_sudo.partner_id.signup_cancel()
+        elif error_key == 'survey_auth':
+            if not answer_sudo:  # survey is not even started
+                redirect_url = '/web/login?redirect=/survey/start/%s' % survey_sudo.access_token
+            elif answer_sudo.token:  # survey is started but user is not logged in anymore.
+                if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
+                    if answer_sudo.partner_id.user_ids:
+                        answer_sudo.partner_id.signup_cancel()
+                    else:
+                        answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
+                    redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))[answer_sudo.partner_id.id]
                 else:
-                    answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
-                redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))[answer_sudo.partner_id.id]
-            else:
-                redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))
+                    redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.token))
             return request.render("survey.auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.token:
             return request.render("survey.survey_expired", {'survey': survey_sudo})

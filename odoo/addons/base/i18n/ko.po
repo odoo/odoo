@@ -28075,6 +28075,15 @@ msgstr ""
 "%(groups_list)s"
 
 #. module: base
+#: code:addons/base/ir/ir_sequence.py:56
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
+msgstr ""
+"다른 트랜잭션이 이미 동일한 no-gap 시퀀스를 사용하고 있기 때문에 이 트랜잭션이 실행되지 않았습니다. 나중에 다시 시도하세요."
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "천 단위 구분 기호"

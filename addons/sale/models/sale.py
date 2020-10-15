@@ -290,7 +290,7 @@ class SaleOrder(models.Model):
         """
         for order in self:
             dates_list = []
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
                 dt = line._expected_date()
                 dates_list.append(dt)
             if dates_list:
@@ -336,7 +336,7 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
 
-    @api.onchange('partner_shipping_id', 'partner_id')
+    @api.onchange('partner_shipping_id', 'partner_id', 'company_id')
     def onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
@@ -782,7 +782,13 @@ class SaleOrder(models.Model):
             'state': 'sale',
             'date_order': fields.Datetime.now()
         })
-        self._action_confirm()
+
+        # Context key 'default_name' is sometimes propagated up to here.
+        # We don't need it and it creates issues in the creation of linked records.
+        context = self._context.copy()
+        context.pop('default_name', None)
+
+        self.with_context(context)._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_done()
         return True
@@ -977,6 +983,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.env.ref('sale.action_quotations_with_onboarding')
 
+    def add_option_to_order_with_taxcloud(self):
+        self.ensure_one()
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
@@ -1093,8 +1102,8 @@ class SaleOrderLine(models.Model):
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
-            # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            # If company_id is set in the order, always filter taxes by the company
+            taxes = line.product_id.taxes_id.filtered(lambda r: r.company_id == line.order_id.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
 
     @api.model
@@ -1236,6 +1245,7 @@ class SaleOrderLine(models.Model):
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced Quantity', store=True, readonly=True,
+        compute_sudo=True,
         digits='Product Unit of Measure')
 
     untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', compute_sudo=True, store=True)
@@ -1397,8 +1407,26 @@ class SaleOrderLine(models.Model):
                     price_subtotal = line.price_reduce * line.qty_delivered
                 else:
                     price_subtotal = line.price_reduce * line.product_uom_qty
+                if len(line.tax_id.filtered(lambda tax: tax.price_include)) > 0:
+                    # As included taxes are not excluded from the computed subtotal, `compute_all()` method
+                    # has to be called to retrieve the subtotal without them.
+                    # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
+                    price_subtotal = line.tax_id.compute_all(price_subtotal)['total_excluded']
 
-                amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+                if any(line.invoice_lines.mapped(lambda l: l.discount != line.discount)):
+                    # In case of re-invoicing with different discount we try to calculate manually the
+                    # remaining amount to invoice
+                    amount = 0
+                    for l in line.invoice_lines:
+                        if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
+                            amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
+                        else:
+                            amount += l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity
+
+                    amount_to_invoice = max(price_subtotal - amount, 0)
+                else:
+                    amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+
             line.untaxed_amount_to_invoice = amount_to_invoice
 
     def _prepare_invoice_line(self):
@@ -1618,6 +1646,9 @@ class SaleOrderLine(models.Model):
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
             'tax_id', 'analytic_tag_ids'
         ]
+
+    def _onchange_product_id_set_customer_lead(self):
+        pass
 
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):

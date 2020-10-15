@@ -125,7 +125,7 @@ class MrpProductProduce(models.TransientModel):
                             'product_id': line.product_id.id,
                             'product_uom': line.product_uom_id.id,
                             'location_id': self.production_id.location_src_id.id,
-                            'location_dest_id': line.product_id.property_stock_production.id,
+                            'location_dest_id': self.product_id.property_stock_production.id,
                             'raw_material_production_id': self.production_id.id,
                             'group_id': self.production_id.procurement_group_id.id,
                             'origin': self.production_id.name,

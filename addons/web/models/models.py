@@ -351,7 +351,7 @@ class Base(models.AbstractModel):
                     for group in groups
                 }
             # retrieve all possible values, and return them with their label and counter
-            selection = self.fields_get([field_name])[field_name]
+            selection = self.fields_get([field_name])[field_name]['selection']
             for value, label in selection:
                 filter_values.append({
                     'id': value,

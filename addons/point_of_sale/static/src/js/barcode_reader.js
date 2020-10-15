@@ -20,6 +20,7 @@ var BarcodeReader = core.Class.extend({
         this.proxy = attributes.proxy;
         this.remote_scanning = false;
         this.remote_active = 0;
+        this.iotbox = false;
 
         this.barcode_parser = attributes.barcode_parser;
 
@@ -101,6 +102,17 @@ var BarcodeReader = core.Class.extend({
         }
         this.remote_active = 1;
 
+        $.ajax({
+            url: self.proxy.host + '/hw_drivers/check_certificate',
+            type: 'GET',
+            success: function() {
+                self.iotbox = true;
+            },
+            error: function() {
+                self.iotbox = false;
+            },
+        });
+
         function waitforbarcode(){
             return self.proxy.connection.rpc('/hw_proxy/scanner',{},{shadow: true, timeout:7500})
                 .then(function (barcode) {
@@ -116,7 +128,11 @@ var BarcodeReader = core.Class.extend({
                         self.remote_active = 0;
                         return;
                     }
-                    setTimeout(waitforbarcode,5000);
+                    if (self.iotbox) {
+                        waitforbarcode();
+                    } else {
+                        setTimeout(waitforbarcode,5000);
+                    }
                 });
         }
         waitforbarcode();

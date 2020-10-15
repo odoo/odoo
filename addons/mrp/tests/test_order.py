@@ -1038,6 +1038,23 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
+    def test_product_produce_12(self):
+        """ Checks that, the production is robust against deletion of finished move."""
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 1
+        produce_wizard = produce_form.save()
+        # remove the finished move from the available to be updated
+        mo.move_finished_ids._action_done()
+        produce_wizard.do_produce()
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)

@@ -147,7 +147,7 @@ class CustomerPortal(CustomerPortal):
         # default filter by value
         if not filterby:
             filterby = 'all'
-        domain = searchbar_filters[filterby]['domain']
+        domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.task', domain) if values.get('my_details') else []

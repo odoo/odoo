@@ -8,6 +8,7 @@ odoo.define('web.kanban_record_quick_create', function (require) {
 
 var core = require('web.core');
 var QuickCreateFormView = require('web.QuickCreateFormView');
+const session = require('web.session');
 var Widget = require('web.Widget');
 
 var qweb = core.qweb;
@@ -71,7 +72,7 @@ var RecordQuickCreate = Widget.extend({
             var formView = new QuickCreateFormView(fieldsViews.form, {
                 context: self.context,
                 modelName: self.model,
-                userContext: self.getSession().user_context,
+                userContext: session.user_context,
             });
             return formView.getController(self).then(function (controller) {
                 self.controller = controller;

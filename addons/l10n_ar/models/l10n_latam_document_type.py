@@ -68,6 +68,9 @@ class L10nLatamDocumentType(models.Model):
 
         msg = "'%s' " + _("is not a valid value for") + " '%s'.<br/>%s"
 
+        if not self.code:
+            return document_number
+
         # Import Dispatch Number Validator
         if self.code in ['66', '67']:
             if len(document_number) != 16:

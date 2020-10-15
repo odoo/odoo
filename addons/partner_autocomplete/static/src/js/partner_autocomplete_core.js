@@ -136,13 +136,14 @@ var PartnerAutocompleteMixin = {
                 var company_data = result[0];
                 var logo_data = result[1];
 
-                if (company_data.error && company_data.error_message === 'Insufficient Credit') {
-                    self._notifyNoCredits();
-                    company_data = company;
-                }
-
-                if (company_data.error && company_data.error_message === 'No Account Token') {
-                    self._notifyAccountToken();
+                if (company_data.error) {
+                    if (company_data.error_message === 'Insufficient Credit') {
+                        self._notifyNoCredits();
+                    } else if (company_data.error_message === 'No Account Token') {
+                        self._notifyAccountToken();
+                    } else {
+                        self.do_notify(_t('Error'), company_data.error_message);
+                    }
                     company_data = company;
                 }
 

@@ -138,8 +138,8 @@
                                                 'form_view_ref': 'base.res_partner_view_form_private'}"
                                             options='{"always_reload": True, "highlight_first_line": True}'
                                             attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
+                                        <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
                                         <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                         <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>

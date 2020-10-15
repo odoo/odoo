@@ -1,65 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data>
-    <!-- Tag used only to generate the CFDI (Mexican e-invoice). -->
-    <record id="tag_iva" model="account.account.tag">
-        <field name="name">IVA</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_isr" model="account.account.tag">
-        <field name="name">ISR</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_ieps" model="account.account.tag">
-        <field name="name">IEPS</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-
-    <!-- Account Tags -->
-    <record id="tag_diot_16" model="account.account.tag">
-        <field name="name">DIOT: 16%</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_16_non_cre" model="account.account.tag">
-        <field name="name">DIOT: 16% NO ACREDITABLE</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_16_imp" model="account.account.tag">
-        <field name="name">DIOT: 16% IMP</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_0" model="account.account.tag">
-        <field name="name">DIOT: 0%</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_8" model="account.account.tag">
-        <field name="name">DIOT: 8%</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_8_non_cre" model="account.account.tag">
-        <field name="name">DIOT: 8% NO ACREDITABLE</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_ret" model="account.account.tag">
-        <field name="name">DIOT: Retención</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-    <record id="tag_diot_exento" model="account.account.tag">
-        <field name="name">DIOT: Exento</field>
-        <field name="applicability">taxes</field>
-        <field name="country_id" ref="base.mx"/>
-    </record>
-
     <record id="tax9" model="account.tax.template">
         <field name="sequence" eval="10"/>
         <field name="chart_template_id" ref="mx_coa"/>

@@ -326,8 +326,8 @@ sure that **pip** is checked.
 PostgreSQL
 ^^^^^^^^^^
 
-Odoo uses PostgreSQL as database management system. Download and install the `latest version of
-PostgreSQL <https://www.enterprisedb.com/downloads/postgres-postgresql-downloads>`_.
+Odoo uses PostgreSQL as database management system. `Download and install PostgreSQL <https://www.postgresql.org/download/windows/>`_
+(supported version: 10.0 and later).
 
 By default, the only user is `postgres` but Odoo forbids connecting as `postgres`, so you need to
 create a new PostgreSQL user:
@@ -488,7 +488,7 @@ PostgreSQL
 ^^^^^^^^^^
 
 Odoo uses PostgreSQL as database management system. Use your package manager to download and install
-the latest version of PostgreSQL.
+PostgreSQL (supported version: 10.0 and later).
 
 On Debian/Unbuntu, it can be achieved by executing the following:
 
@@ -518,7 +518,9 @@ On Debian/Unbuntu, the following command should install all the required librari
 
 .. code-block:: console
 
-    $ sudo apt install python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev
+    $ sudo apt install python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev \
+        libtiff5-dev libjpeg8-dev libopenjp2-7-dev zlib1g-dev libfreetype6-dev \
+        liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev libxcb1-dev libpq-dev
 
 Odoo dependencies are listed in the `requirements.txt` file located at the root of the Odoo
 community directory.
@@ -655,7 +657,7 @@ PostgreSQL
 ^^^^^^^^^^
 
 Odoo uses PostgreSQL as database management system. Use `postgres.app <https://postgresapp.com>`_
-to download and install the latest version of PostgreSQL.
+to download and install PostgreSQL (supported version: 10.0 and later).
 
 By default, the only user is `postgres` but Odoo forbids connecting as `postgres`, so you need to
 create a new PostgreSQL user:

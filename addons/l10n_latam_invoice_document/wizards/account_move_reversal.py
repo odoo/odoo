@@ -69,7 +69,7 @@ class AccountMoveReversal(models.TransientModel):
                 'company_id': rec.move_id.company_id.id,
                 'l10n_latam_document_type_id': rec.l10n_latam_document_type_id.id,
             })
-            rec.l10n_latam_sequence_id = refund._get_document_type_sequence()
+            rec.l10n_latam_sequence_id = refund._get_document_type_sequence()[:1]
 
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):

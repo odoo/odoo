@@ -5,10 +5,10 @@
 # Translators:
 # Jakub Lohnisky <jakub@lepremier.cz>, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
 # Martin Trigaux, 2019
 # trendspotter <j.podhorecky@volny.cz>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1636,14 +1636,14 @@ msgstr "Sledující"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_channel_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Sledující (Kanály)"
+msgstr "Sledující (kanály)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Sledující (Partneři)"
+msgstr "Sledující (partneři)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
@@ -1716,7 +1716,7 @@ msgstr "Příspěvek fóra"
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Forum Posts"
-msgstr "příspěvky fóra"
+msgstr "Příspěvky fóra"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
@@ -1877,6 +1877,8 @@ msgid ""
 "If this approach is not for you, please respect the community and use "
 "Google+ communities instead."
 msgstr ""
+"Pokud tento přístup není pro vás, respektujte prosím komunitu a použijte "
+"místo toho komunity Google+."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1885,6 +1887,8 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
+"Pokud tento příspěvek zavřete, bude pro většinu uživatelů skryt. Pouze\n"
+"uživatelé, kteří mají vysokou karmu, mohou vidět uzavřené příspěvky a moderovat je."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1895,6 +1899,11 @@ msgid ""
 "motivation is “I would like others to explain ______ to me”, then you are "
 "probably OK."
 msgstr ""
+"Pokud zapadáte do některého z těchto příkladů nebo pokud máte motivaci k "
+"položení otázky „Chtěl bych se zúčastnit diskuse o ______“, neměli byste se "
+"ptát zde, ale na našich seznamech adresátů. Pokud je však vaše motivace "
+"„Chtěl bych, aby mi ostatní vysvětlili ______“, pak jste pravděpodobně v "
+"pořádku."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1948,7 +1957,7 @@ msgstr "Je oblíbený"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_is_follower
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
 msgid "Is Follower"
-msgstr "je Sledující"
+msgstr "Je sledující"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
@@ -1964,7 +1973,7 @@ msgstr "Je jeho životopis viditelný z jeho příspěvku"
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to modify someone else's vote."
-msgstr ""
+msgstr "Není dovoleno měnit hlasování někoho jiného."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2094,7 +2103,7 @@ msgstr "Zprávy"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
 msgid "Moderate posts"
-msgstr ""
+msgstr "Moderovat příspěvky"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -2619,11 +2628,13 @@ msgid ""
 "Questions mode: only one answer allowed\n"
 " Discussions mode: multiple answers allowed"
 msgstr ""
+"Režim otázek: povolena pouze jedna odpověď\n"
+"Režim diskusí: povoleno více odpovědí"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
 msgid "Ranks"
-msgstr ""
+msgstr "Úrovně"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2706,12 +2717,12 @@ msgstr "Odpovědět na vlastní otázku"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict publishing to this website."
-msgstr "Omezit publikování na tomto webu."
+msgstr "Omezit publikování na této webstránce."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the forum."
-msgstr ""
+msgstr "Zpět na fórum."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2758,7 +2769,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Hledat v příspěvkách"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2991,11 +3002,13 @@ msgid ""
 "The goal of this site is create a relevant knowledge base that would answer "
 "questions related to Odoo."
 msgstr ""
+"Cílem tohoto webu je vytvořit relevantní znalostní základnu, která by "
+"odpovídala na otázky týkající se Odoo."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr ""
+msgstr "Otázka byla uzavřena"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3016,6 +3029,8 @@ msgid ""
 "This community is for professional and enthusiast users, partners and "
 "programmers."
 msgstr ""
+"Tato komunita je pro profesionální a nadšené uživatele, partnery a "
+"programátory."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3030,6 +3045,8 @@ msgid ""
 "This community is for professionals and enthusiasts of our products and services.\n"
 "                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
 msgstr ""
+"Tato komunita je pro profesionály a nadšence našich produktů a služeb.\n"
+"<br>Sdílejte a diskutujte o nejlepším obsahu a nových marketingových nápadech, budujte svůj profesionální profil a společně se staňte lepším obchodníkem."
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -3114,6 +3131,8 @@ msgid ""
 "To prevent your question from being flagged and possibly removed, avoid "
 "asking subjective questions where …"
 msgstr ""
+"Chcete-li zabránit tomu, aby byla vaše otázka označena a případně "
+"odstraněna, vyhýbejte se subjektivním otázkám, kde ..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3277,7 +3296,7 @@ msgstr "Hlasovat"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists !"
-msgstr ""
+msgstr "Hlasování již existuje!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3305,54 +3324,54 @@ msgstr "Čekající příspěvek"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_id
 msgid "Website"
-msgstr "Webová strana"
+msgstr "Webstránka"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__gamification_challenge__category__forum
 msgid "Website / Forum"
-msgstr "Webová strana / Forum"
+msgstr "Webstránka / fórum"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
 msgid "Website Messages"
-msgstr "Zprávy Webové stránky"
+msgstr "Zprávy webové stránky"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_message_ids
 msgid "Website communication history"
-msgstr "Historie komunikace Webové stránky"
+msgstr "Historie komunikace webové stránky"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_description
 msgid "Website meta description"
-msgstr "Meta-Popis webových stránek"
+msgstr "Meta-popis webových stránek"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_keywords
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_keywords
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Meta-Klíčová slova webových stránek"
+msgstr "Meta-klíčová slova webových stránek"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_title
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_title
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_title
 msgid "Website meta title"
-msgstr "Meta-Název webových stránek"
+msgstr "Meta-název webových stránek"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "opengraph obrázek webových stránek"
+msgstr "Opengraph obrázek webových stránek"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -3679,7 +3698,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "post"
-msgstr ""
+msgstr "příspěvek"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_15
@@ -3775,7 +3794,7 @@ msgstr ""
 msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
-msgstr ""
+msgstr "dostáváme otevřenou hypotetickou otázku: „Co kdyby se ______ stalo?“"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help

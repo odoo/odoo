@@ -177,6 +177,8 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('Promo code is expired')}
         elif order.promo_code and self.promo_code_usage == 'code_needed':
             message = {'error': _('Promotionals codes are not cumulative.')}
+        elif self.reward_type == 'free_shipping' and order.applied_coupon_ids.filtered(lambda c: c.program_id.reward_type == 'free_shipping'):
+            message = {'error': _('Free shipping has already been applied.')}
         elif self._is_global_discount_program() and order._is_global_discount_already_applied():
             message = {'error': _('Global discounts are not cumulative.')}
         elif self.promo_applicability == 'on_current_order' and self.reward_type == 'product' and not order._is_reward_in_order_lines(self):
@@ -253,7 +255,7 @@ class SaleCouponProgram(models.Model):
             ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program.promo_applicability == 'on_current_order' and \
-               program._is_valid_product(program.reward_product_id) and program.reward_type == 'product':
+               program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
                 valid_programs |= program
@@ -306,6 +308,7 @@ class SaleCouponProgram(models.Model):
 
     def _is_valid_product(self, product):
         # NOTE: if you override this method, think of also overriding _get_valid_products
+        # we also encourage the use of _get_valid_products as its execution is faster
         if self.rule_products_domain:
             domain = safe_eval(self.rule_products_domain) + [('id', '=', product.id)]
             return bool(self.env['product.product'].search_count(domain))
@@ -314,6 +317,6 @@ class SaleCouponProgram(models.Model):
 
     def _get_valid_products(self, products):
         if self.rule_products_domain:
-            domain = safe_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
-            return self.env['product.product'].search(domain)
+            domain = safe_eval(self.rule_products_domain)
+            return products.filtered_domain(domain)
         return products

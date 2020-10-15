@@ -53,7 +53,7 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
                 dt = line._expected_date()
                 dates_list.append(dt)
             if dates_list:
@@ -215,12 +215,12 @@ class SaleOrderLine(models.Model):
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
 
-    @api.depends('product_id', 'product_uom_qty', 'qty_delivered', 'state')
+    @api.depends('product_id', 'product_uom_qty', 'qty_delivered', 'state', 'product_uom')
     def _compute_qty_to_deliver(self):
         """Compute the visibility of the inventory widget."""
         for line in self:
             line.qty_to_deliver = line.product_uom_qty - line.qty_delivered
-            if line.state == 'draft' and line.product_type == 'product' and line.qty_to_deliver > 0:
+            if line.state == 'draft' and line.product_type == 'product' and line.product_uom and line.qty_to_deliver > 0:
                 line.display_qty_widget = True
             else:
                 line.display_qty_widget = False
@@ -237,7 +237,7 @@ class SaleOrderLine(models.Model):
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
         for line in self:
-            if not line.display_qty_widget:
+            if not (line.product_id and line.display_qty_widget):
                 continue
             line.warehouse_id = line.order_id.warehouse_id
             if line.order_id.commitment_date:

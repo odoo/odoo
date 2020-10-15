@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from itertools import groupby
 from operator import itemgetter
+from collections import defaultdict
 
 
 class StockPackageLevel(models.Model):
@@ -50,10 +51,11 @@ class StockPackageLevel(models.Model):
         for package_level in self:
             if package_level.is_done:
                 if not package_level.is_fresh_package:
+                    ml_update_dict = defaultdict(float)
                     for quant in package_level.package_id.quant_ids:
                         corresponding_ml = package_level.move_line_ids.filtered(lambda ml: ml.product_id == quant.product_id and ml.lot_id == quant.lot_id)
                         if corresponding_ml:
-                            corresponding_ml[0].qty_done = corresponding_ml[0].qty_done + quant.quantity
+                            ml_update_dict[corresponding_ml[0]] += quant.quantity
                         else:
                             corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)[:1]
                             self.env['stock.move.line'].create({
@@ -69,6 +71,8 @@ class StockPackageLevel(models.Model):
                                 'package_level_id': package_level.id,
                                 'move_id': corresponding_move.id,
                             })
+                    for rec, quant in ml_update_dict.items():
+                        rec.qty_done = quant
             else:
                 package_level.move_line_ids.filtered(lambda ml: ml.product_qty == 0).unlink()
                 package_level.move_line_ids.filtered(lambda ml: ml.product_qty != 0).write({'qty_done': 0})

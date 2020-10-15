@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-12-05 12:40+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +46,14 @@ msgstr ""
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
+"Das neue Sperrdatum für die MwSt. muss nach dem vorherigen Sperrdatum "
+"liegen."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "Das Sperrdatum für die MwSt. kann nicht mehr zurückgesetzt werden."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -81,3 +84,6 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " tax lock date is not set after the last day of the previous month."
 msgstr ""
+"Sie dürfen eine nicht abgeschlossene Periode nicht sperren. Stellen Sie "
+"bitte sicher, dass das MwSt.-Sperrdatum nicht nach dem letzten Tag der "
+"Vorperiode gesetzt wird."

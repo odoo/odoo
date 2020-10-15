@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Paolo Valier, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,12 @@ msgid ""
 "                        configuration to a Cross-border account on the Alipay payment acquirer in Odoo.\n"
 "                    "
 msgstr ""
+"\n"
+"                        Per la cassa veloce Alipay sono consentite solo transazioni in yuan (CNY).\n"
+"\n"
+"                        Per utilizzare valute diverse dallo yuan (CNY) nelle transazioni, cambiare\n"
+"                        la configurazione su conto transfrontaliero nel sistema di pagamento Alipay di Odoo.\n"
+"                    "
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
@@ -38,6 +44,8 @@ msgid ""
 "  * Cross-border: For the Overseas seller \n"
 "  * Express Checkout: For the Chinese Seller"
 msgstr ""
+"  * Transfrontaliero: per venditori esteri \n"
+"  * Cassa veloce: per venditori cinesi"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
@@ -54,7 +62,7 @@ msgstr "; nessun ordine trovato"
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
 msgid "Account"
-msgstr "Conto"
+msgstr "Account"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
@@ -64,45 +72,45 @@ msgstr "Alipay"
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "Alipay Seller Email"
-msgstr ""
+msgstr "E-mail venditore Alipay"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: invalid sign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Alipay: sign non valido, ricevuto %s, elaborato %s, per i dati %s"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: received data for reference %s"
-msgstr ""
+msgstr "Alipay: ricevuti dati con riferimento %s"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment.py:0
 #, python-format
 msgid "Alipay: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
+msgstr "Alipay: ricevuti dati con riferimento (%s) o txn_id (%s) mancante"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
 msgid "Cross-border"
-msgstr ""
+msgstr "Transfrontaliero"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese Merchant)"
-msgstr ""
+msgstr "Cassa veloce (solo per commercianti cinesi)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
 msgid "MD5 Signature Key"
-msgstr ""
+msgstr "Chiave di firma MD5"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
-msgstr ""
+msgstr "ID partner commerciante"
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
@@ -125,6 +133,8 @@ msgid ""
 "The MD5 private key is the 32-byte string which is composed of English "
 "letters and numbers."
 msgstr ""
+"La chiave privata MD5 è la stringa di 32 byte composta da numeri e lettere "
+"inglesi."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
@@ -132,3 +142,5 @@ msgid ""
 "The Merchant Partner ID is used to ensure communications coming from Alipay "
 "are valid and secured."
 msgstr ""
+"L'ID partner commerciante è utilizzato per assicurare che le comunicazioni "
+"da Alipay siano valide e sicure."

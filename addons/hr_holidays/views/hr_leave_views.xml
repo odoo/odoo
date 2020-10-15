@@ -207,6 +207,20 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
+                <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'employee')]}">
+                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
+                    </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'department')]}">
+                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone
+                    </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'company')]}">
+                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone
+                    </span>
+                    (<field name="tz"/>).
+                </div>
+                <field name="tz_mismatch" invisible="1"/>
+                <field name="holiday_type" invisible="1"/>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="oe_title oe_read_only" attrs="{'invisible': [('display_name', '=', False)]}" name="title">
                     <h1>

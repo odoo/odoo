@@ -26,3 +26,11 @@ class L10nLatamDocumentType(models.Model):
             'prefix': None
         })
         return values
+
+    def _filter_taxes_included(self, taxes):
+        """ In Chile we include taxes in line amounts depending on type of document.
+        This serves just for document printing purposes """
+        self.ensure_one()
+        if self.country_id == self.env.ref('base.cl') and self.code in ['39', '41', '110', '111', '112', '34']:
+            return taxes.filtered(lambda x: x.tax_group_id == self.env.ref('l10n_cl.tax_group_iva_19'))
+        return super()._filter_taxes_included(taxes)

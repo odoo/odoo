@@ -21,7 +21,6 @@ var EventRegistrationForm = Widget.extend({
         var res = this._super.apply(this.arguments).then(function () {
             $('#registration_form .a-submit')
                 .off('click')
-                .removeClass('a-submit')
                 .click(function (ev) {
                     self.on_click(ev);
                 });

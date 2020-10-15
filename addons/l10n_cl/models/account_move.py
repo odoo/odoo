@@ -29,7 +29,7 @@ class AccountMove(models.Model):
                 self.journal_id.company_id.country_id == self.env.ref('base.cl')):
             if self.journal_id.type == 'sale':
                 document_type_ids = self.journal_id.l10n_cl_sequence_ids.mapped('l10n_latam_document_type_id').ids
-            else:  # self.journal_id.type == 'purchase':
+            else:
                 partner_domain = [
                     ('country_id.code', '=', 'CL'),
                     ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
@@ -63,10 +63,12 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Tax payer type and vat number are mandatory for this type of '
                                         'document. Please set the current tax payer type of this customer'))
             if rec.journal_id.type == 'sale' and rec.journal_id.l10n_latam_use_documents:
-                if (tax_payer_type == '4' or country_id != self.env.ref('base.cl')) and \
-                        latam_document_type_code not in ['110', '111', '112']:
-                    raise ValidationError(_(
-                        'Document types for foreign customers must be export type (codes 110, 111 or 112)'))
+                if country_id != self.env.ref('base.cl'):
+                    if not ((tax_payer_type == '4' and latam_document_type_code in ['110', '111', '112']) or (
+                            tax_payer_type == '3' and latam_document_type_code in ['39', '41', '61', '56'])):
+                        raise ValidationError(_(
+                            'Document types for foreign customers must be export type (codes 110, 111 or 112) or you \
+                            should define the customer as an end consumer and use receipts (codes 39 or 41)'))
             if rec.journal_id.type == 'purchase' and rec.journal_id.l10n_latam_use_documents:
                 if vat != '60805000-0' and latam_document_type_code == '914':
                     raise ValidationError(_('The DIN document is intended to be used only with RUT 60805000-0'

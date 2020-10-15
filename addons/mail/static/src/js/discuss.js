@@ -653,6 +653,7 @@ var Discuss = AbstractAction.extend({
         if (type === 'multi_user_channel') {
             $input.autocomplete({
                 autoFocus: true,
+                classes: { 'ui-autocomplete': 'o_mail_channel' },
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
                     self._searchChannel(self._lastSearchVal).then(function (result){

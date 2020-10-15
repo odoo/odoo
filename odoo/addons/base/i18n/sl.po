@@ -10,11 +10,11 @@
 # jl2035 <jaka.luthar@gmail.com>, 2020
 # Boris Kodelja <boris@hbs.si>, 2020
 # matjaz k <matjaz@mentis.si>, 2020
-# Grega Vavtar <grega@hbs.si>, 2020
 # Tadej Lupšina <tadej@hbs.si>, 2020
 # Martin Trigaux, 2020
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # Jasmina Macur <jasmina@hbs.si>, 2020
+# Grega Vavtar <grega@hbs.si>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2020\n"
+"Last-Translator: Grega Vavtar <grega@hbs.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13636,7 +13636,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sales
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr "Omogoča obvladovanje predračunov, prodajnih nalogov in obračuna."
+msgstr "Omogoča obvladovanje ponudb, prodajnih nalogov in obračuna."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_operations_timesheets
@@ -13746,7 +13746,7 @@ msgstr "Omogoča enostavno podpisovanje in izpolnjevanje dokumentov."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Here is the exported translation file:"
-msgstr "Izvožena datoteka prevoda je tu:"
+msgstr "Tu je izvožena datoteka prevoda:"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -18765,7 +18765,7 @@ msgstr "Operacije"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "Priložnost v predračun"
+msgstr "Priložnost v ponudbo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
@@ -20257,7 +20257,7 @@ msgstr "Graditelj ponudb"
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr "Predračun, prodajni nalogi, dobave in nadzor obračuna"
+msgstr "Ponudba, prodajni nalogi, nadzor dobave in obračuna"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
@@ -23446,6 +23446,14 @@ msgstr "Ta modul bo sprožil odstranitev naslednjih modulov."
 msgid ""
 "This operation is allowed for the groups:\n"
 "%(groups_list)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_sequence.py:56
+#, python-format
+msgid ""
+"This transaction wasn't executed because another transaction is already "
+"using the same no-gap sequence. Please try again later."
 msgstr ""
 
 #. module: base

@@ -82,6 +82,14 @@ $-font-numbers: (
 .navbar {
     @if ($o-theme-navbar-font != $o-theme-font) {
         font-family: $o-theme-navbar-font;
+
+        h1, h2, h3, h4, h5, h6,
+        .h1, .h2, .h3, .h4, .h5, .h6 {
+            font-family: $headings-font-family;
+        }
+        .btn {
+            font-family: $o-theme-buttons-font;
+        }
     }
 
     .nav-item {
@@ -1119,7 +1127,7 @@ table.table_desc tr td {
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }
-        > ul { // remove dropdown-menu default style as it is nested in another one
+        > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
             float: none;
             display: block;
@@ -1129,6 +1137,26 @@ table.table_desc tr td {
             border: none;
             box-shadow: none;
         }
+        > .o_mega_menu .row > div { // remove mega menu col-lg-* style
+            max-width: none;
+            flex: auto;
+        }
+    }
+}
+
+// Navbar Dropdown Menu
+header {
+    // In mobile there is no need to limit the height...
+    @include media-breakpoint-up(lg) {
+        .navbar .dropdown-menu {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+    }
+    // ... but we limit the navbar-collapse height in mobile affix version
+    &.o_header_affix .navbar-collapse.show {
+        max-height: 80vh;
+        overflow-y: auto;
     }
 }
 

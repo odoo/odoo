@@ -159,7 +159,7 @@ if(!the_form.length) {
         success: function(response, status, xhr, wfe){ // submission attempt
             if(_.has(response, 'errors')){  // some questions have errors
                 _.each(_.keys(response.errors), function(key){
-                    $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
+                    $("#" + key + '>.js_errzone').append($('<p>', {'text': response.errors[key]})).show();
                     if (_.keys(response.errors)[_.keys(response.errors).length - 1] === key) {
                          $('html, body').animate({
                             scrollTop: $('.js_errzone:visible:first').closest('.js_question-wrapper').offset().top - $('.o_main_navbar').height()
