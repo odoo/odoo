@@ -321,6 +321,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'chatter',
             isCausal: true,
+            readonly: true,
         }),
     };
 

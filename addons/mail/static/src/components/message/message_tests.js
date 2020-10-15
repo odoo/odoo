@@ -612,20 +612,18 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 99,
         originThread: [['link', thread]],
     });
-    thread.update({
-       partnerSeenInfos: [['create', [
-            {
-                channelId: 11,
-                lastSeenMessage: [['link', lastSeenMessage]],
-                partnerId: this.env.messaging.currentPartner.id,
-            },
-            {
-                channelId: 11,
-                lastSeenMessage: [['link', lastSeenMessage]],
-                partnerId: 100,
-            },
-        ]]],
-    });
+    this.env.models['mail.thread_partner_seen_info'].insert([
+        {
+            channelId: 11,
+            lastSeenMessage: [['link', lastSeenMessage]],
+            partnerId: this.env.messaging.currentPartner.id,
+        },
+        {
+            channelId: 11,
+            lastSeenMessage: [['link', lastSeenMessage]],
+            partnerId: 100,
+        },
+    ]);
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
     });

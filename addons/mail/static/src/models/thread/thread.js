@@ -1589,6 +1589,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
         }),
         correspondent: many2one('mail.partner', {
             compute: '_computeCorrespondent',
@@ -1814,10 +1815,11 @@ function factory(dependencies) {
         /**
          * All messages that this thread is linked to.
          * Note that this field is automatically computed by inverse
-         * computed field. This field is readonly.
+         * computed field.
          */
         messages: many2many('mail.message', {
             inverse: 'threads',
+            readonly: true,
         }),
         /**
          * All messages that are contained on this channel on the server.
@@ -1829,6 +1831,7 @@ function factory(dependencies) {
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
         }),
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
@@ -1948,6 +1951,7 @@ function factory(dependencies) {
         partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
         }),
         /**
          * Determine if there is a pending seen message change, which is a change

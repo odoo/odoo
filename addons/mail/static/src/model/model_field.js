@@ -25,6 +25,7 @@ class ModelField {
         hashes: extraHashes = [],
         inverse,
         isCausal = false,
+        readonly = false,
         related,
         relationType,
         required = false,
@@ -130,6 +131,14 @@ class ModelField {
          * relation is removed, the related record is automatically deleted.
          */
         this.isCausal = isCausal;
+        /**
+         * Determines whether the field is read only. Read only field
+         * can't be updated once the record is created.
+         * An exception is made for computed fields (updated when the
+         * dependencies are updated) and related fields (updated when the
+         * inverse relation changes).
+         */
+        this.readonly = readonly;
         /**
          * If set, this field acts as a related field, and this prop contains
          * a string that references the related field. It should have the
@@ -587,7 +596,7 @@ class ModelField {
                 this.env.modelManager._update(
                     recordToLink,
                     { [this.inverse]: [['link', record]] },
-                    { hasToUpdateInverse: false }
+                    { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
             }
         }
@@ -623,7 +632,7 @@ class ModelField {
             this.env.modelManager._update(
                 recordToLink,
                 { [this.inverse]: [['link', record]] },
-                { hasToUpdateInverse: false }
+                { allowWriteReadonly: true, hasToUpdateInverse: false }
             );
         }
         return true;
@@ -753,7 +762,7 @@ class ModelField {
                 this.env.modelManager._update(
                     recordToUnlink,
                     { [this.inverse]: [['unlink', record]] },
-                    { hasToUpdateInverse: false }
+                    { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
                 // apply causality
                 if (this.isCausal) {
@@ -796,7 +805,7 @@ class ModelField {
             this.env.modelManager._update(
                 otherRecord,
                 { [this.inverse]: [['unlink', record]] },
-                { hasToUpdateInverse: false }
+                { allowWriteReadonly: true, hasToUpdateInverse: false }
             );
             // apply causality
             if (this.isCausal) {

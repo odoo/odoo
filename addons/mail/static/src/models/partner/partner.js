@@ -291,6 +291,7 @@ function factory(dependencies) {
         }),
         correspondentThreads: one2many('mail.thread', {
             inverse: 'correspondent',
+            readonly: true,
         }),
         country: many2one('mail.country'),
         display_name: attr({

@@ -530,6 +530,7 @@ function factory(dependencies) {
         }),
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
+            readonly: true,
         }),
         date: attr({
             default: moment(),
