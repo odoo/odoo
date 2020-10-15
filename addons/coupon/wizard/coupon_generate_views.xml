@@ -10,6 +10,13 @@
                     <field name="generation_type" widget="radio"/>
                     <field name="partners_domain" attrs="{'invisible': [('generation_type', '!=', 'nbr_customer')]}" widget="domain" options="{'model': 'res.partner'}"/>
                     <field name="nbr_coupons" attrs="{'invisible': [('generation_type', '!=', 'nbr_coupon')]}"/>
+                    <field name="template_id"
+                        options="{'no_create': True, 'no_edit': True}"
+                        context="{'default_model': 'coupon.coupon'}"
+                        attrs="{'invisible': [('generation_type', '!=', 'nbr_customer')]}" />
+                    <div class="text-muted" attrs="{'invisible': [('generation_type', '!=', 'nbr_customer')]}">
+                        Specify a mail template to send the generated coupons as email.
+                    </div>
                 </group>
                 <div role="alert" class="alert alert-warning" attrs="{'invisible': ['|', ('generation_type', '!=', 'nbr_customer'), ('has_partner_email', '=', True)]}">
                     Some selected customers do not have an email address and will not receive the coupon.
