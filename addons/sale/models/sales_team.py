@@ -81,7 +81,7 @@ class CrmTeam(models.Model):
             JOIN account_move_line line ON line.move_id = move.id
             JOIN account_account account ON account.id = line.account_id
             WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
-            AND move.payment_state IN ('in_payment', 'paid')
+            AND move.payment_state IN ('in_payment', 'paid', 'reversed')
             AND move.state = 'posted'
             AND move.team_id IN %s
             AND move.date BETWEEN %s AND %s
