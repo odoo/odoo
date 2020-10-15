@@ -66,6 +66,9 @@
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <tree string="Meetings" multi_edit="1" sample="1" editable="bottom">
+                <header>
+                    <button name="%(mail.action_email_compose_message_wizard)d" type="action" string="Send Email"/>
+                </header>
                 <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}"/>
                 <field name="start" string="Start Date" readonly="1"/>
                 <field name="stop" string="End Date" readonly="1"/>
@@ -121,8 +124,10 @@
                                     class="o_field_widget o_field_many2one"/>
                             </group>
                             <group class="o_group_col_3">
-                                <button name="%(mail.action_email_compose_message_wizard)d" context="{'partner_ids': partner_ids}" type="action" string="Mail" icon="fa-envelope"/>
-                                <!--<button name="%(sms.sms_composer_view_form)d" type="action" string="SMS" icon="fa-mobile"/>-->
+                                <span>
+                                    <button name="%(mail.action_email_compose_message_wizard)d" help="Email attendees" context="{'partner_ids': partner_ids}" type="action" string="Mail" icon="fa-envelope"/>
+                                    <!--<button name="%(mail.action_email_compose_message_wizard)d" help="Send SMS to attendees" type="action" string="SMS" icon="fa-mobile"/>-->
+                                </span>
                             </group>
                         </group>
                     </div>

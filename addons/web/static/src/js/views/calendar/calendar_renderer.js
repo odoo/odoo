@@ -405,6 +405,11 @@ return AbstractRenderer.extend({
                 $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
             },
+            selectAllow: function (event) {
+               if (event.end.getDate() === event.start.getDate() || event.allDay) {
+                   return true;
+               }
+            },
             yearDateClick: function (info) {
                 self._unselectEvent();
                 info.view.unselect();

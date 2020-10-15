@@ -2,13 +2,13 @@
 <odoo>
 
     <!-- Add action entry in the Action Menu for Events -->
-    <record id="calendar_event_act_window_sms_composer_single" model="ir.actions.act_window">
+    <record id="calendar_event_act_window_sms_composer_mass" model="ir.actions.act_window">
         <field name="name">Send SMS</field>
         <field name="res_model">sms.composer</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{
-            'default_composition_mode': 'comment',
+            'default_composition_mode': 'mass',
             'default_res_id': active_id,
         }</field>
     </record>
@@ -18,11 +18,9 @@
         <field name="model">calendar.event</field>
         <field name="inherit_id" ref="calendar.view_calendar_event_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="inside">
-                <header>
-                    <button name="%(calendar_event_act_window_sms_composer_single)d" type="action"
-                            string="Send SMS"/>
-                </header>
+            <xpath expr="//header" position="inside">
+                <button name="%(calendar_event_act_window_sms_composer_mass)d" type="action"
+                        string="Send SMS"/>
             </xpath>
         </field>
     </record>
