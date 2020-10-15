@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
@@ -50,6 +51,7 @@ class TestServerActionsBase(common.TransactionCase):
         self.action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
             'model_id': self.res_partner_model.id,
+            'model_name': 'res.partner',
             'state': 'code',
             'code': 'record.write({"comment": "MyComment"})',
         })
@@ -268,7 +270,7 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
         self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
 
-    def test_copy_action(self):
+    def test_70_copy_action(self):
         # first check that the base case (reset state) works normally
         r = self.env['ir.actions.todo'].create({
             'action_id': self.action.id,
@@ -285,6 +287,30 @@ class TestServerActions(TestServerActionsBase):
             self.action.copy().state, 'code',
             "copying a server action should not reset the state"
         )
+
+    def test_80_permission(self):
+        self.action.write({
+            'state': 'code',
+            'code': """record.write({'date': datetime.date.today()})""",
+        })
+
+        user_demo = self.env.ref("base.user_demo")
+        self_demo = self.action.with_user(user_demo.id)
+
+        # can write on contact partner
+        self.test_partner.type = "contact"
+        self.test_partner.with_user(user_demo.id).check_access_rule("write")
+
+        self_demo.with_context(self.context).run()
+        self.assertEqual(self.test_partner.date, date.today())
+
+        # but can not write on private address
+        self.test_partner.type = "private"
+        with self.assertRaises(AccessError):
+            self.test_partner.with_user(user_demo.id).check_access_rule("write")
+        # nor execute a server action on it
+        with self.assertRaises(AccessError), mute_logger('odoo.addons.base.models.ir_actions'):
+            self_demo.with_context(self.context).run()
 
 
 class TestCustomFields(common.TransactionCase):

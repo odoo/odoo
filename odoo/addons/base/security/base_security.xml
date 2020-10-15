@@ -85,9 +85,9 @@
                 (4, ref('base.group_user')),
             ]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
         <!-- Relex previous rule for group_private_addresses -->
         <record id="res_partner_rule_private_group" model="ir.rule">
@@ -100,9 +100,9 @@
                 (4, ref('base.group_private_addresses'))
             ]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <!-- Restrict modifications on ir.filters to owner only -->
