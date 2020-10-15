@@ -13,30 +13,8 @@ override_dh_auto_build:
 override_dh_auto_install:
 	dh_auto_install
 	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/point_of_sale/static/src/fonts/Inconsolata.otf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/lib/fontawesome/fonts/FontAwesome.otf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/lib/fontawesome/fonts/fontawesome-webfont.eot
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Black.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-BlackItalic.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Bold.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-BoldItalic.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Italic.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Light.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-LightItalic.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Medium.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-MediumItalic.ttf 
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Regular.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-Thin.ttf
-	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/web/static/src/fonts/google/Roboto/Roboto-ThinItalic.ttf
+	for LINKTARGET in `awk '{ print $2 }' odoo.links`; do rm debian/odoo/${LINKTARGET} ; done
 	find debian/odoo -name LICENSE.txt -exec rm {} \;
-
-override_dh_fixperms:
-	dh_fixperms
-	chmod 644 debian/odoo/usr/lib/python3/dist-packages/odoo/addons/l10n_ro/data/res.bank.csv
-	chmod 644 debian/odoo/usr/lib/python3/dist-packages/odoo/addons/l10n_dz/data/*.xml
-	chmod 644 debian/odoo/usr/lib/python3/dist-packages/odoo/addons/survey/static/src/fonts/Oswald-Light.ttf
 
 override_dh_auto_clean:
 	dh_auto_clean
