@@ -38,7 +38,7 @@ var FormView = BasicView.extend({
             hasActionMenus = params.hasActionMenus;
         }
         this.controllerParams.hasActionMenus = hasActionMenus;
-        this.controllerParams.disableAutofocus = params.disable_autofocus;
+        this.controllerParams.disableAutofocus = params.disable_autofocus || this.arch.attrs.disable_autofocus;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.footerToButtons = params.footerToButtons;
 
