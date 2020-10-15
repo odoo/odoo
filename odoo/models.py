@@ -5266,7 +5266,7 @@ Fields:
                         model = model[fname]
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                records = self.browse()
+                records_ids = set()
                 for rec in self:
                     data = rec.mapped(key)
                     if comparator in ('child_of', 'parent_of'):
@@ -5330,8 +5330,9 @@ Fields:
                         ok = bool(fnmatch.filter(data, value and value_esc.lower()))
                     else:
                         raise ValueError
-                    if ok: records |= rec
-                result.append(records)
+                    if ok:
+                       records_ids.add(rec.id)
+                result.append(self.browse(records_ids))
         while len(result)>1:
             result.append(result.pop() & result.pop())
         return result[0]
