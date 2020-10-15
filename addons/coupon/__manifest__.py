@@ -15,7 +15,7 @@
         'views/coupon_program_views.xml',
         'report/coupon_report.xml',
         'report/coupon_report_templates.xml',
-        'data/coupon_email_data.xml',
+        'data/expire_coupon_cron.xml',
     ],
     'demo': [
         'demo/coupon_demo.xml',

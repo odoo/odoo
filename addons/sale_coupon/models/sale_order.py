@@ -239,7 +239,7 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
                 for coupon in order.generated_coupon_ids:

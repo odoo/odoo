@@ -41,3 +41,8 @@ class Coupon(models.Model):
             if self.program_id not in applicable_programs and self.program_id.promo_applicability == 'on_current_order':
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
+
+    def _get_default_template(self):
+        if self.order_id:
+            return self.env.ref('sale_coupon.mail_template_sale_coupon', False)
+        return super()._get_default_template()
