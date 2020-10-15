@@ -548,7 +548,13 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
-    @api.constrains('date_from', 'date_to', 'state', 'employee_id')
+    @api.constrains('date_from', 'date_to')
+    def _check_number_of_days(self):
+        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
+        if leaves:
+            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
+
+    @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
         for holiday in self.filtered('employee_id'):
             domain = [
@@ -923,7 +929,7 @@ class HolidaysRequest(models.Model):
             'parent_id': self.id,
             'employee_id': employee.id,
             'state': 'validate',
-        } for employee in employees]
+        } for employee in employees if work_days_data[employee.id]['days']]
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
