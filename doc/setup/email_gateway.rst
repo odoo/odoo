@@ -40,4 +40,4 @@ For Exim
     - `Exim <https://www.exim.org/docs.html>`
 
 
-.. note:: If you don't have access/manage your email server, use `inbound messages<https://www.odoo.com/documentation/user/13.0/discuss/email_servers.html#how-to-manage-inbound-messages>`.
+.. note:: If you don't have access/manage your email server, use `inbound messages<https://www.odoo.com/documentation/user/14.0/discuss/email_servers.html#how-to-manage-inbound-messages>`.
