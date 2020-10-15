@@ -49,18 +49,21 @@ class Coupon(models.Model):
         for coupon in self.filtered(lambda x: x.program_id.validity_duration > 0):
             coupon.expiration_date = (coupon.create_date + relativedelta(days=coupon.program_id.validity_duration)).date()
 
+    def _get_default_template(self):
+        return False
+
     def action_coupon_sent(self):
         """ Open a window to compose an email, with the edi invoice template
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref('coupon.mail_template_sale_coupon', False)
+        default_template = self._get_default_template()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         ctx = dict(
             default_model='coupon.coupon',
             default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template.id,
+            default_use_template=bool(default_template),
+            default_template_id=default_template and default_template.id,
             default_composition_mode='comment',
             custom_layout='mail.mail_notification_light',
             mark_coupon_as_sent=True,

@@ -17,6 +17,7 @@ class CouponGenerate(models.TransientModel):
         ], default='nbr_coupon')
     partners_domain = fields.Char(string="Customer", default='[]')
     has_partner_email = fields.Boolean(compute='_compute_has_partner_email')
+    template_id = fields.Many2one('mail.template', 'Use template', domain="[('model', '=', 'coupon.coupon')]")
 
     def generate_coupon(self):
         """Generates the number of coupons entered in wizard field nbr_coupons
@@ -34,10 +35,9 @@ class CouponGenerate(models.TransientModel):
                 vals.update({'partner_id': partner.id, 'state': 'sent' if partner.email else 'new'})
                 coupon = self.env['coupon.coupon'].create(vals)
                 subject = '%s, a coupon has been generated for you' % (partner.name)
-                template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
-                if template:
+                if self.template_id:
                     email_values = {'email_to': partner.email, 'email_from': self.env.user.email or '', 'subject': subject}
-                    template.send_mail(coupon.id, email_values=email_values, notif_layout='mail.mail_notification_light')
+                    self.template_id.send_mail(coupon.id, email_values=email_values, notif_layout='mail.mail_notification_light')
 
     @api.depends('partners_domain')
     def _compute_has_partner_email(self):
