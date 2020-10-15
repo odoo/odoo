@@ -23,6 +23,7 @@ class Dialog extends Component {
             const dialog = this.env.models['mail.dialog'].get(props.dialogLocalId);
             return {
                 dialog: dialog ? dialog.__state : undefined,
+                isDeviceMobile: this.env.messaging.device.isMobile,
             };
         });
     }
