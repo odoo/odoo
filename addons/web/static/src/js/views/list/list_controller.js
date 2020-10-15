@@ -334,6 +334,9 @@ var ListController = BasicController.extend({
                 this.do_notify(false, msg);
             }
             this.reload();
+            if (this.withSearchPanel) {
+                this.searchPanelProps.searchModel.dispatch();
+            }
         };
         if (this.confirmOnDelete) {
             Dialog.confirm(this, _t("Are you sure you want to delete these records ?"), {
