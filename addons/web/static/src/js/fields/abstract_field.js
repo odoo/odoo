@@ -50,6 +50,12 @@ var AbstractField = Widget.extend({
     fieldDependencies: {},
 
     /**
+     * If this flag is set to false then the field widget will be readonly
+     * in multi edit view
+     */
+    multiEdit: true,
+
+    /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
      * currently a form view feature.

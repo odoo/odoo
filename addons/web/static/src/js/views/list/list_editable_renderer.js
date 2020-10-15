@@ -404,6 +404,7 @@ ListRenderer.include({
         this.currentRow = editMode ? $row.prop('rowIndex') - 1 : null;
         var $tds = $row.children('.o_data_cell');
         var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
+        const fieldsInfo = this.state.fieldsInfo.list;
 
         // Prepare options for cell rendering (this depends on the mode)
         var options = {
@@ -420,9 +421,10 @@ ListRenderer.include({
         _.each(this.columns, function (node, colIndex) {
             var $td = $tds.eq(colIndex);
 
-            // Restrict the list_activity widget as readonly
-            if (node.attrs.widget === "list_activity" && self.isInMultipleRecordEdition(recordID)) {
-                $td[0].classList.add('o_readonly_modifier');
+            // Restrict to edit of field on multi_edit list view if multi_edit is false
+            const FieldWidget = fieldsInfo[node.attrs.name].Widget;
+            if (!FieldWidget.prototype.multiEdit && self.isInMultipleRecordEdition(recordID)) {
+                node.attrs.modifiers.readonly = true;
             }
 
             var $newTd = self._renderBodyCell(record, node, colIndex, options);

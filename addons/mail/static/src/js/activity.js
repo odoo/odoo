@@ -125,6 +125,7 @@ var setFileUploadID = function (activities) {
 };
 
 var BasicActivity = AbstractField.extend({
+    multiEdit: false,
     events: {
         'click .o_edit_activity': '_onEditActivity',
         'change input.o_input_file': '_onFileChanged',

@@ -313,60 +313,6 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
     list.destroy();
 });
 
-QUnit.test('list activity widget in readonly mode with multi edit', async function (assert) {
-    assert.expect(1);
-
-    const currentUser = this.data['res.users'].records.find(user =>
-        user.id === this.data.currentUserId
-    );
-    Object.assign(currentUser, {
-        activity_ids: [1, 4],
-        activity_state: 'today',
-        activity_summary: 'Call with Al',
-        activity_type_id: 3,
-    });
-    this.data['mail.activity'].records.push(
-        {
-            id: 1,
-            display_name: "Call with Al",
-            date_deadline: moment().format("YYYY-MM-DD"), // now
-            can_write: true,
-            state: "today",
-            user_id: this.data.currentUserId,
-            create_uid: this.data.currentUserId,
-            activity_type_id: 3,
-        }, {
-            id: 4,
-            display_name: "Meet FP",
-            date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
-            can_write: true,
-            state: "planned",
-            user_id: this.data.currentUserId,
-            create_uid: this.data.currentUserId,
-            activity_type_id: 1,
-        }
-    );
-
-    const { widget: list } = await start({
-        hasView: true,
-        View: ListView,
-        model: 'res.users',
-        data: this.data,
-        arch: `
-            <list multi_edit="1">
-                <field name="foo"/>
-                <field name="activity_ids" widget="list_activity"/>
-            </list>`,
-    });
-
-    await testUtils.dom.click(list.$el.find('td.o_list_record_selector'));
-    await testUtils.dom.click(list.$el.find('.o_list_char'));
-    assert.hasClass(list.$('td.o_list_activity_cell'), 'o_readonly_modifier',
-        "should contain a readonly class");
-
-    list.destroy();
-});
-
 QUnit.test('list activity exception widget with activity', async function (assert) {
     assert.expect(3);
 

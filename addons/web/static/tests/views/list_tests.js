@@ -10646,6 +10646,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: disable multi edition of field when multiEdit is false', async function (assert) {
+        assert.expect(3);
+
+        const FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('no_multi_edit_char', FieldChar.extend({}));
+        fieldRegistry.add('multi_edit_char', FieldChar.extend({
+            multiEdit: false,
+        }));
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree multi_edit="1">
+                    <field name="display_name" widget="no_multi_edit_char"/>
+                    <field name="foo" widget="multi_edit_char"/>
+                </tree>`
+        });
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        // edit a char field
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(0)'));
+
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_data_cell input[name="display_name"]',
+            "the display_name field should have input element and hence should be editable");
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_data_cell span[name="foo"]',
+            "the foo field should have span element and hence should not be editable");
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_multi_edit_char_cell span.o_readonly_modifier',
+            "the foo field should have o_readonly_modifier class as it is multiEdit false");
+
+        list.destroy();
+        delete fieldRegistry.map.no_multi_edit_char;
+        delete fieldRegistry.map.multi_edit_char;
+    });
+
     QUnit.test('enter edition in editable list with multi_edit = 1', async function (assert) {
         assert.expect(1);
 
