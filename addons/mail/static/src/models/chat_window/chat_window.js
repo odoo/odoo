@@ -434,6 +434,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'chatWindow',
             isCausal: true,
+            readonly: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

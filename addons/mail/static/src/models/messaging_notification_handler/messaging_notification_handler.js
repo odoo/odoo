@@ -161,13 +161,9 @@ function factory(dependencies) {
                 lastFetchedMessage: [['insert', { id: last_message_id }]],
                 partnerId: partner_id,
             });
-            channel.update({
-                messageSeenIndicators: [['insert',
-                    {
-                        channelId: channel.id,
-                        messageId: last_message_id,
-                    }
-                ]],
+            this.env.models['mail.message_seen_indicator'].insert({
+                channelId: channel.id,
+                messageId: last_message_id,
             });
             // FIXME force the computing of message values (cf task-2261221)
             this.env.models['mail.message_seen_indicator'].recomputeFetchedValues(channel);
@@ -306,30 +302,23 @@ function factory(dependencies) {
             // restrict computation of seen indicator for "non-channel" channels
             // for performance reasons
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
-            const updateData = {};
             if (shouldComputeSeenIndicators) {
                 this.env.models['mail.thread_partner_seen_info'].insert({
                     channelId: channel.id,
                     lastSeenMessage: [['link', lastMessage]],
                     partnerId: partner_id,
                 });
-                Object.assign(updateData, {
-                    // FIXME should no longer use computeId (task-2335647)
-                    messageSeenIndicators: [['insert',
-                        {
-                            channelId: channel.id,
-                            messageId: lastMessage.id,
-                        },
-                    ]],
+                this.env.models['mail.message_seen_indicator'].insert({
+                    channelId: channel.id,
+                    messageId: lastMessage.id,
                 });
             }
             if (this.env.messaging.currentPartner.id === partner_id) {
-                Object.assign(updateData, {
+                channel.update({
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
                 });
             }
-            channel.update(updateData);
             if (shouldComputeSeenIndicators) {
                 // FIXME force the computing of thread values (cf task-2261221)
                 this.env.models['mail.thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
