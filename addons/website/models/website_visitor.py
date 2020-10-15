@@ -30,7 +30,7 @@ class WebsiteVisitor(models.Model):
     _order = 'last_connection_datetime DESC'
 
     name = fields.Char('Name')
-    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
+    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=False, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
