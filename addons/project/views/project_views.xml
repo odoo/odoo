@@ -415,7 +415,7 @@
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Followed" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
-                    <filter string="My Projects" name="my_projects" domain="[('user_id', '=', uid)]"/>
+                    <filter string="My Projects" name="own_projects" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
