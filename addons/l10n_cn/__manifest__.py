@@ -36,7 +36,7 @@ We added the option to print a voucher which will also
 print the amount in words (special Chinese characters for numbers)
 correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     """,
-    'depends': ['base', 'account', 'l10n_multilang'],
+    'depends': ['base', 'account', 'l10n_cn_base', 'l10n_multilang'],
     'data': [
         'data/account_tax_group_data.xml',
         'data/l10n_cn_chart_data.xml',
