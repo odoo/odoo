@@ -39,7 +39,8 @@ var QtyAtDateWidget = Widget.extend({
     _updateData: function() {
         // add some data to simplify the template
         if (this.data.scheduled_date) {
-            this.data.will_be_fulfilled = utils.round_decimals(this.data.virtual_available_at_date, this.fields.virtual_available_at_date.digits[1]) >= utils.round_decimals(this.data.qty_to_deliver, this.fields.qty_to_deliver.digits[1]);
+            // The digit info need to get from free_qty_today in master (instead of virtual_available_at_date)
+            this.data.will_be_fulfilled = utils.round_decimals(this.data.free_qty_today, this.fields.virtual_available_at_date.digits[1]) >= utils.round_decimals(this.data.qty_to_deliver, this.fields.qty_to_deliver.digits[1]);
             this.data.will_be_late = this.data.forecast_expected_date && this.data.forecast_expected_date > this.data.scheduled_date;
             if (['draft', 'sent'].includes(this.data.state)){
                 // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
