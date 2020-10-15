@@ -198,7 +198,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         })
         cls.env.user.company_ids |= company
 
-        chart_template.try_loading(company=company)
+        chart_template.try_loading(company=company, install_demo=False)
 
         # The currency could be different after the installation of the chart template.
         if kwargs.get('currency_id'):
