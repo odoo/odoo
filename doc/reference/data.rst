@@ -258,15 +258,7 @@ section of the view, and allowing a few *optional* attributes:
     website interface) and its default status. If unset, the view is always
     enabled.
 
-``report``
-----------
-
-Creates a :ref:`IrActionsReport <reference/actions/report>` record with a few default values.
-
-Mostly just proxies attributes to the corresponding fields on
-``ir.actions.report``, but also automatically creates the item in the
-:guilabel:`More` menu of the report's ``model``.
-
+.. deprecated act_window & report
 .. ignored url, act_window and ir_set
 
 CSV data files
