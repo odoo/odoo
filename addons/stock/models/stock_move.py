@@ -401,7 +401,7 @@ class StockMove(models.Model):
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
-    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty')
+    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty', 'location_id')
     def _compute_forecast_information(self):
         """ Compute forecasted information of the related product by warehouse."""
         self.forecast_availability = False
@@ -410,16 +410,22 @@ class StockMove(models.Model):
         not_product_moves = self.filtered(lambda move: move.product_id.type != 'product')
         for move in not_product_moves:
             move.forecast_availability = move.product_qty
+
+        product_moves = (self - not_product_moves)
+        warehouse_by_location = {loc: loc.get_warehouse() for loc in product_moves.location_id}
+
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
-        for move in (self - not_product_moves):
+        for move in product_moves:
             picking_type = move.picking_type_id or move.picking_id.picking_type_id
             is_unreserved = move.state in ('waiting', 'confirmed', 'partially_available')
             if picking_type.code in self._consuming_picking_types() and is_unreserved:
-                outgoing_unreserved_moves_per_warehouse[picking_type.warehouse_id] |= move
+                outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
             elif picking_type.code in self._consuming_picking_types():
                 move.forecast_availability = move.reserved_availability
 
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
+            if not warehouse:  # No prediction possible if no warehouse.
+                continue
             product_variant_ids = moves.product_id.ids
             wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
                 [('id', 'child_of', warehouse.view_location_id.id)],
@@ -647,7 +653,8 @@ class StockMove(models.Model):
     def action_product_forecast_report(self):
         self.ensure_one()
         action = self.product_id.action_product_forecast_report()
-        action['context'] = {'warehouse': (self.picking_type_id or self.picking_id.picking_type_id).warehouse_id.id,}
+        warehouse = self.location_id.get_warehouse()
+        action['context'] = {'warehouse': warehouse.id, } if warehouse else {}
         return action
 
     def _do_unreserve(self):
