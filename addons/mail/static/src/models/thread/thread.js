@@ -1176,6 +1176,22 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastTransientMessage() {
+            if (this.orderedMessages.length === 0) {
+                return [['unlink']];
+            }
+            for (let i = this.orderedMessages.length - 1; i >= 0; i--) {
+                const message = this.orderedMessages[i];
+                if (message.isTransient) {
+                    return [['link', message]];
+                }
+            }
+        }
+
+        /**
+         * @private
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
@@ -1238,6 +1254,20 @@ function factory(dependencies) {
          */
         _computeNeedactionMessages() {
             return [['replace', this.messages.filter(message => message.isNeedaction)]];
+        }
+
+        /**
+         * @returns {integer|undefined}
+         * @private
+         */
+        _computeNewMessageSeparatorId() {
+            if (!this.lastSeenByCurrentPartnerMessageId) {
+                return;
+            }
+            if (!this.lastTransientMessage) {
+                return this.lastSeenByCurrentPartnerMessageId;
+            }
+            return Math.max(this.lastTransientMessage.id, this.lastSeenByCurrentPartnerMessageId);
         }
 
         /**
@@ -1678,6 +1708,13 @@ function factory(dependencies) {
             compute: '_computeLastNonTransientMessage',
             dependencies: ['orderedNonTransientMessages'],
         }),
+        /**
+         * Last transient message.
+         */
+        lastTransientMessage: many2one('mail.message', {
+            compute: '_computeLastTransientMessage',
+            dependencies: ['orderedMessages'],
+        }),
         lastNeedactionMessage: many2one('mail.message', {
             compute: '_computeLastNeedactionMessage',
             dependencies: ['needactionMessages'],
@@ -1759,6 +1796,16 @@ function factory(dependencies) {
         }),
         moduleIcon: attr(),
         name: attr(),
+        /**
+         * Id of the message under which the new message separator should be placed.
+         */
+        newMessageSeparatorId: attr({
+            compute: '_computeNewMessageSeparatorId',
+            dependencies:[
+                'lastTransientMessage',
+                'lastSeenByCurrentPartnerMessageId',
+            ],
+        }),
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
             dependencies: ['messages'],

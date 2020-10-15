@@ -1063,7 +1063,7 @@ QUnit.test('new message separator is not shown on receiving new transient messag
     );
 });
 
-QUnit.skip('new messages separator on receiving a message after having posted a command while composer is not focus [REQUIRE FOCUS]', async function (assert) {
+QUnit.test('new messages separator on receiving a message after having posted a command while composer is not focus [REQUIRE FOCUS]', async function (assert) {
     // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
     // Indeed that would trigger channel_seen no matter what, which is already covered by other tests.
     // The goal of this test is to cover the conditions specific to transient messages,
@@ -1094,7 +1094,7 @@ QUnit.skip('new messages separator on receiving a message after having posted a 
         channel_ids: [20],
         id: 10,
     });
-    await this.start({ debug: true });
+    await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
