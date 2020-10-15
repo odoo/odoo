@@ -1181,6 +1181,192 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     );
 });
 
+QUnit.test('show empty placeholder when thread contains no message', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    await this.start();
+    const threadViewer = await this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "should wait until thread becomes loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_empty',
+        "message list empty placeholder should be shown as thread does not contain any messages"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "no message should be shown as thread does not contain any"
+    );
+});
+
+QUnit.test('show empty placeholder when thread contains only empty messages', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message'].records.push(
+        {
+            channel_ids: [11],
+            id: 101,
+        },
+    );
+    await this.start();
+    const threadViewer = await this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "thread become loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_empty',
+        "message list empty placeholder should be shown as thread contain only empty messages"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "no message should be shown as thread contains only empty ones"
+    );
+});
+
+QUnit.test('message with subtype should be displayed (and not considered as empty)', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.message.subtype'].records.push({
+        description: "Task created",
+        id: 10,
+    });
+    this.data['mail.message'].records.push(
+        {
+            channel_ids: [11],
+            id: 101,
+            subtype_id: 10,
+        },
+    );
+    await this.start();
+    const threadViewer = await this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView);
+        },
+        message: "should wait until thread becomes loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display 1 message (message with subtype description 'task created')"
+    );
+    assert.strictEqual(
+        document.body.querySelector('.o_Message_content').textContent,
+        "Task created",
+        "message should have 'Task created' (from its subtype description)"
+    );
+});
+
+QUnit.test('[technical] message list with a full page of empty messages should show load more if there are other messages', async function (assert) {
+    // Technical assumptions :
+    // - message_fetch fetching exactly 30 messages,
+    // - empty messages not being displayed
+    // - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 11,
+    });
+    for (let i = 0; i <= 30; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            channel_ids: [11],
+        });
+    }
+    for (let i = 0; i <= 30; i++) {
+        this.data['mail.message'].records.push({
+            channel_ids: [11],
+        });
+    }
+    await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['insert', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true });
+        },
+        message: "should wait until thread becomes loaded with messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 11
+            );
+        },
+    });
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "No message should be shown as all 30 first messages are empty"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_loadMore',
+        "Load more button should be shown as there are more messages to show"
+    );
+});
+
 });
 });
 });
