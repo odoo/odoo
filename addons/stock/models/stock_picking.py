@@ -1095,7 +1095,7 @@ class Picking(models.Model):
             for quant in quants:
                 remaining_qties[quant.product_id] += quant.quantity
             for ml in move_line_ids:
-                remaining_qties[ml.product_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_po_id)
+                remaining_qties[ml.product_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
 
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if all([float_is_zero(value, precision_digits=precision) for value in remaining_qties.values()]):

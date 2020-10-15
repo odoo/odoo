@@ -6,7 +6,6 @@ from odoo import models, fields, api
 
 
 class StockZeroQuantityCount(models.TransientModel):
-
     _name = 'stock.zero.quantity.count'
     _description = 'Zero Quantity Count'
 

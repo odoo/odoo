@@ -31,14 +31,8 @@ var InventoryValidationController = ListController.extend({
         // Temp fix to prevent rendering the buttons twice in a target new
         if (!this.$buttons) {
             this._super.apply(this, arguments);
-            this.validateMethod = 'action_validate';
             var $renderedValidationButton = $(qweb.render('InventoryLines.Buttons'));
             this.$buttons.prepend($renderedValidationButton);
-        } else {
-            // If the buttons are already set, it means the method renderButton
-            // was called for the second time because of the target new
-            // which means the inventory was triggered by a zqc.
-            this.validateMethod = 'action_validate_zqc';
         }
     },
 
@@ -65,12 +59,31 @@ var InventoryValidationController = ListController.extend({
         }
 
         prom.then(function () {
-            self._rpc({
-                model: 'stock.inventory',
-                method: self.validateMethod,
-                args: [self.inventory_id],
-                context: self.context
-            }).then(function (res) {
+            var rpc = Promise.resolve();
+            if (self.context && self.context.button_validate_picking_ids) {
+                // Clean context to remove default inventory values during move and move lines
+                // creation.
+                var context = Object.keys(self.context || {})
+                    .filter(key => ! (key.startsWith('default_')))
+                    .reduce((obj, key) => {
+                      obj[key] = self.context[key];
+                      return obj;
+                    }, {});
+                rpc = self._rpc({
+                    model: 'stock.picking',
+                    method: 'button_validate',
+                    args: [self.context.button_validate_picking_ids],
+                    context: _.extend({}, context , {skip_zqc: true})
+                });
+            } else {
+                rpc = self._rpc({
+                    model: 'stock.inventory',
+                    method: 'action_validate',
+                    args: [self.inventory_id],
+                    context: self.context
+                });
+            }
+            rpc.then(function (res) {
                 var exitCallback = function (infos) {
                     // In case we discarded a wizard, we do nothing to stay on
                     // the same view...
@@ -82,22 +95,6 @@ var InventoryValidationController = ListController.extend({
                         false,
                         _t("The inventory has been validated"));
 
-                    // The presence of 'button_validate_picking_ids' in the context means the call
-                    // was made from a Zero Quantity Count, wich means there's no need to redirect
-                    // to that inventory.
-                    if (self.context && !self.context.button_validate_picking_ids) {
-                        self.do_action({
-                            type: 'ir.actions.act_window',
-                            res_model: 'stock.inventory',
-                            res_id: self.inventory_id,
-                            views: [[false, 'form']],
-                            target: 'main'
-                        });
-                    } else {
-                        self.do_action({
-                            type: 'ir.actions.act_window_close'
-                        })
-                    }
                     self.trigger_up('history_back');
                 };
 
@@ -108,7 +105,7 @@ var InventoryValidationController = ListController.extend({
                 }
             });
         });
-    },
+    }
 });
 
 return InventoryValidationController;

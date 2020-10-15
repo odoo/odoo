@@ -128,12 +128,6 @@ class Inventory(models.Model):
         self.post_inventory()
         return True
 
-    def action_validate_zqc(self):
-        pickings_to_validate = self.env.context.get('button_validate_picking_ids')
-        if pickings_to_validate:
-            return self.env['stock.picking'].browse(pickings_to_validate).with_context(skip_zqc=True).button_validate()
-        return True
-
     def post_inventory(self):
         # The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
         # as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
