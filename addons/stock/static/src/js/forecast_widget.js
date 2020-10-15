@@ -53,6 +53,9 @@ const ForecastWidgetField = AbstractField.extend({
     _onOpenReport: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
+        if (!this.recordData.id) {
+            return;
+        }
         this._rpc({
             model: 'stock.move',
             method: 'action_product_forecast_report',
