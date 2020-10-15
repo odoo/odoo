@@ -87,7 +87,7 @@
                         t-esc="format_monetary(tax['amount'])"/>
                 </cac:TaxTotal>
                 <cac:Item>
-                    <cbc:Description t-esc="line.name.replace('\n', ', ')"/>
+                    <cbc:Description t-if="line.name" t-esc="line.name.replace('\n', ', ')"/>
                     <cbc:Name t-esc="line.product_id.name"/>
                     <cac:SellersItemIdentification t-if="line.product_id.default_code">
                         <cbc:ID t-esc="line.product_id.default_code"/>
