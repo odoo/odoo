@@ -236,6 +236,9 @@ function factory(dependencies) {
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
         }),
+        nonEmptyMessages: many2many('mail.message', {
+            related: 'threadCache.nonEmptyMessages',
+        }),
         /**
          * Not a real field, used to trigger `_onThreadCacheChanged` when one of
          * the dependencies changes.

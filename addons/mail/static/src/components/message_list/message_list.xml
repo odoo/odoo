@@ -5,7 +5,7 @@
         <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0, 'o-has-message-selection': props.selectedMessageLocalId }" t-on-scroll="_onScroll">
             <t t-if="threadView">
                 <!-- No result messages -->
-                <t t-if="threadView.messages.length === 0">
+                <t t-if="threadView.nonEmptyMessages.length === 0">
                     <div class="o_MessageList_empty o_MessageList_item">
                         <t t-if="threadView.thread === env.messaging.inbox">
                             <div class="o_MessageList_emptyTitle">

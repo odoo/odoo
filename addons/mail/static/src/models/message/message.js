@@ -408,7 +408,8 @@ function factory(dependencies) {
             return (
                 (!this.body || htmlToTextContentInline(this.body) === '') &&
                 this.attachments.length === 0 &&
-                this.tracking_value_ids.length === 0
+                this.tracking_value_ids.length === 0 &&
+                !this.subtype_description
             );
         }
 
