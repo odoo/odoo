@@ -340,6 +340,11 @@ class Cursor(object):
         # Clean the underlying connection.
         self._cnx.rollback()
 
+        # Call rollback hooks. This list is empty if commit()
+        # has been called just before closing the cursor.
+        for func in self._pop_event_handlers()['rollback']:
+            func()
+
         if leak:
             self._cnx.leaked = True
         else:
