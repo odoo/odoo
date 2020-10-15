@@ -16,7 +16,7 @@
                     </tr>
                     <tr>
                         <td><strong>Available</strong><br /><small>All planned operations included</small></td>
-                        <td><b t-esc='data.free_qty_today'/>
+                        <td><b t-esc='data.free_qty_today' t-att-class="!data.will_be_fulfilled ? 'text-danger': ''"/>
                         <t t-esc='data.product_uom.data.display_name'/></td>
                     </tr>
                 </t>

@@ -270,7 +270,7 @@ class SaleOrderLine(models.Model):
     virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
-    free_qty_today = fields.Float(compute='_compute_qty_at_date')
+    free_qty_today = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
     warehouse_id = fields.Many2one(related='order_id.warehouse_id')
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
@@ -308,12 +308,12 @@ class SaleOrderLine(models.Model):
             moves = line.move_ids
             line.forecast_expected_date = max(moves.filtered("forecast_expected_date").mapped("forecast_expected_date"), default=False)
             line.qty_available_today = 0
-            line.virtual_available_at_date = 0
+            line.free_qty_today = 0
             for move in moves:
                 line.qty_available_today += move.product_uom._compute_quantity(move.reserved_availability, line.product_uom)
-                line.virtual_available_at_date += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom)
+                line.free_qty_today += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom)
             line.scheduled_date = line.order_id.commitment_date or line._expected_date()
-            line.free_qty_today = False
+            line.virtual_available_at_date = False
             treated |= line
 
         qty_processed_per_product = defaultdict(lambda: 0)
