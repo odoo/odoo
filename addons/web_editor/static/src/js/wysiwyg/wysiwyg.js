@@ -727,8 +727,8 @@ var Wysiwyg = Widget.extend({
         return this._saveWebsiteContent(context)
             .then(() => {
                 this.trigger_up('edition_was_stopped');
+                window.onbeforeunload = null;
                 if (reload) {
-                    window.onbeforeunload = null;
                     window.location.reload();
                 }
             }).catch(error => {
