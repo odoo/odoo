@@ -10,12 +10,7 @@ from odoo.tests.common import HOST
 class TestWEventRegister(TestWEventCommon):
 
     def test_register(self):
-        self.browser_js(
-            '/event',
-            'odoo.__DEBUG__.services["web_tour.tour"].run("wevent_register")',
-            'odoo.__DEBUG__.services["web_tour.tour"].tours.wevent_register.ready',
-            login=None
-        )
+        self.start_tour("/event", 'wevent_register', login=None)
         new_registrations = self.event.registration_ids
         visitor = new_registrations.visitor_id
 

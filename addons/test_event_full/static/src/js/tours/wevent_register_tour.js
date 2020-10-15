@@ -113,7 +113,12 @@ var registerSteps = [{
     content: "Click on 'register favorites talks' button",
     trigger: 'a:contains("register to your favorites talks now")',
     run: 'click',
-}];
+},{
+    content: "Click on 'register' dropdown",
+    trigger: 'a.dropdown-toggle:contains("Favorites")',
+    run: function () {setTimeout(() => {}, 8000);} // check
+}
+];
 
 /**
  * MAIN STEPS
