@@ -26,7 +26,9 @@ class ProductTemplate(models.Model):
             return combination_info
 
         if combination_info['product_id']:
-            product = self.env['product.product'].sudo().browse(combination_info['product_id'])
+            website = self.env["website"].browse(self.env.context.get("website_id"))
+            company = website.company_id.id
+            product = self.env['product.product'].with_context(force_company=company).sudo().browse(combination_info['product_id'])
             combination_info.update({
                 'virtual_available': product.virtual_available,
                 'product_type': product.type,
