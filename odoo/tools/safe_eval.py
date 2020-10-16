@@ -65,6 +65,7 @@ _CONST_OPCODES = set(to_opcodes([
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
+    'LIST_EXTEND', 'SET_UPDATE',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -82,6 +83,9 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # comprehensions
     'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
     'COMPARE_OP',
+    # specialised comparisons
+    'IS_OP', 'CONTAINS_OP',
+    'DICT_MERGE', 'DICT_UPDATE',
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
@@ -106,6 +110,8 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
+
+    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
 ])) - _BLACKLIST
 
 _logger = logging.getLogger(__name__)
