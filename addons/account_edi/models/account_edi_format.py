@@ -18,7 +18,7 @@ class AccountEdiFormat(models.Model):
     _description = 'EDI format'
 
     name = fields.Char()
-    code = fields.Char()
+    code = fields.Char(required=True)
 
     _sql_constraints = [
         ('unique_code', 'unique (code)', 'This code already exists')
