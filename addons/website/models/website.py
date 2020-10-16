@@ -959,7 +959,7 @@ class Website(models.Model):
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
         lang_path = ('/' + lang.url_code) if lang != self.default_lang_id else ''
         canonical_query_string = '?%s' % urls.url_encode(canonical_params) if canonical_params else ''
-        return self.get_base_url() + lang_path + path + canonical_query_string
+        return (self.get_base_url() or '') + lang_path + path + canonical_query_string
 
     def _get_canonical_url(self, canonical_params):
         """Returns the canonical URL for the current request."""
