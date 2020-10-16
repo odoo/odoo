@@ -412,7 +412,7 @@ class Picking(models.Model):
                 picking.products_availability_state = 'late'
             elif forecast_date:
                 picking.products_availability = _('Exp %s', format_date(self.env, forecast_date))
-                picking.products_availability_state = 'late' if picking.date_deadline < forecast_date else 'expected'
+                picking.products_availability_state = 'late' if picking.date_deadline and picking.date_deadline < forecast_date else 'expected'
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
