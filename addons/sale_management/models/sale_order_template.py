@@ -53,8 +53,15 @@ class SaleOrderTemplate(models.Model):
 
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
+<<<<<<< HEAD
             companies = self.env['res.company'].sudo().search([('sale_order_template_id', 'in', self.ids)])
             companies.sale_order_template_id = None
+=======
+            template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
+            for template in self:
+                if template_id and template_id == template.id:
+                    raise UserError(_('Before archiving "%s" please select another default template in the settings.') % template.name)
+>>>>>>> e94506a7341... temp
         result = super(SaleOrderTemplate, self).write(vals)
         self._update_product_translations()
         return result
@@ -90,7 +97,10 @@ class SaleOrderTemplate(models.Model):
             self.env['ir.translation'].create(data)
         else:
             existing_trans.write(data)
+<<<<<<< HEAD
 
+=======
+>>>>>>> e94506a7341... temp
 
 
 class SaleOrderTemplateLine(models.Model):
