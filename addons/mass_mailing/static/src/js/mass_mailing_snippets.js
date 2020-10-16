@@ -138,4 +138,5 @@ snippetOptions.registry.BackgroundImage = snippetOptions.registry.BackgroundImag
         }
     }
 });
+
 });
