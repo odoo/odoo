@@ -291,7 +291,7 @@ var Wysiwyg = Widget.extend({
         if (this.options.enableWebsite) {
             const $wrapwrap = $('#wrapwrap');
             $wrapwrap.removeClass('o_editable'); // clean the dom before edition
-            this._getEditable($wrapwrap).addClass('o_editable');
+            this._getEditable($wrapwrap).addClass('o_editable o_editable_no_shadow');
             $wrapwrap.data('wysiwyg', this);
 
             // add class when page content is empty to show the "DRAG BUILDING BLOCKS HERE" block
