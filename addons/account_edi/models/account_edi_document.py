@@ -80,11 +80,13 @@ class AccountEdiDocument(models.Model):
                 move_result = edi_result.get(move, {})
                 if move_result.get('attachment'):
                     old_attachment = document.attachment_id
-                    document.write({
+                    values = {
                         'attachment_id': move_result['attachment'].id,
-                        'state': 'sent',
-                        'error': False,
-                    })
+                        'error': move_result.get('error', False),
+                    }
+                    if not values.get('error'):
+                        values.update({'state': 'sent'})
+                    document.write(values)
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
                 else:
