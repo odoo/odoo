@@ -53,7 +53,7 @@ class Digest(models.Model):
             digest.available_fields = ', '.join(kpis_values_fields)
 
     def _get_kpi_compute_parameters(self):
-        return fields.Date.to_string(self._context.get('start_date')), fields.Date.to_string(self._context.get('end_date')), self.env.company
+        return fields.Datetime.to_string(self._context.get('start_datetime')), fields.Datetime.to_string(self._context.get('end_datetime')), self.env.company
 
     def _compute_kpi_res_users_connected_value(self):
         for record in self:
@@ -123,7 +123,7 @@ class Digest(models.Model):
             add_context={
                 'title': self.name,
                 'top_button_label': _('Connect'),
-                'top_button_url': url_join(web_base_url, '/web/login'),
+                'top_button_url': web_base_url,
                 'company': user.company_id,
                 'user': user,
                 'tips_count': tips_count,
@@ -200,8 +200,8 @@ class Digest(models.Model):
         kpis_actions = self._compute_kpis_actions(company, user)
 
         for col_index, (tf_name, tf) in enumerate(self._compute_timeframes(company)):
-            digest = self.with_context(start_date=tf[0][0], end_date=tf[0][1]).with_user(user).with_company(company)
-            previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1]).with_user(user).with_company(company)
+            digest = self.with_context(start_datetime=tf[0][0], end_datetime=tf[0][1]).with_user(user).with_company(company)
+            previous_digest = self.with_context(start_datetime=tf[1][0], end_datetime=tf[1][1]).with_user(user).with_company(company)
             for index, field_name in enumerate(digest_fields):
                 kpi_values = kpis[index]
                 kpi_values['kpi_action'] = kpis_actions.get(field_name)
@@ -286,21 +286,20 @@ class Digest(models.Model):
         return date.today() + delta
 
     def _compute_timeframes(self, company):
-        now = datetime.utcnow()
+        start_datetime = datetime.utcnow()
         tz_name = company.resource_calendar_id.tz
         if tz_name:
-            now = pytz.timezone(tz_name).localize(now)
-        start_date = now.date()
+            start_datetime = pytz.timezone(tz_name).localize(start_datetime)
         return [
-            (_('Yesterday'), (
-                (start_date + relativedelta(days=-1), start_date),
-                (start_date + relativedelta(days=-2), start_date + relativedelta(days=-1)))
+            (_('Last 24 hours'), (
+                (start_datetime + relativedelta(days=-1), start_datetime),
+                (start_datetime + relativedelta(days=-2), start_datetime + relativedelta(days=-1)))
             ), (_('Last 7 Days'), (
-                (start_date + relativedelta(weeks=-1), start_date),
-                (start_date + relativedelta(weeks=-2), start_date + relativedelta(weeks=-1)))
+                (start_datetime + relativedelta(weeks=-1), start_datetime),
+                (start_datetime + relativedelta(weeks=-2), start_datetime + relativedelta(weeks=-1)))
             ), (_('Last 30 Days'), (
-                (start_date + relativedelta(months=-1), start_date),
-                (start_date + relativedelta(months=-2), start_date + relativedelta(months=-1)))
+                (start_datetime + relativedelta(months=-1), start_datetime),
+                (start_datetime + relativedelta(months=-2), start_datetime + relativedelta(months=-1)))
             )
         ]
 
