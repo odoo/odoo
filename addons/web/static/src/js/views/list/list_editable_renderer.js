@@ -421,13 +421,17 @@ ListRenderer.include({
         _.each(this.columns, function (node, colIndex) {
             var $td = $tds.eq(colIndex);
 
+            let $newTd;
             // Restrict to edit of field on multi_edit list view if multi_edit is false
-            const FieldWidget = fieldsInfo[node.attrs.name].Widget;
-            if (!FieldWidget.prototype.multiEdit && self.isInMultipleRecordEdition(recordID)) {
-                node.attrs.modifiers.readonly = true;
+            const FieldWidget = fieldsInfo[node.attrs.name] && fieldsInfo[node.attrs.name].Widget;
+            if (FieldWidget && !FieldWidget.prototype.multiEdit && self.isInMultipleRecordEdition(recordID)) {
+                // td is already prepared and apply readonly modifier later will not apply
+                // o_readonly_modifier class on td so adding class forcefully here
+                $td[0].classList.add('o_readonly_modifier');
+                $newTd = self._renderBodyCell(record, node, colIndex, Object.assign({}, options, {mode: 'readonly'}));
+            } else {
+                $newTd = self._renderBodyCell(record, node, colIndex, options);
             }
-
-            var $newTd = self._renderBodyCell(record, node, colIndex, options);
 
             // Widgets are unregistered of modifiers data when they are
             // destroyed. This is not the case for simple buttons so we have to

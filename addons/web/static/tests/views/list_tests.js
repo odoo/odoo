@@ -10650,8 +10650,8 @@ QUnit.module('Views', {
         assert.expect(3);
 
         const FieldChar = fieldRegistry.get('char');
-        fieldRegistry.add('no_multi_edit_char', FieldChar.extend({}));
-        fieldRegistry.add('multi_edit_char', FieldChar.extend({
+        fieldRegistry.add('multi_edit_char', FieldChar.extend({}));
+        fieldRegistry.add('no_multi_edit_char', FieldChar.extend({
             multiEdit: false,
         }));
 
@@ -10660,8 +10660,8 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: `<tree multi_edit="1">
-                    <field name="display_name" widget="no_multi_edit_char"/>
-                    <field name="foo" widget="multi_edit_char"/>
+                    <field name="display_name" widget="multi_edit_char"/>
+                    <field name="foo" widget="no_multi_edit_char"/>
                 </tree>`
         });
 
@@ -10674,7 +10674,7 @@ QUnit.module('Views', {
             "the display_name field should have input element and hence should be editable");
         assert.containsOnce(list, '.o_data_row:eq(0) .o_data_cell span[name="foo"]',
             "the foo field should have span element and hence should not be editable");
-        assert.containsOnce(list, '.o_data_row:eq(0) .o_multi_edit_char_cell span.o_readonly_modifier',
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_no_multi_edit_char_cell.o_readonly_modifier',
             "the foo field should have o_readonly_modifier class as it is multiEdit false");
 
         list.destroy();
