@@ -61,9 +61,9 @@ class IrConfigParameter(models.Model):
         :param string key: The key of the parameter value to retrieve.
         :param string default: default value if parameter is missing.
         :return: The value of the parameter, or ``default`` if it does not exist.
-        :rtype: string
+        :rtype: string or type(default)
         """
-        return self._get_param(key) or default
+        return self._get_param(key) if self._get_param(key) is not None else default
 
     @api.model
     @ormcache('self.env.uid', 'self.env.su', 'key')
