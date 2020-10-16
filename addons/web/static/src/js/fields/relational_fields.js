@@ -534,6 +534,7 @@ var FieldMany2One = AbstractField.extend({
                     var createAndEditAction = function () {
                         // Clear the value in case the user clicks on discard
                         self.$('input').val('');
+                        self.reinitialize(false);
                         return self._searchCreatePopup("form", false, self._createContext(search_val));
                     };
                     values.push({

@@ -779,6 +779,43 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one open create and edit clears value and make m2o non-dirty', function (assert) {
+        assert.expect(4);
+
+        const M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        const form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="product_id"/></form>',
+            archs: {
+                'product,false,form': '<form><field name="name"/></form>',
+            },
+        });
+
+        // click on 'Create and Edit' in m2o dropdown
+        const $input = form.$('.o_field_many2one input');
+        $input.click();
+        $input.autocomplete('widget').find('li:first()').click();
+        assert.strictEqual(form.$('input').val(), "xphone", "should have selected xphone");
+
+        $input.click();
+        $input.autocomplete('widget').find('.o_m2o_dropdown_option').mouseenter().click();
+        assert.strictEqual(form.$('input').val(), "", "value should be cleared");
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        // close dialog
+        $('.modal .o_form_button_cancel').click();
+        // save form view and check
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$("[name='product_id']").val(), "", "many2one should not have value");
+
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+        form.destroy();
+    });
+
     QUnit.test('many2one with co-model whose name field is a many2one', function (assert) {
         var done = assert.async();
         assert.expect(4);
