@@ -4577,20 +4577,20 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) span'), 'text-bf text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) span'), 'text-bf text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'text-bf text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'text-bf text-danger');
 
         list.destroy();
         unpatchDate();
     });
 
     QUnit.test('remaining_days widget on a date field in form view', async function (assert) {
-        assert.expect(6);
+        assert.expect(4);
 
         const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         this.data.partner.records = [
@@ -4608,16 +4608,11 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
         assert.hasClass(form.$('.o_field_widget'), 'text-bf text-warning');
 
-        // in edit mode, this widget should behave like a regular date(time) widget
+        // in edit mode, this widget should not be editable.
         await testUtils.form.clickEdit(form);
 
         assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
-        assert.containsOnce(form, '.o_datepicker');
-        assert.strictEqual(form.$('.o_datepicker_input').val(), '10/08/2017');
-
-        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-
-        assert.containsOnce(document.body, '.bootstrap-datetimepicker-widget:visible');
+        assert.containsOnce(form, 'div.o_field_widget[name=date]');
 
         form.destroy();
         unpatchDate();
@@ -4659,13 +4654,13 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) span'), 'text-bf text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) span'), 'text-bf text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'text-bf text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'text-bf text-danger');
 
         list.destroy();
         unpatchDate();
