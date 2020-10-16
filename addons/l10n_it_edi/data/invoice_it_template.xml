@@ -107,9 +107,13 @@
                     </RappresentanteFiscale>
                     <CessionarioCommittente>
                         <DatiAnagrafici>
-                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat">
+                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat and in_eu(record.commercial_partner_id)">
                                 <IdPaese t-esc="get_vat_country(record.commercial_partner_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.commercial_partner_id.vat)"/>
+                            </IdFiscaleIVA>
+                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat and not in_eu(record.commercial_partner_id)">
+                                <IdPaese t-esc="record.commercial_partner_id.country_id.code"/>
+                                <IdCodice t-esc="'OO99999999999'"/>
                             </IdFiscaleIVA>
                             <IdFiscaleIVA t-if="not record.commercial_partner_id.vat and record.commercial_partner_id.country_id.code != 'IT'">
                                 <IdCodice t-esc="'0000000'"/>
