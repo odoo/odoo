@@ -666,6 +666,8 @@ var Wysiwyg = Widget.extend({
                     initialClassNames: classes,
                     colorCombinationClass: colorCombinationClass,
                     target: target,
+
+                    __editorEditable: this.editorEditable,
                 },
             },
         );
