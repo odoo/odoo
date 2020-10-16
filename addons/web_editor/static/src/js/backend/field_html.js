@@ -173,6 +173,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     _createWysiwygIntance: function () {
         var self = this;
         this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
+        this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
 
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
