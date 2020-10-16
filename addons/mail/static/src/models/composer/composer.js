@@ -254,7 +254,7 @@ function factory(dependencies) {
             if (thread.model === 'mail.channel') {
                 const command = this._getCommandFromText(body);
                 Object.assign(postData, {
-                    command,
+                    command: command ? command.name : undefined,
                     subtype_xmlid: 'mail.mt_comment'
                 });
                 messageId = await this.async(() => this.env.services.rpc({
@@ -597,11 +597,12 @@ function factory(dependencies) {
         /**
          * @private
          * @param {string} content html content
-         * @returns {string|undefined} command, if any in the content
+         * @returns {mail.channel_command|undefined} command, if any in the content
          */
         _getCommandFromText(content) {
             if (content.startsWith('/')) {
-                return content.substring(1).split(/\s/)[0];
+                const firstWord = content.substring(1).split(/\s/)[0];
+                return this.env.messaging.commands.find(command => command.name === firstWord);
             }
             return undefined;
         }
