@@ -2009,7 +2009,7 @@ var SnippetsMenu = Widget.extend({
      * the new content of the customizePanel
      * @param {this.tabs.VALUE} [tab='blocks'] - the tab to select
      */
-    _updateLeftPanelContent: function ({content, tab}) {
+    _updateLeftPanelContent: function ({content, tab, target}) {
         clearTimeout(this._textToolsSwitchingTimeout);
         this._closeWidgets();
 
@@ -2020,6 +2020,9 @@ var SnippetsMenu = Widget.extend({
                 this.customizePanel.removeChild(this.customizePanel.firstChild);
             }
             $(this.customizePanel).append(content);
+        }
+        if (target && (target.classList.contains('note-popover') || !target.childElementCount)) {
+            return;
         }
 
         this.$('.o_snippet_search_filter').toggleClass('d-none', tab !== this.tabs.BLOCKS);
@@ -2476,7 +2479,7 @@ var SnippetsMenu = Widget.extend({
         // a slight delay to avoid flickering doing it twice.
         clearTimeout(this._textToolsSwitchingTimeout);
         this._textToolsSwitchingTimeout = setTimeout(() => {
-            this._updateLeftPanelContent({tab: this.tabs.OPTIONS});
+            this._updateLeftPanelContent({tab: this.tabs.OPTIONS, target: ev.target});
         }, 250);
     },
     /**
@@ -2487,6 +2490,7 @@ var SnippetsMenu = Widget.extend({
         this._updateLeftPanelContent({
             content: ev.data.customize$Elements,
             tab: ev.data.customize$Elements.length ? this.tabs.OPTIONS : this.tabs.BLOCKS,
+            target: ev.target.$target && ev.target.$target[0],
         });
     },
     /**
