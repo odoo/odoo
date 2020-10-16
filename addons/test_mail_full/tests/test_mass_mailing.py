@@ -3,7 +3,7 @@
 
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.tests.common import users
-from odoo.tools import mute_logger
+from odoo.tools import config, mute_logger
 from odoo.tests import tagged
 
 
@@ -68,11 +68,11 @@ class TestMassMailing(TestMailFullCommon):
                     email['body'])
                 # rendered unsubscribe
                 self.assertIn(
-                    'http://localhost:8069/mail/mailing/%s/unsubscribe' % mailing.id,
+                    'http://localhost:%s/mail/mailing/%s/unsubscribe' % (config['http_port'], mailing.id),
                     email['body'])
                 # rendered view
                 self.assertIn(
-                    'http://localhost:8069/mailing/%s/view' % mailing.id,
+                    'http://localhost:%s/mailing/%s/view' % (config['http_port'], mailing.id),
                     email['body'])
 
             self.assertMailTraces([recipient_info], mailing, recipient, check_mail=True)

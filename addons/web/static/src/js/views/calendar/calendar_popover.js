@@ -165,7 +165,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                     FieldClass = fieldRegistry.getAny([field.widget, field.type]);
                     fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
                 }
-                if (!_.isObject(fieldWidget.attrs.modifiers)) {
+                if (fieldWidget.attrs && !_.isObject(fieldWidget.attrs.modifiers)) {
                     fieldWidget.attrs.modifiers = fieldWidget.attrs.modifiers ? JSON.parse(fieldWidget.attrs.modifiers) : {};
                 }
                 self._registerWidget(recordID, field.name, fieldWidget);
