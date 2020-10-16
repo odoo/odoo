@@ -12,7 +12,9 @@ var _t = core._t;
 
 var MassMailingFieldHtml = FieldHtml.extend({
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
-    jsLibs: [],
+    jsLibs: [
+        '/mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
+    ],
 
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
         snippets_loaded: '_onSnippetsLoaded',
