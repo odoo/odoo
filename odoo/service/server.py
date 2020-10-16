@@ -391,7 +391,7 @@ class ThreadedServer(CommonServer):
         # e.g. threads that exceeded their real time,
         # but which finished before the server could restart.
         for thread in list(self.limits_reached_threads):
-            if not thread.isAlive():
+            if not thread.is_alive():
                 self.limits_reached_threads.remove(thread)
         if self.limits_reached_threads:
             self.limit_reached_time = self.limit_reached_time or time.time()
@@ -489,7 +489,7 @@ class ThreadedServer(CommonServer):
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
             if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
                     thread not in self.limits_reached_threads):
-                while thread.isAlive() and (time.time() - stop_time) < 1:
+                while thread.is_alive() and (time.time() - stop_time) < 1:
                     # We wait for requests to finish, up to 1 second.
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
