@@ -359,10 +359,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         // If the form has no model it means a new snippet has been dropped.
         // Apply the default model selected in willStart on it.
         if (!this.$target[0].dataset.model_name) {
-            proms.push((async () => {
-                await this._applyFormModel();
-                await this.updateChangesInWysiwyg();
-            })());
+            proms.push(this._applyFormModel());
         }
 
         await Promise.all(proms);

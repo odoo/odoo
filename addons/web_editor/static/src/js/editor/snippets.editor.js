@@ -2068,18 +2068,17 @@ var SnippetsMenu = Widget.extend({
 
                         _.defer(async () => {
                             self.trigger_up('snippet_dropped', {$target: $snippetToInsert});
+
+                            await self._callForEachChildSnippet($snippetToInsert, function (editor) {
+                                return editor.buildSnippet();
+                            });
+
                             const jwEditor = self.wysiwyg.editor;
                             const vNodes = await self._insertSnippet($snippetToInsert);
-                            const layout = jwEditor.plugins.get(self.JWEditorLib.Layout);
-                            const domLayout = layout.engines.dom;
-                            const domNode = domLayout.getDomNodes(vNodes[0])[0];
+
                             self._disableUndroppableSnippets();
 
                             self.dragAndDropResolve();
-
-                            await self._callForEachChildSnippet($(domNode), function (editor) {
-                                return editor.buildSnippet();
-                            });
 
                             $snippetToInsert.trigger('content_changed');
                             await self._updateInvisibleDOM();
