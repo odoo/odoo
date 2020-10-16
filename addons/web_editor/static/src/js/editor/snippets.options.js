@@ -1284,6 +1284,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     async setValue(color) {
         await this._super(...arguments);
 
+        await this._renderColorPalette();
+
         const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
         this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
@@ -1297,8 +1299,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
                 this.colorPreviewEl.classList.add(`bg-${this._value}`);
             }
         }
-
-        await this._renderColorPalette();
     },
 
 
