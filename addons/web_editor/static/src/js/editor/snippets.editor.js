@@ -6,6 +6,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var Widget = require('web.Widget');
+var config = require('web.config');
 var snippetOptions = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
@@ -2848,8 +2849,17 @@ var SnippetsMenu = Widget.extend({
     /**
      * On click on discard button.
      */
-    _onMobilePreviewClick: function() {
-        this.wysiwyg.editor.execCommand('toggleDevicePreview', { device: 'mobile' });
+    _onMobilePreviewClick: async function() {
+        await this.wysiwyg.editor.execCommand('toggleDevicePreview', { device: 'mobile' });
+        await new Promise(r => setTimeout(r)); // Wait browser redrawing (because the commands use microtask and not setTimeout)
+        const $iframe = this.$el.closest('.wrap_editor').find('iframe[name="jw-iframe"]');
+        if ($iframe.length) {
+            config.device.isMobile = true;
+            config.device.bus.trigger('size_changed', 0);
+        } else {
+            config.device.isMobile = config.device.size_class <= config.device.SIZES.SM;
+            config.device.bus.trigger('size_changed', config.device.size_class);
+        }
     },
     /**
      * Set the last snippet activated.
