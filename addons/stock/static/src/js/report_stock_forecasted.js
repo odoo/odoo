@@ -5,7 +5,6 @@ const clientAction = require('report.client_action');
 const core = require('web.core');
 const dom = require('web.dom');
 const GraphView = require('web.GraphView');
-const session = require('web.session');
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -19,7 +18,7 @@ const ReplenishReport = clientAction.extend({
         this._super.apply(this, arguments);
         this.context = action.context;
         this.productId = this.context.active_id;
-        this.resModel = this.context.active_model || 'product.template';
+        this.resModel = this.context.active_model || this.context.params.active_model || 'product.template';
         const isTemplate = this.resModel === 'product.template';
         this.actionMethod = `action_product_${isTemplate ? 'tmpl_' : ''}forecast_report`;
         const reportName = `report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
@@ -112,6 +111,12 @@ const ReplenishReport = clientAction.extend({
             return graphView.getController(this);
         }).then(res => {
             viewController = res;
+
+            // Hack to put the res_model on the url. This way, the report always know on with res_model it refers.
+            if (location.href.indexOf('active_model') === -1) {
+                const url = window.location.href + `&active_model=${this.resModel}`;
+                window.history.pushState({}, "", url);
+            }
             const fragment = document.createDocumentFragment();
             return viewController.appendTo(fragment);
         });
