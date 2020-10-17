@@ -1704,7 +1704,8 @@ exports.Orderline = Backbone.Model.extend({
     },
     // sets a discount [0,100]%
     set_discount: function(discount){
-        var disc = Math.min(Math.max(parseFloat(discount) || 0, 0),100);
+        var parsed_discount = isNaN(parseFloat(discount)) ? 0 : field_utils.parse.float('' + discount);
+        var disc = Math.min(Math.max(parsed_discount || 0, 0),100);
         this.discount = disc;
         this.discountStr = '' + disc;
         this.trigger('change',this);
@@ -1734,7 +1735,7 @@ exports.Orderline = Backbone.Model.extend({
             this.order.remove_orderline(this);
             return;
         }else{
-            var quant = parseFloat(quantity) || 0;
+            var quant = field_utils.parse.float('' + quantity) || 0;
             var unit = this.get_unit();
             if(unit){
                 if (unit.rounding) {
@@ -1921,7 +1922,8 @@ exports.Orderline = Backbone.Model.extend({
     // changes the base price of the product for this orderline
     set_unit_price: function(price){
         this.order.assert_editable();
-        this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
+        var parsed_price = isNaN(parseFloat(price)) ? 0 : field_utils.parse.float('' + price)
+        this.price = round_di(parsed_price || 0, this.pos.dp['Product Price']);
         this.trigger('change',this);
     },
     get_unit_price: function(){

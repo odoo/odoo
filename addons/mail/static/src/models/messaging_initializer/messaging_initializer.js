@@ -51,7 +51,7 @@ function factory(dependencies) {
             const data = await this.async(() => this.env.services.rpc({
                 route: '/mail/init_messaging',
                 params: { context: context }
-            }));
+            }, { shadow: true }));
             await this.async(() => this._init(data));
             if (discuss.isOpen) {
                 discuss.openInitThread();

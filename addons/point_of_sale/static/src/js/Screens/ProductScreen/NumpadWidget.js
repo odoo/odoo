@@ -47,6 +47,9 @@ odoo.define('point_of_sale.NumpadWidget', function (require) {
         sendInput(key) {
             this.trigger('numpad-click-input', { key });
         }
+        get decimalSeparator() {
+            return this.env._t.database.parameters.decimal_point;
+        }
     }
     NumpadWidget.template = 'NumpadWidget';
 

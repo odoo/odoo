@@ -915,6 +915,40 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('render popover with modifiers', async function (assert) {
+        assert.expect(3);
+
+        this.data.event.fields.priority = {string: "Priority", type: "selection", selection: [['0', 'Normal'], ['1', 'Important']],};
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week">'+
+                '<field name="priority" widget="priority" readonly="1"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click($('.fc-event:contains(event 4)'));
+
+        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
+        assert.containsOnce(calendar, '.o_cw_popover .o_priority span.o_priority_star', "priority field should not be editable");
+
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
+
+        calendar.destroy();
+    });
+
     QUnit.test('render popover with widget which has specialData attribute', async function (assert) {
         assert.expect(3);
 
