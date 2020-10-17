@@ -10,8 +10,9 @@
 # Michael Yeung, 2019
 # Martin Trigaux, 2019
 # 棋文 鄭 <a09930185@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 曾逸民 <suncombo@gmail.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# pofan lai <gasklath20312@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: 曾逸民 <suncombo@gmail.com>, 2020\n"
+"Last-Translator: pofan lai <gasklath20312@gmail.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,17 +131,17 @@ msgstr "-> 查看已部分調節分錄"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "15天"
+msgstr "15 天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr "2個月"
+msgstr "2 個月"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr "21天"
+msgstr "21 天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -150,7 +151,7 @@ msgstr "30 天"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "預付30% 其他下個月月底支付"
+msgstr "預付30%，其他下個月月底支付"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -166,7 +167,7 @@ msgstr "45 天"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ": Refund"
-msgstr ":退款"
+msgstr "：退款"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -193,7 +194,7 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        親愛的 ${object.partner_id.name}<br/><br/>\n"
 "        感謝您的付款.\n"
-"        附件為您的付款收據 <strong>${(object.name or '').replace('/','-')}</strong> 總金額\n"
+"        附件為您的付款收據 <strong>${(object.name or '').replace('/','-')}</strong> 總金額為\n"
 "         <strong>${format_amount(object.amount, object.currency_id)}</strong> 支付對象 ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        若有任何問題請隨時跟我們聯絡.\n"
@@ -7093,7 +7094,7 @@ msgstr "憑證已調節"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "日記帳類型"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11929,7 +11930,7 @@ msgstr "供應商應付憑單"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr ""
+msgstr "已建立供應商應付憑單"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12386,7 +12387,7 @@ msgstr "您不能修改已登帳的付款分錄。"
 msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
-msgstr ""
+msgstr "您不能修改此日誌的已過帳條目,因為它處於限制模式。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12410,7 +12411,7 @@ msgstr ""
 msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
-msgstr ""
+msgstr "不能覆寫數值以確保會計的一致性。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12459,7 +12460,7 @@ msgstr "您不能刪除／關閉一個已經被設定在供應商／客戶上的
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr ""
+msgstr "您不能重置到稅現金基礎日記帳分錄草稿。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
