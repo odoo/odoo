@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* payment_stripe
 # 
+# Translators:
+# Martin Trigaux, 2020
+# Kostas Goutoudis <goutoudis@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2020\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +25,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -29,11 +34,14 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"Μια σχετική ή απόλυτη διεύθυνση URL που εμφανίζει μια τετράγωνη εικόνα της εταιρείας ή του είδους σας. \n"
+"Ορίζεται στο προφίλ σας στο Stripe. \n"
+"Δείτε: https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "Διεύθυνση URL της φωτογραφίας στην Ολοκλήρωση Αγοράς"
 
 #. module: payment_stripe
 #. openerp-web
@@ -41,28 +49,28 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Κλείσιμο"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__display_name
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Σφάλμα"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__id
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -84,12 +92,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token____last_update
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Αποδέκτης Πληρωμής"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
@@ -99,19 +107,19 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Διακριτικό Πληρωμής"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Συναλλαγή Πληρωμής"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "Σφάλμα πληρωμής"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -120,16 +128,18 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Ίσως το πρόβλημα να μπορεί να λυθεί με τον επανέλεγχο των στοιχείων της "
+"πιστωτικής σας κάρτας ή επικοινωνώντας με την τράπεζά σας;"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "Πάροχος"
 
 #. module: payment_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
@@ -144,12 +154,12 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Δημοσιεύσιμο Κλειδί Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Κρυφό Κλειδί Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -162,6 +172,7 @@ msgstr ""
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr ""
+"Το Stripe μας έδωσε τις ακόλουθες πληροφορίες σχετικά με το πρόβλημα: '%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -173,7 +184,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe: δεν βρέθηκε παραγγελία για την αναφορά %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -202,3 +213,4 @@ msgstr ""
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
 msgstr ""
+"Λυπούμαστε αλλά πρέπει να σας αναφέρουμε ότι η συναλλαγή έχει αποτύχει."

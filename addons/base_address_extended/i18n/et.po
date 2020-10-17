@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Triine Aavik <triine@avalah.ee>, 2020
+# Martin Trigaux, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2020\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,28 +27,30 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Muutke, kuidas süsteem koostab täispika tänava välja erinevatest tänava "
+"alamväljadest."
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Ettevõtted"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Riik"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__display_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Kuva nimi"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -57,7 +61,7 @@ msgstr ""
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "Ukse number"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
@@ -69,6 +73,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Selle riigi tänavatele mõeldud vorming.\n"
+"\n"
+"Võite kasutada pythoni stiilis sõne mustrit koos kõigi tänava väljadega (näiteks, kasuta '%(street_name)s, %(street_number)s', kui soovid näidata tänavanime, millele järgneb koma ja maja number)\n"
+"%(street_name)s: tänavanimi\n"
+"%(street_number)s: maja number\n"
+"%(street_number2)s: ukse number"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -79,14 +89,14 @@ msgstr ""
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
 msgid "House Number"
-msgstr ""
+msgstr "Maja number"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company____last_update
@@ -98,30 +108,30 @@ msgstr "Viimati muudetud (millal)"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Tänava formaat"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Tänava nimi"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "Tänava nimi ..."
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Täna formaat ..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/res_partner.py:0
 #: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Tänava formaadis on väli %s, mida ei õnnestu tuvastada."

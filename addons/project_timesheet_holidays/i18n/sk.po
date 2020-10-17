@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * project_timesheet_holidays
+# 	* project_timesheet_holidays
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Martin Trigaux, 2020
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,11 +33,12 @@ msgid "Analytic Lines"
 msgstr "Analytické riadky"
 
 #. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:38
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
 #, python-format
 msgid ""
-"Both the internal project and task are required to generate timesheet for "
-"the leaves."
+"Both the internal project and task are required to generate a timesheet for "
+"the time off %s. If you don't want a timesheet, you should leave the "
+"internal project and task empty."
 msgstr ""
 
 #. module: project_timesheet_holidays
@@ -46,44 +49,69 @@ msgstr "Spoločnosti"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenia konfigurácie"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
-msgid "Default project value for timesheet generated from leave type."
+msgid "Default project value for timesheet generated from time off type."
 msgstr ""
+"Predvolená hodnota projektu pre pracovný výkaz generovaný z typu voľných "
+"dní."
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "Generovanie pracovného výkazu"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid ""
-"If checked, when validating a leave, timesheet will be generated in the "
+"If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Ak je toto políčko začiarknuté, pri potvrdení pracovného voľna sa vygeneruje"
+" pracovný výkaz projekte Dovolenka."
 
 #. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/res_company.py:30
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#, python-format
+msgid "Internal"
+msgstr "Interné"
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
-#, python-format
 msgid "Internal Project"
-msgstr ""
+msgstr "Interný projekt"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
-msgid "Internal Task for timesheet"
-msgstr ""
-
-#. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_hr_leave
-msgid "Leave"
-msgstr "Voľno"
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line____last_update
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type____last_update
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company____last_update
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
@@ -91,23 +119,7 @@ msgid "Leave Request"
 msgstr "Žiadosť o voľno"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
-msgid "Leave Task"
-msgstr ""
-
-#. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
-msgid "Leave Type"
-msgstr "Typ voľna"
-
-#. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/res_company.py:40
-#, python-format
-msgid "Leaves"
-msgstr "Voľná"
-
-#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
 msgstr "Projekt"
@@ -115,18 +127,57 @@ msgstr "Projekt"
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
-msgstr "Úloha"
+msgstr "Požiadavka"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
+msgid "Task for timesheet"
+msgstr "Úloha pre pracovný výkaz"
+
+#. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#, python-format
+msgid "The Internal Project of a company should be in that company."
+msgstr "Interný projekt spoločnosti by mal byť v tejto spoločnosti."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 msgid ""
-"The project will contain the timesheet generated when a leave is validated."
+"The project will contain the timesheet generated when a time off is "
+"validated."
 msgstr ""
+"Projekt bude obsahovať pracovný výkaz vygenerovaný pri overení voľných dní."
 
 #. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:16
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: model:ir.model,name:project_timesheet_holidays.model_hr_leave
+#, python-format
+msgid "Time Off"
+msgstr "Voľné dni"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+msgid "Time Off Task"
+msgstr "Voľné dni úloha"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
+msgid "Time Off Type"
+msgstr "Typ voľných dní"
+
+#. module: project_timesheet_holidays
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
+msgid "Timesheet"
+msgstr "Pracovné výkazy"
+
+#. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
+"Nemožno odstrániť riadky pracovného výkazu pripojené k listom. Namiesto toho"
+" zrušte listy."

@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_email_template
+# 	* product_email_template
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Martin Trigaux, 2020
+# Matus Krnac <matus.krnac@gmail.com>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# Jan Prokop, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +26,18 @@ msgstr ""
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.product_template_form_view
 msgid "Automatic Email at Invoice"
-msgstr ""
+msgstr "Automatický email pri fakturácii"
 
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
 msgid "Body"
 msgstr "Telo"
+
+#. module: product_email_template
+#: model:ir.model.fields,field_description:product_email_template.field_account_move__display_name
+#: model:ir.model.fields,field_description:product_email_template.field_product_template__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
 
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
@@ -37,9 +46,21 @@ msgid "Email Template"
 msgstr "Šablóna emailu"
 
 #. module: product_email_template
-#: model:ir.model,name:product_email_template.model_account_invoice
-msgid "Invoice"
-msgstr "Faktúra"
+#: model:ir.model.fields,field_description:product_email_template.field_account_move__id
+#: model:ir.model.fields,field_description:product_email_template.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_email_template
+#: model:ir.model,name:product_email_template.model_account_move
+msgid "Journal Entry"
+msgstr "Vstup účtovnej knihy"
+
+#. module: product_email_template
+#: model:ir.model.fields,field_description:product_email_template.field_account_move____last_update
+#: model:ir.model.fields,field_description:product_email_template.field_product_template____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
 
 #. module: product_email_template
 #: model:ir.model.fields,field_description:product_email_template.field_product_product__email_template_id
@@ -50,15 +71,21 @@ msgstr "Emailová šablóna produktu"
 #. module: product_email_template
 #: model:ir.model,name:product_email_template.model_product_template
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: product_email_template
 #: model_terms:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Send a product-specific email once the invoice is paid"
-msgstr ""
+msgid "Send a product-specific email once the invoice is validated"
+msgstr "Zaslať produktovo špecifický mail akonáhle je faktúra overená"
 
 #. module: product_email_template
 #: model:ir.model.fields,help:product_email_template.field_product_product__email_template_id
 #: model:ir.model.fields,help:product_email_template.field_product_template__email_template_id
-msgid "Send a product-specific email once the invoice is paid."
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to"
+" an email template."
 msgstr ""
+"Pri overovaní faktúry bude zaslaný email zákazníkovi založený na tejto "
+"šablóne. Zákazník dostane email pre každý výrobok spojený s emailovou "
+"šablónou."

@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Luigi Di Naro <gigidn@gmail.com>, 2020
+# Iacopo Simonelli <lsi@odoo.com>, 2020
 # mbo_odoo <mbo@odoo.com>, 2020
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Iacopo Simonelli <lsi@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2020
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
@@ -289,6 +289,37 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Spett.le ${object.partner_id.name},<br/><br/>\n"
+"        siamo lieti di informarLa che il suo ordine è stato spedito.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Codice tracciabilità:\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Per maggiori dettagli consultare l'ordine di consegna allegato.<br/><br/>\n"
+"        Grazie,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -411,7 +442,7 @@ msgstr "<span>NL/NS:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span>New</span>"
-msgstr "<span>Nuova</span>"
+msgstr "<span>Nuovo</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -615,7 +646,7 @@ msgstr "Attività"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decorazione eccezione attività"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__activity_state
@@ -660,8 +691,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Aggiungere e personalizzare le rotte operative per elaborare gli spostamenti del prodotto nei magazzini: ad es. scaricare > controllo qualità > giacenza per prodotti in arrivo, prelievo > confezione > spedizione per prodotti in uscita.\n"
-"È inoltre possibile impostare strategie di posizionamento nel magazzino per inviare direttamente i prodotti in arrivo in specifiche ubicazioni (es. contenitori specifici, scaffali)."
+"Aggiunge e personalizza le operazioni sui percorsi per elaborare gli spostamenti prodotto nei magazzini: es. scarico > controllo qualità > giacenza per prodotti in arrivo, prelievo > collo > spedizione per prodotti in uscita.\n"
+" È anche possibile impostare strategie di immagazzinamento per le ubicazioni di magazzino, in modo da inviare immediatamente i prodotti in arrivo in specifiche ubicazioni (es. contenitori particolari, scaffali)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -672,12 +703,12 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Aggiungere e personalizzare rotte operative per elaborare i movimenti del "
-"prodotto nei magazzini: ad es. scarico > controllo qualità > magazzino per "
-"prodotti in entrata, prelievo > confezione > spedizione per prodotti in "
-"uscita. È inoltre possibile impostare strategie di inserimento nel magazzino"
-" per inviare immediatamente i prodotti in arrivo in ubicazioni specifiche "
-"(es. contenitori specifici, scaffali)."
+"Aggiunge e personalizza le operazioni sui percorsi per elaborare gli "
+"spostamenti prodotto nei magazzini: es. scarico > controllo qualità > "
+"giacenza per prodotti in arrivo, prelievo > collo > spedizione per prodotti "
+"in uscita. È anche possibile impostare strategie di immagazzinamento per le "
+"ubicazioni di magazzino, in modo da inviare immediatamente i prodotti in "
+"arrivo in specifiche ubicazioni (es. contenitori particolari, scaffali)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -718,7 +749,7 @@ msgstr "Avanzate: applica le regole di approvvigionamento"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
-msgstr "tutte"
+msgstr "Tutti"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -794,8 +825,8 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
-"Applicare rotte specifiche per il rifornimento del prodotto invece di rotte "
-"predefinite del prodotto."
+"Applica percorsi specifici per il rifornimento al posto di quelli "
+"predefiniti del prodotto."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -811,7 +842,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
-msgstr "Archiviati"
+msgstr "In archivio"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1251,7 +1282,7 @@ msgstr "Azienda"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs"
-msgstr ""
+msgstr "Calcolo dei costi di spedizione"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1577,7 +1608,7 @@ msgstr "Cross-Dock"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Rotte di Cross-Dock"
+msgstr "Percorso cross dock"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -2727,7 +2758,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare una eccezione attività."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__message_needaction
@@ -3150,7 +3181,7 @@ msgstr "Resoconto magazzino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Rotte di inventario"
+msgstr "Percorsi di inventario"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -3432,7 +3463,7 @@ msgstr "Lasciare vuoto"
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
 msgstr ""
-"Lascia questo campo vuoto se questa rotta è condivisa tra tutte le società"
+"Lasciare vuoto questo campo se il percorso è condiviso tra tutte le aziende"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -3685,8 +3716,8 @@ msgstr "Gestione flussi di invio e richiesta di magazzoino"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
 msgstr ""
-"Gestire i confezionamenti dei prodotti (ad esempio, un pacchetto di 6 "
-"bottiglie, una scatola di 10 pezzi)"
+"Gestione dell'imballaggio prodotti (es. confezione da 6 bottiglie, scatola "
+"da 10 pezzi)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -5235,7 +5266,7 @@ msgstr "Percorso di ricezione"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "Ricevute"
+msgstr "Ricezioni"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5447,7 +5478,7 @@ msgstr "Rendicontazione"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr ""
+msgstr "Richiesta di firma per gli ordini di consegna"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_procurement_jit
@@ -5597,7 +5628,7 @@ msgstr "Percorsi"
 #: model:ir.model.fields,field_description:stock.field_product_product__has_available_route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
-msgstr ""
+msgstr "Su questo prodotto è possibile selezionare i percorsi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -5912,8 +5943,7 @@ msgstr "Imposta proprietario sui prodotti a magazzino"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
-"Imposta gli attributi dei prodotti (es. colore, taglia) per gestire le "
-"varianti"
+"Imposta gli attributi prodotto (es. colore, taglia) per gestire le varianti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6959,7 +6989,7 @@ msgstr "Attività odierne"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__total_route_ids
 msgid "Total routes"
-msgstr "Percorsi totali"
+msgstr "Totale percorsi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7003,7 +7033,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "Tracciare l'ubicazione dei prodotti nel magazzino"
+msgstr "Tiene traccia dell'ubicazione dei prodotti nel magazzino"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -7148,7 +7178,7 @@ msgstr "Tipo di operazione"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di eccezione attività sul record."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -7324,7 +7354,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes"
-msgstr ""
+msgstr "Utilizzo di percorsi personali"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -7756,10 +7786,10 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
-"Qui puoi definire le rotte principali che attraversano\n"
-"                    i tuoi magazzini e che definiscono i flussi dei tuoi prodotti. Queste\n"
-"                    rotte possono essere collegate ad un prodotto, ad una categoria di prodotti,\n"
-"                    ad un approvvigionamento o un ordine di vendita. "
+"Qui è possibile indicare i percorsi principali che attraversano\n"
+"                    i magazzini e che definiscono i flussi dei prodotti. Possono essere\n"
+"                    assegnati a un prodotto, a una categoria prodotto oppure essere fissi su\n"
+"                    approvvigionamenti o ordini di vendita. "
 
 #. module: stock
 #: code:addons/stock/models/product.py:0

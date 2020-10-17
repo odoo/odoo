@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_unsplash
+# 	* web_unsplash
 # 
 # Translators:
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2020
+# gebri <gebri@inmail.sk>, 2020
+# Jan Prokop, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,30 +25,16 @@ msgstr ""
 #. module: web_unsplash
 #: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Vytvoriť prístupový kľúč"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
 msgid "Access Key"
-msgstr ""
+msgstr "Prístupový kľúč"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:36
-#, python-format
-msgid "Access key is not set"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
-#, python-format
-msgid "Add"
-msgstr "Pridať"
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:44
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Apply"
 msgstr "Použiť"
@@ -54,68 +42,113 @@ msgstr "Použiť"
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
 msgid "Config Settings"
+msgstr "Nastavenia konfigurácie"
+
+#. module: web_unsplash
+#: model:ir.model.fields,field_description:web_unsplash.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:web_unsplash.field_res_users__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: web_unsplash
+#: code:addons/web_unsplash/controllers/main.py:0
+#, python-format
+msgid "ERROR: Unknown Unsplash URL!"
+msgstr "CHYBA: Neznáma Unsplash URL!"
+
+#. module: web_unsplash
+#: code:addons/web_unsplash/controllers/main.py:0
+#, python-format
+msgid "ERROR: Unknown Unsplash notify URL!"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Generate an access key"
-msgstr ""
+msgstr "Vytvoriť prístupový kľúč"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:43
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:65
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "How to find my Unsplash Application ID?"
+msgstr ""
+
+#. module: web_unsplash
+#: model:ir.model.fields,field_description:web_unsplash.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__id
+#: model:ir.model.fields,field_description:web_unsplash.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: web_unsplash
+#: model:ir.model.fields,field_description:web_unsplash.field_ir_qweb_field_image____last_update
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:web_unsplash.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Paste your access key here"
-msgstr ""
+msgstr "Vložte svoj prístupový kľúč"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:27
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
-msgid "Photos not found"
+msgid "Paste your application ID here"
+msgstr "Vložte svoje ID aplikácie"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "Photos (via Unsplash)"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "Please check your Unsplash access key and application ID."
+msgstr ""
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
 msgstr ""
+"Skontrolujte vaše internetové pripojenie alebo kontaktujte administrátora."
+
+#. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr "Qweb pole obrázok"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:61
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
-msgid "Please check your unsplash api key."
-msgstr ""
+msgid "Search is temporarily unavailable"
+msgstr "Hľadanie dočasne nedostupné"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:8
-#, python-format
-msgid "Search from Unsplash"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
-#, python-format
-msgid "Search is temporary unavailable"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Something went wrong"
-msgstr ""
+msgstr "Niečo sa pokazilo"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:53
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
@@ -124,19 +157,19 @@ msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:58
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Unauthorized Key"
 msgstr ""
 
 #. module: web_unsplash
-#: model:ir.model,name:web_unsplash.model_res_users
-msgid "Users"
-msgstr "Používatelia"
+#. openerp-web
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
+#, python-format
+msgid "Unsplash requires an access key and an application ID"
+msgstr ""
 
 #. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:7
-#, python-format
-msgid "— or —"
-msgstr "— alebo —"
+#: model:ir.model,name:web_unsplash.model_res_users
+msgid "Users"
+msgstr "Užívatelia"

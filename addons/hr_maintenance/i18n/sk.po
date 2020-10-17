@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_maintenance
+# 	* hr_maintenance
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# gebri <gebri@inmail.sk>, 2020
+# Jan Prokop, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,48 +24,93 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__assign_date
+msgid "Assigned Date"
+msgstr "Dátum pridelienia"
+
+#. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__department_id
-msgid "Assigned to Department"
-msgstr "Pridelené oddeleniu"
+msgid "Assigned Department"
+msgstr "Pridelené oddelenie"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__employee_id
-msgid "Assigned to Employee"
-msgstr "Pridelené zamestnancovi"
+msgid "Assigned Employee"
+msgstr "Pridelený zamestnanec"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
+msgid "Assigned Equipments"
+msgstr "Priradené vybavenie"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "Created By"
-msgstr ""
+msgstr "Vytvoril"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__owner_user_id
 msgid "Created by User"
-msgstr ""
+msgstr "Vytvoril užívateľ"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__department_id
+#: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__department
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
-#: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Department"
 msgstr "Oddelenie"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
+#: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__employee
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
-#: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Employee"
 msgstr "Zamestnanec"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
+msgid "Equipment"
+msgstr "Vybavenie"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
+msgid "Equipments"
+msgstr "Vybavenia"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment____last_update
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request____last_update
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
+
+#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr ""
+msgstr "Vybavenie na údržbu"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
@@ -70,19 +118,24 @@ msgid "Maintenance Request"
 msgstr "Požiadavka na údržbu"
 
 #. module: hr_maintenance
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
-msgid "My Requests"
-msgstr "Moje požiadavky"
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
+msgid "Managed Equipments"
+msgstr "Spravované zariadenia"
 
 #. module: hr_maintenance
-#: selection:maintenance.equipment,equipment_assign_to:0
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
+msgid "My Maintenances"
+msgstr "Moja údržba"
+
+#. module: hr_maintenance
+#: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__other
 msgid "Other"
 msgstr "Iné"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__owner_user_id
 msgid "Owner"
-msgstr "Vlastník"
+msgstr "Majiteľ"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr
@@ -93,3 +146,8 @@ msgstr "Nepriradené"
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__equipment_assign_to
 msgid "Used By"
 msgstr "Používaný"
+
+#. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_res_users
+msgid "Users"
+msgstr "Užívatelia"

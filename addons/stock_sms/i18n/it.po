@@ -33,6 +33,16 @@ msgid ""
 "                %endif\n"
 "            "
 msgstr ""
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: siamo lieti di informarLa che l'ordine n° ${object.origin} è stato spedito.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: siamo lieti di informarLa che l'ordine è stato spedito.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Il codice di rintracciabilità è ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -72,7 +82,7 @@ msgstr "Creato il"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "Consegna: invio con SMS"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -136,7 +146,7 @@ msgstr "Modello SMS"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "Conferma via SMS dal movimento di magazzino "
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
