@@ -3,6 +3,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
 
     var ajax = require('web.ajax');
     var core = require('web.core');
+    var session = require('web.session');
     require('web.dom_ready');
 
     var _t = core._t;
