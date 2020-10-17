@@ -3,8 +3,18 @@
 # 	* project
 # 
 # Translators:
-# Triine Aavik <triine@avalah.ee>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# Egon Raamat <egon@avalah.ee>, 2020
+# Ants Peetsalu <ants@avalah.ee>, 2020
+# Triine Aavik <triine@avalah.ee>, 2020
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Martin Trigaux, 2020
+# Arma Gedonsky <armagedonsky@hot.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# Marek Pontus, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
+# Helen Sulaoja <helen@avalah.ee>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,28 +61,28 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "Päevade arv tähtajani"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
 #: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "Ülesannete arv"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "Määratavate tööpäevade arv"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "Tööpäevade arv sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "Ülesannete arv"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
@@ -84,7 +94,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (koopia)"
 
 #. module: project
 #. openerp-web
@@ -109,7 +119,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__12
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__12
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__13
@@ -359,7 +369,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Staatus:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -423,37 +433,37 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assigned to</strong>"
-msgstr ""
+msgstr "<strong>Määratud</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>Kuupäev:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Lõpptähtaeg:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Kirjeldus</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Message and communication history</strong>"
-msgstr ""
+msgstr "<strong>Message and communication history</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>Projekt:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Reported by</strong>"
-msgstr ""
+msgstr "<strong>Koostaja</strong>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -461,11 +471,13 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Pythoni sõnastik, mida hinnatakse vaikimisi väärtuste määramiseks uute "
+"kirjete loomiseks sellele aliasele."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "Võta e-kirju vastu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
@@ -477,19 +489,19 @@ msgstr "Ligipääsuhoiatus"
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vajalik toiming"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
 #: model:ir.model.fields,field_description:project.field_project_task__active
 #: model:ir.model.fields,field_description:project.field_project_task_type__active
 msgid "Active"
-msgstr ""
+msgstr "Aktiivne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Tegevused"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
@@ -499,7 +511,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Tegevuse staatus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
@@ -510,12 +522,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Tegevuste tüübid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "Lisa kirjeldus ..."
 
 #. module: project
 #. openerp-web
@@ -537,7 +549,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administraator"
 
 #. module: project
 #. openerp-web
@@ -549,27 +561,27 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
 msgid "Alias"
-msgstr ""
+msgstr "Alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Turvakontakti alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliase nimi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "Aliase domeen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Aliase mudel"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -606,7 +618,7 @@ msgstr ""
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analüütiline konto"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -619,12 +631,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__april
 msgid "April"
-msgstr ""
+msgstr "Aprill"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Arhiveeri"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -644,7 +656,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "Arhiveeritud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -666,24 +678,24 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Määra mulle"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assigned"
-msgstr ""
+msgstr "Määratud"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "Määratud ülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
 msgid "Assigned To"
-msgstr ""
+msgstr "Määratud (kellele)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_id
@@ -692,12 +704,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr ""
+msgstr "Kellele määratud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "Määramise kuupäev"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
@@ -711,6 +723,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"Igas etapis saavad töötajad ülesandeid blokeerida või määrata, et ülesanne/probleem on valmis järgmise etapi jaoks.\n"
+"                               Siin saate määrata sildid, mis ilmuvad vaikimisi määratud\n"
+"                               staatuse siltide asemel."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_attachment_count
@@ -721,13 +736,13 @@ msgstr "Manuste arv"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Manus, mis ei pärine sõnumist."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__august
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__august
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -738,7 +753,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Kanbani automaatne olek"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -747,6 +762,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Muutke kanbani olekut automaatselt, kui klient vastab selle etapi tagasisidele.\n"
+" * Kliendi hea tagasiside värskendab kanbani oleku „uueks etapiks valmis” (roheline täpp).\n"
+" * Keskmine või halb tagasiside seab kanbani oleku blokeeritud (punane täpp)."
 
 #. module: project
 #. openerp-web
@@ -754,7 +772,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Backlog"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -775,7 +793,7 @@ msgstr ""
 #: model:project.task.type,legend_blocked:project.project_stage_3
 #, python-format
 msgid "Blocked"
-msgstr ""
+msgstr "Blokeeritud"
 
 #. module: project
 #. openerp-web
@@ -821,12 +839,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Cancel"
-msgstr ""
+msgstr "Loobu"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_3
 msgid "Cancelled"
-msgstr ""
+msgstr "Tühistatud"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
@@ -853,7 +871,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
 msgid "City"
-msgstr ""
+msgstr "Linn"
 
 #. module: project
 #. openerp-web
@@ -871,13 +889,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
 msgid "Color"
-msgstr ""
+msgstr "Värv"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__color
 #: model:ir.model.fields,field_description:project.field_project_task__color
 msgid "Color Index"
-msgstr ""
+msgstr "Värvikood"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__commercial_partner_id
@@ -900,12 +918,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__company_id
 msgid "Company"
-msgstr ""
+msgstr "Ettevõte"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Seadistused"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -915,28 +933,28 @@ msgstr "Seadistus"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Confirm"
-msgstr ""
+msgstr "Kinnitage"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: code:addons/project/wizard/project_task_type_delete.py:0
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "Kinnitusviis"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Consulting"
-msgstr ""
+msgstr "Konsultatsioon"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: project
 #. openerp-web
@@ -948,23 +966,23 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Kaanepilt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Create"
-msgstr ""
+msgstr "Loo"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Looge projekt"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Loo uus ülesanne müügitorus"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -979,7 +997,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Loomise kuupäev"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_uid
@@ -990,7 +1008,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Loonud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_date
@@ -1000,17 +1018,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Loodud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
-msgstr ""
+msgstr "Loomise kuupäev"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuuta"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -1020,12 +1038,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr ""
+msgstr "Ülesande praegune etapp"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Ülesande praegune etapp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
@@ -1043,27 +1061,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Klient"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Kliendi e-post"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Kliendi tagasiside"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Kliendiportaali URL"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1071,7 +1089,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Kliendi hinnangud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
@@ -1104,7 +1122,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "Igapäevaselt"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
@@ -1141,24 +1159,24 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr ""
+msgstr "Päevad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
 msgid "Deadline"
-msgstr ""
+msgstr "Tähtaeg"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__december
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__december
 msgid "December"
-msgstr ""
+msgstr "Detsember"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "Vaikeväärtused"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
@@ -1169,6 +1187,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"Define the steps that will be used in the project from the\n"
+"                creation of the task, up to the closing of the task or issue.\n"
+"                You will use these stages in order to track the progress in\n"
+"                solving a task or an issue."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -1187,7 +1209,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
-msgstr ""
+msgstr "Kustuta"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1208,7 +1230,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Delivered"
-msgstr ""
+msgstr "Tarnitud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1222,7 +1244,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
-msgstr ""
+msgstr "Kirjeldus"
 
 #. module: project
 #. openerp-web
@@ -1231,19 +1253,19 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Design"
-msgstr ""
+msgstr "Disain"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Development"
-msgstr ""
+msgstr "Development"
 
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Ülevaade"
 
 #. module: project
 #. openerp-web
@@ -1263,7 +1285,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Discard"
-msgstr ""
+msgstr "Loobu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__display_name
@@ -1279,23 +1301,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Kuva nimi"
 
 #. module: project
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Puudub ligipääs. Jäta need andmed kasutaja kokkuvõtte kirjast välja"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentatsioon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Documents"
-msgstr ""
+msgstr "Dokumendid"
 
 #. module: project
 #. openerp-web
@@ -1307,25 +1329,25 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
-msgstr ""
+msgstr "Tehtud"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
-msgstr ""
+msgstr "Planeerimata"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rippmenüü"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
-msgstr ""
+msgstr "Muuda"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1361,7 +1383,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "E-kirja näidis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -1380,7 +1402,7 @@ msgstr "Lõppkuupäev"
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_end
 msgid "Ending Date"
-msgstr ""
+msgstr "Lõppkuupäev"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1397,7 +1419,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "Error! project start-date must be lower than project end-date."
-msgstr ""
+msgstr "Error! project start-date must be lower than project end-date."
 
 #. module: project
 #. openerp-web
@@ -1412,23 +1434,23 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Aegumiskuupäev"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Laiendatud filtrid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr ""
+msgstr "Täiendav info"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__february
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__february
 msgid "February"
-msgstr ""
+msgstr "Veebruar"
 
 #. module: project
 #. openerp-web
@@ -1452,12 +1474,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__first
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__first
 msgid "First"
-msgstr ""
+msgstr "Esimene"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "Kanbanis volditud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1465,11 +1487,13 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed"
-msgstr ""
+msgstr "Jälgitud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1480,19 +1504,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Jälgijad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Jälgijad (kanalid)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Jälgijad (partnerid)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
@@ -1509,23 +1533,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__fri
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__fri
 msgid "Fri"
-msgstr ""
+msgstr "Reede"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__fri
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__fri
 msgid "Friday"
-msgstr ""
+msgstr "Reede"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr ""
+msgstr "Tulevased tegevused"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1542,29 +1566,29 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "Gives the sequence order when displaying a list of Projects."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
+msgstr "Annab toimingute loendi kuvamisel jadajärjestuse."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Roheline Kanban´i silt."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Hall Kanbani silt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr ""
+msgstr "Rühmitamine"
 
 #. module: project
 #. openerp-web
@@ -1587,17 +1611,17 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Õnnelik nägu"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High"
-msgstr ""
+msgstr "Kõrge"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
-msgstr ""
+msgstr "Tunnid"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1613,7 +1637,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Võta see"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
@@ -1629,7 +1653,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_thread_id
@@ -1637,11 +1661,13 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"Algse kirje ülem ID, millele kuulub alias (nt: projekt, millele kuulub "
+"ülesande loomise alias)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Ikoon"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
@@ -1654,7 +1680,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
-msgstr ""
+msgstr "Ideed"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction
@@ -1662,7 +1688,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 #: model:ir.model.fields,help:project.field_project_task__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error
@@ -1670,7 +1696,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -1678,6 +1704,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"If set an email will be sent to the customer when the task or issue reaches "
+"this step."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -1700,11 +1728,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
 msgid "Important"
-msgstr ""
+msgstr "Tähtis"
 
 #. module: project
 #. openerp-web
@@ -1739,7 +1769,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "Töös"
 
 #. module: project
 #. openerp-web
@@ -1753,12 +1783,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "Saabuvad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "Algselt planeeritud aeg"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -1767,6 +1797,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"Internal email associated with this project. Incoming emails are "
+"automatically synchronized with Tasks (or optionally Issues if the Issue "
+"Tracker module is installed)."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
@@ -1782,51 +1815,51 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Jälgija"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_is_company
 msgid "Is a Company"
-msgstr ""
+msgstr "On ettevõte"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "Versioon"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__january
 msgid "January"
-msgstr ""
+msgstr "Jaanuar"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__july
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__july
 msgid "July"
-msgstr ""
+msgstr "Juuli"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__june
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__june
 msgid "June"
-msgstr ""
+msgstr "Juuni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Blokeeritud kanbani selgitus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Kanbani jooksev selgitus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
 msgid "Kanban State"
-msgstr ""
+msgstr "Kanbani seisund"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
@@ -1836,7 +1869,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Kanban´i kehtiv seletus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -1852,7 +1885,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__last
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__last
 msgid "Last"
-msgstr ""
+msgstr "Viimane"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
@@ -1881,12 +1914,12 @@ msgstr "Viimati muudetud (millal)"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Viimase etapi värskendus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Viimati uuendatud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__write_uid
@@ -1912,7 +1945,7 @@ msgstr "Viimati uuendatud"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "Hilinenud tegevused"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1922,17 +1955,17 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Viimane hinnang: väga rahul"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Viimane hinnang: Pole rahul"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Viimane hinnang: Rahul"
 
 #. module: project
 #. openerp-web
@@ -2000,18 +2033,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 msgid "Low"
-msgstr ""
+msgstr "Madal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_main_attachment_id
 #: model:ir.model.fields,field_description:project.field_project_task__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Peamine manus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Peamine manus"
 
 #. module: project
 #. openerp-web
@@ -2029,13 +2062,13 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Manufacturing"
-msgstr ""
+msgstr "Tootmine"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__march
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__march
 msgid "March"
-msgstr ""
+msgstr "Märts"
 
 #. module: project
 #. openerp-web
@@ -2048,12 +2081,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__may
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Liikmed"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
@@ -2065,7 +2098,7 @@ msgstr "Sõnumi edastamise veateade"
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Sõnumid"
 
 #. module: project
 #. openerp-web
@@ -2078,34 +2111,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__mon
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__mon
 msgid "Mon"
-msgstr ""
+msgstr "Esmaspäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__mon
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__mon
 msgid "Monday"
-msgstr ""
+msgstr "Esmaspäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__month
 msgid "Months"
-msgstr ""
+msgstr "Kuud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "Minu lemmikud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Projects"
-msgstr ""
+msgstr "Minu projektid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr ""
+msgstr "Minu ülesanded"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2115,7 +2148,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2139,7 +2172,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Neutraalne nägu"
 
 #. module: project
 #. openerp-web
@@ -2148,7 +2181,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Uus"
 
 #. module: project
 #. openerp-web
@@ -2170,34 +2203,34 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Request"
-msgstr ""
+msgstr "Uued taotlused"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Newest"
-msgstr ""
+msgstr "Uusim"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_activity
 msgid "Next Activities"
-msgstr ""
+msgstr "Järgmised tegevused"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Järgmise tegevuse kuupäev"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Järgmise tegevuse kokkuvõte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Järgmise tegevuse tüüp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
@@ -2213,13 +2246,13 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Teema puudub"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Klientide hinnanguid pole veel"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2244,25 +2277,25 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "Pole"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "Normal"
-msgstr ""
+msgstr "Tavaline"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__november
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__november
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Toimingute arv"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
@@ -2273,17 +2306,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Number of Working Days to Open the task"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Tööpäevade arv ülesande sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
 msgid "Number of documents attached"
-msgstr ""
+msgstr "Number of documents attached"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
@@ -2295,7 +2328,7 @@ msgstr "Vigade arv"
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Tegutsemist nõudvate sõnumite arv"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error_counter
@@ -2317,18 +2350,18 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,help:project.field_project_task__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Lugemata sõnumite arv"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__october
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__october
 msgid "October"
-msgstr ""
+msgstr "Oktoober"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: project
 #. openerp-web
@@ -2340,7 +2373,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
-msgstr ""
+msgstr "Kord kuus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -2354,17 +2387,20 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Seose (kirje) valikuline ID, mille külge lisatakse kõik sissetulevad "
+"sõnumid, isegi kui sellele ei vastatud. Kui määratud, siis kaob täielikult "
+"võimalus luua uusi kirjeid."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "Muud"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "Overpassed Tasks"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_blocked
@@ -2373,6 +2409,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -2381,6 +2419,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -2389,11 +2429,13 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "Omanik"
 
 #. module: project
 #. openerp-web
@@ -2405,19 +2447,19 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Ülemmudel"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Ülemkirje seose ID"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Peamine ülesanne"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -2426,6 +2468,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Ülemmudel, millel on alias. Aliase mudeli viide ei pruugi olla mudel, mis on"
+" antud nii: alias_model_id (näide: projekt (ülem_mudel) ja ülesanne (mudel))"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -2440,13 +2484,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Perioodiline hindamine"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
 #: model:ir.model.fields,field_description:project.field_project_task__partner_phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2458,7 +2502,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
 msgid "Planning"
-msgstr ""
+msgstr "Planeerimine"
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -2467,6 +2511,8 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
+"Palun eemalda olemasolevad ülesanded projektidest, millega seotud kontosid "
+"soovite kustutada."
 
 #. module: project
 #. openerp-web
@@ -2483,12 +2529,16 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Dokumendil sõnumite postitamise reeglid mailgateway'd kasutades.\n"
+"- igaüks: igaüks saab postitada\n"
+"- partnerid: ainult autenditud partnerid\n"
+"- jälgijad: ainult dokumendiga seotud jälgijad või nende kanalite liikmed\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portaali ligipääsu URL"
 
 #. module: project
 #. openerp-web
@@ -2514,7 +2564,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 msgid "Priority"
-msgstr ""
+msgstr "Prioriteet"
 
 #. module: project
 #. openerp-web
@@ -2539,12 +2589,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Project"
-msgstr ""
+msgstr "Projektid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
-msgstr ""
+msgstr "Projektide loendus"
 
 #. module: project
 #: model:ir.model,name:project.model_project_delete_wizard
@@ -2559,13 +2609,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr ""
+msgstr "Projektijuht"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Project Name"
-msgstr ""
+msgstr "Projekti nimi"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
@@ -2582,7 +2632,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projekti ülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -2600,7 +2650,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "Projekti ülesanded"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_recurring_tasks_ir_actions_server
@@ -2631,12 +2681,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
-msgstr ""
+msgstr "Projektid"
 
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Projektid ja ülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__projects_archived
@@ -2655,7 +2705,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
-msgstr ""
+msgstr "Avaldatud"
 
 #. module: project
 #. openerp-web
@@ -2668,12 +2718,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr ""
+msgstr "Kord kvartalis"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "Hinnatud ülesanded"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -2681,7 +2731,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
-msgstr ""
+msgstr "Hinnang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
@@ -2691,17 +2741,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Hinnangute e-kirja põhi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Hindamise sagedus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Viimase tagasiside hinnang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
@@ -2739,13 +2789,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Hindamine etapi muutmisel"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 #: model:mail.message.subtype,description:project.mt_task_rating
 msgid "Ratings"
-msgstr ""
+msgstr "Hinnangud"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2769,18 +2819,18 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
-msgstr ""
+msgstr "Saadaval"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Järgmise etapi jaoks valmis"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_19
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
-msgstr ""
+msgstr "Valmis taasavamiseks"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -2795,20 +2845,20 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Kirje seose ID"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Recording"
-msgstr ""
+msgstr "Salvestamine"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurrence"
-msgstr ""
+msgstr "Kordumine"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
@@ -2818,7 +2868,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
 msgid "Recurrent"
-msgstr ""
+msgstr "Korduv"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_recurring_tasks
@@ -2830,19 +2880,19 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Punane Kanban´i silt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Ref"
-msgstr ""
+msgstr "Viide"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Refused"
-msgstr ""
+msgstr "Tagasi lükatud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -2854,7 +2904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "Korda iga..."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_month
@@ -2954,12 +3004,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Vastutav kasutaja"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Taasta"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
@@ -2975,19 +3025,19 @@ msgstr "Sõnumi kohaletoimetamise viga"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Kurb nägu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sat
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sat
 msgid "Sat"
-msgstr ""
+msgstr "Laupäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sat
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sat
 msgid "Saturday"
-msgstr ""
+msgstr "Laupäev"
 
 #. module: project
 #. openerp-web
@@ -3000,30 +3050,30 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Otsi <span class=\"nolabel\"> (sisu hulgast)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr ""
+msgstr "Otsi projekti"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Otsi kõige hulgast"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Otsi klientide hulgast"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Otsi sõnumite hulgast"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3035,42 +3085,42 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Otsing etappides"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__second
 msgid "Second"
-msgstr ""
+msgstr "Teine"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Turvamärgis"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Send an email"
-msgstr ""
+msgstr "Saada e-kiri"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__september
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestus"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Määra kaanepilt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3083,7 +3133,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Settings"
-msgstr ""
+msgstr "Seaded"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
@@ -3091,17 +3141,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
-msgstr ""
+msgstr "Jaga"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Kuva projekt töölaual"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Näita kõiki andmeid, millel on järgmise tegevuse kuupäev on ennem tänast "
+"kuupäeva"
 
 #. module: project
 #. openerp-web
@@ -3128,6 +3180,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
 msgstr ""
+"Jaga oma töö korraldamiseks ülesandeid alamülesanneteks/alametappideks"
 
 #. module: project
 #. openerp-web
@@ -3160,34 +3213,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Stage"
-msgstr ""
+msgstr "Etapp"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Etapp muudetud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Etappide kirjeldused ja õpetused"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr ""
+msgstr "Etapi nimi"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Etapp muudetud"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr ""
+msgstr "Etapid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
@@ -3202,12 +3255,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr ""
+msgstr "Tähistatud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
 msgid "Start Date"
-msgstr ""
+msgstr "Alguskuupäev"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_state
@@ -3222,12 +3275,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Alamülesannete projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Alamülesannete loendus"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3236,7 +3289,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_subtask_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Alamülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
@@ -3254,13 +3307,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__sun
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sun
 msgid "Sun"
-msgstr ""
+msgstr "Pühapäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sun
 msgid "Sunday"
-msgstr ""
+msgstr "Pühapäev"
 
 #. module: project
 #. openerp-web
@@ -3281,7 +3334,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
-msgstr ""
+msgstr "Sildid"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3300,18 +3353,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Task"
-msgstr ""
+msgstr "Ülesanne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr ""
+msgstr "Ülesande tegevused"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "Ülesanne blokeeritud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__task_count
@@ -3341,7 +3394,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Ülesanne on valmis"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
@@ -3353,28 +3406,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr ""
+msgstr "Ülesande etapp"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "Ülesande etapp on muutunud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
-msgstr ""
+msgstr "Ülesande nimi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "Ülesande nimi..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "Ülesanne blokeeritud"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3385,11 +3438,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"Ülesanne on blokeeritud. Kliki, et blokeering tühistada või märkida "
+"\"Tehtud\"."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "Ülesanne on valmis järgmise etapi jaoks"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3411,7 +3466,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr ""
+msgstr "Ülesanded"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3421,7 +3476,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Ülesannete analüüs"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3437,7 +3492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr ""
+msgstr "Ülesannete etapid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
@@ -3448,14 +3503,14 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_project_task_type__is_closed
 msgid "Tasks in this stage are considered as closed."
-msgstr ""
+msgstr "Selle staadiumi ülesandeid arvestatakse suletuks."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Tests"
-msgstr ""
+msgstr "Testid"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -3464,6 +3519,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Aliasele vastav mudel (Odoo dokumendi laadi). Iga sissetulev kiri, mis ei "
+"vasta olemasolevale kirjele, põhjustab uue mudeli kirje loomise (nt projekti"
+" ülesanne)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -3471,6 +3529,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"E-maili aliase nimi, nt \"job\" kui soovid saada e-kirju "
+"<jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -3480,6 +3540,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"E-maili saamisel loodud kirjete omanik, mis tulevad sellele e-posti "
+"aliasele. Kui see väli pole määratud, siis süsteem üritab leida õige omaniku"
+" lähtuvalt saatja (From) aadressist või kasutab administraatori kontot, kui "
+"ei leita ühtegi süsteemikontot sellise e-posti aadressiga."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3510,7 +3574,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Ühtegi projekti pole"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
@@ -3520,32 +3584,32 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "Ühtegi ülesannet pole"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
 msgid "These people will receive email."
-msgstr ""
+msgstr "Nendele inimestele saadetakse e-mail."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__third
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__third
 msgid "Third"
-msgstr ""
+msgstr "Kolmas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Month"
-msgstr ""
+msgstr "See kuu"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "See nädal"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__subsequent
@@ -3559,6 +3623,9 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
@@ -3566,6 +3633,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"See etapp on kanban vaates volditud, kui puuduvad etapikirjed, mida kuvada."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3588,18 +3656,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__thu
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__thu
 msgid "Thu"
-msgstr ""
+msgstr "Saaja"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__thu
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__thu
 msgid "Thursday"
-msgstr ""
+msgstr "Neljapäev"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Ajaarvestus"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__planned_hours
@@ -3624,7 +3692,7 @@ msgstr "Nimi"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "Printimiseks"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3641,39 +3709,39 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "Täna"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr ""
+msgstr "Tänased tegevused"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Jälgi ülesannete täitmisel kliendi rahulolu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "Jälgi projektidele ja ülesannetele kulunud aega"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__tue
 msgid "Tue"
-msgstr ""
+msgstr "Teisipäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__tue
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__tue
 msgid "Tuesday"
-msgstr ""
+msgstr "Teisipäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
 msgid "Twice a Month"
-msgstr ""
+msgstr "Kaks korda kuus"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
@@ -3684,7 +3752,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr ""
+msgstr "Määramata"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3697,19 +3765,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lugemata sõnumid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Lugemata sõnumite loendur"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_type
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_type
 msgid "Until"
-msgstr ""
+msgstr "Kuni"
 
 #. module: project
 #. openerp-web
@@ -3736,7 +3804,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "Kasutage ülesandeid, kui"
 
 #. module: project
 #. openerp-web
@@ -3762,17 +3830,17 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr ""
+msgstr "Kasutaja"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_email
 msgid "User Email"
-msgstr ""
+msgstr "Kasutaja e-post"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
 msgid "Visibility"
-msgstr ""
+msgstr "Nähtavus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allowed_user_ids
@@ -3794,12 +3862,13 @@ msgstr ""
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Veebilehe sõnumid"
 
 #. module: project
 #. openerp-web
@@ -3812,30 +3881,30 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Veebilehe suhtluse ajalugu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__wed
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__wed
 msgid "Wed"
-msgstr ""
+msgstr "Kolmapäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__wed
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__wed
 msgid "Wednesday"
-msgstr ""
+msgstr "Kolmapäev"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
 msgid "Weekly"
-msgstr ""
+msgstr "Iganädalane"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
-msgstr ""
+msgstr "Nädalad"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
@@ -3845,37 +3914,37 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "Tööaeg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Määratavad tunnid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Töötunde sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Määratavad tööpäevad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Tööpäevi sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Määratavad töötunnid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Töötunde sulgemiseni"
 
 #. module: project
 #. openerp-web
@@ -3888,13 +3957,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "Iga-aastaselt"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__year
 msgid "Years"
-msgstr ""
+msgstr "Aastad"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3902,6 +3971,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
+"Siia saad lisada juhendi/kirjelduse kaastöötajatele, et nad saaksid aru "
+"selle etapi mõttest ja eesmärgist."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3950,7 +4021,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "nt. kontoripidu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

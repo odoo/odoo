@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_membership
+# 	* website_membership
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# gebri <gebri@inmail.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +23,21 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "All"
 msgstr "Všetko"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:83
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Všetky krajiny"
@@ -39,7 +50,13 @@ msgstr "Asociácie"
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "Close"
-msgstr "Zatvor"
+msgstr "Zatvoriť"
+
+#. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:website_membership.field_website__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -47,26 +64,39 @@ msgid "Find a business partner"
 msgstr "Nájsť obchodného partnera"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:126
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "Free Members"
 msgstr "Bezplatný členovia"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
-msgid "Location"
-msgstr "Umiestnenie"
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:website_membership.field_website__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:website_membership.field_website____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
+msgid "Location"
+msgstr "Miesto (adresa)"
+
+#. module: website_membership
+#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-#: model:website.menu,name:website_membership.menu_members
+#, python-format
 msgid "Members"
 msgstr "Členovia"
 
 #. module: website_membership
 #: model:ir.model,name:website_membership.model_membership_membership_line
 msgid "Membership Line"
-msgstr ""
+msgstr "Členská línia"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -79,11 +109,11 @@ msgid "Our Members Directory"
 msgstr "Náš adresár členstva"
 
 #. module: website_membership
+#: model:ir.model,name:website_membership.model_website
+msgid "Website"
+msgstr "Webstránka"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "World Map"
 msgstr "Mapa sveta"
-
-#. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "float-left"
-msgstr ""

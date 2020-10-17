@@ -1,0 +1,148 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_lead_enrich
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span> Žiadne údaje o spoločnosti neboli nájdené na základe e-mailovej "
+"adresy alebo e-mailoé adresy nie sú poskytovateľmi e-mailových služieb. "
+"Žiadny kredit nebol spotrebovaný.</span>"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
+msgid ""
+"<span>Enrichment could not be done as no email address was provided.</span>"
+msgstr ""
+"<span>Rozšírenie nebolo možné, pretože nebola poskytnutá žiadna e-mailová "
+"adresa.</span>"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "Umožnite manuálne rozšírenie"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.actions.server,name:crm_iap_lead_enrich.ir_cron_lead_enrichment_ir_actions_server
+#: model:ir.cron,cron_name:crm_iap_lead_enrich.ir_cron_lead_enrichment
+#: model:ir.cron,name:crm_iap_lead_enrich.ir_cron_lead_enrichment
+msgid "CRM: enrich leads (IAP)"
+msgstr "CRM: rozšírenie Potenciálnych príležitostí (IAP)"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavenia konfigurácie"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.actions.server,name:crm_iap_lead_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "Rozšírenie"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this lead with company data based on the email address"
+msgstr "Rozšírte potenciálnu príležitosť o údaje e-mailovej adresy"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this opportunity with company data based on the email address"
+msgstr "Rozšírte príležitosť o firemné údaje založené na e-mailovej adrese"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
+msgid "Enrichment done"
+msgstr "Rozšírené"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_iap_enrich_api
+msgid "IAP Lead Enrichment API"
+msgstr "IAP rozšírenie Potenciálnych príležitostí API"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+msgid "IAP account"
+msgstr "IAP účet"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__id
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__id
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
+msgid "Lead Enrichment based on email address"
+msgstr "Rozšíriť potenciálne príležitosti o emailovú adresu"
+
+#. module: crm_iap_lead_enrich
+#: code:addons/crm_iap_lead_enrich/models/crm_lead.py:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+#, python-format
+msgid "Lead enriched based on email address"
+msgstr "Rozšírenie potenciálnych príležitostí o emailovú adresu"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Potenciálna príležitosť / obchodný prípad"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,help:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on"
+" this lead."
+msgstr ""
+"Služba IAP bola poskytnutá pre rozšírenie Potenciálnej príležitosti na "
+"základe e-mailu."
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+msgid "Your balance for Lead Enrichment is insufficient. Please go to your"
+msgstr ""
+"Váš zostatok na rozšírenie Potenciálnej príležitoisti nie je dostatočný. "
+"Prejdite na vašu"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+msgid "to buy credits."
+msgstr "kúpiť kredity."

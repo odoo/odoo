@@ -4,6 +4,12 @@
 # 
 # Translators:
 # Triine Aavik <triine@avalah.ee>, 2020
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Martin Trigaux, 2020
+# Arma Gedonsky <armagedonsky@hot.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
+# Helen Sulaoja <helen@avalah.ee>, 2020
 # 
 msgid ""
 msgstr ""
@@ -11,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2020\n"
+"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +28,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analüütiline konto"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -45,7 +51,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr ""
+msgstr "Kulu salvestatud"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
@@ -54,7 +60,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Kuva nimi"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -72,6 +78,8 @@ msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
+"Täida see ainult juhul, kui soovid analüütilise raamatupidamise kandeid "
+"tootmise tellimustele."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
@@ -80,7 +88,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production____last_update
@@ -94,17 +102,17 @@ msgstr "Viimati muudetud (millal)"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Toode"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Toote mall"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
 msgid "Production Order"
-msgstr ""
+msgstr "Tootmiskäsk"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
@@ -119,18 +127,22 @@ msgid ""
 " multiple times and only consider new entries in the work centers time "
 "lines."
 msgstr ""
+"Tehniline väli, mida kontrollitakse automaatselt, kui käimasolev tootmine "
+"postitab andmikukande kulude kohta. Nii saame salvestada ühe tootmise kulu "
+"korduvalt ja arvestada ainult uusi kandeid töökoha ajaliste sissekannete "
+"ridadel."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "Valuation"
-msgstr ""
+msgstr "Hindamine"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
-msgstr ""
+msgstr "Töökeskus"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "Töökoha tootlikkuse logi"

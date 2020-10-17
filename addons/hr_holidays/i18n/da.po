@@ -12,7 +12,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
@@ -2131,7 +2131,7 @@ msgstr "Ingen bekræftelse"
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
 msgid "No data yet!"
-msgstr ""
+msgstr "Ingen data endnu!"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2625,6 +2625,14 @@ msgstr ""
 "Den ansatte, afdelingen, virksomheden, eller ansatte kategorien for denne "
 "anmodning mangler. Vær venligst sikker på, at dit brugerlogin er forbundet "
 "til en ansat."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The following employees are not supposed to work during that period:\n"
+" %s"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_interval_number_check

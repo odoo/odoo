@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # 	* account_tax_python
 # 
+# Translators:
+# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Pedro Castro Silva <pedrocs@exo.pt>, 2020
+# Joao Felix <jrmfelix@gmail.com>, 2020
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
+# Pedro Filipe <pedro2.10@hotmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +42,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "Código Aplicável"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -48,6 +56,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Calcula o montante de imposto ao ajustar a variável 'result'\n"
+"\n"
+":param base_amount: float, montante actual sbro o qual o imposto é aplicado\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -60,6 +76,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Calcula o montante de impostos ao ajustar a variável 'result'\n"
+"\n"
+":param base_amount: float, montante onde o imposto é aplicado\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -72,6 +95,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Determina se o imposto será aplicado ao ajustar a variável 'result' para Verdadeiro ou Falso.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -83,24 +113,30 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Determina se o imposto será aplicado ao ajustar a variável 'result' para Verdadeiro ou Falso.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax____last_update
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última Modificação em"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
@@ -108,20 +144,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "Código Python"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Imposto"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "Cálculo de Imposto"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Modelos para Impostos"

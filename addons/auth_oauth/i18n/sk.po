@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_oauth
+# 	* auth_oauth
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# gebri <gebri@inmail.sk>, 2020
+# Jan Prokop, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,15 +26,15 @@ msgstr ""
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
-msgstr ""
+msgstr "- alebo -"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Príručka"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:100
+#: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid "Access Denied"
 msgstr "Prístup zamietnutý"
@@ -44,7 +47,7 @@ msgstr "Povoliť používateľom prihlásiť sa cez Google"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr ""
+msgstr "Povoliť používateľom prihlásiť sa s účtom Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -75,12 +78,12 @@ msgstr "ID klienta"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr ""
+msgstr "ID klienta:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenia konfigurácie"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_uid
@@ -100,12 +103,17 @@ msgstr "URL dát"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentácia"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
-msgstr ""
+msgstr "Autentifikácia Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
@@ -115,7 +123,7 @@ msgstr "ID"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_uid
@@ -126,6 +134,26 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
+msgid "Link text in Login Dialog"
+msgstr "Text odkazu v dialógovom okne prihlásenia"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
+msgid "Log in with Facebook"
+msgstr "Prihlásiť sa cez Facebook"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_google
+msgid "Log in with Google"
+msgstr "Prihlásiť sa cez Google"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
+msgid "Log in with Odoo.com"
+msgstr "Prihlásiť sa cez Odoo.com"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -144,7 +172,7 @@ msgid "OAuth Providers"
 msgstr "OAuth poskytovatelia"
 
 #. module: auth_oauth
-#: sql_constraint:res.users:0
+#: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
 msgstr "OAuth UID musí byť unikátne pre poskytovateľa"
 
@@ -191,10 +219,10 @@ msgstr "Postupnosť"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "Server uri"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:98
+#: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr "Registrácia nie je povolená v tejto databáze."
@@ -202,12 +230,12 @@ msgstr "Registrácia nie je povolená v tejto databáze."
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Systémový parameter"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
-msgstr "Používatelia"
+msgstr "Užívatelia"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
@@ -215,7 +243,7 @@ msgid "Validation URL"
 msgstr "Overovacia URL"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:102
+#: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "

@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pad
+# 	* pad
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2020
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "API Kľúč"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -34,12 +36,12 @@ msgstr "Spoločnosti"
 #. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenia konfigurácie"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company__pad_key
@@ -61,14 +63,19 @@ msgstr "ID"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common____last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr "Posledná úprava"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:147
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Loading"
 msgstr "Nahrávanie"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
+msgid "Pad API Key"
+msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_key
@@ -76,22 +83,18 @@ msgid "Pad Api Key"
 msgstr "Pad Api kľúč"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
-msgid "Pad Api Key *"
+#: model:ir.model,name:pad.model_pad_common
+msgid "Pad Common"
 msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_server
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
 msgid "Pad Server"
 msgstr "Pad server"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
-msgid "Pad Server *"
-msgstr ""
-
-#. module: pad
-#: code:addons/pad/models/pad.py:57
+#: code:addons/pad/models/pad.py:0
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -102,11 +105,9 @@ msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:6
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
-msgid ""
-"Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings'."
+msgid "Please, enter your Etherpad credentials through the Settings."
 msgstr ""
 
 #. module: pad
@@ -116,21 +117,21 @@ msgstr "Server"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:14
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
 msgid "Switch pad"
 msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:166
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr "Tento pad bude inicializovaný pri prvom editovaní"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:160
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Unable to load pad"
 msgstr "Nemožno načítať pad"
@@ -139,8 +140,3 @@ msgstr "Nemožno načítať pad"
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr "e.g. beta.primarypad.com"
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"

@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_transfer
+# 	* payment_transfer
 # 
 # Translators:
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# Miroslav Fic <mirko.fic@gmail.com>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2020
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# 192015edb78c7397bdecc2172c7447b3, 2020
+# Jan Prokop, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,19 +25,19 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:83
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr "; viacnásobná objednávka nájdená"
+msgstr "; nájdená viacnásobná objednávka"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:81
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr "; žiadna objednávka nájdená"
+msgstr "; nenájdená žiadna objednávka"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:41
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid ""
 "<div>\n"
@@ -45,48 +48,48 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>Použite prosím nasledovné platobné údaje</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Komunikácia</h4>\n"
+"<p>Použite číslo faktúry ako variabilný symbol.</p>\n"
+"</div>"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net "
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Account"
 msgstr "Bankový účet"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Accounts"
-msgstr "Bankové Účty"
+msgstr "Bankové účty"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr ""
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Manual Payment"
+msgstr "Manuálna platba"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -99,32 +102,12 @@ msgid "Payment Transaction"
 msgstr "Platobná transakcia"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
-
-#. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Poskytovateľ"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr "Sips"
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Drôtový prenos"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:79
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "received data for reference %s"
 msgstr "prijaté dáta pre referenciu %s"
