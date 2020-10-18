@@ -7016,6 +7016,8 @@ msgid ""
 " another model requires the record being deleted. If possible, archive it "
 "instead."
 msgstr ""
+" một đối tượng khác đang yêu cầu truy cập dữ liệu đã bị xóa. Nếu được, hãy "
+"lưu trữ thay vì xóa."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -7164,6 +7166,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Tạo/cập nhật: có một trường bắt buộc nhưng chưa có dữ liệu.\n"
+"- Xóa: có dữ liệu khác đang liên kết với dữ liệu bạn đang xóa. Nếu được, hãy lưu trữ dữ liệu này thay vì xóa."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8111,7 +8115,7 @@ msgstr "Một module để chạy thử API."
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
 msgid "A module to test the RPC requests."
-msgstr ""
+msgstr "Một mô-đun để kiểm tra các truy vấn RPC."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -11969,7 +11973,7 @@ msgstr "Mô hình (model) Tài liệu"
 #: code:addons/models.py:2888
 #, python-format
 msgid "Document type:"
-msgstr ""
+msgstr "Loại tài liệu:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
@@ -13018,6 +13022,9 @@ msgid ""
 "from mail header:\n"
 "%s"
 msgstr ""
+"Không mã hóa được địa chỉ %s\n"
+"từ tiêu đề mail:\n"
+"%s"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -23477,14 +23484,6 @@ msgstr ""
 "Bootswatch themes which were previously part of the website module in 8.0."
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_thousands_sep
 msgid "Thousands Separator"
 msgstr "Dấu phân cách ngàn"
@@ -24062,7 +24061,7 @@ msgstr "Không xác định"
 #: code:addons/models.py:833
 #, python-format
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Lỗi cơ sở dữ liệu không xác định: '%s'"
 
 #. module: base
 #: code:addons/models.py:996
