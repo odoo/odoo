@@ -1213,8 +1213,7 @@ header {
                 }
             }
             > footer {
-                @include o-position-absolute(0, 0, 0, 0);
-                position: sticky;
+                @include o-position-sticky(auto, 0, 0, 0);
                 z-index: -1;
             }
         }
