@@ -317,7 +317,7 @@ class AccountBankStatement(models.Model):
 
                         st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
                         st_line_vals['counterpart_account_id'] = stmt.journal_id.profit_account_id.id
-                        
+
                     self.env['account.bank.statement.line'].create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
-"PO-Revision-Date: 2020-10-29 15:48+0000\n"
+"PO-Revision-Date: 2020-11-05 16:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -11680,6 +11680,12 @@ msgid ""
 " There is nothing left to process."
 msgstr ""
 
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The date (%(date)s) doesn't match the sequence number (%(sequence)s).\n"
+"You might want to remove the sequence before proceeding with the change of the date."
+
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
@@ -13554,6 +13560,14 @@ msgstr ""
 msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot edit the journal of an account move if it has already a sequence "
+"number assigned."
 msgstr ""
 
 #. module: account

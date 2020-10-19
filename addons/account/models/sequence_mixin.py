@@ -44,6 +44,28 @@ class SequenceMixin(models.AbstractModel):
                     field=sql.Identifier(self._sequence_field),
                 ))
 
+    def __init__(self, pool, cr):
+        api.constrains(self._sequence_field, self._sequence_date_field)(type(self)._constrains_date_sequence)
+        return super().__init__(pool, cr)
+
+    def _constrains_date_sequence(self):
+        for record in self:
+            date = fields.Date.to_date(record[record._sequence_date_field])
+            sequence = record[record._sequence_field]
+            if sequence and date:
+                format_values = record._get_sequence_format_param(sequence)[1]
+                if (
+                    format_values['year'] and format_values['year'] != date.year % 10**len(str(format_values['year']))
+                    or format_values['month'] and format_values['month'] != date.month
+                ):
+                    raise ValidationError(_(
+                        "The date (%(date)s) doesn't match the sequence number (%(sequence)s).\n"
+                        "You might want to remove the sequence before proceeding with the change of the date."
+                    ) % {
+                        'date': date,
+                        'sequence': sequence,
+                    })
+
     @api.depends(lambda self: [self._sequence_field])
     def _compute_split_sequence(self):
         for record in self:
@@ -61,25 +83,34 @@ class SequenceMixin(models.AbstractModel):
             periodicity. Typically, it is the last before the one you want to give a
             sequence.
         """
-        def _check_grouping(grouping, optional=None, required=None):
-            sequence_dict = sequence.groupdict()
-            check = all(key in sequence_dict for key in (optional or [])) and all(sequence_dict.get(key) for key in (required or []))
-            check &= 'year' not in (required or []) or 2000 <= int(sequence_dict.get('year', -1)) <= 2100 or len(sequence_dict.get('year', '')) == 2
-            check &= 'month' not in (required or []) or 1 <= int(sequence_dict.get('month', -1)) <= 12
-            return check
+        def _check_grouping(grouping, required):
+            sequence_dict = grouping.groupdict()
+            if 'seq' not in sequence_dict or any(not sequence_dict.get(key) for key in required):
+                return False
+            if 'year' in required and not (
+                2000 <= int(sequence_dict.get('year') or -1) <= 2100
+                or len(sequence_dict.get('year') or '') == 2
+            ):
+                return False
+            if 'month' in required and not 1 <= int(sequence_dict.get('month') or -1) <= 12:
+                return False
+            return True
 
         if not name:
             return False
         sequence = re.match(self._sequence_monthly_regex, name)
-        if sequence and _check_grouping(sequence, ['seq'], ['year', 'month']):
+        if sequence and _check_grouping(sequence, ['year', 'month']):
             return 'month'
         sequence = re.match(self._sequence_yearly_regex, name)
-        if sequence and _check_grouping(sequence, ['seq'], ['year']):
+        if sequence and _check_grouping(sequence, ['year']):
             return 'year'
         sequence = re.match(self._sequence_fixed_regex, name)
-        if sequence and _check_grouping(sequence, ['seq']):
+        if sequence and _check_grouping(sequence, []):
             return 'never'
-        raise ValidationError(_('The sequence regex should at least contain the seq grouping keys. For instance:\n^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'))
+        raise ValidationError(_(
+            'The sequence regex should at least contain the seq grouping keys. For instance:\n'
+            '^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+        ))
 
     def _get_last_sequence_domain(self, relaxed=False):
         """Get the sql domain to retreive the previous sequence number.
