@@ -805,7 +805,7 @@ class Task(models.Model):
     @api.depends('partner_id.email', 'parent_id.email_from')
     def _compute_email_from(self):
         for task in self:
-            task.email_from = task.partner_id.email or task.email_from or task.parent_id.email_from
+            task.email_from = task.partner_id.email or ((task.partner_id or task.parent_id) and task.email_from) or task.parent_id.email_from
 
     @api.depends('parent_id.project_id.subtask_project_id')
     def _compute_project_id(self):
