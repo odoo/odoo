@@ -126,7 +126,7 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
 });
 
 QUnit.test('composer text input: basic rendering when linked thread is a mail.channel', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -153,10 +153,48 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
         1,
         "should have editable part inside composer text input"
     );
+});
+
+QUnit.test('composer text input placeholder should contain channel name when thread does not have specific correspondent', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        name: 'General',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
-        "Write something...",
-        "should have 'Write something...' as placeholder in composer text input if composer is for a 'mail.channel'"
+        "Message #General...",
+        "should have 'Message #General...' as placeholder for composer text input when thread does not have specific correspondent"
+    );
+});
+
+QUnit.test('composer text input placeholder should contain correspondent name when thread has exactly one correspondent', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 7, name: 'Marc Demo' });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 20,
+        members: [this.data.currentPartnerId, 7],
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        "Message Marc Demo...",
+        "should have 'Message Marc Demo...' as placeholder for composer text input when thread has exactly one correspondent"
     );
 });
 
