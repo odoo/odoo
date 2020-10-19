@@ -123,4 +123,5 @@
         'static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.xml',
         'static/src/widgets/messaging_menu/messaging_menu.xml',
     ],
+    'post_init_hook': '_initialize_contact_logs',
 }
