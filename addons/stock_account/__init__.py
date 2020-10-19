@@ -6,6 +6,22 @@ from . import wizard
 
 from odoo import api, SUPERUSER_ID, _, tools
 
+
+def _post_init_hook(cr, registry):
+    _configure_journals(cr, registry)
+    _compute_stock_move_valuation(cr, registry)
+
+
+def _compute_stock_move_valuation(cr, registry):
+
+    env = api.Environment(cr, SUPERUSER_ID, {})
+
+    stock_moves = env['stock.move'].search([])
+    for move in stock_moves:
+        if move.state == 'done' and move.quantity_done:
+            move._run_valuation(quantity=move.quantity_done)
+
+
 def _configure_journals(cr, registry):
     """Setting journal and property field (if needed)"""
 
