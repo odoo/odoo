@@ -80,7 +80,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
             evalutatedContext.dashboard_merge_domains_contexts = false;
 
             Object.assign(this.state, {
-                name: this.env.action.name || "",
+                name: $(".o_input").val() || "",
                 open: false,
             });
 
