@@ -1924,7 +1924,9 @@ exports.Orderline = Backbone.Model.extend({
     // changes the base price of the product for this orderline
     set_unit_price: function(price){
         this.order.assert_editable();
-        var parsed_price = isNaN(parseFloat(price)) ? 0 : field_utils.parse.float('' + price)
+        var parsed_price = !isNaN(price) ?
+            price :
+            isNaN(parseFloat(price)) ? 0 : field_utils.parse.float('' + price)
         this.price = round_di(parsed_price || 0, this.pos.dp['Product Price']);
         this.trigger('change',this);
     },
