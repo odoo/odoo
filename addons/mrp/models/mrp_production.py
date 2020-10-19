@@ -8,7 +8,6 @@ import re
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
