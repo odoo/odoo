@@ -35,6 +35,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.nodeOptions.snippets) {
             this.nodeOptions.snippets = 'mass_mailing.email_designer_snippets';
         }
+        this.enableResizer = false;
     },
 
     //--------------------------------------------------------------------------

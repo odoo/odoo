@@ -263,11 +263,18 @@ var Wysiwyg = Widget.extend({
                 describeImage: { handler: this.describeImage.bind(this) },
             });
         }
+        const plugins = []
+        if (this.options.enableWebsite && !this.options.enableTranslation) {
+            plugins.push([JWEditorLib.OdooField]);
+        }
+        if (this.options.enableResizer) {
+            plugins.push([JWEditorLib.Resizer]);
+        }
         this.editor = new JWEditorLib.OdooWebsiteEditor(Object.assign({}, this.options, {
             snippetMenuElement: $mainSidebar[0],
             snippetManipulators: $snippetManipulators[0],
             customCommands: Object.assign(customCommands, this.options.customCommands),
-            plugins: this.options.enableWebsite && !this.options.enableTranslation ? [[this.JWEditorLib.OdooField]] : [],
+            plugins: plugins,
             source: this.value,
             location: this.options.location || [this.el, 'replace'],
             mode: this._modeConfig,
