@@ -205,6 +205,29 @@ class TestSchema(common.TransactionCase):
             'udt_schema': u'pg_catalog',
         })
 
+    def test_10_biginteger(self):
+        """ check the database representation of a big integer field """
+        model = self.env['test_new_api.category']
+        columns_data = self.get_columns_data(model._table)
+        self.assertEqual(columns_data['color_highres'], {
+            'character_maximum_length': None,
+            'column_default': None,
+            'column_name': u'color_highres',
+            'data_type': u'bigint',
+            'datetime_precision': None,
+            'is_nullable': u'YES',
+            'is_updatable': u'YES',
+            'numeric_precision': 64,
+            'numeric_precision_radix': 2,
+            'numeric_scale': 0,
+            'table_catalog': self.cr.dbname,
+            'table_name': u'test_new_api_category',
+            'table_schema': u'public',
+            'udt_catalog': self.cr.dbname,
+            'udt_name': u'int8',
+            'udt_schema': u'pg_catalog',
+        })
+
     def test_10_float(self):
         """ check the database representation of a float field """
         model = self.env['test_new_api.mixed']

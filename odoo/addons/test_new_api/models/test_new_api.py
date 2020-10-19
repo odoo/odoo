@@ -16,6 +16,7 @@ class Category(models.Model):
 
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
+    color_highres = fields.Integer('Color Index (high resolution)', bigint=True)
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
     parent_path = fields.Char(index=True)
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
@@ -828,6 +829,7 @@ class ModelB(models.Model):
     name = fields.Char()
     a_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_1', ondelete='restrict')
     b_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_2')
+    a_id = fields.Many2one('test_new_api.model_a')
 
 
 class ModelParent(models.Model):

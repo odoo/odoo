@@ -48,9 +48,9 @@ def table_kind(cr, tablename):
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
 
-def create_model_table(cr, tablename, comment=None, columns=()):
+def create_model_table(cr, tablename, comment=None, columns=(), bigint_id=False):
     """ Create the table for a model. """
-    colspecs = ['id SERIAL NOT NULL'] + [
+    colspecs = ['id {}SERIAL NOT NULL'.format('BIG' if bigint_id else '')] + [
         '"{}" {}'.format(columnname, columntype)
         for columnname, columntype, columncomment in columns
     ]
@@ -71,14 +71,31 @@ def create_model_table(cr, tablename, comment=None, columns=()):
 def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
         a dict with the data from the table ``information_schema.columns``.
+        Also include the configuration of referenced Many2one columns.
     """
     # Do not select the field `character_octet_length` from `information_schema.columns`
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
-    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
-               FROM information_schema.columns WHERE table_name=%s'''
-    cr.execute(query, (tablename,))
+    query='''SELECT column_name, udt_name, character_maximum_length, is_nullable
+             FROM information_schema.columns WHERE table_name=%(tablename)s
+             UNION
+             SELECT c.table_name || '.' || c.column_name, c.udt_name, NULL, c.is_nullable
+             FROM information_schema.columns c
+             JOIN information_schema.constraint_column_usage ccu
+                 ON ccu.table_name=c.table_name AND ccu.column_name=c.column_name
+             JOIN information_schema.key_column_usage AS kcu
+                 ON kcu.constraint_name=ccu.constraint_name
+             WHERE kcu.table_name=%(tablename)s'''
+    cr.execute(query, {'tablename': tablename})
     return {row['column_name']: row for row in cr.dictfetchall()}
+
+def column_type(cr, table, column):
+    """ Return the sql column type """
+    cr.execute(
+        """ SELECT udt_name FROM information_schema.columns
+        WHERE table_name = %s AND column_name = %s """, (table, column))
+    row = cr.fetchone()
+    return row[0] if row else None
 
 def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
@@ -102,11 +119,19 @@ def rename_column(cr, tablename, columnname1, columnname2):
 
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
-    try:
-        with cr.savepoint(flush=False):
-            cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
-                       log_exceptions=False)
-    except psycopg2.NotSupportedError:
+    converted = False
+    if columntype == 'int8' and column_type(cr, tablename, columnname) == 'int4':
+        convert_column_int4_to_int8(cr, tablename, columnname)
+        converted = True
+    if not converted:
+        try:
+            with cr.savepoint(flush=False):
+                cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
+                           log_exceptions=False)
+                converted = True
+        except psycopg2.NotSupportedError:
+            pass
+    if not converted:
         # can't do inplace change -> use a casted temp column
         query = '''
             ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
@@ -277,3 +302,133 @@ def increment_field_skiplock(record, field):
     cr.execute(query, {'ids': tuple(record.ids)})
 
     return bool(cr.fetchone())
+
+
+def get_fk_constraints(cr, table, column):
+    """ Get the FK constraints that are based on the given column. """
+    cr.execute(
+        """
+        SELECT kcu.table_name, kcu.column_name
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+            ON tc.constraint_schema = kcu.constraint_schema
+                AND tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+            ON ccu.constraint_schema = tc.constraint_schema
+                AND ccu.constraint_name = tc.constraint_name
+        JOIN pg_constraint pgc
+            ON pgc.conname = tc.constraint_name
+                AND tc.table_name = pgc.conrelid::regclass::text
+        WHERE ccu.table_name = %s
+            AND ccu.column_name = %s
+            AND constraint_type = 'FOREIGN KEY'
+        """, (table, column))
+    return cr.fetchall()
+
+
+def get_sequences(cr, table, column):
+    """ Get any sequences that are owned by the given column """
+    cr.execute(
+        """
+        SELECT d.objid::regclass
+        FROM pg_depend d
+        JOIN pg_sequence s ON s.seqrelid = d.objid
+        JOIN pg_attribute a ON a.attrelid = d.refobjid
+            AND a.attnum = d.refobjsubid
+        WHERE d.refobjid = %s::regclass and a.attname = %s
+            AND d.refobjsubid > 0
+            AND d.classid = 'pg_class'::regclass;
+        """, (table, column))
+    return [row[0] for row in cr.fetchall()]
+
+
+def get_views(cr, table, column):
+    """ Get all views that (recursively) depend on the given column.
+    https://stackoverflow.com/questions/4462908
+    """
+    cr.execute(
+        """
+        WITH RECURSIVE view_deps AS (
+            SELECT DISTINCT dependent_ns.nspname as schema,
+                dependent_view.relname as view,
+                1 AS level
+            FROM pg_depend
+            JOIN pg_rewrite
+                ON pg_depend.objid = pg_rewrite.oid
+            JOIN pg_class as dependent_view
+                ON pg_rewrite.ev_class = dependent_view.oid
+            JOIN pg_class as source_table
+                ON pg_depend.refobjid = source_table.oid
+            JOIN pg_namespace dependent_ns
+                ON dependent_ns.oid = dependent_view.relnamespace
+            JOIN pg_namespace source_ns
+                ON source_ns.oid = source_table.relnamespace
+            JOIN pg_attribute
+                ON pg_depend.refobjid = pg_attribute.attrelid
+                    AND pg_depend.refobjsubid = pg_attribute.attnum
+            WHERE source_ns.nspname = 'public'
+                AND source_table.relname = %s
+                AND pg_attribute.attnum > 0
+                AND pg_attribute.attname = %s
+            UNION
+            SELECT DISTINCT dependent_ns.nspname as schema,
+                dependent_view.relname as view,
+                level + 1
+            FROM pg_depend
+            JOIN pg_rewrite
+                ON pg_depend.objid = pg_rewrite.oid
+            JOIN pg_class as dependent_view
+                ON pg_rewrite.ev_class = dependent_view.oid
+            JOIN pg_class as source_table
+                ON pg_depend.refobjid = source_table.oid
+            JOIN pg_namespace dependent_ns
+                ON dependent_ns.oid = dependent_view.relnamespace
+            JOIN pg_namespace source_ns
+                ON source_ns.oid = source_table.relnamespace
+            INNER JOIN view_deps vd
+                ON vd.schema = source_ns.nspname
+                    AND vd.view = source_table.relname
+                    AND dependent_view.relname != vd.view
+        )
+        SELECT view, pgv.definition
+        FROM view_deps
+        JOIN pg_views pgv ON pgv.viewname = view
+        GROUP BY view, definition
+        ORDER BY MIN(level) ASC;
+        """, (table, column))
+    return [row for row in cr.fetchall()]
+
+
+def convert_column_int4_to_int8(cr, table, column):
+    """ Migrate an integer column, and its FK reference columns recursively,
+    to a bigint column. Postgresql supports changing the column type, but
+    only if there are no dependent views so we drop those and recreate them
+    later.
+    """
+    views = get_views(cr, table, column)
+    for view in views:
+        cr.execute('DROP VIEW "%s"' % view[0])
+
+    _schema.info('Changing column type of %s.%s from int4 to int8', table, column)
+    if column_type(cr, table, column) == 'int8':
+        # Allow for the fact that a column was already (manually) migrated instead of
+        # insisting on an unnecessary, time consuming 'alter column' statement.
+        _schema.info('Column type of %s.%s is already int8', table, column)
+    else:
+        cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(
+            table, column, 'int8'), log_exceptions=False)
+
+    if cr._cnx.server_version >= 100000:
+        # Update sequence owned by the column to BIGINT. Before Postgres 10.0,
+        # sequences were BIGINT by default and the 'AS BIGINT' syntax is not
+        # supported
+        for sequence in get_sequences(cr, table, column):
+            _schema.info('Updating type of sequence %s', sequence)
+            cr.execute('ALTER SEQUENCE "{}" AS BIGINT'.format(sequence))
+
+    for constraint in get_fk_constraints(cr, table, column):
+        # Call this code recursively on any column with an FK constaint
+        convert_column_int4_to_int8(cr, constraint[0], constraint[1])
+
+    for view in views:
+        cr.execute('CREATE VIEW "%s" AS %s' % view)

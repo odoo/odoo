@@ -304,6 +304,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _name = None                #: the model name (in dot-notation, module namespace)
     _description = None         #: the model's informal name
+    _bigint_id = False          #: set to True to create the id column as bigint
     _custom = False             #: should be True for custom models only
 
     _inherit = None
@@ -441,7 +442,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         from . import fields
 
         # this field 'id' must override any other column or field
-        self._add_field('id', fields.Id(automatic=True))
+        self._add_field('id', fields.Id(automatic=True, bigint=self._bigint_id))
 
         add('display_name', fields.Char(string='Display Name', automatic=True,
             compute='_compute_display_name'))
@@ -2555,7 +2556,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     (name, make_type(field), field.string)
                     for name, field in self._fields.items()
                     if name != 'id' and field.store and field.column_type
-                ])
+                ], bigint_id=self._bigint_id)
 
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_path'):

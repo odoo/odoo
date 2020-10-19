@@ -149,3 +149,8 @@ class Selection(models.Model):
 
     def _other_values(self):
         return [('baz', 'Baz')]
+
+
+class ModelA(models.Model):
+    _inherit = 'test_new_api.model_a'
+    _bigint_id = True

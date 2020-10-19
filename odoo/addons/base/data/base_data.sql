@@ -91,7 +91,7 @@ CREATE TABLE ir_model_data (
     name varchar NOT NULL,
     module varchar NOT NULL,
     model varchar NOT NULL,
-    res_id integer,
+    res_id int8,
     primary key(id)
 );
 

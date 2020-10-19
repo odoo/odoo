@@ -3,6 +3,7 @@
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import common
+from odoo.tools.sql import column_type
 
 class test_inherits(common.TransactionCase):
 
@@ -169,3 +170,16 @@ class TestXMLIDS(common.TransactionCase):
             'test_inherit.selection__test_new_api_selection__state__baz',
         ])
 
+
+class TestBigintId(common.TransactionCase):
+    def test_bigint_id(self):
+        """ References to bigint id columns are bigint themselves,
+        even if the model's _bigint_id property is set in an inheritance. """
+        target = self.env['test_new_api.model_a']
+        source = self.env['test_new_api.model_b']
+        self.assertEqual(column_type(self.env.cr, source._table, 'id'), 'int4')
+        self.assertEqual(column_type(self.env.cr, target._table, 'id'), 'int8')
+        self.assertEqual(column_type(self.env.cr, source._table, 'a_id'), 'int8')
+        m2m = source._fields['a_restricted_a_ids']
+        self.assertEqual(column_type(self.env.cr, m2m.relation, m2m.column1), 'int4')
+        self.assertEqual(column_type(self.env.cr, m2m.relation, m2m.column2), 'int8')

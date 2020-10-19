@@ -23,6 +23,20 @@ from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
+# Patch xmlrpclib to avoid the 32 bit limit when sending longs
+MAXLONG =  2**63-1
+MINLONG = -2**63
+
+def dump_long(_self, value, write):
+    if value > MAXLONG or value < MINLONG:
+        raise OverflowError("int exceeds XML-RPC limits")
+    tag = 'i8' if value > xmlrpclib.MAXINT or value < xmlrpclib.MININT else 'int'
+    write("<value><%s>" % tag)
+    write(str(int(value)))
+    write("</%s></value>\n" % tag)
+
+xmlrpclib.Marshaller.dispatch[int] = dump_long
+
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``odoo.exceptions`` (not

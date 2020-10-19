@@ -45,6 +45,21 @@ class TestXMLRPC(common.HttpCase):
             'res.partner', 'name_search', "admin"
         )
 
+    def test_xmlrpc_long(self):
+        """ Transport of long values across XMLRPC is possible """
+        imd_id = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'ir.model.data', 'create', {
+                'model': 'odoo.addons.base.tests',
+                'module': '__test__',
+                'name': 'test_xmlrpc',
+                'res_id': 2**63-1,
+            })
+        record = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'ir.model.data', 'read', [imd_id])[0]
+        self.assertEqual(record['res_id'], 2**63-1)
+
     def test_jsonrpc_read_group(self):
         self._json_call(
             common.get_db_name(), self.admin_uid, 'admin',
