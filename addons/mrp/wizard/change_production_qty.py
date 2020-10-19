@@ -6,6 +6,10 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_round
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
@@ -114,4 +118,15 @@ class ChangeProductionQty(models.TransientModel):
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if quantity > 0 and wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_line_ids:
                     wo._generate_lot_ids()
+            # remove orphan lines
+            # initial qty (product_uom_qty) cannot be set manually so this is used
+            # to avoid removing manual inserted lines
+            for move_raw in production.move_raw_ids:
+                if not move_raw.bom_line_id and move_raw.product_uom_qty != 0:
+                    if move_raw.state == 'draft':
+                        move_raw.unlink()
+                    elif move_raw.state != 'done':
+                        move_raw._action_cancel()
+                    else:
+                        logger.info('Move %s is already done' % move_raw.id)
         return {}

@@ -9,3 +9,4 @@ from . import test_procurement
 from . import test_unbuild
 from . import test_oee
 from . import test_traceability
+from . import test_production_change_qty_fix
