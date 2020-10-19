@@ -43,6 +43,11 @@
                                 <field name="sequence_id" groups="base.group_no_one"/>
                                 <field name="sequence_code"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
+                                <label for="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}"/>
+                                <div class="o_row" attrs="{'invisible': [('code', '=', 'incoming')]}">
+                                    <field name="reservation_method" widget="radio"/>
+                                    <span attrs='{"invisible": [("reservation_method", "!=", "by_date")]}' class="oe_left"><field name="reservation_days_before" style="width: 30px; padding-top: 0px"/> days</span>
+                                </div>
                             </group>
                             <group>
                                 <field name="code"/>
