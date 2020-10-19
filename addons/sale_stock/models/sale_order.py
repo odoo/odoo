@@ -3,13 +3,11 @@
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
-from odoo.tools.float_utils import float_repr
-from odoo.tools.misc import format_date
+from odoo.tools import float_compare, float_round
 from odoo.exceptions import UserError
 
 

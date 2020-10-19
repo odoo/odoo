@@ -4,7 +4,6 @@
 import json
 import time
 from ast import literal_eval
-from collections import defaultdict
 from datetime import date, timedelta
 from itertools import groupby
 from operator import itemgetter
