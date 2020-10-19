@@ -886,7 +886,7 @@ var IconWidget = SearchableMediaWidget.extend({
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
         var finalClasses = _.uniq(this.nonIconClasses.concat([iconFont.base, iconFont.font]));
-        if (!this.$media.is('span')) {
+        if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
             $span.data(this.$media.data());
             this.$media = $span;

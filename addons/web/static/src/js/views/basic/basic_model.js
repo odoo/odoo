@@ -2517,7 +2517,7 @@ var BasicModel = AbstractModel.extend({
         var toFetch = {};
         _.each(list.data, function (groupIndex) {
             var group = self.localData[groupIndex];
-            _.extend(toFetch, self._getDataToFetchByModel(group, fieldName));
+            self._getDataToFetchByModel(group, fieldName, toFetch);
         });
 
         var defs = [];
@@ -3419,13 +3419,18 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} list a valid resource object
      * @param {string} fieldName
+     * @param {Object} [toFetchAcc] an object to store fetching data. Used when
+     *  batching reference across multiple groups.
+     *    [modelName: string]: {
+     *        [recordId: number]: datapointId[]
+     *    }
      * @returns {Object} each key represent a model and contain a sub-object
      * where each key represent an id (res_id) containing an array of
      * webclient id (referred to a datapoint, so not a res_id).
      */
-    _getDataToFetchByModel: function (list, fieldName) {
+    _getDataToFetchByModel: function (list, fieldName, toFetchAcc) {
         var self = this;
-        var toFetch = {};
+        var toFetch = toFetchAcc || {};
         _.each(list.data, function (dataPoint) {
             var record = self.localData[dataPoint];
             var value = record.data[fieldName];

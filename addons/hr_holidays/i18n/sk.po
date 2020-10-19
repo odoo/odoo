@@ -11,8 +11,8 @@
 # Jan Prokop, 2019
 # Stefan Stieranka <stieranka@itec.sk>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -567,7 +567,7 @@ msgstr "<span class=\"text-muted\">do </span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "<span>Add</span>"
-msgstr "<span>pridať</span>"
+msgstr "<span>Pridať</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1179,7 +1179,7 @@ msgstr "Nástenka"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
 msgid "Date Period Start"
-msgstr "Dátum Začiatok obdobia"
+msgstr "Dátum začiatku obdobia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
@@ -1510,7 +1510,7 @@ msgstr "Súhrnná správa o sviatkoch"
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_home_working
 msgid "Home Working"
-msgstr "Domáca práca"
+msgstr "Práca z domu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
@@ -1560,8 +1560,8 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
-"Ak pridelenie časového rozlíšenia: Počet pridelených dní navyše k tým, ktoré"
-" získate prostredníctvom systému časového rozlíšenia."
+"Ak pridelenie rezervy: počet pridelených dní navyše k tým, ktoré získate "
+"prostredníctvom systému pridelenie rezervy."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -1569,8 +1569,8 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
-"Ak pridelenie časového rozlíšenia: Počet pridelených hodín navyše k tým, "
-"ktoré získate prostredníctvom systému časového rozlíšenia."
+"Ak pridelenie rezervy: počet pridelených hodín navyše k tým, ktoré získate "
+"prostredníctvom systému pridelenie rezervy."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -1684,12 +1684,12 @@ msgstr "Typ voľna"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Leaves Taken"
-msgstr "Odobraté listy"
+msgstr "Vybraté dovolenky"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Leaves Taken/Total Allocated"
-msgstr "Odobraté listy / celkové pridelené"
+msgstr "Vybraté dovolenky / celkové pridelené"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightblue
@@ -1768,7 +1768,7 @@ msgstr "Manažéri"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
 msgid "Max Leaves"
-msgstr "Max odíde"
+msgstr "Max dovoleniek"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -2040,7 +2040,7 @@ msgstr "Počet neprečítaných správ"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Off Till"
-msgstr "Off Till"
+msgstr "Preč do"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -2082,7 +2082,7 @@ msgstr "Začaté voľno môže resetovať iba správca dovolenky."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Leave Manager can reset other people leaves."
-msgstr "Iba manažér odchodu môže resetovať odchody ostatných ľudí."
+msgstr "Iba schvalovateľ dovolenky môže resetovať dovolenky ostatných ľudí."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3047,7 +3047,7 @@ msgstr "Môžete prideliť %s iba predtým %s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can not have 2 leaves that overlaps on the same day."
-msgstr "Nemôžete mať 2 listy, ktoré sa prekrývajú v ten istý deň."
+msgstr "Nemôžete mať 2 dovolenky, ktoré sa prekrývajú v ten istý deň."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3078,8 +3078,8 @@ msgid ""
 "You cannot first approve a leave for %s, because you are not his leave "
 "manager"
 msgstr ""
-"Nemôžete najskôr schváliť dovolenku pre %s, pretože nie ste jeho vedúcim "
-"dovolenky"
+"Nemôžete najskôr schváliť dovolenku pre %s, pretože nie ste jeho vedúcim, "
+"ktorý má oprávnenie schvalovať dovolenky"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3091,7 +3091,9 @@ msgstr "Nemáte práva na uplatnenie druhého schválenia žiadosti o dovolenku"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You must be either %s's manager or Leave manager to approve this leave"
-msgstr "Musíte byť%ssprávca alebo Správca dovolenky, aby schválil toto voľno"
+msgstr ""
+"Musíte byť%smanažér alebo správca dovolenky, aby ste mohli schváliť túto "
+"dovolenku"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3121,7 +3123,7 @@ msgstr "Váš %s plánované dňa %sbol prijatý"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %s planned on %s has been refused"
-msgstr "Váš %splánované dňa  %s bol odmietnutý"
+msgstr "Váše %splánované dňa %s bolo odmietnuté"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree

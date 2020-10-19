@@ -5331,7 +5331,7 @@ Fields:
                         model = model[fname]
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                records = self.browse()
+                records_ids = set()
                 for rec in self:
                     data = rec.mapped(key)
                     if comparator in ('child_of', 'parent_of'):
@@ -5395,8 +5395,9 @@ Fields:
                         ok = bool(fnmatch.filter(data, value and value_esc.lower()))
                     else:
                         raise ValueError
-                    if ok: records |= rec
-                result.append(records)
+                    if ok:
+                       records_ids.add(rec.id)
+                result.append(self.browse(records_ids))
         while len(result)>1:
             result.append(result.pop() & result.pop())
         return result[0]
@@ -6090,20 +6091,34 @@ Fields:
 
         nametree = PrefixTree(self.browse(), field_onchange)
 
-        # prefetch x2many lines without data (for the initial snapshot)
+        # prefetch x2many lines: this speeds up the initial snapshot by avoiding
+        # to compute fields on new records as much as possible, as that can be
+        # costly and is not necessary at all
         for name, subnames in nametree.items():
             if subnames and values.get(name):
-                # retrieve all ids in commands
+                # retrieve all line ids in commands
                 line_ids = set()
                 for cmd in values[name]:
                     if cmd[0] in (1, 4):
                         line_ids.add(cmd[1])
                     elif cmd[0] == 6:
                         line_ids.update(cmd[2])
-                # build corresponding new lines, and prefetch fields
-                new_lines = self[name].browse(NewId(id_) for id_ in line_ids)
-                for subname in subnames:
-                    new_lines.mapped(subname)
+                # prefetch stored fields on lines
+                lines = self[name].browse(line_ids)
+                fnames = [subname
+                          for subname in subnames
+                          if lines._fields[subname].base_field.store]
+                lines._read(fnames)
+                # copy the cache of lines to their corresponding new records;
+                # this avoids computing computed stored fields on new_lines
+                new_lines = lines.browse(map(NewId, line_ids))
+                cache = self.env.cache
+                for fname in fnames:
+                    field = lines._fields[fname]
+                    cache.update(new_lines, field, [
+                        field.convert_to_cache(value, new_line, validate=False)
+                        for value, new_line in zip(cache.get_values(lines, field), new_lines)
+                    ])
 
         # Isolate changed values, to handle inconsistent data sent from the
         # client side: when a form view contains two one2many fields that

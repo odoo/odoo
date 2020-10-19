@@ -247,7 +247,9 @@ class IrAttachment(models.Model):
 
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
+                'xml' in mimetype and    # other xml (svg, text/xml, etc)
+                not 'openxmlformats' in mimetype)  # exception for Office formats
         user = self.env.context.get('binary_field_real_user', self.env.user)
         force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))

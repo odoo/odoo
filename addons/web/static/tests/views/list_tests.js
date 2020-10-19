@@ -5658,6 +5658,57 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('reference field batched in grouped list', async function (assert) {
+        assert.expect(7);
+
+        this.data.foo.records= [
+            // group 1
+            {id: 1, foo: '1', reference: 'bar,1'},
+            {id: 2, foo: '1', reference: 'bar,2'},
+            {id: 3, foo: '1', reference: 'res_currency,1'},
+            //group 2
+            {id: 4, foo: '2', reference: 'bar,2'},
+            {id: 5, foo: '2', reference: 'bar,3'},
+        ];
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree expand="1">
+                       <field name="foo" invisible="1"/>
+                       <field name="reference"/>
+                   </tree>`,
+            groupBy: ['foo'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'name_get') {
+                    if (args.model === 'bar') {
+                        assert.deepEqual(args.args[0], [1, 2 ,3]);
+                    }
+                    if (args.model === "res.currency") {
+                        assert.deepEqual(args.args[0], [1]);
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps([
+            'web_read_group',
+            'name_get',
+            'name_get',
+        ]);
+        assert.containsN(list, '.o_group_header', 2);
+        const allNames = Array.from(list.el.querySelectorAll('.o_data_cell'), node => node.textContent);
+        assert.deepEqual(allNames, [
+            'Value 1',
+            'Value 2',
+            'USD',
+            'Value 2',
+            'Value 3',
+        ]);
+        list.destroy();
+    });
+
     QUnit.test('editable list view: contexts are correctly sent', async function (assert) {
         assert.expect(6);
 

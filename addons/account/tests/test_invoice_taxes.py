@@ -448,20 +448,20 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         ------------------
         2.82       | 20000     | 21% not incl
         '''
-        self.env['res.currency.rate'].search([]).unlink()
-        self.currency_usd_id = self.env.ref("base.USD")
-        self.currency_chf_id = self.env.ref("base.CHF")
-        # make sure that we have USD as base...
-        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", 
-            [self.currency_usd_id.id, self.env.company.id])
         self.env['res.currency.rate'].create({
-            'currency_id': self.currency_chf_id.id,
+            'name': '2018-01-01',
             'rate': 1.1726,
-            'name': '2001-01-01'})
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.05
+
         invoice = self.env['account.move'].create({
             'type': 'out_invoice',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_chf_id.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
             'invoice_line_ids': [(0, 0, {
                 'name': 'xxxx',
                 'quantity': 20000,
@@ -469,49 +469,25 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'tax_ids': [(6, 0, self.percent_tax_1.ids)],
             })]
         })
-        # don't post!  Post will write() which will cause the amount to recalculate.
-        # but we want to make sure that the calculation is correct when it is made on 
-        # the fly, from a user editing it in the web UI
-        # invoice.post()
-        # make sure the tax is calculated in the foreign currency correctly
-        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
-            {
-                'name': self.percent_tax_1.name,
-                # 20000 * 2.82 / 1.1726
-                'tax_base_amount': 48098.24,
-                'price_unit': 11844,
-                # tax_base_amount * 21%
-                'credit': 10100.63,
-                'tax_ids': []
-            },
-        ])
 
-    def test_foreign_currency_01(self):
-        ''' Test:
-        Foreign currency with rate of 0.654065014 with currency rounding set to 0.05.
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 48098.24,    # 20000 * 2.82 / 1.1726
+            'credit': 10100.63,             # tax_base_amount * 0.21
+        }])
 
-        price_unit | Taxes
-        ------------------
-        5          | 5% incl
-        10         | 5% incl
-        50         | 5% incl
-
-        '''
-        company = self.env.ref('base.main_company')
-        currency_usd_id = self.env.ref("base.USD")
-        currency_chf_id = self.env.ref("base.CHF")
-        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [currency_usd_id.id, company.id])
-        currency_chf_id.rounding = 0.05
-        
-        self.env['res.currency.rate'].search([]).unlink()
+    def test_ensure_no_unbalanced_entry(self):
+        ''' Ensure to not create an unbalanced journal entry when saving. '''
         self.env['res.currency.rate'].create({
-            'currency_id': currency_chf_id.id,
+            'name': '2018-01-01',
             'rate': 0.654065014,
-            'name': '2001-01-01'})
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.05
 
         invoice = self._create_invoice([
             (5, self.percent_tax_3_incl),
             (10, self.percent_tax_3_incl),
             (50, self.percent_tax_3_incl),
-        ], currency_id=currency_chf_id, invoice_payment_term_id=self.pay_terms_a)
+        ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
         invoice.post()
