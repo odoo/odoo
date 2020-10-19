@@ -18,5 +18,5 @@ class PayuLatamController(http.Controller):
         """ PayUlatam."""
         _logger.info('PayU Latam: entering form_feedback with post response data %s', pprint.pformat(post))
         if post:
-            request.env['payment.transaction'].sudo().form_feedback(post, 'payulatam')
-        return werkzeug.utils.redirect('/payment/process')
+            request.env['payment.transaction'].sudo()._handle_feedback_data('payulatam', post)
+        return werkzeug.utils.redirect('/payment/status')
