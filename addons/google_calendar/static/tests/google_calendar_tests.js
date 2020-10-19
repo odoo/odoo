@@ -98,6 +98,8 @@ QUnit.module('Google Calendar', {
                     assert.step(route);
                 } else if (route === '/microsoft_calendar/sync_data') {
                     return Promise.resolve();
+                } else if (route === '/web/dataset/call_kw/hr.employee/search_read') {
+                    return Promise.resolve([]);
                 }
                 return this._super.apply(this, arguments);
             },
