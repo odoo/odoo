@@ -62,7 +62,7 @@
                             <field name="tag_name"/>
                         </group>
                         <group>
-                            <field name="report_id" readonly="1"/>
+                            <field name="report_id" invisible="1"/>
                             <field name="parent_id" readonly="1"/>
                             <field name="code"/>
                         </group>
@@ -71,26 +71,7 @@
                         <field name="formula"/>
                     </group>
                     <group string="Sublines">
-                        <field name="children_line_ids" context="{'default_report_id': report_id}">
-                            <form>
-                                <group>
-                                    <group>
-                                        <field name="sequence" invisible="1"/>
-                                        <field name="name"/>
-                                        <field name="tag_name"/>
-                                    </group>
-                                    <group>
-                                        <field name="code"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <field name="formula"/>
-                                </group>
-                                <group string="Sublines">
-                                    <field name="children_line_ids" context="{'form_view_ref': 'account.account_tax_report_line_form'}"/>
-                                </group>
-                            </form>
-                        </field>
+                        <field name="children_line_ids" context="{'default_report_id': report_id}"/>
                     </group>
                 </sheet>
                 </form>
