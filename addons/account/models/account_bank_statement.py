@@ -848,6 +848,7 @@ class AccountBankStatementLine(models.Model):
             if aml_rec.journal_id.post_at == 'bank_rec' and aml_rec.payment_id and aml_rec.move_id.state == 'draft':
                 # In case the journal is set to only post payments when performing bank
                 # reconciliation, we modify its date and post it.
+                aml_rec.move_id.name = False
                 aml_rec.move_id.date = self.date
                 aml_rec.payment_id.payment_date = self.date
                 aml_rec.move_id.post()
