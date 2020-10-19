@@ -17,12 +17,12 @@ class SipsController(http.Controller):
     _notify_url = '/payment/sips/ipn/'
     _return_url = '/payment/sips/dpn/'
 
-    def sips_validate_data(self, **post):
-        sips = request.env['payment.acquirer'].search([('provider', '=', 'sips')], limit=1)
-        security = sips.sudo()._sips_generate_shasign(post)
+    def _sips_validate_data(self, **post):
+        sips = request.env['payment.acquirer'].sudo().search([('provider', '=', 'sips')], limit=1)
+        security = sips._sips_generate_shasign(post)
         if security == post['Seal']:
             _logger.debug('Sips: validated data')
-            return request.env['payment.transaction'].sudo().form_feedback(post, 'sips')
+            return request.env['payment.transaction'].sudo()._handle_feedback_data(data=post, provider='sips')
         _logger.warning('Sips: data are corrupted')
         return False
 
@@ -36,7 +36,7 @@ class SipsController(http.Controller):
             # meaningful information; log as a warning instead of a traceback
             _logger.warning('Sips: received empty notification; skip.')
         else:
-            self.sips_validate_data(**post)
+            self._sips_validate_data(**post)
         return ''
 
     @http.route('/payment/sips/dpn', type='http', auth="public", methods=['POST'], csrf=False)
@@ -44,7 +44,7 @@ class SipsController(http.Controller):
         """ Sips DPN """
         try:
             _logger.info('Beginning Sips DPN form_feedback with post data %s', pprint.pformat(post))  # debug
-            self.sips_validate_data(**post)
-        except:
+            self._sips_validate_data(**post)
+        except Exception:
             pass
-        return werkzeug.utils.redirect('/payment/process')
+        return werkzeug.utils.redirect('/payment/status')

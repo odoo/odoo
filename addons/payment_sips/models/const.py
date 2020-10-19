@@ -61,3 +61,10 @@ SIPS_SUPPORTED_CURRENCIES = {
     'PLN': Currency('996', 2),
     'BRL': Currency('986', 2),
 }
+
+SIPS_STATUS_VALID = ['00']
+SIPS_STATUS_WAIT = ['90', '99']
+SIPS_STATUS_REFUSED = ['05', '14', '34', '54', '75', '97']
+SIPS_STATUS_ERROR = ['03', '12', '24', '25', '30', '40', '51', '63', '94']
+SIPS_STATUS_PENDING = ['60']
+SIPS_STATUS_CANCEL = ['17']
