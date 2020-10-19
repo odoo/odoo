@@ -94,6 +94,7 @@ var CrashManager = AbstractService.extend({
             'odoo.exceptions.MissingError': _lt("Missing Record"),
             'odoo.exceptions.UserError': _lt("User Error"),
             'odoo.exceptions.ValidationError': _lt("Validation Error"),
+            'odoo.exceptions.Warning': _lt("Warning"),
         };
 
         this.browserDetection = new BrowserDetection();

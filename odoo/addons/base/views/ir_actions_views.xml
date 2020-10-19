@@ -337,7 +337,7 @@
                                             <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
                                             <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
                                             <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
-                                            <li><code>Warning</code>: Warning Exception to use with <code>raise</code></li>
+                                            <li><code>UserError</code>: Warning Exception to use with <code>raise</code></li>
                                             <li>To return an action, assign: <code>action = {...}</code></li>
                                         </ul>
                                         <div attrs="{'invisible': [('state', '!=', 'code')]}">
