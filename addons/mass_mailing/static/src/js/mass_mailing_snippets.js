@@ -138,4 +138,5 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
         }
     }
 });
+
 });

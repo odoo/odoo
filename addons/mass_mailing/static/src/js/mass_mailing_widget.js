@@ -13,7 +13,7 @@ var _t = core._t;
 var MassMailingFieldHtml = FieldHtml.extend({
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
     jsLibs: [
-       '/mass_mailing/static/src/js/mass_mailing_snippets.js',
+        '/mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
     ],
 
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
@@ -28,6 +28,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.nodeOptions.snippets) {
             this.nodeOptions.snippets = 'mass_mailing.email_designer_snippets';
         }
+
+        // All the code related to this __extraAssetsForIframe variable is an
+        // ugly hack to restore mass mailing options in stable versions. The
+        // whole logic has to be refactored as soon as possible...
+        this.__extraAssetsForIframe = [{
+            jsLibs: ['/mass_mailing/static/src/js/mass_mailing_snippets.js'],
+        }];
     },
 
     //--------------------------------------------------------------------------

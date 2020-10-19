@@ -771,8 +771,6 @@ class MassMailing(models.Model):
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
-        if self.mailing_type == 'mail' and 'opt_out' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('opt_out', '=', False)], mailing_domain])
 
         return mailing_domain
 
