@@ -242,8 +242,10 @@ class Lang(models.Model):
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
             raise UserError(_("Language code cannot be modified."))
         if vals.get('active') == False:
-            if self.env['res.users'].search([('lang', 'in', lang_codes)]):
+            if self.env['res.users'].search_count([('lang', 'in', lang_codes)]):
                 raise UserError(_("Cannot deactivate a language that is currently used by users."))
+            if self.env['res.partner'].search_count([('lang', 'in', lang_codes)]):
+                raise UserError(_("Cannot deactivate a language that is currently used by contacts."))
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 

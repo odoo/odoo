@@ -260,19 +260,30 @@ class SaleOrder(models.Model):
     def _get_applicable_programs(self):
         """
         This method is used to return the valid applicable programs on given order.
-        param: order - The sale order for which method will get applicable programs.
         """
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
-        ])._filter_programs_from_common_rules(self)
-        if self.promo_code:
-            programs._filter_promo_programs_with_code(self)
+        programs = self.env['sale.coupon.program'].with_context(
+            no_outdated_coupons=True
+        ).search([
+            ('company_id', 'in', [self.company_id.id, False]),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+        ], order="id")._filter_programs_from_common_rules(self)
+        # no impact code...
+        # should be programs = programs.filtered if we really want to filter...
+        # if self.promo_code:
+        #     programs._filter_promo_programs_with_code(self)
         return programs
 
     def _get_applicable_no_code_promo_program(self):
         self.ensure_one()
-        programs = self.env['sale.coupon.program'].search([
+        programs = self.env['sale.coupon.program'].with_context(
+            no_outdated_coupons=True,
+            applicable_coupon=True,
+        ).search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
             '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
@@ -298,6 +309,9 @@ class SaleOrder(models.Model):
         programs = order._get_applicable_no_code_promo_program()
         programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
         for program in programs:
+            # VFE REF in master _get_applicable_no_code_programs already filters programs
+            # why do we need to reapply this bunch of checks in _check_promo_code ????
+            # We should only apply a little part of the checks in _check_promo_code...
             error_status = program._check_promo_code(order, False)
             if not error_status.get('error'):
                 if program.promo_applicability == 'on_next_order':
@@ -364,30 +378,39 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
 
-        applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_valid_applied_coupon_program()
-        applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
-        applied_programs = order._get_applied_programs_with_rewards_on_current_order() + order._get_applied_programs_with_rewards_on_next_order()
+        applied_programs = order._get_applied_programs()
+        applicable_programs = self.env['sale.coupon.program']
+        if applied_programs:
+            applicable_programs = order._get_applicable_programs() + order._get_valid_applied_coupon_program()
+            applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         programs_to_remove = applied_programs - applicable_programs
-        products_to_remove = programs_to_remove.mapped('discount_line_product_id')
 
+        reward_product_ids = applied_programs.discount_line_product_id.ids
         # delete reward line coming from an archived coupon (it will never be updated/removed when recomputing the order)
-        invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in (applied_programs).mapped('discount_line_product_id').ids)
+        invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in reward_product_ids)
 
-        # Invalid generated coupon for which we are not eligible anymore ('expired' since it is specific to this SO and we may again met the requirements)
-        self.generated_coupon_ids.filtered(lambda coupon: coupon.program_id.discount_line_product_id.id in products_to_remove.ids).write({'state': 'expired'})
-        # Reset applied coupons for which we are not eligible anymore ('valid' so it can be use on another )
-        coupons_to_remove = order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
-        coupons_to_remove.write({'state': 'new'})
-
-        # Unbind promotion and coupon programs which requirements are not met anymore
         if programs_to_remove:
+            product_ids_to_remove = programs_to_remove.discount_line_product_id.ids
+
+            if product_ids_to_remove:
+                # Invalid generated coupon for which we are not eligible anymore ('expired' since it is specific to this SO and we may again met the requirements)
+                self.generated_coupon_ids.filtered(lambda coupon: coupon.program_id.discount_line_product_id.id in product_ids_to_remove).write({'state': 'expired'})
+
+            # Reset applied coupons for which we are not eligible anymore ('valid' so it can be use on another )
+            coupons_to_remove = order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
+            coupons_to_remove.write({'state': 'new'})
+
+            # Unbind promotion and coupon programs which requirements are not met anymore
             order.no_code_promo_program_ids -= programs_to_remove
             order.code_promo_program_id -= programs_to_remove
-        if coupons_to_remove:
-            order.applied_coupon_ids -= coupons_to_remove
 
-        # Remove their reward lines
-        invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)
+            if coupons_to_remove:
+                order.applied_coupon_ids -= coupons_to_remove
+
+            # Remove their reward lines
+            if product_ids_to_remove:
+                invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in product_ids_to_remove)
+
         invalid_lines.unlink()
 
     def _get_applied_programs_with_rewards_on_current_order(self):
@@ -402,6 +425,17 @@ class SaleOrder(models.Model):
     def _get_applied_programs_with_rewards_on_next_order(self):
         return self.no_code_promo_program_ids.filtered(lambda p: p.promo_applicability == 'on_next_order') + \
             self.code_promo_program_id.filtered(lambda p: p.promo_applicability == 'on_next_order')
+
+    def _get_applied_programs(self):
+        """Returns all applied programs on current order:
+
+        Expected to return same result than:
+
+            self._get_applied_programs_with_rewards_on_current_order()
+            +
+            self._get_applied_programs_with_rewards_on_next_order()
+        """
+        return self.code_promo_program_id + self.no_code_promo_program_ids + self.applied_coupon_ids.mapped('program_id')
 
 
 class SaleOrderLine(models.Model):

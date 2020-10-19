@@ -436,7 +436,7 @@ class TestTranslationWrite(TransactionCase):
 
     def test_03_fr_single(self):
         self.env['res.lang'].load_lang('fr_FR')
-        self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
         self.env.ref('base.lang_en').active = False
 
         langs = self.env['res.lang'].get_installed()
@@ -481,7 +481,7 @@ class TestTranslationWrite(TransactionCase):
 
     def test_04_fr_multi_no_en(self):
         self.env['res.lang'].load_lang('fr_FR')
-        self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
         self.env['res.lang'].load_lang('es_ES')
         self.env.ref('base.lang_en').active = False
 
