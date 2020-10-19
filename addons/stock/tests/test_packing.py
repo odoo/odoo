@@ -14,6 +14,7 @@ class TestPackingCommon(TransactionCase):
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.warehouse = cls.env['stock.warehouse'].search([('lot_stock_id', '=', cls.stock_location.id)], limit=1)
         cls.warehouse.write({'delivery_steps': 'pick_pack_ship'})
+        cls.warehouse.int_type_id.reservation_method = 'manual'
         cls.pack_location = cls.warehouse.wh_pack_stock_loc_id
         cls.ship_location = cls.warehouse.wh_output_stock_loc_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
