@@ -375,7 +375,7 @@ class IrActionsServer(models.Model):
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
-#  - Warning: Warning Exception to use with raise
+#  - UserError: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
