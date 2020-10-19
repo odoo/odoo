@@ -219,6 +219,20 @@ var Wysiwyg = Widget.extend({
                             },
                         },
                     },
+
+                    // s_process_step
+                    {
+                        selector: [node => {
+                            const attributes = node.modifiers.find(this.JWEditorLib.Attributes);
+                            return attributes && attributes.classList.has('s_process_step_icon');
+                        }],
+                        properties: {
+                            editable: {
+                                value: false,
+                                cascading: true,
+                            },
+                        },
+                    },
                 ],
             };
         }
