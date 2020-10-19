@@ -1078,7 +1078,8 @@ class AccountInvoice(models.Model):
             raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
         to_open_invoices.action_date_assign()
         to_open_invoices.invoice_validate()
-        return to_open_invoices.action_move_create()
+        # Keep the invoices just opened for re-use in sale_stock.
+        return to_open_invoices.with_context(to_open_invoices=to_open_invoices).action_move_create()
 
     @api.multi
     def action_invoice_paid(self):
