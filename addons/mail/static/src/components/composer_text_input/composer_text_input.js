@@ -24,9 +24,13 @@ class ComposerTextInput extends Component {
         super(...args);
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const thread = composer && composer.thread;
+            const correspondent = thread ? thread.correspondent : undefined;
             return {
                 composer: composer ? composer.__state : undefined,
+                correspondent: correspondent ? correspondent.__state : undefined,
                 isDeviceMobile: this.env.messaging.device.isMobile,
+                thread: thread ? thread.__state : undefined,
             };
         });
         /**
@@ -63,13 +67,19 @@ class ComposerTextInput extends Component {
         if (!this.composer) {
             return "";
         }
-        if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
-            if (this.composer.isLog) {
-                return this.env._t("Log an internal note...");
-            }
-            return this.env._t("Send a message to followers...");
+        if (!this.composer.thread) {
+            return "";
         }
-        return this.env._t("Write something...");
+        if (this.composer.thread.model === 'mail.channel') {
+            if (this.composer.thread.correspondent) {
+                return _.str.sprintf("Message %s...", this.composer.thread.correspondent.nameOrDisplayName)
+            }
+            return _.str.sprintf("Message #%s...", this.composer.thread.displayName);
+        }
+        if (this.composer.isLog) {
+            return this.env._t("Log an internal note...");
+        }
+        return this.env._t("Send a message to followers...");
     }
 
     focus() {
