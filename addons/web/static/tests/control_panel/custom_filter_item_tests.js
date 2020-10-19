@@ -71,7 +71,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('selection field: default and updated value', async function (assert) {
-            assert.expect(4);
+            assert.expect(7);
 
             let expectedFilters;
             class MockedSearchModel extends ActionModel {
@@ -108,6 +108,20 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await cpHelpers.toggleAddCustomFilter(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_value select'), 'white');
+            await cpHelpers.applyFilter(cfi);
+
+            // Test value resets on operator change
+            expectedFilters = [{
+                description: 'Color is not "black"',
+                domain: '[["color","!=","black"]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_value select'), 'white');
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), '!=');
+            const selectValue = cfi.el.querySelector('.o_generator_menu_value select')
+            assert.strictEqual(selectValue.selectedIndex, 0, "first options should be selected");
             await cpHelpers.applyFilter(cfi);
 
             cfi.destroy();
