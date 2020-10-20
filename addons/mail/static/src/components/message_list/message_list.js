@@ -44,6 +44,7 @@ export class MessageList extends Component {
             const threadCache = threadView && threadView.threadCache;
             return {
                 componentHintList: threadView ? [...threadView.componentHintList] : [],
+                filteredMessages: threadCache ? [...threadCache.filteredMessages] : [],
                 hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
                 hasScrollAdjust: this.props.hasScrollAdjust,
                 order: this.props.order,
@@ -237,12 +238,15 @@ export class MessageList extends Component {
     /**
      * @returns {mail.message[]}
      */
-    get orderedMessages() {
+    get messages() {
         const threadCache = this.threadView.threadCache;
+        const messages = this.threadView.hasVisibleSearchBox && threadCache.filteredMessages.length > 0
+                       ? threadCache.filteredMessages
+                       : threadCache.orderedMessages;
         if (this.props.order === 'desc') {
-            return [...threadCache.orderedMessages].reverse();
+            return [...messages].reverse();
         }
-        return threadCache.orderedMessages;
+        return messages;
     }
 
     /**
@@ -254,6 +258,20 @@ export class MessageList extends Component {
         }
         this._isLastScrollProgrammatic = true;
         this._getScrollableElement().scrollTop = value;
+    }
+
+    /**
+     * @param {mail.message} message
+     * @returns {boolean}
+     */
+    shouldMessageBeFiltered(message) {
+        const threadCache = this.threadView.threadCache;
+        if (threadCache.filteredMessages.includes(message)) {
+            message.update({ 'isFiltered': true });
+        } else {
+            message.update({ 'isFiltered': false });
+        }
+        return message.isFiltered;
     }
 
     /**

@@ -23,6 +23,14 @@
                             t-ref="composer"
                         />
                     </t>
+                    <t t-if="chatter.isSearchBoxVisible">
+                        <ChatterSearchBox
+                            class="o_Chatter_searchBox"
+                            t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
+                            threadLocalId="chatter.thread.localId"
+                            t-ref="searchBox"
+                        />
+                    </t>
                 </div>
                 <div class="o_Chatter_scrollPanel" t-on-scroll="_onScrollPanelScroll" t-ref="scrollPanel">
                     <t t-if="chatter.isAttachmentBoxVisible">

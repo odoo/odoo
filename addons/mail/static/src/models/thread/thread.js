@@ -1953,6 +1953,9 @@ function factory(dependencies) {
          */
         pendingSeenMessageId: attr(),
         public: attr(),
+        searchedText: attr({
+            default: "",
+        }),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending

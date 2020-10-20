@@ -258,6 +258,9 @@ function factory(dependencies) {
         composer: many2one('mail.composer', {
             related: 'thread.composer',
         }),
+        filteredMessages: many2many('mail.message', {
+            related: 'threadCache.filteredMessages',
+        }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
         }),
@@ -266,6 +269,12 @@ function factory(dependencies) {
          */
         hasTopbar: attr({
             related: 'threadViewer.hasTopbar',
+        }),
+        /**
+         * Determines whether this thread view has a search box.
+         */
+        hasVisibleSearchBox: attr({
+            related: 'threadViewer.hasVisibleSearchBox',
         }),
         /**
          * States whether `this.threadCache` is currently loading messages.

@@ -359,6 +359,40 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {Object}
+         */
+        _computeMessagefilterOn() {
+            if (!this.isFiltered) {
+                return;
+            }
+            const filterBy = {};
+            const body = this.body ? this.body : this.subtype_description;
+            const searchRegExp = new RegExp(this.originThread.searchedText, 'gi');
+
+            if (body.match(searchRegExp)) {
+                filterBy.body = body.replace(searchRegExp, (match) => {
+                    return `<span class="highlighter">${match}</span>`;
+                });
+            }
+            if (this.author && this.author.nameOrDisplayName.match(searchRegExp)) {
+                filterBy.author = this.author.nameOrDisplayName.replace(searchRegExp, (match) => {
+                    return `<span class="highlighter">${match}</span>`;
+                });
+            }
+            if (this.subject && !this.isSubjectSimilarToOriginThreadName) {
+                const subject = this.env._t("Subject: ") + this.subject;
+                if (subject.match(searchRegExp)) {
+                    filterBy.subject = subject.replace(searchRegExp, (match) => {
+                        return `<span class="highlighter">${match}</span>`;
+                    });
+                }
+            }
+
+            return filterBy;
+        }
+
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsSubjectSimilarToOriginThreadName() {
@@ -477,6 +511,10 @@ function factory(dependencies) {
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
         }),
+        filterOn: attr({
+            default: {},
+            compute: '_computeMessagefilterOn',
+        }),
         id: attr({
             required: true,
         }),
@@ -515,6 +553,13 @@ function factory(dependencies) {
          */
         isEmpty: attr({
             compute: '_computeIsEmpty',
+        }),
+        /**
+         * Determine whether the message is filtered or not. Useful to make
+         * body with highlighted keyword.
+         */
+        isFiltered: attr({
+            default: false,
         }),
         /**
          * States whether `originThread.name` and `subject` contain similar

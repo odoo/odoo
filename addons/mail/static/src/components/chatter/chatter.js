@@ -24,6 +24,10 @@ export class Chatter extends Component {
          */
         this._scrollPanelRef = useRef('scrollPanel');
         /**
+         * Reference of the search box. Useful to focus it.
+         */
+        this._searchBoxRef = useRef('searchBox');
+        /**
          * Reference of the message list. Useful to trigger the scroll event on it.
          */
         this._threadRef = useRef('thread');
@@ -80,6 +84,10 @@ export class Chatter extends Component {
             const composer = this._composerRef.comp;
             if (composer) {
                 composer.focus();
+            }
+            const searchBox = this._searchBoxRef.comp;
+            if (searchBox) {
+                searchBox.focus();
             }
         }
     }

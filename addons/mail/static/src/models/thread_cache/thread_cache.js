@@ -97,6 +97,37 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.message[]}
+         */
+        _computeFilteredMessages() {
+            if (!this.thread) {
+                return [['unlink-all']];
+            }
+            let searchedText = this.thread.searchedText;
+            if (!searchedText || /<.+>/g.exec( searchedText )) {
+                return [['unlink-all']];
+            }
+            searchedText = searchedText.toLowerCase();
+            const filteredMessages = this.thread.messages.filter((message) => {
+                const authorName = message.author && message.author.nameOrDisplayName;
+                const body = message.body;
+                const subject = message.subject && this.env._t('Subject: ') + message.subject;
+                const subtypeDescription = message.subtype_description
+                return (
+                    (authorName && authorName.toLowerCase().includes(searchedText)) ||
+                    (body && body.toLowerCase().includes(searchedText)) ||
+                    (subject && subject.toLowerCase().includes(searchedText)) ||
+                    (subtypeDescription && subtypeDescription.toLowerCase().includes(searchedText))
+
+                );
+            });
+
+            filteredMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
+            return [['replace', filteredMessages]];
+       }
+
+        /**
+         * @private
          * @returns {mail.message|undefined}
          */
         _computeLastFetchedMessage() {
@@ -374,6 +405,13 @@ function factory(dependencies) {
             compute: '_computeFetchedMessages',
         }),
         /**
+         * List of filtered messages based on searched keyword linked
+         * to this cache.
+         */
+        filteredMessages: many2many('mail.message', {
+            compute: '_computeFilteredMessages',
+        }),
+        /**
          * Determines whether the last message fetch failed.
          */
         hasLoadingFailed: attr({
@@ -414,6 +452,12 @@ function factory(dependencies) {
          * @see `_onChangeMarkAllAsRead`
          */
         isMarkAllAsReadRequested: attr({
+            default: false,
+        }),
+        /**
+         * States whether `this` is currently searching messages.
+         */
+        isSearchingMessages: attr({
             default: false,
         }),
         /**

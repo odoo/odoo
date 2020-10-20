@@ -29,6 +29,7 @@ export class Message extends Component {
             isClicked: false,
         });
         useUpdate({ func: () => this._update() });
+        this._authorHighlighterRef = useRef('_authorHighlighterRef');
         /**
          * The intent of the reply button depends on the last rendered state.
          */
@@ -43,6 +44,7 @@ export class Message extends Component {
          * replace prettyBody with new value in JS (which is faster than t-raw).
          */
         this._prettyBodyRef = useRef('prettyBody');
+        this._prettyBodyHighlighterRef = useRef('prettyBodyHighlighter');
         /**
          * Reference to the content of the message.
          */
@@ -56,6 +58,7 @@ export class Message extends Component {
          * regular time.
          */
         this._intervalId = undefined;
+        this._subjectHighlighterRef = useRef('subjectHighlighterRef');
         this._constructor();
     }
 
@@ -394,9 +397,19 @@ export class Message extends Component {
         if (!this.message) {
             return;
         }
+        if (this._authorHighlighterRef.el) {
+            this._authorHighlighterRef.el.innerHTML = this.message.filterOn.author;
+        }
+        if (this._prettyBodyHighlighterRef.el) {
+            this._prettyBodyHighlighterRef.el.innerHTML = this.message.filterOn.body;
+            this._lastPrettyBody = this.message.filteredMessageBody;
+        }
         if (this._prettyBodyRef.el && this.message.prettyBody !== this._lastPrettyBody) {
             this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
             this._lastPrettyBody = this.message.prettyBody;
+        }
+        if (this._subjectHighlighterRef.el) {
+            this._subjectHighlighterRef.el.innerHTML = this.message.filterOn.subject;
         }
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations
@@ -538,6 +551,7 @@ Object.assign(Message, {
     defaultProps: {
         hasMarkAsReadIcon: false,
         hasReplyIcon: false,
+        isFiltered: false,
         isSquashed: false,
     },
     props: {
@@ -548,6 +562,7 @@ Object.assign(Message, {
         },
         hasMarkAsReadIcon: Boolean,
         hasReplyIcon: Boolean,
+        isFiltered: Boolean,
         isSquashed: Boolean,
         messageLocalId: String,
         threadViewLocalId: {

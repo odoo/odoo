@@ -59,12 +59,28 @@
                         </t>
                     </t>
                 </div>
+                <t t-set="isFiltered" t-value="props.isFiltered and message.isFiltered"/>
+                <t t-if="isFiltered and message.filterOn">
+                    <t t-set="isFilterOnAuthor" t-value="message.filterOn.author"/>
+                    <t t-set="isFilterOnBody" t-value="message.filterOn.body"/>
+                    <t t-set="isFilterOnSubject" t-value="message.filterOn.subject"/>
+                </t>
+                <t t-else="">
+                    <t t-set="isFilterOnAuthor" t-value="false"/>
+                    <t t-set="isFilterOnBody" t-value="false"/>
+                    <t t-set="isFilterOnSubject" t-value="false"/>
+                </t>
                 <div class="o_Message_core">
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_header">
                             <t t-if="message.author">
                                 <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" t-on-click="_onClickAuthorName" title="Open profile">
-                                    <t t-esc="message.author.nameOrDisplayName"/>
+                                    <t t-if="isFilterOnAuthor">
+                                        <div t-ref="_authorHighlighterRef"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="message.author.nameOrDisplayName"/>
+                                    </t>
                                 </div>
                             </t>
                             <t t-elif="message.email_from">
@@ -146,9 +162,14 @@
                         </div>
                     </t>
                     <div class="o_Message_content" t-ref="content">
-                        <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
-                        <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
-                            <p t-esc="message.subtype_description"/>
+                        <t t-if="isFilterOnBody">
+                            <div class="o_Message_prettyBody_highlighter" t-ref="prettyBodyHighlighter"/>
+                        </t>
+                        <t t-else="">
+                            <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                            <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
+                                <p t-esc="message.subtype_description"/>
+                            </t>
                         </t>
                         <t t-if="trackingValues.length > 0">
                             <ul class="o_Message_trackingValues">
@@ -170,7 +191,12 @@
                         </t>
                     </div>
                     <t t-if="message.subject and !message.isSubjectSimilarToOriginThreadName">
-                        <p class="o_Message_subject mb-0">Subject: <t t-esc="message.subject"/></p>
+                        <t t-if="isFilterOnSubject">
+                            <p class="o_Message_subject mb-0" t-ref="subjectHighlighterRef"/>
+                        </t>
+                        <t t-else="">
+                            <p class="o_Message_subject mb-0">Subject: <t t-esc="message.subject"/></p>
+                        </t>
                     </t>
                     <t t-if="message.attachments and message.attachments.length > 0">
                         <div class="o_Message_footer">

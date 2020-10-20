@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, many2one, many2many, one2one } from '@mail/model/model_field';
 import { create, insert, link, unlink, update } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -72,6 +72,11 @@ function factory(dependencies) {
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
+            this.focus();
+        }
+
+        showSearchBox() {
+            this.update({ isSearchBoxVisible: true });
             this.focus();
         }
 
@@ -278,6 +283,12 @@ function factory(dependencies) {
         isDoFocus: attr({
             default: false,
         }),
+        /**
+         * Determiners whether the search box is currently visible.
+         */
+        isSearchBoxVisible: attr({
+            default: false,
+        }),
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
@@ -304,6 +315,7 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'chatter',
             isCausal: true,
             readonly: true,
             required: true,

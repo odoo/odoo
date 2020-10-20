@@ -78,6 +78,12 @@ function factory(dependencies) {
 
     ThreadViewer.fields = {
         /**
+         * States the `mail.chatter` managing `this`.
+         */
+        chatter: one2one('mail.chatter', {
+            inverse: 'threadViewer',
+        }),
+        /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
@@ -88,6 +94,12 @@ function factory(dependencies) {
          */
         hasTopbar: attr({
             default: false,
+        }),
+        /**
+         * Determines whether this thread viewer has a search box.
+         */
+        hasVisibleSearchBox: attr({
+            related: 'chatter.isSearchBoxVisible',
         }),
         /**
          * Determines the selected `mail.message`.
