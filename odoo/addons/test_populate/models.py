@@ -17,6 +17,7 @@ class TestPopulateModel(models.Model):
     some_ref = fields.Integer('Reference')
     dependant_field_1 = fields.Char('Dependant 1')
     dependant_field_2 = fields.Char('Dependant 2')
+    sequence = fields.Integer("Sequence")
 
     _populate_dependencies = ['test.populate.category']
 
@@ -53,6 +54,7 @@ class TestPopulateModel(models.Model):
             ('_dependant', generate_dependant),
             ('name', populate.compute(get_name)),
             ('category_id', populate.randomize([False] + category_ids)),
+            ('sequence', populate.randint(1, 10))
         ]
 
 class TestPopulateDependencyModel(models.Model):
