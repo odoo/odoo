@@ -1693,8 +1693,11 @@ td {
     body * {
         visibility: hidden;
     }
+    .pos, .pos * {
+        position: static !important;
+    }
     .pos .receipt-screen .pos-receipt-container {
-        position: fixed;
+        position: absolute !important;
         top: 0;
         left: 0;
     }
@@ -1704,7 +1707,7 @@ td {
         color: black !important;
     }
     .pos .pos-receipt {
-        margin: 0;
+        margin: 0 !important;
         margin-left: auto !important;
         margin-right: auto !important;
         border: none !important;
