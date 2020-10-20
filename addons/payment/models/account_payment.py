@@ -51,10 +51,10 @@ class AccountPayment(models.Model):
         self.ensure_one()
         return {
             'amount': self.amount,
+            'reference': self.ref,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
-            'invoice_ids': [(6, 0, self.invoice_ids.ids)],
             'payment_token_id': self.payment_token_id.id,
             'acquirer_id': self.payment_token_id.acquirer_id.id,
             'payment_id': self.id,
@@ -112,5 +112,11 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self - payments_need_trans).action_post()
 
         transactions.s2s_do_transaction()
+
+        # Post payments for issued transactions.
+        payments_trans_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state == 'done')
+        super(AccountPayment, payments_trans_done).action_post()
+        payments_trans_not_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state != 'done')
+        payments_trans_not_done.action_cancel()
 
         return res
