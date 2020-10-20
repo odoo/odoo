@@ -1097,7 +1097,6 @@ var SnippetsMenu = Widget.extend({
 
         const $autoFocusEls = $('.o_we_snippet_autofocus');
         this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
-        this._textToolsSwitchingEnabled = true;
 
         // Add tooltips on we-title elements whose text overflows
         this.$el.tooltip({
@@ -1129,6 +1128,12 @@ var SnippetsMenu = Widget.extend({
             // animation). (TODO wait for real animation end)
             setTimeout(() => {
                 this.$window.trigger('resize');
+
+                // Hacky way to prevent to switch to text tools on editor
+                // start. Only allow switching after some delay. Switching to
+                // tools is only useful for out-of-snippet texts anyway, so
+                // snippet texts can still be enabled immediately.
+                this._mutex.exec(() => this._textToolsSwitchingEnabled = true);
             }, 1000);
         });
     },
