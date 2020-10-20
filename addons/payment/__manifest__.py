@@ -24,6 +24,7 @@
         'security/ir.model.access.csv',
         'security/payment_security.xml',
         'wizards/payment_link_wizard_views.xml',
+        'wizards/account_payment_register_views.xml',
     ],
     'installable': True,
     'auto_install': True,
