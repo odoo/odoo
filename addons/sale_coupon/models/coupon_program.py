@@ -69,7 +69,7 @@ class CouponProgram(models.Model):
             'amount_untaxed' : order.amount_untaxed - sum(line.price_subtotal for line in no_effect_lines),
             'amount_tax' : order.amount_tax - sum(line.price_tax for line in no_effect_lines)
         }
-        program_ids = set()
+        program_ids = list()
         for program in self:
             if program.reward_type != 'discount':
                 # avoid the filtered
@@ -84,7 +84,7 @@ class CouponProgram(models.Model):
             tax_amount = order_amount['amount_tax'] - sum(line.price_tax for line in lines)
             program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
             if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and program_amount <= untaxed_amount:
-                program_ids.add(program.id)
+                program_ids.append(program.id)
 
         return self.browse(program_ids)
 
@@ -118,10 +118,10 @@ class CouponProgram(models.Model):
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
             products_qties[line.product_id] += line.product_uom_qty
-        valid_program_ids = set()
+        valid_program_ids = list()
         for program in self:
             if not program.rule_products_domain:
-                valid_program_ids.add(program.id)
+                valid_program_ids.append(program.id)
                 continue
             valid_products = program._get_valid_products(products)
             if not valid_products:
@@ -133,7 +133,7 @@ class CouponProgram(models.Model):
                program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
-                valid_program_ids.add(program.id)
+                valid_program_ids.append(program.id)
         return self.browse(valid_program_ids)
 
     def _filter_not_ordered_reward_programs(self, order):
