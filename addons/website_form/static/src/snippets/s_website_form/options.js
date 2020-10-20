@@ -575,9 +575,11 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
                         break;
                 }
                 if (field.required) {
-                    // Get default value or for many2one fields the first option.
+                    // Try to retrieve hidden value in form, else,
+                    // get default value or for many2one fields the first option.
+                    const currentValue = this.$target.find(`.s_website_form_dnone input[name="${field.name}"]`).val();
                     const defaultValue = field.defaultValue || field.records[0].id;
-                    this._addHiddenField(defaultValue, field.name);
+                    this._addHiddenField(currentValue || defaultValue, field.name);
                 }
                 uiFragment.insertBefore(option, firstOption);
             });
