@@ -720,7 +720,7 @@ class Meeting(models.Model):
                 detached_events = event._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
+        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys() })
 
         # Notify attendees if there is an alarm on the created event, as it might have changed their
