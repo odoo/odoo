@@ -6220,8 +6220,9 @@ Fields:
 
             It is the responsibility of the generator to handle the field_name correctly.
             The generator could generate values for multiple fields together. In this case,
-            the field_name should be more a "field_group", covering the different fields
-            updated by the generator (e.g. "_address" for a generator updating multiple address fields).
+            the field_name should be more a "field_group" (should be begin by a "_"), covering
+            the different fields updated by the generator (e.g. "_address" for a generator
+            updating multiple address fields).
         """
         return []
 
