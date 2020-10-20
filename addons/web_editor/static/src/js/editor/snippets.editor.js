@@ -809,7 +809,7 @@ var SnippetEditor = Widget.extend({
     /**
      * Called when the 'mouse wheel' is used when hovering over the overlay.
      * Disable the pointer events to prevent page scrolling from stopping.
-     * 
+     *
      * @private
      * @param {Event} ev
      */
@@ -2475,8 +2475,16 @@ var SnippetsMenu = Widget.extend({
         if (!this._textToolsSwitchingEnabled) {
             return;
         }
-        if (!$.summernote.core.range.create()) {
-            // Sometimes not enough...
+        const range = $.summernote.core.range.create();
+        if (!range) {
+            return;
+        }
+        if (range.sc === range.ec && range.sc.nodeType === Node.ELEMENT_NODE
+                && range.sc.classList.contains('oe_structure')
+                && range.sc.children.length === 0) {
+            // Do not switch to text tools if the cursor is in an empty
+            // oe_structure (to encourage using snippets there and actually
+            // avoid breaking tours which suppose the snippet list is visible).
             return;
         }
         this.textEditorPanelEl.classList.add('d-block');
