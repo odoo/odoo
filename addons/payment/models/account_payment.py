@@ -114,6 +114,7 @@ class AccountPayment(models.Model):
         transactions.s2s_do_transaction()
 
         # Post payments for issued transactions.
+        transactions._post_process_after_done()
         payments_trans_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state == 'done')
         super(AccountPayment, payments_trans_done).action_post()
         payments_trans_not_done = payments_need_trans.filtered(lambda pay: pay.payment_transaction_id.state != 'done')
