@@ -1665,7 +1665,8 @@ class AccountMove(models.Model):
             # Which is wrong in some case
             # It's better to set the account_id before the partner_id
             # Ensure related fields are well copied.
-            line.partner_id = self.partner_id.commercial_partner_id
+            if line.partner_id != self.partner_id.commercial_partner_id:
+                line.partner_id = self.partner_id.commercial_partner_id
             line.date = self.date
             line.recompute_tax_line = True
             line.currency_id = self.currency_id
@@ -3097,18 +3098,16 @@ class AccountMoveLine(models.Model):
             return self.product_id.uom_id
         return False
 
-    @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
+    @api.depends('product_id', 'account_id', 'partner_id', 'date')
     def _compute_analytic_account(self):
         for record in self:
-            record.analytic_account_id = (record._origin or record).analytic_account_id
-            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
-            if not record.exclude_from_invoice_tab:
+            if not record.exclude_from_invoice_tab or not record.move_id.is_invoice(include_receipts=True):
                 rec = self.env['account.analytic.default'].account_get(
                     product_id=record.product_id.id,
                     partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
                     account_id=record.account_id.id,
                     user_id=record.env.uid,
-                    date=record.date_maturity,
+                    date=record.date,
                     company_id=record.move_id.company_id.id
                 )
                 if rec:
