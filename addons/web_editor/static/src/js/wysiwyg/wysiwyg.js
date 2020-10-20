@@ -704,7 +704,7 @@ var Wysiwyg = Widget.extend({
         });
     },
     openMediaDialog(params) {
-        const nodes = params.context.range.selectedNodes();
+        const nodes = params.media ? [params.media] : params.context.range.selectedNodes();
         const node = nodes[0];
         let $baseNode;
 
