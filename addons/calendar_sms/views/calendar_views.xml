@@ -8,8 +8,9 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{
-            'default_composition_mode': 'comment',
+            'sms_composition_mode': 'guess',
             'default_res_id': active_id,
+            'default_res_ids': active_ids,
         }</field>
         <field name="binding_model_id" ref="model_calendar_event"/>
     </record>
