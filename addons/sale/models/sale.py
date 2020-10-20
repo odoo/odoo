@@ -1015,7 +1015,7 @@ Reason(s) of this behavior could be:
             'currency_id': currency.id,
             'partner_id': partner.id,
             'sale_order_ids': [(6, 0, self.ids)],
-            'type': self[0]._get_payment_type(),
+            'type': self[0]._get_payment_type(vals.get('type')=='form_save'),
         })
 
         transaction = self.env['payment.transaction'].create(vals)
@@ -1072,9 +1072,9 @@ Reason(s) of this behavior could be:
             return self.get_portal_url(query_string='&%s' % auth_param)
         return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
 
-    def _get_payment_type(self):
+    def _get_payment_type(self, tokenize=False):
         self.ensure_one()
-        return 'form'
+        return 'form_save' if tokenize else 'form'
 
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """
