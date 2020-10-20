@@ -903,9 +903,8 @@ class PaymentTransaction(models.Model):
         :return: A unique reference for the transaction.
         '''
         if not prefix:
-            if values:
-                prefix = self._compute_reference_prefix(values)
-            else:
+            prefix = self._compute_reference_prefix(values)
+            if not prefix:
                 prefix = 'tx'
 
         # Fetch the last reference
