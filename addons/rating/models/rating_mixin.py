@@ -186,7 +186,7 @@ class RatingMixin(models.AbstractModel):
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
                 if rating.rating > 5:
                     self.write({'kanban_state': 'done'})
-                if rating.rating < 5:
+                else:
                     self.write({'kanban_state': 'blocked'})
         return rating
 
