@@ -137,6 +137,15 @@ class GamificationBadge(models.Model):
             the total number of time this badge was granted
             the total number of users this badge was granted to
         """
+        defaults = {
+            'granted_count': 0,
+            'granted_users_count': 0,
+            'unique_owner_ids': [],
+        }
+        if not self.ids:
+            self.update(defaults)
+            return
+
         self.env.cr.execute("""
             SELECT badge_id, count(user_id) as granted_count,
                 count(distinct(user_id)) as granted_users_count,
@@ -146,11 +155,6 @@ class GamificationBadge(models.Model):
             GROUP BY badge_id
             """, [tuple(self.ids)])
 
-        defaults = {
-            'granted_count': 0,
-            'granted_users_count': 0,
-            'unique_owner_ids': [],
-        }
         mapping = {
             badge_id: {
                 'granted_count': count,
