@@ -294,7 +294,7 @@ class CustomerPortal(CustomerPortal):
         # Create transaction
         vals = {
             'acquirer_id': acquirer_id,
-            'type': order._get_payment_type(),
+            'type': order._get_payment_type(save_token),
             'return_url': order.get_portal_url(),
         }
 
@@ -304,7 +304,7 @@ class CustomerPortal(CustomerPortal):
             order,
             submit_txt=_('Pay & Confirm'),
             render_values={
-                'type': order._get_payment_type(),
+                'type': order._get_payment_type(save_token),
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
             }
         )
