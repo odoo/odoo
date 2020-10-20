@@ -12,6 +12,10 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
+        closeSearchBox() {
+            this.update({ hasVisibleSearchBox: false });
+        }  
+
         /**
          * @param {integer} scrollHeight
          * @param {mail.thread_cache} threadCache
@@ -56,6 +60,18 @@ function factory(dependencies) {
             });
         }
 
+        showSearchBox() {
+            this.update({ hasVisibleSearchBox: true });
+        }
+        
+        toggleSearchBox() {
+            if (this.hasVisibleSearchBox) {
+                this.closeSearchBox();
+            } else {
+                this.showSearchBox();
+            }
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -77,6 +93,12 @@ function factory(dependencies) {
     }
 
     ThreadViewer.fields = {
+        /** 
+        * States the `mail.chatter` managing `this`.
+        */
+        chatter: one2one('mail.chatter', {
+           inverse: 'threadViewer',
+        }),
         /**
          * true if the viewer is in a compact format, like in a chat window.
          */
@@ -105,6 +127,12 @@ function factory(dependencies) {
          * Determines whether this thread viewer has a top bar.
          */
         hasTopbar: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether this thread viewer has a search box.
+         */
+        hasVisibleSearchBox: attr({
             default: false,
         }),
         /**

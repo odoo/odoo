@@ -7,8 +7,14 @@ import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
 import { session } from '@web/session';
+import { escapeRegExp } from "@web/core/utils/strings"
 
 import { str_to_datetime } from 'web.time';
+import { format } from 'web.field_utils';
+import { _lt } from 'web.core';
+
+const READ_MORE = _lt("read more");
+const READ_LESS = _lt("read less");
 
 function factory(dependencies) {
 
@@ -232,6 +238,28 @@ function factory(dependencies) {
         }
 
         /**
+         * Removes a hash to the map keeping track of open collapsable contents.
+         * Basically means it closes it.
+         * 
+         * @param {String} hash 
+         */
+        collapseCollapsableContentByHash(hash) {
+            const newSet = new Set([...this.currentlyOpenedReadMoreHashes]);
+            newSet.delete(hash);
+            this.update({ currentlyOpenedReadMoreHashes: newSet });
+        }
+
+        /**
+         * Adds a hash to the map keeping track of open collapsable contents.
+         * Basically means it opens it.
+         * 
+         * @param {String} hash 
+         */
+        expandCollapsableContentByHash(hash) {
+            this.update({ currentlyOpenedReadMoreHashes: new Set([...this.currentlyOpenedReadMoreHashes.add(hash)]) });
+        }
+
+        /**
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
@@ -243,6 +271,30 @@ function factory(dependencies) {
                     },
                 },
             });
+        }
+
+        /**
+         * Performs DOM transformation needed to display the message.
+         * It uses a string representation of the DOM as we don't manipulate directly the real DOM with OWL. 
+         * 
+         * @param {String} content dom string rep on which to apply all the dom maniplation
+         * @returns processed content
+         */
+        processDomTransformation(content, isSafe = false) {
+            if (!content) return "";
+            if (!isSafe) {
+                content = _.escape(content);
+            }
+            content = this._wrapEmojisForFormatting(content)
+            if (this._isThreadCurrentlyBeingSearched()) {
+                content = this._highlightBasedOnThreadSearch(content);
+            }
+            if (this.message_type == 'email') {
+                // Only the emails need to have collapsable content for now.
+                content = this._insertMoreOrLessTogglersForCollapsableContent(content, true);
+            }
+            content = parseAndTransform(content, addLink);
+            return content;
         }
 
         /**
@@ -328,6 +380,88 @@ function factory(dependencies) {
                 return;
             }
             this.messaging.models['mail.message'].insert(messageData);
+        }
+        
+        /**
+         * @returns {Object}
+         */
+        get trackingValues() {
+            return this.tracking_value_ids.map(trackingValue => {
+                const value = Object.assign({}, trackingValue);
+                value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
+                /**
+                 * Maps tracked field type to a JS formatter. Tracking values are
+                 * not always stored in the same field type as their origin type.
+                 * Field types that are not listed here are not supported by
+                 * tracking in Python. Also see `create_tracking_values` in Python.
+                 */
+                switch (value.field_type) {
+                    case 'boolean':
+                        value.old_value = format.boolean(value.old_value, undefined, { forceString: true });
+                        value.new_value = format.boolean(value.new_value, undefined, { forceString: true });
+                        break;
+                    /**
+                     * many2one formatter exists but is expecting id/name_get or data
+                     * object but only the target record name is known in this context.
+                     *
+                     * Selection formatter exists but requires knowing all
+                     * possibilities and they are not given in this context.
+                     */
+                    case 'char':
+                    case 'many2one':
+                    case 'selection':
+                        value.old_value = format.char(value.old_value);
+                        value.new_value = format.char(value.new_value);
+                        break;
+                    case 'date':
+                        if (value.old_value) {
+                            value.old_value = moment.utc(value.old_value);
+                        }
+                        if (value.new_value) {
+                            value.new_value = moment.utc(value.new_value);
+                        }
+                        value.old_value = format.date(value.old_value);
+                        value.new_value = format.date(value.new_value);
+                        break;
+                    case 'datetime':
+                        if (value.old_value) {
+                            value.old_value = moment.utc(value.old_value);
+                        }
+                        if (value.new_value) {
+                            value.new_value = moment.utc(value.new_value);
+                        }
+                        value.old_value = format.datetime(value.old_value);
+                        value.new_value = format.datetime(value.new_value);
+                        break;
+                    case 'float':
+                        value.old_value = format.float(value.old_value);
+                        value.new_value = format.float(value.new_value);
+                        break;
+                    case 'integer':
+                        value.old_value = format.integer(value.old_value);
+                        value.new_value = format.integer(value.new_value);
+                        break;
+                    case 'monetary':
+                        value.old_value = format.monetary(value.old_value, undefined, {
+                            currency: value.currency_id
+                                ? this.env.session.currencies[value.currency_id]
+                                : undefined,
+                            forceString: true,
+                        });
+                        value.new_value = format.monetary(value.new_value, undefined, {
+                            currency: value.currency_id
+                                ? this.env.session.currencies[value.currency_id]
+                                : undefined,
+                            forceString: true,
+                        });
+                        break;
+                    case 'text':
+                        value.old_value = format.text(value.old_value);
+                        value.new_value = format.text(value.new_value);
+                        break;
+                }
+                return value;
+            });
         }
 
         //----------------------------------------------------------------------
@@ -503,29 +637,31 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computePrettyBody() {
-            let prettyBody;
-            for (const emoji of emojis) {
-                const { unicode } = emoji;
-                const regexp = new RegExp(
-                    `(?:^|\\s|<[a-z]*>)(${unicode})(?=\\s|$|</[a-z]*>)`,
-                    "g"
-                );
-                const originalBody = this.body;
-                prettyBody = this.body.replace(
-                    regexp,
-                    ` <span class="o_mail_emoji">${unicode}</span> `
-                );
-                // Idiot-proof limit. If the user had the amazing idea of
-                // copy-pasting thousands of emojis, the image rendering can lead
-                // to memory overflow errors on some browsers (e.g. Chrome). Set an
-                // arbitrary limit to 200 from which we simply don't replace them
-                // (anyway, they are already replaced by the unicode counterpart).
-                if (_.str.count(prettyBody, "o_mail_emoji") > 200) {
-                    prettyBody = originalBody;
-                }
+            return this.processDomTransformation(this.body, true);
+        }
+        _computePrettyAuthor() {
+            if (!this.author) {
+                return this.processDomTransformation("");
             }
-            // add anchor tags to urls
-            return parseAndTransform(prettyBody, addLink);
+            return this.processDomTransformation(this.author.nameOrDisplayName);
+        }
+        _computePrettySubject() {
+            return this.processDomTransformation(this.subject);
+        }
+        _computePrettySubtypeDescription() {
+            return this.processDomTransformation(this.subtype_description);
+        }
+        _computePrettyTrackingValues() {
+            return Object.fromEntries(this.trackingValues.map(({id, new_value, old_value, changed_field}) =>
+                [
+                    id,
+                    {
+                        'new': this.processDomTransformation(new_value),
+                        'old': this.processDomTransformation(old_value),
+                        'changed_field': this.processDomTransformation(changed_field),
+                    }
+                ]
+            ));
         }
 
         /**
@@ -549,6 +685,158 @@ function factory(dependencies) {
             return replace(threads);
         }
 
+        /**
+         * Apllies the hightlighting based the thread search text. 
+         * 
+         * @private
+         * @param {String} content
+         * @returns {String}
+         */
+        _highlightBasedOnThreadSearch(content) {
+            if (this.threads) {
+                for (const thread of this.threads) {
+                    if (thread.searchedText) {
+                        // this regex ignores html tags
+                        const pattern = `(?<!<\/?[^>]*|&[^;]*)(${escapeRegExp(thread.searchedText)})`
+                        content = content.replace(
+                            new RegExp(pattern,"ig"),
+                            '<b class="o_MessageInlineHighlight">$1</b>'
+                        );
+                    }
+                }
+            }
+            return content;
+        }
+
+        /**
+         * Adds Read More and Read Less togglers for the collapsable contents.
+         * 
+         * @param {String} content String rep of the DOM Content
+         * @param {Boolean} shouldOpenChidlrenRecursively 
+         * When opening a collapsable content, should it open all the children as well ?
+         * Making the effective depth of the collapsable equals 1.
+         * @returns String rep of the DOM Content processed
+         */
+        _insertMoreOrLessTogglersForCollapsableContent(content, shouldOpenChidlrenRecursively = false) {
+            /**
+             * For simplicity, we need to manipulate a DOM Element directly.
+             * Note that "unvalid" html, like nested <p> will get unested by this procedure.
+             * So the better the html conventions are respected, the better this will work.
+             */
+            const contentAsHMTL = document.createElement('div');
+            contentAsHMTL.innerHTML = content;
+
+            /**
+             * For any element with id "stopSpelling", all the following text nodes siblings
+             * nedd to get collapsed. So we add to them the data-o-mail-quote that will 
+             * trigger later the callapsable behavior.
+             */
+            let stopSpellings = contentAsHMTL.querySelectorAll("#stopSpelling");
+            for (const stopSpelling of stopSpellings) {
+                let current = stopSpelling.nextSibling
+                while (current) {
+                    const next = current.nextSibling
+                    if (current.nodeType === 3 && current.textContent.trim()) { 
+                        var spanNode = document.createElement('span');
+                        spanNode.dataset.oMailQuote = true;
+                        var newTextNode = document.createTextNode(current.textContent);
+                        spanNode.appendChild(newTextNode);
+                        current.parentNode.replaceChild(spanNode, current);
+                    }
+                    current = next;
+                }
+            }
+
+            /**
+             * While there is a collapsable element in the dom, we need to process it. 
+             * We remove the data-o-mail-quote attr when the processing is done.
+             */
+            let collapsable = contentAsHMTL.querySelector("[data-o-mail-quote]");
+            while (collapsable) {
+                collapsable.removeAttribute("data-o-mail-quote");
+                /**
+                 * We create a hash based on the content of the node. 
+                 * We need to do this because we have no other way to compare nodes at each different update.
+                 * We use the message id as prefix to make sure not to modify other messages that could have the same content.
+                 * It will be kept in a map to keep track of the opened/closed state of the collapsable contents.
+                 */
+                const hash = this.id + '_' + collapsable.innerHTML.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+                /**
+                 * If the map keeping track of the opened collapsable contents contains the current hash, it means it's opened. 
+                 * So we keep the content and add a Read Less possibility.
+                 * Otherwise, we replace the content by Read Less possibility.
+                 */
+                if(this.currentlyOpenedReadMoreHashes.has(hash)) {
+                    /** 
+                     * If the children must all be open recursively, we simply remove all the data-o-mail-quote attributes on
+                     * the chidlren elements.
+                     */
+                    if (shouldOpenChidlrenRecursively) {
+                        const elements = collapsable.querySelectorAll("[data-o-mail-quote]");
+                        for (const element of elements) {
+                            element.removeAttribute("data-o-mail-quote");
+                        }
+                    }
+                    collapsable.outerHTML = `<span class="o_Message_readMoreLess" data-read-less-hash="${hash}">${READ_LESS}</span>` + collapsable.outerHTML;
+                }
+                else {
+                    collapsable.outerHTML = `<span class="o_Message_readMoreLess" data-read-more-hash="${hash}">${READ_MORE}</span>`
+                } 
+                collapsable = contentAsHMTL.querySelector("[data-o-mail-quote]");
+            }
+            /**
+             * We used a DOM Element, but all the process use DOM as string, so we get
+             * back the inner html.
+             */
+            return contentAsHMTL.innerHTML;
+        }
+
+        /**
+         * Determines if the message is in a search context,
+         * in other words, if the user is searching through the messages with the search box
+         * 
+         * @private
+         * @returns {Boolean}
+         */
+        _isThreadCurrentlyBeingSearched() {
+            return this.threads.some(
+                (thread) => thread.threadViews.some(
+                    (threadView) => threadView.threadViewer.hasVisibleSearchBox
+                )
+            )
+        }
+
+        /**
+         * Wraps emojis with a span to give them a class for formatting. 
+         * 
+         * @private
+         * @param {String} content
+         * @returns {String}
+         */
+        _wrapEmojisForFormatting(content) {
+            let processedContent;
+            for (const emoji of emojis) {
+                const { unicode } = emoji;
+                const regexp = new RegExp(
+                    `(?:^|\\s|<[a-z]*>)(${unicode})(?=\\s|$|</[a-z]*>)`,
+                    "g"
+                );
+                processedContent = content.replace(
+                    regexp,
+                    ` <span class="o_mail_emoji">${unicode}</span> `
+                );
+                // Idiot-proof limit. If the user had the amazing idea of
+                // copy-pasting thousands of emojis, the image rendering can lead
+                // to memory overflow errors on some browsers (e.g. Chrome). Set an
+                // arbitrary limit to 200 from which we simply don't replace them
+                // (anyway, they are already replaced by the unicode counterpart).
+                if (_.str.count(processedContent, "o_mail_emoji") > 200) {
+                    processedContent = content;
+                }
+            }
+            return processedContent;
+        }
+
     }
 
     Message.fields = {
@@ -557,6 +845,9 @@ function factory(dependencies) {
             inverse: 'message',
             isCausal: true,
             readonly: true,
+        }),
+        currentlyOpenedReadMoreHashes: attr({
+            default: new Set(),
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
@@ -743,13 +1034,44 @@ function factory(dependencies) {
             inverse: 'messagesAsOriginThread',
         }),
         /**
-         * This value is meant to be based on field body which is
-         * returned by the server (and has been sanitized before stored into db).
-         * Do not use this value in a 't-raw' if the message has been created
-         * directly from user input and not from server data as it's not escaped.
+         * Value gone through processing to be displayed.
+         * Has been escaped in the frontend. Will be used in a t-raw.
+         * Based on the author.nameOrDisplayName nested field.
+         */
+        prettyAuthor: attr({
+            compute: '_computePrettyAuthor',
+        }),
+        /**
+         * Value gone through processing to be displayed.
+         * Has already been escaped in the backend. Will be used in a t-raw.
+         * Based on the body field.
          */
         prettyBody: attr({
             compute: '_computePrettyBody',
+        }),
+        /**
+         * Value gone through processing to be displayed.
+         * Has been escaped in the frontend. Will be used in a t-raw.
+         * Based on the subject field.
+         */
+        prettySubject: attr({
+            compute: '_computePrettySubject',
+        }),
+       /**
+         * Value gone through processing to be displayed.
+         * Has been escaped in the frontend. Will be used in a t-raw.
+         * Based on the subtypeDescription field.
+         */
+        prettySubtypeDescription: attr({
+            compute: '_computePrettySubtypeDescription',
+        }),
+       /**
+         * Value gone through processing to be displayed.
+         * Has been escaped in the frontend. Will be used in a t-raw.
+         * Based on the getter "trackingValues".
+         */
+        prettyTrackingValues: attr({
+            compute: '_computePrettyTrackingValues',
         }),
         subject: attr(),
         subtype_description: attr(),

@@ -40,7 +40,7 @@ QUnit.module('chatter_topbar_tests.js', {
 });
 
 QUnit.test('base rendering', async function (assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
@@ -71,6 +71,11 @@ QUnit.test('base rendering', async function (assert) {
         "should have a schedule activity button in chatter menu"
     );
     assert.strictEqual(
+        document.querySelectorAll(`.o_ChatterTopbar_buttonSearch`).length,
+        1,
+        "should have a search button in chatter menu"
+    );
+    assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
@@ -93,7 +98,7 @@ QUnit.test('base rendering', async function (assert) {
 });
 
 QUnit.test('base disabled rendering', async function (assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
@@ -116,6 +121,10 @@ QUnit.test('base disabled rendering', async function (assert) {
     assert.ok(
         document.querySelector(`.o_ChatterTopbar_buttonScheduleActivity`).disabled,
         "schedule activity should be disabled"
+    );
+    assert.ok(
+        document.querySelector(`.o_ChatterTopbar_buttonSearch`).disabled,
+        "search button should be disabled"
     );
     assert.ok(
         document.querySelector(`.o_ChatterTopbar_buttonAttachments`).disabled,
@@ -421,6 +430,51 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
     );
 });
 
+QUnit.test('search box state conserved when clicking on another topbar button', async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({ id: 100 });
+    await this.start();
+    const chatter = this.messaging.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterTopbarComponent(chatter);
+
+    assert.containsOnce(
+        document.body,
+        `.o_ChatterTopbar`,
+        "should have a chatter topbar"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_ChatterTopbar_buttonSearch`,
+        "should have a search button in chatter menu"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_ChatterTopbar_buttonAttachments`,
+        "should have an attachments button in chatter menu"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ChatterTopbar_buttonSearch`).click();
+    });
+    assert.containsOnce(
+        document.body,
+        `.o_ChatterTopbar_buttonSearch.o-active`,
+        "search button should now be active"
+    );
+
+    document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click();
+    await nextAnimationFrame();
+    assert.containsOnce(
+        document.body,
+        `.o_ChatterTopbar_buttonSearch.o-active`,
+        "search button should still be active"
+    );
+});
+
 QUnit.test('rendering with multiple partner followers', async function (assert) {
     assert.expect(7);
 
@@ -633,6 +687,46 @@ QUnit.test('send message toggling', async function (assert) {
         document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
         'o-active',
         "'Send Message' button should not be active"
+    );
+});
+
+QUnit.test('search message toggling', async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({ id: 100 });
+    await this.start();
+    const chatter = this.messaging.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterTopbarComponent(chatter);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterTopbar_buttonSearch',
+        "should have a search button"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonSearch'),
+        'o-active',
+        "search button should not be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSearch`).click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatterTopbar_buttonSearch'),
+        'o-active',
+        "search button should be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSearch`).click()
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonSearch'),
+        'o-active',
+        "search button should not be active"
     );
 });
 

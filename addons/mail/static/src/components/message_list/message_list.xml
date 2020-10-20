@@ -41,14 +41,14 @@
                         </button>
                     </div>
                 </t>
-                <t t-elif="props.order === 'asc' and orderedMessages.length > 0">
+                <t t-elif="props.order === 'asc' and messages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
                 <div t-if="props.order === 'asc' and threadView.nonEmptyMessages.length !== 0" class="flex-grow-1"/>
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-set="prev_message" t-value="0"/>
-                <t t-foreach="orderedMessages" t-as="message" t-key="message.localId">
+                <t t-foreach="messages" t-as="message" t-key="message.localId">
                     <t t-if="message === threadView.thread.messageAfterNewMessageSeparator">
                         <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': messaging.disableAnimation }" t-transition="fade">
                             <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
@@ -79,7 +79,7 @@
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->
-                <t t-if="!threadView.threadCache.hasLoadingFailed and props.order === 'desc' and orderedMessages.length > 0">
+                <t t-if="!threadView.threadCache.hasLoadingFailed and props.order === 'desc' and messages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
             </t>

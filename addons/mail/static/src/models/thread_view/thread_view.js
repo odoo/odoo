@@ -300,6 +300,12 @@ function factory(dependencies) {
             related: 'threadViewer.hasTopbar',
         }),
         /**
+         * Determines whether this thread view has a search box.
+         */
+        hasVisibleSearchBox: attr({
+            related: 'threadViewer.hasVisibleSearchBox',
+        }),
+        /**
          * States whether `this.threadCache` is currently loading messages.
          *
          * This field is related to `this.threadCache.isLoading` but with a

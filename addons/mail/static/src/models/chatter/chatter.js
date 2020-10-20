@@ -36,6 +36,7 @@ function factory(dependencies) {
             this.onClickLogNote = this.onClickLogNote.bind(this);
             this.onClickScheduleActivity = this.onClickScheduleActivity.bind(this);
             this.onClickSendMessage = this.onClickSendMessage.bind(this);
+            this.onClickSearch = this.onClickSearch.bind(this);
             this.onComposerMessagePosted = this.onComposerMessagePosted.bind(this);
             this.onScrollScrollPanel = this.onScrollScrollPanel.bind(this);
         }
@@ -92,6 +93,7 @@ function factory(dependencies) {
             if (!this.composer) {
                 return;
             }
+            this.threadViewer.closeSearchBox();
             if (this.isComposerVisible && this.composer.isLog) {
                 this.update({ isComposerVisible: false });
             } else {
@@ -132,6 +134,18 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the search button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickSearch(ev) {
+            if (this.isComposerVisible) {
+                this.update({ isComposerVisible: false });
+            }
+            this.threadViewer.toggleSearchBox();
+        }
+
+        /**
          * Handles click on "send message" button.
          *
          * @param {MouseEvent} ev
@@ -140,6 +154,7 @@ function factory(dependencies) {
             if (!this.composer) {
                 return;
             }
+            this.threadViewer.closeSearchBox();
             if (this.isComposerVisible && !this.composer.isLog) {
                 this.update({ isComposerVisible: false });
             } else {
@@ -424,6 +439,7 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'chatter',
             isCausal: true,
             readonly: true,
             required: true,

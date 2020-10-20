@@ -3,16 +3,14 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { processDomTransformation } from '@mail/js/utils';
+import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
 
-import { _lt } from 'web.core';
-import { format } from 'web.field_utils';
+import { useListener } from 'web.custom_hooks';
 import { getLangDatetimeFormat } from 'web.time';
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
-
-const READ_MORE = _lt("read more");
-const READ_LESS = _lt("read less");
 
 export class Message extends Component {
 
@@ -34,20 +32,27 @@ export class Message extends Component {
             isClicked: false,
         });
         useUpdate({ func: () => this._update() });
+        
         /**
-         * Value of the last rendered prettyBody. Useful to compare to new value
-         * to decide if it has to be updated.
+         * References to the contents of the message.
          */
-        this._lastPrettyBody;
-        /**
-         * Reference to element containing the prettyBody. Useful to be able to
-         * replace prettyBody with new value in JS (which is faster than t-raw).
-         */
+        this._authorRef = useRef('author');
         this._prettyBodyRef = useRef('prettyBody');
+        this._subjectRef = useRef('subject')
+        this._subtypeDescriptionRef = useRef('subtype_description')
+        this._trackingValuesRef = useRef('tracking_values');
+
         /**
-         * Reference to the content of the message.
+         * All refs to handle the dynamic tracking value refs.
          */
-        this._contentRef = useRef('content');
+        this._getRefs = useRefs();
+
+        /**
+         * Keeps a cache of all the content to display to know if it needs to be 
+         * updated or not. 
+         */
+        this._contentCache = {}
+
         /**
          * To get checkbox state.
          */
@@ -57,6 +62,10 @@ export class Message extends Component {
          * regular time.
          */
         this._intervalId = undefined;
+
+        useListener("click", "[data-read-more-hash]", this._onReadMoreClicked);
+        useListener("click", "[data-read-less-hash]", this._onReadLessClicked);
+
         this._constructor();
     }
 
@@ -244,171 +253,18 @@ export class Message extends Component {
         return this.messaging && this.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
-    /**
-     * @returns {Object}
-     */
-    get trackingValues() {
-        return this.message.tracking_value_ids.map(trackingValue => {
-            const value = Object.assign({}, trackingValue);
-            value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
-            /**
-             * Maps tracked field type to a JS formatter. Tracking values are
-             * not always stored in the same field type as their origin type.
-             * Field types that are not listed here are not supported by
-             * tracking in Python. Also see `create_tracking_values` in Python.
-             */
-            switch (value.field_type) {
-                case 'boolean':
-                    value.old_value = format.boolean(value.old_value, undefined, { forceString: true });
-                    value.new_value = format.boolean(value.new_value, undefined, { forceString: true });
-                    break;
-                /**
-                 * many2one formatter exists but is expecting id/name_get or data
-                 * object but only the target record name is known in this context.
-                 *
-                 * Selection formatter exists but requires knowing all
-                 * possibilities and they are not given in this context.
-                 */
-                case 'char':
-                case 'many2one':
-                case 'selection':
-                    value.old_value = format.char(value.old_value);
-                    value.new_value = format.char(value.new_value);
-                    break;
-                case 'date':
-                    if (value.old_value) {
-                        value.old_value = moment.utc(value.old_value);
-                    }
-                    if (value.new_value) {
-                        value.new_value = moment.utc(value.new_value);
-                    }
-                    value.old_value = format.date(value.old_value);
-                    value.new_value = format.date(value.new_value);
-                    break;
-                case 'datetime':
-                    if (value.old_value) {
-                        value.old_value = moment.utc(value.old_value);
-                    }
-                    if (value.new_value) {
-                        value.new_value = moment.utc(value.new_value);
-                    }
-                    value.old_value = format.datetime(value.old_value);
-                    value.new_value = format.datetime(value.new_value);
-                    break;
-                case 'float':
-                    value.old_value = format.float(value.old_value);
-                    value.new_value = format.float(value.new_value);
-                    break;
-                case 'integer':
-                    value.old_value = format.integer(value.old_value);
-                    value.new_value = format.integer(value.new_value);
-                    break;
-                case 'monetary':
-                    value.old_value = format.monetary(value.old_value, undefined, {
-                        currency: value.currency_id
-                            ? this.env.session.currencies[value.currency_id]
-                            : undefined,
-                        forceString: true,
-                    });
-                    value.new_value = format.monetary(value.new_value, undefined, {
-                        currency: value.currency_id
-                            ? this.env.session.currencies[value.currency_id]
-                            : undefined,
-                        forceString: true,
-                    });
-                    break;
-                case 'text':
-                    value.old_value = format.text(value.old_value);
-                    value.new_value = format.text(value.new_value);
-                    break;
-            }
-            return value;
-        });
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Modifies the message to add the 'read more/read less' functionality
-     * All element nodes with 'data-o-mail-quote' attribute are concerned.
-     * All text nodes after a ``#stopSpelling`` element are concerned.
-     * Those text nodes need to be wrapped in a span (toggle functionality).
-     * All consecutive elements are joined in one 'read more/read less'.
-     *
-     * FIXME This method should be rewritten (task-2308951)
-     *
-     * @private
-     * @param {jQuery} $element
-     */
-    _insertReadMoreLess($element) {
-        const groups = [];
-        let readMoreNodes;
+    _onReadLessClicked(ev) {
+        const hash = ev.target.dataset.readLessHash;
+        this.message.collapseCollapsableContentByHash(hash);
+    }
 
-        // nodeType 1: element_node
-        // nodeType 3: text_node
-        const $children = $element.contents()
-            .filter((index, content) =>
-                content.nodeType === 1 || (content.nodeType === 3 && content.nodeValue.trim())
-            );
-
-        for (const child of $children) {
-            let $child = $(child);
-
-            // Hide Text nodes if "stopSpelling"
-            if (
-                child.nodeType === 3 &&
-                $child.prevAll('[id*="stopSpelling"]').length > 0
-            ) {
-                // Convert Text nodes to Element nodes
-                $child = $('<span>', {
-                    text: child.textContent,
-                    'data-o-mail-quote': '1',
-                });
-                child.parentNode.replaceChild($child[0], child);
-            }
-
-            // Create array for each 'read more' with nodes to toggle
-            if (
-                $child.attr('data-o-mail-quote') ||
-                (
-                    $child.get(0).nodeName === 'BR' &&
-                    $child.prev('[data-o-mail-quote="1"]').length > 0
-                )
-            ) {
-                if (!readMoreNodes) {
-                    readMoreNodes = [];
-                    groups.push(readMoreNodes);
-                }
-                $child.hide();
-                readMoreNodes.push($child);
-            } else {
-                readMoreNodes = undefined;
-                this._insertReadMoreLess($child);
-            }
-        }
-
-        for (const group of groups) {
-            // Insert link just before the first node
-            const $readMoreLess = $('<a>', {
-                class: 'o_Message_readMoreLess',
-                href: '#',
-                text: READ_MORE,
-            }).insertBefore(group[0]);
-
-            // Toggle All next nodes
-            let isReadMore = true;
-            $readMoreLess.click(e => {
-                e.preventDefault();
-                isReadMore = !isReadMore;
-                for (const $child of group) {
-                    $child.hide();
-                    $child.toggle(!isReadMore);
-                }
-                $readMoreLess.text(isReadMore ? READ_MORE : READ_LESS);
-            });
-        }
+    _onReadMoreClicked(ev) {
+        const hash = ev.target.dataset.readMoreHash;
+        this.message.expandCollapsableContentByHash(hash);
     }
 
     /**
@@ -418,25 +274,57 @@ export class Message extends Component {
         if (!this.message) {
             return;
         }
-        if (this._prettyBodyRef.el && this.message.prettyBody !== this._lastPrettyBody) {
-            this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
-            this._lastPrettyBody = this.message.prettyBody;
+        
+        if (this._authorRef.el) {
+            if (this._contentCache["author"] !== this.message.prettyAuthor) {
+                this._contentCache["author"] = this.message.prettyAuthor
+                this._authorRef.el.innerHTML = this.message.prettyAuthor;
+            }
+        }
+        if (!this._authorRef.el) {
+            this._contentCache["author"] = undefined;
+        }
+        if (this._prettyBodyRef.el) {
+            if (this._contentCache["body"] !== this.message.prettyBody) {
+                this._contentCache["body"] = this.message.prettyBody
+                this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
+            }
         }
         if (!this._prettyBodyRef.el) {
-            this._lastPrettyBody = undefined;
+            this._contentCache["body"] = undefined;
         }
-        // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
-        // This is needed because _insertReadMoreLess is working with direct DOM mutations
-        // which are not sync with Owl.
-        if (this._contentRef.el) {
-            for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
-                el.remove();
+        if (this._subjectRef.el) {
+            if (this._contentCache["subject"] !== this.message.prettySubject) {
+                this._contentCache["subject"] = this.message.prettySubject
+                this._subjectRef.el.innerHTML = this.message.prettySubject;
             }
-            this._insertReadMoreLess($(this._contentRef.el));
-            this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
-                message: this.message,
-            });
         }
+        if (!this._subjectRef.el) {
+            this._contentCache["subject"] = undefined;
+        }
+        if (this._subtypeDescriptionRef.el) {
+            if (this._contentCache["subtype-description"] !== this.message.prettySubtypeDescription) {
+                this._contentCache["subtype-description"] = this.message.prettySubtypeDescription
+                this._subtypeDescriptionRef.el.innerHTML = this.message.prettySubtypeDescription;
+            }
+        }
+        if (!this._subtypeDescriptionRef.el) {
+            this._contentCache["subtype-description"] = undefined;
+        }
+     
+        const refs = this._getRefs();
+        for (const key in refs) {
+            if (key.startsWith("tracking_value_")) {
+                const trackingValueId = key.split("_").slice(-1).pop(); // keep only last item, which is the id
+                const trackingValueIdType = key.includes('new_value') ? 'new' : (key.includes('old_value') ? 'old' : 'changed_field');
+                const valueToDisplay = this.message.prettyTrackingValues[trackingValueId][trackingValueIdType];
+                if (this._contentCache[key] !== valueToDisplay) {
+                    this._contentCache[key] = valueToDisplay;
+                    refs[key].innerHTML = valueToDisplay;
+                }
+            }
+        }
+
         this.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {

@@ -2367,6 +2367,9 @@ function factory(dependencies) {
          */
         pendingSeenMessageId: attr(),
         public: attr(),
+        searchedText: attr({
+            default: "",
+        }),
         /**
          * If set, the current thread is the thread that hosts the current RTC call.
          */

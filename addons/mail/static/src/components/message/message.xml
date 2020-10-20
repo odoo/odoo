@@ -115,7 +115,7 @@
                         </div>
                     </t>
                     <t t-if="message.subject and !message.isSubjectSimilarToOriginThreadName">
-                        <p class="o_Message_subject mx-2 mb-1">Subject: <t t-esc="message.subject"/></p>
+                        <p class="o_Message_subject mx-2 mb-1">Subject: <span t-ref="subject"></span></p>
                     </t>
                     <div class="o_Message_content mx-2" t-ref="content">
                         <t t-if="message.actionList.showDeleteConfirm or !message.isEditing or !message.composerInEditing">
@@ -135,20 +135,20 @@
                             />
                         </t>
                         <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
-                            <p t-esc="message.subtype_description"/>
+                            <p t-ref="subtype_description"/>
                         </t>
-                        <t t-if="trackingValues.length > 0">
+                        <t t-if="message.trackingValues.length > 0">
                             <ul class="o_Message_trackingValues">
-                                <t t-foreach="trackingValues" t-as="value" t-key="value.id">
+                                <t t-foreach="message.trackingValues" t-as="value" t-key="value.id">
                                     <li>
                                         <div class="o_Message_trackingValue">
-                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
+                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-ref="tracking_value_changed_field_id_{{value.id}}" />
                                             <t t-if="value.old_value">
-                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
+                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-ref="tracking_value_old_value_id_{{value.id}}" />
                                             </t>
-                                            <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                            <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img" />
                                             <t t-if="value.new_value">
-                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
+                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-ref="tracking_value_new_value_id_{{value.id}}" />
                                             </t>
                                         </div>
                                     </li>

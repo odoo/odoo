@@ -595,97 +595,8 @@ QUnit.test('chatter should become enabled when creation done', async function (a
     );
 });
 
-QUnit.test('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {
-    assert.expect(5);
-
-    this.data['mail.message'].records.push({
-        author_id: 100,
-        // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
-        body: `
-            <div>
-                Dear Joel Willis,<br>
-                Thank you for your enquiry.<br>
-                If you have any questions, please let us know.
-                <br><br>
-                Thank you,<br>
-                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
-                    System
-                </span>
-            </div>
-        `,
-        id: 1000,
-        model: 'res.partner',
-        res_id: 2,
-    });
-    this.data['res.partner'].records.push({
-        display_name: "Someone",
-        id: 100,
-    });
-    await this.createView({
-        data: this.data,
-        hasView: true,
-        // View params
-        View: FormView,
-        model: 'res.partner',
-        res_id: 2,
-        arch: `
-            <form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        `,
-        waitUntilEvent: {
-            eventName: 'o-component-message-read-more-less-inserted',
-            message: "should wait until read more/less is inserted initially",
-            predicate: ({ message }) => message.id === 1000,
-        },
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_Chatter',
-        "there should be a chatter"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "there should be a message"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_readMoreLess',
-        "there should be only one read more"
-    );
-    await afterNextRender(() => this.afterEvent({
-        eventName: 'o-component-message-read-more-less-inserted',
-        func: () => document.querySelector('.o_form_button_edit').click(),
-        message: "should wait until read more/less is inserted after clicking on edit",
-        predicate: ({ message }) => message.id === 1000,
-    }));
-    assert.containsOnce(
-        document.body,
-        '.o_Message_readMoreLess',
-        "there should still be only one read more after switching to edit mode"
-    );
-
-    await afterNextRender(() => this.afterEvent({
-        eventName: 'o-component-message-read-more-less-inserted',
-        func: () => document.querySelector('.o_form_button_cancel').click(),
-        message: "should wait until read more/less is inserted after canceling edit",
-        predicate: ({ message }) => message.id === 1000,
-    }));
-    assert.containsOnce(
-        document.body,
-        '.o_Message_readMoreLess',
-        "there should still be only one read more after switching back to read mode"
-    );
-});
-
 QUnit.test('read more links becomes read less after being clicked', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     this.data['mail.message'].records = [{
         author_id: 100,
@@ -727,11 +638,6 @@ QUnit.test('read more links becomes read less after being clicked', async functi
                 </div>
             </form>
         `,
-        waitUntilEvent: {
-            eventName: 'o-component-message-read-more-less-inserted',
-            message: "should wait until read more/less is inserted initially",
-            predicate: ({ message }) => message.id === 1000,
-        },
     });
     assert.containsOnce(
         document.body,
@@ -754,19 +660,10 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => this.afterEvent({
-        eventName: 'o-component-message-read-more-less-inserted',
-        func: () => document.querySelector('.o_form_button_edit').click(),
-        message: "should wait until read more/less is inserted after clicking on edit",
-        predicate: ({ message }) => message.id === 1000,
-    }));
-    assert.strictEqual(
-        document.querySelector('.o_Message_readMoreLess').textContent,
-        'read more',
-        "read more/less link should contain 'read more' as text"
-    );
+    await afterNextRender(() => {
+        document.querySelector('.o_Message_readMoreLess').click();
+    });
 
-    document.querySelector('.o_Message_readMoreLess').click();
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read less',

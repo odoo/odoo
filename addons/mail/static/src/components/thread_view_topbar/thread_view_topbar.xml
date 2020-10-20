@@ -57,6 +57,11 @@
                             <i class="fa fa-lg fa-video-camera"/>
                         </button>
                     </t>
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.threadView.messages.length > 0">
+                        <button class="o_ThreadViewTopbar_searchButton o_ThreadViewTopbar_button" t-att-class="{ 'o-active': threadViewTopBar.threadView.threadViewer.hasVisibleSearchBox }" t-on-click="threadViewTopBar.onClickSearch">
+                            <i class="fa fa-lg fa-search"/>
+                        </button>
+                    </t>
                     <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.hasInviteFeature">
                         <Popover popoverClass="'o_ThreadViewTopbar_invitePopover'" position="'bottom'">
                             <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button" t-att-class="{ 'o-active': threadViewTopBar.threadView.channelInvitationForm.component }" title="Add users" t-on-click="threadViewTopBar.onClickInviteButton">

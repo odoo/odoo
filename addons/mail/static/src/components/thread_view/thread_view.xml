@@ -7,6 +7,14 @@
                 <t t-if="threadView.topbar">
                     <ThreadViewTopbar class="border-bottom" localId="threadView.topbar.localId"/>
                 </t>
+                <t t-if="threadView.hasVisibleSearchBox and threadView.messages.length > 0 and !threadView.threadViewer.chatter">
+                    <!-- the !threadView.threadViewer.chatter condition makes sure we don't have 2 search boxes in a chatter situation -->
+                    <ThreadSearchBox
+                        class="o_Thread_searchBox"
+                        threadLocalId="threadView.thread.localId"
+                        t-ref="searchBox"
+                    />
+                </t>
                 <div class="o_ThreadView_bottomPart d-flex flex-grow-1">
                     <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
                         <t t-if="threadView.rtcCallViewer">

@@ -46,7 +46,7 @@ QUnit.module('chatter_tests.js', {
 });
 
 QUnit.test('base rendering when chatter has no attachment', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
 
     this.data['res.partner'].records.push({ id: 100 });
     for (let i = 0; i < 60; i++) {
@@ -71,6 +71,11 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
         document.querySelectorAll(`.o_ChatterTopbar`).length,
         1,
         "should have a chatter topbar"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_ChatterTopbar_buttonSearch`).length,
+        1,
+        "should have a search box in the chatter"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
@@ -98,7 +103,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 });
 
 QUnit.test('base rendering when chatter has no record', async function (assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
@@ -114,6 +119,11 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         document.querySelectorAll(`.o_ChatterTopbar`).length,
         1,
         "should have a chatter topbar"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_ChatterTopbar_buttonSearch`).length,
+        1,
+        "should have a search box in the chatter"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
@@ -517,6 +527,72 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
         document.body,
         '.o_Message',
         "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
+    );
+});
+
+QUnit.test('search message with "Enter" keyboard shortcut', async function (assert) {
+    assert.expect(7);
+    this.data['res.partner'].records.push({ id: 100 });
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "test" + i,
+            model: 'res.partner',
+            res_id: 100,
+        });
+    }
+    await this.start();
+    const chatter = this.messaging.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterComponent({ chatter });
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Message`).length,
+        10,
+        "should have 10 messages of thread"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_ChatterTopbar_buttonSearch`).length,
+        1,
+        "should have a search button in the chatter"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSearch`).click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatterTopbar_buttonSearch'),
+        'o-active',
+        "search button should be active"
+    );
+
+    assert.strictEqual(
+        document.querySelectorAll(`.o_ThreadSearchBox`).length,
+        1,
+        "should have a search box"
+    );
+
+    document.querySelector('.o_ThreadSearchBox_textInput').focus();
+    document.execCommand('insertText', false, "Test1");
+
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
+        document.querySelector('.o_ThreadSearchBox_textInput').dispatchEvent(kevt);
+    });
+    assert.strictEqual(
+        document.querySelector('.o_ThreadSearchBox_searchCount').textContent,
+        '1 Results',
+        "should display a filtered messages count"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Message`).length,
+        1,
+        "should have single filtered message of thread"
+    );
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        '.o_MessageInlineHighlight',
+        "should have a body with highlighted part"
     );
 });
 

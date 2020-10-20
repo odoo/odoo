@@ -56,6 +56,11 @@
     }
 }
 
+.o_Message_contentCollapsed {
+    font-style: italic;
+    color: gray('500');
+}
+
 .o_Message_core {
     min-width: 0; // allows this flex child to shrink more than its content
     margin-inline-end: map-get($spacers, 4);
@@ -102,6 +107,8 @@
 
 .o_Message_readMoreLess {
     display: block;
+    color: $o-brand-primary;
+    cursor: pointer;
 }
 
 .o_Message_seenIndicator {
@@ -210,6 +217,12 @@
 
 .o_Message_highlightIndicator.o-active {
     background-color: $o-brand-primary;
+}
+
+.o_MessageInlineHighlight {
+    color: #017e84;
+    background-color: rgba(1, 126, 132, 0.2);
+    border-radius: 2px;
 }
 
 .o_Message_originThread {

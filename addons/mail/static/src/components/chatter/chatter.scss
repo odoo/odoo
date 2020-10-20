@@ -19,6 +19,15 @@
     }
 }
 
+.o_Thread_searchBox {
+    border-bottom: $border-width solid;
+
+    &.o-bordered {
+        border-left: $border-width solid;
+        border-right: $border-width solid;
+    }
+}
+
 .o_Chatter_scrollPanel {
     overflow-y: auto;
 }
@@ -33,6 +42,15 @@
 }
 
 .o_Chatter_composer {
+    border-bottom-color: $border-color;
+
+    &.o-bordered {
+        border-left-color: $border-color;
+        border-right-color: $border-color;
+    }
+}
+
+.o_Thread_searchBox {
     border-bottom-color: $border-color;
 
     &.o-bordered {

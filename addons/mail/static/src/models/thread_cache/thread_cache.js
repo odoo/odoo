@@ -90,6 +90,87 @@ function factory(dependencies) {
         }
 
         /**
+         * This all logic has nothing to do on the frontend. 
+         * Currently, search will only be applied to loaded messages. 
+         * Which doesn't make much sense. 
+         * 
+         * @FIXME Need to find a solution to be put efficiently in the backend.
+         * 
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeFilteredMessages() {
+            if (!this.thread) {
+                return unlinkAll();
+            }
+            let searchedText = this.thread.searchedText;
+            if (!searchedText) {
+                return unlinkAll();
+            }
+            searchedText = _.escape(searchedText);
+            searchedText = searchedText.toLowerCase();
+            const filters = [
+                // authorNameFilter
+                (message, searchedText) => {
+                    return message.author &&
+                    message.author.nameOrDisplayName && 
+                    message.author.nameOrDisplayName.toLowerCase().includes(searchedText);
+                },
+                // authorNameFilter
+                (message, searchedText) => {
+                    return message.body && message.body.toLowerCase().includes(searchedText);
+                },
+                // attachmentNameFilter
+                (message, searchedText) => {
+                    for (const attachment of message.attachments) {
+                        if (attachment.name && attachment.name.toLowerCase().includes(searchedText)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+                // subjectFilter
+                (message, searchedText) => {
+                    return message.subject && message.subject.toLowerCase().includes(searchedText);
+                },
+                // subTypeDescriptionFilter
+                (message, searchedText) => {
+                    return message.subtype_description && message.subtype_description.toLowerCase().includes(searchedText);
+                },
+                // tracking values
+                (message, searchedText) => {
+                    const doesTrackingValueContainsSearchedText = (trackingValue) => {
+                        return trackingValue.new_value.toLowerCase().includes(searchedText) || trackingValue.old_value.toLowerCase().includes(searchedText) 
+                    }
+                    return message.trackingValues.some(doesTrackingValueContainsSearchedText);
+                },
+            ];
+            const filteredMessages = this.thread.messages.filter((message) => {
+                return filters.some((filterFn) => filterFn(message, searchedText))
+            });
+            filteredMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
+            return replace(filteredMessages);
+       }
+
+        /**
+        * @private
+        * @returns {Boolean}
+        */
+        _computeIsMessageSearchPending() {
+            // If there is no thread, there is no pending
+            if (!this.thread) {
+                return false;
+            }
+            // If the data has changed, it means we're done
+            if (this._filteredMessages !== this.filteredMessages) {
+                this._filteredMessages = this.filteredMessages;
+                return false;
+            } 
+            // Otherwise, if the data has not changed, we're still pending. 
+            return true;
+        }
+
+        /**
          * @private
          * @returns {mail.message|undefined}
          */
@@ -341,6 +422,13 @@ function factory(dependencies) {
             compute: '_computeFetchedMessages',
         }),
         /**
+         * List of filtered messages based on searched keyword linked
+         * to this cache.
+         */
+        filteredMessages: many2many('mail.message', {
+            compute: '_computeFilteredMessages',
+        }),
+        /**
          * Determines whether the last message fetch failed.
          */
         hasLoadingFailed: attr({
@@ -382,6 +470,12 @@ function factory(dependencies) {
          */
         isMarkAllAsReadRequested: attr({
             default: false,
+        }),
+        /**
+         * States whether `this` is currently searching messages.
+         */
+        isMessageSearchPending: attr({
+            compute: '_computeIsMessageSearchPending',
         }),
         /**
          * Last message that has been fetched by this thread cache.

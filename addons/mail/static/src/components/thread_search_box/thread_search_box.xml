@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadSearchBox" owl="1">
+        <div class="o_ThreadSearchBox">
+            <t t-if="thread">
+                <input type="text" class="o_ThreadSearchBox_textInput" placeholder="Search..." t-on-focusout="_onFocusout" t-on-keydown="_onKeydown" t-model="state.searchText" autofocus="true"/>
+                <t t-if="thread.cache and thread.searchedText">
+                    <div class="o_ThreadSearchBox_searchCount">
+                        <t t-if="thread.cache.isMessageSearchPending">
+                            <span><i class="o_ThreadSearchBox_loadingIcon fa fa-spinner fa-spin" title="Searching..." role="img"/>Searching...</span>
+                        </t>
+                        <t t-else="">
+                            <span><t t-esc="thread.cache.filteredMessages.length"/> Results</span>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

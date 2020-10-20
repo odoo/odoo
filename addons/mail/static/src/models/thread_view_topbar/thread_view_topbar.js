@@ -29,6 +29,7 @@ function factory(dependencies) {
             this.onKeyDownThreadDescriptionInput = this.onKeyDownThreadDescriptionInput.bind(this);
             this.onMouseEnterTopBarThreadDescription = this.onMouseEnterTopBarThreadDescription.bind(this);
             this.onMouseLeaveTopBarThreadDescription = this.onMouseLeaveTopBarThreadDescription.bind(this);
+            this.onClickSearch = this.onClickSearch.bind(this);
             document.addEventListener('click', this._onClickCaptureGlobal, true);
             return super._created();
         }
@@ -77,6 +78,15 @@ function factory(dependencies) {
                 this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
                 this.threadView.channelInvitationForm.searchPartnersToInvite();
             }
+        }
+
+        /**
+         * Handles click on the "search" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickSearch(ev) {
+            this.threadView.threadViewer.toggleSearchBox();
         }
 
         /**
