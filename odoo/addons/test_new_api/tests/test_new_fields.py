@@ -2896,6 +2896,28 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
             self.registry.setup_models(self.env.cr)
 
 
+class TestFieldParametersValidation(common.TransactionCase):
+    def test_invalid_parameter(self):
+        self.addCleanup(self.registry.model_cache.clear)
+
+        class Foo(models.Model):
+            _module = None
+            _name = _description = 'test_new_api.field_parameter_validation'
+
+            name = fields.Char(invalid_parameter=42)
+
+        Foo._build_model(self.registry, self.env.cr)
+        self.addCleanup(self.registry.__delitem__, Foo._name)
+
+        with self.assertLogs('odoo.fields', level='WARNING') as cm:
+            self.registry.setup_models(self.env.cr)
+
+        self.assertTrue(cm.output[0].startswith(
+            "WARNING:odoo.fields:Field test_new_api.field_parameter_validation.name: "
+            "unknown parameter 'invalid_parameter'"
+        ))
+
+
 def insert(model, *fnames):
     """ Return the expected query string to INSERT the given columns. """
     columns = ['create_uid', 'create_date', 'write_uid', 'write_date'] + sorted(fnames)

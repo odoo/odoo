@@ -34,7 +34,7 @@ class Sponsor(models.Model):
     image_256 = fields.Image("Image 256", related="image_512", max_width=256, max_height=256, store=False)
     image_128 = fields.Image("Image 128", related="image_512", max_width=128, max_height=128, store=False)
     website_image_url = fields.Char(
-        string='Image URL', max_width=256, max_height=256,
+        string='Image URL',
         compute='_compute_website_image_url', compute_sudo=True, store=False)
 
     @api.depends('partner_id')
