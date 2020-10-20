@@ -19360,7 +19360,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const size = container.getBoundingClientRect();
                 const range = selection.getRangeAt(0);
                 const box = range.getBoundingClientRect();
-                container.style.top = window.scrollY + box.bottom + size.height / 2 + 'px';
+                let topPosition = window.scrollY + box.bottom + size.height / 2;
+                topPosition = Math.max(25, topPosition);
+                topPosition = Math.min(window.scrollY + window.innerHeight - 50, topPosition);
+                container.style.top = topPosition + 'px';
                 let leftPosition = box.left + (box.width - size.width) * 0.3;
                 leftPosition = Math.max(0, leftPosition);
                 container.style.left = leftPosition + 'px';
@@ -23745,6 +23748,133 @@ odoo.define('web_editor.jabberwock', (function(require) {
         }
     }
 
+    class ResizerNode extends ContainerNode {
+        constructor() {
+            super(...arguments);
+            this.editable = false;
+            this.breakable = false;
+        }
+    }
+
+    class ResizerDomObjectRenderer extends NodeRenderer {
+        constructor() {
+            super(...arguments);
+            this.predicate = ResizerNode;
+        }
+        async render(node) {
+            const objectResizer = {
+                tag: 'JW-RESIZER',
+            };
+            // This should become obsolete when we refactor the resiser (see _initTargetToResize() comment).
+            this.domEngine = this.engine.editor.plugins.get(Layout).engines.dom;
+            objectResizer.attach = (el) => {
+                el.addEventListener('mousedown', this.startResize.bind(this));
+                el.addEventListener('touchstart', this.startResize.bind(this));
+            };
+            return objectResizer;
+        }
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+        /**
+         * Drag the Resizer to change the editor size.
+         *
+         * @param {MouseEvent} event
+         */
+        startResize(event) {
+            event.preventDefault();
+            this._initTargetToResize();
+            if (!this.targetToResize)
+                return;
+            const startHeight = this.targetToResize.clientHeight;
+            const startY = isInstanceOf(event, MouseEvent)
+                ? event.pageY
+                : event.targetTouches[0].pageY; // Y position of the mousedown
+            /**
+             * Perform the resizing on every mouse mouvement.
+             *
+             * @param e
+             */
+            const doResize = (e) => {
+                const currentY = isInstanceOf(e, MouseEvent)
+                    ? e.pageY
+                    : e.targetTouches[0].pageY;
+                const offset = currentY - startY;
+                this._resizeTargetHeight(startHeight + offset);
+            };
+            /**
+             * Stop resizing on mouse up.
+             */
+            const stopResize = () => {
+                window.removeEventListener('mousemove', doResize, false);
+                window.removeEventListener('mouseup', stopResize, false);
+                window.removeEventListener('touchmove', doResize, false);
+                window.removeEventListener('touchend', stopResize, false);
+            };
+            window.addEventListener('mousemove', doResize);
+            window.addEventListener('mouseup', stopResize);
+            window.addEventListener('touchmove', doResize);
+            window.addEventListener('touchend', stopResize);
+        }
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+        /**
+         * Discover the HTMLElement to resize and set it as a class property.
+         */
+        _initTargetToResize() {
+            // This way of HTMLElement discovery is far from ideal.
+            // The Resizer should never be aware of the HTMLElement.
+            //
+            // TODO: We should change this to use a shared variable whose value would be listen to by another plugin.
+            // The other plugin can then use the shared height value to change the height of his children element.
+            //
+            // Result: the resizer plugin will become agnostic of the HTMLElement afected by the resize.
+            // Problem: We don't yet have a way to do this properly.
+            if (this.targetToResize)
+                return;
+            const mainZone = this.domEngine.root.descendants(node => node instanceof ZoneNode && node.managedZones.includes('main'))[0];
+            const domMain = this.domEngine.getDomNodes(mainZone)[0];
+            this.targetToResize = (domMain === null || domMain === void 0 ? void 0 : domMain.parentElement) || domMain;
+            // Force the overflow on the targetElement.
+            // Necesary to make the resizer works out of the box.
+            if (this.targetToResize) {
+                this.targetToResize.style.overflow = 'auto';
+            }
+        }
+        /**
+         * Change the height of the target HTMLElement.
+         *
+         * @param {number} height
+         */
+        _resizeTargetHeight(height) {
+            height = Math.max(height, 50); // todo : implement a way to force the min-height with resizer parameters ?
+            if (this.targetToResize) {
+                this.targetToResize.style.height = height + 'px';
+            }
+        }
+    }
+    ResizerDomObjectRenderer.id = DomObjectRenderingEngine.id;
+
+    class Resizer extends JWPlugin {
+        constructor() {
+            super(...arguments);
+            this.loadables = {
+                renderers: [ResizerDomObjectRenderer],
+                components: [
+                    {
+                        id: 'resizer',
+                        render: async () => {
+                            return [new ResizerNode()];
+                        },
+                    },
+                ],
+                componentZones: [['resizer', ['resizer']]],
+            };
+        }
+    }
+    Resizer.dependencies = [DomLayout];
+
     exports.Attributes = Attributes;
     exports.BasicEditor = BasicEditor;
     exports.ContainerNode = ContainerNode;
@@ -23768,6 +23898,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
     exports.Parser = Parser;
     exports.ReactiveEditorInfo = ReactiveEditorInfo;
     exports.Renderer = Renderer;
+    exports.Resizer = Resizer;
     exports.SeparatorNode = SeparatorNode;
     exports.TagNode = TagNode;
     exports.VRange = VRange;
