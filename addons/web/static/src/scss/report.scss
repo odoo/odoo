@@ -16,6 +16,15 @@ body {
     border-top: 1px solid black !important;
 }
 
+.o_report_footer {
+    max-height: 215px;
+    display: -webkit-box;
+    -webkit-line-clamp: 9;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
 .table-sm {
     > thead > tr > th {

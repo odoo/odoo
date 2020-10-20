@@ -85,18 +85,12 @@
                         This changes down here are hacks to make the preview look as good as possible.
                     **/
 
-                    /** The footers are not at the bottom of the page, so we push them down. **/
-                    .o_background_footer  {
-                        margin-top: 270px !important;
-                    }
-                    .o_standard_footer {
-                        margin-top: 190px !important;
-                    }
-                    .o_boxed_footer {
-                         margin-top: 270px !important;
-                    }
-                    .o_clean_footer {
-                         margin-top: 160px !important;
+                    /** The footers are not at the bottom of the page, so we fixed them bottom of page. **/
+                    .o_clean_footer, .o_standard_footer, .o_boxed_footer, .o_background_footer {
+                        position: fixed;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
                     }
 
                     /** Avoid image overflowing and creating a scrollbar **/
@@ -364,7 +358,7 @@
                     <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
                     <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
-                <div t-field="company.report_footer"/>
+                <div t-field="company.report_footer" class="o_report_footer"/>
                 <div t-if="report_type == 'pdf'" class="text-muted">
                     Page:
                     <span class="page"/>
@@ -409,7 +403,7 @@
                     <li t-if="company.website" class="list-inline-item"><span t-field="company.website"/></li>
                     <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
-                <div t-field="company.report_footer"/>
+                <div t-field="company.report_footer" class="o_report_footer"/>
                 <div t-if="report_type == 'pdf'">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
@@ -445,7 +439,7 @@
         <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
             <div class="row mt8">
                 <div class="col-3">
-                    <span t-field="company.report_footer"/>
+                    <span t-field="company.report_footer" class="o_report_footer"/>
                 </div>
                 <div class="col-4 text-right">
                     <span class="company_address" t-field="company.partner_id"
@@ -505,7 +499,7 @@
                 </ul>
 
                 <div name="financial_infos">
-                    <span t-field="company.report_footer"/>
+                    <span t-field="company.report_footer" class="o_report_footer"/>
                 </div>
 
                 <div t-if="report_type == 'pdf'" class="text-muted">
