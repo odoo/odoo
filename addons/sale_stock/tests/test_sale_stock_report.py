@@ -13,6 +13,9 @@ class TestSaleStockReports(TestReportsCommon):
         for tomorrow. Then check in the report it's the most urgent who is
         linked to the qty. on stock.
         """
+        # make sure first picking doesn't auto-assign
+        self.picking_type_out.reservation_method = 'manual'
+
         today = datetime.today()
         # Put some quantity in stock.
         quant_vals = {
