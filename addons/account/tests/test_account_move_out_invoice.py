@@ -1319,6 +1319,33 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
         ], self.move_vals)
 
+    def test_out_invoice_line_onchange_analytic_2(self):
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'test_analytic_account1',
+            'code': 'TEST1'
+        })
+
+        self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
+            'analytic_account_id': analytic_account.id,
+        })]})
+
+        self.assertRecordValues(self.invoice.invoice_line_ids, [
+            {'analytic_account_id': analytic_account.id},
+            {'analytic_account_id': False},
+        ])
+
+        # We can remove the analytic account, it is not recomputed by an invalidation
+        self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
+            'analytic_account_id': False,
+        })]})
+
+        self.assertRecordValues(self.invoice.invoice_line_ids, [
+            {'analytic_account_id': False},
+            {'analytic_account_id': False},
+        ])
+
     def test_out_invoice_line_onchange_cash_rounding_1(self):
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
