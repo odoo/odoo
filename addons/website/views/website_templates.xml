@@ -1856,7 +1856,8 @@
         </t>
     </xpath>
     <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
-        <span class="o_add_language list-inline-item">|</span>
+        <span class="o_add_language list-inline-item"
+            groups="website.group_website_publisher">|</span>
         <t t-call="website.language_selector_add_language">
             <t t-set="dropdown" t-value="False"/>
         </t>
