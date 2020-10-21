@@ -237,74 +237,36 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} current_partner
-         * @param {boolean} current_partner.active
-         * @param {string} current_partner.display_name
-         * @param {integer} current_partner.id
-         * @param {string} current_partner.name
          * @param {integer} current_user_id
          * @param {integer[]} moderation_channel_ids
          * @param {Object} partner_root
-         * @param {boolean} partner_root.active
-         * @param {string} partner_root.display_name
-         * @param {integer} partner_root.id
-         * @param {string} partner_root.name
          * @param {Object} public_partner
-         * @param {boolean} public_partner.active
-         * @param {string} public_partner.display_name
-         * @param {integer} public_partner.id
-         * @param {string} public_partner.name
          */
         _initPartners({
-            current_partner: {
-                active: currentPartnerIsActive,
-                display_name: currentPartnerDisplayName,
-                id: currentPartnerId,
-                name: currentPartnerName,
-            },
+            current_partner,
             current_user_id: currentUserId,
             moderation_channel_ids = [],
-            partner_root: {
-                active: partnerRootIsActive,
-                display_name: partnerRootDisplayName,
-                id: partnerRootId,
-                name: partnerRootName,
-            },
-            public_partner: {
-                active: publicPartnerIsActive,
-                display_name: publicPartnerDisplayName,
-                id: publicPartnerId,
-                name: publicPartnerName,
-            },
+            partner_root,
+            public_partner,
         }) {
             this.messaging.update({
-                currentPartner: [['insert', {
-                    active: currentPartnerIsActive,
-                    display_name: currentPartnerDisplayName,
-                    id: currentPartnerId,
-                    moderatedChannels: [
-                        ['insert', moderation_channel_ids.map(id => {
-                            return {
-                                id,
-                                model: 'mail.channel',
-                            };
-                        })],
-                    ],
-                    name: currentPartnerName,
-                    user: [['insert', { id: currentUserId }]],
-                }]],
+                currentPartner: [['insert', Object.assign(
+                    this.env.models['mail.partner'].convertData(current_partner),
+                    {
+                        moderatedChannels: [
+                            ['insert', moderation_channel_ids.map(id => {
+                                return {
+                                    id,
+                                    model: 'mail.channel',
+                                };
+                            })],
+                        ],
+                        user: [['insert', { id: currentUserId }]],
+                    }
+                )]],
                 currentUser: [['insert', { id: currentUserId }]],
-                partnerRoot: [['insert', {
-                    active: partnerRootIsActive,
-                    display_name: partnerRootDisplayName,
-                    id: partnerRootId,
-                    name: partnerRootName,
-                }]],
-                publicPartner: [['insert', {
-                    active: publicPartnerIsActive,
-                    display_name: publicPartnerDisplayName,
-                    id: publicPartnerId,
-                    name: publicPartnerName,
-                }]],
+                partnerRoot: [['insert', this.env.models['mail.partner'].convertData(partner_root)]],
+                publicPartner: [['insert', this.env.models['mail.partner'].convertData(public_partner)]],
             });
         }
 
