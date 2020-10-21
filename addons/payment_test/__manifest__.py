@@ -12,9 +12,11 @@ not use it in production environment.
 """,
     'depends': ['payment'],
     'data': [
+        'views/assets.xml',
         'views/payment_test_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
     'installable': True,
-    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
 }
