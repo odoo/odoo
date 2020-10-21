@@ -9,7 +9,7 @@ class AccountPaymentRegister(models.TransientModel):
     _description = 'Register Payment'
 
     # == Business fields ==
-    payment_date = fields.Date(String="Payment Date", required=True,
+    payment_date = fields.Date(string="Payment Date", required=True,
         default=fields.Date.context_today)
     amount = fields.Monetary(currency_field='currency_id', store=True, readonly=False,
         compute='_compute_amount')

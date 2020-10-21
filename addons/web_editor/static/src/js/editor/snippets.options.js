@@ -1051,6 +1051,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         const unit = this.el.dataset.unit;
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
+        this.inputEl.setAttribute('autocomplete', 'chrome-off');
         this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
         this.inputEl.classList.toggle('text-left', !unit);
         this.inputEl.classList.toggle('text-right', !!unit);
@@ -4080,14 +4081,17 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         });
 
         const position = this.$target.css('background-position').split(' ').map(v => parseInt(v));
-        // Convert % values to pixels (because mouse movement is in pixels)
         const delta = this._getBackgroundDelta();
+        // originalPosition kept in % for when movement in one direction doesn't make sense
         this.originalPosition = {
+            left: position[0],
+            top: position[1],
+        };
+        // Convert % values to pixels for current position because mouse movement is in pixels
+        this.currentPosition = {
             left: position[0] / 100 * delta.x || 0,
             top: position[1] / 100 * delta.y || 0,
         };
-        this.currentPosition = _.clone(this.originalPosition);
-
         this._toggleBgOverlay(true);
     },
     /**

@@ -3,8 +3,10 @@
 # 	* pos_hr
 # 
 # Translators:
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Martin Trigaux, 2020
-# luis abarca <AVEMAR2714@GMAIL.COM>, 2020
+# Cristopher Cravioto <ccr@odoo.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: luis abarca <AVEMAR2714@GMAIL.COM>, 2020\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,28 +25,28 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
+msgstr "<span class=\"o_form_label oe_edit_only\">Empleados permitidos </span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
-msgstr "Cashier"
+msgstr "Cajero"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Change Cashier"
-msgstr "Change Cashier"
+msgstr "Cambiar Cajero"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Close session"
-msgstr "Close session"
+msgstr "Cerrar sesion"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee__display_name
@@ -52,7 +54,7 @@ msgstr "Close session"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 msgid "Display Name"
-msgstr "Display Name"
+msgstr "Nombre mostrado"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -60,18 +62,18 @@ msgstr "Display Name"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
-msgstr "Employee"
+msgstr "Empleado"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr "Employee: %s - PoS Config(s): %s \n"
+msgstr "Empleado: %s - Configuración(es) de PoS: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr "Employees with access"
+msgstr "Empleados con acceso"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
@@ -84,14 +86,16 @@ msgstr "ID"
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
-msgstr "If left empty, all employees can log in to the PoS session"
+msgstr ""
+"Si se deja vacío, todos los empleados pueden iniciar sesión de usuario en la"
+" sesión de PoS"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Incorrect Password"
-msgstr "Incorrect Password"
+msgstr "Contraseña incorrecta"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee____last_update
@@ -99,14 +103,14 @@ msgstr "Incorrect Password"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order____last_update
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order____last_update
 msgid "Last Modified on"
-msgstr "Last Modified on"
+msgstr "Última modificación el"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr "Log in to"
+msgstr "Iniciar sesión a"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -114,15 +118,15 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Only users with Manager access rights for PoS app can modify the product "
-"prices on orders."
+"Solo los usuarios con derechos de acceso de administrador pueden modificar "
+"los precios de los productos en los pedidos."
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Password ?"
-msgstr "Password ?"
+msgstr "Contraseña?"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
@@ -130,47 +134,47 @@ msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
-"Person who uses the cash register. It can be a reliever, a student or an "
-"interim employee."
+"Persona que utiliza la caja registradora. Puede ser un sustituto, un "
+"estudiante o un empleado interino."
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Point of Sale Configuration"
+msgstr "Configuración del TPV"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Point of Sale Orders"
+msgstr "Pedidos del TPV"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "Point of Sale Orders Report"
+msgstr "Reporte de Órdenes del Punto de Venta"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "Price Control"
-msgstr "Price Control"
+msgstr "Control de precios"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "Restrict price modification to managers"
-msgstr "Restrict price modification to managers"
+msgstr "Restringir la modificación de los precios a los responsables"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr "Scan your badge"
+msgstr "Escaneé su identificación"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr "Select Cashier"
+msgstr "Seleccionar Cajero"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -179,19 +183,19 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
-"You cannot delete an employee that may be used in an active PoS session, "
-"close the session(s) first: \n"
+"No puede eliminar un empleado que se pueda usar en una sesión activa de PoS,"
+" primero cierre las sesiones: \n"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
-msgstr "or"
+msgstr "o"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/CashierName.xml:0
 #, python-format
 msgid "selectCashier"
-msgstr "selectCashier"
+msgstr ""
