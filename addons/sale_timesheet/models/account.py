@@ -68,6 +68,9 @@ class AccountAnalyticLine(models.Model):
         result = super(AccountAnalyticLine, self).write(values)
         return result
 
+    def _add_timesheet_time(self, minutes_spent, try_to_match=False):
+        super(AccountAnalyticLine, self)._add_timesheet_time(minutes_spent, try_to_match=False)
+
     def _check_can_write(self, values):
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
             if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
