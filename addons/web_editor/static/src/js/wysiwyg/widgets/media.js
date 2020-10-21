@@ -213,12 +213,8 @@ var ImageWidget = MediaWidget.extend({
         if (!this.$media.is('img')) {
             return;
         }
-        var allImgClasses = /(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g;
-        var allImgClassModifiers = /(^|\s+)(rounded-circle|shadow|rounded|img-thumbnail|mx-auto)([^\s]*)/g;
-        this.media.className = this.media.className && this.media.className
-            .replace('o_we_custom_image', '')
-            .replace(allImgClasses, ' ')
-            .replace(allImgClassModifiers, ' ');
+        var allImgClasses = /(^|\s+)(img|img-(?!circle|rounded|thumbnail)\S*|o_we_custom_image|o_image)(?=\s|$)/g;
+        this.media.className = this.media.className && this.media.className.replace(allImgClasses, ' ');
     },
     /**
      * Returns the domain for attachments used in media dialog.
@@ -678,7 +674,6 @@ var IconWidget = MediaWidget.extend({
                 this._highlightSelectedIcon();
             }
         }
-        this.nonIconClasses = _.without(classes, 'media_iframe_video', this.selectedIcon);
 
         return this._super.apply(this, arguments);
     },
@@ -693,8 +688,9 @@ var IconWidget = MediaWidget.extend({
     save: function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
-        var finalClasses = _.uniq(this.nonIconClasses.concat([iconFont.base, iconFont.font]));
-        if (!this.$media.is('span')) {
+        var oldClasses = this.media ? _.toArray(this.media.classList) : [];
+        var finalClasses = _.union(oldClasses, [iconFont.base, iconFont.font]);
+        if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
             $span.data(this.$media.data());
             this.$media = $span;
@@ -742,7 +738,7 @@ var IconWidget = MediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa(\s|$)|fa-[^\s]*)/g;
+        var allFaClasses = /(^|\s)(fa|fa-\S*)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**

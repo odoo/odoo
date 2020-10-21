@@ -4007,7 +4007,7 @@ QUnit.test('Pictogram (fontawesome)', function (assert) {
                 },
             },
             {
-                name: "Replace PICTOGRAM (i.fa => span.fa)",
+                name: "Replace PICTOGRAM",
                 async: true,
                 content: '<div class="row">\n' +
                     '   <div class="col-lg-12">\n' +
@@ -4022,7 +4022,7 @@ QUnit.test('Pictogram (fontawesome)', function (assert) {
                 test: {
                     content: '<div class="row">\n' +
                         '   <div class="col-lg-12">\n' +
-                        '       <span class="rounded-circle fa fa-glass"></span>\n' +
+                        '       <i class="rounded-circle fa fa-glass"></i>\n' +
                         '       <div>Other content</div>\n' +
                         '   </div>\n' +
                         '</div>',

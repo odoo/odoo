@@ -8,6 +8,7 @@ var registry = require('web_editor.wysiwyg.plugin.registry');
 var Plugins = require('web_editor.wysiwyg.plugins');
 var wysiwygTranslation = require('web_editor.wysiwyg.translation');
 var wysiwygOptions = require('web_editor.wysiwyg.options');
+var fonts = require('wysiwyg.fonts');
 
 var _t = core._t;
 
@@ -184,9 +185,12 @@ var MediaPlugin = AbstractPlugin.extend({
                 var start = previous.parentNode;
                 rng = this.context.invoke('editor.setRange', start, _.indexOf(start.childNodes, previous));
                 if (previous.tagName === newMedia.tagName) {
-                    // Eg: replace an image with an image -> reapply classes removed by `clear`
-                    var reFaIcons = /fa-(?!spin(\s|$))\S+/g; // do not keep fontawesome icons but keep fa-spin
-                    $(newMedia).addClass(previous.className.replace(reFaIcons, ''));
+                    // Eg: replace an image with an image -> reapply classes removed by `clear` except previous icon
+                    var faIcons = _.flatten(_.map(fonts.fontIcons, function (icon) {
+                        return icon.alias;
+                    }));
+                    var oldClasses = _.difference(_.toArray(previous.classList), faIcons);
+                    newMedia.className = _.union(_.toArray(newMedia.classList), oldClasses).join(' ');
                 }
 
                 if (dom.isVideo(previous) || dom.isVideo(newMedia)) {

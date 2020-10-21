@@ -139,11 +139,14 @@ var MediaDialog = Dialog.extend({
         var self = this;
         var _super = this._super;
         var args = arguments;
+        var oldClasses = this.media ? _.toArray(this.media.classList) : [];
         return Promise.resolve(this.active.save()).then(function (data) {
             self.final_data = data;
             // In the case of multi images selection we suppose this was not to
             // replace an old media, so we only retrieve the images and save.
             if (!self.multiImages) {
+                // Restore classes if the media was replaced (when changing type)
+                data.className = _.union(_.toArray(data.classList), oldClasses).join(' ');
                 // TODO this dialog triggers 'save' and 'saved' with different
                 // data on close... should refactor to avoid confusion...
                 self.trigger('saved', {
