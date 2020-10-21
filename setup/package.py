@@ -168,7 +168,7 @@ def gen_rpm_repo(args, file_name):
     shutil.rmtree(temp_path)
 
 
-def _prepare_build_dir(args, win32=False):
+def _prepare_build_dir(args, win32=False, move_addons=True):
     """Copy files to the build directory"""
     logging.info('Preparing build dir "%s"', args.build_dir)
     cmd = ['rsync', '-a', '--delete', '--exclude', '.git', '--exclude', '*.pyc', '--exclude', '*.pyo']
@@ -176,6 +176,8 @@ def _prepare_build_dir(args, win32=False):
         cmd += ['--exclude', 'setup/win32']
 
     run_cmd(cmd + ['%s/' % args.odoo_dir, args.build_dir])
+    if not move_addons:
+        return
     for addon_path in glob(os.path.join(args.build_dir, 'addons/*')):
         if args.blacklist is None or os.path.basename(addon_path) not in args.blacklist:
             try:
@@ -541,7 +543,7 @@ def main(args):
             except Exception as e:
                 logging.error("Won't publish the rpm release.\n Exception: %s" % str(e))
         if args.build_deb:
-            _prepare_build_dir(args)
+            _prepare_build_dir(args, move_addons=False)
             docker_deb = DockerDeb(args)
             docker_deb.build()
             try:
