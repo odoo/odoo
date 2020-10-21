@@ -41,4 +41,4 @@ class BusController(Controller):
 
     @route('/longpolling/im_status', type="json", auth="user")
     def im_status(self, partner_ids):
-        return request.env['res.partner'].search_read([['id', 'in', partner_ids]], ['id', 'im_status'])
+        return request.env['res.partner'].browse(partner_ids).read(['im_status'])
