@@ -440,8 +440,6 @@ return AbstractRenderer.extend({
                 self.trigger_up('openCreate', self._convertEventToFC3Event(data));
                 if (self.state.scale === 'year') {
                     self.calendar.view.unselect();
-                } else {
-                    self.calendar.unselect();
                 }
             },
             eventRender: function (info) {

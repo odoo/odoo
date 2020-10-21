@@ -44,7 +44,7 @@ class Meeting(models.Model):
     _name = 'calendar.event'
     _description = "Calendar Event"
     _order = "start desc"
-    _inherit = ["mail.thread"]
+    _inherit = ["mail.thread", 'mail.activity.mixin']
 
     @api.model
     def default_get(self, fields):
@@ -315,6 +315,14 @@ class Meeting(models.Model):
             else:
                 meeting.start_date = False
                 meeting.stop_date = False
+            if not meeting.res_model == 'hr.leave' and not meeting.allday and meeting.start.date() != meeting.stop.date():
+                # The not meeting.res_model == 'hr.leave' should be only a temporary solution.
+                # Allday events do not convert timezones. When it's Christmas we don't want the conversion to be made.
+                # However, when we have a planned phone call with a client, we want the conversion.
+                # A phone call in at 12h BE is a phone call at 20h ROK.
+                # If we set holidays as allday events we might think someone in India is still working
+                # when in reality, he/she is already in vacations.
+                raise UserError(_("Only allday and hr.leave events can span across multiple days"))
 
     @api.depends('stop', 'start')
     def _compute_duration(self):

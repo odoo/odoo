@@ -18,9 +18,22 @@
         <field name="model">calendar.event</field>
         <field name="inherit_id" ref="calendar.view_calendar_event_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button name="%(calendar_event_act_window_sms_composer_mass)d" type="action"
-                        string="Send SMS"/>
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="%(calendar_event_act_window_sms_composer_mass)d" type="action"
+                            string="Send SMS"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form_inherited" model="ir.ui.view">
+        <field name="name">calendar.event.form.calendar_sms</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='send_buttons']" position="inside">
+                <button name="action_SMS" help="Send SMS to attendees" type="object" string="SMS" icon="fa-mobile"/>
             </xpath>
         </field>
     </record>

@@ -325,6 +325,9 @@ var CalendarController = AbstractController.extend({
             this.quick.opened(function () {
                 self.quick.focus();
             });
+            this.quick.on('closed', this, function () {
+                self.reload();
+            })
             return;
         }
 

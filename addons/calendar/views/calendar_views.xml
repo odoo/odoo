@@ -65,24 +65,21 @@
         <field name="name">calendar.event.tree</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" multi_edit="1" sample="1" editable="bottom">
-                <header>
-                    <button name="%(mail.action_email_compose_message_wizard)d" type="action" string="Send Email"/>
-                </header>
-                <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}"/>
-                <field name="start" string="Start Date" readonly="1"/>
-                <field name="stop" string="End Date" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
-                <field name="partner_ids" widget="many2many_tags" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="show"/>
-                <field name="alarm_ids" widget="many2many_tags" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
-                <field name="categ_ids" widget="many2many_tags" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
-                <field name="recurrency" readonly="1" optional="hide"/>
-                <field name="privacy" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
-                <field name="show_as" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
-                <field name="location" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="show"/>
-                <field name="duration" widget="float_time" readonly="1"/>
-                <field name="description" attrs="{'readonly': &quot;['|', ('recurrency', '=', True), '&amp;', ('privacy', '=', 'private'), ('user_id', '!=', uid)]&quot;}" optional="hide"/>
-                <field name="allday" invisible="True"/>
+            <tree string="Meetings" sample="1">
+                <field name="name" string="Subject" decoration-bf="1"/>
+                <field name="start" string="Start Date"/>
+                <field name="stop" string="End Date"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="partner_ids" widget="many2many_tags"/>
+                <field name="alarm_ids" widget="many2many_tags" optional="hide"/>
+                <field name="categ_ids" widget="many2many_tags" optional="hide"/>
+                <field name="recurrency" optional="hide"/>
+                <field name="privacy" optional="hide"/>
+                <field name="show_as" optional="hide"/>
+                <field name="location" optional="show"/>
+                <field name="duration" widget="float_time"/>
+                <field name="description" optional="hide"/>
+                <field name="allday" invisible="1"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
@@ -123,11 +120,7 @@
                                     context="{'force_email':True}"
                                     class="o_field_widget o_field_many2one"/>
                             </group>
-                            <group class="o_group_col_3">
-                                <span>
-                                    <button name="%(mail.action_email_compose_message_wizard)d" help="Email attendees" context="{'partner_ids': partner_ids}" type="action" string="Mail" icon="fa-envelope"/>
-                                    <!--<button name="%(mail.action_email_compose_message_wizard)d" help="Send SMS to attendees" type="action" string="SMS" icon="fa-mobile"/>-->
-                                </span>
+                            <group name="send_buttons" class="o_group_col_3">
                             </group>
                         </group>
                     </div>
