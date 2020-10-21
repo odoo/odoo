@@ -301,7 +301,7 @@ class ProcurementGroup(models.Model):
         In order to be able to find a suitable location that provide the product
         it will search among stock.rule.
         """
-        values.setdefault('company_id', self.env['res.company']._company_default_get('procurement.group'))
+        values.setdefault('company_id', location_id.company_id)
         values.setdefault('priority', '1')
         values.setdefault('date_planned', fields.Datetime.now())
         rule = self._get_rule(product_id, location_id, values)
