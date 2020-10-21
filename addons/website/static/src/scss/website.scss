@@ -1240,6 +1240,9 @@ header {
     border-radius: $rounded-pill;
     vertical-align: top;
 }
+span.list-inline-item.o_add_language:last-child {
+    display: none !important; // Hide the separator if it is the last list item
+}
 
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
