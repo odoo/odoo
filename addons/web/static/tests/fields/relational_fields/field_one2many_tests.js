@@ -1103,7 +1103,7 @@ QUnit.module('fields', {}, function () {
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "blurp#21#22#23#24#25#26#27#28#29",
                 "should display the records in order with the changes");
 
-            await testUtils.dom.click($('.modal .modal-footer button:first'));
+            await testUtils.dom.click($('.modal .modal-footer button:eq(1)'));
 
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
@@ -1135,7 +1135,7 @@ QUnit.module('fields', {}, function () {
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence");
 
-            await testUtils.dom.click($('.modal .modal-footer button:first'));
+            await testUtils.dom.click($('.modal .modal-footer button:eq(1)'));
 
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
@@ -2090,7 +2090,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickDiscard(form);
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
                 "changes shouldn't have been discarded yet, waiting for user confirmation");
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(0)'));
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'relational record 1',
                 "display name of first record in o2m list should be 'relational record 1'");
 
@@ -2768,7 +2768,7 @@ QUnit.module('fields', {}, function () {
 
             // cancel the edition
             await testUtils.form.clickDiscard(form);
-            await testUtils.dom.click($('.modal-footer button.btn-primary').first());
+            await testUtils.dom.click($('.modal-footer button.btn-secondary:eq(0)').first());
             assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
 
@@ -2921,7 +2921,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickDiscard(form);
 
             // confirm the discard operation
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(0)'));
 
             assert.isVisible(form.$('.o_field_widget[name=turtles] .o_pager'));
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 4',
@@ -2997,7 +2997,7 @@ QUnit.module('fields', {}, function () {
                 "pager should still display the correct total");
 
             // click on cancel
-            await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
+            await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(1)'));
 
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 4',
                 "pager should again display the correct total");
@@ -3037,7 +3037,7 @@ QUnit.module('fields', {}, function () {
 
             // discard
             await testUtils.form.clickDiscard(form);
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(0)'));
 
             assert.containsOnce(form, 'tr.o_data_row');
             assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
@@ -3086,13 +3086,13 @@ QUnit.module('fields', {}, function () {
                 'a confirmation model should be opened');
 
             // click on cancel, the line should still be selected
-            await testUtils.dom.click($('.modal .modal-footer button.btn-secondary'));
+            await testUtils.dom.click($('.modal .modal-footer button.btn-secondary:eq(1)'));
             assert.containsOnce(form, 'tr.o_data_row.o_selected_row',
                 "should still have 1 selected data row");
 
             // click elsewhere, and click on ok (on the confirmation dialog)
             await testUtils.dom.click(form.$('label.o_form_label'));
-            await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+            await testUtils.dom.click($('.modal .modal-footer button.btn-secondary:eq(0)'));
             assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows (invalid line has been discarded");
 

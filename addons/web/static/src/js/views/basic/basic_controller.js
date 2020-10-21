@@ -90,18 +90,41 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             return Promise.resolve(false);
         }
 
-        var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
+        var message = _t("Would you like to save your changes?");
         this.discardingDef = new Promise(function (resolve, reject) {
             var dialog = Dialog.confirm(self, message, {
-                title: _t("Warning"),
-                confirm_callback: () => {
-                    resolve(true);
-                    self.discardingDef = null;
-                },
-                cancel_callback: () => {
-                    reject();
-                    self.discardingDef = null;
-                },
+                title: _t("Unsaved changes"),
+                buttons: [
+                    {
+                        text: _t("Save"),
+                        classes: 'btn-primary',
+                        close: true,
+                        click: () => {
+                            self._disableButtons();
+                            self.saveRecord().then(() => {
+                                resolve(true);
+                                self._enableButtons();
+                                self.discardingDef = null;
+                            });
+                        },
+                    },
+                    {
+                        text: _t("Discard"),
+                        close: true,
+                        click: () => {
+                            resolve(true);
+                            self.discardingDef = null;
+                        },
+                    },
+                    {
+                        text: _t("Stay Here"),
+                        close: true,
+                        click: () => {
+                            reject();
+                            self.discardingDef = null;
+                        },
+                    }
+                ],
             });
             dialog.on('closed', self.discardingDef, reject);
         });

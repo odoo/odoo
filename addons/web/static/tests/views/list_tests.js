@@ -6506,7 +6506,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal:visible').length, 1,
             "a modal to ask for discard should be visible");
 
-        await testUtils.dom.click($('.modal:visible .btn-primary'));
+        await testUtils.dom.click($('.modal:visible .btn-secondary:eq(0)'));
         assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
             "first cell should still contain 'yop'");
 
@@ -7641,8 +7641,8 @@ QUnit.module('Views', {
         $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
         await testUtils.dom.click($discardButton);
 
-        assert.ok($('.modal').text().includes("Warning"), "Modal should ask to discard changes");
-        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-secondary:eq(0)'));
 
         assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "yop");
 
@@ -9074,7 +9074,7 @@ QUnit.module('Views', {
         await testUtils.fields.editAndTrigger(list.$('tr.o_selected_row .o_data_cell:first input[name="foo"]'), 'new_value', 'input');
         // discard by pressing ESC
         await testUtils.fields.triggerKeydown(list.$('input[name="foo"]'), 'escape');
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(0)'));
 
         assert.containsOnce(list, 'tbody tr td:contains(yop)');
         assert.containsN(list, 'tr.o_data_row', 3);
@@ -9626,7 +9626,7 @@ QUnit.module('Views', {
 
         assert.hasClass($('body'), 'modal-open',
             'record has been modified, are you sure modal should be opened');
-        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        await testUtils.dom.click($('body .modal button span:contains(Discard)'));
 
         assert.doesNotHaveClass(list.$('tr.o_data_row:eq(1)'), 'o_selected_row',
             'second row should be closed');

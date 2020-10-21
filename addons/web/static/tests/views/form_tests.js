@@ -2901,16 +2901,54 @@ QUnit.module('Views', {
         // click on discard and cancel the confirm request
         await testUtils.form.clickDiscard(form);
         assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-secondary');
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(1)');
         assert.strictEqual(form.$('input').val(), 'new value', 'input should still contain new value');
 
         // click on discard and confirm
         await testUtils.form.clickDiscard(form);
         assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-primary');
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(0)');
         assert.strictEqual(form.$('.o_field_widget').text(), 'yop', 'field in readonly should display yop');
 
         assert.strictEqual(nbWrite, 0, "no write RPC should have been done");
+        form.destroy();
+    });
+
+    QUnit.test('ask for confirmation when discarding a "dirty" view and save from confirmation dialog', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="foo"></field></form>',
+            res_id: 1,
+            mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.ok("write should called");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // edit record
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), 'pinkypie');
+        // discard
+        await testUtils.dom.click(form.$('.o_control_panel .o_form_button_cancel'));
+
+        assert.containsOnce(document.body, '.modal',
+            "should have a confirmation modal dialog to confirm discard action");
+        assert.containsN($('.modal'), '.modal-footer button', 3,
+            "should have 3 buttons");
+
+        // cancel
+        await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+        assert.strictEqual(form.$('span[name="foo"]').text(), 'pinkypie',
+            "value should be saved");
+
         form.destroy();
     });
 
@@ -2984,7 +3022,7 @@ QUnit.module('Views', {
 
         // click on discard and confirm
         await testUtils.form.clickDiscard(form);
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(0)'); // click on confirm
 
         assert.notOk(form.$el.prop('outerHTML').match('xphone'),
             "the string xphone should not be present after discarding");
@@ -3050,14 +3088,14 @@ QUnit.module('Views', {
         await testUtils.form.clickDiscard(form);
         assert.containsOnce(document.body, '.modal', 'there should be a confirm modal');
         assert.strictEqual(form.$('input').val(), 'DEF', 'input should be DEF');
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(0)'); // click on confirm
         assert.strictEqual(form.$('input').val(), 'ABC', 'input should now be ABC');
 
         // redirty and discard the field foo (to make sure initial changes haven't been lost)
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'GHI');
         await testUtils.form.clickDiscard(form);
         assert.strictEqual(form.$('input').val(), 'GHI', 'input should be GHI');
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(0)'); // click on confirm
         assert.strictEqual(form.$('input').val(), 'ABC', 'input should now be ABC');
 
         form.destroy();
@@ -3126,7 +3164,7 @@ QUnit.module('Views', {
         // click on the pager to switch to the next record and cancel the confirm request
         await cpHelpers.pagerNext(form);
         assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-secondary'); // click on cancel
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(1)'); // click on cancel
         assert.strictEqual(form.$('input[name=foo]').val(), 'new value',
             "input should still contain new value");
         assert.strictEqual(cpHelpers.getPagerValue(form), '1', "pager value should still be 1");
@@ -3134,7 +3172,7 @@ QUnit.module('Views', {
         // click on the pager to switch to the next record and confirm
         await cpHelpers.pagerNext(form);
         assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        await testUtils.dom.click('.modal-footer .btn-secondary:eq(0)'); // click on confirm
         assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "input should contain blip");
         assert.strictEqual(cpHelpers.getPagerValue(form), '2', "pager value should be 2");
 
@@ -3956,10 +3994,10 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name=display_name]'), '');
         await testUtils.dom.click(form.$('.fa-trash-o').eq(1));
 
-        assert.strictEqual($('.modal').find('.modal-title').first().text(), "Warning",
+        assert.strictEqual($('.modal').find('.modal-title').first().text(), "Unsaved changes",
             "Clicking out of a dirty line while editing should trigger a warning modal.");
 
-        await testUtils.dom.click($('.modal').find('.btn-primary'));
+        await testUtils.dom.click($('.modal').find('.btn-secondary:eq(0)'));
 
         assert.strictEqual(form.$('.o_data_cell').first().text(), "first record",
             "Value should have been reset to what it was before editing began.");
@@ -4335,7 +4373,7 @@ QUnit.module('Views', {
 
         // discard changes
         await testUtils.form.clickDiscard(form);
-        await testUtils.dom.click($('.modal-footer .btn-primary'));
+        await testUtils.dom.click($('.modal-footer .btn-secondary:eq(0)'));
         assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
             "field foo should still be displayed to initial value");
 
@@ -8650,7 +8688,7 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         assert.containsOnce(document.body, '.modal');
 
-        await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(1)'));
 
         assert.containsNone(document.body, '.modal');
 
@@ -8704,7 +8742,7 @@ QUnit.module('Views', {
         await cpHelpers.pagerNext(form);
 
         // discard changes by clicking on confirm in the dialog
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary:first'));
 
         assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "should be on record 2");
 
