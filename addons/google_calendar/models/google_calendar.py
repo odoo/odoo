@@ -526,8 +526,10 @@ class GoogleCalendar(models.AbstractModel):
                 stop = single_event_dict['end']['date']
                 d_end = fields.Date.from_string(stop)
                 allday = True
-                d_end = d_end + timedelta(days=-1)
-                stop = fields.Date.to_string(d_end)
+                if date != stop:
+                    d_end = fields.Date.from_string(stop)
+                    d_end = d_end + timedelta(days=-1)
+                    stop = fields.Date.to_string(d_end)
 
             update_date = datetime.strptime(single_event_dict['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
             result.update({
