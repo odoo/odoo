@@ -273,7 +273,9 @@ var SnippetEditor = Widget.extend({
             top: offset.top,
         });
         this.$('.o_handles').css('height', $target.outerHeight());
-        this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
+
+        const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
+        this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 25);
     },
     /**
      * DOMElements have a default name which appears in the overlay when they
@@ -899,7 +901,7 @@ var SnippetEditor = Widget.extend({
     /**
      * Called when the 'mouse wheel' is used when hovering over the overlay.
      * Disable the pointer events to prevent page scrolling from stopping.
-     * 
+     *
      * @private
      * @param {Event} ev
      */
