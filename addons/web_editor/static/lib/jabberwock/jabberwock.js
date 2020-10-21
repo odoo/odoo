@@ -7141,7 +7141,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 if (parent) {
                     const markers = [];
                     parent.childVNodes.forEach(sibling => {
-                        // Filter and sort the ndoes.
+                        // Filter and sort the nodes.
                         if (setNodes.has(sibling)) {
                             if (sibling.tangible) {
                                 renderingUnits.push(this._createUnit(cache, sibling, rendered));
@@ -8336,11 +8336,41 @@ odoo.define('web_editor.jabberwock', (function(require) {
     function _isAtSegmentBreak(node, side) {
         const siblingSide = side === 'start' ? 'previousSibling' : 'nextSibling';
         const sibling = node && node[siblingSide];
-        const isAgainstAnotherSegment = sibling && _isSegment(sibling);
+        const isAgainstAnotherSegment = _isAgainstAnotherSegment(node, side);
         const isAtEdgeOfOwnSegment = _isBlockEdge(node, side);
         // In the DOM, a space before a BR is rendered but a space after a BR isn't.
         const isBeforeBR = side === 'end' && sibling && nodeName(sibling) === 'BR';
         return (isAgainstAnotherSegment && !isBeforeBR) || isAtEdgeOfOwnSegment;
+    }
+    /**
+     * Return true if the given node is just before or just after another segment.
+     * Eg: <div>abc<div>def</div></div> -> abc is before another segment (div).
+     * Eg: <div><a>abc</a>     <div>def</div></div> -> abc is before another segment
+     * (div).
+     *
+     * @param {Node} node
+     * @param {'start'|'end'} side
+     * @returns {boolean}
+     */
+    function _isAgainstAnotherSegment(node, side) {
+        const siblingSide = side === 'start' ? 'previousSibling' : 'nextSibling';
+        const sibling = node && node[siblingSide];
+        if (sibling) {
+            return sibling && _isSegment(sibling);
+        }
+        else {
+            // Look further (eg.: `<div><a>abc</a>     <div>def</div></div>`: the
+            // space should be removed).
+            let ancestor = node;
+            while (ancestor && !ancestor[siblingSide]) {
+                ancestor = ancestor.parentNode;
+            }
+            let cousin = ancestor && !_isSegment(ancestor) && ancestor.nextSibling;
+            while (cousin && isInstanceOf(cousin, Text)) {
+                cousin = cousin.nextSibling;
+            }
+            return cousin && _isSegment(cousin);
+        }
     }
     /**
      * Return true if the node is a segment according to W3 formatting model.
@@ -17652,6 +17682,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const inputType = (cutEvent && 'deleteByCut') ||
                 (dropEvent && 'insertFromDrop') ||
                 (pasteEvent && 'insertFromPaste') ||
+                (key === 'Enter' && (inputEvent === null || inputEvent === void 0 ? void 0 : inputEvent.inputType) === 'insertText' && 'insertLineBreak') ||
                 (inputEvent && inputEvent.inputType);
             // In case of accent inserted from a Mac, check that the char before was
             // one of the special accent temporarily inserted in the DOM (e.g. '^',
@@ -20784,7 +20815,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 });
             };
             const openMedia = () => {
-                this.engine.editor.execCommand('openMedia');
+                this.engine.editor.execCommand('openMedia', { media: node });
             };
             const wrapper = {
                 tag: 'DIV',
@@ -21277,7 +21308,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const savedAttach = image.attach;
                 const savedDetach = image.detach;
                 const handleClick = () => {
-                    const params = { image: node };
+                    const params = { media: node };
                     this.engine.editor.execCommand('openMedia', params);
                 };
                 image.attach = (el) => {
@@ -21423,7 +21454,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const fa = domObject.children[1] || domObject.children[0];
                 if ('tag' in fa) {
                     const dbclickCallback = () => {
-                        this.engine.editor.execCommand('openMedia');
+                        this.engine.editor.execCommand('openMedia', { media: node });
                     };
                     const savedAttach = fa.attach;
                     fa.attach = (el) => {
