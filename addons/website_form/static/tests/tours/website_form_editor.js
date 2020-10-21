@@ -30,11 +30,6 @@ odoo.define('website_form_editor.tour', function(require) {
             in_modal: false,
         },
         {
-            content:  "Change the action to create issues",
-            trigger:  ".modal-body select",
-            run:      "text project.issue"
-        },
-        {
             content:  "Change the action to Send an E-mail",
             trigger:  ".modal-body select",
             run: function (actions) {
