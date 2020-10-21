@@ -11,9 +11,13 @@
 
         <record id="calendar_event_rule_employee" model="ir.rule">
             <field ref="model_calendar_event" name="model_id"/>
-            <field name="name">All Calendar Event for employees</field>
-            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="name">All Calendar Event for employees: write/unlink only (created or assigned)</field>
+            <field name="domain_force">['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]</field>
             <field eval="[(4,ref('base.group_user'))]" name="groups"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="calendar_attendee_rule_my" model="ir.rule">
