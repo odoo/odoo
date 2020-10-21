@@ -241,9 +241,9 @@ class Partner(models.Model):
 
     @api.model_cr
     def init(self):
-        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
+        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_renamed_vat_index'""")
         if not self._cr.fetchone():
-            self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
+            self._cr.execute("""CREATE INDEX res_partner_renamed_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
