@@ -617,6 +617,12 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        &.o_top_cover > .o_handles > .o_move_handle {
+            top: auto;
+            bottom: -$o-we-handles-offset-to-hide;
+            transform: translate(-50%, 110%);
+        }
+
         &.o_we_overlay_preview {
             border-color: $o-we-handles-accent-color-preview;
 

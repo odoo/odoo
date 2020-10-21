@@ -181,7 +181,9 @@ var SnippetEditor = Widget.extend({
             top: offset.top,
         });
         this.$('.o_handles').css('height', this.$target.outerHeight());
-        this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
+
+        const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
+        this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 10);
     },
     /**
      * @return {boolean}
