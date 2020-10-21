@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_registration" name="Event Booth Registration">
+        <t t-call="website_event.layout">
+            <div class="o_wevent_booth_registration" name="event" t-att-data-event-id="event.id"
+                 itemscope="itemscope" itemtype="http://schema.org/Event">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="event"/>
+                    <t t-set="use_filters" t-value="True"/>
+                    <t t-set="use_size" t-value="True"/>
+                    <t t-set="use_text_align" t-value="True"/>
+
+                    <div class="container d-flex flex-column flex-grow-1">
+                        <h1 class="text-white my-5">Become an Exhibitor</h1>
+                        <div t-if="not event.event_booth_ids" class="alert alert-info">
+                            <span>This event is not open to exhibitors registration, check our <a href="/event">list of future events</a>.</span>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="bg-white"/>
+                    </div>
+                </t>
+                <section class="mt-n5">
+                    <div class="container overflow-hidden">
+                        <div class="row mb64 bg-white no-gutters rounded shadow-sm">
+                            <t t-if="event.event_booth_ids">
+                                <div class="col-lg-9 p-4">
+                                    <form method="post" t-attf-action="/event/#{slug(event)}/booths/registration/new"
+                                          id="booth-registration" class="form-horizontal justify-content-center mt32" t-att-data-event-id="event.id">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="row form-group justify-content-center">
+                                            <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
+                                                <t t-set="booth_category_unavailable" t-value="booth_category.event_booth_count_available == 0"/>
+                                                <div t-if="booth_category.event_booth_ids" class="col-md-4">
+                                                    <label t-att-class="'o_wevent_booth_category_unavailable' if booth_category_unavailable else ''">
+                                                        <input type="radio" name="booth_category_id" t-att-value="booth_category.id"
+                                                               t-att-disabled="booth_category_unavailable"/>
+                                                        <div>
+                                                            <h5><t t-esc="booth_category.name"/></h5>
+                                                            <span class="img img-responsive">
+                                                                <img class="img img-fluid" t-att-title="booth_category.name" t-att-src="website.image_url(booth_category, 'image_256')"/>
+                                                            </span>
+                                                        </div>
+                                                        <div t-if="booth_category_unavailable" class="o_ribbon_right bg-danger">
+                                                            <span>Unavailable</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-2 offset-sm-1">
+                                                <label for="booth_id" class="control-label">Booth</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" id="booth_id" name="booth_id" disabled="true"></select>
+                                            </div>
+                                            <div t-if="event.exhibition_map" class="col-sm-3 text-right">
+                                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#mapModal">View Floor Plan</button>
+                                                <div role="dialog" id="mapModal" class="modal" tabindex="-1">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <div t-field="event.exhibition_map" t-options="{'widget': 'image'}" class="img img-responsive"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group o_wevent_booth_slots_group d-none">
+                                            <div class="col-sm-2 offset-sm-1">
+                                                <label class="control-label">Slots</label>
+                                            </div>
+                                            <div class="col-sm-9 o_wevent_booth_slots"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-10 offset-sm-2">
+                                                <button type="submit" class="btn btn-primary btn-lg booth-submit" disabled="true">Book My Booth</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 bg-200 hidden-sm hidden-xs py-4">
+                                    <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
+                                        <div t-attf-id="booth_description_#{booth_category.id}"
+                                             class="o_wevent_booth_description d-none" t-field="booth_category.description"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="event_booth_registration_complete" name="Booth Registration Complete">
+        <t t-call="website_event.layout">
+            <div class="container my-5">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h3>Booth Registration Completed</h3>
+                        <span class="h4 text-muted" t-esc="event.name"/>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <span class="font-weight-bold">
+                        <t t-if="contact['contact_name']" t-esc="contact['contact_name']"/>
+                        <t t-else="">N/A</t>
+                    </span>
+                    <span>
+                        <i class="fa fa-envelope mr-2"/>
+                        <t t-if="contact['contact_email']" t-esc="contact['contact_email']"/>
+                        <t t-else="">N/A</t>
+                    </span>
+                    <span>
+                        <i class="fa fa-phone mr-2"/>
+                        <t t-if="contact['contact_phone']" t-esc="contact['contact_phone']"/>
+                        <t t-else="">N/A</t>
+                    </span>
+                    <span>
+                        <i class="fa fa-mobile mr-2"/>
+                        <t t-if="contact['contact_mobile']" t-esc="contact['contact_mobile']"/>
+                        <t t-else="">N/A</t>
+                    </span>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</data></odoo>

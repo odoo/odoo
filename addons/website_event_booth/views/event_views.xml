@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.website.event.booth</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='website_menu']" position='after'>
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
+                    <label class="col-lg-4" for="website_booth"/> <field name="website_booth"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.website.event.booth</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <page name="event_communication" position="after">
+                <page string="Map" name="event_exhibition_map">
+                    <group>
+                        <field name="exhibition_map"/>
+                    </group>
+                </page>
+            </page>
+            <field name='website_menu' position="after">
+                <label for="website_booth" string="Booth Register"/>
+                <field name="website_booth"/>
+            </field>
+        </field>
+    </record>
+
+</data></odoo>

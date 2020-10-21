@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="booth.registration.details" class="bg-light">
+        <t t-if="!widget.unavailableSlots">
+            <form method="post" t-attf-action="/event/#{widget.eventId}/booths/registration/confirm">
+                <input type="hidden" name="csrf_token" t-att-value="widget.csrf_token"/>
+                <div class="row">
+                    <div class="col-lg my-2">
+                        <label class="font-weight-bold">Name</label>
+                        <input type="text" class="form-control" name="name" t-att-value="widget.name" required="True"/>
+                    </div>
+                    <div class="col-lg my-2">
+                        <label class="font-weight-bold">Email</label>
+                        <input type="email" class="form-control" name="email" t-att-value="widget.email" required="True"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg my-2">
+                        <label class="font-weight-bold">Phone <small>(Optional)</small></label>
+                        <input type="tel" class="form-control" name="phone" t-att-value="widget.phone"/>
+                    </div>
+                    <div class="col-lg my-2">
+                        <label class="font-weight-bold">Mobile <small>(Optional)</small></label>
+                        <input type="tel" class="form-control" name="mobile" t-att-value="widget.mobile"/>
+                    </div>
+                </div>
+                <input type="hidden" name="event_booth_slot_ids" t-att-value="widget.requestedSlots"/>
+            </form>
+        </t>
+        <t t-else="">
+            <div class="alert alert-warning" role="alert">
+                <span>The following slots are not available anymore :</span>
+                <ul class="my-2">
+                    <li t-foreach="widget.unavailableSlots" t-as="slot">
+                        <span><t t-esc="slot.booth"/> (<t t-esc="slot.name"/>)</span>
+                    </li>
+                </ul>
+                <span>Please modify your choice and retry</span>
+            </div>
+        </t>
+    </div>
+
+</templates>
