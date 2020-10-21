@@ -69,6 +69,7 @@ class Partner(models.Model):
             "display_name": self.name_get()[0][1],
             "name": self.name,
             "active": self.active,
+            "im_status": self.im_status,
         }
 
     @api.model
