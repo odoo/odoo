@@ -417,13 +417,14 @@ class Project(models.Model):
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
         tasks_context = self.env.context
+        if len(self) == 1:
+            tasks_context = {**tasks_context, 'default_project_id': self.id}
+        elif len(self):
+            task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+            task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+            if len(task_projects_ids) == 1:
+                tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
 
-        # filter out all the projects that have no tasks
-        task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
-        task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
-
-        if len(task_projects_ids) == 1:
-            tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
         stat_buttons.append({
             'name': _('Tasks'),
             'count': sum(self.mapped('task_count')),

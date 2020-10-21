@@ -175,6 +175,7 @@
                             <field name="order_line"
                                 widget="section_and_note_one2many"
                                 mode="tree,kanban"
+                                context="{'default_state': 'draft'}"
                                 attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
                                 <tree string="Purchase Order Lines" editable="bottom">
                                     <control>
@@ -184,7 +185,7 @@
                                     </control>
                                     <field name="display_type" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
-                                    <field name="state" invisible="1"/>
+                                    <field name="state" invisible="1" readonly="1"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="invoice_lines" invisible="1"/>

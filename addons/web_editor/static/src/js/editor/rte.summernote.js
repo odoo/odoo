@@ -489,14 +489,13 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     var media = $(r.sc).parents().addBack().filter(function (i, el) {
         return dom.isImg(el);
     })[0];
+    var options = $editable.closest('.o_editable, .note-editor').data('options');
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
         options: {
             onUpload: $editable.data('callbacks').onUpload,
-            noVideos:
-              $editable.data('oe-model') === "mail.compose.message" ||
-              ($editable.data('options') && $editable.data('options').noVideos),
+            noVideos: options && options.noVideos,
         },
         onSave: function (media) {
             if(media && !document.body.contains(media)) {
