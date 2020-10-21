@@ -348,13 +348,14 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("sync", (event) => {
     console.info(`Syncing pending requests...`);
-    if (event.tag === pendingRequestsQueueName) {
-        event.waitUntil(processPendingRequests());
-    }
+    // if (event.tag === pendingRequestsQueueName) {
+    //     event.waitUntil(processPendingRequests());
+    // }
 });
 
 self.addEventListener("message", (event) => {
-    event.waitUntil(processMessage(event.data));
+    console.info(`message`);
+    // event.waitUntil(processMessage(event.data));
 });
 
 // Precache static resources here. Like offline page
