@@ -59,7 +59,10 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': {
                 'default_order_id': self.id,
-                'default_carrier_id': self.partner_shipping_id.property_delivery_carrier_id.id,
+                'default_carrier_id': (
+                    self.partner_shipping_id.property_delivery_carrier_id.id
+                    or self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id.id
+                ),
             }
         }
 
