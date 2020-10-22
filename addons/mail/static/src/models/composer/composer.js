@@ -161,7 +161,7 @@ function factory(dependencies) {
                     recordReplacement = this[this.activeSuggestedRecordName].substitution;
                     break;
                 case 'activeSuggestedChannel':
-                    recordReplacement = this[this.activeSuggestedRecordName].name;
+                    recordReplacement = this[this.activeSuggestedRecordName].name.replace(/ /g, '\u00a0');
                     this.update({
                         mentionedChannels: [['link', this[this.activeSuggestedRecordName]]],
                     });
@@ -524,7 +524,7 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeMentionedChannels() {
-            const inputMentions = this.textInputContent.match(
+            const inputMentions = this.textInputContent.replace('\n', "\n ").match(
                 new RegExp("#[^ ]+(?= |&nbsp;|$)", 'g')
             ) || [];
             const unmentionedChannels = [];
