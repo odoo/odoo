@@ -54,6 +54,7 @@ class AccountAccount(models.Model):
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
+    template_id = fields.Many2one('account.account.template', ondelete='set null', readonly=True)
     name = fields.Char(string="Account Name", required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.")
@@ -519,6 +520,7 @@ class AccountGroup(models.Model):
     _parent_store = True
     _order = 'code_prefix_start'
 
+    template_id = fields.Many2one('account.group.template', ondelete='set null', readonly=True)
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True)
     parent_path = fields.Char(index=True)
     name = fields.Char(required=True)

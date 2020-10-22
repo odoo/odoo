@@ -40,6 +40,7 @@ class AccountReconcileModelLine(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
+    template_id = fields.Many2one('account.reconcile.model.line.template', ondelete='set null', readonly=True)
     model_id = fields.Many2one('account.reconcile.model', readonly=True, ondelete='cascade')
     match_total_amount = fields.Boolean(related='model_id.match_total_amount')
     match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
@@ -118,6 +119,7 @@ class AccountReconcileModel(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
+    template_id = fields.Many2one('account.reconcile.model.template', ondelete='set null', readonly=True)
     # Base fields.
     active = fields.Boolean(default=True)
     name = fields.Char(string='Name', required=True)

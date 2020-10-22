@@ -44,6 +44,7 @@ class AccountTax(models.Model):
     def _default_tax_group(self):
         return self.env['account.tax.group'].search([], limit=1)
 
+    template_id = fields.Many2one('account.tax.template', ondelete='set null', readonly=True)
     name = fields.Char(string='Tax Name', required=True)
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
@@ -624,6 +625,7 @@ class AccountTaxRepartitionLine(models.Model):
     _order = 'sequence, repartition_type, id'
     _check_company_auto = True
 
+    template_id = fields.Many2one('account.tax.repartition.line.template', ondelete='set null', readonly=True)
     factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this distribution line, in percents")
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this distribution line")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")

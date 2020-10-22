@@ -682,6 +682,7 @@ class AccountChartTemplate(models.Model):
         for template, vals in template_vals:
             module, name = template_xmlids[template.id].split('.', 1)
             xml_id = "%s.%s_%s" % (module, company.id, name)
+            vals.update({'template_id': template.id})
             data_list.append(dict(xml_id=xml_id, values=vals, noupdate=True))
         return self.env[model]._load_records(data_list)
 
@@ -805,6 +806,7 @@ class AccountChartTemplate(models.Model):
             'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
             'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
             'line_ids': [(0, 0, {
+                'template_id': line.id,
                 'account_id': acc_template_ref[line.account_id.id],
                 'label': line.label,
                 'amount_type': line.amount_type,
@@ -1142,6 +1144,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
             tags_to_add += record.tag_ids
 
             rslt.append((0, 0, {
+                'template_id': record.id,
                 'factor_percent': record.factor_percent,
                 'repartition_type': record.repartition_type,
                 'tag_ids': [(6, 0, tags_to_add.ids)],

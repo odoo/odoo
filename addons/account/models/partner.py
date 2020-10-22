@@ -18,6 +18,7 @@ class AccountFiscalPosition(models.Model):
     _description = 'Fiscal Position'
     _order = 'sequence'
 
+    template_id = fields.Many2one('account.fiscal.position.template', ondelete='set null', readonly=True)
     sequence = fields.Integer()
     name = fields.Char(string='Fiscal Position', required=True)
     active = fields.Boolean(default=True,
@@ -211,6 +212,7 @@ class AccountFiscalPositionTax(models.Model):
     _rec_name = 'position_id'
     _check_company_auto = True
 
+    template_id = fields.Many2one('account.fiscal.position.tax.template', ondelete='set null', readonly=True)
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
@@ -230,6 +232,7 @@ class AccountFiscalPositionAccount(models.Model):
     _rec_name = 'position_id'
     _check_company_auto = True
 
+    template_id = fields.Many2one('account.fiscal.position.account.template', ondelete='set null', readonly=True)
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
