@@ -185,7 +185,6 @@ return AbstractModel.extend({
         this.fieldNames = params.fieldNames;
         this.fieldsInfo = params.fieldsInfo;
         this.mapping = params.mapping;
-        this.mode = params.mode;       // one of month, week or day
         this.scales = params.scales;   // one of month, week or day
         this.scalesInfo = params.scalesInfo;
 
@@ -219,6 +218,7 @@ return AbstractModel.extend({
             context: params.context,
             // get in arch the filter to display in the sidebar and the field to read
             filters: params.filters,
+            scale: params.mode,
         };
 
         this.setDate(params.initialDate);
@@ -435,7 +435,8 @@ return AbstractModel.extend({
             hour12: false,
         };
         return {
-            defaultView: this.scalesInfo[this.mode || 'week'],
+            defaultDate: this.data.target_date.toDate(),
+            defaultView: this.scalesInfo[this.data.scale || 'week'],
             header: false,
             selectable: this.creatable && this.create_right,
             selectMirror: true,

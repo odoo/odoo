@@ -16,7 +16,9 @@ odoo.define('web.Popover', function () {
     class Popover extends Component {
         /**
          * @param {Object} props
+         * @param {HTMLElement} [props.target]
          * @param {String} [props.position='bottom']
+         * @param {String} [props.trigger='click']
          * @param {String} [props.title]
          */
         constructor() {
@@ -58,6 +60,17 @@ odoo.define('web.Popover', function () {
         }
 
         //----------------------------------------------------------------------
+        // Getters
+        //----------------------------------------------------------------------
+
+        get displayed() {
+            return (this.props.target && this.target) || this.state.displayed;
+        }
+        get target() {
+            return document.querySelector(this.props.target) || this.el;
+        }
+
+        //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
 
@@ -89,13 +102,13 @@ odoo.define('web.Popover', function () {
          * @private
          */
         _compute() {
-            if (!this._hasGlobalEventListeners && this.state.displayed) {
+            if (!this._hasGlobalEventListeners && this.displayed) {
                 this._addGlobalEventListeners();
             }
-            if (this._hasGlobalEventListeners && !this.state.displayed) {
+            if (this._hasGlobalEventListeners && !this.displayed) {
                 this._removeGlobalEventListeners();
             }
-            if (!this.state.displayed) {
+            if (!this.displayed) {
                 return;
             }
 
@@ -107,7 +120,7 @@ odoo.define('web.Popover', function () {
 
             const positioningData = this.constructor.computePositioningData(
                 this.popoverRef.el,
-                this.el
+                this.target
             );
 
             // check if the requested position fits the viewport; if not,
@@ -160,13 +173,38 @@ odoo.define('web.Popover', function () {
         //----------------------------------------------------------------------
 
         /**
-         * Toggles the popover depending on its current state.
+         * Toggles the popover depending on its current state
+         * and the trigger type.
          *
          * @private
          * @param {MouseEvent} ev
          */
         _onClick(ev) {
-            this.state.displayed = !this.state.displayed;
+            if (this.props.trigger === 'click') {
+                this.state.displayed = !this.state.displayed;
+            }
+        }
+        /**
+         * Displays the popover if trigger type is hover.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onMouseEnter(ev) {
+            if (this.props.trigger === 'hover') {
+                this.state.displayed = true;
+            }
+        }
+        /**
+         * Hides the popover if trigger type is hover.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onMouseLeave(ev) {
+            if (this.props.trigger === 'hover') {
+                this.state.displayed = false;
+            }
         }
 
         /**
@@ -177,7 +215,7 @@ odoo.define('web.Popover', function () {
          */
         _onClickDocument(ev) {
             // Handled by `_onClick`.
-            if (this.el.contains(ev.target)) {
+            if (this.target.contains(ev.target)) {
                 return;
             }
             // Ignore click inside the popover.
@@ -185,6 +223,7 @@ odoo.define('web.Popover', function () {
                 return;
             }
             this.state.displayed = false;
+            this.trigger('o-popover-close');
         }
 
         /**
@@ -301,13 +340,21 @@ odoo.define('web.Popover', function () {
     Popover.template = 'Popover';
     Popover.defaultProps = {
         position: 'bottom',
+        trigger: 'click',
     };
     Popover.props = {
+        popoverClass: { type: String, optional: true },
+        target: { type: String, optional: true },
         position: {
             type: String,
             validate: (p) => ['top', 'bottom', 'left', 'right'].includes(p),
         },
         title: { type: String, optional: true },
+        trigger: {
+            type: String,
+            optional: true,
+            validate: (v) => ['click', 'hover'].includes(v),
+        },
     };
 
     QWeb.registerComponent('Popover', Popover);

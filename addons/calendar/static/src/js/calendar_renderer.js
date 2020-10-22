@@ -1,108 +1,131 @@
 odoo.define('calendar.CalendarRenderer', function (require) {
-"use strict";
+    "use strict";
 
-const CalendarRenderer = require('web.CalendarRenderer');
-const CalendarPopover = require('web.CalendarPopover');
-const session = require('web.session');
+    const { CalendarPopover } = require('web.CalendarPopover');
+    const CalendarRenderer = require('web.CalendarRenderer');
 
+    const STATUS_COLOR = {
+        accepted: 'text-success',
+        declined: 'text-danger',
+        tentative: 'text-muted',
+        needsAction: 'text-dark',
+    };
 
-const AttendeeCalendarPopover = CalendarPopover.extend({
-    template: 'Calendar.attendee.status.popover',
-    events: _.extend({}, CalendarPopover.prototype.events, {
-        'click .o-calendar-attendee-status .dropdown-item': '_onClickAttendeeStatus'
-    }),
-    /**
-     * @constructor
-     */
-    init: function () {
-        var self = this;
-        this._super.apply(this, arguments);
-        // Show status dropdown if user is in attendees list
-        if (this.isCurrentPartnerAttendee()) {
-            this.statusColors = {accepted: 'text-success', declined: 'text-danger', tentative: 'text-muted', needsAction: 'text-dark'};
-            this.statusInfo = {};
-            _.each(this.fields.attendee_status.selection, function (selection) {
-                self.statusInfo[selection[0]] = {text: selection[1], color: self.statusColors[selection[0]]};
-            });
-            this.selectedStatusInfo = this.statusInfo[this.event.extendedProps.record.attendee_status];
+    class AttendeeCalendarPopover extends CalendarPopover {
+        /**
+         * @constructor
+         */
+        constructor() {
+            super(...arguments);
+            this.status = this.props.record.attendee_status;
         }
-    },
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        // Getters
+        //----------------------------------------------------------------------
 
-    /**
-     * @return {boolean}
-     */
-    isCurrentPartnerAttendee() {
-        return this.event.extendedProps.record.partner_ids.includes(session.partner_id);
-    },
-    /**
-     * @override
-     * @return {boolean}
-     */
-    isEventDeletable() {
-        return this._super() && (this._isEventPrivate() ? this.isCurrentPartnerAttendee() : true);
-    },
-    /**
-     * @override
-     * @return {boolean}
-     */
-    isEventDetailsVisible() {
-        return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
-    },
-    /**
-     * @override
-     * @return {boolean}
-     */
-    isEventEditable() {
-        return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
-    },
+        /**
+         * @returns {Object}
+         */
+        get allStatus() {
+            return this.props.fields.attendee_status.selection
+                .filter(s => s[0] !== 'needsAction');
+        }
+        /**
+         * @returns {boolean}
+         */
+        get displayEventDetails() {
+            return this._isEventPrivate ?
+                this.isCurrentPartnerAttendee :
+                super.displayEventDetails;
+        }
+        /**
+         * @return {boolean}
+         */
+        get isCurrentPartnerAttendee() {
+            return this.props.record.partner_ids.includes(this.env.session.partner_id);
+        }
+        /**
+         * @returns {boolean}
+         */
+        get isEventDeletable() {
+            return super.isEventDeletable && (
+                this._isEventPrivate ? this.isCurrentPartnerAttendee : true 
+            );
+        }
+        /**
+         * @returns {boolean}
+         */
+        get isEventEditable() {
+            return this._isEventPrivate ?
+                this.isCurrentPartnerAttendee :
+                super.isEventEditable;
+        }
+        /**
+         * @returns {Object}
+         */
+        get statusInfo() {
+            return this.getStatusInfo(this.status);
+        }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
 
-    /**
-     * @private
-     * @return {boolean}
-     */
-    _isEventPrivate() {
-        return this.event.extendedProps.record.privacy === 'private';
-    },
+        /**
+         * @param {string} status
+         * @returns {Object}
+         */
+        getStatusInfo(status) {
+            return {
+                color: this.getStatusColor(status),
+                label: Object.fromEntries(this.allStatus)[status],
+            };
+        }
+        /**
+         * @param {string} status
+         * @returns {string}
+         */
+        getStatusColor(status) {
+            return STATUS_COLOR[status];
+        }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAttendeeStatus: function (ev) {
-        ev.preventDefault();
-        var self = this;
-        var selectedStatus = $(ev.currentTarget).attr('data-action');
-        this._rpc({
-            model: 'calendar.event',
-            method: 'change_attendee_status',
-            args: [parseInt(this.event.id), selectedStatus],
-        }).then(function () {
-            self.event.extendedProps.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
-            self.$('.o-calendar-attendee-status-text').text(self.statusInfo[selectedStatus].text);
-            self.$('.o-calendar-attendee-status-icon').removeClass(_.values(self.statusColors).join(' ')).addClass(self.statusInfo[selectedStatus].color);
-        });
-    },
-});
+        /**
+         * @private
+         * @return {boolean}
+         */
+        get _isEventPrivate() {
+            return this.props.record.privacy === 'private';
+        }
 
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
 
-const AttendeeCalendarRenderer = CalendarRenderer.extend({
-	config: _.extend({}, CalendarRenderer.prototype.config, {
-		CalendarPopover: AttendeeCalendarPopover,
-	}),
-});
+        /**
+         * @private
+         * @param {string} status
+         */
+        _onClickAttendeeStatus(status) {
+            this.status = status;
+            this.trigger('attendee-status-changed', {
+                eventId: this.props.eventId,
+                status,
+            });
+        }
+    }
+    AttendeeCalendarPopover.template = 'calendar.CalendarPopover';
 
-return AttendeeCalendarRenderer
+    class AttendeeCalendarRenderer extends CalendarRenderer {
+    }
+    AttendeeCalendarRenderer.components = {
+        ...CalendarRenderer.components,
+        CalendarPopover: AttendeeCalendarPopover,
+    };
 
+    return AttendeeCalendarRenderer;
 });

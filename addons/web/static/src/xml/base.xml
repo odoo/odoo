@@ -496,15 +496,24 @@
 </t>
 
 <t t-name="Popover" owl="1">
-    <div t-att-class="{ 'o_is_open': state.displayed }" t-on-click="_onClick" t-on-o-popover-compute="_onPopoverCompute" t-on-o-popover-close="_onPopoverClose">
-        <t t-slot="default"/>
-        <Portal t-if="state.displayed" target="'body'">
-            <div role="tooltip" class="o_popover" t-ref="popover">
-                <div class="arrow"/>
-                <h3 t-if="props.title" class="o_popover_header"><t t-esc="props.title"/></h3>
-                <div class="popover-body">
-                    <t t-slot="opened"/>
-                </div>
+    <div t-att-class="{ 'o_is_open': displayed }"
+        t-on-click="_onClick"
+        t-on-mouseenter="_onMouseEnter"
+        t-on-mouseleave="_onMouseLeave"
+        t-on-o-popover-compute="_onPopoverCompute"
+        t-on-o-popover-close="_onPopoverClose"
+    >
+        <t t-if="!props.target">
+            <t t-slot="default"/>
+        </t>
+        <Portal t-if="displayed" target="'body'">
+            <div role="tooltip" class="o_popover" t-att-class="props.popoverClass" t-ref="popover">
+                <t t-slot="popover">
+                    <h3 t-if="props.title" class="o_popover_header"><t t-esc="props.title"/></h3>
+                    <div class="popover-body">
+                        <t t-slot="opened"/>
+                    </div>
+                </t>
             </div>
         </Portal>
     </div>

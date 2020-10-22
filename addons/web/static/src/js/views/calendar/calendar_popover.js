@@ -1,207 +1,210 @@
 odoo.define('web.CalendarPopover', function (require) {
-"use strict";
+    "use strict";
 
-var fieldRegistry = require('web.field_registry');
-const fieldRegistryOwl = require('web.field_registry_owl');
-const FieldWrapper = require('web.FieldWrapper');
-var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
-var Widget = require('web.Widget');
-const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+    const fieldRegistry = require('web.field_registry');
+    const fieldRegistryOwl = require('web.field_registry_owl');
+    const FieldWrapper = require('web.FieldWrapper');
+    const StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
+    const Widget = require('web.Widget');
+    const { ComponentAdapter, WidgetAdapterMixin } = require('web.OwlCompatibility');
 
-var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMixin, {
-    template: 'CalendarView.event.popover',
-    events: {
-        'click .o_cw_popover_edit': '_onClickPopoverEdit',
-        'click .o_cw_popover_delete': '_onClickPopoverDelete',
-    },
-    /**
-     * @constructor
-     * @param {Widget} parent
-     * @param {Object} eventInfo
-     */
-    init: function (parent, eventInfo) {
-        this._super.apply(this, arguments);
-        StandaloneFieldManagerMixin.init.call(this);
-        this.hideDate = eventInfo.hideDate;
-        this.hideTime = eventInfo.hideTime;
-        this.eventTime = eventInfo.eventTime;
-        this.eventDate = eventInfo.eventDate;
-        this.displayFields = eventInfo.displayFields;
-        this.fields = eventInfo.fields;
-        this.event = eventInfo.event;
-        this.modelName = eventInfo.modelName;
-        this._canDelete = eventInfo.canDelete;
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        return Promise.all([this._super.apply(this, arguments), this._processFields()]);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        _.each(this.$fieldsList, function ($field) {
-            $field.appendTo(self.$('.o_cw_popover_fields_secondary'));
-        });
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-        WidgetAdapterMixin.destroy.call(this);
-    },
-    /**
-     * Called each time the widget is attached into the DOM.
-     */
-    on_attach_callback: function () {
-        WidgetAdapterMixin.on_attach_callback.call(this);
-    },
-    /**
-     * Called each time the widget is detached from the DOM.
-     */
-    on_detach_callback: function () {
-        WidgetAdapterMixin.on_detach_callback.call(this);
-    },
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+    const CalendarPopoverFields = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMixin, {
+        tagName: 'ul',
+        className: 'list-group list-group-flush o_cw_popover_fields_secondary',
 
-    /**
-     * @return {boolean}
-     */
-    isEventDeletable() {
-        return this._canDelete;;
-    },
-    /**
-     * @return {boolean}
-     */
-    isEventDetailsVisible() {
-        return true;
-    },
-    /**
-     * @return {boolean}
-     */
-    isEventEditable() {
-        return true;
-    },
+        /**
+         * @constructor
+         */
+        init(parent, props) {
+            this._super(...arguments);
+            StandaloneFieldManagerMixin.init.call(this);
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Returns the AbstractField specialization that should be used for the
-     * given field informations. If there is no mentioned specific widget to
-     * use, determines one according the field type.
-     *
-     * @private
-     * @param {Object} field
-     * @param {Object} attrs
-     * @returns {function|null} AbstractField specialization Class
-     */
-    _getFieldWidgetClass(field, attrs) {
-        let FieldWidget;
-        if (attrs.widget) {
-            FieldWidget = fieldRegistry.getAny(['form' + "." + attrs.widget, attrs.widget]);
-            if (!FieldWidget) {
-                console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
+            this.props = props;
+        },
+        /**
+         * @override
+         */
+        async willStart() {
+            await this._super(...arguments);
+            await this._processFields();
+        },
+        /**
+         * @override
+         */
+        start() {
+            this._super(...arguments);
+            this.render();
+        },
+        render() {
+            this.renderElement();
+            for (const $field of this.$fieldsList) {
+                $field.appendTo(this.$el);
             }
-        }
-        return FieldWidget || fieldRegistry.getAny(['form' + "." + field.type, field.type, "abstract"]);
-    },
+        },
+        async update(nextProps) {
+            this.props = nextProps;
+            await this._processFields();
+        },
+        /**
+         * @override
+         */
+        destroy() {
+            this._super(...arguments);
+            WidgetAdapterMixin.destroy.call(this);
+        },
+        /**
+         * Called each time the widget is attached into the DOM.
+         */
+        on_attach_callback() {
+            WidgetAdapterMixin.on_attach_callback.call(this);
+        },
+        /**
+         * Called each time the widget is detached from the DOM.
+         */
+        on_detach_callback() {
+            WidgetAdapterMixin.on_detach_callback.call(this);
+        },
 
-    /**
-     * Generate fields to render into popover
-     *
-     * @private
-     * @returns {Promise}
-     */
-    _processFields: function () {
-        var self = this;
-        var fieldsToGenerate = [];
-        const fieldInformation = {};
-        var fields = _.keys(this.displayFields);
-        for (var i=0; i<fields.length; i++) {
-            var fieldName = fields[i];
-            var displayFieldInfo = self.displayFields[fieldName] || {attrs: {invisible: 1}};
-            var fieldInfo = self.fields[fieldName];
-            fieldInformation[fieldName] = {
-                Widget: self._getFieldWidgetClass(fieldInfo, displayFieldInfo.attrs),
-            };
-            var field = {
-                name: fieldName,
-                string: displayFieldInfo.attrs.string || fieldInfo.string,
-                value: self.event.extendedProps.record[fieldName],
-                type: fieldInfo.type,
-            };
-            if (field.type === 'selection') {
-                field.selection = fieldInfo.selection;
-            }
-            if (field.type === 'monetary') {
-                var currencyField = field.currency_field || 'currency_id';
-                if (!fields.includes(currencyField) && _.has(self.event.record, currencyField)) {
-                    fields.push(currencyField);
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * Returns the AbstractField specialization that should be used for the
+         * given field informations. If there is no mentioned specific widget to
+         * use, determines one according the field type.
+         *
+         * @private
+         * @param {Object} field
+         * @param {Object} attrs
+         * @returns {function|null} AbstractField specialization Class
+         */
+        _getFieldWidgetClass(field, attrs) {
+            let FieldWidget;
+            if (attrs.widget) {
+                FieldWidget = fieldRegistry.getAny([
+                    'form' + '.' + attrs.widget,
+                    attrs.widget
+                ]);
+                if (!FieldWidget) {
+                    console.warn('Missing widget: ', attrs.widget, ' for field',
+                        attrs.name, 'of type', field.type);
                 }
             }
-            if (fieldInfo.relation) {
-                field.relation = fieldInfo.relation;
+            return FieldWidget || fieldRegistry.getAny([
+                'form' + '.' + field.type,
+                field.type,
+                'abstract'
+            ]);
+        },
+        /**
+         * Generate fields to render into popover
+         *
+         * @private
+         * @returns {Promise}
+         */
+        async _processFields() {
+            const fieldsToGenerate = [];
+            const fieldInformation = {};
+            const fields = Object.keys(this.props.displayFields);
+            for (const fieldName of fields) {
+                const displayFieldInfo = this.props.displayFields[fieldName] ||
+                    {attrs: {invisible: 1}};
+                const fieldInfo = this.props.fields[fieldName];
+                fieldInformation[fieldName] = {
+                    Widget: this._getFieldWidgetClass(fieldInfo, displayFieldInfo.attrs),
+                };
+                const field = {
+                    name: fieldName,
+                    string: displayFieldInfo.attrs.string || fieldInfo.string,
+                    value: this.props.record[fieldName],
+                    type: fieldInfo.type,
+                };
+                if (field.type === 'selection') {
+                    field.selection = fieldInfo.selection;
+                }
+                if (field.type === 'monetary') {
+                    let currencyField = field.currency_field || 'currency_id';
+                    if (!fields.includes(currencyField) &&
+                        _.has(this.props.record, currencyField)
+                    ) {
+                        fields.push(currencyField);
+                    }
+                }
+                if (fieldInfo.relation) {
+                    field.relation = fieldInfo.relation;
+                }
+                if (displayFieldInfo.attrs.widget) {
+                    field.widget = displayFieldInfo.attrs.widget;
+                } else if (['many2many', 'one2many'].includes(field.type)) {
+                    field.widget = 'many2many_tags';
+                }
+                if (['many2many', 'one2many'].includes(field.type)) {
+                    field.fields = [{
+                        name: 'id',
+                        type: 'integer',
+                    }, {
+                        name: 'display_name',
+                        type: 'char',
+                    }];
+                }
+                fieldsToGenerate.push(field);
             }
-            if (displayFieldInfo.attrs.widget) {
-                field.widget = displayFieldInfo.attrs.widget;
-            } else if (_.contains(['many2many', 'one2many'], field.type)) {
-                field.widget = 'many2many_tags';
-            }
-            if (_.contains(['many2many', 'one2many'], field.type)) {
-                field.fields = [{
-                    name: 'id',
-                    type: 'integer',
-                }, {
-                    name: 'display_name',
-                    type: 'char',
-                }];
-            }
-            fieldsToGenerate.push(field);
-        };
 
-        this.$fieldsList = [];
-        return this.model.makeRecord(this.modelName, fieldsToGenerate, fieldInformation).then(async function (recordID) {
-            var defs = [];
+            this.$fieldsList = [];
+            const recordId = await this.model.makeRecord(
+                this.props.modelName, fieldsToGenerate, fieldInformation);
+            const defs = [];
 
-            const recordDataPoint = self.model.localData[recordID];
-            recordDataPoint.res_id = self.event.extendedProps.record.id;
-            await self.model._fetchSpecialData(recordDataPoint);
-            var record = self.model.get(recordID);
-            _.each(fieldsToGenerate, function (field) {
-                if (field.invisible) return;
+            const recordDataPoint = Object.assign({},
+                this.model.localData[recordId],
+                {res_id: this.props.record.id},
+            );
+            await this.model._fetchSpecialData(recordDataPoint);
+            const record = this.model.get(recordId);
+
+            for (const field of fieldsToGenerate) {
+                if (field.invisible) {
+                    return;
+                }
                 let isLegacy = true;
                 let fieldWidget;
                 let FieldClass = fieldRegistryOwl.getAny([field.widget, field.type]);
+
+                const options = Object.assign({}, this.props.displayFields[field.name]);
+                options.attrs = Object.assign({}, options.attrs, {
+                    modifiers: typeof options.attrs.modifiers === 'string' ?
+                        JSON.parse(options.attrs.modifiers) :
+                        options.attrs.modifiers || {},
+                    // Remove proxy because "one2many"s write on it
+                    options: Object.assign({}, options.attrs.options),
+                });
+
                 if (FieldClass) {
                     isLegacy = false;
                     fieldWidget = new FieldWrapper(this, FieldClass, {
                         fieldName: field.name,
                         record,
-                        options: self.displayFields[field.name],
+                        options,
                     });
                 } else {
                     FieldClass = fieldRegistry.getAny([field.widget, field.type]);
-                    fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
+                    fieldWidget = new FieldClass(this, field.name, record, options);
                 }
-                if (fieldWidget.attrs && !_.isObject(fieldWidget.attrs.modifiers)) {
-                    fieldWidget.attrs.modifiers = fieldWidget.attrs.modifiers ? JSON.parse(fieldWidget.attrs.modifiers) : {};
-                }
-                self._registerWidget(recordID, field.name, fieldWidget);
+                this._registerWidget(recordId, field.name, fieldWidget);
 
-                var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
-                var $fieldLabel = $('<strong>', {class: 'mr-2', text: _.str.sprintf('%s : ', field.string)});
+                const $field = $('<li>', {
+                    class: 'list-group-item flex-shrink-0 d-flex flex-wrap'
+                });
+                const $fieldLabel = $('<strong>', {
+                    class: 'mr-2',
+                    text: `${field.string} : `,
+                });
                 $fieldLabel.appendTo($field);
-                var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
+                const $fieldContainer = $('<div>', {
+                    class: 'flex-grow-1'
+                });
                 $fieldContainer.appendTo($field);
 
                 let def;
@@ -210,39 +213,122 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 } else {
                     def = fieldWidget.mount($fieldContainer[0]);
                 }
-                defs.push(def.then(function () {
-                    self.$fieldsList.push($field);
+                defs.push(def.then(() => {
+                    this.$fieldsList.push($field);
                 }));
-            });
-            return Promise.all(defs);
-        });
-    },
+            }
+            await Promise.all(defs);
+        },
+    });
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    class CalendarPopoverFieldsAdapter extends ComponentAdapter {
+        constructor(_, props) {
+            props.Component = CalendarPopoverFields;
+            super(...arguments);
+        }
+        get widgetArgs() {
+            return [this.props];
+        }
+        renderWidget() {
+            this.widget.render();
+        }
+        async updateWidget(nextProps) {
+            await this.widget.update(nextProps);
+        }
+    }
 
-    /**
-     * @private
-     * @param {jQueryEvent} ev
-     */
-    _onClickPopoverEdit: function (ev) {
-        ev.preventDefault();
-        this.trigger_up('edit_event', {
-            id: this.event.id,
-            title: this.event.extendedProps.record.display_name,
-        });
-    },
-    /**
-     * @private
-     * @param {jQueryEvent} ev
-     */
-    _onClickPopoverDelete: function (ev) {
-        ev.preventDefault();
-        this.trigger_up('delete_event', {id: this.event.id});
-    },
-});
+    class CalendarPopover extends owl.Component {
+        /**
+         * @returns {boolean}
+         */
+        get displayControls() {
+            return true;
+        }
+        /**
+         * @returns {boolean}
+         */
+        get displayEventDetails() {
+            return true;
+        }
+        /**
+         * @returns {Object}
+         */
+        get displayedFields() {
+            return this.props.displayFields;
+        }
+        /**
+         * @returns {boolean}
+         */
+        get isEventDeletable() {
+            return this.props.deletable;
+        }
+        /**
+         * @returns {boolean}
+         */
+        get isEventEditable() {
+            return true;
+        }
+    }
+    CalendarPopover.components = {
+        CalendarPopoverFieldsAdapter,
+    };
+    /*
+    CalendarPopover.props = {
+        date: {
+            type: [Object,Proxy],
+            shape: {
+                duration: { type: String, optional: true, },
+                hide: Boolean,
+                value: { type: String, optional: true, },
+            },
+        },
+        deletable: Boolean,
+        eventId: [String, Number],
+        headerColorClass: String,
+        target: String,
+        time: {
+            type: [Object,Proxy],
+            shape: {
+                duration: { type: String, optional: true, },
+                hide: Boolean,
+                value: { type: String, optional: true, },
+            },
+        },
+        title: String,
 
-return CalendarPopover;
+        modelName: String,
+        displayFields: [Object, Proxy],
+        fields: [Object, Proxy],
+        record: [Object, Proxy],
+    };
+    */
+    CalendarPopover.template = 'web.CalendarPopover';
+
+    class CalendarYearPopover extends owl.Component {
+        /**
+         * @returns {Boolean}
+         */
+        get isEventCreateable() {
+            return this.props.createable;
+        }
+    }
+    /*
+    CalendarYearPopover.props = {
+        createable: Boolean,
+        date: Date,
+        groupedEvents: Object,
+        groupKeys: {
+            type: Array,
+            element: String,
+        },
+        target: String,
+    };
+    */
+    CalendarYearPopover.template = 'web.CalendarYearPopover';
+
+    return {
+        CalendarPopover,
+        CalendarYearPopover,
+    };
 
 });

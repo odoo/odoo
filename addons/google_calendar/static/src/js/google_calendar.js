@@ -4,13 +4,18 @@ odoo.define('google_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-const CalendarView = require('calendar.CalendarView');
 const CalendarRenderer = require('calendar.CalendarRenderer');
 const CalendarController = require('calendar.CalendarController');
 const CalendarModel = require('calendar.CalendarModel');
-const viewRegistry = require('web.view_registry');
 
 var _t = core._t;
+
+const {
+    Component,
+    hooks: {
+        useState,
+    },
+} = owl;
 
 const GoogleCalendarModel = CalendarModel.include({
 
@@ -122,68 +127,36 @@ const GoogleCalendarController = CalendarController.include({
     }
 });
 
-const GoogleCalendarRenderer = CalendarRenderer.include({
-    events: _.extend({}, CalendarRenderer.prototype.events, {
-        'click .o_google_sync_button': '_onGoogleSyncCalendar',
-    }),
+class GoogleCalendarButton extends Component {
+    constructor() {
+        super(...arguments);
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Adds the Sync with Google button in the sidebar
-     *
-     * @private
-     */
-    _initSidebar: function () {
-        var self = this;
-        this._super.apply(this, arguments);
-        this.$googleButton = $();
-        if (this.model === "calendar.event") {
-            if (this.state.google_is_sync) {
-                this.$googleButton = $('<span/>', {
-                                    html: _t("Synched with Google"),
-                                    class: 'w-100 badge badge-pill badge-success border-0'
-                                })
-                                .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
-                                .appendTo(self.$sidebar);
-            } else {
-                this.$googleButton = $('<button/>', {
-                                    type: 'button',
-                                    html: _t("Sync with <b>Google</b>"),
-                                    class: 'o_google_sync_button w-100 m-auto btn btn-secondary'
-                                })
-                                .appendTo(self.$sidebar);
-            }
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
+        this.state = useState({
+            disabled: false,
+        });
+    }
     /**
      * Requests to sync the calendar with Google Calendar
      *
      * @private
      */
-    _onGoogleSyncCalendar: function () {
-        var self = this;
-        var context = this.getSession().user_context;
-        this.$googleButton.prop('disabled', true);
-        this.trigger_up('syncGoogleCalendar', {
-            on_always: function () {
-                self.$googleButton.prop('disabled', false);
+    _onGoogleSyncCalendar() {
+        this.state.disabled = true;
+        this.trigger('syncGoogleCalendar', {
+            on_always: () => {
+                this.state.disabled = false;
             },
         });
-    },
-});
+    }
+}
+GoogleCalendarButton.template = 'google_calendar.CalendarButton';
+
+CalendarRenderer.components.GoogleCalendarButton = GoogleCalendarButton;
 
 return {
     GoogleCalendarController,
     GoogleCalendarModel,
-    GoogleCalendarRenderer,
+    GoogleCalendarRenderer: CalendarRenderer,
 };
 
 });

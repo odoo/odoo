@@ -1,98 +1,121 @@
 odoo.define('web.CalendarRenderer', function (require) {
 "use strict";
 
-var AbstractRenderer = require('web.AbstractRenderer');
-var CalendarPopover = require('web.CalendarPopover');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var field_utils = require('web.field_utils');
-var FieldManagerMixin = require('web.FieldManagerMixin');
-var relational_fields = require('web.relational_fields');
-var session = require('web.session');
-var Widget = require('web.Widget');
+const AbstractRenderer = require('web.AbstractRendererOwl');
+const { CalendarPopover, CalendarYearPopover } = require('web.CalendarPopover');
+const Dialog = require('web.Dialog');
+const FieldManagerMixin = require('web.FieldManagerMixin');
 const { createYearCalendarView } = require('/web/static/src/js/libs/fullcalendar.js');
+const { adaptFullCalendarEvent, FullCalendarAdapter } = require('web.FullCalendarAdapter');
+const { ComponentAdapter } = require('web.OwlCompatibility');
+const patchMixin = require('web.patchMixin');
+const { FieldMany2One } = require('web.relational_fields');
+const session = require('web.session');
+const { generateID } = require('web.utils');
+const Widget = require('web.Widget');
 
-var _t = core._t;
-var qweb = core.qweb;
+const {
+    Component,
+    hooks: {
+        useRef,
+        useState,
+    },
+} = owl;
 
-var SidebarFilterM2O = relational_fields.FieldMany2One.extend({
-    _getSearchBlacklist: function () {
-        return this._super.apply(this, arguments).concat(this.filter_ids || []);
+/**
+ * Checks if two dates are the same date.
+ * We consider day+0 and day+1 at midnight to be the same days
+ *
+ * @param {Date} a
+ * @param {Date} b
+ */
+function isSameDayEvent(a, b) {
+    // Detect if the event occurs in just one day
+    // note: add & remove 1 min to avoid issues with 00:00
+    return moment(a).add(1, 'minute')
+        .isSame(moment(b).subtract(1, 'minute'), 'day');
+}
+
+const FilterSelectorM2O = FieldMany2One.extend({
+    init(parent, write_field, state, options) {
+        this._super(...arguments);
+        this.filter_ids = options.filter_ids;
+    },
+    _getSearchBlacklist() {
+        return this._super(...arguments).concat(this.filter_ids || []);
     },
 });
 
-var SidebarFilter = Widget.extend(FieldManagerMixin, {
-    template: 'CalendarView.sidebar.filter',
+const FilterSelector = Widget.extend(FieldManagerMixin, {
     custom_events: _.extend({}, FieldManagerMixin.custom_events, {
         field_changed: '_onFieldChanged',
     }),
     /**
      * @constructor
-     * @param {Widget} parent
-     * @param {Object} options
-     * @param {string} options.fieldName
-     * @param {Object[]} options.filters A filter is an object with the
-     *   following keys: id, value, label, active, avatar_model, color,
-     *   can_be_removed
-     * @param {Object} [options.favorite] this is an object with the following
-     *   keys: fieldName, model, fieldModel
      */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
+    init(parent, env, props) {
+        this._super(...arguments);
         FieldManagerMixin.init.call(this);
-
-        this.title = options.title;
-        this.fields = options.fields;
-        this.fieldName = options.fieldName;
-        this.write_model = options.write_model;
-        this.write_field = options.write_field;
-        this.avatar_field = options.avatar_field;
-        this.avatar_model = options.avatar_model;
-        this.filters = options.filters;
-        this.label = options.label;
-        this.getColor = options.getColor;
+        this.env = env;
+        this.props = props;
+        this.field = null;
     },
     /**
      * @override
      */
-    willStart: function () {
-        var self = this;
-        var defs = [this._super.apply(this, arguments)];
-
-        if (this.write_model || this.write_field) {
-            var def = this.model.makeRecord(this.write_model, [{
-                name: this.write_field,
-                relation: this.fields[this.fieldName].relation,
-                type: 'many2one',
-            }]).then(function (recordID) {
-                self.many2one = new SidebarFilterM2O(self,
-                    self.write_field,
-                    self.model.get(recordID),
-                    {
-                        mode: 'edit',
-                        attrs: {
-                            string: _t(self.fields[self.fieldName].string),
-                            placeholder: "+ " + _.str.sprintf(_t("Add %s"), self.title),
-                            can_create: false
-                        },
-                    });
-            });
-            defs.push(def);
-        }
-        return Promise.all(defs);
-
+    async willStart() {
+        await this._super(...arguments);
+        await this._updateField();
     },
     /**
      * @override
      */
-    start: function () {
-        this._super();
-        if (this.many2one) {
-            this.many2one.appendTo(this.$el);
-            this.many2one.filter_ids = _.without(_.pluck(this.filters, 'value'), 'all');
+    async start() {
+        this._super(...arguments);
+        await this.field.appendTo(this.el);
+    },
+    async update(nextProps) {
+        this.props = nextProps;
+        await this._updateField();
+        await this.field.appendTo(this.el);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.field.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    async _updateField() {
+        if (this.field) {
+            this.field.destroy();
+            this.field = null;
         }
-        this.$el.on('click', '.o_remove', this._onFilterRemove.bind(this));
-        this.$el.on('click', '.o_calendar_filter_items input', this._onFilterActive.bind(this));
+        const recordId = await this.model.makeRecord(this.props.write_model, [{
+            name: this.props.write_field,
+            relation: this.props.fields[this.props.fieldName].relation,
+            type: 'many2one',
+        }]);
+        this.field = new FilterSelectorM2O(this,
+            this.props.write_field,
+            this.model.get(recordId),
+            {
+                mode: 'edit',
+                attrs: {
+                    string: this.env._t(this.props.fields[this.props.fieldName].string),
+                    placeholder: `+ ${this.env._t('Add')} ${this.props.title}`,
+                    can_create: false,
+                },
+                filter_ids: this.props.filters
+                    .map(x => x.value)
+                    .filter(x => x !== 'all'),
+            }
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -101,431 +124,232 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
 
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onFieldChanged: function (event) {
-        var self = this;
-        event.stopPropagation();
-        var createValues = {'user_id': session.uid};
-        var value = event.data.changes[this.write_field].id;
-        createValues[this.write_field] = value;
-        this._rpc({
-                model: this.write_model,
-                method: 'create',
-                args: [createValues],
-            })
-            .then(function () {
-                self.trigger_up('changeFilter', {
-                    'fieldName': self.fieldName,
-                    'value': value,
-                    'active': true,
-                });
-            });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} e
-     */
-    _onFilterActive: function (e) {
-        var $input = $(e.currentTarget);
-        this.trigger_up('changeFilter', {
-            'fieldName': this.fieldName,
-            'value': $input.closest('.o_calendar_filter_item').data('value'),
-            'active': $input.prop('checked'),
+    async _onFieldChanged(ev) {
+        ev.stopPropagation();
+        const value = ev.data.changes[this.props.write_field].id;
+        const createValues = {
+            user_id: session.uid,
+            [this.props.write_field]: value,
+        };
+        await this._rpc({
+            model: this.props.write_model,
+            method: 'create',
+            args: [createValues],
         });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} e
-     */
-    _onFilterRemove: function (e) {
-        var self = this;
-        var $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
-        Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
-            confirm_callback: function () {
-                self._rpc({
-                        model: self.write_model,
-                        method: 'unlink',
-                        args: [[$filter.data('id')]],
-                    })
-                    .then(function () {
-                        self.trigger_up('changeFilter', {
-                            'fieldName': self.fieldName,
-                            'id': $filter.data('id'),
-                            'active': false,
-                            'value': $filter.data('value'),
-                        });
-                    });
-            },
+        this.trigger_up('changeFilter', {
+            'fieldName': this.props.fieldName,
+            'value': value,
+            'active': true,
         });
     },
 });
 
-return AbstractRenderer.extend({
-    template: "CalendarView",
-    config: {
-        CalendarPopover: CalendarPopover,
-    },
-    custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
-        edit_event: '_onEditEvent',
-        delete_event: '_onDeleteEvent',
-    }),
+class FilterSelectorAdapter extends ComponentAdapter {
+    constructor(parent, props) {
+        props.Component = FilterSelector;
+        super(...arguments);
+    }
+    get widgetArgs() {
+        return [this.env, this.props];
+    }
+    async updateWidget(nextProps) {
+        await this.widget.update(nextProps);
+    }
+    renderWidget() {
+    }
+}
 
-    /**
-     * @constructor
-     * @param {Widget} parent
-     * @param {Object} state
-     * @param {Object} params
-     */
-    init: function (parent, state, params) {
-        this._super.apply(this, arguments);
-        this.displayFields = params.displayFields;
-        this.model = params.model;
-        this.filters = [];
-        this.color_map = {};
-        this.hideDate = params.hideDate;
-        this.hideTime = params.hideTime;
-        this.canDelete = params.canDelete;
-        this.canCreate = params.canCreate;
-        this.scalesInfo = params.scalesInfo;
-        this._isInDOM = false;
-    },
-    /**
-     * @override
-     * @returns {Promise}
-     */
-    start: function () {
-        this._initSidebar();
-        this._initCalendar();
-        return this._super();
-    },
-    /**
-     * @override
-     */
-    on_attach_callback: function () {
-        this._super(...arguments);
-        this._isInDOM = true;
-        // BUG Test ????
-        // this.$el.height($(window).height() - this.$el.offset().top);
-        this.calendar.render();
-        this._renderCalendar();
-        window.addEventListener('click', this._onWindowClick.bind(this));
-    },
-    /**
-     * Called when the field is detached from the DOM.
-     */
-    on_detach_callback: function () {
-        this._super(...arguments);
-        this._isInDOM = false;
-        window.removeEventListener('click', this._onWindowClick);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (this.calendar) {
-            this.calendar.destroy();
-        }
-        if (this.$small_calendar) {
-            this.$small_calendar.datepicker('destroy');
-            $('#ui-datepicker-div:empty').remove();
-        }
-        this._super.apply(this, arguments);
-    },
+class FilterSection extends Component {
+    constructor() {
+        super(...arguments);
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Note: this is not dead code, it is called by the calendar-box template
-     *
-     * @param {any} record
-     * @param {any} fieldName
-     * @param {any} imageField
-     * @returns {string[]}
-     */
-    getAvatars: function (record, fieldName, imageField) {
-        var field = this.state.fields[fieldName];
-
-        if (!record[fieldName]) {
-            return [];
-        }
-        if (field.type === 'one2many' || field.type === 'many2many') {
-            return _.map(record[fieldName], function (id) {
-                return '<img src="/web/image/'+field.relation+'/'+id+'/'+imageField+'" />';
-            });
-        } else if (field.type === 'many2one') {
-            return ['<img src="/web/image/'+field.relation+'/'+record[fieldName][0]+'/'+imageField+'" />'];
-        } else {
-            var value = this._format(record, fieldName);
-            var color = this.getColor(value);
-            if (isNaN(color)) {
-                return ['<span class="o_avatar_square" style="background-color:'+color+';"/>'];
-            }
-            else {
-                return ['<span class="o_avatar_square o_calendar_color_'+color+'"/>'];
-            }
-        }
-    },
-    /**
-     * Note: this is not dead code, it is called by two template
-     *
-     * @param {any} key
-     * @returns {integer}
-     */
-    getColor: function (key) {
-        if (!key) {
-            return;
-        }
-        if (this.color_map[key]) {
-            return this.color_map[key];
-        }
-        // check if the key is a css color
-        if (typeof key === 'string' && key.match(/^((#[A-F0-9]{3})|(#[A-F0-9]{6})|((hsl|rgb)a?\(\s*(?:(\s*\d{1,3}%?\s*),?){3}(\s*,[0-9.]{1,4})?\))|)$/i)) {
-            return this.color_map[key] = key;
-        }
-        if (typeof key === 'number' && !(key in this.color_map)) {
-            return this.color_map[key] = key;
-        }
-        var index = (((_.keys(this.color_map).length + 1) * 5) % 24) + 1;
-        this.color_map[key] = index;
-        return index;
-    },
-    /**
-     * @override
-     */
-    getLocalState: function () {
-        var fcScroller = this.calendarElement.querySelector('.fc-scroller');
-        return {
-            scrollPosition: fcScroller.scrollTop,
-        };
-    },
-    /**
-     * @override
-     */
-    setLocalState: function (localState) {
-        if (localState.scrollPosition) {
-            var fcScroller = this.calendarElement.querySelector('.fc-scroller');
-            fcScroller.scrollTop = localState.scrollPosition;
-        }
-    },
+        this.state = useState({
+            isOpened: true,
+        });
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    get _nextIdForLabel() {
+        return `o_calendar_filter_item_${generateID()}`;
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
-     * Convert the new format of Event from FullCalendar V4 to a Event FullCalendar V3
-     * @param fc4Event
-     * @return {Object} FullCalendar V3 Object Event
      * @private
      */
-    _convertEventToFC3Event: function (fc4Event) {
-        var event = fc4Event;
-        if (!moment.isMoment(fc4Event.start)) {
-            event = {
-                id: fc4Event.id,
-                title: fc4Event.title,
-                start: moment(fc4Event.start).utcOffset(0, true),
-                end: fc4Event.end && moment(fc4Event.end).utcOffset(0, true),
-                allDay: fc4Event.allDay,
-                color: fc4Event.color,
-            };
-            if (fc4Event.extendedProps) {
-                event = Object.assign({}, event, {
-                    r_start: fc4Event.extendedProps.r_start && moment(fc4Event.extendedProps.r_start).utcOffset(0, true),
-                    r_end: fc4Event.extendedProps.r_end && moment(fc4Event.extendedProps.r_end).utcOffset(0, true),
-                    record: fc4Event.extendedProps.record,
-                    attendees: fc4Event.extendedProps.attendees,
+    _onToggle() {
+        this.state.isOpened = !this.state.isOpened;
+    }
+    /**
+     * @private
+     * @param {number|string} value
+     * @param {MouseEvent} ev
+     */
+    _onFilterToggle(value, ev) {
+        this.trigger('changeFilter', {
+            'fieldName': this.props.fieldName,
+            'value': value,
+            'active': ev.currentTarget.checked,
+        });
+    }
+    /**
+     * @private
+     * @param {number|string} value
+     * @param {number} [id]
+     */
+    _onFilterRemove(value, id) {
+        const dialogTitle = this.env.
+            _t('Do you really want to delete this filter from favorites ?');
+        Dialog.confirm(this, dialogTitle, {
+            confirm_callback: async () => {
+                await this.env.services.rpc({
+                    model: this.props.write_model,
+                    method: 'unlink',
+                    args: [[id]],
                 });
+                this.trigger('changeFilter', {
+                    fieldName: this.props.fieldName,
+                    id,
+                    active: false,
+                    value,
+                });
+            },
+        });
+    }
+}
+FilterSection.components = {
+    FilterSelectorAdapter,
+};
+FilterSection.template = 'web.CalendarFilterSection';
+
+class CalendarRenderer extends AbstractRenderer {
+    constructor() {
+        super(...arguments);
+
+        this.calendarMiniRef = useRef('calendarMini');
+        this.colorMap = {};
+        this.scrollPosition = null;
+        this.shouldUpdateCalendarMini = false;
+        this.state = useState({
+            displayPopover: false,
+            popoverTarget: null,
+            popoverProps: {
+            },
+        });
+    }
+
+    /**
+     * @override
+     */
+    mounted() {
+        super.mounted();
+
+        if (this._displayCalendarMini) {
+            $(this.calendarMiniRef.el).datepicker({
+                'onSelect': this._onCalendarMiniSelect.bind(this),
+                'showOtherMonths': true,
+                'dayNamesMin' : this.props.fc_options.dayNamesShort.map(x => x[0]),
+                'monthNames': this.props.fc_options.monthNamesShort,
+                'firstDay': this.props.fc_options.firstDay,
+            });
+            this._updateCalendarMini();
+        }
+
+        const scrollerEl = this.el.querySelector('.o_calendar_widget .fc-scroller');
+        if (this.scrollPosition && scrollerEl) {
+            scrollerEl.scrollTop = this.scrollPosition;
+        }
+    }
+    /**
+     * @override
+     */
+    patched() {
+        super.patched();
+
+        if (this.shouldUpdateCalendarMini) {
+            this._updateCalendarMini();
+        }
+
+        if (this.state.displayPopover && this.props.scale !== 'year') {
+            for (const el of this._findEventElementsById(this.state.popoverProps.eventId)) {
+                el.classList.add('o_cw_custom_highlight');
             }
         }
-        return event;
-    },
+    }
     /**
-     * @param {any} event
-     * @returns {string} the html for the rendered event
+     * @override
      */
-    _eventRender: function (event) {
-        var qweb_context = {
-            event: event,
-            record: event.extendedProps.record,
-            color: this.getColor(event.extendedProps.color_index),
-            showTime: !self.hideTime && event.extendedProps.showTime,
-        };
-        this.qweb_context = qweb_context;
-        if (_.isEmpty(qweb_context.record)) {
-            return '';
-        } else {
-            return qweb.render("calendar-box", qweb_context);
+    willUnmount() {
+        super.willUnmount();
+
+        const scrollerEl = this.el.querySelector('.o_calendar_widget .fc-scroller');
+        if (scrollerEl) {
+            this.scrollPosition = scrollerEl.scrollTop;
         }
-    },
-    /**
-     * @private
-     * @param {any} record
-     * @param {any} fieldName
-     * @returns {string}
-     */
-    _format: function (record, fieldName) {
-        var field = this.state.fields[fieldName];
-        if (field.type === "one2many" || field.type === "many2many") {
-            return field_utils.format[field.type]({data: record[fieldName]}, field);
-        } else {
-            return field_utils.format[field.type](record[fieldName], field, {forceString: true});
+
+        $(this.calendarMiniRef.el).datepicker('destroy');
+        $('#ui-datepicker-div:empty').remove();
+    }
+    async willUpdateProps(nextProps) {
+        await super.willUpdateProps(...arguments);
+
+        const dateOrViewChanged =
+            !this.props.target_date.isSame(nextProps.target_date, 'day') ||
+            this.props.scalesInfo[this.props.scale] !== nextProps.scalesInfo[nextProps.scale];
+        this.shouldUpdateCalendarMini = this._displayCalendarMini && dateOrViewChanged;
+
+        if (dateOrViewChanged) {
+            this._unselectEvent();
         }
-    },
+    }
+
+    //--------------------------------------------------------------------------
+    // Getters
+    //--------------------------------------------------------------------------
+
     /**
-     * Return the Object options for FullCalendar
+     * Returns the time format from database parameters (only hours and minutes).
+     * FIXME: this looks like a weak heuristic...
      *
      * @private
-     * @param {Object} fcOptions
+     * @returns {string}
+     */
+    get _dbTimeFormat() {
+        return this.env._t.database.parameters.time_format
+            .search('%H') !== -1 ? 'HH:mm' : 'hh:mm a';
+    }
+    get _displayCalendarMini() {
+        return true;
+    }
+    /**
+     * Returns the props/options for FullCalendar
+     *
+     * @private
      * @return {Object}
      */
-    _getFullCalendarOptions: function (fcOptions) {
-        var self = this;
-        const options = Object.assign({}, this.state.fc_options, {
+    get _fullCalendarProps() {
+        const options = Object.assign({}, this.props.fc_options, {
+            events: (_, onSuccess) => {
+                onSuccess(this.props.data);
+            },
+            dir: this.env._t.database.parameters.direction,
+            height: 'parent',
+            locale: moment.locale(),
             plugins: [
                 'moment',
                 'interaction',
                 'dayGrid',
                 'timeGrid'
             ],
-            eventDrop: function (eventDropInfo) {
-                var event = self._convertEventToFC3Event(eventDropInfo.event);
-                self.trigger_up('dropRecord', event);
-            },
-            eventResize: function (eventResizeInfo) {
-                self._unselectEvent();
-                var event = self._convertEventToFC3Event(eventResizeInfo.event);
-                self.trigger_up('updateRecord', event);
-            },
-            eventClick: function (eventClickInfo) {
-                eventClickInfo.jsEvent.preventDefault();
-                eventClickInfo.jsEvent.stopPropagation();
-                var eventData = eventClickInfo.event;
-                self._unselectEvent();
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
-                self._renderEventPopover(eventData, $(eventClickInfo.el));
-            },
-            yearDateClick: function (info) {
-                self._unselectEvent();
-                info.view.unselect();
-                if (!info.events.length) {
-                    if (info.selectable) {
-                        const data = {
-                            start: info.date,
-                            allDay: true,
-                        };
-                        if (self.state.context.default_name) {
-                            data.title = self.state.context.default_name;
-                        }
-                        self.trigger_up('openCreate', self._convertEventToFC3Event(data));
-                    }
-                } else {
-                    self._renderYearEventPopover(info.date, info.events, $(info.dayEl));
-                }
-            },
-            select: function (selectionInfo) {
-                // Clicking on the view, dispose any visible popover. Otherwise create a new event.
-                if (self.$('.o_cw_popover').length) {
-                    self._unselectEvent();
-                }
-                var data = {start: selectionInfo.start, end: selectionInfo.end, allDay: selectionInfo.allDay};
-                if (self.state.context.default_name) {
-                    data.title = self.state.context.default_name;
-                }
-                self.trigger_up('openCreate', self._convertEventToFC3Event(data));
-                if (self.state.scale === 'year') {
-                    self.calendar.view.unselect();
-                } else {
-                    self.calendar.unselect();
-                }
-            },
-            eventRender: function (info) {
-                var event = info.event;
-                var element = $(info.el);
-                var view = info.view;
-                element.attr('data-event-id', event.id);
-                if (view.type === 'dayGridYear') {
-                    const color = this.getColor(event.extendedProps.color_index);
-                    if (typeof color === 'string') {
-                        element.css({
-                            backgroundColor: color,
-                        });
-                    } else if (typeof color === 'number') {
-                        element.addClass(`o_calendar_color_${color}`);
-                    } else {
-                        element.addClass('o_calendar_color_1');
-                    }
-                } else {
-                var $render = $(self._eventRender(event));
-                element.find('.fc-content').html($render.html());
-                element.addClass($render.attr('class'));
-
-                // Add background if doesn't exist
-                if (!element.find('.fc-bg').length) {
-                    element.find('.fc-content').after($('<div/>', {class: 'fc-bg'}));
-                }
-
-                if (view.type === 'dayGridMonth' && event.extendedProps.record) {
-                    var start = event.extendedProps.r_start || event.start;
-                    var end = event.extendedProps.r_end || event.end;
-                    // Detect if the event occurs in just one day
-                    // note: add & remove 1 min to avoid issues with 00:00
-                    var isSameDayEvent = moment(start).clone().add(1, 'minute').isSame(moment(end).clone().subtract(1, 'minute'), 'day');
-                    if (!event.extendedProps.record.allday && isSameDayEvent) {
-                        // For month view: do not show background for non allday, single day events
-                        element.addClass('o_cw_nobg');
-                        if (event.extendedProps.showTime && !self.hideTime) {
-                            const displayTime = moment(start).clone().format(self._getDbTimeFormat());
-                            element.find('.fc-content .fc-time').text(displayTime);
-                        }
-                    }
-                }
-
-                // On double click, edit the event
-                element.on('dblclick', function () {
-                    self.trigger_up('edit_event', {id: event.id});
-                });
-                }
-            },
-            datesRender: function (info) {
-                const viewToMode = Object.fromEntries(
-                    Object.entries(self.scalesInfo).map(([k, v]) => [v, k])
-                );
-                self.trigger_up('viewUpdated', {
-                    mode: viewToMode[info.view.type],
-                    title: info.view.title,
-                });
-            },
-            // Add/Remove a class on hover to style multiple days events.
-            // The css ":hover" selector can't be used because these events
-            // are rendered using multiple elements.
-            eventMouseEnter: function (mouseEnterInfo) {
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseEnterInfo.event.id)).addClass('o_cw_custom_hover');
-            },
-            eventMouseLeave: function (mouseLeaveInfo) {
-                if (!mouseLeaveInfo.event.id) {
-                    return;
-                }
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseLeaveInfo.event.id)).removeClass('o_cw_custom_hover');
-            },
-            eventDragStart: function (mouseDragInfo) {
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseDragInfo.event.id)).addClass('o_cw_custom_hover');
-                self._unselectEvent();
-            },
-            eventResizeStart: function (mouseResizeInfo) {
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseResizeInfo.event.id)).addClass('o_cw_custom_hover');
-                self._unselectEvent();
-            },
-            eventLimitClick: function () {
-                self._unselectEvent();
-                return 'popover';
-            },
-            windowResize: function () {
-                self._render();
-            },
+            unselectAuto: false,
             views: {
                 timeGridDay: {
                     columnHeaderFormat: 'LL'
@@ -537,212 +361,69 @@ return AbstractRenderer.extend({
                     columnHeaderFormat: 'dddd'
                 }
             },
-            height: 'parent',
-            unselectAuto: false,
-            dir: _t.database.parameters.direction,
-            events: (info, successCB) => {
-                successCB(self.state.data);
-            },
-        }, fcOptions);
+            eventClick: this._onCalendarEventClick.bind(this),
+            eventDragStart: this._onCalendarEventDragStart.bind(this),
+            eventDrop: this._onCalendarEventDrop.bind(this),
+            eventLimitClick: this._onCalendarEventLimitClick.bind(this),
+            eventMouseEnter: this._onCalendarEventMouseEnter.bind(this),
+            eventMouseLeave: this._onCalendarEventMouseLeave.bind(this),
+            eventRender: this._onCalendarEventRender.bind(this),
+            eventResize: this._onCalendarEventResize.bind(this),
+            eventResizeStart: this._onCalendarEventResizeStart.bind(this),
+            datesRender: this._onCalendarDatesRender.bind(this),
+            select: this._onCalendarSelect.bind(this),
+            yearDateClick: this._onCalendarYearDateClick.bind(this),
+        });
         options.plugins.push(createYearCalendarView(FullCalendar, options));
         return options;
-    },
-    /**
-     * Initialize the main calendar
-     *
-     * @private
-     */
-    _initCalendar: function () {
-        this.calendarElement = this.$(".o_calendar_widget")[0];
-        var locale = moment.locale();
+    }
 
-        var fcOptions = this._getFullCalendarOptions({
-            locale: locale, // reset locale when fullcalendar has already been instanciated before now
-        });
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-        this.calendar = new FullCalendar.Calendar(this.calendarElement, fcOptions);
-    },
     /**
-     * Initialize the mini calendar in the sidebar
-     *
-     * @private
+     * @param {any} event
+     * @param {moment} displayTime
+     * @returns {string} the html for the rendered event
      */
-    _initCalendarMini: function () {
-        var self = this;
-        this.$small_calendar = this.$(".o_calendar_mini");
-        this.$small_calendar.datepicker({
-            'onSelect': function (datum, obj) {
-                self.trigger_up('changeDate', {
-                    date: moment(new Date(+obj.currentYear , +obj.currentMonth, +obj.currentDay))
-                });
-            },
-            'showOtherMonths': true,
-            'dayNamesMin' : this.state.fc_options.dayNamesShort.map(x => x[0]),
-            'monthNames': this.state.fc_options.monthNamesShort,
-            'firstDay': this.state.fc_options.firstDay,
-        });
-    },
-    /**
-     * Initialize the sidebar
-     *
-     * @private
-     */
-    _initSidebar: function () {
-        this.$sidebar = this.$('.o_calendar_sidebar');
-        this.$sidebar_container = this.$(".o_calendar_sidebar_container");
-        this._initCalendarMini();
-    },
-    /**
-     * Finalise the popover
-     *
-     * @param {jQueryElement} $popoverElement
-     * @param {web.CalendarPopover} calendarPopover
-     * @private
-     */
-    _onPopoverShown: function ($popoverElement, calendarPopover) {
-        var $popover = $($popoverElement.data('bs.popover').tip);
-        $popover.find('.o_cw_popover_close').on('click', this._unselectEvent.bind(this));
-        $popover.find('.o_cw_body').replaceWith(calendarPopover.$el);
-    },
-    /**
-     * Render the calendar view, this is the main entry point.
-     *
-     * @override
-     */
-    async _renderView() {
-        this.$('.o_calendar_view')[0].prepend(this.calendarElement);
-        if (this._isInDOM) {
-            this._renderCalendar();
-        }
-        this.$small_calendar.datepicker("setDate", this.state.highlight_date.toDate())
-                            .find('.o_selected_range')
-                            .removeClass('o_color o_selected_range');
-        var $a;
-        switch (this.state.scale) {
-            case 'year': $a = this.$small_calendar.find('td'); break;
-            case 'month': $a = this.$small_calendar.find('td'); break;
-            case 'week': $a = this.$small_calendar.find('tr:has(.ui-state-active)'); break;
-            case 'day': $a = this.$small_calendar.find('a.ui-state-active'); break;
-        }
-        $a.addClass('o_selected_range');
-        setTimeout(function () {
-            $a.not('.ui-state-active').addClass('o_color');
-        });
-
-        await this._renderFilters();
-    },
-    /**
-     * Render the specific code for the FullCalendar when it's in the DOM
-     *
-     * @private
-     */
-    _renderCalendar() {
-        this.calendar.unselect();
-
-        if (this.scalesInfo[this.state.scale] !== this.calendar.view.type) {
-            this.calendar.changeView(this.scalesInfo[this.state.scale]);
-        }
-
-        if (this.target_date !== this.state.target_date.toString()) {
-            this.calendar.gotoDate(moment(this.state.target_date).toDate());
-            this.target_date = this.state.target_date.toString();
+    _eventRender(event, displayTime) {
+        const context = {
+            event: event,
+            record: event.extendedProps.record,
+            color: this._getColor(event.extendedProps.color_index),
+            displayTime,
+        };
+        if (!context.record || !Object.keys(context.record).length) {
+            return '';
         } else {
-            // this.calendar.gotoDate already renders events when called
-            // so render events only when domain changes
-            this._renderEvents();
+            return this.env.qweb.renderToString("web.CalendarView.event", context);
         }
-
-        this._unselectEvent();
-        // this._scrollToScrollTime();
-    },
+    }
     /**
-     * Render all events
-     *
      * @private
+     * @param {any} key
+     * @returns {integer}
      */
-    _renderEvents: function () {
-        this.calendar.refetchEvents();
-    },
-    /**
-     * Render all filters
-     *
-     * @private
-     * @returns {Promise} resolved when all filters have been rendered
-     */
-    _renderFilters: function () {
-        // Dispose of filter popover
-        this.$('.o_calendar_filter_item').popover('dispose');
-        _.each(this.filters || (this.filters = []), function (filter) {
-            filter.destroy();
-        });
-        if (this.state.fullWidth) {
-            return Promise.resolve();
+    _getColor(key) {
+        if (!key) {
+            return;
         }
-        return this._renderFiltersOneByOne();
-    },
-    /**
-     * Renders each filter one by one, waiting for the first filter finished to
-     * be rendered and appended to render the next one.
-     * We need to do like this since render a filter is asynchronous, we don't
-     * know which one will be appened at first and we want tp force them to be
-     * rendered in order.
-     *
-     * @param {number} filterIndex if not set, 0 by default
-     * @returns {Promise} resolved when all filters have been rendered
-     */
-    _renderFiltersOneByOne: function (filterIndex) {
-        filterIndex = filterIndex || 0;
-        var arrFilters = _.toArray(this.state.filters);
-        var prom;
-        if (filterIndex < arrFilters.length) {
-            var options = arrFilters[filterIndex];
-            if (!_.find(options.filters, function (f) {return f.display == null || f.display;})) {
-                return this._renderFiltersOneByOne(filterIndex + 1);
-            }
-
-            var self = this;
-            options.getColor = this.getColor.bind(this);
-            options.fields = this.state.fields;
-            var sidebarFilter = new SidebarFilter(self, options);
-            prom = sidebarFilter.appendTo(this.$sidebar).then(function () {
-                // Show filter popover
-                if (options.avatar_field) {
-                    _.each(options.filters, function (filter) {
-                        if (!['all', false].includes(filter.value)) {
-                            var selector = _.str.sprintf('.o_calendar_filter_item[data-value=%s]', filter.value);
-                            sidebarFilter.$el.find(selector).popover({
-                                animation: false,
-                                trigger: 'hover',
-                                html: true,
-                                placement: 'top',
-                                title: filter.label,
-                                delay: {show: 300, hide: 0},
-                                content: function () {
-                                    return $('<img>', {
-                                        src: _.str.sprintf('/web/image/%s/%s/%s', options.avatar_model, filter.value, options.avatar_field),
-                                        class: 'mx-auto',
-                                    });
-                                },
-                            });
-                        }
-                    });
-                }
-                return self._renderFiltersOneByOne(filterIndex + 1);
-            });
-            this.filters.push(sidebarFilter);
+        if (this.colorMap[key]) {
+            return this.colorMap[key];
         }
-        return Promise.resolve(prom);
-    },
-    /**
-     * Returns the time format from database parameters (only hours and minutes).
-     * FIXME: this looks like a weak heuristic...
-     *
-     * @private
-     * @returns {string}
-     */
-    _getDbTimeFormat: function () {
-        return _t.database.parameters.time_format.search('%H') !== -1 ? 'HH:mm' : 'hh:mm a';
-    },
+        // check if the key is a css color
+        const colorRegex = /^((#[A-F0-9]{3})|(#[A-F0-9]{6})|((hsl|rgb)a?\(\s*(?:(\s*\d{1,3}%?\s*),?){3}(\s*,[0-9.]{1,4})?\))|)$/i;
+        if ((typeof key === 'string' && key.match(colorRegex)) ||
+            (typeof key === 'number' && !(key in this.colorMap))
+        ) {
+            this.colorMap[key] = key;
+        } else {
+            const index = (((Object.keys(this.colorMap).length + 1) * 5) % 24) + 1;
+            this.colorMap[key] = index;
+        }
+        return this.colorMap[key];
+    }
     /**
      * Returns event's formatted date for popovers.
      *
@@ -752,129 +433,117 @@ return AbstractRenderer.extend({
      * @param {boolean} showDayName
      * @param {boolean} allDay
      */
-    _getFormattedDate: function (start, end, showDayName, allDay) {
-        const isSameDayEvent = start.clone().add(1, 'minute')
-            .isSame(end.clone().subtract(1, 'minute'), 'day');
+    _getFormattedDate(start, end, showDayName, allDay) {
+        const isSameDay = isSameDayEvent(start, end);
+        const isSameMonth = start.isSame(end, 'month');
         if (allDay) {
             // cancel correction done in _recordToCalendarEvent
             end = end.clone().subtract(1, 'day');
         }
-        if (!isSameDayEvent && start.isSame(end, 'month')) {
+        if (isSameDay) {
+            return start.format(showDayName ? 'dddd, LL' : 'LL');
+        } else if (isSameMonth) {
             // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
-            return start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
+            return start.format('MMMM D') + '-' + end.format('D, YYYY');
         } else {
-            return isSameDayEvent ?
-                start.clone().format(showDayName ? 'dddd, LL' : 'LL') :
-                start.clone().format('LL') + ' - ' + end.clone().format('LL');
+            return start.format('LL') + ' - ' + end.format('LL');
         }
-    },
+    }
     /**
-     * Prepare context to display in the popover.
+     * Prepare data to display in the popover.
      *
      * @private
-     * @param {Object} eventData
-     * @returns {Object} context
+     * @param {Object} event
+     * @returns {Object}
      */
-    _getPopoverContext: function (eventData) {
-        var context = {
-            hideDate: this.hideDate,
-            hideTime: this.hideTime,
-            eventTime: {},
-            eventDate: {},
-            fields: this.state.fields,
-            displayFields: this.displayFields,
-            event: eventData,
-            modelName: this.model,
-            canDelete: this.canDelete,
+    _getPopoverData(event) {
+        const data = {
+            eventId: parseInt(event.id, 10),
+            title: event.extendedProps.record.display_name,
+            color: event.extendedProps.color_index,
+            date: {
+                hide: this.props.hideDate,
+                value: null,
+                duration: null,
+            },
+            time: {
+                hide: this.props.hideTime,
+                value: null,
+                duration: null,
+            },
+            fields: this.props.fields,
+            displayFields: this.props.displayFields,
+            record: event.extendedProps.record,
+            modelName: this.props.model,
+            deletable: this.props.canDelete,
         };
 
-        var start = moment((eventData.extendedProps && eventData.extendedProps.r_start) || eventData.start);
-        var end = moment((eventData.extendedProps && eventData.extendedProps.r_end) || eventData.end);
-        var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
+        const start = moment((event.extendedProps &&
+            event.extendedProps.r_start) || event.start);
+        const end = moment((event.extendedProps &&
+            event.extendedProps.r_end) || event.end);
+        const localeData = moment.localeData();
 
-        // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
-        if (!this.hideTime && !eventData.extendedProps.record.allday && isSameDayEvent) {
-            var dbTimeFormat = this._getDbTimeFormat();
-
-            context.eventTime.time = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
+        // Do not display timing if the event occur across multiple days.
+        // Otherwise use user's timing preferences
+        if (!this.props.hideTime &&
+            !event.extendedProps.record.allday && isSameDayEvent(start, end)
+        ) {
+            const dbTimeFormat = this._dbTimeFormat;
+            data.time.value =
+                `${start.format(dbTimeFormat)} - ${end.format(dbTimeFormat)}`;
 
             // Calculate duration and format text
-            var durationHours = moment.duration(end.diff(start)).hours();
-            var durationHoursKey = (durationHours === 1) ? 'h' : 'hh';
-            var durationMinutes = moment.duration(end.diff(start)).minutes();
-            var durationMinutesKey = (durationMinutes === 1) ? 'm' : 'mm';
-
-            var localeData = moment.localeData(); // i18n for 'hours' and "minutes" strings
-            context.eventTime.duration = (durationHours > 0 ? localeData.relativeTime(durationHours, true, durationHoursKey) : '')
-                    + (durationHours > 0 && durationMinutes > 0 ? ', ' : '')
-                    + (durationMinutes > 0 ? localeData.relativeTime(durationMinutes, true, durationMinutesKey) : '');
+            const durationHours = moment.duration(end.diff(start)).hours();
+            const durationHoursKey = (durationHours === 1) ? 'h' : 'hh';
+            const durationMinutes = moment.duration(end.diff(start)).minutes();
+            const durationMinutesKey = (durationMinutes === 1) ? 'm' : 'mm';
+            // i18n for 'hours' and "minutes" strings
+            const durationParts = [];
+            if (durationHours > 0) {
+                durationParts.push(
+                    localeData.relativeTime(durationHours, true, durationHoursKey)
+                );
+            }
+            if (durationMinutes > 0) {
+                durationParts.push(
+                    localeData.relativeTime(durationMinutes, true, durationMinutesKey)
+                );
+            }
+            data.time.duration = durationParts.join(', ');
         }
 
-        if (!this.hideDate) {
-
-            if (eventData.extendedProps.record.allday && isSameDayEvent) {
-                context.eventDate.duration = _t("All day");
-            } else if (eventData.extendedProps.record.allday && !isSameDayEvent) {
-                var daysLocaleData = moment.localeData();
-                var days = moment.duration(end.diff(start)).days();
-                context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
+        if (!this.props.hideDate) {
+            if (event.extendedProps.record.allday && isSameDayEvent(start, end)) {
+                data.date.duration = this.env._t("All day");
+            } else if (event.extendedProps.record.allday && !isSameDayEvent(start, end)) {
+                const days = moment.duration(end.diff(start)).days();
+                data.date.duration = localeData.relativeTime(days, true, 'dd');
             }
 
-            context.eventDate.date = this._getFormattedDate(start, end, true, eventData.extendedProps.record.allday);
+            data.date.value = this._getFormattedDate(start, end, true,
+                event.extendedProps.record.allday);
         }
 
-        return context;
-    },
+        return data;
+    }
     /**
-     * Prepare the parameters for the popover.
-     * This allow the parameters to be extensible.
-     *
+     * @param {string} filterKey
      * @private
-     * @param {Object} eventData
      */
-    _getPopoverParams: function (eventData) {
-        return {
-            animation: false,
-            delay: {
-                show: 50,
-                hide: 100
-            },
-            trigger: 'manual',
-            html: true,
-            title: eventData.extendedProps.record.display_name,
-            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.extendedProps.color_index)}),
-            container: eventData.allDay ? '.fc-view' : '.fc-scroller',
-        }
-    },
-    /**
-     * Render event popover
-     *
-     * @private
-     * @param {Object} eventData
-     * @param {jQueryElement} $eventElement
-     */
-    _renderEventPopover: function (eventData, $eventElement) {
-        var self = this;
-
-        // Initialize popover widget
-        var calendarPopover = new self.config.CalendarPopover(self, self._getPopoverContext(eventData));
-        calendarPopover.appendTo($('<div>')).then(() => {
-            $eventElement.popover(
-                self._getPopoverParams(eventData)
-            ).on('shown.bs.popover', function () {
-                self._onPopoverShown($(this), calendarPopover);
-            }).popover('show');
+    _getSidebarFilterProps(filterKey) {
+        return Object.assign({}, this.props.filters[filterKey], {
+            fields: this.props.fields,
+            getColor: this._getColor.bind(this),
         });
-    },
+    }
     /**
-     * Render year event popover
-     *
      * @private
      * @param {Date} date
-     * @param {Object[]} events
-     * @param {jQueryElement} $el
+     * @param {Array} events
+     * @returns {Object}
      */
-    _renderYearEventPopover: function (date, events, $el) {
+    _getYearPopoverData(date, events) {
         const groupKeys = [];
         const groupedEvents = {};
         for (const event of events) {
@@ -887,14 +556,19 @@ return AbstractRenderer.extend({
                     key: key,
                     start: event.extendedProps.r_start,
                     end: event.extendedProps.r_end,
-                    isSameDayEvent: start.clone().add(1, 'minute')
-                        .isSame(end.clone().subtract(1, 'minute'), 'day'),
+                    isSameDayEvent: isSameDayEvent(start, end),
                 });
             }
-            groupedEvents[key].push(event);
+            const record = event.extendedProps.record;
+            groupedEvents[key].push({
+                id: record.id,
+                name: record.display_name,
+            });
         }
 
-        const popoverContent = qweb.render('CalendarView.yearEvent.popover', {
+        return {
+            createable: this.props.canCreate,
+            date,
             groupedEvents,
             groupKeys: groupKeys
                 .sort((a, b) => {
@@ -909,97 +583,355 @@ return AbstractRenderer.extend({
                     return a.start.getTime() - b.start.getTime();
                 })
                 .map(x => x.key),
-            canCreate: this.canCreate,
-        });
-
-        $el.popover({
-            animation: false,
-            delay: {
-                show: 50,
-                hide: 100
-            },
-            trigger: 'manual',
-            html: true,
-            content: popoverContent,
-            template: qweb.render('CalendarView.yearEvent.popover.placeholder'),
-            container: '.fc-dayGridYear-view',
-        }).on('shown.bs.popover', () => {
-            $('.o_cw_popover .o_cw_popover_close').on('click', () => this._unselectEvent());
-            $('.o_cw_popover .o_cw_popover_create').on('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._unselectEvent();
-                const data = {
-                    start: date,
-                    allDay: true,
-                };
-                if (this.state.context.default_name) {
-                    data.title = this.state.context.default_name;
-                }
-                this.trigger_up('openCreate', this._convertEventToFC3Event(data));
-            });
-            $('.o_cw_popover .o_cw_popover_link').on('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._unselectEvent();
-                this.trigger_up('openEvent', {
-                    _id: parseInt(e.target.dataset.id, 10),
-                    title: e.target.dataset.title,
-                });
-            });
-        }).popover('show');
-    },
+        };
+    }
     /**
-     * Scroll to the time set in the FullCalendar parameter
+     * Returns all HTMLElements that represent the event with the given id.
+     *
+     * @private
+     * @param {Number} eventId
+     */
+    _findEventElementsById(eventId) {
+        return this.el.querySelectorAll(`o_calendar_widget [data-event-id="${eventId}"]`);
+    }
+    /**
+     * @private
+     * @param {string} target
+     * @param {Object} popoverProps
+     */
+    _selectEvent(target, popoverProps) {
+        Object.assign(this.state, {
+            displayPopover: true,
+            popoverTarget: target,
+            popoverProps: popoverProps,
+        });
+    }
+    /**
      * @private
      */
-    _scrollToScrollTime: function () {
-        var scrollTime = this.calendar.getOption('scrollTime');
-        this.calendar.scrollToTime(scrollTime);
-    },
+    _updateCalendarMini() {
+        const $calendarMini = $(this.calendarMiniRef.el);
+        $calendarMini
+            .datepicker("setDate", this.props.highlight_date.toDate())
+            .find('.o_selected_range')
+            .removeClass('o_color o_selected_range');
+        let $a;
+        switch (this.props.scale) {
+            case 'year': $a = $calendarMini.find('td'); break;
+            case 'month': $a = $calendarMini.find('td'); break;
+            case 'week': $a = $calendarMini.find('tr:has(.ui-state-active)'); break;
+            case 'day': $a = $calendarMini.find('a.ui-state-active'); break;
+        }
+        $a.addClass('o_selected_range');
+        setTimeout(() => {
+            $a.not('.ui-state-active').addClass('o_color');
+        });
+    }
+    /**
+     * Removes highlight classes and popover
+     *
+     * @private
+     */
+    _unselectEvent() {
+        Object.assign(this.state, {
+            displayPopover: false,
+            popoverTarget: null,
+            popoverProps: {
+            },
+        });
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
-     * Remove highlight classes and dispose of popovers
+     * @private
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
+     * @param {Object} info.jsEvent interaction event
+     */
+    _onCalendarEventClick({ event, jsEvent: ev }) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        this._selectEvent(
+            `.fc-event[data-event-id="${event.id}"]`,
+            this._getPopoverData(event)
+        );
+    }
+    /**
+     * @private
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
+     */
+    _onCalendarEventDragStart({ event }) {
+        this._unselectEvent();
+        for (const el of this._findEventElementsById(event.id)) {
+            el.classList.add('o_cw_custom_hover');
+        }
+    }
+    /**
+     * @private
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
+     */
+    _onCalendarEventDrop({ event }) {
+        this.trigger('dropRecord', adaptFullCalendarEvent(event));
+    }
+    /**
+     * @private
+     */
+    _onCalendarEventLimitClick() {
+        this._unselectEvent();
+        return 'popover';
+    }
+    /**
+     * Add/Remove a class on hover to style multiple days events.
+     * The css ":hover" selector can't be used because these events
+     * are rendered using multiple elements.
      *
      * @private
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
      */
-    _unselectEvent: function () {
-        this.$('.fc-event').removeClass('o_cw_custom_highlight');
-        this.$('.o_cw_popover').popover('dispose');
-    },
+    _onCalendarEventMouseEnter({ event }) {
+        for (const el of this._findEventElementsById(event.id)) {
+            el.classList.add('o_cw_custom_hover');
+        }
+    }
     /**
      * @private
-     * @param {MouseEvent} e
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
      */
-    _onWindowClick: function (e) {
-        const popover = this.el.querySelector('.o_cw_popover');
-        if (popover && !popover.contains(e.target)) {
+    _onCalendarEventMouseLeave({ event }) {
+        if (!event.id) {
+            return;
+        }
+        for (const el of this._findEventElementsById(event.id)) {
+            el.classList.remove('o_cw_custom_hover');
+        }
+    }
+    /**
+     * @private
+     * @param {Object} info
+     */
+    _onCalendarEventRender({ event, el, view }) {
+        el.setAttribute('data-event-id', event.id);
+        if (this.props.scale === 'year') {
+            const color = this._getColor(event.extendedProps.color_index);
+            if (typeof color === 'string') {
+                el.style.backgroundColor = color;
+            } else if (typeof color === 'number') {
+                el.classList.add(`o_calendar_color_${color}`);
+            } else {
+                el.classList.add('o_calendar_color_1');
+            }
+        } else {
+            let displayTime = null;
+            if (view.type === 'dayGridMonth' && event.extendedProps.record) {
+                const start = event.extendedProps.r_start || event.start;
+                const end = event.extendedProps.r_end || event.end;
+                if (!event.extendedProps.record.allday && isSameDayEvent(start, end)) {
+                    // For month view: do not show background for non allday, single day events
+                    el.classList.add('o_cw_nobg');
+                    if (event.extendedProps.showTime && !this.props.hideTime) {
+                        displayTime = moment(start).format(this._dbTimeFormat);
+                    }
+                }
+            }
+
+            const fcContent = el.querySelector('.fc-content');
+            const render = this._eventRender(event, displayTime);
+            if (render) {
+                const parser = new DOMParser();
+                const renderEl = parser
+                    .parseFromString(render, "application/xml")
+                    .children[0];
+                fcContent.innerHTML = renderEl.innerHTML;
+                el.classList.add(...renderEl.classList.values());
+                el.setAttribute('style', renderEl.getAttribute('style'));
+            }
+
+            // Add background if doesn't exist
+            if (!el.querySelector('.fc-bg')) {
+                const fcBg = document.createElement('div');
+                fcBg.classList.add('fc-bg');
+                fcContent.after(fcBg);
+            }
+
+            // On double click, edit the event
+            el.addEventListener('dblclick', () => {
+                this.trigger('edit_event', { id: event.id });
+            });
+        }
+    }
+    /**
+     * @private
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
+     */
+    _onCalendarEventResize({ event }) {
+        this._unselectEvent();
+        this.trigger('updateRecord', adaptFullCalendarEvent(event));
+    }
+    /**
+     * @private
+     * @param {Object} info
+     * @param {Object} info.event calendar event data
+     */
+    _onCalendarEventResizeStart({ event }) {
+        this._unselectEvent();
+        for (const el of this._findEventElementsById(event.id)) {
+            el.classList.add('o_cw_custom_hover');
+        }
+    }
+    /**
+     * @private
+     * @param {Object} info
+     * @param {Object} info.view current calendar view
+     */
+    _onCalendarDatesRender({ view }) {
+        const viewToMode = Object.fromEntries(
+            Object.entries(this.props.scalesInfo).map(([k, v]) => [v, k])
+        );
+        this.trigger('viewUpdated', {
+            mode: viewToMode[view.type],
+            title: view.title,
+        });
+    }
+    /**
+     * @private
+     * @param {*} datum
+     * @param {Object} obj
+     */
+    _onCalendarMiniSelect(datum, obj) {
+        this.trigger('changeDate', {
+            date: moment({
+                year: +obj.currentYear,
+                month: +obj.currentMonth,
+                day: +obj.currentDay
+            }),
+        });
+    }
+    /**
+     * @private
+     * @param {Object} info
+     * @param {Object} info.allDay tells if the event last all the day
+     * @param {Object} info.start event start datetime
+     * @param {Object} info.end event end datetime
+     * @param {Object} info.view
+     */
+    _onCalendarSelect({ allDay, end, start, view }) {
+        // Clicking on the view, dispose any visible popover.
+        // Otherwise create a new event.
+        if (this.state.displayPopover) {
             this._unselectEvent();
         }
-    },
+        const data = { start, end, allDay };
+        if (this.props.context.default_name) {
+            data.title = this.props.context.default_name;
+        }
+        this.trigger('openCreate', adaptFullCalendarEvent(data));
+        if (this.props.scale === 'year') {
+            view.unselect();
+        } else {
+            view.context.calendar.unselect();
+        }
+    }
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {Object} info
+     * @param {Date} info.date the date of the event clicked on
+     * @param {Array} info.events list of event
+     * @param {Object} info.view current calendar view (here dayGridYear)
      */
-    _onEditEvent: function (event) {
+    _onCalendarYearDateClick({ date, events, view }) {
         this._unselectEvent();
-        this.trigger_up('openEvent', {
-            _id: event.data.id,
-            title: event.data.title,
+        view.unselect();
+        if (!events.length) {
+            if (view.context.options.selectable) {
+                const data = {
+                    start: date,
+                    allDay: true,
+                };
+                if (this.props.context.default_name) {
+                    data.title = this.props.context.default_name;
+                }
+                this.trigger('openCreate', this._convertEventToFC3Event(data));
+            }
+        } else {
+            const formattedDate = moment(date).format('YYYY-MM-DD');
+            this._selectEvent(
+                `.fc-day-top[data-date="${formattedDate}"]`,
+                this._getYearPopoverData(date, events)
+            );
+        }
+    }
+    /**
+     * @private
+     * @param {CustomEvent} e
+     */
+    _onCreateEvent(e) {
+        this._unselectEvent();
+        const data = {
+            start: e.detail,
+            allDay: true,
+        };
+        if (this.props.context.default_name) {
+            data.title = this.props.context.default_name;
+        }
+        this.trigger('openCreate', adaptFullCalendarEvent(data));
+    }
+    /**
+     * @private
+     * @param {CustomEvent} e
+     */
+    _onDeleteEvent(e) {
+        this._unselectEvent();
+        this.trigger('deleteRecord', {
+            id: parseInt(e.detail.id, 10),
         });
-    },
+    }
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {CustomEvent} e
      */
-    _onDeleteEvent: function (event) {
+    _onEditEvent(e) {
         this._unselectEvent();
-        this.trigger_up('deleteRecord', {id: parseInt(event.data.id, 10)});
-    },
-});
+        this.trigger('openEvent', {
+            _id: e.detail.id,
+            title: e.detail.title,
+        });
+    }
+    /**
+     * @private
+     * @param {CustomEvent} e
+     */
+    _onOpenEvent(e) {
+        this._unselectEvent();
+        this.trigger('openEvent', {
+            _id: e.detail.id,
+            title: e.detail.name,
+        });
+    }
+    /**
+     * @private
+     * @param {CustomEvent} e
+     */
+    _onPopoverClose(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this._unselectEvent();
+    }
+}
+CalendarRenderer.components = {
+    CalendarPopover,
+    CalendarYearPopover,
+    FilterSection,
+    FullCalendarAdapter,
+};
+CalendarRenderer.template = 'web.CalendarView';
 
+return patchMixin(CalendarRenderer);
 });

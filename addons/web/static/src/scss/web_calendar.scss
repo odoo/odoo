@@ -626,7 +626,6 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             .o_cw_filter_title {
-                line-height: 1;
                 flex-grow: 1;
             }
 
@@ -650,10 +649,15 @@ $o-cw-filter-avatar-size: 20px;
     }
 }
 
+.o_cw_popover_wrapper {
+    padding: 0;
+}
+
 .o_cw_popover {
     min-width: 256px;
     max-width: 328px;
     font-size: $font-size-base;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 
     .card-header, .card-header .popover-header {
         font-size: 1.05em;

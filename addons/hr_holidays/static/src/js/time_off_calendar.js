@@ -1,48 +1,58 @@
 odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     'use strict';
 
-    var core = require('web.core');
-    var CalendarPopover = require('web.CalendarPopover');
-    var CalendarController = require("web.CalendarController");
-    var CalendarRenderer = require("web.CalendarRenderer");
-    var CalendarView = require("web.CalendarView");
-    var viewRegistry = require('web.view_registry');
+    const core = require('web.core');
+    const { CalendarPopover } = require('web.CalendarPopover');
+    const CalendarController = require("web.CalendarController");
+    const CalendarRenderer = require("web.CalendarRenderer");
+    const CalendarView = require("web.CalendarView");
+    const viewRegistry = require('web.view_registry');
 
-    var _t = core._t;
-    var QWeb = core.qweb;
+    const _t = core._t;
+    const QWeb = core.qweb;
 
-    var TimeOffCalendarPopover = CalendarPopover.extend({
-        template: 'hr_holidays.calendar.popover',
-
-        init: function (parent, eventInfo) {
-            this._super.apply(this, arguments);
-            const state = this.event.extendedProps.record.state;
-            this.canDelete = state && ['validate', 'refuse'].indexOf(state) === -1;
-            this.canEdit = state !== undefined;
-            this.displayFields = [];
-
-            if (this.modelName === "hr.leave.report.calendar") {
-                const duration = this.event.extendedProps.record.display_name.split(':').slice(-1);
-                this.display_name = _.str.sprintf(_t("Time Off : %s"), duration);
+    class TimeOffCalendarPopover extends CalendarPopover {
+        /**
+         * @override
+         * @returns {Boolean}
+         */
+        get isEventDeletable() {
+            const state = this.props.record.state;
+            return state && ['validate', 'refuse'].indexOf(state) === -1;
+        }
+        /**
+         * @override
+         * @returns {Boolean}
+         */
+        get isEventEditable() {
+            return this.props.record.state !== undefined;
+        }
+        /**
+         * @override
+         * @returns {Object}
+         */
+        get displayedFields() {
+            return [];
+        }
+        /**
+         * @returns {string}
+         */
+        get displayName() {
+            if (this.props.modelName === 'hr.leave.report.calendar') {
+                const duration = this.props.record.display_name.split(':').slice(-1);
+                return `${this.env._t('Time Off :')} ${duration}`;
             } else {
-                this.display_name = this.event.extendedProps.record.display_name;
+                return this.props.record.display_name;
             }
-        },
-    });
+        }
+    }
+    TimeOffCalendarPopover.template = 'hr_holidays.CalendarPopover';
 
     var TimeOffCalendarController = CalendarController.extend({
         events: _.extend({}, CalendarController.prototype.events, {
             'click .btn-time-off': '_onNewTimeOff',
             'click .btn-allocation': '_onNewAllocation',
         }),
-
-        /**
-         * @override
-         */
-        start: function () {
-            this.$el.addClass('o_timeoff_calendar');
-            return this._super(...arguments);
-        },
 
         //--------------------------------------------------------------------------
         // Public
@@ -111,16 +121,14 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         },
     });
 
-    var TimeOffPopoverRenderer = CalendarRenderer.extend({
-        config: _.extend({}, CalendarRenderer.prototype.config, {
-            CalendarPopover: TimeOffCalendarPopover,
-        }),
-
-        _getPopoverParams: function (eventData) {
-            let params = this._super.apply(this, arguments);
+    class TimeOffPopoverRenderer extends CalendarRenderer {
+        get _displayCalendarMini() {
+            return false;
+        }
+        _getPopoverData(event) {
+            const data = super._getPopoverData(...arguments);
+            const state = event.extendedProps.record.state;
             let calendarIcon;
-            let state = eventData.extendedProps.record.state;
-
             if (state === 'validate') {
                 calendarIcon = 'fa-calendar-check-o';
             } else if (state === 'refuse') {
@@ -129,38 +137,45 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                 calendarIcon = 'fa-calendar-o';
             }
 
-            params['title'] = eventData.extendedProps.record.display_name.split(':').slice(0, -1).join(':');
-            params['template'] = QWeb.render('hr_holidays.calendar.popover.placeholder', {color: this.getColor(eventData.color_index), calendarIcon: calendarIcon});
-            return params;
-        },
-
-        _render: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                self.$el.parent().find('.o_calendar_mini').hide();
+            return Object.assign(data, {
+                title: data.title.split(':').slice(0, -1).join(':'),
+                calendarIcon,
             });
-        },
-    });
+        }
+    }
+    TimeOffPopoverRenderer.components = {
+        ...TimeOffPopoverRenderer.components,
+        CalendarPopover: TimeOffCalendarPopover,
+    };
 
-    var TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
-        _render: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                return self._rpc({
-                    model: 'hr.leave.type',
-                    method: 'get_days_all_request',
-                    context: self.context,
-                });
-            }).then(function (result) {
-                self.$el.parent().find('.o_calendar_mini').hide();
-                self.$el.parent().find('.o_timeoff_container').remove();
-                var elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
-                    timeoffs: result,
-                });
-                self.$el.before(elem);
+    class TimeOffCalendarRenderer extends TimeOffPopoverRenderer {
+        /**
+         * @override
+         */
+        async willStart() {
+            await super.willStart();
+            this.timeoffs = await this.fetchTimeoffs();
+        }
+        /**
+         * @override
+         */
+        async willUpdateProps() {
+            await super.willUpdateProps(...arguments);
+            this.timeoffs = await this.fetchTimeoffs();
+        }
+        /**
+         * @returns {Promise}
+         */
+        fetchTimeoffs() {
+            return this.env.services.rpc({
+                model: 'hr.leave.type',
+                method: 'get_days_all_request',
+                context: this.props.context,
             });
-        },
-    });
+        }
+    }
+    TimeOffCalendarRenderer.template = 'hr_holidays.CalendarView';
+
     var TimeOffCalendarView = CalendarView.extend({
         config: _.extend({}, CalendarView.prototype.config, {
             Controller: TimeOffCalendarController,

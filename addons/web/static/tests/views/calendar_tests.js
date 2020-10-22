@@ -1,37 +1,24 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
-var AbstractStorageService = require('web.AbstractStorageService');
 const BasicModel = require('web.BasicModel');
-var CalendarView = require('web.CalendarView');
-var CalendarRenderer = require('web.CalendarRenderer');
-var Dialog = require('web.Dialog');
+const CalendarView = require('web.CalendarView');
+const Dialog = require('web.Dialog');
 const fieldRegistry = require('web.field_registry');
-var ViewDialogs = require('web.view_dialogs');
-var fieldUtils = require('web.field_utils');
-var mixins = require('web.mixins');
-var RamStorage = require('web.RamStorage');
-var testUtils = require('web.test_utils');
-var session = require('web.session');
+const fieldUtils = require('web.field_utils');
+const mixins = require('web.mixins');
+const session = require('web.session');
+const testUtils = require('web.test_utils');
+const ViewDialogs = require('web.view_dialogs');
 const Widget = require('web.Widget');
 
-var createActionManager = testUtils.createActionManager;
-
-CalendarRenderer.include({
-    getAvatars: function () {
-        var res = this._super.apply(this, arguments);
-        for (var k in res) {
-            res[k] = res[k].replace(/src="([^"]+)"/, 'data-src="\$1"');
-        }
-        return res;
-    }
-});
-
-
-var createCalendarView = testUtils.createCalendarView;
+const {
+    createActionManager,
+    createCalendarView,
+} = testUtils;
 
 // 2016-12-12 08:00:00
-var initialDate = new Date(2016, 11, 12, 8, 0, 0);
+let initialDate = new Date(2016, 11, 12, 8, 0, 0);
 initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
 
 function _preventScroll(ev) {
@@ -153,6 +140,10 @@ QUnit.module('Views', {
             '</form>',
     };
 
+    function getPopoverParent() {
+        return document.body;
+    }
+
     QUnit.test('simple calendar rendering', async function (assert) {
         assert.expect(24);
 
@@ -221,7 +212,7 @@ QUnit.module('Views', {
         assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'user'");
 
         // filters which has no value should show with string "Undefined", should not have any user image and should show at the last
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), undefined, "filters having false value should be displayed at last in filter items");
         assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last .o_cw_filter_title').text(), "Undefined", "filters having false value should display 'Undefined' string");
         assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last label img').length, 0, "filters having false value should not have any user image");
 
@@ -274,11 +265,15 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
-        assert.containsOnce(calendar, '.o_cw_popover',
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover',
             "should open a popover clicking on event");
-        assert.containsNone(calendar, '.o_cw_popover .o_cw_popover_delete',
+        assert.containsNone(getPopoverParent(), '.o_cw_popover .o_cw_popover_delete',
             "should not have the 'Delete' Button");
+
+        await testUtils.dom.click($('.o_cw_popover_close'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         calendar.destroy();
     });
@@ -317,16 +312,19 @@ QUnit.module('Views', {
 
         // switch to day mode
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_day'));
+        await testUtils.nextTick();
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 12, 2016)', "should display the current day");
 
         // switch to month mode
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_month'));
+        await testUtils.nextTick();
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
 
         // switch to year mode
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_year'));
+        await testUtils.nextTick();
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (2016)', "should display the current year");
 
@@ -366,12 +364,12 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
 
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
-        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_delete').length, "popover should have a delete button");
-        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_close').length, "popover should have a close button");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.ok($('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
+        assert.ok($('.o_cw_popover .o_cw_popover_delete').length, "popover should have a delete button");
+        assert.ok($('.o_cw_popover .o_cw_popover_close').length, "popover should have a close button");
 
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_edit'));
 
         assert.ok($('.modal-body').length, "should open the form view in dialog when click on event");
 
@@ -463,17 +461,17 @@ QUnit.module('Views', {
             'colspan', "2","the new record should have 2 days");
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(new event in quick create 2) .fc-content'));
-        var $popover_description = calendar.$('.o_cw_popover .o_cw_body .list-group-item');
+        var $popover_description = $('.o_cw_popover .o_cw_body .list-group-item');
         assert.strictEqual($popover_description.children()[1].textContent,'December 20-21, 2016',
             "The popover description should indicate the correct range");
-        assert.strictEqual($popover_description.children()[2].textContent,'(2 days)',
+        assert.strictEqual($popover_description.children()[2].textContent.trim(),'(2 days)',
             "The popover description should indicate 2 days");
-        await testUtils.dom.click(calendar.$('.o_cw_popover .fa-close'));
+        await testUtils.dom.click($('.o_cw_popover .fa-close'));
 
         // delete the a record
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_delete'));
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_delete'));
         assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
         await testUtils.dom.click($('.modal-footer button.btn:contains(Ok)'));
         assert.notOk(calendar.$('.fc-event:contains(event 4) .fc-content').length, "the record should be deleted");
@@ -753,19 +751,20 @@ QUnit.module('Views', {
         // delete record
 
         await testUtils.dom.click($newevent);
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_delete'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_delete'));
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.dom.click($('.modal button.btn-primary:contains(Ok)'));
         assert.containsNone(calendar, '.fc-content', "should delete the record");
 
         calendar.destroy();
     });
 
-    QUnit.test('default week start (US)', function (assert) {
+    QUnit.test('default week start (US)', async function (assert) {
         // if not given any option, default week start is on Sunday
         assert.expect(3);
-        var done = assert.async();
 
-        createCalendarView({
+        const calendar = await createCalendarView({
             View: CalendarView,
             model: 'event',
             data: this.data,
@@ -790,14 +789,14 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             }
-        }).then(function (calendar) {
-            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Sun 11",
-                "The first day of the week should be Sunday");
-            assert.strictEqual(calendar.$('.fc-day-header').last().text(), "Sat 17",
-                "The last day of the week should be Saturday");
-            calendar.destroy();
-            done();
         });
+
+        assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Sun 11",
+            "The first day of the week should be Sunday");
+        assert.strictEqual(calendar.$('.fc-day-header').last().text(), "Sat 17",
+            "The last day of the week should be Saturday");
+
+        calendar.destroy();
     });
 
     QUnit.test('European week start', function (assert) {
@@ -900,25 +899,25 @@ QUnit.module('Views', {
 
         await testUtils.dom.click($('.fc-event:contains(event 4)'));
 
-        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
-        assert.strictEqual(calendar.$('.o_cw_popover .popover-header').text(), 'event 4', "popover should have a title 'event 4'");
-        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_edit', "popover should have an edit button");
-        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_delete', "popover should have a delete button");
-        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_close', "popover should have a close button");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover', "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover .popover-header').text(), 'event 4', "popover should have a title 'event 4'");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover .o_cw_popover_edit', "popover should have an edit button");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover .o_cw_popover_delete', "popover should have a delete button");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover .o_cw_popover_close', "popover should have a close button");
 
-        assert.strictEqual(calendar.$('.o_cw_popover .list-group-item:first b.text-capitalize').text(), 'Wednesday, December 14, 2016', "should display date 'Wednesday, December 14, 2016'");
-        assert.containsN(calendar, '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item', 2, "popover should have a two fields");
+        assert.strictEqual($('.o_cw_popover .list-group-item:first b.text-capitalize').text(), 'Wednesday, December 14, 2016', "should display date 'Wednesday, December 14, 2016'");
+        assert.containsN(getPopoverParent(), '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item', 2, "popover should have a two fields");
 
-        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:first .o_field_char', "should apply char widget");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:first strong').text(), 'Custom Name : ', "label should be a 'Custom Name'");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:first .o_field_char').text(), 'event 4', "value should be a 'event 4'");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:first .o_field_char', "should apply char widget");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:first strong').text(), 'Custom Name : ', "label should be a 'Custom Name'");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:first .o_field_char').text(), 'event 4', "value should be a 'event 4'");
 
-        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri', "should apply m20 widget");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last strong').text(), 'user : ', "label should be a 'user'");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri').text(), 'partner 1', "value should be a 'partner 1'");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri', "should apply m20 widget");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last strong').text(), 'user : ', "label should be a 'user'");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri').text(), 'partner 1', "value should be a 'partner 1'");
 
         await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
-        assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
+        assert.containsNone(getPopoverParent(), '.o_cw_popover', "should close a popover");
 
         calendar.destroy();
     });
@@ -948,11 +947,11 @@ QUnit.module('Views', {
 
         await testUtils.dom.click($('.fc-event:contains(event 4)'));
 
-        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
-        assert.containsOnce(calendar, '.o_cw_popover .o_priority span.o_priority_star', "priority field should not be editable");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover', "should open a popover clicking on event");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover .o_priority span.o_priority_star', "priority field should not be editable");
 
         await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
-        assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
+        assert.containsNone(getPopoverParent(), '.o_cw_popover', "should close a popover");
 
         calendar.destroy();
     });
@@ -993,7 +992,7 @@ QUnit.module('Views', {
 
         const event4 = document.querySelectorAll(".fc-event")[0];
         await testUtils.dom.click(event4);
-        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover', "should open a popover clicking on event");
         assert.verifySteps(["_fetchSpecialDataForMyWidget"]);
 
         calendar.destroy();
@@ -1022,7 +1021,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click($('.fc-event:contains(event 4)'));
-        assert.containsNone(calendar, '.o_cw_popover .list-group-item', "popover should not contain date/time");
+        assert.containsNone(getPopoverParent(), '.o_cw_popover .list-group-item', "popover should not contain date/time");
 
         calendar.destroy();
     });
@@ -1259,7 +1258,9 @@ QUnit.module('Views', {
         // delete record
 
         await testUtils.dom.click($newevent);
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_delete'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_delete'));
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.dom.click($('.modal button.btn-primary:contains(Ok)'));
         assert.containsNone(calendar, '.fc-content', "should delete the record");
 
@@ -1602,6 +1603,7 @@ QUnit.module('Views', {
         pos = calendar.$('.fc-bg td:eq(5)').offset();
         testUtils.dom.triggerPositionalMouseEvent(pos.left + 15, pos.top + 15, "mousemove");
         testUtils.dom.triggerPositionalMouseEvent(pos.left + 15, pos.top + 15, "mouseup");
+        await testUtils.nextTick();
         assert.verifySteps(['do_action']);
 
         calendar.destroy();
@@ -1654,6 +1656,7 @@ QUnit.module('Views', {
         pos = calendar.$('.fc-bg td:eq(5)').offset();
         testUtils.dom.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousemove");
         testUtils.dom.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mouseup");
+        await testUtils.nextTick();
 
         calendar.destroy();
     });
@@ -1808,13 +1811,13 @@ QUnit.module('Views', {
 
         // Event 1
         await testUtils.dom.click(calendar.$('.fc-event:first'));
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.strictEqual(calendar.$('.o_cw_popover').find('img').length, 1, "should have 1 avatar");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover').find('img').length, 1, "should have 1 avatar");
 
         // Event 2
         await testUtils.dom.click(calendar.$('.fc-event:eq(1)'));
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.strictEqual(calendar.$('.o_cw_popover').find('img').length, 5, "should have 5 avatar");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover').find('img').length, 5, "should have 5 avatar");
 
         calendar.destroy();
     });
@@ -1860,7 +1863,7 @@ QUnit.module('Views', {
                 "should open the form view");
         });
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_edit'));
 
         // create a new event and edit it
 
@@ -2094,7 +2097,7 @@ QUnit.module('Views', {
                 "should open the form view");
         });
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_edit'));
 
         // create a new event and edit it
 
@@ -2439,8 +2442,8 @@ QUnit.module('Views', {
         assert.containsN(calendar, '.fc-event', 3, "should display 3 events");
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 2) .fc-content'));
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_edit'));
         assert.strictEqual($('.modal .modal-title').text(), 'Open: event 2', "dialog should have a valid title");
         await testUtils.dom.click($('.modal .o_field_widget[name="user_id"] input'));
         await testUtils.dom.click($('.ui-menu-item a:contains(user 5)').trigger('mouseenter'));
@@ -2802,7 +2805,7 @@ QUnit.module('Views', {
     QUnit.test('calendar is configured to have no groupBy menu', async function (assert) {
         assert.expect(1);
 
-        var archs = {
+        const archs = {
             'event,1,calendar': '<calendar class="o_calendar_test" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
@@ -2810,7 +2813,7 @@ QUnit.module('Views', {
             'event,false,search': '<search></search>',
         };
 
-        var actions = [{
+        const actions = [{
             id: 1,
             name: 'some action',
             res_model: 'event',
@@ -2818,7 +2821,7 @@ QUnit.module('Views', {
             views: [[1, 'calendar']]
         }];
 
-        var actionManager = await createActionManager({
+        const actionManager = await createActionManager({
             actions: actions,
             archs: archs,
             data: this.data,
@@ -2827,6 +2830,8 @@ QUnit.module('Views', {
         await actionManager.doAction(1);
         assert.containsNone(actionManager.$('.o_control_panel .o_search_options span.fa.fa-bars'),
             "the control panel has no groupBy menu");
+        await testUtils.nextTick();
+
         actionManager.destroy();
     });
 
@@ -2896,11 +2901,11 @@ QUnit.module('Views', {
 
         assert.strictEqual(calendar.$('.fc-event:eq(0)').text().replace(/\s/g, ''), "08:00event1");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
-        assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
+        assert.strictEqual($(getPopoverParent()).find('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
 
         assert.strictEqual(calendar.$('.fc-event:eq(5)').text().replace(/\s/g, ''), "16:00event6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(5)'));
-        assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/16/2016 16:00:00");
+        assert.strictEqual($(getPopoverParent()).find('.o_field_widget[name="start"]').text(), "12/16/2016 16:00:00");
 
         // Move event 6 as on first day of month view (27th november 2016)
         await testUtils.dragAndDrop(
@@ -2911,11 +2916,11 @@ QUnit.module('Views', {
 
         assert.strictEqual(calendar.$('.fc-event:eq(0)').text().replace(/\s/g, ''), "16:00event6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
-        assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "11/27/2016 16:00:00");
+        assert.strictEqual($(getPopoverParent()).find('.o_field_widget[name="start"]').text(), "11/27/2016 16:00:00");
 
         assert.strictEqual(calendar.$('.fc-event:eq(1)').text().replace(/\s/g, ''), "08:00event1");
         await testUtils.dom.click(calendar.$('.fc-event:eq(1)'));
-        assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
+        assert.strictEqual($(getPopoverParent()).find('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
 
         calendar.destroy();
     });
@@ -2963,8 +2968,8 @@ QUnit.module('Views', {
         await testUtils.nextTick();
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '12/20/2016', "should have correct start date");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '12/20/2016', "should have correct start date");
 
         // Move event to another day (on 27 november)
         await testUtils.dragAndDrop(
@@ -2974,8 +2979,8 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         assert.verifySteps(["2016-11-27 00:00:00"]);
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '11/27/2016', "should have correct start date");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '11/27/2016', "should have correct start date");
 
         // Move event to last day (on 7 january)
         await testUtils.dragAndDrop(
@@ -2985,8 +2990,8 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         assert.verifySteps(["2017-01-07 00:00:00"]);
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '01/07/2017', "should have correct start date");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '01/07/2017', "should have correct start date");
         calendar.destroy();
     });
 
@@ -3024,9 +3029,9 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         await testUtils.dom.click(calendar.$('.fc-event:contains("An event")'));
 
-        assert.containsOnce(calendar, '.popover:contains("07:00")',
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover:contains("07:00")',
             "start hour shouldn't have been changed");
-        assert.containsOnce(calendar, '.popover:contains("19:00")',
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover:contains("19:00")',
             "end hour shouldn't have been changed");
 
         calendar.destroy();
@@ -3085,9 +3090,9 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         await testUtils.dom.click(calendar.$('.fc-event:contains("An event")'));
 
-        assert.containsOnce(calendar, '.popover:contains("07:00")',
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover:contains("07:00")',
             "start hour shouldn't have been changed");
-        assert.containsOnce(calendar, '.popover:contains("19:00")',
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover:contains("19:00")',
             "end hour shouldn't have been changed");
 
         calendar.destroy();
@@ -3543,12 +3548,12 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
 
-        assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
-        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
-        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_delete').length, "popover should have a delete button");
-        assert.ok(calendar.$('.o_cw_popover .o_cw_popover_close').length, "popover should have a close button");
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.ok($('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
+        assert.ok($('.o_cw_popover .o_cw_popover_delete').length, "popover should have a delete button");
+        assert.ok($('.o_cw_popover .o_cw_popover_close').length, "popover should have a close button");
 
-        await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_edit'));
 
         assert.ok($('.modal-body').length, "should open the form view in dialog when click on edit");
 
@@ -3684,6 +3689,7 @@ QUnit.module('Views', {
         assert.expect(27);
 
         const calendar = await createCalendarView({
+            debug:1,
             View: CalendarView,
             model: 'event',
             data: this.data,
@@ -3717,7 +3723,7 @@ QUnit.module('Views', {
             'There should be 6 events displayed but there is 1 split on 2 weeks');
 
         async function clickDate(date) {
-            const el = calendar.el.querySelector(`.fc-day-top[data-date="${date}"]`);
+            const el = calendar.el.querySelector(`.fc-day-top[data-date="${date}"] .fc-day-number`);
             el.scrollIntoView(); // scroll to it as the calendar could be too small
 
             testUtils.dom.triggerMouseEvent(el, "mousedown");
@@ -3729,63 +3735,59 @@ QUnit.module('Views', {
         assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-11-17"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-11-17');
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-11-16"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-11-16');
-        assert.containsOnce(calendar, '.o_cw_popover');
-        let popoverText = calendar.el.querySelector('.o_cw_popover')
-            .textContent.replace(/\s{2,}/g, ' ').trim();
-        assert.strictEqual(popoverText, 'November 14-16, 2016 event 7');
-        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover');
+        let popoverText = getPopoverParent().querySelector('.o_cw_popover').textContent;
+        assert.strictEqual(popoverText, 'November 14-16, 2016event 7');
+        await testUtils.dom.click(getPopoverParent().querySelector('.o_cw_popover_close'));
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-11-14"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-11-14');
-        assert.containsOnce(calendar, '.o_cw_popover');
-        popoverText = calendar.el.querySelector('.o_cw_popover')
-            .textContent.replace(/\s{2,}/g, ' ').trim();
-        assert.strictEqual(popoverText, 'November 14-16, 2016 event 7');
-        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover');
+        popoverText = getPopoverParent().querySelector('.o_cw_popover').textContent;
+        assert.strictEqual(popoverText, 'November 14-16, 2016event 7');
+        await testUtils.dom.click(getPopoverParent().querySelector('.o_cw_popover_close'));
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-11-13"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-11-13');
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-12-10"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-12-10');
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-12-12"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-12-12');
-        assert.containsOnce(calendar, '.o_cw_popover');
-        popoverText = calendar.el.querySelector('.o_cw_popover')
-            .textContent.replace(/\s{2,}/g, ' ').trim();
-        assert.strictEqual(popoverText, 'December 12, 2016 event 2 event 3');
-        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover');
+        popoverText = getPopoverParent().querySelector('.o_cw_popover').textContent;
+        assert.strictEqual(popoverText, 'December 12, 2016event 2event 3');
+        await testUtils.dom.click(getPopoverParent().querySelector('.o_cw_popover_close'));
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.ok(calendar.el.querySelector('.fc-day-top[data-date="2016-12-14"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-12-14');
-        assert.containsOnce(calendar, '.o_cw_popover');
-        popoverText = calendar.el.querySelector('.o_cw_popover')
-            .textContent.replace(/\s{2,}/g, ' ').trim();
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover');
+        popoverText = getPopoverParent().querySelector('.o_cw_popover').textContent;
         assert.strictEqual(popoverText,
-            'December 14, 2016 event 4 December 13-20, 2016 event 5');
-        await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
-        assert.containsNone(calendar, '.o_cw_popover');
+            'December 14, 2016event 4December 13-20, 2016event 5');
+        await testUtils.dom.click(getPopoverParent().querySelector('.o_cw_popover_close'));
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         assert.notOk(calendar.el.querySelector('.fc-day-top[data-date="2016-12-21"]')
             .classList.contains('fc-has-event'));
         await clickDate('2016-12-21');
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         calendar.destroy();
     });
@@ -3916,18 +3918,18 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsNone(calendar, '.o_cw_popover');
+        assert.containsNone(getPopoverParent(), '.o_cw_popover');
 
         await testUtils.dom.click(calendar.el.querySelector('.fc-event .fc-content'));
-        assert.containsOnce(calendar, '.o_cw_popover',
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover',
             'open popup when click on event');
 
-        await testUtils.dom.click(calendar.el.querySelector('.o_cw_body'));
-        assert.containsOnce(calendar, '.o_cw_popover',
+        await testUtils.dom.click(getPopoverParent().querySelector('.o_cw_body'));
+        assert.containsOnce(getPopoverParent(), '.o_cw_popover',
             'keep popup openned when click inside popup');
 
         await testUtils.dom.click(calendar.el.querySelector('.o_content'));
-        assert.containsNone(calendar, '.o_cw_popover',
+        assert.containsNone(getPopoverParent(), '.o_cw_popover',
             'close popup when click outside popup');
 
         calendar.destroy();

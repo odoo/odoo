@@ -4,13 +4,18 @@ odoo.define('microsoft_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-const CalendarView = require('calendar.CalendarView');
 const CalendarRenderer = require('calendar.CalendarRenderer');
 const CalendarController = require('calendar.CalendarController');
 const CalendarModel = require('calendar.CalendarModel');
-const viewRegistry = require('web.view_registry');
 
 var _t = core._t;
+
+const {
+    Component,
+    hooks: {
+        useState,
+    },
+} = owl;
 
 const MicrosoftCalendarModel = CalendarModel.include({
 
@@ -119,68 +124,36 @@ const MicrosoftCalendarController = CalendarController.include({
     }
 });
 
-const MicrosoftCalendarRenderer = CalendarRenderer.include({
-    events: _.extend({}, CalendarRenderer.prototype.events, {
-        'click .o_microsoft_sync_button': '_onSyncMicrosoftCalendar',
-    }),
+class MicrosoftCalendarButton extends Component {
+    constructor() {
+        super(...arguments);
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Adds the Sync with Outlook button in the sidebar
-     *
-     * @private
-     */
-    _initSidebar: function () {
-        var self = this;
-        this._super.apply(this, arguments);
-        this.$microsoftButton = $();
-        if (this.model === "calendar.event") {
-            if (this.state.microsoft_is_sync) {
-                this.$microsoftButton = $('<span/>', {
-                                    html: _t("Synched with Outlook"),
-                                    class: 'w-100  badge badge-pill badge-success border-0'
-                                })
-                                .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
-                                .appendTo(self.$sidebar);
-            } else {
-                this.$microsoftButton = $('<button/>', {
-                                    type: 'button',
-                                    html: _t("Sync with <b>Outlook</b>"),
-                                    class: 'o_microsoft_sync_button w-100 m-auto btn btn-secondary'
-                                })
-                                .appendTo(self.$sidebar);
-            }
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
+        this.state = useState({
+            disabled: false,
+        });
+    }
     /**
      * Requests to sync the calendar with Microsoft Calendar
      *
      * @private
      */
-    _onSyncMicrosoftCalendar: function () {
-        var self = this;
-        var context = this.getSession().user_context;
-        this.$microsoftButton.prop('disabled', true);
-        this.trigger_up('syncMicrosoftCalendar', {
-            on_always: function () {
-                self.$microsoftButton.prop('disabled', false);
+    _onSyncMicrosoftCalendar() {
+        this.state.disabled = true;
+        this.trigger('syncMicrosoftCalendar', {
+            on_always: () => {
+                this.state.disabled = false;
             },
         });
-    },
-});
+    }
+}
+MicrosoftCalendarButton.template = 'microsoft_calendar.CalendarButton';
+
+CalendarRenderer.components.MicrosoftCalendarButton = MicrosoftCalendarButton;
 
 return {
     MicrosoftCalendarController,
     MicrosoftCalendarModel,
-    MicrosoftCalendarRenderer,
+    MicrosoftCalendarRenderer: CalendarRenderer,
 };
 
 });

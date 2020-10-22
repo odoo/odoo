@@ -6,6 +6,9 @@ odoo.define('calendar.CalendarController', function (require) {
     const { qweb, _t } = require('web.core');
 
     const CalendarController = Controller.extend({
+        custom_events: Object.assign({}, Controller.prototype.custom_events, {
+            attendee_status_changed: '_onAttendeeStatusChanged',
+        }),
 
         _askRecurrenceUpdatePolicy() {
             return new Promise((resolve, reject) => {
@@ -25,6 +28,21 @@ odoo.define('calendar.CalendarController', function (require) {
             });
         },
 
+        /**
+         * @private
+         * @param {OdooEvent} ev
+         */
+        async _onAttendeeStatusChanged(ev) {
+            await this._rpc({
+                model: 'calendar.event',
+                method: 'change_attendee_status',
+                args: [
+                    ev.data.eventId,
+                    ev.data.status,
+                ],
+            });
+            this.reload();
+        },
         // TODO factorize duplicated code
         /**
          * @override

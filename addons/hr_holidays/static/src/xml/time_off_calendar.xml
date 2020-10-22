@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates id="template" xml:space="preserve">
-    <t t-name="hr_holidays.dashboard_calendar_header">
+    <t t-name="hr_holidays.CalendarView" owl="1">
+        <div class="o_timeoff_calendar">
+            <t t-call="hr_holidays.dashboard_calendar_header"/>
+            <t t-call="web.CalendarView"/>
+        </div>
+    </t>
+
+    <t t-name="hr_holidays.dashboard_calendar_header" owl="1">
         <div class="o_timeoff_container d-flex">
             <div t-foreach="timeoffs" t-as="timeoff" t-attf-class="o_timeoff_card flex-grow-1 d-flex flex-column {{ timeoff_last ? 'o_timeoff_card_last' : '' }}">
                 <t t-set="need_allocation" t-value="timeoff[2] !== 'no'"/>
                 <t t-set="cl" t-value="'text-muted'"/>
 
-                <t t-if="need_allocation &amp;&amp; timeoff[1]['virtual_remaining_leaves'] &gt; 0">
+                <t t-if="need_allocation and timeoff[1]['virtual_remaining_leaves'] gt 0">
                     <t t-set="cl" t-value="'o_timeoff_green'"/>
                 </t>
 
@@ -39,40 +46,31 @@
         </button>
     </t>
 
-    <t t-name="hr_holidays.calendar.popover.placeholder">
-        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
-            <div class="arrow"/>
-            <div class="card-header d-flex justify-content-between py-2 pr-2">
-                <h4 class="popover-header border-0 p-0 pt-1"/>
-                <div class="ml-4">
-                    <i t-if="calendarIcon" t-attf-class="fa {{calendarIcon}}"></i>
-                    <span class="o_cw_popover_close ml-1"><i class="fa fa-close small"/></span>
-                </div>
+    <t t-name="hr_holidays.CalendarPopover" t-inherit="web.CalendarPopover" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[hasclass('o_cw_popover_close')]" position="replace">
+            <div class="ml-auto">
+                <i t-if="props.calendarIcon" t-attf-class="fa {{ props.calendarIcon }}"></i>
+                <span class="o_cw_popover_close ml-1"
+                    t-on-click="trigger('o-popover-close')"
+                >
+                    <i class="fa fa-close small"/>
+                </span>
             </div>
-            <div class="o_cw_body">
-            </div>
-        </div>
+        </xpath>
+        <xpath expr="//*[@t-call='web.CalendarPopover.body']" position="attributes">
+            <attribute name="t-call">hr_holidays.CalendarPopover.body</attribute>
+        </xpath>
     </t>
 
-    <t t-name="hr_holidays.calendar.popover">
-        <div class="o_cw_body">
-            <ul class="list-group list-group-flush">
-                <li t-if="!widget.hideDate and widget.eventDate.date" class="list-group-item">
-                    <b class="text-capitalize" t-esc="widget.eventDate.date"/> <small t-if="widget.eventDate.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventDate.duration)"/></small>
-                </li>
-                <li t-if="!widget.hideTime and widget.eventTime.time" class="list-group-item">
-                    <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventTime.duration)"/></small>
-                </li>
-            </ul>
-            <ul class="list-group list-group-flush o_cw_popover_fields_secondary" t-if="widget.display_name">
+    <t t-name="hr_holidays.CalendarPopover.body" t-inherit="web.CalendarPopover.body" t-inherit-mode="primary" owl="1">
+        <xpath expr="//i[hasclass('fa-calendar-o')]" position="replace"></xpath>
+        <xpath expr="//i[hasclass('fa-clock-o')]" position="replace"></xpath>
+        <xpath expr="//CalendarPopoverFieldsAdapter" position="replace">
+            <ul class="list-group list-group-flush o_cw_popover_fields_secondary" t-if="displayName">
                 <li class="list-group-item">
-                    <span class="o_field_char o_field_widget" t-esc="widget.display_name" />
+                    <span class="o_field_char o_field_widget" t-esc="displayName" />
                 </li>
             </ul>
-            <div class="card-footer border-top" t-if="widget.canEdit or widget.canDelete">
-                <a t-if="widget.canEdit" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
-                <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
-            </div>
-        </div>
+        </xpath>
     </t>
 </templates>

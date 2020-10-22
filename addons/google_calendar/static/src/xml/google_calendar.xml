@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <t t-inherit="web.CalendarView" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[@t-ref='calendarMini']" position="after">
+            <GoogleCalendarButton t-props="props" t-if="props.model === 'calendar.event'"/>
+        </xpath>
+    </t>
+
+    <t t-name="google_calendar.CalendarButton" owl="1">
+        <t t-if="props.google_is_sync">
+            <span class="w-100 badge badge-pill badge-success border-0">
+                <i class="fa mr-2 fa-check"/> Synched with Google
+            </span>
+        </t>
+        <t t-else="">
+            <button class="o_google_sync_button w-100 m-auto btn btn-secondary"
+                t-att-disabled="state.disabled"
+                t-on-click="_onGoogleSyncCalendar"
+            >
+                <img src="/google_calendar/static/src/img/calendar_32.png"/>
+                Sync with <b>Google</b>
+            </button>
+        </t>
+    </t>
+
+</template>
