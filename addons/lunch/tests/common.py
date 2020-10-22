@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.fields import X2ManyCmd
 
 
 class TestsCommon(common.TransactionCase):
@@ -26,7 +27,7 @@ class TestsCommon(common.TransactionCase):
             'send_by': 'mail',
             'automatic_email_time': 11,
             'available_location_ids': [
-                (6, 0, [self.location_office_1.id, self.location_office_2.id])
+                (X2ManyCmd.SET, 0, [self.location_office_1.id, self.location_office_2.id])
             ],
         })
 
@@ -38,7 +39,7 @@ class TestsCommon(common.TransactionCase):
             'partner_id': self.partner_coin_gourmand.id,
             'send_by': 'phone',
             'available_location_ids': [
-                (6, 0, [self.location_office_1.id, self.location_office_2.id])
+                (X2ManyCmd.SET, 0, [self.location_office_1.id, self.location_office_2.id])
             ],
         })
 

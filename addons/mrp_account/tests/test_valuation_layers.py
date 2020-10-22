@@ -5,6 +5,7 @@
 
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.tests import Form
+from odoo.fields import X2ManyCmd
 
 
 class TestMrpValuationCommon(TestStockValuationCommon):
@@ -26,7 +27,7 @@ class TestMrpValuationCommon(TestStockValuationCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.component.id, 'product_qty': 1})
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.component.id, 'product_qty': 1})
             ]})
 
     def _make_mo(self, bom, quantity=1):

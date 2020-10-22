@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo.tests
+from odoo.fields import X2ManyCmd
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -50,11 +51,11 @@ class TestUi(odoo.tests.HttpCase):
         self.env['product.template.attribute.line'].create([{
             'product_tmpl_id': self.product_product_4_product_template.id,
             'attribute_id': self.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+            'value_ids': [(X2ManyCmd.LINK, product_attribute_value_1.id), (X2ManyCmd.LINK, product_attribute_value_2.id)],
         }, {
             'product_tmpl_id': self.product_product_4_product_template.id,
             'attribute_id': product_attribute_2.id,
-            'value_ids': [(4, product_attribute_value_3.id), (4, product_attribute_value_4.id)],
+            'value_ids': [(X2ManyCmd.LINK, product_attribute_value_3.id), (X2ManyCmd.LINK, product_attribute_value_4.id)],
 
         }])
 

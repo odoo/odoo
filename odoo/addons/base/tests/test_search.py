@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.tests.common import TransactionCase
 
 
@@ -68,7 +69,7 @@ class test_search(TransactionCase):
         states_us = country_us.state_ids[:2]
 
         # Create test users
-        u = Users.create({'name': '__search', 'login': '__search', 'groups_id': [(6, 0, [group_employee.id])]})
+        u = Users.create({'name': '__search', 'login': '__search', 'groups_id': [(fields.X2ManyCmd.SET, 0, [group_employee.id])]})
         a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.id})
         b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
@@ -137,7 +138,7 @@ class test_search(TransactionCase):
         self.patch_order('res.partner', 'create_uid, name')
         self.patch_order('res.users', 'partner_id, login desc')
 
-        kw = dict(groups_id=[(6, 0, [self.ref('base.group_system'),
+        kw = dict(groups_id=[(fields.X2ManyCmd.SET, 0, [self.ref('base.group_system'),
                                      self.ref('base.group_partner_manager')])])
 
         u1 = Users.create(dict(name='Q', login='m', **kw)).id

@@ -2792,6 +2792,44 @@ class Many2oneReference(Integer):
         return model_ids
 
 
+class X2ManyCmd:
+    CREATE = 0
+    UPDATE = 1
+    DELETE = 2
+    UNLINK = 3
+    LINK = 4
+    CLEAR = 5
+    SET = 6
+
+    @staticmethod
+    def create(values):
+        return (0, 0, values)
+
+    @staticmethod
+    def update(id, values):
+        return (1, id, values)
+
+    @staticmethod
+    def delete(id):
+        return (2, id)
+
+    @staticmethod
+    def unlink(id):
+        return (3, id)
+
+    @staticmethod
+    def link(id):
+        return (4, id)
+
+    @staticmethod
+    def clear():
+        return (5,)
+
+    @staticmethod
+    def set(ids):
+        return (6, 0, ids)
+
+
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
@@ -2850,22 +2888,22 @@ class _RelationalMulti(_Relational):
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
-                    if command[0] == 0:
+                    if command[0] == X2ManyCmd.CREATE:
                         ids.add(comodel.new(command[2], ref=command[1]).id)
-                    elif command[0] == 1:
+                    elif command[0] == X2ManyCmd.UPDATE:
                         line = browse(command[1])
                         if validate:
                             line.update(command[2])
                         else:
                             line._update_cache(command[2], validate=False)
                         ids.add(line.id)
-                    elif command[0] in (2, 3):
+                    elif command[0] in (X2ManyCmd.DELETE, 3):
                         ids.discard(browse(command[1]).id)
-                    elif command[0] == 4:
+                    elif command[0] == X2ManyCmd.LINK:
                         ids.add(browse(command[1]).id)
-                    elif command[0] == 5:
+                    elif command[0] == X2ManyCmd.CLEAR:
                         ids.clear()
-                    elif command[0] == 6:
+                    elif command[0] == X2ManyCmd.SET:
                         ids = OrderedSet(browse(it).id for it in command[2])
                 elif isinstance(command, dict):
                     ids.add(comodel.new(command).id)
@@ -2915,7 +2953,7 @@ class _RelationalMulti(_Relational):
         if isinstance(value, BaseModel) and value._name == self.comodel_name:
             # make result with new and existing records
             inv_names = {field.name for field in record._field_inverses[self]}
-            result = [(6, 0, [])]
+            result = [(X2ManyCmd.SET, 0, [])]
             for record in value:
                 origin = record._origin
                 if not origin:
@@ -2924,7 +2962,7 @@ class _RelationalMulti(_Relational):
                         for name in record._cache
                         if name not in inv_names
                     })
-                    result.append((0, 0, values))
+                    result.append((X2ManyCmd.CREATE, 0, values))
                 else:
                     result[0][2].append(origin.id)
                     if record != origin:
@@ -2934,11 +2972,11 @@ class _RelationalMulti(_Relational):
                             if name not in inv_names and record[name] != origin[name]
                         })
                         if values:
-                            result.append((1, origin.id, values))
+                            result.append((X2ManyCmd.UPDATE, origin.id, values))
             return result
 
         if value is False or value is None:
-            return [(5,)]
+            return [(X2ManyCmd.CLEAR,)]
 
         if isinstance(value, list):
             return value
@@ -2980,13 +3018,13 @@ class _RelationalMulti(_Relational):
 
         for idx, (recs, value) in enumerate(records_commands_list):
             if isinstance(value, tuple):
-                value = [(6, 0, value)]
+                value = [(X2ManyCmd.SET, 0, value)]
             elif isinstance(value, BaseModel) and value._name == self.comodel_name:
-                value = [(6, 0, value._ids)]
+                value = [(X2ManyCmd.SET, 0, value._ids)]
             elif value is False or value is None:
-                value = [(5,)]
+                value = [(X2ManyCmd.CLEAR,)]
             elif isinstance(value, list) and value and not isinstance(value[0], (tuple, list)):
-                value = [(6, 0, tuple(value))]
+                value = [(X2ManyCmd.SET, 0, tuple(value))]
             if not isinstance(value, list):
                 raise ValueError("Wrong value for %s: %s" % (self, value))
             records_commands_list[idx] = (recs, value)

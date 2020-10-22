@@ -26,7 +26,7 @@ def create_internal_project(cr, registry):
             'name': _('Internal'),
             'allow_timesheets': True,
             'company_id': company.id,
-            'task_ids': [(0, 0, {
+            'task_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': name,
                 'company_id': company.id,
             }) for name in [_('Training'), _('Meeting')]]

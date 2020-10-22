@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.tests import common
+from odoo.fields import X2ManyCmd
 
 
 class TestMrpByProduct(common.TransactionCase):
@@ -22,8 +23,8 @@ class TestMrpByProduct(common.TransactionCase):
 
         # Create product A, B, C.
         # --------------------------
-        self.product_a = create_product('Product A', route_ids=[(6, 0, [route_manufacture, route_mto])])
-        self.product_b = create_product('Product B', route_ids=[(6, 0, [route_manufacture, route_mto])])
+        self.product_a = create_product('Product A', route_ids=[(X2ManyCmd.SET, 0, [route_manufacture, route_mto])])
+        self.product_b = create_product('Product B', route_ids=[(X2ManyCmd.SET, 0, [route_manufacture, route_mto])])
         self.product_c_id = create_product('Product C', route_ids=[]).id
 
     def test_00_mrp_byproduct(self):
@@ -35,7 +36,7 @@ class TestMrpByProduct(common.TransactionCase):
             'product_qty': 1.0,
             'type': 'normal',
             'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
             })
 
         # Create BOM for product A and set byproduct product B
@@ -44,8 +45,8 @@ class TestMrpByProduct(common.TransactionCase):
             'product_qty': 1.0,
             'type': 'normal',
             'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
-            'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            'byproduct_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]
             })
 
         # Create production order for product A
@@ -93,7 +94,7 @@ class TestMrpByProduct(common.TransactionCase):
             'product_qty': 1.0,
             'type': 'normal',
             'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
             })
 
         bom_product_a_2 = self.MrpBom.create({
@@ -101,7 +102,7 @@ class TestMrpByProduct(common.TransactionCase):
             'product_qty': 1.0,
             'type': 'normal',
             'product_uom_id': self.uom_unit_id,
-            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
             })
         # Create production order for product A
         # -------------------------------------

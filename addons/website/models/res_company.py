@@ -48,5 +48,5 @@ class Company(models.Model):
                 'name': 'Public user for %s' % self.name,
                 'login': 'public-user@company-%s.com' % self.id,
                 'company_id': self.id,
-                'company_ids': [(6, 0, [self.id])],
+                'company_ids': [(fields.X2ManyCmd.SET, 0, [self.id])],
             })

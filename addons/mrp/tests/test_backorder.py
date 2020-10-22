@@ -4,6 +4,7 @@
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 from odoo.tests.common import SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestMrpProductionBackorder(TestMrpCommon):
@@ -316,12 +317,12 @@ class TestMrpWorkorderBackorder(SavepointCase):
             'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.compfinished1.id, 'product_qty': 1}),
-                (0, 0, {'product_id': cls.compfinished2.id, 'product_qty': 1}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.compfinished1.id, 'product_qty': 1}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.compfinished2.id, 'product_qty': 1}),
             ],
             'operation_ids': [
-                (0, 0, {'sequence': 1, 'name': 'finished operation 1', 'workcenter_id': cls.workcenter1.id}),
-                (0, 0, {'sequence': 2, 'name': 'finished operation 2', 'workcenter_id': cls.workcenter2.id}),
+                (X2ManyCmd.CREATE, 0, {'sequence': 1, 'name': 'finished operation 1', 'workcenter_id': cls.workcenter1.id}),
+                (X2ManyCmd.CREATE, 0, {'sequence': 2, 'name': 'finished operation 2', 'workcenter_id': cls.workcenter2.id}),
             ],
         })
         cls.bom_finished1.bom_line_ids[0].operation_id = cls.bom_finished1.operation_ids[0].id

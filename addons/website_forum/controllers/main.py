@@ -10,7 +10,7 @@ import werkzeug.wrappers
 
 from datetime import datetime
 
-from odoo import http, tools, _
+from odoo import fields, http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -70,7 +70,7 @@ class WebsiteForum(WebsiteProfile):
                 'url': "/forum/%s" % slug(forum_id),
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
-                'group_ids': [(6, 0, group)]
+                'group_ids': [(fields.X2ManyCmd.SET, 0, group)]
             })
             forum_id.menu_id = menu_id
         return "/forum/%s" % slug(forum_id)

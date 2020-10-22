@@ -4,6 +4,7 @@ from contextlib import contextmanager
 
 from odoo.tests.common import SavepointCase, Form
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestMultiCompanyCommon(SavepointCase):
@@ -40,32 +41,32 @@ class TestMultiCompanyCommon(SavepointCase):
             'login': 'employee-a',
             'email': 'employee@companya.com',
             'company_id': cls.company_a.id,
-            'company_ids': [(6, 0, [cls.company_a.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [cls.company_a.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_employee.id])]
         })
         cls.user_manager_company_a = Users.create({
             'name': 'Manager Company A',
             'login': 'manager-a',
             'email': 'manager@companya.com',
             'company_id': cls.company_a.id,
-            'company_ids': [(6, 0, [cls.company_a.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [cls.company_a.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_employee.id])]
         })
         cls.user_employee_company_b = Users.create({
             'name': 'Employee Company B',
             'login': 'employee-b',
             'email': 'employee@companyb.com',
             'company_id': cls.company_b.id,
-            'company_ids': [(6, 0, [cls.company_b.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [cls.company_b.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_employee.id])]
         })
         cls.user_manager_company_b = Users.create({
             'name': 'Manager Company B',
             'login': 'manager-b',
             'email': 'manager@companyb.com',
             'company_id': cls.company_b.id,
-            'company_ids': [(6, 0, [cls.company_b.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [cls.company_b.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_employee.id])]
         })
 
     @contextmanager
@@ -131,16 +132,16 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
         # setup users
         cls.user_employee_company_a.write({
-            'groups_id': [(4, user_group_project_user.id)]
+            'groups_id': [(X2ManyCmd.LINK, user_group_project_user.id)]
         })
         cls.user_manager_company_a.write({
-            'groups_id': [(4, user_group_project_manager.id)]
+            'groups_id': [(X2ManyCmd.LINK, user_group_project_manager.id)]
         })
         cls.user_employee_company_b.write({
-            'groups_id': [(4, user_group_project_user.id)]
+            'groups_id': [(X2ManyCmd.LINK, user_group_project_user.id)]
         })
         cls.user_manager_company_b.write({
-            'groups_id': [(4, user_group_project_manager.id)]
+            'groups_id': [(X2ManyCmd.LINK, user_group_project_manager.id)]
         })
 
         # create project in both companies
@@ -151,11 +152,11 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             'partner_id': cls.partner_1.id,
             'company_id': cls.company_a.id,
             'type_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'New',
                     'sequence': 1,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Won',
                     'sequence': 10,
                 })
@@ -167,11 +168,11 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             'partner_id': cls.partner_1.id,
             'company_id': cls.company_b.id,
             'type_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'New',
                     'sequence': 1,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Won',
                     'sequence': 10,
                 })

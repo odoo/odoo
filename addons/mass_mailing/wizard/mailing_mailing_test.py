@@ -47,7 +47,7 @@ class TestMassMailing(models.TransientModel):
                 'body_html': mass_mail_layout._render({'body': body}, engine='ir.qweb', minimal_qcontext=True),
                 'notification': True,
                 'mailing_id': mailing.id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
+                'attachment_ids': [(fields.X2ManyCmd.LINK, attachment.id) for attachment in mailing.attachment_ids],
                 'auto_delete': True,
                 'mail_server_id': mailing.mail_server_id.id,
             }

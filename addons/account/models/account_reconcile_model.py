@@ -286,8 +286,8 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_exigible': tax_res['tax_exigibility'],
                 'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
-                'tax_ids': [(6, 0, tax_res['tax_ids'])],
-                'tax_tag_ids': [(6, 0, tax_res['tag_ids'])],
+                'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_res['tax_ids'])],
+                'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, tax_res['tag_ids'])],
                 'currency_id': False,
                 'reconcile_model_id': self.id,
             })
@@ -300,7 +300,7 @@ class AccountReconcileModel(models.Model):
                 'credit': base_balance < 0 and -base_balance or 0,
             })
 
-        base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
+        base_line_dict['tax_tag_ids'] = [(fields.X2ManyCmd.SET, 0, res['base_tags'])]
         return new_aml_dicts
 
     def _get_write_off_move_lines_dict(self, st_line, residual_balance):
@@ -341,7 +341,7 @@ class AccountReconcileModel(models.Model):
                 'account_id': line.account_id.id,
                 'currency_id': False,
                 'analytic_account_id': line.analytic_account_id.id,
-                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
             }
             lines_vals_list.append(writeoff_line)

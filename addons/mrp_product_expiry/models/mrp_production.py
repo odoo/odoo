@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import fields, models, _
 
 
 class MrpWorkorder(models.Model):
@@ -32,7 +32,7 @@ class MrpWorkorder(models.Model):
     def _get_expired_context(self, expired_lot_ids):
         context = dict(self.env.context)
         context.update({
-            'default_lot_ids': [(6, 0, expired_lot_ids)],
+            'default_lot_ids': [(fields.X2ManyCmd.SET, 0, expired_lot_ids)],
             'default_production_ids': self.ids,
         })
         return context

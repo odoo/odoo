@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.fields import X2ManyCmd
 from odoo.exceptions import UserError
 
 
@@ -50,7 +51,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
             for lead in leads:
                 partner_id = partner_assigned_dict.get(lead.id) or False
                 partner = self.env['res.partner'].browse(partner_id)
-                res['assignation_lines'].append((0, 0, self._convert_to_assignation_line(lead, partner)))
+                res['assignation_lines'].append((X2ManyCmd.CREATE, 0, self._convert_to_assignation_line(lead, partner)))
         return res
 
     def action_forward(self):

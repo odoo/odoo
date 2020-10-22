@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import X2ManyCmd
 
 
 class MergeOpportunity(models.TransientModel):
@@ -28,7 +29,7 @@ class MergeOpportunity(models.TransientModel):
         if record_ids:
             if 'opportunity_ids' in fields:
                 opp_ids = self.env['crm.lead'].browse(record_ids).filtered(lambda opp: opp.probability < 100).ids
-                result['opportunity_ids'] = [(6, 0, opp_ids)]
+                result['opportunity_ids'] = [(X2ManyCmd.SET, 0, opp_ids)]
 
         return result
 
@@ -53,4 +54,4 @@ class MergeOpportunity(models.TransientModel):
                 if wizard.team_id:
                     user_in_team = wizard.env['crm.team'].search_count([('id', '=', wizard.team_id.id), '|', ('user_id', '=', wizard.user_id.id), ('member_ids', '=', wizard.user_id.id)])
                 if not user_in_team:
-                    wizard.team_id = wizard.env['crm.team'].search(['|', ('user_id', '=', wizard.user_id.id), ('member_ids', '=', wizard.user_id.id)], limit=1)                    
+                    wizard.team_id = wizard.env['crm.team'].search(['|', ('user_id', '=', wizard.user_id.id), ('member_ids', '=', wizard.user_id.id)], limit=1)

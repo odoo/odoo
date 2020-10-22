@@ -218,8 +218,8 @@ class AccountPartialReconcile(models.Model):
             'currency_id': base_line.currency_id.id,
             'partner_id': base_line.partner_id.id,
             'account_id': account.id,
-            'tax_ids': [(6, 0, base_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, base_line._convert_tags_for_cash_basis(base_line.tax_tag_ids).ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, base_line.tax_ids.ids)],
+            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, base_line._convert_tags_for_cash_basis(base_line.tax_tag_ids).ids)],
             'tax_exigible': True,
         }
 
@@ -259,8 +259,8 @@ class AccountPartialReconcile(models.Model):
             'credit': -balance if balance < 0.0 else 0.0,
             'tax_base_amount': tax_line.tax_base_amount,
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
-            'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, tax_line._convert_tags_for_cash_basis(tax_line.tax_tag_ids).ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_line.tax_ids.ids)],
+            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, tax_line._convert_tags_for_cash_basis(tax_line.tax_tag_ids).ids)],
             'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.account_id.id,
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
@@ -576,7 +576,7 @@ class AccountPartialReconcile(models.Model):
 
                     sequence += 2
 
-                    move_vals['line_ids'] += [(0, 0, counterpart_line_vals), (0, 0, line_vals)]
+                    move_vals['line_ids'] += [(fields.X2ManyCmd.CREATE, 0, counterpart_line_vals), (fields.X2ManyCmd.CREATE, 0, line_vals)]
 
                 moves_to_create.append(move_vals)
 

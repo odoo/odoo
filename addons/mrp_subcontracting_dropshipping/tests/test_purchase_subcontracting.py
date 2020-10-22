@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
@@ -21,8 +22,8 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         resupply_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         buy_route = self.env['stock.location.route'].search([('name', '=', 'Buy')])
         dropship_route = self.env['stock.location.route'].search([('name', '=', 'Dropship')])
-        self.comp2.write({'route_ids': [(4, buy_route.id), (4, mto_route.id), (4, resupply_route.id)]})
-        self.finished.write({'route_ids': [(4, dropship_route.id)]})
+        self.comp2.write({'route_ids': [(X2ManyCmd.LINK, buy_route.id), (X2ManyCmd.LINK, mto_route.id), (X2ManyCmd.LINK, resupply_route.id)]})
+        self.finished.write({'route_ids': [(X2ManyCmd.LINK, dropship_route.id)]})
 
         warehouse = self.env['stock.warehouse'].create({
             'name': 'Warehouse For subcontract',

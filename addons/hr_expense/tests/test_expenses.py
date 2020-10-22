@@ -22,7 +22,7 @@ class TestExpenses(TestExpenseCommon):
             'journal_id': self.company_data['default_journal_purchase'].id,
             'accounting_date': '2017-01-01',
             'expense_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     # Expense without foreign currency.
                     'name': 'expense_1',
                     'date': '2016-01-01',
@@ -32,7 +32,7 @@ class TestExpenses(TestExpenseCommon):
                     'analytic_account_id': self.analytic_account_1.id,
                     'employee_id': self.expense_employee.id,
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     # Expense with foreign currency (rate 1:3).
                     'name': 'expense_1',
                     'date': '2016-01-01',

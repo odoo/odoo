@@ -4,6 +4,7 @@ from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -62,16 +63,16 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'match_total_amount': True,
             'match_total_amount_param': 100,
             'match_partner': True,
-            'match_partner_ids': [(6, 0, (cls.partner_1 + cls.partner_2 + cls.partner_3).ids)],
+            'match_partner_ids': [(X2ManyCmd.SET, 0, (cls.partner_1 + cls.partner_2 + cls.partner_3).ids)],
             'company_id': cls.company.id,
-            'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})],
+            'line_ids': [(X2ManyCmd.CREATE, 0, {'account_id': cls.current_assets_account.id})],
         })
         cls.rule_2 = cls.env['account.reconcile.model'].create({
             'name': 'write-off model',
             'rule_type': 'writeoff_suggestion',
             'match_partner': True,
             'match_partner_ids': [],
-            'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})],
+            'line_ids': [(X2ManyCmd.CREATE, 0, {'account_id': cls.current_assets_account.id})],
         })
 
         ##################
@@ -95,13 +96,13 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'name': 'test bank journal',
                 'journal_id': cls.bank_journal.id,
                 'line_ids': [
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         'payment_ref': 'invoice %s-%s-%s' % tuple(invoice_number.split('/')[1:]),
                         'partner_id': cls.partner_1.id,
                         'amount': 100,
                         'sequence': 1,
                     }),
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         'payment_ref': 'xxxxx',
                         'partner_id': cls.partner_1.id,
                         'amount': 600,
@@ -112,20 +113,20 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'name': 'second test bank journal',
                 'journal_id': cls.bank_journal.id,
                 'line_ids': [
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         'payment_ref': 'nawak',
                         'narration': 'Communication: RF12 3456',
                         'partner_id': cls.partner_3.id,
                         'amount': 600,
                         'sequence': 1,
                     }),
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         'payment_ref': 'RF12 3456',
                         'partner_id': cls.partner_3.id,
                         'amount': 600,
                         'sequence': 2,
                     }),
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         'payment_ref': 'baaaaah',
                         'ref': 'RF12 3456',
                         'partner_id': cls.partner_3.id,
@@ -137,7 +138,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'name': 'test cash journal',
                 'journal_id': cls.cash_journal.id,
                 'line_ids': [
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         'payment_ref': 'yyyyy',
                         'partner_id': cls.partner_2.id,
                         'amount': -1000,
@@ -452,11 +453,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.write({
             'auto_reconcile': True,
             'rule_type': 'writeoff_suggestion',
-            'line_ids': [(1, self.rule_1.line_ids.id, {
+            'line_ids': [(X2ManyCmd.UPDATE, self.rule_1.line_ids.id, {
                 'amount': 50,
                 'force_tax_included': True,
                 'tax_ids': [(6, 0, self.tax21.ids)],
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'amount': 100,
                 'force_tax_included': False,
                 'tax_ids': [(6, 0, self.tax12.ids)],
@@ -487,13 +488,13 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         move = AccountMove.create({
             'journal_id': self.bank_journal.id,
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': self.account_pay.id,
                     'partner_id': partner.id,
                     'name': 'One of these days',
                     'debit': 10,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': self.bank_journal.payment_credit_account_id.id,
                     'partner_id': partner.id,
                     'name': 'I\'m gonna cut you into little pieces',
@@ -520,7 +521,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     def test_match_different_currencies(self):
         partner = self.env['res.partner'].create({'name': 'Bernard Gagnant'})
-        self.rule_1.write({'match_partner_ids': [(6, 0, partner.ids)], 'match_same_currency': False})
+        self.rule_1.write({'match_partner_ids': [(X2ManyCmd.SET, 0, partner.ids)], 'match_same_currency': False})
 
         currency_inv = self.env.ref('base.EUR')
         currency_statement = self.env.ref('base.JPY')
@@ -547,7 +548,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         })
 
         self.rule_1.write({
-            'line_ids': [(5, 0, 0)],
+            'line_ids': [(X2ManyCmd.CLEAR, 0, 0)],
             'match_partner': False,
             'match_label': 'contains',
             'match_label_param': 'Tournicoti',  # So that we only match what we want to test
@@ -580,7 +581,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
             # We add some mapping for payment reference to rule_1
             rule.write({
-                'partner_mapping_line_ids': [(0, 0, {
+                'partner_mapping_line_ids': [(X2ManyCmd.CREATE, 0, {
                     'partner_id': self.partner_1.id,
                     'payment_ref_regex': 'toto.*',
                 })]
@@ -645,7 +646,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'name': 'test_match_multi_currencies',
             'rule_type': 'invoice_matching',
             'match_partner': True,
-            'match_partner_ids': [(6, 0, partner.ids)],
+            'match_partner_ids': [(X2ManyCmd.SET, 0, partner.ids)],
             'match_total_amount': True,
             'match_total_amount_param': 95.0,
             'match_same_currency': False,
@@ -656,7 +657,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'name': 'test_match_multi_currencies',
             'journal_id': journal.id,
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'journal_id': journal.id,
                     'date': '2016-01-01',
                     'payment_ref': 'line',
@@ -678,7 +679,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'line_ids': [
                 # Rate is 2 GOL = 1 USD in 2017.
                 # The statement line will consider this line equivalent to 600 DAR.
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': self.company_data['default_account_receivable'].id,
                     'partner_id': partner.id,
                     'currency_id': self.currency_data['currency'].id,
@@ -687,7 +688,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                     'amount_currency': 200.0,
                 }),
                 # Rate is 20 GOL = 1 USD in 2017.
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': self.company_data['default_account_receivable'].id,
                     'partner_id': partner.id,
                     'currency_id': self.currency_data_2['currency'].id,
@@ -696,7 +697,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                     'amount_currency': 280.0,
                 }),
                 # Line to balance the journal entry:
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': self.company_data['default_account_revenue'].id,
                     'debit': 0.0,
                     'credit': 114.0,

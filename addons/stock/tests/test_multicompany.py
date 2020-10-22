@@ -3,6 +3,7 @@
 
 from odoo.exceptions import UserError
 from odoo.tests.common import SavepointCase, Form
+from odoo.fields import X2ManyCmd
 
 
 class TestMultiCompany(SavepointCase):
@@ -22,16 +23,16 @@ class TestMultiCompany(SavepointCase):
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
-            'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [group_user.id, group_stock_manager.id])],
             'company_id': cls.company_a.id,
-            'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [cls.company_a.id, cls.company_b.id])]
         })
         cls.user_b = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user b',
-            'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [group_user.id, group_stock_manager.id])],
             'company_id': cls.company_b.id,
-            'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [cls.company_a.id, cls.company_b.id])]
         })
 
     def test_picking_type_1(self):
@@ -116,7 +117,7 @@ class TestMultiCompany(SavepointCase):
         inventory = self.env['stock.inventory'].with_user(self.user_a).create({})
         self.assertEqual(inventory.company_id, self.company_a)
         inventory.with_user(self.user_b).action_start()
-        inventory.with_user(self.user_b).line_ids = [(0, 0, {
+        inventory.with_user(self.user_b).line_ids = [(X2ManyCmd.CREATE, 0, {
             'product_qty': 10,
             'product_id': product.id,
             'location_id': self.stock_location_a.id,
@@ -137,7 +138,7 @@ class TestMultiCompany(SavepointCase):
         })
         inventory = self.env['stock.inventory'].with_user(self.user_a).create({})
         inventory.with_user(self.user_a).action_start()
-        inventory.with_user(self.user_a).line_ids = [(0, 0, {
+        inventory.with_user(self.user_a).line_ids = [(X2ManyCmd.CREATE, 0, {
             'product_id': product.id,
             'product_qty': 10,
             'location_id': self.stock_location_a.id,
@@ -154,7 +155,7 @@ class TestMultiCompany(SavepointCase):
             'company_id': self.company_b.id,
             'type': 'product'
         })
-        inventory = self.env['stock.inventory'].with_user(self.user_a).create({'product_ids': [(4, product.id)]})
+        inventory = self.env['stock.inventory'].with_user(self.user_a).create({'product_ids': [(X2ManyCmd.LINK, product.id)]})
         with self.assertRaises(UserError):
             inventory.with_user(self.user_a).action_start()
 
@@ -282,7 +283,7 @@ class TestMultiCompany(SavepointCase):
         # Creates a new product belong to Company A and set a responsible belong
         # to Company B. The product mustn't be created as the product and the
         # user don't belong of the same company.
-        self.user_b.company_ids = [(6, 0, [self.company_b.id])]
+        self.user_b.company_ids = [(X2ManyCmd.SET, 0, [self.company_b.id])]
         product_form = Form(self.env['product.template'].with_user(self.user_a))
         product_form.name = 'Meech Munchy'
         product_form.company_id = self.company_a
@@ -295,7 +296,7 @@ class TestMultiCompany(SavepointCase):
         # Creates a new product belong to Company A and set a responsible belong
         # to Company A & B (default B). The product must be created as the user
         # belongs to product's company.
-        self.user_b.company_ids = [(6, 0, [self.company_a.id, self.company_b.id])]
+        self.user_b.company_ids = [(X2ManyCmd.SET, 0, [self.company_a.id, self.company_b.id])]
         product_form = Form(self.env['product.template'].with_user(self.user_a))
         product_form.name = 'Scrab Cake'
         product_form.company_id = self.company_a
@@ -458,7 +459,7 @@ class TestMultiCompany(SavepointCase):
             'product_uom': product_lot.uom_id.id,
             'product_uom_qty': 1.0,
             'picking_type_id': picking_type_to_transit.id,
-            'route_ids': [(4, route.id)],
+            'route_ids': [(X2ManyCmd.LINK, route.id)],
         })
         move_to_transit._action_confirm()
         move_to_transit._action_assign()
@@ -501,7 +502,7 @@ class TestMultiCompany(SavepointCase):
         intercom_location = self.env.ref('stock.stock_location_inter_wh')
         intercom_location.write({'active': True})
         partner = self.env['res.partner'].create({'name': 'Deco Addict'})
-        self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
+        self.warehouse_a.resupply_wh_ids = [(X2ManyCmd.SET, 0, [self.warehouse_b.id])]
         resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
                                                                   ('supplied_wh_id', '=', self.warehouse_a.id)])
         self.assertTrue(resupply_route, "Resupply route not found")
@@ -510,7 +511,7 @@ class TestMultiCompany(SavepointCase):
             'type': 'product',
             'tracking': 'lot',
             'name': 'product lot',
-            'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)],
+            'route_ids': [(X2ManyCmd.LINK, resupply_route.id), (X2ManyCmd.LINK, self.env.ref('stock.route_warehouse0_mto').id)],
         })
 
         move_sup_to_whb = self.env['stock.move'].create({

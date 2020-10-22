@@ -2,6 +2,7 @@
 from freezegun import freeze_time
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -36,7 +37,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
             'amount_type': 'group',
             'amount': 0.0,
             'type_tax_use': 'sale',
-            'children_tax_ids': [(6, 0, (cls.tax_10_include + cls.tax_20).ids)],
+            'children_tax_ids': [(X2ManyCmd.SET, 0, (cls.tax_10_include + cls.tax_20).ids)],
         })
 
         # ==== Invoice ====
@@ -48,7 +49,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': cls.product_a.id,
                 'product_uom_id': cls.env.ref('uom.product_uom_dozen').id,
                 'price_unit': 275.0,
@@ -158,7 +159,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
     def test_facturx_group_of_taxes(self):
         ''' Same as above with a group of taxes. '''
         self.invoice.write({
-            'invoice_line_ids': [(1, self.invoice.invoice_line_ids.id, {'tax_ids': [(6, 0, self.tax_group.ids)]})],
+            'invoice_line_ids': [(X2ManyCmd.UPDATE, self.invoice.invoice_line_ids.id, {'tax_ids': [(X2ManyCmd.SET, 0, self.tax_group.ids)]})],
         })
 
         applied_xpath = '''

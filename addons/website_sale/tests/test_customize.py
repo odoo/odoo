@@ -5,6 +5,8 @@ import base64
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.modules.module import get_module_resource
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
+
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
@@ -40,7 +42,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, [product_attribute_value_1.id, product_attribute_value_2.id])]
+            'value_ids': [(X2ManyCmd.SET, 0, [product_attribute_value_1.id, product_attribute_value_2.id])]
         }])
 
         # set a different price on the variants to differentiate them
@@ -55,7 +57,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
-        self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
+        self.env.ref('product.group_product_variant').write({'users': [(X2ManyCmd.LINK, self.env.ref('base.user_admin').id)]})
         self.start_tour("/", 'shop_customize', login="admin")
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
@@ -100,11 +102,11 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.env['product.template.attribute.line'].create([{
             'product_tmpl_id': self.product_product_4_product_template.id,
             'attribute_id': self.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+            'value_ids': [(X2ManyCmd.LINK, product_attribute_value_1.id), (X2ManyCmd.LINK, product_attribute_value_2.id)],
         }, {
             'product_tmpl_id': self.product_product_4_product_template.id,
             'attribute_id': product_attribute_2.id,
-            'value_ids': [(4, product_attribute_value_3.id), (4, product_attribute_value_4.id)],
+            'value_ids': [(X2ManyCmd.LINK, product_attribute_value_3.id), (X2ManyCmd.LINK, product_attribute_value_4.id)],
 
         }])
         product_template = self.product_product_4_product_template
@@ -116,7 +118,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'sequence': 3,
             'is_custom': True
         })
-        self.product_product_4_product_template.attribute_line_ids[0].write({'value_ids': [(4, product_attribute_value_7.id)]})
+        self.product_product_4_product_template.attribute_line_ids[0].write({'value_ids': [(X2ManyCmd.LINK, product_attribute_value_7.id)]})
 
         img_path = get_module_resource('product', 'static', 'img', 'product_product_11-image.png')
         img_content = base64.b64encode(open(img_path, "rb").read())
@@ -130,7 +132,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.product_product_11_product_template.id,
             'attribute_id': self.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+            'value_ids': [(X2ManyCmd.LINK, product_attribute_value_1.id), (X2ManyCmd.LINK, product_attribute_value_2.id)],
         })
         self.product_product_11_product_template.attribute_line_ids[0].product_template_value_ids[1].price_extra = 6.40
 
@@ -192,7 +194,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, product_attribute_values.ids)]
+            'value_ids': [(X2ManyCmd.SET, 0, product_attribute_values.ids)]
         }])
 
         # set a different price on the variants to differentiate them
@@ -246,7 +248,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, product_attribute_values.ids)]
+            'value_ids': [(X2ManyCmd.SET, 0, product_attribute_values.ids)]
         }])
 
         # set a different price on the variants to differentiate them
@@ -293,7 +295,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         ptal = self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute_no_variant.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, product_attribute_value_no_variant.ids)]
+            'value_ids': [(X2ManyCmd.SET, 0, product_attribute_value_no_variant.ids)]
         }])
 
         # set a price on the value
@@ -302,7 +304,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
 
     def test_06_admin_list_view_b2c(self):
-        self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
+        self.env.ref('product.group_product_variant').write({'users': [(X2ManyCmd.LINK, self.env.ref('base.user_admin').id)]})
 
         # activate b2c
         config = self.env['res.config.settings'].create({})

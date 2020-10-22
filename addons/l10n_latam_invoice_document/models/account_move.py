@@ -149,7 +149,7 @@ class AccountMove(models.Model):
             invoice.l10n_latam_tax_ids = not_included_invoice_taxes
         remaining = self - recs_invoice
         remaining.l10n_latam_amount_untaxed = False
-        remaining.l10n_latam_tax_ids = [(5, 0)]
+        remaining.l10n_latam_tax_ids = [(fields.X2ManyCmd.CLEAR, 0)]
 
     def _post(self, soft=True):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):

@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import tagged
 from odoo.exceptions import AccessError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -79,7 +80,7 @@ if 'user_id' in env.context['old_values'][record.id]:
             }, {
                 'name': 'Base Automation: test rule with trigger',
                 'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
-                'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__state').id)],
+                'trigger_field_ids': [(X2ManyCmd.LINK, self.env.ref('test_base_automation.field_base_automation_lead_test__state').id)],
                 'state': 'code',
                 'code': """
 record = model.browse(env.context['active_id'])
@@ -90,7 +91,7 @@ record['name'] = record.name + 'X'""",
                 'name': 'Base Automation: test send an email',
                 'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'template_id': self.test_mail_template_automation.id,
-                'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__deadline').id)],
+                'trigger_field_ids': [(X2ManyCmd.LINK, self.env.ref('test_base_automation.field_base_automation_lead_test__deadline').id)],
                 'state': 'email',
                 'code': """
 record = model.browse(env.context['active_id'])
@@ -258,7 +259,7 @@ record['name'] = record.name + 'X'""",
         """
         Check that creating a lead with a line executes rules on both records.
         """
-        lead = self.create_lead(line_ids=[(0, 0, {'name': "Line"})])
+        lead = self.create_lead(line_ids=[(X2ManyCmd.CREATE, 0, {'name': "Line"})])
         self.assertEqual(lead.state, 'draft', "Lead state should be 'draft'")
         self.assertEqual(lead.user_id, self.user_demo, "Responsible should change on creation of Lead test line.")
         self.assertEqual(len(lead.line_ids), 1, "New test line is not created")
@@ -285,7 +286,7 @@ record['name'] = record.name + 'X'""",
 
         # change the rule to trigger on partner_id
         rule = self.env['base.automation'].search([('name', '=', 'Base Automation: test rule with trigger')])
-        rule.write({'trigger_field_ids':  [(6, 0, [self.env.ref('test_base_automation.field_base_automation_lead_test__partner_id').id])]})
+        rule.write({'trigger_field_ids':  [(X2ManyCmd.SET, 0, [self.env.ref('test_base_automation.field_base_automation_lead_test__partner_id').id])]})
 
         partner2 = self.env['res.partner'].create({'name': 'A new partner'})
         lead.name = 'X'
@@ -314,7 +315,7 @@ record['name'] = record.name + 'X'""",
         access = self.env.ref("test_base_automation.access_base_automation_linked_test")
         access.group_id = self.env['res.groups'].create({
             'name': "Access to base.automation.linked.test",
-            "users": [(6, 0, [self.user_admin.id,])]
+            "users": [(X2ManyCmd.SET, 0, [self.user_admin.id,])]
         })
 
         # sanity check: user demo has no access to the comodel of 'linked_id'

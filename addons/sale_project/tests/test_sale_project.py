@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestSaleProject(SavepointCase):
@@ -26,7 +27,7 @@ class TestSaleProject(SavepointCase):
         cls.project_template_state = cls.env['project.task.type'].create({
             'name': 'Only stage in project template',
             'sequence': 1,
-            'project_ids': [(4, cls.project_template.id)]
+            'project_ids': [(X2ManyCmd.LINK, cls.project_template.id)]
         })
 
         # Create service products

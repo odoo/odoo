@@ -163,7 +163,7 @@ class Challenge(models.Model):
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
-            vals['user_ids'].extend((4, user.id) for user in users)
+            vals['user_ids'].extend((fields.X2ManyCmd.LINK, user.id) for user in users)
 
         return super(Challenge, self).create(vals)
 
@@ -173,7 +173,7 @@ class Challenge(models.Model):
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
-            vals['user_ids'].extend((4, user.id) for user in users)
+            vals['user_ids'].extend((fields.X2ManyCmd.LINK, user.id) for user in users)
 
         write_res = super(Challenge, self).write(vals)
 
@@ -358,7 +358,7 @@ class Challenge(models.Model):
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids
                 if user_squating_challenge_ids:
-                    # users that used to match the challenge 
+                    # users that used to match the challenge
                     Goals.search([
                         ('challenge_id', '=', challenge.id),
                         ('user_id', 'in', list(user_squating_challenge_ids))
@@ -446,7 +446,7 @@ class Challenge(models.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
             'completeness': <percentage>,
             'current': <current value>,
         }
@@ -597,7 +597,7 @@ class Challenge(models.Model):
         user = self.env.user
         sudoed = self.sudo()
         sudoed.message_post(body=_("%s has joined the challenge", user.name))
-        sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
+        sudoed.write({'invited_user_ids': [(fields.X2ManyCmd.UNLINK, user.id)], 'user_ids': [(fields.X2ManyCmd.LINK, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
     def discard_challenge(self):
@@ -605,7 +605,7 @@ class Challenge(models.Model):
         user = self.env.user
         sudoed = self.sudo()
         sudoed.message_post(body=_("%s has refused the challenge", user.name))
-        return sudoed.write({'invited_user_ids': (3, user.id)})
+        return sudoed.write({'invited_user_ids': (fields.X2ManyCmd.UNLINK, user.id)})
 
     def _check_challenge_reward(self, force=False):
         """Actions for the end of a challenge

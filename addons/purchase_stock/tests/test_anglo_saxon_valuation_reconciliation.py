@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import Form, tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -34,7 +35,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': quantity,
@@ -159,7 +160,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         )
 
         test_product = self.test_product_delivery
-        test_product.supplier_taxes_id = [(6, 0, tax_exclude_id.ids)]
+        test_product.supplier_taxes_id = [(X2ManyCmd.SET, 0, tax_exclude_id.ids)]
         date_po_and_delivery = '2018-01-01'
 
         purchase_order = self._create_purchase(test_product, date_po_and_delivery, quantity=10000, set_tax=True)

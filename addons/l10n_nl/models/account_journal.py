@@ -14,7 +14,7 @@ class AccountJournal(models.Model):
             # Ensure the newly liquidity accounts have the right account tag in order to be part
             # of the Dutch financial reports.
             tag_ids = account_vals.get('tag_ids', [])
-            tag_ids.append((4, self.env.ref('l10n_nl.account_tag_25').id))
+            tag_ids.append((fields.X2ManyCmd.LINK, self.env.ref('l10n_nl.account_tag_25').id))
             account_vals['tag_ids'] = tag_ids
 
         return account_vals

@@ -6,6 +6,8 @@ from ast import literal_eval
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users, Form
 from odoo.tools import formataddr, mute_logger
+from odoo.fields import X2ManyCmd
+
 
 class TestMassMailValues(MassMailCommon):
 
@@ -83,7 +85,7 @@ class TestMassMailValues(MassMailCommon):
         # default for mailing list: depends upon contact_list_ids
         self.assertEqual(literal_eval(mailing.mailing_domain), [])
         mailing.write({
-            'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)]
+            'contact_list_ids': [(X2ManyCmd.LINK, self.mailing_list_1.id), (X2ManyCmd.LINK, self.mailing_list_2.id)]
         })
         self.assertEqual(literal_eval(mailing.mailing_domain), [('list_ids', 'in', (self.mailing_list_1 | self.mailing_list_2).ids)])
 
@@ -135,7 +137,7 @@ class TestMassMailFeatures(MassMailCommon):
         """ Posting a message on a channel should send one email to all recipients, except the blacklisted ones """
         def _join_channel(channel, partners):
             for partner in partners:
-                channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner.id})]})
+                channel.write({'channel_last_seen_partner_ids': [(X2ManyCmd.CREATE, 0, {'partner_id': partner.id})]})
             channel.invalidate_cache()
 
         test_channel = self.env['mail.channel'].create({
@@ -224,7 +226,7 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
             'reply_to_mode': 'email',
             'reply_to': self.email_reply_to,
-            'contact_list_ids': [(6, 0, self.mailing_list_1.ids)],
+            'contact_list_ids': [(X2ManyCmd.SET, 0, self.mailing_list_1.ids)],
             'keep_archives': True,
         })
 

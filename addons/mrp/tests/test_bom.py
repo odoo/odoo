@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions
+from odoo import fields, exceptions
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools import float_compare, float_round
@@ -30,8 +30,8 @@ class TestBoM(TestMrpCommon):
         })
         test_bom.write({
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ],
         })
         test_bom_l1 = self.env['mrp.bom.line'].create({
@@ -43,13 +43,13 @@ class TestBoM(TestMrpCommon):
             'bom_id': test_bom.id,
             'product_id': self.product_3.id,
             'product_qty': 2,
-            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
+            'bom_product_template_attribute_value_ids': [(fields.X2ManyCmd.LINK, self.product_7_attr1_v1.id)],
         })
         test_bom_l3 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom.id,
             'product_id': self.product_4.id,
             'product_qty': 2,
-            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
+            'bom_product_template_attribute_value_ids': [(fields.X2ManyCmd.LINK, self.product_7_attr1_v2.id)],
         })
         boms, lines = test_bom.explode(self.product_7_3, 4)
         self.assertIn(test_bom, [b[0]for b in boms])
@@ -87,7 +87,7 @@ class TestBoM(TestMrpCommon):
         })
         test_bom_1.write({
             'operation_ids': [
-                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
         })
         test_bom_1_l1 = self.env['mrp.bom.line'].create({
@@ -105,8 +105,8 @@ class TestBoM(TestMrpCommon):
         })
         test_bom_2.write({
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ]
         })
         test_bom_2_l1 = self.env['mrp.bom.line'].create({
@@ -118,13 +118,13 @@ class TestBoM(TestMrpCommon):
             'bom_id': test_bom_2.id,
             'product_id': self.product_5.id,
             'product_qty': 2,
-            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
+            'bom_product_template_attribute_value_ids': [(fields.X2ManyCmd.LINK, self.product_7_attr1_v1.id)],
         })
         test_bom_2_l3 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_2.id,
             'product_id': self.product_5.id,
             'product_qty': 2,
-            'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
+            'bom_product_template_attribute_value_ids': [(fields.X2ManyCmd.LINK, self.product_7_attr1_v2.id)],
         })
         test_bom_2_l4 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_2.id,
@@ -203,11 +203,11 @@ class TestBoM(TestMrpCommon):
         product_template = self.env['product.template'].create({
             'name': 'Sofa',
             'attribute_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'attribute_id': att_color.id,
                     'value_ids': [(6, 0, [att_color_red.id, att_color_blue.id])]
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'attribute_id': att_size.id,
                     'value_ids': [(6, 0, [att_size_big.id, att_size_medium.id])]
                 })
@@ -232,12 +232,12 @@ class TestBoM(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'product_id': product_A.id,
                     'product_qty': 1,
                     'bom_product_template_attribute_value_ids': [(4, sofa_red.id), (4, sofa_blue.id), (4, sofa_big.id)],
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'product_id': product_B.id,
                     'product_qty': 1,
                     'bom_product_template_attribute_value_ids': [(4, sofa_red.id), (4, sofa_blue.id)]
@@ -480,7 +480,7 @@ class TestBoM(TestMrpCommon):
         self.car_gps_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.car.id,
             'attribute_id': self.gps_attribute.id,
-            'value_ids': [(6, 0, [self.gps_yes.id, self.gps_no.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.gps_yes.id, self.gps_no.id])],
         })
         self.car_gps_yes = self.car_gps_attribute_line.product_template_value_ids[0]
         self.car_gps_no = self.car_gps_attribute_line.product_template_value_ids[1]
@@ -500,7 +500,7 @@ class TestBoM(TestMrpCommon):
         self.car_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.car.id,
             'attribute_id': self.color_attribute.id,
-            'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.color_red.id, self.color_blue.id])],
         })
         self.car_color_red = self.car_color_attribute_line.product_template_value_ids[0]
         self.car_color_blue = self.car_color_attribute_line.product_template_value_ids[1]
@@ -515,7 +515,7 @@ class TestBoM(TestMrpCommon):
         self.paint_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.paint.id,
             'attribute_id': self.color_attribute.id,
-            'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.color_red.id, self.color_blue.id])],
         })
         self.paint_color_red = self.paint_color_attribute_line.product_template_value_ids[0]
         self.paint_color_blue = self.paint_color_attribute_line.product_template_value_ids[1]
@@ -530,7 +530,7 @@ class TestBoM(TestMrpCommon):
         self.dashboard_gps_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.dashboard.id,
             'attribute_id': self.gps_attribute.id,
-            'value_ids': [(6, 0, [self.gps_yes.id, self.gps_no.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.gps_yes.id, self.gps_no.id])],
         })
         self.dashboard_gps_yes = self.dashboard_gps_attribute_line.product_template_value_ids[0]
         self.dashboard_gps_no = self.dashboard_gps_attribute_line.product_template_value_ids[1]
@@ -538,7 +538,7 @@ class TestBoM(TestMrpCommon):
         self.dashboard_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.dashboard.id,
             'attribute_id': self.color_attribute.id,
-            'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.color_red.id, self.color_blue.id])],
         })
         self.dashboard_color_red = self.dashboard_color_attribute_line.product_template_value_ids[0]
         self.dashboard_color_blue = self.dashboard_color_attribute_line.product_template_value_ids[1]

@@ -3,7 +3,7 @@
 import base64
 
 from dateutil.relativedelta import relativedelta
-from odoo import tests
+from odoo import fields, tests
 from odoo.fields import Datetime
 from odoo.modules.module import get_module_resource
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
@@ -30,32 +30,32 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'description': 'Learn the basics of gardening !',
             'create_date': Datetime.now() - relativedelta(days=8),
             'slide_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'Gardening: The Know-How',
                     'sequence': 1,
                     'datas': pdf_content,
                     'slide_type': 'presentation',
                     'is_published': True,
                     'is_preview': True,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'Home Gardening',
                     'sequence': 2,
                     'image_1920': img_content,
                     'slide_type': 'infographic',
                     'is_published': True,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'Mighty Carrots',
                     'sequence': 3,
                     'image_1920': img_content,
                     'slide_type': 'infographic',
                     'is_published': True,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'How to Grow and Harvest The Best Strawberries | Basics',
                     'sequence': 4,
                     'datas': pdf_content,
                     'slide_type': 'document',
                     'is_published': True,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'Test your knowledge',
                     'sequence': 5,
                     'slide_type': 'quiz',
@@ -102,7 +102,7 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
+            'groups_id': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.LINK, self.env.ref('base.group_user').id)]
         })
 
         self.browser_js(
@@ -115,7 +115,7 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_officer').id)]
+            'groups_id': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.LINK, self.env.ref('base.group_user').id), (fields.X2ManyCmd.LINK, self.env.ref('website_slides.group_website_slides_officer').id)]
         })
 
         self.browser_js(
@@ -143,7 +143,7 @@ class TestUiYoutube(HttpCaseWithUserDemo):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
+            'groups_id': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.LINK, self.env.ref('base.group_user').id)]
         })
         self.env.ref('website_slides.slide_channel_demo_3_furn0')._remove_membership(self.env.ref('base.partner_demo').ids)
 
@@ -157,7 +157,7 @@ class TestUiYoutube(HttpCaseWithUserDemo):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_manager').id)]
+            'groups_id': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.LINK, self.env.ref('base.group_user').id), (fields.X2ManyCmd.LINK, self.env.ref('website_slides.group_website_slides_manager').id)]
         })
 
         self.browser_js(

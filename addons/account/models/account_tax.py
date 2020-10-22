@@ -109,15 +109,15 @@ class AccountTax(models.Model):
         if 'refund_repartition_line_ids' in fields_list:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
+                (fields.X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
+                (fields.X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
             ]
 
         if 'invoice_repartition_line_ids' in fields_list:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
+                (fields.X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
+                (fields.X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
             ]
 
         return rslt
@@ -237,7 +237,7 @@ class AccountTax(models.Model):
     @api.onchange('amount_type')
     def onchange_amount_type(self):
         if self.amount_type != 'group':
-            self.children_tax_ids = [(5,)]
+            self.children_tax_ids = [(fields.X2ManyCmd.CLEAR,)]
         if self.amount_type == 'group':
             self.description = None
 

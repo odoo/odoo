@@ -2,6 +2,7 @@
 
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestSwissQRCode(AccountTestInvoicingCommon):
@@ -33,7 +34,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
             'payment_reference': "Papa a vu le fifi de lolo",
             'invoice_line_ids': [
-                (0, 0, {'quantity': 1, 'price_unit': 100})
+                (X2ManyCmd.CREATE, 0, {'quantity': 1, 'price_unit': 100})
             ],
         })
 

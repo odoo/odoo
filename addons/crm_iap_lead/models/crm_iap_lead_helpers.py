@@ -1,5 +1,5 @@
 from math import floor, log10
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class CRMHelpers(models.Model):
@@ -37,7 +37,7 @@ class CRMHelpers(models.Model):
             # Lead vals from record itself
             'type': lead_type,
             'team_id': team_id,
-            'tag_ids': [(6, 0, tag_ids)],
+            'tag_ids': [(fields.X2ManyCmd.SET, 0, tag_ids)],
             'user_id': user_id,
             'reveal_id': company_data['clearbit_id'],
             # Lead vals from data

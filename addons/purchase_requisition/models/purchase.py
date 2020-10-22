@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
             order_line_values = line._prepare_purchase_order_line(
                 name=name, product_qty=product_qty, price_unit=price_unit,
                 taxes_ids=taxes_ids)
-            order_lines.append((0, 0, order_line_values))
+            order_lines.append((fields.X2ManyCmd.CREATE, 0, order_line_values))
         self.order_line = order_lines
 
     def button_confirm(self):

@@ -175,7 +175,7 @@ class MicrosoftSync(models.AbstractModel):
 
                 to_create_values += [dict(value, need_sync_m=False)]
 
-            new_calendar_recurrence['calendar_event_ids'] = [(0, 0, to_create_value) for to_create_value in to_create_values]
+            new_calendar_recurrence['calendar_event_ids'] = [(fields.X2ManyCmd.CREATE, 0, to_create_value) for to_create_value in to_create_values]
             new_recurrence_odoo = self.env['calendar.recurrence'].create(new_calendar_recurrence)
             new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
             new_recurrence |= new_recurrence_odoo

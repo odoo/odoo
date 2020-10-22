@@ -63,8 +63,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+            'seller_ids': [(fields.X2ManyCmd.SET, 0, [supplier_info1.id])],
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_buy, route_mto])]
         })
 
         # Stock picking
@@ -87,7 +87,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         self.assertEqual(purchase1.order_line.price_unit, 50, 'The price on the purchase order is not the supplierinfo one')
 
         # Blanket order creation
-        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 50})
+        line1 = (fields.X2ManyCmd.CREATE, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 50})
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
             'quantity_copy': 'none',
@@ -160,24 +160,24 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+            'seller_ids': [(fields.X2ManyCmd.SET, 0, [supplier_info1.id])],
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_buy, route_mto])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
             'type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+            'seller_ids': [(fields.X2ManyCmd.SET, 0, [supplier_info1.id])],
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_buy, route_mto])]
         })
         # Blanket orders creation
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
             'quantity_copy': 'none',
         })
-        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
-        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
+        line1 = (fields.X2ManyCmd.CREATE, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
+        line2 = (fields.X2ManyCmd.CREATE, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
         requisition_1 = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'type_id': requisition_type.id,
@@ -222,7 +222,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         POL2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)]).order_id
         self.assertFalse(POL1 == POL2, 'The two blanket orders should generate two purchase different purchase orders')
         POL1.write({'order_line': [
-            (0, 0, {
+            (fields.X2ManyCmd.CREATE, 0, {
                 'name': product_2.name,
                 'product_id': product_2.id,
                 'product_qty': 5.0,

@@ -3,6 +3,7 @@
 
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestMrpMulticompany(common.TransactionCase):
@@ -22,16 +23,16 @@ class TestMrpMulticompany(common.TransactionCase):
         self.user_a = self.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
-            'groups_id': [(6, 0, [group_user.id, group_mrp_manager.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [group_user.id, group_mrp_manager.id])],
             'company_id': self.company_a.id,
-            'company_ids': [(6, 0, [self.company_a.id, self.company_b.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [self.company_a.id, self.company_b.id])]
         })
         self.user_b = self.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user b',
-            'groups_id': [(6, 0, [group_user.id, group_mrp_manager.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [group_user.id, group_mrp_manager.id])],
             'company_id': self.company_b.id,
-            'company_ids': [(6, 0, [self.company_a.id, self.company_b.id])]
+            'company_ids': [(X2ManyCmd.SET, 0, [self.company_a.id, self.company_b.id])]
         })
 
     def test_bom_1(self):
@@ -66,7 +67,7 @@ class TestMrpMulticompany(common.TransactionCase):
                 'product_id': product_a.id,
                 'product_tmpl_id': product_b.product_tmpl_id.id,
                 'company_id': self.company_a.id,
-                'bom_line_ids': [(0, 0, {'product_id': product_b.id})]
+                'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': product_b.id})]
             })
 
     def test_production_1(self):
@@ -101,7 +102,7 @@ class TestMrpMulticompany(common.TransactionCase):
             'product_id': product_a.id,
             'product_tmpl_id': product_a.product_tmpl_id.id,
             'company_id': self.company_a.id,
-            'bom_line_ids': [(0, 0, {'product_id': component_a.id})]
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': component_a.id})]
         })
         mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
         mo_form.product_id = product_a
@@ -129,7 +130,7 @@ class TestMrpMulticompany(common.TransactionCase):
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
             'company_id': self.company_a.id,
-            'bom_line_ids': [(0, 0, {'product_id': component.id})]
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': component.id})]
         })
         mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
         mo_form.product_id = product
@@ -157,7 +158,7 @@ class TestMrpMulticompany(common.TransactionCase):
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
             'company_id': self.company_a.id,
-            'bom_line_ids': [(0, 0, {'product_id': component.id})]
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': component.id})]
         })
         mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
         mo_form.product_id = product

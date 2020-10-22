@@ -9,7 +9,7 @@ from datetime import datetime
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID, _
+from odoo import fields, http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
@@ -241,7 +241,7 @@ class WebsiteForm(http.Controller):
             }
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
             if attachment_id and not custom_field:
-                record.sudo()[file.field_name] = [(4, attachment_id.id)]
+                record.sudo()[file.field_name] = [(fields.X2ManyCmd.LINK, attachment_id.id)]
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 
@@ -255,11 +255,11 @@ class WebsiteForm(http.Controller):
                     'message_type': 'comment',
                     'no_auto_thread': False,
                     'res_id': id_record,
-                    'attachment_ids': [(6, 0, orphan_attachment_ids)],
+                    'attachment_ids': [(fields.X2ManyCmd.SET, 0, orphan_attachment_ids)],
                 }
                 mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
         else:
             # If the model is mail.mail then we have no other choice but to
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
-                record.attachment_ids = [(4, attachment_id_id)]
+                record.attachment_ids = [(fields.X2ManyCmd.LINK, attachment_id_id)]

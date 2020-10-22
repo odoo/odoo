@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, _
+from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 from odoo.http import request
 
@@ -13,7 +13,7 @@ class AccountChartTemplate(models.Model):
         res = super()._get_fp_vals(company, position)
         if company.country_id.code == "AR":
             res['l10n_ar_afip_responsibility_type_ids'] = [
-                (6, False, position.l10n_ar_afip_responsibility_type_ids.ids)]
+                (fields.X2ManyCmd.SET, False, position.l10n_ar_afip_responsibility_type_ids.ids)]
         return res
 
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):

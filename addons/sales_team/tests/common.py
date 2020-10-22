@@ -3,6 +3,7 @@
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestSalesCommon(SavepointCase):
@@ -56,7 +57,7 @@ class TestSalesCommon(SavepointCase):
             'sequence': 5,
             'company_id': False,
             'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_leads.id), (4, cls.user_admin.id)],
+            'member_ids': [(X2ManyCmd.LINK, cls.user_sales_leads.id), (X2ManyCmd.LINK, cls.user_admin.id)],
         })
 
 

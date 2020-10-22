@@ -56,7 +56,7 @@ class ResUsers(models.Model):
         current_website = self.env['website'].get_current_website()
         if request and current_website.specific_user_account:
             values['company_id'] = current_website.company_id.id
-            values['company_ids'] = [(4, current_website.company_id.id)]
+            values['company_ids'] = [(fields.X2ManyCmd.LINK, current_website.company_id.id)]
             values['website_id'] = current_website.id
         new_user = super(ResUsers, self)._signup_create_user(values)
         return new_user

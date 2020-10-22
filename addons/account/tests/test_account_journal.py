@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -49,13 +50,13 @@ class TestAccountJournal(AccountTestInvoicingCommon):
     def test_account_control_create_journal_entry(self):
         move_vals = {
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'debit',
                     'account_id': self.company_data['default_account_revenue'].id,
                     'debit': 100.0,
                     'credit': 0.0,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'credit',
                     'account_id': self.company_data['default_account_expense'].id,
                     'debit': 0.0,
@@ -76,13 +77,13 @@ class TestAccountJournal(AccountTestInvoicingCommon):
     def test_account_control_existing_journal_entry(self):
         self.env['account.move'].create({
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'debit',
                     'account_id': self.company_data['default_account_revenue'].id,
                     'debit': 100.0,
                     'credit': 0.0,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'credit',
                     'account_id': self.company_data['default_account_expense'].id,
                     'debit': 0.0,

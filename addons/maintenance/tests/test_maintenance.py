@@ -4,6 +4,7 @@
 import time
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 from dateutil import relativedelta
 import datetime
 
@@ -25,7 +26,7 @@ class TestEquipment(TransactionCase):
             company_id=self.main_company.id,
             login="emp",
             email="empuser@yourcompany.example.com",
-            groups_id=[(6, 0, [res_user.id])]
+            groups_id=[(X2ManyCmd.SET, 0, [res_user.id])]
         ))
 
         self.manager = self.res_users.create(dict(
@@ -33,7 +34,7 @@ class TestEquipment(TransactionCase):
             company_id=self.main_company.id,
             login="hm",
             email="eqmanager@yourcompany.example.com",
-            groups_id=[(6, 0, [res_manager.id])]
+            groups_id=[(X2ManyCmd.SET, 0, [res_manager.id])]
         ))
 
         self.equipment_monitor = self.env['maintenance.equipment.category'].create({

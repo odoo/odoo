@@ -729,7 +729,7 @@ class Survey(models.Model):
         # return a fake 'audience' user_input
         fake_user_input = self.env['survey.user_input'].new({
             'survey_id': self.id,
-            'predefined_question_ids': [(6, 0, self._prepare_user_input_predefined_questions().ids)]
+            'predefined_question_ids': [(fields.X2ManyCmd.SET, 0, self._prepare_user_input_predefined_questions().ids)]
         })
 
         fake_user_input_lines = self.env['survey.user_input.line']

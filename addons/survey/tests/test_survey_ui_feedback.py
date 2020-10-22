@@ -3,6 +3,7 @@
 import odoo.tests
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.fields import X2ManyCmd
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -20,23 +21,23 @@ class TestUiFeedback(HttpCaseWithUserDemo):
             'description': """<p>This survey allows you to give a feedback about your experience with our eCommerce solution.
     Filling it helps us improving your experience.</p></field>""",
             'question_and_page_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'title': 'General information',
                     'sequence': 1,
                     'question_type': False,
                     'is_page': True,
                     'description': """<p>This section is about general informations about you. Answering them helps qualifying your answers.</p>""",
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Where do you live ?',
                     'sequence': 2,
                     'question_type': 'char_box',
                     'constr_mandatory': False,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'When is your date of birth ?',
                     'sequence': 3,
                     'question_type': 'date',
                     'description': False,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'How frequently do you buy products online ?',
                     'sequence': 4,
                     'question_type': 'simple_choice',
@@ -60,18 +61,18 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                             'value': 'Other (answer in comment)',
                             'sequence': 5,
                         })],
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'How many times did you order products on our website ?',
                     'sequence': 5,
                     'question_type': 'numerical_box',
                     'constr_mandatory': True,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'About our ecommerce',
                     'sequence': 6,
                     'is_page': True,
                     'question_type': False,
                     'description': """<p>This section is about our eCommerce experience itself.</p>""",
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Which of the following words would you use to describe our products ?',
                     'sequence': 7,
                     'question_type': 'multiple_choice',
@@ -107,7 +108,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                             'value': 'Other',
                             'sequence': 9,
                         })],
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'What do your think about our new eCommerce ?',
                     'sequence': 8,
                     'question_type': 'matrix',
@@ -142,7 +143,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                         'value': 'I have added products to my wishlist',
                         'sequence': 5,
                     })],
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Do you have any other comments, questions, or concerns ?',
                     'sequence': 9,
                     'question_type': 'text_box',

@@ -24,7 +24,7 @@ class BaseLanguageInstall(models.TransientModel):
         action = super(BaseLanguageInstall, self).lang_install()
         lang = self.env['res.lang']._lang_get(self.lang)
         if self.website_ids and lang:
-            self.website_ids.write({'language_ids': [(4, lang.id)]})
+            self.website_ids.write({'language_ids': [(fields.X2ManyCmd.LINK, lang.id)]})
         params = self._context.get('params', {})
         if 'url_return' in params:
             return {

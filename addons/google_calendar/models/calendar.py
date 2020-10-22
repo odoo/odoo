@@ -98,19 +98,19 @@ class Meeting(models.Model):
 
             if email in attendees_by_emails:
                 # Update existing attendees
-                attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
+                attendee_commands += [(fields.X2ManyCmd.UPDATE, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
             else:
                 # Create new attendees
                 partner = self.env['res.partner'].find_or_create(attendee.get('email'))
-                attendee_commands += [(0, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
-                partner_commands += [(4, partner.id)]
+                attendee_commands += [(fields.X2ManyCmd.CREATE, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
+                partner_commands += [(fields.X2ManyCmd.LINK, partner.id)]
                 if attendee.get('displayName') and not partner.name:
                     partner.name = attendee.get('displayName')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
-                attendee_commands += [(2, odoo_attendee.id)]
-                partner_commands += [(3, odoo_attendee.partner_id.id)]
+                attendee_commands += [(fields.X2ManyCmd.DELETE, odoo_attendee.id)]
+                partner_commands += [(fields.X2ManyCmd.UNLINK, odoo_attendee.partner_id.id)]
         return attendee_commands, partner_commands
 
     @api.model
@@ -126,7 +126,7 @@ class Meeting(models.Model):
                 ('duration_minutes', '=', minutes)
             ], limit=1)
             if alarm:
-                commands += [(4, alarm.id)]
+                commands += [(fields.X2ManyCmd.LINK, alarm.id)]
             else:
                 if minutes % (60*24) == 0:
                     interval = 'days'
@@ -152,7 +152,7 @@ class Meeting(models.Model):
                         reminder_type=alarm_type_label,
                         duration=duration,
                     )
-                commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
+                commands += [(fields.X2ManyCmd.CREATE, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
 
     def _google_values(self):

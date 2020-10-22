@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import fields, api, models, _
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -35,7 +35,7 @@ class SaleOrder(models.Model):
             'product_uom': program.discount_line_product_id.uom_id.id,
             'order_id': self.id,
             'is_reward_line': True,
-            'tax_id': [(4, tax.id, False) for tax in taxes],
+            'tax_id': [(fields.X2ManyCmd.LINK, tax.id, False) for tax in taxes],
         }
 
     def _get_cheapest_line(self):

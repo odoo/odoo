@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -53,7 +54,7 @@ class TestSettings(AccountTestInvoicingCommon):
         """
         user = self.env.ref('base.user_admin')
         company = self.env['res.company'].create({'name': 'oobO'})
-        user.write({'company_ids': [(4, company.id)], 'company_id': company.id})
+        user.write({'company_ids': [(X2ManyCmd.LINK, company.id)], 'company_id': company.id})
         Settings = self.env['res.config.settings'].with_user(user.id)
         config = Settings.create({})
 

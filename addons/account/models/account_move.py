@@ -500,10 +500,10 @@ class AccountMove(models.Model):
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
             'account_id': tax_line.account_id.id,
             'currency_id': tax_line.currency_id.id,
-            'analytic_tag_ids': [(6, 0, tax_line.tax_line_id.analytic and tax_line.analytic_tag_ids.ids or [])],
+            'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, tax_line.tax_line_id.analytic and tax_line.analytic_tag_ids.ids or [])],
             'analytic_account_id': tax_line.tax_line_id.analytic and tax_line.analytic_account_id.id,
-            'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, tax_line.tax_tag_ids.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_line.tax_ids.ids)],
+            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, tax_line.tax_tag_ids.ids)],
         }
 
     @api.model
@@ -520,10 +520,10 @@ class AccountMove(models.Model):
             'tax_repartition_line_id': tax_vals['tax_repartition_line_id'],
             'account_id': account.id,
             'currency_id': base_line.currency_id.id,
-            'analytic_tag_ids': [(6, 0, tax_vals['analytic'] and base_line.analytic_tag_ids.ids or [])],
+            'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, tax_vals['analytic'] and base_line.analytic_tag_ids.ids or [])],
             'analytic_account_id': tax_vals['analytic'] and base_line.analytic_account_id.id,
-            'tax_ids': [(6, 0, tax_vals['tax_ids'])],
-            'tax_tag_ids': [(6, 0, tax_vals['tag_ids'])],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_vals['tax_ids'])],
+            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, tax_vals['tag_ids'])],
         }
 
     def _recompute_tax_lines(self, recompute_tax_base_amount=False):
@@ -612,7 +612,7 @@ class AccountMove(models.Model):
         for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id):
             # Don't call compute_all if there is no tax.
             if not line.tax_ids:
-                line.tax_tag_ids = [(5, 0, 0)]
+                line.tax_tag_ids = [(fields.X2ManyCmd.CLEAR, 0, 0)]
                 continue
 
             compute_all_vals = _compute_base_line_taxes(line)
@@ -1291,7 +1291,7 @@ class AccountMove(models.Model):
 
             for line in move.line_ids:
                 if not line.currency_id.is_zero(balance - abs(line.balance)):
-                    to_write.append((1, line.id, {
+                    to_write.append((fields.X2ManyCmd.UPDATE, line.id, {
                         'debit': line.balance > 0.0 and balance or 0.0,
                         'credit': line.balance < 0.0 and balance or 0.0,
                         'amount_currency': line.balance > 0.0 and amount_currency or -amount_currency,
@@ -2202,7 +2202,7 @@ class AccountMove(models.Model):
                 line_vals.update({
                     'tax_repartition_line_id': refund_repartition_line.id,
                     'account_id': account_id,
-                    'tax_tag_ids': [(6, 0, refund_repartition_line.tag_ids.ids)],
+                    'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, refund_repartition_line.tag_ids.ids)],
                 })
             elif line_vals.get('tax_ids') and line_vals['tax_ids'][0][2]:
                 # Base line.
@@ -2411,7 +2411,7 @@ class AccountMove(models.Model):
                     'line_ids': []
                 }
                 for line in move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-                    to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
+                    to_write['line_ids'].append((fields.X2ManyCmd.UPDATE, line.id, {'name': to_write['payment_reference']}))
                 move.write(to_write)
 
         for move in to_post:
@@ -2652,7 +2652,7 @@ class AccountMove(models.Model):
             new_invoice_line_ids = []
             for cmd, virtualid, line_vals in reversed_move['line_ids']:
                 if not line_vals['exclude_from_invoice_tab']:
-                    new_invoice_line_ids.append((0, 0,line_vals))
+                    new_invoice_line_ids.append((fields.X2ManyCmd.CREATE, 0,line_vals))
             if move.amount_total < 0:
                 # Inverse all invoice_line_ids
                 for cmd, virtualid, line_vals in new_invoice_line_ids:
@@ -2664,7 +2664,7 @@ class AccountMove(models.Model):
                     })
             move.write({
                 'move_type': move.move_type.replace('invoice', 'refund'),
-                'invoice_line_ids' : [(5, 0, 0)],
+                'invoice_line_ids' : [(fields.X2ManyCmd.CLEAR, 0, 0)],
                 'partner_bank_id': False,
             })
             move.write({'invoice_line_ids' : new_invoice_line_ids})
@@ -4157,7 +4157,7 @@ class AccountMoveLine(models.Model):
 
                 sequence = len(exchange_diff_move_vals['line_ids'])
                 exchange_diff_move_vals['line_ids'] += [
-                    (0, 0, {
+                    (fields.X2ManyCmd.CREATE, 0, {
                         'name': _('Currency exchange rate difference'),
                         'debit': -line.amount_residual if line.amount_residual < 0.0 else 0.0,
                         'credit': line.amount_residual if line.amount_residual > 0.0 else 0.0,
@@ -4167,7 +4167,7 @@ class AccountMoveLine(models.Model):
                         'partner_id': line.partner_id.id,
                         'sequence': sequence,
                     }),
-                    (0, 0, {
+                    (fields.X2ManyCmd.CREATE, 0, {
                         'name': _('Currency exchange rate difference'),
                         'debit': line.amount_residual if line.amount_residual > 0.0 else 0.0,
                         'credit': -line.amount_residual if line.amount_residual < 0.0 else 0.0,
@@ -4236,8 +4236,8 @@ class AccountMoveLine(models.Model):
                             'partner_id': line.partner_id.id,
                             'tax_base_amount': line.tax_base_amount,
                             'tax_repartition_line_id': line.tax_repartition_line_id.id,
-                            'tax_ids': [(6, 0, line.tax_ids.ids)],
-                            'tax_tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tax_tag_ids).ids)],
+                            'tax_ids': [(fields.X2ManyCmd.SET, 0, line.tax_ids.ids)],
+                            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, line._convert_tags_for_cash_basis(line.tax_tag_ids).ids)],
                             'debit': line.debit,
                             'credit': line.credit,
                         }
@@ -4292,7 +4292,7 @@ class AccountMoveLine(models.Model):
 
                     sequence = len(exchange_diff_move_vals['line_ids'])
                     exchange_diff_move_vals['line_ids'] += [
-                        (0, 0, {
+                        (fields.X2ManyCmd.CREATE, 0, {
                             **values,
                             'name': _('Currency exchange rate difference (cash basis)'),
                             'debit': values['credit'],
@@ -4300,7 +4300,7 @@ class AccountMoveLine(models.Model):
                             'amount_currency': 0.0,
                             'sequence': sequence,
                         }),
-                        (0, 0, {
+                        (fields.X2ManyCmd.CREATE, 0, {
                             **values,
                             'name': _('Currency exchange rate difference (cash basis)'),
                             'amount_currency': 0.0,
@@ -4480,8 +4480,8 @@ class AccountMoveLine(models.Model):
 
             results['full_reconcile'] = self.env['account.full.reconcile'].create({
                 'exchange_move_id': exchange_move and exchange_move.id,
-                'partial_reconcile_ids': [(6, 0, involved_partials.ids)],
-                'reconciled_line_ids': [(6, 0, involved_lines.ids)],
+                'partial_reconcile_ids': [(fields.X2ManyCmd.SET, 0, involved_partials.ids)],
+                'reconciled_line_ids': [(fields.X2ManyCmd.SET, 0, involved_lines.ids)],
             })
 
         # Trigger action for paid invoices
@@ -4553,7 +4553,7 @@ class AccountMoveLine(models.Model):
                 'date': move_line.date,
                 'account_id': move_line.analytic_account_id.id,
                 'group_id': move_line.analytic_account_id.group_id.id,
-                'tag_ids': [(6, 0, move_line._get_analytic_tag_ids())],
+                'tag_ids': [(fields.X2ManyCmd.SET, 0, move_line._get_analytic_tag_ids())],
                 'unit_amount': move_line.quantity,
                 'product_id': move_line.product_id and move_line.product_id.id or False,
                 'product_uom_id': move_line.product_uom_id and move_line.product_uom_id.id or False,
@@ -4579,7 +4579,7 @@ class AccountMoveLine(models.Model):
             'date': self.date,
             'account_id': distribution.account_id.id,
             'partner_id': self.partner_id.id,
-            'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
+            'tag_ids': [(fields.X2ManyCmd.SET, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -21,7 +22,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         cls.po_vals = {
             'partner_id': cls.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
@@ -29,7 +30,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'price_unit': 500.0,
                     'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': cls.product_id_2.name,
                     'product_id': cls.product_id_2.id,
                     'product_qty': 5.0,
@@ -45,7 +46,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a) else False
             if id_to_remove:
                 self.product_id_2.write({
-                    'seller_ids': [(2, id_to_remove, False)],
+                    'seller_ids': [(X2ManyCmd.DELETE, id_to_remove, False)],
                 })
         self.assertFalse(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a), 'Purchase: the partner should not be in the list of the product suppliers')
 
@@ -164,7 +165,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_qty': 10,
@@ -204,7 +205,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # Deliver 15 instead of 10.
         po1.write({
             'order_line': [
-                (1, po1.order_line[0].id, {'product_qty': 15}),
+                (X2ManyCmd.UPDATE, po1.order_line[0].id, {'product_qty': 15}),
             ]
         })
 

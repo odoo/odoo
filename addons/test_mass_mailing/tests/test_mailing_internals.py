@@ -5,6 +5,7 @@ from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.addons.test_mass_mailing.data.mail_test_data import MAIL_TEMPLATE
 from odoo.tests.common import users
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestMailingInternals(TestMassMailCommon):
@@ -54,7 +55,7 @@ class TestMailingInternals(TestMassMailCommon):
         })
         with self.mock_mail_gateway(), self.assertRaises(Exception):
                 mailing_test.send_mail_test()
-        
+
         # Test if bad jinja in the preview raises an error
         mailing.write({
             'body_html': '<p>Hello ${object.name}</p>',
@@ -138,7 +139,7 @@ class TestMailingInternals(TestMassMailCommon):
             'reply_to': '%s@%s' % (self.test_alias.alias_name, self.test_alias.alias_domain),
             'keep_archives': True,
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
-            'contact_list_ids': [(4, self.mailing_list_1.id)],
+            'contact_list_ids': [(X2ManyCmd.LINK, self.mailing_list_1.id)],
             'source_id': source.id,
             'medium_id': medium.id,
             'campaign_id': campaign.id

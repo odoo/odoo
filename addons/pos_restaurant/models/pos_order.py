@@ -83,7 +83,7 @@ class PosOrder(models.Model):
             del order_line['id']
             if not 'pack_lot_ids' in order_line:
                 order_line['pack_lot_ids'] = []
-            extended_order_lines.append([0, 0, order_line])
+            extended_order_lines.append([fields.X2ManyCmd.CREATE, 0, order_line])
 
         for order_id, order_lines in groupby(extended_order_lines, key=lambda x:x[2]['order_id']):
             next(order for order in orders if order['id'] == order_id[0])['lines'] = list(order_lines)
@@ -118,7 +118,7 @@ class PosOrder(models.Model):
             payment_line['payment_method_id'] = payment_line['payment_method_id'][0]
 
             del payment_line['id']
-            extended_payment_lines.append([0, 0, payment_line])
+            extended_payment_lines.append([fields.X2ManyCmd.CREATE, 0, payment_line])
         for order_id, payment_lines in groupby(extended_payment_lines, key=lambda x:x[2]['pos_order_id']):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
@@ -192,7 +192,7 @@ class PosOrder(models.Model):
         process_line = partial(PosOrderLine._order_line_fields, session_id=self.session_id.id)
 
         # 1. add/modify tip orderline
-        processed_tip_line_vals = process_line([0, 0, tip_line_vals])[2]
+        processed_tip_line_vals = process_line([fields.X2ManyCmd.CREATE, 0, tip_line_vals])[2]
         processed_tip_line_vals.update({ "order_id": self.id })
         tip_line = self.lines.filtered(lambda line: line.product_id == self.session_id.config_id.tip_product_id)
         if not tip_line:

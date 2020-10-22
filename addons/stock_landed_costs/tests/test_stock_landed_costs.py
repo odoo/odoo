@@ -4,6 +4,7 @@
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -40,7 +41,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_1',
             'picking_type_id': self.warehouse.out_type_id.id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'product_id': product_landed_cost_1.id,
                 'product_uom_qty': 5,
                 'product_uom': self.ref('uom.product_uom_unit'),
@@ -65,7 +66,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_2',
             'picking_type_id': self.warehouse.out_type_id.id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'product_id': product_landed_cost_2.id,
                 'product_uom_qty': 10,
                 'product_uom': self.ref('uom.product_uom_unit'),
@@ -101,10 +102,10 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'picking_ids': [picking_landed_cost_1.id, picking_landed_cost_2.id],
             'account_journal_id': self.expenses_journal,
             'cost_lines': [
-                (0, 0, {'product_id': virtual_home_staging.id}),
-                (0, 0, {'product_id': virtual_home_staging.id}),
-                (0, 0, {'product_id': virtual_home_staging.id}),
-                (0, 0, {'product_id': virtual_home_staging.id})],
+                (X2ManyCmd.CREATE, 0, {'product_id': virtual_home_staging.id}),
+                (X2ManyCmd.CREATE, 0, {'product_id': virtual_home_staging.id}),
+                (X2ManyCmd.CREATE, 0, {'product_id': virtual_home_staging.id}),
+                (X2ManyCmd.CREATE, 0, {'product_id': virtual_home_staging.id})],
             'valuation_adjustment_lines': [],
         })
         cost_lines_values = {

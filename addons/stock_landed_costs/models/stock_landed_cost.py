@@ -417,8 +417,8 @@ class AdjustmentLines(models.Model):
             # negative cost, reverse the entry
             debit_line['credit'] = -diff
             credit_line['debit'] = -diff
-        AccountMoveLine.append([0, 0, debit_line])
-        AccountMoveLine.append([0, 0, credit_line])
+        AccountMoveLine.append([fields.X2ManyCmd.CREATE, 0, debit_line])
+        AccountMoveLine.append([fields.X2ManyCmd.CREATE, 0, credit_line])
 
         # Create account move lines for quants already out of stock
         if qty_out > 0:
@@ -438,8 +438,8 @@ class AdjustmentLines(models.Model):
                 # negative cost, reverse the entry
                 debit_line['credit'] = -diff
                 credit_line['debit'] = -diff
-            AccountMoveLine.append([0, 0, debit_line])
-            AccountMoveLine.append([0, 0, credit_line])
+            AccountMoveLine.append([fields.X2ManyCmd.CREATE, 0, debit_line])
+            AccountMoveLine.append([fields.X2ManyCmd.CREATE, 0, credit_line])
 
             if self.env.company.anglo_saxon_accounting:
                 expense_account_id = self.product_id.product_tmpl_id.get_product_accounts()['expense'].id
@@ -459,7 +459,7 @@ class AdjustmentLines(models.Model):
                     # negative cost, reverse the entry
                     debit_line['credit'] = -diff
                     credit_line['debit'] = -diff
-                AccountMoveLine.append([0, 0, debit_line])
-                AccountMoveLine.append([0, 0, credit_line])
+                AccountMoveLine.append([fields.X2ManyCmd.CREATE, 0, debit_line])
+                AccountMoveLine.append([fields.X2ManyCmd.CREATE, 0, credit_line])
 
         return AccountMoveLine

@@ -223,7 +223,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'standard_price': 110.0,
-            'supplier_taxes_id': [(6, 0, tax_price_include.ids)],
+            'supplier_taxes_id': [(fields.X2ManyCmd.SET, 0, tax_price_include.ids)],
         })
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
@@ -368,7 +368,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'standard_price': 110.0,
-            'supplier_taxes_id': [(6, 0, tax_price_include_1.ids)],
+            'supplier_taxes_id': [(fields.X2ManyCmd.SET, 0, tax_price_include_1.ids)],
         })
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))

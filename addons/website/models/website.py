@@ -173,7 +173,7 @@ class Website(models.Model):
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
             groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
-            groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
+            groups.write({'implied_ids': [(fields.X2ManyCmd.LINK, self.env.ref('website.group_multi_website').id)]})
 
         return res
 

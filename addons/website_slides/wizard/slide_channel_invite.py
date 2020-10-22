@@ -93,9 +93,9 @@ class SlideChannelInvite(models.TransientModel):
             'res_id': None,
             'subject': subject,
             'body_html': body,
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
+            'attachment_ids': [(fields.X2ManyCmd.LINK, att.id) for att in self.attachment_ids],
             'auto_delete': True,
-            'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
+            'recipient_ids': [(fields.X2ManyCmd.LINK, slide_channel_partner.partner_id.id)]
         }
 
         # optional support of notif_layout in context

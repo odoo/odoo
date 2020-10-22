@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
@@ -38,12 +39,12 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 2, "The promo offer shouldn't have been applied as 2 product A aren't in the order")
 
         # Test case 3 (2 A 1 B): Assert that the reward is given as the product B is now in the order
-        order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 2.0})]})
+        order.write({'order_line': [(X2ManyCmd.UPDATE, order.order_line[0].id, {'product_uom_qty': 2.0})]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied, the discount is not created")
 
         # Test case 4 (1 A 1 B): Assert that the reward is removed as we don't buy 2 products B anymore
-        order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 1.0})]})
+        order.write({'order_line': [(X2ManyCmd.UPDATE, order.order_line[0].id, {'product_uom_qty': 1.0})]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo reward should have been removed as the rules are not matched anymore")
         self.assertEqual(order.order_line[0].product_id.id, self.product_A.id, "The wrong line has been removed")
@@ -51,8 +52,8 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
 
         # Test case 5 (1 B): Assert that the reward is removed when the order is modified and doesn't match the rules anymore
         order.write({'order_line': [
-            (1, order.order_line[0].id, {'product_uom_qty': 2.0}),
-            (2, order.order_line[0].id, False)
+            (X2ManyCmd.UPDATE, order.order_line[0].id, {'product_uom_qty': 2.0}),
+            (X2ManyCmd.DELETE, order.order_line[0].id, False)
         ]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "The promo reward should have been removed as the rules are not matched anymore")

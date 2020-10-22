@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
+from odoo.fields import X2ManyCmd
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date, formatLang
 
@@ -85,7 +86,7 @@ class AutomaticEntryWizard(models.TransientModel):
         if self.env.context.get('active_model') != 'account.move.line' or not self.env.context.get('active_ids'):
             raise UserError(_('This can only be used on journal items'))
         move_line_ids = self.env['account.move.line'].browse(self.env.context['active_ids'])
-        res['move_line_ids'] = [(6, 0, move_line_ids.ids)]
+        res['move_line_ids'] = [(X2ManyCmd.SET, 0, move_line_ids.ids)]
 
         if any(move.state != 'posted' for move in move_line_ids.mapped('move_id')):
             raise UserError(_('You can only change the period/account for posted journal items.'))
@@ -161,7 +162,7 @@ class AutomaticEntryWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
             'date': fields.Date.to_string(self.date),
             'ref': self.destination_account_id.display_name and _("Transfer entry to %s", self.destination_account_id.display_name or ''),
-            'line_ids': [(0, 0, line) for line in line_vals],
+            'line_ids': [(X2ManyCmd.CREATE, 0, line) for line in line_vals],
         }]
 
     def _get_move_dict_vals_change_period(self):
@@ -197,7 +198,7 @@ class AutomaticEntryWizard(models.TransientModel):
             reported_amount_currency = aml.currency_id.round((self.percentage / 100) * aml.amount_currency)
 
             move_data['new_date']['line_ids'] += [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': aml.name or '',
                     'debit': reported_debit,
                     'credit': reported_credit,
@@ -206,7 +207,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': _('Adjusting Entry'),
                     'debit': reported_credit,
                     'credit': reported_debit,
@@ -217,7 +218,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 }),
             ]
             move_data[aml.move_id.date]['line_ids'] += [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': aml.name or '',
                     'debit': reported_credit,
                     'credit': reported_debit,
@@ -226,7 +227,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': _('Adjusting Entry'),
                     'debit': reported_debit,
                     'credit': reported_credit,

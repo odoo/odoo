@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import fields, models, _
 
 
 class StockPicking(models.Model):
@@ -25,8 +25,8 @@ class StockPicking(models.Model):
         expired_lot_ids = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).lot_id.ids
         context = dict(self.env.context)
         context.update({
-            'default_picking_ids': [(6, 0, self.ids)],
-            'default_lot_ids': [(6, 0, expired_lot_ids)],
+            'default_picking_ids': [(fields.X2ManyCmd.SET, 0, self.ids)],
+            'default_lot_ids': [(fields.X2ManyCmd.SET, 0, expired_lot_ids)],
         })
         return {
             'name': _('Confirmation'),

@@ -4,6 +4,7 @@
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
+from odoo.fields import X2ManyCmd
 
 
 @tagged('event_flow')
@@ -15,12 +16,12 @@ class TestEventSale(TestEventSaleCommon):
 
         cls.event_0.write({
             'event_ticket_ids': [
-                (5, 0),
-                (0, 0, {
+                (X2ManyCmd.CLEAR, 0),
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'First Ticket',
                     'product_id': cls.event_product.id,
                     'seats_max': 30,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'name': 'Second Ticket',
                     'product_id': cls.event_product.id,
                 })
@@ -45,12 +46,12 @@ class TestEventSale(TestEventSaleCommon):
         # adding some tickets to SO
         customer_so.write({
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'event_id': self.event_0.id,
                     'event_ticket_id': ticket1.id,
                     'product_id': ticket1.product_id.id,
                     'product_uom_qty': TICKET1_COUNT,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'event_id': self.event_0.id,
                     'event_ticket_id': ticket2.id,
                     'product_id': ticket2.product_id.id,

@@ -178,7 +178,7 @@ class EventLeadRule(models.Model):
                         for lead in toupdate_leads:
                             lead.write({
                                 'description': "%s\n%s" % (lead.description, additionnal_description),
-                                'registration_ids': [(4, reg.id) for reg in group_registrations],
+                                'registration_ids': [(fields.X2ManyCmd.LINK, reg.id) for reg in group_registrations],
                             })
                     else:
                         lead_vals_list.append(group_registrations._get_lead_values(rule))

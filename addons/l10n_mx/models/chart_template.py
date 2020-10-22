@@ -2,7 +2,7 @@
 # Copyright 2016 Vauxoo (https://www.vauxoo.com) <info@vauxoo.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import models, api, _
+from odoo import fields, models, api, _
 
 
 class AccountChartTemplate(models.Model):
@@ -45,5 +45,5 @@ class AccountChartTemplate(models.Model):
         if company.country_id.code == 'MX':
             xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
             res.setdefault('tag_ids', [])
-            res['tag_ids'].append((4, xml_id))
+            res['tag_ids'].append((fields.X2ManyCmd.LINK, xml_id))
         return res

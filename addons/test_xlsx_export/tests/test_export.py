@@ -5,7 +5,7 @@ import json
 from datetime import date
 from unittest.mock import patch
 
-from odoo import http
+from odoo import fields, http
 from odoo.tests import common, tagged
 from odoo.addons.web.controllers.main import ExportXlsxWriter
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -305,8 +305,8 @@ class TestGroupedExport(XlsxCreatorCase):
         values = [{
             'int_sum': 10,
             'one2many': [
-                (0, 0, {'value': 8}),
-                (0, 0, {'value': 9}),
+                (fields.X2ManyCmd.CREATE, 0, {'value': 8}),
+                (fields.X2ManyCmd.CREATE, 0, {'value': 9}),
             ],
         }]
         export = self.export(values,

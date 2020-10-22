@@ -3,7 +3,7 @@
 
 from lxml.builder import E
 
-from odoo import api, models, tools, _
+from odoo import api, fields, models, tools, _
 
 
 class BaseModel(models.AbstractModel):
@@ -46,7 +46,7 @@ class BaseModel(models.AbstractModel):
                     tracking_sequence = 100
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
-                    tracking_value_ids.append([0, 0, tracking])
+                    tracking_value_ids.append([fields.X2ManyCmd.CREATE, 0, tracking])
                 changes.add(col_name)
 
         return changes, tracking_value_ids

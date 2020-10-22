@@ -38,9 +38,9 @@ class AccountBankStmtCashWizard(models.Model):
             else:
                 lines = config.default_cashbox_id.cashbox_lines_ids
             if self.env.context.get('balance', False) == 'start':
-                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
+                vals['cashbox_lines_ids'] = [[fields.X2ManyCmd.CREATE, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
             else:
-                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
+                vals['cashbox_lines_ids'] = [[fields.X2ManyCmd.CREATE, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
         return vals
 
     def _validate_cashbox(self):
@@ -57,7 +57,7 @@ class AccountBankStmtCashWizard(models.Model):
         lines = current_session.config_id.default_cashbox_id.cashbox_lines_ids
         context = dict(self._context)
         self.cashbox_lines_ids.unlink()
-        self.cashbox_lines_ids = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
+        self.cashbox_lines_ids = [[fields.X2ManyCmd.CREATE, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
 
         return {
             'name': _('Cash Control'),
@@ -439,7 +439,7 @@ class PosConfig(models.Model):
     @api.onchange('tax_regime_selection')
     def _onchange_tax_regime_selection(self):
         if not self.tax_regime_selection:
-            self.fiscal_position_ids = [(5, 0, 0)]
+            self.fiscal_position_ids = [(fields.X2ManyCmd.CLEAR, 0, 0)]
 
     @api.onchange('start_category')
     def _onchange_start_category(self):
@@ -528,9 +528,9 @@ class PosConfig(models.Model):
     def _set_fiscal_position(self):
         for config in self:
             if config.tax_regime and config.default_fiscal_position_id.id not in config.fiscal_position_ids.ids:
-                config.fiscal_position_ids = [(4, config.default_fiscal_position_id.id)]
+                config.fiscal_position_ids = [(fields.X2ManyCmd.LINK, config.default_fiscal_position_id.id)]
             elif not config.tax_regime_selection and not config.tax_regime and config.fiscal_position_ids.ids:
-                config.fiscal_position_ids = [(5, 0, 0)]
+                config.fiscal_position_ids = [(fields.X2ManyCmd.CLEAR, 0, 0)]
 
     def _check_modules_to_install(self):
         # determine modules to install
@@ -557,7 +557,7 @@ class PosConfig(models.Model):
                 if field.type in ('boolean', 'selection') and hasattr(field, 'implied_group'):
                     field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
-                    field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
+                    field_groups.write({'implied_ids': [(fields.X2ManyCmd.LINK, self.env.ref(field.implied_group).id)]})
 
 
     def execute(self):
@@ -673,7 +673,7 @@ class PosConfig(models.Model):
                 'is_cash_count': False,
                 'company_id': company.id,
             })
-            pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
+            pos_config.write({'payment_method_ids': [(fields.X2ManyCmd.SET, 0, payment_methods.ids)]})
 
     def generate_pos_journal(self, company):
         for pos_config in self:

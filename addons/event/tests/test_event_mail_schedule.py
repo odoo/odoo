@@ -23,11 +23,11 @@ class TestMailSchedule(TestEventCommon):
             'date_begin': event_date_begin,
             'date_end': event_date_end,
             'event_mail_ids': [
-                (0, 0, {  # right at subscription
+                (fields.X2ManyCmd.CREATE, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
-                (0, 0, {  # 1 days before event
+                (fields.X2ManyCmd.CREATE, 0, {  # 1 days before event
                     'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',

@@ -5,6 +5,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
+from odoo.fields import X2ManyCmd
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
@@ -407,7 +408,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         inventory = self.Inventory.create({
             'name': 'Inventory Product KG',
-            'product_ids': [(4, product_c.id)]})
+            'product_ids': [(X2ManyCmd.LINK, product_c.id)]})
 
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
@@ -455,7 +456,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # -------------------------------------------------------
         inventory = self.Inventory.create({
             'name': 'Inventory Product C KG',
-            'product_ids': [(4, product_c.id)]})
+            'product_ids': [(X2ManyCmd.LINK, product_c.id)]})
 
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
@@ -500,7 +501,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
-        product.write({'route_ids': [(6, 0, [self.company_data['default_warehouse'].manufacture_pull_id.route_id.id])]})
+        product.write({'route_ids': [(X2ManyCmd.SET, 0, [self.company_data['default_warehouse'].manufacture_pull_id.route_id.id])]})
 
         product_wood_panel = self.env['product.product'].create({
             'name': 'Wood Panel',
@@ -516,11 +517,11 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'sequence': 2,
             'type': 'phantom',
             'bom_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': product_wood_panel.id,
                     'product_qty': 1,
                     'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'product_id': product_desk_bolt.id,
                     'product_qty': 4,
                     'product_uom_id': self.env.ref('uom.product_uom_unit').id,
@@ -658,7 +659,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.finished_product.name,
                 'product_id': self.finished_product.id,
                 'product_uom_qty': 3,
@@ -1380,7 +1381,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         route_shelf1 = self.env['stock.location.route'].create({
             'name': 'Shelf1 -> Customer',
             'product_selectable': True,
-            'rule_ids': [(0, 0, {
+            'rule_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Shelf1 -> Customer',
                 'action': 'pull',
                 'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
@@ -1392,7 +1393,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         route_shelf2 = self.env['stock.location.route'].create({
             'name': 'Shelf2 -> Customer',
             'product_selectable': True,
-            'rule_ids': [(0, 0, {
+            'rule_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Shelf2 -> Customer',
                 'action': 'pull',
                 'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
@@ -1402,9 +1403,9 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         })
 
         component_shelf1.write({
-            'route_ids': [(4, route_shelf1.id)]})
+            'route_ids': [(X2ManyCmd.LINK, route_shelf1.id)]})
         component_shelf2.write({
-            'route_ids': [(4, route_shelf2.id)]})
+            'route_ids': [(X2ManyCmd.LINK, route_shelf2.id)]})
 
         # Set enough quantities to make 1 kit_uom_in_kit in WH1
         self.env['stock.quant']._update_available_quantity(component_shelf1, self.company_data['default_warehouse'].lot_stock_id, 15)
@@ -1499,7 +1500,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
             'type': 'product',
-            'route_ids': [(4, route_mto), (4, route_manufacture)],
+            'route_ids': [(X2ManyCmd.LINK, route_mto), (X2ManyCmd.LINK, route_manufacture)],
         })
 
         # Create service type product
@@ -1515,7 +1516,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+            'bom_line_ids': [(X2ManyCmd.CLEAR, 0), (X2ManyCmd.CREATE, 0, {'product_id': product_raw.id})]
         })
 
         # Create sale order
@@ -1548,7 +1549,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
             'type': 'product',
-            'route_ids': [(4, route_mto), (4, route_manufacture)],
+            'route_ids': [(X2ManyCmd.LINK, route_mto), (X2ManyCmd.LINK, route_manufacture)],
         })
 
         product_raw = self.env['product.product'].create({
@@ -1563,7 +1564,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+            'bom_line_ids': [(X2ManyCmd.CLEAR, 0), (X2ManyCmd.CREATE, 0, {'product_id': product_raw.id})]
         })
 
         # Create sale order
@@ -1602,7 +1603,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
             'type': 'product',
-            'route_ids': [(4, route_mto), (4, route_manufacture)],
+            'route_ids': [(X2ManyCmd.LINK, route_mto), (X2ManyCmd.LINK, route_manufacture)],
         })
 
         product_raw = self.env['product.product'].create({
@@ -1617,7 +1618,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+            'bom_line_ids': [(X2ManyCmd.CLEAR, 0), (X2ManyCmd.CREATE, 0, {'product_id': product_raw.id})]
         })
 
         # Create sale order

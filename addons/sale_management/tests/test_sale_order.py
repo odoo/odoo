@@ -3,6 +3,7 @@
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('-at_install', 'post_install')
@@ -67,14 +68,14 @@ class TestSaleOrder(TestSaleCommon):
             'name': 'Discount included Pricelist',
             'discount_policy': 'with_discount',
             'item_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Product 1 premium price',
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.product_1.product_tmpl_id.id,
                     'compute_price': 'fixed',
                     'fixed_price': cls.pl_product_price
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Optional product premium price',
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.optional_product.product_tmpl_id.id,
@@ -87,14 +88,14 @@ class TestSaleOrder(TestSaleCommon):
             'name': 'Discount excluded Pricelist',
             'discount_policy': 'without_discount',
             'item_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Product 1 premium price',
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.product_1.product_tmpl_id.id,
                     'compute_price': 'fixed',
                     'fixed_price': cls.pl_product_price
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Optional product premium price',
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.optional_product.product_tmpl_id.id,

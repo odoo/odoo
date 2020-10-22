@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.fields import X2ManyCmd
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -44,7 +45,7 @@ class AccountMoveReversal(models.TransientModel):
         if 'company_id' in fields:
             res['company_id'] = move_ids.company_id.id or self.env.company.id
         if 'move_ids' in fields:
-            res['move_ids'] = [(6, 0, move_ids.ids)]
+            res['move_ids'] = [(X2ManyCmd.SET, 0, move_ids.ids)]
         if 'refund_method' in fields:
             res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
         return res
@@ -60,7 +61,7 @@ class AccountMoveReversal(models.TransientModel):
     def _prepare_default_reversal(self, move):
         reverse_date = self.date if self.date_mode == 'custom' else move.date
         return {
-            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason) 
+            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
                    if self.reason
                    else _('Reversal of: %s', move.name),
             'date': reverse_date,

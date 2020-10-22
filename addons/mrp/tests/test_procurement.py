@@ -20,7 +20,7 @@ class TestProcurement(TestMrpCommon):
         self.warehouse.mto_pull_id.route_id.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
-        self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        self.product_4.write({'route_ids': [(fields.X2ManyCmd.SET, 0, [route_manufacture, route_mto])]})
 
         # Create production order
         # -------------------------
@@ -117,7 +117,7 @@ class TestProcurement(TestMrpCommon):
         mto_route = self.warehouse.mto_pull_id.route_id
         mto_route.active = True
         mto_route.product_categ_selectable = True
-        all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
+        all_categ_id.write({'route_ids': [(fields.X2ManyCmd.SET, 0, [mto_route.id])]})
 
         # create MO, but check it raises error as components are in make to order and not everyone has
         with self.assertRaises(UserError):
@@ -146,7 +146,7 @@ class TestProcurement(TestMrpCommon):
         component = self.env['product.product'].create({
             'name': 'Component',
             'type': 'product',
-            'route_ids': [(4, warehouse.mto_pull_id.route_id.id)]
+            'route_ids': [(fields.X2ManyCmd.LINK, warehouse.mto_pull_id.route_id.id)]
         })
         self.env['stock.quant']._update_available_quantity(component, warehouse.wh_input_stock_loc_id, 100)
         bom = self.env['mrp.bom'].create({
@@ -156,7 +156,7 @@ class TestProcurement(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': component.id, 'product_qty': 1.0})
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': component.id, 'product_qty': 1.0})
             ]})
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished_product
@@ -197,7 +197,7 @@ class TestProcurement(TestMrpCommon):
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+            'route_ids': [(fields.X2ManyCmd.LINK, self.ref('mrp.route_warehouse0_manufacture'))]
         })
 
         component_1 = self.env['product.product'].create({
@@ -211,7 +211,7 @@ class TestProcurement(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': component_1.id, 'product_qty': 1}),
             ]})
 
         # create a move for product_1 from stock to output and reserve to trigger the
@@ -261,7 +261,7 @@ class TestProcurement(TestMrpCommon):
         """Check state of finished move on cancellation of raw moves. """
         product_bottle = self.env['product.product'].create({
             'name': 'Plastic Bottle',
-            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+            'route_ids': [(fields.X2ManyCmd.LINK, self.ref('mrp.route_warehouse0_manufacture'))]
         })
 
         component_mold = self.env['product.product'].create({
@@ -275,7 +275,7 @@ class TestProcurement(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': component_mold.id, 'product_qty': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': component_mold.id, 'product_qty': 1}),
             ]})
 
         move_dest = self.env['stock.move'].create({
@@ -307,7 +307,7 @@ class TestProcurement(TestMrpCommon):
         route_mto = self.warehouse.mto_pull_id.route_id.id
         product = self.env['product.product'].create({
             'name': 'Clafoutis',
-            'route_ids': [(6, 0, [route_manufacture, route_mto])]
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_manufacture, route_mto])]
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,
@@ -361,12 +361,12 @@ class TestProcurement(TestMrpCommon):
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
             'type': 'product',
-            'route_ids': [(6, 0, [route_manufacture.id])]
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_manufacture.id])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'Cake Mix',
             'type': 'product',
-            'route_ids': [(6, 0, [route_manufacture.id])]
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_manufacture.id])]
         })
         product_3 = self.env['product.product'].create({
             'name': 'Flour',
@@ -381,7 +381,7 @@ class TestProcurement(TestMrpCommon):
             'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_2.id, 'product_qty': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': product_2.id, 'product_qty': 1}),
             ]})
 
         self.env['mrp.bom'].create({
@@ -391,14 +391,14 @@ class TestProcurement(TestMrpCommon):
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_3.id, 'product_qty': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': product_3.id, 'product_qty': 1}),
             ]})
 
         # extra manufactured component added to 1st MO after it is already confirmed
         product_4 = self.env['product.product'].create({
             'name': 'Flavor Enchancer',
             'type': 'product',
-            'route_ids': [(6, 0, [route_manufacture.id])]
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [route_manufacture.id])]
         })
         product_5 = self.env['product.product'].create({
             'name': 'MSG',
@@ -412,7 +412,7 @@ class TestProcurement(TestMrpCommon):
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_5.id, 'product_qty': 1}),
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': product_5.id, 'product_qty': 1}),
             ]})
 
         # setup auto orderpoints (reordering rules)
@@ -446,7 +446,7 @@ class TestProcurement(TestMrpCommon):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': '/',
                 'product_id': product_1.id,
                 'product_uom': product_1.uom_id.id,

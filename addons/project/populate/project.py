@@ -3,7 +3,7 @@
 import logging
 import collections
 
-from odoo import models
+from odoo import fields, models
 from odoo.tools import populate
 
 _logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class ProjectProject(models.Model):
 
         def get_stage_ids(random, **kwargs):
             return [
-                (6, 0, [
+                (fields.X2ManyCmd.SET, 0, [
                     random.choice(stage_ids)
                     for i in range(random.choice([j for j in range(1, 10)]))
                 ])

@@ -83,7 +83,7 @@ class MailComposeMessage(models.TransientModel):
                     trace_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
-                    'mailing_trace_ids': [(0, 0, trace_vals)],
+                    'mailing_trace_ids': [(fields.X2ManyCmd.CREATE, 0, trace_vals)],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
                     'auto_delete': not mass_mailing.keep_archives,

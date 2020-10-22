@@ -899,7 +899,7 @@ class MailThread(models.AbstractModel):
 
         # 0. Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
         #    Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
-        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID 
+        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
         #    Bounce message (not alias)
         #       See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
         #        As all MTA does not respect this RFC (googlemail is one of them),
@@ -1659,10 +1659,10 @@ class MailThread(models.AbstractModel):
             if not self.env.user.has_group('base.group_user'):
                 attachment_ids = filtered_attachment_ids.ids
 
-            m2m_attachment_ids += [(4, id) for id in attachment_ids]
+            m2m_attachment_ids += [(fields.X2ManyCmd.LINK, id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
-        if attachments: # generate 
+        if attachments: # generate
             cids_in_body = set()
             names_in_body = set()
             cid_list = []
@@ -1716,7 +1716,7 @@ class MailThread(models.AbstractModel):
                         cid_mapping[cid] = (new_attachment.id, attachement_values_list[counter]['access_token'])
                     name = name_list[counter]
                     name_mapping[name] = (new_attachment.id, attachement_values_list[counter]['access_token'])
-                m2m_attachment_ids.append((4, new_attachment.id))
+                m2m_attachment_ids.append((fields.X2ManyCmd.LINK, new_attachment.id))
 
             # note: right know we are only taking attachments and ignoring attachment_ids.
             if (cid_mapping or name_mapping) and body:
@@ -1749,7 +1749,7 @@ class MailThread(models.AbstractModel):
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str subject: subject of the message
-            :param str message_type: see mail_message.message_type field. Can be anything but 
+            :param str message_type: see mail_message.message_type field. Can be anything but
                 user_notification, reserved for message_notify
             :param int parent_id: handle thread formation
             :param int subtype_id: subtype_id of the message, mainly use fore
@@ -1932,7 +1932,7 @@ class MailThread(models.AbstractModel):
     def message_notify(self, *,
                        partner_ids=False, parent_id=False, model=False, res_id=False,
                        author_id=None, email_from=None, body='', subject=False, **kwargs):
-        """ Shortcut allowing to notify partners of messages that shouldn't be 
+        """ Shortcut allowing to notify partners of messages that shouldn't be
         displayed on a document. It pushes notifications on inbox or by email depending
         on the user configuration, like other notifications. """
         if self:
@@ -2058,8 +2058,8 @@ class MailThread(models.AbstractModel):
             # Avoid warnings about non-existing fields
             for x in ('from', 'to', 'cc', 'canned_response_ids'):
                 create_values.pop(x, None)
-            create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
-            create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
+            create_values['partner_ids'] = [(fields.X2ManyCmd.LINK, pid) for pid in create_values.get('partner_ids', [])]
+            create_values['channel_ids'] = [(fields.X2ManyCmd.LINK, cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
         if 'default_child_ids' in self._context:
             ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
@@ -2098,7 +2098,7 @@ class MailThread(models.AbstractModel):
 
         message_values = {}
         if rdata['channels']:
-            message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
+            message_values['channel_ids'] = [(fields.X2ManyCmd.SET, 0, [r['id'] for r in rdata['channels']])]
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
@@ -2118,7 +2118,7 @@ class MailThread(models.AbstractModel):
         """
         channel_ids = [r['id'] for r in recipients_data['channels']]
         if channel_ids:
-            message.write({'channel_ids': [(6, 0, channel_ids)]})
+            message.write({'channel_ids': [(fields.X2ManyCmd.SET, 0, channel_ids)]})
 
         inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
         if inbox_pids:
@@ -2234,7 +2234,7 @@ class MailThread(models.AbstractModel):
                 create_values = {
                     'body_html': mail_body,
                     'subject': mail_subject,
-                    'recipient_ids': [(4, pid) for pid in recipient_ids],
+                    'recipient_ids': [(fields.X2ManyCmd.LINK, pid) for pid in recipient_ids],
                 }
                 if email_to:
                     create_values['email_to'] = email_to
@@ -2535,7 +2535,7 @@ class MailThread(models.AbstractModel):
             'button_access': {'title': 'View Simple Chatter Model',
                             'url': '/mail/view?model=mail.test.simple&res_id=1497'},
             'has_button_access': False,
-            'recipients': [4, 5, 6] 
+            'recipients': [4, 5, 6]
         },
         {
             'actions': [],

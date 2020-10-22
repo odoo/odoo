@@ -14,7 +14,7 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         cls.pay_term_today = cls.env['account.payment.term'].create({
             'name': 'Today',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'days': 0,
                     'option': 'day_after_invoice_date',
@@ -25,7 +25,7 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         cls.pay_term_min_31days_15th = cls.env['account.payment.term'].create({
             'name': 'the 15th of the month, min 31 days from now',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'days': 31,
                     'day_of_the_month': 15,
@@ -37,7 +37,7 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         cls.pay_term_45_end_month = cls.env['account.payment.term'].create({
             'name': '45 Days from End of Month',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'days': 45,
                     'option': 'after_invoice_month',
@@ -48,7 +48,7 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         cls.pay_term_last_day_of_month = cls.env['account.payment.term'].create({
             'name': 'Last Day of month',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'days': 31,
                     'option': 'day_current_month',
@@ -59,7 +59,7 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         cls.pay_term_first_day_next_month = cls.env['account.payment.term'].create({
             'name': 'First day next month',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'days': 1,
                     'option': 'day_following_month',

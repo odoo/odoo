@@ -3,6 +3,7 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -32,11 +33,11 @@ class TestGetCurrentWebsite(TransactionCase):
 
         country_group_1_2 = self.env['res.country.group'].create({
             'name': "My Country Group 1-2",
-            'country_ids': [(6, 0, (country1 + country2 + country5).ids)],
+            'country_ids': [(X2ManyCmd.SET, 0, (country1 + country2 + country5).ids)],
         })
         country_group_3 = self.env['res.country.group'].create({
             'name': "My Country Group 3",
-            'country_ids': [(6, 0, (country3 + country5).ids)],
+            'country_ids': [(X2ManyCmd.SET, 0, (country3 + country5).ids)],
         })
 
         # CASE: no domain, no country: get first

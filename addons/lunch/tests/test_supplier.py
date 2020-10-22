@@ -82,7 +82,7 @@ class TestSupplier(TestsCommon):
 
                     line = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
-                        'topping_ids_1': [(6, 0, [self.topping_olives.id])],
+                        'topping_ids_1': [(fields.X2ManyCmd.SET, 0, [self.topping_olives.id])],
                         'date': self.monday_1pm.date()
                     })
                     line2 = self.env['lunch.order'].create({
@@ -107,7 +107,7 @@ class TestSupplier(TestsCommon):
 
                     line_2 = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
-                        'topping_ids_1': [(6, 0, [self.topping_olives.id])],
+                        'topping_ids_1': [(fields.X2ManyCmd.SET, 0, [self.topping_olives.id])],
                         'date': self.monday_1pm.date()
                     })
 

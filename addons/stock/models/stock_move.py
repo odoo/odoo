@@ -350,7 +350,7 @@ class StockMove(models.Model):
                 if quantity_done:
                     # do not impact reservation here
                     move_line = self.env['stock.move.line'].create(dict(move._prepare_move_line_vals(), qty_done=quantity_done))
-                    move.write({'move_line_ids': [(4, move_line.id)]})
+                    move.write({'move_line_ids': [(fields.X2ManyCmd.LINK, move_line.id)]})
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:
@@ -480,7 +480,7 @@ class StockMove(models.Model):
             mls = mls.filtered(lambda ml: ml.lot_id)
             for ml in mls:
                 if ml.lot_id not in move.lot_ids:
-                    move_lines_commands.append((2, ml.id))
+                    move_lines_commands.append((fields.X2ManyCmd.DELETE, ml.id))
             ls = move.move_line_ids.lot_id
             for lot in move.lot_ids:
                 if lot not in ls:
@@ -489,7 +489,7 @@ class StockMove(models.Model):
                     move_line_vals['lot_name'] = lot.name
                     move_line_vals['product_uom_id'] = move.product_id.uom_id.id
                     move_line_vals['qty_done'] = 1
-                    move_lines_commands.append((0, 0, move_line_vals))
+                    move_lines_commands.append((fields.X2ManyCmd.CREATE, 0, move_line_vals))
             move.write({'move_line_ids': move_lines_commands})
 
     @api.constrains('product_uom')
@@ -743,8 +743,8 @@ class StockMove(models.Model):
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')),
             'date': min(self.mapped('date')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date')),
-            'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
-            'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, m.id) for m in self.mapped('move_dest_ids')],
+            'move_orig_ids': [(fields.X2ManyCmd.LINK, m.id) for m in self.mapped('move_orig_ids')],
             'state': state,
             'origin': origin,
         }
@@ -1023,7 +1023,7 @@ class StockMove(models.Model):
         for lot_name in lot_names:
             # We write the lot name on an existing move line (if we have still one)...
             if move_lines:
-                move_lines_commands.append((1, move_lines[0].id, {
+                move_lines_commands.append((fields.X2ManyCmd.UPDATE, move_lines[0].id, {
                     'lot_name': lot_name,
                     'qty_done': 1,
                 }))
@@ -1031,7 +1031,7 @@ class StockMove(models.Model):
             # ... or create a new move line with the serial name.
             else:
                 move_line_cmd = dict(move_line_vals, lot_name=lot_name)
-                move_lines_commands.append((0, 0, move_line_cmd))
+                move_lines_commands.append((fields.X2ManyCmd.CREATE, 0, move_line_cmd))
         return move_lines_commands
 
     def _get_new_picking_values(self):
@@ -1388,10 +1388,10 @@ class StockMove(models.Model):
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                    move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
+                    move.move_dest_ids.write({'move_orig_ids': [(fields.X2ManyCmd.UNLINK, move.id, 0)]})
         self.write({
             'state': 'cancel',
-            'move_orig_ids': [(5, 0, 0)],
+            'move_orig_ids': [(fields.X2ManyCmd.CLEAR, 0, 0)],
             'procure_method': 'make_to_stock',
         })
         return True
@@ -1526,8 +1526,8 @@ class StockMove(models.Model):
         vals = {
             'product_uom_qty': qty,
             'procure_method': 'make_to_stock',
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
-            'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
+            'move_orig_ids': [(fields.X2ManyCmd.LINK, x.id) for x in self.move_orig_ids],
             'origin_returned_move_id': self.origin_returned_move_id.id,
             'price_unit': self.price_unit,
         }
@@ -1636,7 +1636,7 @@ class StockMove(models.Model):
             # Assign qty_done and explicitly round to make sure there is no inconsistency between
             # ml.qty_done and qty.
             taken_qty = float_round(taken_qty, precision_rounding=ml.product_uom_id.rounding)
-            res.append((1, ml.id, {'qty_done': ml.qty_done + taken_qty}))
+            res.append((fields.X2ManyCmd.UPDATE, ml.id, {'qty_done': ml.qty_done + taken_qty}))
             if ml.product_uom_id != self.product_uom:
                 taken_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
             qty -= taken_qty
@@ -1646,20 +1646,20 @@ class StockMove(models.Model):
 
         for ml in self.move_line_ids:
             if float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding) and float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
-                res.append((2, ml.id))
+                res.append((fields.X2ManyCmd.DELETE, ml.id))
 
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
             if self.product_id.tracking != 'serial':
                 vals = self._prepare_move_line_vals(quantity=0)
                 vals['qty_done'] = qty
-                res.append((0, 0, vals))
+                res.append((fields.X2ManyCmd.CREATE, 0, vals))
             else:
                 uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
                 for i in range(0, int(uom_qty)):
                     vals = self._prepare_move_line_vals(quantity=0)
                     vals['qty_done'] = 1
                     vals['product_uom_id'] = self.product_id.uom_id.id
-                    res.append((0, 0, vals))
+                    res.append((fields.X2ManyCmd.CREATE, 0, vals))
         return res
 
     def _set_quantity_done(self, qty):

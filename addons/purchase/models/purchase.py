@@ -449,7 +449,7 @@ class PurchaseOrder(models.Model):
                     supplierinfo['product_name'] = seller.product_name
                     supplierinfo['product_code'] = seller.product_code
                 vals = {
-                    'seller_ids': [(0, 0, supplierinfo)],
+                    'seller_ids': [(fields.X2ManyCmd.CREATE, 0, supplierinfo)],
                 }
                 try:
                     line.product_id.write(vals)
@@ -478,9 +478,9 @@ class PurchaseOrder(models.Model):
                     continue
                 if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_account_move_line()))
+                        invoice_vals['invoice_line_ids'].append((fields.X2ManyCmd.CREATE, 0, pending_section._prepare_account_move_line()))
                         pending_section = None
-                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_account_move_line()))
+                    invoice_vals['invoice_line_ids'].append((fields.X2ManyCmd.CREATE, 0, line._prepare_account_move_line()))
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
@@ -1088,9 +1088,9 @@ class PurchaseOrderLine(models.Model):
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,
             'price_unit': self.price_unit,
-            'tax_ids': [(6, 0, self.taxes_id.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, self.taxes_id.ids)],
             'analytic_account_id': self.account_analytic_id.id,
-            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, self.analytic_tag_ids.ids)],
             'purchase_line_id': self.id,
         }
         if not move:
@@ -1162,7 +1162,7 @@ class PurchaseOrderLine(models.Model):
             'product_uom': product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
-            'taxes_id': [(6, 0, taxes_id.ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, taxes_id.ids)],
             'order_id': po.id,
         }
 

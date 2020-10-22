@@ -230,7 +230,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
-            'emp': [(6, 0, [self.ref('hr.employee_admin')])],
+            'emp': [(fields.X2ManyCmd.SET, 0, [self.ref('hr.employee_admin')])],
             'holiday_type': 'Approved'
         }
         self.env.company.external_report_layout_id = self.env.ref('web.external_layout_standard').id

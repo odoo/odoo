@@ -6,6 +6,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 @tagged('security')
@@ -197,7 +198,7 @@ class TestAccessFeatures(common.SlidesCase):
             'name': 'Test',
             'enroll': 'invite',
             'is_published': True,
-            'enroll_group_ids': [(4, self.ref('base.group_user'))]
+            'enroll_group_ids': [(X2ManyCmd.LINK, self.ref('base.group_user'))]
         })
         channel.invalidate_cache(['partner_ids'])
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
@@ -205,7 +206,7 @@ class TestAccessFeatures(common.SlidesCase):
         new_user = self.env['res.users'].create({
             'name': 'NewUser',
             'login': 'NewUser',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])]
+            'groups_id': [(X2ManyCmd.SET, 0, [self.ref('base.group_user')])]
         })
         channel.invalidate_cache()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
@@ -213,22 +214,22 @@ class TestAccessFeatures(common.SlidesCase):
         new_user_2 = self.env['res.users'].create({
             'name': 'NewUser2',
             'login': 'NewUser2',
-            'groups_id': [(5, 0)]
+            'groups_id': [(X2ManyCmd.CLEAR, 0)]
         })
         channel.invalidate_cache()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
-        new_user_2.write({'groups_id': [(4, self.ref('base.group_user'))]})
+        new_user_2.write({'groups_id': [(X2ManyCmd.LINK, self.ref('base.group_user'))]})
         channel.invalidate_cache()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
 
         new_user_3 = self.env['res.users'].create({
             'name': 'NewUser3',
             'login': 'NewUser3',
-            'groups_id': [(5, 0)]
+            'groups_id': [(X2ManyCmd.CLEAR, 0)]
         })
         channel.invalidate_cache()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
-        self.env.ref('base.group_user').write({'users': [(4, new_user_3.id)]})
+        self.env.ref('base.group_user').write({'users': [(X2ManyCmd.LINK, new_user_3.id)]})
         channel.invalidate_cache()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id | new_user_3.partner_id)
 
@@ -243,7 +244,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertFalse(channel_portal.can_publish)
 
         # allow employees to upload
-        channel_manager.write({'upload_group_ids': [(4, self.ref('base.group_user'))]})
+        channel_manager.write({'upload_group_ids': [(X2ManyCmd.LINK, self.ref('base.group_user'))]})
         self.assertTrue(channel_emp.can_upload)
         self.assertFalse(channel_emp.can_publish)
         self.assertFalse(channel_portal.can_upload)
@@ -257,13 +258,13 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_officer.can_upload)
         self.assertTrue(channel_officer.can_publish)
 
-        channel_officer.write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
+        channel_officer.write({'upload_group_ids': [(X2ManyCmd.LINK, self.ref('base.group_system'))]})
         self.assertTrue(channel_officer.can_upload)
         self.assertTrue(channel_officer.can_publish)
 
         channel_manager = self.channel.with_user(self.user_manager)
         channel_manager.write({
-            'upload_group_ids': [(5, 0)],
+            'upload_group_ids': [(X2ManyCmd.CLEAR, 0)],
             'user_id': self.user_manager.id
         })
         self.assertFalse(channel_officer.can_upload)
@@ -278,7 +279,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_manager.can_publish)
 
         # test upload group limitation: member of group_system OR responsible OR manager
-        channel_manager.write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
+        channel_manager.write({'upload_group_ids': [(X2ManyCmd.LINK, self.ref('base.group_system'))]})
         self.assertFalse(channel_manager.can_upload)
         self.assertFalse(channel_manager.can_publish)
         channel_manager.write({'user_id': self.user_manager.id})
@@ -286,7 +287,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_manager.can_publish)
 
         # Needs the manager to write on channel as user_officer is not the responsible anymore
-        channel_manager.write({'upload_group_ids': [(5, 0)]})
+        channel_manager.write({'upload_group_ids': [(X2ManyCmd.CLEAR, 0)]})
         self.assertTrue(channel_manager.can_upload)
         self.assertTrue(channel_manager.can_publish)
         channel_manager.write({'user_id': self.user_officer.id})

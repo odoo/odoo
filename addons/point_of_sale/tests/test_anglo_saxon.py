@@ -57,7 +57,7 @@ class TestAngloSaxonCommon(common.TransactionCase):
             'cash_journal_id': self.cash_journal.id,
             'receivable_account_id': self.account.id,
         })
-        self.pos_config.write({'payment_method_ids': [(6, 0, self.cash_payment_method.ids)]})
+        self.pos_config.write({'payment_method_ids': [(fields.X2ManyCmd.SET, 0, self.cash_payment_method.ids)]})
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -76,7 +76,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'partner_id': self.partner.id,
             'pricelist_id': self.company.partner_id.property_product_pricelist.id,
             'session_id': self.pos_config.current_session_id.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product.id,
                 'price_unit': 450,
@@ -154,7 +154,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'partner_id': self.partner.id,
             'pricelist_id': self.company.partner_id.property_product_pricelist.id,
             'session_id': self.pos_config.current_session_id.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product.id,
                 'price_unit': 450,

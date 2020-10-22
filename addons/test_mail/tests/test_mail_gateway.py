@@ -6,7 +6,7 @@ import socket
 from unittest.mock import DEFAULT
 from unittest.mock import patch
 
-from odoo import exceptions
+from odoo import fields, exceptions
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
@@ -855,7 +855,7 @@ class TestMailgateway(TestMailCommon):
         })
         self.test_channel = self.env['mail.channel'].create({
             'name': 'Test',
-            'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.partner_1.id})],
+            'channel_last_seen_partner_ids': [(fields.X2ManyCmd.CREATE, 0, {'partner_id': self.partner_1.id})],
         })
         self.fake_email.write({
             'model': 'mail.channel',

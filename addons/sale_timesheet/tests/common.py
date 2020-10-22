@@ -3,6 +3,7 @@
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestCommonSaleTimesheet(TestSaleCommon):
@@ -80,7 +81,7 @@ class TestCommonSaleTimesheet(TestSaleCommon):
         cls.project_template_state = cls.env['project.task.type'].create({
             'name': 'Only stage in project template',
             'sequence': 1,
-            'project_ids': [(4, cls.project_template.id)]
+            'project_ids': [(X2ManyCmd.LINK, cls.project_template.id)]
         })
 
         # Create service products

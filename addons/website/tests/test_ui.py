@@ -3,6 +3,7 @@
 
 import odoo
 import odoo.tests
+from odoo.fields import X2ManyCmd
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -115,7 +116,7 @@ class TestUi(odoo.tests.HttpCase):
             'name': 'Restricted Editor',
             'login': 'restricted',
             'password': 'restricted',
-            'groups_id': [(6, 0, [
+            'groups_id': [(X2ManyCmd.SET, 0, [
                     self.ref('base.group_user'),
                     self.ref('website.group_website_publisher')
                 ])]

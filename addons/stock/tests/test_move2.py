@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
+from odoo.fields import X2ManyCmd
 
 
 class TestPickShip(TestStockCommon):
@@ -42,7 +43,7 @@ class TestPickShip(TestStockCommon):
             'picking_id': picking_pick.id,
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'move_dest_ids': [(4, dest.id)],
+            'move_dest_ids': [(X2ManyCmd.LINK, dest.id)],
             'state': 'confirmed',
         })
         return picking_pick, picking_client
@@ -78,7 +79,7 @@ class TestPickShip(TestStockCommon):
             'picking_id': picking_pack.id,
             'location_id': self.pack_location,
             'location_dest_id': self.output_location,
-            'move_dest_ids': [(4, ship.id)],
+            'move_dest_ids': [(X2ManyCmd.LINK, ship.id)],
         })
 
         picking_pick = self.env['stock.picking'].create({
@@ -95,7 +96,7 @@ class TestPickShip(TestStockCommon):
             'picking_id': picking_pick.id,
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'move_dest_ids': [(4, pack.id)],
+            'move_dest_ids': [(X2ManyCmd.LINK, pack.id)],
             'state': 'confirmed',
         })
         return picking_pick, picking_pack, picking_ship
@@ -190,7 +191,7 @@ class TestPickShip(TestStockCommon):
         """
         picking_pick, picking_client = self.create_pick_ship()
         stock_location = self.env['stock.location'].browse(self.stock_location)
-        self.productA.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        self.productA.write({'route_ids': [(X2ManyCmd.LINK, self.env.ref('stock.route_warehouse0_mto').id)]})
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
         picking_pick.action_assign()
         picking_pick.move_lines[0].move_line_ids[0].qty_done = 15.0
@@ -247,11 +248,11 @@ class TestPickShip(TestStockCommon):
             'code': 'SWH'
         })
         warehouse_1.write({
-            'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
+            'resupply_wh_ids': [(X2ManyCmd.SET, 0, [warehouse_2.id])]
         })
         resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route)
-        self.productA.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        self.productA.write({'route_ids': [(X2ManyCmd.LINK, resupply_route.id), (X2ManyCmd.LINK, self.env.ref('stock.route_warehouse0_mto').id)]})
 
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
 
@@ -408,7 +409,7 @@ class TestPickShip(TestStockCommon):
             'picking_id': picking_pick.id,
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'move_dest_ids': [(4, dest.id)],
+            'move_dest_ids': [(X2ManyCmd.LINK, dest.id)],
             'state': 'confirmed',
         })
         location = self.env['stock.location'].browse(self.stock_location)
@@ -1062,7 +1063,7 @@ class TestSinglePicking(TestStockCommon):
         delivery.action_assign()
 
         delivery.write({
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom_qty': 0,
@@ -1145,8 +1146,8 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location)],
+            'product_ids': [(X2ManyCmd.LINK, self.productA.id)],
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 2
@@ -1201,8 +1202,8 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location)],
+            'product_ids': [(X2ManyCmd.LINK, self.productA.id)],
         })
         inventory.action_start()
         inventory.line_ids.prod_lot_id = lot1
@@ -1261,8 +1262,8 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location)],
+            'product_ids': [(X2ManyCmd.LINK, self.productA.id)],
         })
         inventory.action_start()
         self.env['stock.inventory.line'].create({
@@ -1328,8 +1329,8 @@ class TestSinglePicking(TestStockCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location)],
+            'product_ids': [(X2ManyCmd.LINK, self.productA.id)],
         })
         inventory.action_start()
         self.env['stock.inventory.line'].create({
@@ -1877,7 +1878,7 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
             'immediate_transfer': True,
-            'move_ids_without_package': [(0, 0, {
+            'move_ids_without_package': [(X2ManyCmd.CREATE, 0, {
                 'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom': self.productA.uom_id.id,
@@ -1951,7 +1952,7 @@ class TestSinglePicking(TestStockCommon):
 
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, grp_multi_loc.id)]})
         putaway_product = self.env['stock.putaway.rule'].create({
             'product_id': self.productA.id,
             'location_in_id': stock_location.id,
@@ -2138,11 +2139,11 @@ class TestRoutes(TestStockCommon):
             'code': 'SWH'
         })
         warehouse_1.write({
-            'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
+            'resupply_wh_ids': [(X2ManyCmd.SET, 0, [warehouse_2.id])]
         })
         resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route, "Ressuply route not found")
-        self.product1.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        self.product1.write({'route_ids': [(X2ManyCmd.LINK, resupply_route.id), (X2ManyCmd.LINK, self.env.ref('stock.route_warehouse0_mto').id)]})
         self.wh = warehouse_1
 
         replenish_wizard = self.env['product.replenish'].create({
@@ -2192,7 +2193,7 @@ class TestRoutes(TestStockCommon):
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
-            'route_ids': [(4, route.id)]
+            'route_ids': [(X2ManyCmd.LINK, route.id)]
         })
         move1._action_confirm()
 
@@ -2680,7 +2681,7 @@ class TestAutoAssign(TestStockCommon):
             'picking_id': picking_pick.id,
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'move_dest_ids': [(4, dest.id)],
+            'move_dest_ids': [(X2ManyCmd.LINK, dest.id)],
             'state': 'confirmed',
         })
         return picking_pick, picking_client
@@ -2809,11 +2810,11 @@ class TestAutoAssign(TestStockCommon):
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        move.lot_ids = [(4, lot1.id)]
-        move.lot_ids = [(4, lot2.id)]
-        move.lot_ids = [(4, lot3.id)]
+        move.lot_ids = [(X2ManyCmd.LINK, lot1.id)]
+        move.lot_ids = [(X2ManyCmd.LINK, lot2.id)]
+        move.lot_ids = [(X2ManyCmd.LINK, lot3.id)]
         self.assertEqual(move.quantity_done, 3.0)
-        move.lot_ids = [(3, lot2.id)]
+        move.lot_ids = [(X2ManyCmd.UNLINK, lot2.id)]
         self.assertEqual(move.quantity_done, 2.0)
 
         self.uom_dozen = self.env.ref('uom.product_uom_dozen')

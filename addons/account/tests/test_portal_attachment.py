@@ -5,7 +5,7 @@ from odoo.tests.common import tagged
 
 import json
 
-from odoo import http
+from odoo import fields, http
 from odoo.tools import mute_logger
 
 
@@ -22,7 +22,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100.0}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'line1', 'price_unit': 100.0}),
             ],
         })
 
@@ -150,7 +150,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         })
         attachment.flush()
         message = self.env['mail.message'].create({
-            'attachment_ids': [(6, 0, attachment.ids)],
+            'attachment_ids': [(fields.X2ManyCmd.SET, 0, attachment.ids)],
         })
         res = self.opener.post(
             url='%s/portal/attachment/remove' % self.base_url,

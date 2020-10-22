@@ -4,6 +4,7 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestWarehouse(TestStockCommon):
@@ -21,8 +22,8 @@ class TestWarehouse(TestStockCommon):
         })
         inventory = self.env['stock.inventory'].with_user(self.user_stock_manager).create({
             'name': 'Starting for product_1',
-            'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
-            'product_ids': [(4, self.product_1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.warehouse_1.lot_stock_id.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product_1.id)],
         })
         inventory.action_start()
         # As done in common.py, there is already an inventory line existing
@@ -221,8 +222,8 @@ class TestWarehouse(TestStockCommon):
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
             'name': 'Starting for product_1',
-            'location_ids': [(4, stock_location.id)],
-            'product_ids': [(4, productA.id)],
+            'location_ids': [(X2ManyCmd.LINK, stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, productA.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
@@ -259,13 +260,13 @@ class TestWarehouse(TestStockCommon):
         warehouse_distribution = self.env['stock.warehouse'].create({
             'name': 'Dist.',
             'code': 'DIST',
-            'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
+            'resupply_wh_ids': [(X2ManyCmd.SET, 0, [warehouse_stock.id])]
         })
 
         warehouse_shop = self.env['stock.warehouse'].create({
             'name': 'Shop',
             'code': 'SHOP',
-            'resupply_wh_ids': [(6, 0, [warehouse_distribution.id])]
+            'resupply_wh_ids': [(X2ManyCmd.SET, 0, [warehouse_distribution.id])]
         })
 
         route_stock_to_dist = warehouse_distribution.resupply_route_ids
@@ -281,7 +282,7 @@ class TestWarehouse(TestStockCommon):
         product = self.env['product.product'].create({
             'name': 'Fakir',
             'type': 'product',
-            'route_ids': [(4, route_id) for route_id in [route_stock_to_dist.id, route_dist_to_shop.id, self.env.ref('stock.route_warehouse0_mto').id]],
+            'route_ids': [(X2ManyCmd.LINK, route_id) for route_id in [route_stock_to_dist.id, route_dist_to_shop.id, self.env.ref('stock.route_warehouse0_mto').id]],
         })
 
         picking_out = self.env['stock.picking'].create({
@@ -335,7 +336,7 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_wavre = self.env['stock.warehouse'].create({
             'name': 'Shop Wavre',
             'code': 'SHWV',
-            'resupply_wh_ids': [(6, 0, [warehouse_distribution_wavre.id])]
+            'resupply_wh_ids': [(X2ManyCmd.SET, 0, [warehouse_distribution_wavre.id])]
         })
 
         warehouse_distribution_namur = self.env['stock.warehouse'].create({
@@ -346,7 +347,7 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_namur = self.env['stock.warehouse'].create({
             'name': 'Shop Namur',
             'code': 'SHNM',
-            'resupply_wh_ids': [(6, 0, [warehouse_distribution_namur.id])]
+            'resupply_wh_ids': [(X2ManyCmd.SET, 0, [warehouse_distribution_namur.id])]
         })
 
         route_shop_namur = warehouse_shop_namur.resupply_route_ids
@@ -355,7 +356,7 @@ class TestWarehouse(TestStockCommon):
         product = self.env['product.product'].create({
             'name': 'Fakir',
             'type': 'product',
-            'route_ids': [(4, route_id) for route_id in [route_shop_namur.id, route_shop_wavre.id, self.env.ref('stock.route_warehouse0_mto').id]],
+            'route_ids': [(X2ManyCmd.LINK, route_id) for route_id in [route_shop_namur.id, route_shop_wavre.id, self.env.ref('stock.route_warehouse0_mto').id]],
         })
 
         # Add 1 quant in each distribution warehouse.
@@ -545,7 +546,7 @@ class TestWarehouse(TestStockCommon):
         wh.delivery_steps = "pick_pack_ship"
         warehouse = wh.save()
 
-        warehouse.resupply_wh_ids = [(6, 0, [self.warehouse_1.id])]
+        warehouse.resupply_wh_ids = [(X2ManyCmd.SET, 0, [self.warehouse_1.id])]
 
         custom_location = Form(self.env['stock.location'])
         custom_location.name = "A Trunk"
@@ -554,14 +555,14 @@ class TestWarehouse(TestStockCommon):
 
         # Add a warehouse on the route.
         warehouse.reception_route_id.write({
-            'warehouse_ids': [(4, self.warehouse_1.id)]
+            'warehouse_ids': [(X2ManyCmd.LINK, self.warehouse_1.id)]
         })
 
         route = Form(self.env['stock.location.route'])
         route.name = "Stair"
         route = route.save()
 
-        route.warehouse_ids = [(6, 0, [warehouse.id, self.warehouse_1.id])]
+        route.warehouse_ids = [(X2ManyCmd.SET, 0, [warehouse.id, self.warehouse_1.id])]
 
         # Pre archive a location and a route
         warehouse.delivery_route_id.toggle_active()

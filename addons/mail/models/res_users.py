@@ -110,7 +110,7 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
             updates from public channels until they manually un-subscribe themselves.
         """
         self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public').write({
-            'channel_partner_ids': [(3, pid) for pid in self.mapped('partner_id').ids]
+            'channel_partner_ids': [(fields.X2ManyCmd.UNLINK, pid) for pid in self.mapped('partner_id').ids]
         })
 
     @api.model

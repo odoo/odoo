@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestGetMailChannel(TransactionCase):
@@ -32,7 +33,7 @@ class TestGetMailChannel(TransactionCase):
 
         self.livechat_channel = self.env['im_livechat.channel'].create({
             'name': 'The channel',
-            'user_ids': [(6, 0, self.operators.ids)]
+            'user_ids': [(X2ManyCmd.SET, 0, self.operators.ids)]
         })
 
         operators = self.operators
@@ -88,7 +89,7 @@ class TestGetMailChannel(TransactionCase):
             mail_channels.append(mail_channel)
             # send a message to mark this channel as 'active'
             self.env['mail.channel'].browse(mail_channel['id']).write({
-                'channel_message_ids': [(0, 0, {'body': 'cc'})]
+                'channel_message_ids': [(X2ManyCmd.CREATE, 0, {'body': 'cc'})]
             })
 
         return mail_channels

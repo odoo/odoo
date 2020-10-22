@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo import fields, http
 from odoo.http import request
 from odoo.addons.website_form.controllers import main
 
@@ -63,7 +63,7 @@ class WebsiteForm(main.WebsiteForm):
             if visitor_sudo and result:
                 lead_sudo = request.env['crm.lead'].browse(result).sudo()
                 if lead_sudo.exists():
-                    vals = {'lead_ids': [(4, result)]}
+                    vals = {'lead_ids': [(fields.X2ManyCmd.LINK, result)]}
                     if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
                         vals['name'] = lead_sudo.contact_name
                     visitor_sudo.write(vals)

@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta
 from itertools import groupby
 
-from odoo import models
+from odoo import models, fields
 from odoo.tools import populate
 
 _logger = logging.getLogger(__name__)
@@ -91,7 +91,7 @@ class LunchSupplier(models.Model):
 
         def get_location_ids(random=None, **kwargs):
             nb_locations = random.randint(0, len(location_ids))
-            return [(6, 0, random.choices(location_ids, k=nb_locations))]
+            return [(fields.X2ManyCmd.SET, 0, random.choices(location_ids, k=nb_locations))]
 
         return [
 

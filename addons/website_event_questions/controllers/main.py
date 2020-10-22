@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.http import request
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
@@ -37,9 +38,9 @@ class WebsiteEvent(WebsiteEventController):
                     }
 
                 if answer_values and not int(registration_index):
-                    general_answer_ids.append((0, 0, answer_values))
+                    general_answer_ids.append((fields.X2ManyCmd.CREATE, 0, answer_values))
                 elif answer_values:
-                    registrations[int(registration_index) - 1]['registration_answer_ids'].append((0, 0, answer_values))
+                    registrations[int(registration_index) - 1]['registration_answer_ids'].append((fields.X2ManyCmd.CREATE, 0, answer_values))
 
         for registration in registrations:
             registration['registration_answer_ids'].extend(general_answer_ids)

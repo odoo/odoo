@@ -3,6 +3,7 @@
 
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests.common import users
+from odoo.fields import X2ManyCmd
 
 
 class TestWebsiteVisitor(TestCrmCommon):
@@ -40,7 +41,7 @@ class TestWebsiteVisitor(TestCrmCommon):
         lead_1 = self.env['crm.lead'].create({
             'name': 'Test Lead 1',
             'email_from': 'Rambeau Fort <beaufort@test.example.com',
-            'visitor_ids': [(4, visitor.id)],
+            'visitor_ids': [(X2ManyCmd.LINK, visitor.id)],
         })
         self.assertEqual(visitor.email, lead_1.email_normalized)
         self.assertFalse(visitor.mobile)
@@ -51,7 +52,7 @@ class TestWebsiteVisitor(TestCrmCommon):
             'email_from': 'Martino Brie <brie@test.example.com',
             'country_id': self.env.ref('base.be').id,
             'mobile': '+32456001122',
-            'visitor_ids': [(4, visitor.id)],
+            'visitor_ids': [(X2ManyCmd.LINK, visitor.id)],
         })
         self.assertEqual(visitor.email, lead_1.email_normalized)
         self.assertEqual(visitor.mobile, lead_2.mobile)

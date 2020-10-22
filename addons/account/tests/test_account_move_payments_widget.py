@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 import json
 
@@ -29,8 +30,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2016_curr_1 = cls.env['account.move'].create({
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -500.0,  'currency_id': cls.curr_1.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
-                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 500.0,   'currency_id': cls.curr_1.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -500.0,  'currency_id': cls.curr_1.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 500.0,   'currency_id': cls.curr_1.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
         cls.payment_2016_curr_1.action_post()
@@ -38,8 +39,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2016_curr_2 = cls.env['account.move'].create({
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -1550.0, 'currency_id': cls.curr_2.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
-                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 1550.0,  'currency_id': cls.curr_2.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -1550.0, 'currency_id': cls.curr_2.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 1550.0,  'currency_id': cls.curr_2.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
         cls.payment_2016_curr_2.action_post()
@@ -47,8 +48,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2017_curr_2 = cls.env['account.move'].create({
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -950.0, 'currency_id': cls.curr_2.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
-                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 950.0,  'currency_id': cls.curr_2.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -950.0, 'currency_id': cls.curr_2.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 950.0,  'currency_id': cls.curr_2.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
         cls.payment_2017_curr_2.action_post()
@@ -56,8 +57,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2016_curr_3 = cls.env['account.move'].create({
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -3050.0, 'currency_id': cls.curr_3.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
-                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 3050.0,  'currency_id': cls.curr_3.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -3050.0, 'currency_id': cls.curr_3.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 3050.0,  'currency_id': cls.curr_3.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
         cls.payment_2016_curr_3.action_post()
@@ -65,8 +66,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2017_curr_3 = cls.env['account.move'].create({
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -1950.0, 'currency_id': cls.curr_3.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
-                (0, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 1950.0,  'currency_id': cls.curr_3.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 500.0,    'amount_currency': -1950.0, 'currency_id': cls.curr_3.id,   'account_id': cls.receivable_account.id,    'partner_id': cls.partner_a.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 500.0,     'credit': 0.0,      'amount_currency': 1950.0,  'currency_id': cls.curr_3.id,   'account_id': cls.payable_account.id,       'partner_id': cls.partner_a.id}),
             ],
         })
         cls.payment_2017_curr_3.action_post()
@@ -121,7 +122,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.curr_1.id,
-            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 2500.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'name': '/', 'price_unit': 2500.0})],
         })
         out_invoice.action_post()
 
@@ -132,7 +133,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.curr_1.id,
-            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 2500.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'name': '/', 'price_unit': 2500.0})],
         })
         in_invoice.action_post()
 
@@ -157,7 +158,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.curr_2.id,
-            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 7500.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'name': '/', 'price_unit': 7500.0})],
         })
         out_invoice.action_post()
 
@@ -168,7 +169,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.curr_2.id,
-            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 7500.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'name': '/', 'price_unit': 7500.0})],
         })
         in_invoice.action_post()
 

@@ -46,8 +46,8 @@ class TestOnchangeProductId(TransactionCase):
 
         product_tmpl_id = self.product_tmpl_model.create(dict(name="Voiture",
                                                               list_price=121,
-                                                              seller_ids=[(6, 0, [supplierinfo.id])],
-                                                              supplier_taxes_id=[(6, 0, [tax_include_id.id])]))
+                                                              seller_ids=[(fields.X2ManyCmd.SET, 0, [supplierinfo.id])],
+                                                              supplier_taxes_id=[(fields.X2ManyCmd.SET, 0, [tax_include_id.id])]))
         product_id = product_tmpl_id.product_variant_id
 
         fp_id = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
@@ -59,7 +59,7 @@ class TestOnchangeProductId(TransactionCase):
             'partner_id': partner_id.id,
             'fiscal_position_id': fp_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_id.name,
                     'product_id': product_id.id,
                     'product_qty': 1.0,

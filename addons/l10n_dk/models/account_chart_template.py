@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class AccountChartTemplate(models.Model):
@@ -12,6 +12,6 @@ class AccountChartTemplate(models.Model):
         res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
         if company.country_id.code == 'DK':
             account_tag_liquidity = self.env.ref('l10n_dk.account_tag_liquidity')
-            res['tag_ids'] = [(6, 0, account_tag_liquidity.ids)]
+            res['tag_ids'] = [(fields.X2ManyCmd.SET, 0, account_tag_liquidity.ids)]
             res['name'] = 'Bank i transfer'
         return res

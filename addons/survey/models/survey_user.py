@@ -151,7 +151,7 @@ class SurveyUserInput(models.Model):
             if 'predefined_question_ids' not in vals:
                 suvey_id = vals.get('survey_id', self.env.context.get('default_survey_id'))
                 survey = self.env['survey.survey'].browse(suvey_id)
-                vals['predefined_question_ids'] = [(6, 0, survey._prepare_user_input_predefined_questions().ids)]
+                vals['predefined_question_ids'] = [(fields.X2ManyCmd.SET, 0, survey._prepare_user_input_predefined_questions().ids)]
         return super(SurveyUserInput, self).create(vals_list)
 
     # ------------------------------------------------------------

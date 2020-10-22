@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import Form, SavepointCase
 
@@ -50,7 +51,7 @@ class StockGenerate(SavepointCase):
             'product_uom': self.uom_unit.id,
             'location_id': self.location.id,
             'location_dest_id': self.location_dest.id,
-            'move_line_ids': [(0, 0, line_vals) for line_vals in move_lines_val]
+            'move_line_ids': [(fields.X2ManyCmd.CREATE, 0, line_vals) for line_vals in move_lines_val]
         })
 
     def test_generate_01_sn(self):
@@ -273,7 +274,7 @@ class StockGenerate(SavepointCase):
 
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_loc.id)]})
         # Creates a putaway rule
         putaway_product = self.env['stock.putaway.rule'].create({
             'product_id': self.product_serial.id,

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.fields import X2ManyCmd
 
 
 class TestNote(TransactionCaseWithUserDemo):
@@ -12,7 +13,7 @@ class TestNote(TransactionCaseWithUserDemo):
         group_erp = self.env.ref('base.group_erp_manager')
 
         demo_user.write({
-            'groups_id': [(4, group_erp.id)],
+            'groups_id': [(X2ManyCmd.LINK, group_erp.id)],
         })
 
         # must not fail

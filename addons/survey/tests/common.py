@@ -6,6 +6,7 @@ import re
 from collections import Counter
 from contextlib import contextmanager
 
+from odoo import fields, api
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
@@ -100,7 +101,7 @@ class SurveyCase(common.SavepointCase):
         }
         if qtype in ('simple_choice', 'multiple_choice'):
             base_qvalues['suggested_answer_ids'] = [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': label['value'],
                     'answer_score': label.get('answer_score', 0),
                     'is_correct': label.get('is_correct', False)
@@ -109,11 +110,11 @@ class SurveyCase(common.SavepointCase):
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
             base_qvalues['suggested_answer_ids'] = [
-                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
+                (fields.X2ManyCmd.CREATE, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels')
             ]
             base_qvalues['matrix_row_ids'] = [
-                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
+                (fields.X2ManyCmd.CREATE, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels_2')
             ]
         else:

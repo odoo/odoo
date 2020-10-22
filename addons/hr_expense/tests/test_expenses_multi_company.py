@@ -3,6 +3,7 @@
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -22,7 +23,7 @@ class TestExpenseMultiCompany(TestExpenseCommon):
                 'journal_id': self.company_data_2['default_journal_purchase'].id,
                 'accounting_date': '2017-01-01',
                 'expense_line_ids': [
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         # Expense without foreign currency but analytic account.
                         'name': 'expense_1',
                         'date': '2016-01-01',
@@ -84,7 +85,7 @@ class TestExpenseMultiCompany(TestExpenseCommon):
                 'journal_id': self.company_data_2['default_journal_purchase'].id,
                 'accounting_date': '2017-01-01',
                 'expense_line_ids': [
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         # Expense without foreign currency but analytic account.
                         'name': 'expense_1',
                         'date': '2016-01-01',

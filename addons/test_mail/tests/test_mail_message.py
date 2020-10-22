@@ -10,6 +10,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 class TestMessageValues(TestMailCommon):
@@ -192,18 +193,18 @@ class TestMessageAccess(TestMailCommon):
             'subject': '_ZTest', 'body': 'A', 'subtype_id': self.ref('mail.mt_comment')})
         msg2 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+B', 'subtype_id': self.ref('mail.mt_comment'),
-            'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
+            'partner_ids': [(X2ManyCmd.SET, 0, [self.user_public.partner_id.id])]})
         msg3 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A Pigs', 'subtype_id': False,
             'model': 'mail.channel', 'res_id': self.group_pigs.id})
         msg4 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+P Pigs', 'subtype_id': self.ref('mail.mt_comment'),
             'model': 'mail.channel', 'res_id': self.group_pigs.id,
-            'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
+            'partner_ids': [(X2ManyCmd.SET, 0, [self.user_public.partner_id.id])]})
         msg5 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+E Pigs', 'subtype_id': self.ref('mail.mt_comment'),
             'model': 'mail.channel', 'res_id': self.group_pigs.id,
-            'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
+            'partner_ids': [(X2ManyCmd.SET, 0, [self.user_employee.partner_id.id])]})
         msg6 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A Birds', 'subtype_id': self.ref('mail.mt_comment'),
             'model': 'mail.channel', 'res_id': self.group_private.id})
@@ -211,7 +212,7 @@ class TestMessageAccess(TestMailCommon):
             'subject': '_ZTest', 'body': 'B', 'subtype_id': self.ref('mail.mt_comment')})
         msg8 = self.env['mail.message'].with_user(self.user_employee).create({
             'subject': '_ZTest', 'body': 'B+E', 'subtype_id': self.ref('mail.mt_comment'),
-            'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
+            'partner_ids': [(X2ManyCmd.SET, 0, [self.user_employee.partner_id.id])]})
 
         # Test: Public: 2 messages (recipient)
         messages = self.env['mail.message'].with_user(self.user_public).search([('subject', 'like', '_ZTest')])
@@ -261,8 +262,8 @@ class TestMessageAccess(TestMailCommon):
             'datas': base64.b64encode(b'My attachment'),
             'name': 'doc.txt'})
         # attach the attachment to the message
-        self.message.write({'attachment_ids': [(4, attachment.id)]})
-        self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
+        self.message.write({'attachment_ids': [(X2ManyCmd.LINK, attachment.id)]})
+        self.message.write({'partner_ids': [(X2ManyCmd.LINK, self.user_employee.partner_id.id)]})
         self.message.with_user(self.user_employee).read()
         # Test: Bert has access to attachment, ok because he can read message
         attachment.with_user(self.user_employee).read(['name', 'datas'])
@@ -317,7 +318,7 @@ class TestMessageAccess(TestMailCommon):
     def test_mail_message_access_create_reply(self):
         # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', False)
-        self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
+        self.message.write({'partner_ids': [(X2ManyCmd.LINK, self.user_employee.partner_id.id)]})
         self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_mail_message_access_create_wo_parent_access(self):
@@ -368,8 +369,8 @@ class TestMessageAccess(TestMailCommon):
         self.group_public.write({
             'email_send': True,
             'moderation': True,
-            'channel_partner_ids': [(4, self.partner_employee.id)],
-            'moderator_ids': [(4, self.user_employee.id)],
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_employee.id)],
+            'moderator_ids': [(X2ManyCmd.LINK, self.user_employee.id)],
         })
         self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
         self.message.with_user(self.user_employee).write({'moderation_status': 'accepted'})
@@ -463,7 +464,7 @@ class TestMessageModeration(TestMailCommon):
             'email_send': True,
             'moderation': True
         })
-        cls.user_employee.write({'moderation_channel_ids': [(6, 0, [cls.channel_1.id])]})
+        cls.user_employee.write({'moderation_channel_ids': [(X2ManyCmd.SET, 0, [cls.channel_1.id])]})
         cls.user_portal = cls._create_portal_user()
 
         # A pending moderation message needs to have field channel_ids empty. Moderators
@@ -537,7 +538,7 @@ class TestMessageModeration(TestMailCommon):
             'email_send': True,
             'moderation': True
         })
-        self.user_admin.write({'moderation_channel_ids': [(6, 0, [channel_2.id])]})
+        self.user_admin.write({'moderation_channel_ids': [(X2ManyCmd.SET, 0, [channel_2.id])]})
         self.msg_c2_portal = self._add_messages(channel_2, 'Body31', author=self.partner_portal, moderation_status='pending_moderation')
 
         # one notification for each moderator: employee (channel1), admin (channel2)

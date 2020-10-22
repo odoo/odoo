@@ -3,6 +3,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.fields import X2ManyCmd
 
 
 class TestExpenseCommon(AccountTestInvoicingCommon):
@@ -20,7 +21,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             email='expense_user_employee@example.com',
             notification_type='email',
             groups='base.group_user',
-            company_ids=[(6, 0, cls.env.companies.ids)],
+            company_ids=[(X2ManyCmd.SET, 0, cls.env.companies.ids)],
         )
         cls.expense_user_manager = mail_new_test_user(
             cls.env,
@@ -29,7 +30,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             email='expense_manager_1@example.com',
             notification_type='email',
             groups='base.group_user,hr_expense.group_hr_expense_manager',
-            company_ids=[(6, 0, cls.env.companies.ids)],
+            company_ids=[(X2ManyCmd.SET, 0, cls.env.companies.ids)],
         )
 
         cls.expense_employee = cls.env['hr.employee'].create({

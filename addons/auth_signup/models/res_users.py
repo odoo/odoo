@@ -94,7 +94,7 @@ class ResUsers(models.Model):
                 })
                 if partner.company_id:
                     values['company_id'] = partner.company_id.id
-                    values['company_ids'] = [(6, 0, [partner.company_id.id])]
+                    values['company_ids'] = [(fields.X2ManyCmd.SET, 0, [partner.company_id.id])]
                 partner_user = self._signup_create_user(values)
                 partner_user._notify_inviter()
         else:

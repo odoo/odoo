@@ -3,6 +3,7 @@
 
 from odoo.tests import common, Form
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestDropship(common.TransactionCase):
@@ -11,7 +12,7 @@ class TestDropship(common.TransactionCase):
         prod = self.env['product.product'].create({'name': 'Large Desk'})
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
-        prod.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])]})
+        prod.write({'route_ids': [(X2ManyCmd.SET, 0, [dropshipping_route.id, mto_route.id])]})
 
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
@@ -19,7 +20,7 @@ class TestDropship(common.TransactionCase):
             'name': vendor1.id,
             'price': 8,
         })
-        prod.write({'seller_ids': [(6, 0, [seller1.id])]})
+        prod.write({'seller_ids': [(X2ManyCmd.SET, 0, [seller1.id])]})
 
         # sell one unit of this product
         cust = self.env['res.partner'].create({'name': 'customer1'})
@@ -27,7 +28,7 @@ class TestDropship(common.TransactionCase):
             'partner_id': cust.id,
             'partner_invoice_id': cust.id,
             'partner_shipping_id': cust.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': prod.name,
                 'product_id': prod.id,
                 'product_uom_qty': 1.00,
@@ -78,7 +79,7 @@ class TestDropship(common.TransactionCase):
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'uom_po_id': self.env.ref('uom.product_uom_unit').id,
-            'seller_ids': [(0, 0, {
+            'seller_ids': [(X2ManyCmd.CREATE, 0, {
                 'delay': 1,
                 'name': supplier_dropship.id,
                 'min_qty': 2.0

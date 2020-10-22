@@ -54,7 +54,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'name': 'BNK1',
             'date': '2019-01-02',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 100.0})],
         })
         self.assertRecordValues(bnk1, [{
             'balance_start': 0.0,
@@ -68,7 +68,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'name': 'BNK2',
             'date': '2019-01-10',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 50.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 50.0})],
         })
         self.assertRecordValues(bnk2, [{
             'balance_start': 100.0,
@@ -82,7 +82,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'name': 'BNK3',
             'date': '2019-01-15',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 25.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 25.0})],
             'balance_end_real': 200.0,
         })
         self.assertRecordValues(bnk3, [{
@@ -97,7 +97,7 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'name': 'BNK4',
             'date': '2019-01-03',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 100.0})],
         })
         self.assertRecordValues(bnk4, [{
             'balance_start': 100.0,
@@ -228,14 +228,14 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'name': 'BNK1_1',
             'date': '2019-01-01',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 100.0})],
             'balance_end_real': 100.0,
         })
         bnk1_2 = self.env['account.bank.statement'].create({
             'name': 'BNK1_2',
             'date': '2019-01-10',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 50.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 50.0})],
         })
 
         # Create statements in cash journal.
@@ -243,14 +243,14 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'name': 'BNK2_1',
             'date': '2019-01-02',
             'journal_id': self.company_data['default_journal_cash'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 20.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 20.0})],
             'balance_end_real': 20.0,
         })
         bnk2_2 = self.env['account.bank.statement'].create({
             'name': 'BNK2_2',
             'date': '2019-01-12',
             'journal_id': self.company_data['default_journal_cash'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 10.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'payment_ref': '/', 'amount': 10.0})],
         })
         self.assertRecordValues(bnk1_1, [{
             'balance_start': 0.0,
@@ -307,7 +307,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': cls.bank_journal_1.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': cls.partner_a.id,
@@ -378,7 +378,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': journal.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -436,12 +436,12 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         # Check the account.bank.statement.line is still correct after editing the account.move.
         statement_line.move_id.write({'line_ids': [
-            (1, liquidity_lines.id, {
+            (fields.X2ManyCmd.UPDATE, liquidity_lines.id, {
                 'debit': expected_liquidity_values.get('debit', 0.0),
                 'credit': expected_liquidity_values.get('credit', 0.0),
                 'amount_currency': expected_liquidity_values.get('amount_currency', 0.0),
             }),
-            (1, suspense_lines.id, {
+            (fields.X2ManyCmd.UPDATE, suspense_lines.id, {
                 'debit': expected_counterpart_values.get('debit', 0.0),
                 'credit': expected_counterpart_values.get('credit', 0.0),
                 'amount_currency': expected_counterpart_values.get('amount_currency', 0.0),
@@ -543,7 +543,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -567,7 +567,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -591,7 +591,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -615,7 +615,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -639,7 +639,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -663,7 +663,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,
@@ -684,7 +684,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             with self.assertRaises(Exception), self.cr.savepoint():
                 self.env['account.bank.statement'].create({
                     **statement_vals,
-                    'line_ids': [(0, 0, statement_line_vals)],
+                    'line_ids': [(fields.X2ManyCmd.CREATE, 0, statement_line_vals)],
                 })
 
         statement_vals = {
@@ -732,7 +732,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         statement = self.env['account.bank.statement'].create({
             **statement_vals,
-            'line_ids': [(0, 0, statement_line_vals)],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, statement_line_vals)],
         })
         st_line = statement.line_ids
 
@@ -753,7 +753,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         ]
         with self.assertRaises(UserError), self.cr.savepoint():
             st_line.move_id.write({
-                'line_ids': [(0, 0, vals) for vals in addition_lines_to_create]
+                'line_ids': [(fields.X2ManyCmd.CREATE, 0, vals) for vals in addition_lines_to_create]
             })
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -869,7 +869,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'date': '2019-01-01',
             'journal_id': journal.id,
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': self.partner_a.id,

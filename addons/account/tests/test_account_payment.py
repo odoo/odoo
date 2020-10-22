@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -23,12 +24,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         cls.company_data['default_journal_bank'].write({
             'payment_debit_account_id': cls.payment_debit_account_id.id,
             'payment_credit_account_id': cls.payment_credit_account_id.id,
-            'inbound_payment_method_ids': [(6, 0, cls.env.ref('account.account_payment_method_manual_in').ids)],
-            'outbound_payment_method_ids': [(6, 0, cls.env.ref('account.account_payment_method_manual_out').ids)],
+            'inbound_payment_method_ids': [(X2ManyCmd.SET, 0, cls.env.ref('account.account_payment_method_manual_in').ids)],
+            'outbound_payment_method_ids': [(X2ManyCmd.SET, 0, cls.env.ref('account.account_payment_method_manual_out').ids)],
         })
 
         cls.partner_a.write({
-            'bank_ids': [(6, 0, cls.partner_bank_account.ids)],
+            'bank_ids': [(X2ManyCmd.SET, 0, cls.partner_bank_account.ids)],
         })
 
     def test_payment_move_sync_create_write(self):
@@ -126,7 +127,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         payment.move_id.write({
             'partner_bank_id': False,
             'line_ids': [
-                (1, counterpart_lines.id, {
+                (X2ManyCmd.UPDATE, counterpart_lines.id, {
                     'debit': 0.0,
                     'credit': 75.0,
                     'amount_currency': -75.0,
@@ -134,7 +135,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                     'account_id': copy_receivable.id,
                     'partner_id': self.partner_b.id,
                 }),
-                (1, liquidity_lines.id, {
+                (X2ManyCmd.UPDATE, liquidity_lines.id, {
                     'debit': 100.0,
                     'credit': 0.0,
                     'amount_currency': 100.0,
@@ -143,7 +144,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 }),
 
                 # Additional write-off:
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 25.0,
                     'amount_currency': -25.0,
@@ -397,11 +398,11 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
         payment.move_id.write({
             'line_ids': [
-                (1, counterpart_lines.id, {
+                (X2ManyCmd.UPDATE, counterpart_lines.id, {
                     'account_id': self.company_data['company'].transfer_account_id.id,
                     'partner_id': self.company_data['company'].partner_id.id,
                 }),
-                (1, liquidity_lines.id, {
+                (X2ManyCmd.UPDATE, liquidity_lines.id, {
                     'partner_id': self.company_data['company'].partner_id.id,
                 }),
             ]
@@ -468,7 +469,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': '50 to pay',
                 'price_unit': 50.0,
                 'quantity': 1,
@@ -491,7 +492,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'name': 'test_statement',
             'journal_id': self.company_data['default_journal_bank'].id,
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'payment_ref': '50 to pay',
                     'partner_id': self.partner_a.id,
                     'amount': 50.0,

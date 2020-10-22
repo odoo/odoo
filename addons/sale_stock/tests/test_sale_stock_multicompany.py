@@ -3,6 +3,7 @@
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -39,7 +40,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'partner_shipping_id': partner.id,
             'user_id': False,
             'company_id': self.env.company.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 10,
@@ -58,7 +59,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
             'company_id': self.env.company.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 10,
@@ -74,7 +75,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
             'company_id': self.company_data_2['company'].id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 10,

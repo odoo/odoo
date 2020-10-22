@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
+from odoo import fields, tools
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import date, timedelta
@@ -126,7 +126,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         line = env['product.template.attribute.line'].create({
             'product_tmpl_id': pear.product_tmpl_id.id,
             'attribute_id': attribute.id,
-            'value_ids': [(6, 0, attribute_value.ids)]
+            'value_ids': [(fields.X2ManyCmd.SET, 0, attribute_value.ids)]
         })
         line.product_template_value_ids[0].price_extra = 2
 
@@ -148,7 +148,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         chair_color_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_color_attribute.id,
-            'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [chair_color_red.id, chair_color_blue.id])]
         })
         chair_color_line.product_template_value_ids[0].price_extra = 1
 
@@ -168,7 +168,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         chair_legs_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_legs_attribute.id,
-            'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [chair_legs_metal.id, chair_legs_wood.id])]
         })
 
         chair_fabrics_attribute = env['product.attribute'].create({
@@ -188,21 +188,21 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         chair_fabrics_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_fabrics_attribute.id,
-            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
         fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'product_id': wall_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
@@ -212,17 +212,17 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'Percentage',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
                 'product_id': wall_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
                 'product_id': small_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
@@ -232,32 +232,32 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'Formula',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'formula',
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
                 'product_id': wall_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
                 'product_id': small_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
                 'product_id': magnetic_board.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
                 'product_id': monitor_stand.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
@@ -269,19 +269,19 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'min_quantity ordering',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
                 'product_id': wall_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
                 'product_id': wall_shelf.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
@@ -292,12 +292,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'Product template',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
                 'product_tmpl_id': wall_shelf.product_tmpl_id.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
             })],
@@ -311,12 +311,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         env['product.pricelist'].create({
             # no category has precedence over category
             'name': 'Category vs no category',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '2_product_category',
                 'categ_id': product_category_3.id,  # All / Saleable / Services
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
             })],
@@ -324,12 +324,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         p = env['product.pricelist'].create({
             'name': 'Category',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '2_product_category',
                 'categ_id': env.ref('product.product_category_all').id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '2_product_category',
@@ -349,17 +349,17 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'Dates',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'date_start': two_weeks_ago.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_end': one_week_ago.strftime(DEFAULT_SERVER_DATE_FORMAT),
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'date_start': today.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_end': one_week_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 3,
                 'date_start': one_week_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -369,7 +369,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         cost_base_pricelist = env['product.pricelist'].create({
             'name': 'Cost base',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'base': 'standard_price',
                 'compute_price': 'percentage',
                 'percent_price': 55,
@@ -378,7 +378,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         pricelist_base_pricelist = env['product.pricelist'].create({
             'name': 'Pricelist base',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'base': 'pricelist',
                 'base_pricelist_id': cost_base_pricelist.id,
                 'compute_price': 'percentage',
@@ -388,7 +388,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'Pricelist base 2',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'base': 'pricelist',
                 'base_pricelist_id': pricelist_base_pricelist.id,
                 'compute_price': 'percentage',
@@ -398,7 +398,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
 
         env['product.pricelist'].create({
             'name': 'Pricelist base rounding',
-            'item_ids': [(0, 0, {
+            'item_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'base': 'pricelist',
                 'base_pricelist_id': fixed_pricelist.id,
                 'compute_price': 'percentage',
@@ -437,11 +437,11 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
         dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
 
-        letter_tray.taxes_id = [(6, 0, [src_tax.id])]
+        letter_tray.taxes_id = [(fields.X2ManyCmd.SET, 0, [src_tax.id])]
 
         self.main_pos_config.write({
             'tax_regime_selection': True,
-            'fiscal_position_ids': [(0, 0, {
+            'fiscal_position_ids': [(fields.X2ManyCmd.CREATE, 0, {
                                             'name': "FP-POS-2M",
                                             'tax_ids': [
                                                 (0,0,{'tax_src_id': src_tax.id,
@@ -451,14 +451,14 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                                             })],
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
-            'payment_method_ids': [(0, 0, { 'name': 'Cash',
+            'payment_method_ids': [(fields.X2ManyCmd.CREATE, 0, { 'name': 'Cash',
                                             'is_cash_count': True,
                                             'cash_journal_id': cash_journal.id,
                                             'receivable_account_id': account_receivable.id,
             })],
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
-            'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
+            'available_pricelist_ids': [(fields.X2ManyCmd.LINK, pricelist.id) for pricelist in all_pricelists],
             'module_pos_loyalty': False,
         })
 

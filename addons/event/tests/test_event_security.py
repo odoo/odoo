@@ -8,6 +8,7 @@ from odoo.addons.event.tests.common import TestEventCommon
 from odoo.exceptions import AccessError
 from odoo.tests.common import users
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestEventSecurity(TestEventCommon):
@@ -65,7 +66,7 @@ class TestEventSecurity(TestEventCommon):
         event_type = self.env['event.type'].create({
             'name': 'ManagerEventType',
             'use_mail_schedule': True,
-            'event_type_mail_ids': [(5, 0), (0, 0, {
+            'event_type_mail_ids': [(X2ManyCmd.CLEAR, 0), (X2ManyCmd.CREATE, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
         })
@@ -90,8 +91,8 @@ class TestEventSecurity(TestEventCommon):
 
         # Settings access rights required to enable some features
         self.user_eventmanager.write({'groups_id': [
-            (3, self.env.ref('base.group_system').id),
-            (4, self.env.ref('base.group_erp_manager').id)
+            (X2ManyCmd.UNLINK, self.env.ref('base.group_system').id),
+            (X2ManyCmd.LINK, self.env.ref('base.group_erp_manager').id)
         ]})
         with self.assertRaises(AccessError):
             event_config = self.env['res.config.settings'].with_user(self.user_eventmanager).create({

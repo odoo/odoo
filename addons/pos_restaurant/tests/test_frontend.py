@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.fields import X2ManyCmd
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(odoo.tests.HttpCase):
@@ -24,7 +26,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'iface_splitbill': True,
             'iface_printbill': True,
             'iface_orderline_notes': True,
-            'printer_ids': [(4, printer.id)],
+            'printer_ids': [(X2ManyCmd.LINK, printer.id)],
             'iface_start_categ_id': drinks_category.id,
             'start_category': True,
             'pricelist_id': self.env.ref('product.list0').id,
@@ -110,7 +112,7 @@ class TestFrontend(odoo.tests.HttpCase):
         pos_config.write({
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
-            'payment_method_ids': [(0, 0, {
+            'payment_method_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Cash restaurant',
                 'split_transactions': True,
                 'receivable_account_id': account_receivable.id,
@@ -126,7 +128,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'weight': 0.01,
             'pos_categ_id': drinks_category.id,
             'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
-            'taxes_id': [(6, 0, [])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [])],
         })
 
         water = self.env['product.product'].create({
@@ -136,7 +138,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'weight': 0.01,
             'pos_categ_id': drinks_category.id,
             'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
-            'taxes_id': [(6, 0, [])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [])],
         })
 
         minute_maid = self.env['product.product'].create({
@@ -146,7 +148,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'weight': 0.01,
             'pos_categ_id': drinks_category.id,
             'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
-            'taxes_id': [(6, 0, [])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [])],
         })
 
         pricelist = self.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})

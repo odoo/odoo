@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 from odoo.fields import Datetime
-from odoo import tests
+from odoo import fields, tests
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
 
 @tests.common.tagged('post_install', '-at_install')
@@ -14,7 +14,7 @@ class TestUi(TestUICommon):
         user_demo.flush()
         # Avoid Billing/Shipping address page
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)],
+            'groups_id': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.LINK, self.env.ref('base.group_user').id)],
             'street': '215 Vine St',
             'city': 'Scranton',
             'zip': '18503',
@@ -65,12 +65,12 @@ class TestUi(TestUICommon):
             'attempts_limit': 3,
             'description': "<p>Test your furniture knowledge!</p>",
             'question_and_page_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'title': 'Furniture',
                     'sequence': 1,
                     'is_page': True,
                     'description': "&lt;p&gt;Test your furniture knowledge!&lt;/p&gt",
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'title': 'What type of wood is the best for furniture?',
                     'sequence': 2,
                     'question_type': 'simple_choice',
@@ -92,7 +92,7 @@ class TestUi(TestUICommon):
                             'sequence': 4,
                         })
                     ]
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'title': 'Select all the furniture shown in the video',
                     'sequence': 3,
                     'question_type': 'multiple_choice',
@@ -123,7 +123,7 @@ class TestUi(TestUICommon):
                             'answer_score': -1.0,
                         })
                     ]
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'title': 'What do you think about the content of the course? (not rated)',
                     'sequence': 4,
                     'question_type': 'text_box',
@@ -143,7 +143,7 @@ class TestUi(TestUICommon):
             'description': 'So much amazing certification.',
             'create_date': Datetime.now() - relativedelta(days=2),
             'slide_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'DIY Furniture Certification',
                     'sequence': 1,
                     'slide_type': 'certification',

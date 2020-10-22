@@ -546,7 +546,7 @@ class MailActivity(models.Model):
                 },
                 subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
                 mail_activity_type_id=activity.activity_type_id.id,
-                attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
+                attachment_ids=[(fields.X2ManyCmd.LINK, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
 
             # Moving the attachments in the message

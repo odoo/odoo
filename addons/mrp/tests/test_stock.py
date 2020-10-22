@@ -4,6 +4,7 @@
 from . import common
 from odoo.exceptions import UserError
 from odoo.tests import Form
+from odoo.fields import X2ManyCmd
 
 
 class TestWarehouse(common.TestMrpCommon):
@@ -28,7 +29,7 @@ class TestWarehouse(common.TestMrpCommon):
         })
         inventory = self.env['stock.inventory'].create({
             'name': 'Initial inventory',
-            'line_ids': [(0, 0, {
+            'line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.graphics_card.id,
                 'product_uom_id': self.graphics_card.uom_id.id,
                 'product_qty': 16.0,
@@ -43,13 +44,13 @@ class TestWarehouse(common.TestMrpCommon):
             'product_qty': 1,
             'product_uom_id': unit.id,
             'consumption': 'flexible',
-            'bom_line_ids': [(0, 0, {
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.graphics_card.id,
                 'product_qty': 1,
                 'product_uom_id': unit.id
             })],
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
             ],
         })
 
@@ -114,16 +115,16 @@ class TestWarehouse(common.TestMrpCommon):
 
         stock_inv_product_4 = self.env['stock.inventory'].create({
             'name': 'Stock Inventory for Stick',
-            'product_ids': [(4, self.product_4.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product_4.id)],
             'line_ids': [
-                (0, 0, {'product_id': self.product_4.id, 'product_uom_id': self.product_4.uom_id.id, 'product_qty': 8, 'prod_lot_id': lot_product_4.id, 'location_id': self.stock_location_14.id}),
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_4.id, 'product_uom_id': self.product_4.uom_id.id, 'product_qty': 8, 'prod_lot_id': lot_product_4.id, 'location_id': self.stock_location_14.id}),
             ]})
 
         stock_inv_product_2 = self.env['stock.inventory'].create({
             'name': 'Stock Inventory for Stone Tools',
-            'product_ids': [(4, self.product_2.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product_2.id)],
             'line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.stock_location_14.id})
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.stock_location_14.id})
             ]})
         (stock_inv_product_4 | stock_inv_product_2)._action_start()
         stock_inv_product_2.action_validate()

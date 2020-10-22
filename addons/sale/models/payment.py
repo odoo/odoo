@@ -132,7 +132,7 @@ class PaymentTransaction(models.Model):
                     .with_context(company_id=trans.acquirer_id.company_id.id)
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids._create_invoices()
-                trans.invoice_ids = [(6, 0, invoices.ids)]
+                trans.invoice_ids = [(fields.X2ManyCmd.SET, 0, invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, values):

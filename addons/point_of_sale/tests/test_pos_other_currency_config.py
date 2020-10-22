@@ -3,7 +3,7 @@
 
 import odoo
 
-from odoo import tools
+from odoo import fields, tools
 from odoo.tests.common import Form
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -32,7 +32,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'product_tmpl_id': self.product2.product_tmpl_id.id,
             'fixed_price': 12.99,
         })
-        self.config.pricelist_id.write({'item_ids': [(6, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
+        self.config.pricelist_id.write({'item_ids': [(fields.X2ManyCmd.SET, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
 
         self.output_account = self.categ_anglo.property_stock_account_output_categ_id
         self.expense_account = self.categ_anglo.property_account_expense_categ_id

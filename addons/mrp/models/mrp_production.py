@@ -563,8 +563,8 @@ class MrpProduction(models.Model):
             self.product_id = self.bom_id.product_id or self.bom_id.product_tmpl_id.product_variant_ids[0]
         self.product_qty = self.bom_id.product_qty or 1.0
         self.product_uom_id = self.bom_id and self.bom_id.product_uom_id.id or self.product_id.uom_id.id
-        self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
-        self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids]
+        self.move_raw_ids = [(fields.X2ManyCmd.DELETE, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
+        self.move_finished_ids = [(fields.X2ManyCmd.DELETE, move.id) for move in self.move_finished_ids]
         self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
     @api.onchange('date_planned_start')
@@ -575,8 +575,8 @@ class MrpProduction(models.Model):
             if date_planned_finished == self.date_planned_start:
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
             self.date_planned_finished = date_planned_finished
-            self.move_raw_ids = [(1, m.id, {'date': self.date_planned_start}) for m in self.move_raw_ids]
-            self.move_finished_ids = [(1, m.id, {'date': date_planned_finished}) for m in self.move_finished_ids]
+            self.move_raw_ids = [(fields.X2ManyCmd.UPDATE, m.id, {'date': self.date_planned_start}) for m in self.move_raw_ids]
+            self.move_finished_ids = [(fields.X2ManyCmd.UPDATE, m.id, {'date': date_planned_finished}) for m in self.move_finished_ids]
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
@@ -585,28 +585,28 @@ class MrpProduction(models.Model):
         # Clear move raws if we are changing the product. In case of creation (self._origin is empty),
         # we need to avoid keeping incorrect lines, so clearing is necessary too.
         if self.product_id != self._origin.product_id:
-            self.move_raw_ids = [(5,)]
+            self.move_raw_ids = [(fields.X2ManyCmd.CLEAR,)]
         if self.bom_id and self.product_qty > 0:
             # keep manual entries
-            list_move_raw = [(4, move.id) for move in self.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
+            list_move_raw = [(fields.X2ManyCmd.LINK, move.id) for move in self.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             moves_raw_values = self._get_moves_raw_values()
             move_raw_dict = {move.bom_line_id.id: move for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)}
             for move_raw_values in moves_raw_values:
                 if move_raw_values['bom_line_id'] in move_raw_dict:
                     # update existing entries
-                    list_move_raw += [(1, move_raw_dict[move_raw_values['bom_line_id']].id, move_raw_values)]
+                    list_move_raw += [(fields.X2ManyCmd.UPDATE, move_raw_dict[move_raw_values['bom_line_id']].id, move_raw_values)]
                 else:
                     # add new entries
-                    list_move_raw += [(0, 0, move_raw_values)]
+                    list_move_raw += [(fields.X2ManyCmd.CREATE, 0, move_raw_values)]
             self.move_raw_ids = list_move_raw
         else:
-            self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
+            self.move_raw_ids = [(fields.X2ManyCmd.DELETE, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_finished(self):
         if self.product_id and self.product_qty > 0:
             # keep manual entries
-            list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
+            list_move_finished = [(fields.X2ManyCmd.LINK, move.id) for move in self.move_finished_ids.filtered(
                 lambda m: not m.byproduct_id and m.product_id != self.product_id)]
             moves_finished_values = self._get_moves_finished_values()
             moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
@@ -614,15 +614,15 @@ class MrpProduction(models.Model):
             for move_finished_values in moves_finished_values:
                 if move_finished_values.get('byproduct_id') in moves_byproduct_dict:
                     # update existing entries
-                    list_move_finished += [(1, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
+                    list_move_finished += [(fields.X2ManyCmd.UPDATE, moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
                 elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
-                    list_move_finished += [(1, move_finished.id, move_finished_values)]
+                    list_move_finished += [(fields.X2ManyCmd.UPDATE, move_finished.id, move_finished_values)]
                 else:
                     # add new entries
-                    list_move_finished += [(0, 0, move_finished_values)]
+                    list_move_finished += [(fields.X2ManyCmd.CREATE, 0, move_finished_values)]
             self.move_finished_ids = list_move_finished
         else:
-            self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
+            self.move_finished_ids = [(fields.X2ManyCmd.DELETE, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
 
     @api.onchange('location_src_id', 'move_raw_ids', 'bom_id')
     def _onchange_location(self):
@@ -637,7 +637,7 @@ class MrpProduction(models.Model):
         destination_location = self.location_dest_id
         update_value_list = []
         for move in self.move_finished_ids:
-            update_value_list += [(1, move.id, ({
+            update_value_list += [(fields.X2ManyCmd.UPDATE, move.id, ({
                 'warehouse_id': destination_location.get_warehouse().id,
                 'location_dest_id': destination_location.id,
             }))]
@@ -801,7 +801,7 @@ class MrpProduction(models.Model):
                         'state': 'pending',
                         'consumption': production.consumption,
                     }]
-            production.workorder_ids = [(5, 0)] + [(0, 0, value) for value in workorders_values]
+            production.workorder_ids = [(fields.X2ManyCmd.CLEAR, 0)] + [(fields.X2ManyCmd.CREATE, 0, value) for value in workorders_values]
             for workorder in production.workorder_ids:
                 workorder.duration_expected = workorder._get_duration_expected()
 
@@ -832,7 +832,7 @@ class MrpProduction(models.Model):
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
-            'move_dest_ids': [(4, x.id) for x in move_dest_ids],
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, x.id) for x in move_dest_ids],
         }
 
     def _get_moves_finished_values(self):
@@ -1047,7 +1047,7 @@ class MrpProduction(models.Model):
             'views': [(view.id, 'form')],
             'view_id': view.id,
             'target': 'new',
-            'context': dict(self.env.context, default_mo_ids=[(4, mo.id) for mo in self]),
+            'context': dict(self.env.context, default_mo_ids=[(fields.X2ManyCmd.LINK, mo.id) for mo in self]),
         }
 
     def action_confirm(self):
@@ -1215,7 +1215,7 @@ class MrpProduction(models.Model):
         ctx = self.env.context.copy()
         lines = []
         for order, product_id, consumed_qty, expected_qty in consumption_issues:
-            lines.append((0, 0, {
+            lines.append((fields.X2ManyCmd.CREATE, 0, {
                 'mrp_production_id': order.id,
                 'product_id': product_id.id,
                 'consumption': order.consumption,
@@ -1241,7 +1241,7 @@ class MrpProduction(models.Model):
         ctx = self.env.context.copy()
         lines = []
         for order in quantity_issues:
-            lines.append((0, 0, {
+            lines.append((fields.X2ManyCmd.CREATE, 0, {
                 'mrp_production_id': order.id,
                 'to_backorder': True
             }))
@@ -1334,7 +1334,7 @@ class MrpProduction(models.Model):
             moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
             order.action_assign()
             consume_move_lines = moves_to_do.mapped('move_line_ids')
-            order.move_finished_ids.move_line_ids.consume_line_ids = [(6, 0, consume_move_lines.ids)]
+            order.move_finished_ids.move_line_ids.consume_line_ids = [(fields.X2ManyCmd.SET, 0, consume_move_lines.ids)]
         return True
 
     @api.model

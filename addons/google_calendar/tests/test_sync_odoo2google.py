@@ -11,6 +11,7 @@ from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
 from odoo.modules.registry import Registry
 from odoo.addons.google_account.models.google_service import TIMEOUT
+from odoo.fields import X2ManyCmd
 
 
 def patch_api(func):
@@ -63,8 +64,8 @@ class TestSyncOdoo2Google(SavepointCase):
             'name': "Event",
             'start': datetime(2020, 1, 15, 8, 0),
             'stop': datetime(2020, 1, 15, 18, 0),
-            'partner_ids': [(4, partner.id)],
-            'alarm_ids': [(4, alarm.id)],
+            'partner_ids': [(X2ManyCmd.LINK, partner.id)],
+            'alarm_ids': [(X2ManyCmd.LINK, alarm.id)],
             'privacy': 'private',
             'need_sync': False,
         })
@@ -149,7 +150,7 @@ class TestSyncOdoo2Google(SavepointCase):
         })
         recurrence = self.env['calendar.recurrence'].create({
             'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=WE',
-            'calendar_event_ids': [(4, event.id)],
+            'calendar_event_ids': [(X2ManyCmd.LINK, event.id)],
             'need_sync': False,
         })
         recurrence._sync_odoo2google(self.google_service)
@@ -210,7 +211,7 @@ class TestSyncOdoo2Google(SavepointCase):
         self.env['calendar.recurrence'].create({
             'google_id': google_id,
             'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=WE',
-            'calendar_event_ids': [(4, event_1.id), (4, event_2.id)],
+            'calendar_event_ids': [(X2ManyCmd.LINK, event_1.id), (X2ManyCmd.LINK, event_2.id)],
             'need_sync': False,
         })
         event = event_2

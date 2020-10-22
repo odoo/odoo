@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sales_team.tests.common import TestSalesMC
+from odoo.fields import X2ManyCmd
 
 
 class TestDefaultTeam(TestSalesMC):
@@ -37,7 +38,7 @@ class TestDefaultTeam(TestSalesMC):
 
     def test_default_team_fallback(self):
         """ Test fallback: domain, order """
-        self.sales_team_1.member_ids = [(5,)]
+        self.sales_team_1.member_ids = [(X2ManyCmd.CLEAR,)]
 
         with self.with_user('user_sales_leads'):
             team = self.env['crm.team']._get_default_team_id()
@@ -50,7 +51,7 @@ class TestDefaultTeam(TestSalesMC):
             self.assertEqual(team, self.team_responsible)
 
         self.user_sales_leads.write({
-            'company_ids': [(4, self.company_2.id)],
+            'company_ids': [(X2ManyCmd.LINK, self.company_2.id)],
             'company_id': self.company_2.id,
         })
         # multi company: switch company

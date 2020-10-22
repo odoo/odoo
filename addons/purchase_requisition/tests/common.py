@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import common
+from odoo.fields import X2ManyCmd
 
 
 class TestPurchaseRequisitionCommon(common.SavepointCase):
@@ -21,14 +22,14 @@ class TestPurchaseRequisitionCommon(common.SavepointCase):
             'login': 'prm',
             'email': 'requisition_manager@yourcompany.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_purchase_manager.id])]})
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_purchase_manager.id])]})
 
         cls.user_purchase_requisition_user = Users.create({
             'name': 'Purchase requisition User',
             'login': 'pru',
             'email': 'requisition_user@yourcompany.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_purchase_user.id])]})
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_purchase_user.id])]})
 
         # Create Product
         cls.product_uom_id = cls.env.ref('uom.product_uom_unit')
@@ -58,7 +59,7 @@ class TestPurchaseRequisitionCommon(common.SavepointCase):
 
         # In order to test process of the purchase requisition ,create requisition
         cls.requisition1 = cls.env['purchase.requisition'].create({
-            'line_ids': [(0, 0, {
+            'line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': cls.product_09.id,
                 'product_qty': 10.0,
                 'product_uom_id': cls.product_uom_id.id})]

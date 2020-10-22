@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account_check_printing.models.account_payment import INV_LINES_PER_STUB
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 import math
 
@@ -16,7 +17,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         cls.payment_method_check = cls.env.ref("account_check_printing.account_payment_method_check")
 
         cls.company_data['default_journal_bank'].write({
-            'outbound_payment_method_ids': [(6, 0, (
+            'outbound_payment_method_ids': [(X2ManyCmd.SET, 0, (
                 cls.env.ref('account.account_payment_method_manual_out').id,
                 cls.payment_method_check.id,
             ))],
@@ -37,7 +38,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
         } for i in range(nb_invoices_to_test)])
         out_invoices.action_post()
 
@@ -78,7 +79,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
         } for i in range(nb_invoices_to_test)])
         out_refunds.action_post()
 

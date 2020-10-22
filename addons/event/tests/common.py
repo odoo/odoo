@@ -65,19 +65,19 @@ class TestEventCommon(common.SavepointCase):
             'use_timezone': True,
             'default_timezone': 'Europe/Paris',
             'use_ticket': True,
-            'event_type_ticket_ids': [(0, 0, {
+            'event_type_ticket_ids': [(fields.X2ManyCmd.CREATE, 0, {
                     'name': 'First Ticket',
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'Second Ticket',
                 })
             ],
             'use_mail_schedule': True,
             'event_type_mail_ids': [
-                (0, 0, {  # right at subscription
+                (fields.X2ManyCmd.CREATE, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_id': cls.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
-                (0, 0, {  # 1 days before event
+                (fields.X2ManyCmd.CREATE, 0, {  # 1 days before event
                     'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',

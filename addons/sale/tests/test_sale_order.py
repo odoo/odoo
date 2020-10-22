@@ -5,6 +5,7 @@ from odoo.tests import tagged
 from odoo.tools import float_compare
 
 from .common import TestSaleCommon
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -211,7 +212,7 @@ class TestSaleOrder(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {'name': prod_gap.name, 'product_id': prod_gap.id, 'product_uom_qty': 2, 'product_uom': prod_gap.uom_id.id, 'price_unit': prod_gap.list_price})],
+            'order_line': [(X2ManyCmd.CREATE, 0, {'name': prod_gap.name, 'product_id': prod_gap.id, 'product_uom_qty': 2, 'product_uom': prod_gap.uom_id.id, 'price_unit': prod_gap.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so.action_confirm()
@@ -220,7 +221,7 @@ class TestSaleOrder(TestSaleCommon):
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': serv_cost.name,
                     'product_id': serv_cost.id,
                     'product_uom_id': serv_cost.uom_id.id,
@@ -250,10 +251,10 @@ class TestSaleOrder(TestSaleCommon):
         })
 
         # Apply taxes on the sale order lines
-        self.sol_product_order.write({'tax_id': [(4, tax_include.id)]})
-        self.sol_serv_deliver.write({'tax_id': [(4, tax_include.id)]})
-        self.sol_serv_order.write({'tax_id': [(4, tax_exclude.id)]})
-        self.sol_product_deliver.write({'tax_id': [(4, tax_exclude.id)]})
+        self.sol_product_order.write({'tax_id': [(X2ManyCmd.LINK, tax_include.id)]})
+        self.sol_serv_deliver.write({'tax_id': [(X2ManyCmd.LINK, tax_include.id)]})
+        self.sol_serv_order.write({'tax_id': [(X2ManyCmd.LINK, tax_exclude.id)]})
+        self.sol_product_deliver.write({'tax_id': [(X2ManyCmd.LINK, tax_exclude.id)]})
 
         # Trigger onchange to reset discount, unit price, subtotal, ...
         for line in self.sale_order.order_line:
@@ -279,7 +280,7 @@ class TestSaleOrder(TestSaleCommon):
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
             'invoice_policy': 'order',
-            'taxes_id': [(6, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
+            'taxes_id': [(X2ManyCmd.SET, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
 
@@ -361,7 +362,7 @@ class TestSaleOrder(TestSaleCommon):
         })
         user_in_other_company = self.env["res.users"].create({
             "company_id": other_company.id,
-            "company_ids": [(6, 0, [other_company.id])],
+            "company_ids": [(X2ManyCmd.SET, 0, [other_company.id])],
             "name": "E.T",
             "login": "hohoho",
         })
@@ -397,13 +398,13 @@ class TestSaleOrder(TestSaleCommon):
             "discount_policy": "without_discount",
             "currency_id": other_curr.id,
             "item_ids": [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     "base": "list_price",
                     "product_id": product_1.id,
                     "compute_price": "percentage",
                     "percent_price": 20,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     "base": "standard_price",
                     "product_id": product_2.id,
                     "compute_price": "percentage",
@@ -424,11 +425,11 @@ class TestSaleOrder(TestSaleCommon):
             "partner_id": self.env.user.partner_id.id,
             "pricelist_id": pricelist.id,
             "order_line": [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     "product_id": product_1.id,
                     "product_uom_qty": 1.0
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     "product_id": product_2.id,
                     "product_uom_qty": 1.0
                 })
@@ -455,11 +456,11 @@ class TestSaleOrder(TestSaleCommon):
             "pricelist_id": pricelist.id,
             "order_line": [
                 # Verify discount is considered in create hack
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     "product_id": product_1.id,
                     "product_uom_qty": 1.0
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     "product_id": product_2.id,
                     "product_uom_qty": 1.0
                 })

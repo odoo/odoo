@@ -38,7 +38,7 @@ class Company(models.Model):
                 return base64.b64encode(f.read())
             # Modify the source image to add a colored bar on the bottom
             # This could seem overkill to modify the pixels 1 by 1, but
-            # Pillow doesn't provide an easy way to do it, and this 
+            # Pillow doesn't provide an easy way to do it, and this
             # is acceptable for a 16x16 image.
             color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
             original = Image.open(f)
@@ -212,7 +212,7 @@ class Company(models.Model):
         self.clear_caches()
         company = super(Company, self).create(vals)
         # The write is made on the user to set it automatically in the multi company group.
-        self.env.user.write({'company_ids': [(4, company.id)]})
+        self.env.user.write({'company_ids': [(fields.X2ManyCmd.LINK, company.id)]})
 
         # Make sure that the selected currency is enabled
         if vals.get('currency_id'):

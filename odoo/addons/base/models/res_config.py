@@ -6,7 +6,7 @@ import re
 
 from lxml import etree
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
 
@@ -350,7 +350,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             The attribute 'group' may contain several xml ids, separated by commas.
 
         *   For a selection field like 'group_XXX' composed of 2 string values ('0' and '1'),
-            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group', 
+            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group',
             depending on the field's value.
             By default 'group' is the group Employee.  Groups are given by their xml id.
             The attribute 'group' may contain several xml ids, separated by commas.
@@ -358,8 +358,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
-        *   For a selection field like 'module_XXX' composed of 2 string values ('0' and '1'), 
-            ``execute`` triggers the immediate installation of the module named 'XXX' 
+        *   For a selection field like 'module_XXX' composed of 2 string values ('0' and '1'),
+            ``execute`` triggers the immediate installation of the module named 'XXX'
             if the field has the value ``'1'``.
 
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
@@ -577,10 +577,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 if self[name] == current_settings[name]:
                     continue
                 if int(self[name]):
-                    groups.write({'implied_ids': [(4, implied_group.id)]})
+                    groups.write({'implied_ids': [(fields.X2ManyCmd.LINK, implied_group.id)]})
                 else:
-                    groups.write({'implied_ids': [(3, implied_group.id)]})
-                    implied_group.write({'users': [(3, user.id) for user in groups.users]})
+                    groups.write({'implied_ids': [(fields.X2ManyCmd.UNLINK, implied_group.id)]})
+                    implied_group.write({'users': [(fields.X2ManyCmd.UNLINK, user.id) for user in groups.users]})
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()

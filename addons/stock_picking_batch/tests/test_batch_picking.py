@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestBatchPicking(TransactionCase):
@@ -80,7 +81,7 @@ class TestBatchPicking(TransactionCase):
         self.batch = self.env['stock.picking.batch'].create({
             'name': 'Batch 1',
             'company_id': self.env.company.id,
-            'picking_ids': [(4, self.picking_client_1.id), (4, self.picking_client_2.id)]
+            'picking_ids': [(X2ManyCmd.LINK, self.picking_client_1.id), (X2ManyCmd.LINK, self.picking_client_2.id)]
         })
 
     def test_batch_scheduled_date(self):
@@ -118,11 +119,11 @@ class TestBatchPicking(TransactionCase):
 
         # add a new picking with an earlier scheduled date => batch's scheduled date should auto-update
         self.picking_client_3.scheduled_date = picking3_scheduled_date
-        self.batch.write({'picking_ids': [(4, self.picking_client_3.id)]})
+        self.batch.write({'picking_ids': [(X2ManyCmd.LINK, self.picking_client_3.id)]})
         self.assertEqual(self.batch.scheduled_date, self.picking_client_3.scheduled_date)
 
         # remove that picking and batch scheduled date should auto-update to next min date
-        self.batch.write({'picking_ids': [(3, self.picking_client_3.id)]})
+        self.batch.write({'picking_ids': [(X2ManyCmd.UNLINK, self.picking_client_3.id)]})
         self.assertEqual(self.batch.scheduled_date, self.picking_client_2.scheduled_date)
 
         # directly add new picking with an earlier scheduled date => batch's scheduled date auto updates to match,
@@ -138,8 +139,8 @@ class TestBatchPicking(TransactionCase):
 
 
         # remove all pickings and batch scheduled date should default to none
-        self.batch.write({'picking_ids': [(3, self.picking_client_1.id)]})
-        self.batch.write({'picking_ids': [(3, self.picking_client_2.id)]})
+        self.batch.write({'picking_ids': [(X2ManyCmd.UNLINK, self.picking_client_1.id)]})
+        self.batch.write({'picking_ids': [(X2ManyCmd.UNLINK, self.picking_client_2.id)]})
         self.assertEqual(self.batch.scheduled_date, False)
 
     def test_simple_batch_with_manual_qty_done(self):

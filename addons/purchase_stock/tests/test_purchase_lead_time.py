@@ -169,8 +169,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [(4, self.route_buy)],
-            'seller_ids': [(0, 0, {'name': self.partner_1.id, 'delay': 5})]
+            'route_ids': [(fields.X2ManyCmd.LINK, self.route_buy)],
+            'seller_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': self.partner_1.id, 'delay': 5})]
         })
 
         # create a move for product_1 from stock to output and reserve to trigger the
@@ -274,7 +274,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         product = self.env['product.product'].create({
             'name': 'Chicory',
             'type': 'product',
-            'seller_ids': [(0, 0, {'name': vendor.id, 'delay': 1.0})]
+            'seller_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': vendor.id, 'delay': 1.0})]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = product

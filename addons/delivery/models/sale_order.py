@@ -96,7 +96,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
-            'tax_id': [(6, 0, taxes_ids)],
+            'tax_id': [(fields.X2ManyCmd.SET, 0, taxes_ids)],
             'is_delivery': True,
         }
         if carrier.invoice_policy == 'real':

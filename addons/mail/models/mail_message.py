@@ -620,7 +620,7 @@ class Message(models.Model):
                             return match.group(3)  # group(3) is the url ending single/double quote matched by the regexp
                         else:
                             attachment.generate_access_token()
-                            values['attachment_ids'].append((4, attachment.id))
+                            values['attachment_ids'].append((fields.X2ManyCmd.LINK, attachment.id))
                             data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
                     return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
                 values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
@@ -631,14 +631,14 @@ class Message(models.Model):
         messages = super(Message, self).create(values_list)
 
         check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        if all(isinstance(command, int) or command[0] in (fields.X2ManyCmd.LINK, fields.X2ManyCmd.SET) for values in values_list for command in values.get('attachment_ids')):
             for values in values_list:
                 for command in values.get('attachment_ids'):
                     if isinstance(command, int):
                         check_attachment_access += [command]
-                    elif command[0] == 6:
+                    elif command[0] == fields.X2ManyCmd.SET:
                         check_attachment_access += command[2]
-                    else:  # command[0] == 4:
+                    else:  # command[0] == fields.X2ManyCmd.LINK:
                         check_attachment_access += [command[1]]
         else:
             check_attachment_access = messages.mapped('attachment_ids').ids  # fallback on read if any unknow command
@@ -761,7 +761,7 @@ class Message(models.Model):
         partner_id = self.env.user.partner_id.id
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+        starred_messages.write({'starred_partner_ids': [(fields.X2ManyCmd.UNLINK, partner_id)]})
 
         ids = [m.id for m in starred_messages]
         notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
@@ -775,9 +775,9 @@ class Message(models.Model):
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
-            self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [(fields.X2ManyCmd.LINK, self.env.user.partner_id.id)]})
         else:
-            self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [(fields.X2ManyCmd.UNLINK, self.env.user.partner_id.id)]})
 
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)

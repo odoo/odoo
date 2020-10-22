@@ -899,13 +899,13 @@ class HolidaysRequest(models.Model):
                 'allday': False,
                 'privacy': 'confidential',
                 'event_tz': holiday.user_id.tz,
-                'activity_ids': [(5, 0, 0)],
+                'activity_ids': [(fields.X2ManyCmd.CLEAR, 0, 0)],
                 'partner_ids': [],
             }
             # Add the partner_id (if exist) as an attendee
             if holiday.user_id and holiday.user_id.partner_id:
                 meeting_values['partner_ids'] = [
-                    (4, holiday.user_id.partner_id.id)]
+                    (fields.X2ManyCmd.LINK, holiday.user_id.partner_id.id)]
             result.append(meeting_values)
         return result
 

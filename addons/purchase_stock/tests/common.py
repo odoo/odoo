@@ -33,25 +33,25 @@ class PurchaseTestCommon(TestStockCommon):
         # Update product_1 with type, route and Delivery Lead Time
         cls.product_1.write({
             'type': 'product',
-            'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]})
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [cls.route_buy, cls.route_mto])],
+            'seller_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': cls.partner_1.id, 'delay': 5})]})
 
         cls.t_shirt = cls.env['product.product'].create({
             'name': 'T-shirt',
-            'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [cls.route_buy, cls.route_mto])],
+            'seller_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': cls.partner_1.id, 'delay': 5})]
         })
 
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({
             'type': 'product',
-            'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 2})]})
+            'route_ids': [(fields.X2ManyCmd.SET, 0, [cls.route_buy, cls.route_mto])],
+            'seller_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': cls.partner_1.id, 'delay': 2})]})
 
         cls.res_users_purchase_user = cls.env['res.users'].create({
             'company_id': cls.env.ref('base.main_company').id,
             'name': "Purchase User",
             'login': "pu",
             'email': "purchaseuser@yourcompany.com",
-            'groups_id': [(6, 0, [cls.env.ref('purchase.group_purchase_user').id])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [cls.env.ref('purchase.group_purchase_user').id])],
             })

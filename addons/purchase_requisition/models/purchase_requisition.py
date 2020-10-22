@@ -257,7 +257,7 @@ class PurchaseRequisitionLine(models.Model):
             'product_uom': self.product_id.uom_po_id.id,
             'product_qty': product_qty,
             'price_unit': price_unit,
-            'taxes_id': [(6, 0, taxes_ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, taxes_ids)],
             'date_planned': date_planned,
             'account_analytic_id': self.account_analytic_id.id,
             'analytic_tag_ids': self.analytic_tag_ids.ids,

@@ -711,7 +711,7 @@ class WebsiteSale(http.Controller):
                     order.partner_shipping_id = partner_id
 
                 # TDE FIXME: don't ever do this
-                order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
+                order.message_partner_ids = [(fields.X2ManyCmd.LINK, partner_id), (fields.X2ManyCmd.UNLINK, request.website.partner_id.id)]
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/confirm_order')
 

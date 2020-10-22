@@ -5,6 +5,7 @@ from datetime import datetime
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_compare, test_reports
+from odoo.fields import X2ManyCmd
 
 
 class TestProductPricelist(TransactionCase):
@@ -86,26 +87,26 @@ class TestProductPricelist(TransactionCase):
         self.ipad_retina_display.write({'uom_id': self.uom_unit_id, 'categ_id': self.category_5_id})
         self.customer_pricelist = self.ProductPricelist.create({
             'name': 'Customer Pricelist',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Default pricelist',
                 'compute_price': 'formula',
                 'base': 'pricelist',
                 'base_pricelist_id': self.list0
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'name': '10% Discount on Assemble Computer',
                 'applied_on': '1_product',
                 'product_tmpl_id': self.ipad_retina_display.product_tmpl_id.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
                 'price_discount': 10
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'name': '1 surchange on Laptop',
                 'applied_on': '1_product',
                 'product_tmpl_id': self.laptop_E5023.product_tmpl_id.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
                 'price_surcharge': 1
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'name': '5% Discount on all Computer related products',
                 'applied_on': '2_product_category',
                 'min_quantity': 2,
@@ -113,7 +114,7 @@ class TestProductPricelist(TransactionCase):
                 'base': 'list_price',
                 'categ_id': self.category_5_id,
                 'price_discount': 5
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'name': '30% Discount on all products',
                 'applied_on': '3_global',
                 'date_start': '2011-12-27',
@@ -121,7 +122,7 @@ class TestProductPricelist(TransactionCase):
                 'compute_price': 'formula',
                 'price_discount': 30,
                 'base': 'list_price'
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                  'name': 'Fixed on all products',
                  'applied_on': '1_product',
                  'product_tmpl_id': self.monitor.product_tmpl_id.id,

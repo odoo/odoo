@@ -3,6 +3,7 @@
 
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.tests import Form, tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -24,7 +25,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'sale_ok': False,
             'purchase_ok': False,
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [tax_15pc_excl.id])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [tax_15pc_excl.id])],
         })
         cls.carrier = cls.env['delivery.carrier'].create({
             'name': 'The Poste',
@@ -126,7 +127,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         # Test case 3: the amount is not sufficient now, the reward should be removed
         order.write({'order_line': [
-            (2, order.order_line.filtered(lambda line: line.product_id.id == self.product_A.id).id, False)
+            (X2ManyCmd.DELETE, order.order_line.filtered(lambda line: line.product_id.id == self.product_A.id).id, False)
         ]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3)

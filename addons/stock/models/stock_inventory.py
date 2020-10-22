@@ -98,7 +98,7 @@ class Inventory(models.Model):
         inventory_lines = self.line_ids.filtered(lambda l: l.product_id.tracking in ['lot', 'serial'] and not l.prod_lot_id and l.theoretical_qty != l.product_qty)
         lines = self.line_ids.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) > 0 and l.product_id.tracking == 'serial' and l.prod_lot_id)
         if inventory_lines and not lines:
-            wiz_lines = [(0, 0, {'product_id': product.id, 'tracking': product.tracking}) for product in inventory_lines.mapped('product_id')]
+            wiz_lines = [(fields.X2ManyCmd.CREATE, 0, {'product_id': product.id, 'tracking': product.tracking}) for product in inventory_lines.mapped('product_id')]
             wiz = self.env['stock.track.confirmation'].create({'inventory_id': self.id, 'tracking_line_ids': wiz_lines})
             return {
                 'name': _('Tracked Products in Inventory Adjustment'),
@@ -511,7 +511,7 @@ class InventoryLine(models.Model):
             'restrict_partner_id': self.partner_id.id,
             'location_id': location_id,
             'location_dest_id': location_dest_id,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_id.id,
                 'lot_id': self.prod_lot_id.id,
                 'product_uom_qty': 0,  # bypass reservation here

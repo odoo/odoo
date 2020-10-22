@@ -4,6 +4,7 @@
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -24,8 +25,8 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
     def _inv_adj_two_units(self):
         inventory = self.env['stock.inventory'].create({
             'name': 'test',
-            'location_ids': [(4, self.company_data['default_warehouse'].lot_stock_id.id)],
-            'product_ids': [(4, self.product.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.company_data['default_warehouse'].lot_stock_id.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product.id)],
         })
         inventory.action_start()
         self.env['stock.inventory.line'].create({
@@ -40,7 +41,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 2.0,
@@ -812,7 +813,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,
@@ -902,7 +903,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 1,
@@ -921,7 +922,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 6,
@@ -966,7 +967,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 10.0,

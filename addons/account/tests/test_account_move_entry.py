@@ -89,8 +89,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[2].id, {'debit': lines[2].debit + 100.0}),
                 ],
             })
 
@@ -102,8 +102,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[3].id, {'debit': lines[3].debit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[3].id, {'debit': lines[3].debit + 100.0}),
                 ],
             })
 
@@ -111,7 +111,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
+                    (fields.X2ManyCmd.UPDATE, lines[2].id, {'tax_ids': [(fields.X2ManyCmd.SET, 0, self.company_data['default_tax_purchase'].ids)]}),
                 ],
             })
 
@@ -119,7 +119,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
                     (0, None, {
                         'name': 'revenue line 1',
                         'account_id': self.company_data['default_account_revenue'].id,
@@ -152,7 +152,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'journal_id': self.company_data['default_journal_bank'].id,
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'payment_ref': 'test', 'amount': 10.0})
+                (fields.X2ManyCmd.CREATE, 0, {'payment_ref': 'test', 'amount': 10.0})
             ],
         })
         statement.button_post()
@@ -176,8 +176,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # Try to edit a line not affecting the taxes.
         self.test_move.write({
             'line_ids': [
-                (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
+                (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                (fields.X2ManyCmd.UPDATE, lines[2].id, {'debit': lines[2].debit + 100.0}),
             ],
         })
 
@@ -188,8 +188,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[3].id, {'debit': lines[3].debit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[3].id, {'debit': lines[3].debit + 100.0}),
                 ],
             })
 
@@ -197,7 +197,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
+                    (fields.X2ManyCmd.UPDATE, lines[2].id, {'tax_ids': [(fields.X2ManyCmd.SET, 0, self.company_data['default_tax_purchase'].ids)]}),
                 ],
             })
 
@@ -205,15 +205,15 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[1].id, {'debit': lines[1].debit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[1].id, {'debit': lines[1].debit + 100.0}),
                 ],
             })
 
         # Try to create a line not affecting the taxes.
         self.test_move.write({
             'line_ids': [
-                (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
                 (0, None, {
                     'name': 'revenue line 1',
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -227,7 +227,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.write({
                 'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[0].id, {'credit': lines[0].credit + 100.0}),
                     (0, None, {
                         'name': 'revenue line 2',
                         'account_id': self.company_data['default_account_revenue'].id,
@@ -308,16 +308,16 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves[0].write({
                 'line_ids': [
-                    (1, lines[1].id, {'credit': lines[1].credit + 100.0}),
-                    (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[1].id, {'credit': lines[1].credit + 100.0}),
+                    (fields.X2ManyCmd.UPDATE, lines[2].id, {'debit': lines[2].debit + 100.0}),
                 ]
             })
 
         # The write must not raise anything because the rounding of the monetary field should ignore such tiny amount.
         draft_moves[0].write({
             'line_ids': [
-                (1, lines[1].id, {'credit': lines[1].credit + 0.0000001}),
-                (1, lines[2].id, {'debit': lines[2].debit + 0.0000001}),
+                (fields.X2ManyCmd.UPDATE, lines[1].id, {'credit': lines[1].credit + 0.0000001}),
+                (fields.X2ManyCmd.UPDATE, lines[2].id, {'debit': lines[2].debit + 0.0000001}),
             ]
         })
 
@@ -571,7 +571,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             moves = env0['account.move'].create([{
                 'journal_id': journal.id,
                 'date': fields.Date.from_string('2016-01-01'),
-                'line_ids': [(0, 0, {'name': 'name', 'account_id': account.id})]
+                'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': 'name', 'account_id': account.id})]
             }] * 3)
             moves.name = '/'
             moves[0].action_post()

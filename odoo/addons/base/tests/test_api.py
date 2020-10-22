@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import fields, models
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.exceptions import AccessError
@@ -205,7 +205,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             demo_partner.company_id.write({'name': 'Pricks'})
 
         # remove demo user from all groups
-        demo.write({'groups_id': [(5,)]})
+        demo.write({'groups_id': [(fields.X2ManyCmd.CLEAR,)]})
 
         # demo user can no longer access partner data
         with self.assertRaises(AccessError):
@@ -224,7 +224,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         for p in data:
             pids.append(Partners.create({
                 'name': p,
-                'child_ids': [(0, 0, {'name': c}) for c in data[p]],
+                'child_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': c}) for c in data[p]],
             }).id)
 
         partners = Partners.search([('id', 'in', pids)])
@@ -270,7 +270,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         partner.country_id, partner.child_ids
         data = partner._convert_to_write(partner._cache)
         self.assertEqual(data['country_id'], partner.country_id.id)
-        self.assertEqual(data['child_ids'], [(6, 0, partner.child_ids.ids)])
+        self.assertEqual(data['child_ids'], [(fields.X2ManyCmd.SET, 0, partner.child_ids.ids)])
 
     @mute_logger('odoo.models')
     def test_60_prefetch(self):
@@ -344,8 +344,8 @@ class TestAPI(SavepointCaseWithUserDemo):
         vals1 = {
             'name': 'Non-empty relational fields',
             'country_id': self.ref('base.be'),
-            'bank_ids': [(0, 0, {'acc_number': 'FOO42'})],
-            'category_id': [(4, self.partner_category.id)],
+            'bank_ids': [(fields.X2ManyCmd.CREATE, 0, {'acc_number': 'FOO42'})],
+            'category_id': [(fields.X2ManyCmd.LINK, self.partner_category.id)],
         }
         partners = partners.create(vals0) + partners.create(vals1)
         for partner in partners:

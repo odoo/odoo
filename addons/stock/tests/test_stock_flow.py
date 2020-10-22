@@ -1072,7 +1072,7 @@ class TestStockFlow(TestStockCommon):
         # ------------------------------------------------
 
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_ids': [(4, self.UnitA.id)]})
+                                        'product_ids': [(fields.X2ManyCmd.LINK, self.UnitA.id)]})
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
@@ -1089,7 +1089,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(self.UnitA.qty_available, 120, 'Expecting 120 Units , got %.4f Units of quantity available!' % (self.UnitA.qty_available))
         # Create Inventory again for product UnitA.
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_ids': [(4, self.UnitA.id)]})
+                                        'product_ids': [(fields.X2ManyCmd.LINK, self.UnitA.id)]})
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', self.UnitA.id), ('inventory_id', '=', inventory.id)], limit=1)
@@ -1112,7 +1112,7 @@ class TestStockFlow(TestStockCommon):
 
         productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'type': 'product'})
         inventory = self.InvObj.create({'name': 'Inventory Product KG',
-                                        'product_ids': [(4, productKG.id)]})
+                                        'product_ids': [(fields.X2ManyCmd.LINK, productKG.id)]})
         inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
@@ -1128,7 +1128,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(productKG.qty_available, 5000, 'Expecting 5000 kg , got %.4f kg of quantity available!' % (productKG.qty_available))
         # Create Inventory again.
         inventory = self.InvObj.create({'name': 'Test',
-                                        'product_ids': [(4, productKG.id)]})
+                                        'product_ids': [(fields.X2ManyCmd.LINK, productKG.id)]})
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
@@ -1154,7 +1154,7 @@ class TestStockFlow(TestStockCommon):
         lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
         inventory = self.InvObj.create({'name': 'Test Partial and Pack',
                                         'start_empty': True,
-                                        'location_ids': [(4, self.stock_location)]})
+                                        'location_ids': [(fields.X2ManyCmd.LINK, self.stock_location)]})
         inventory.action_start()
         pack_obj = self.env['stock.quant.package']
         lot_obj = self.env['stock.production.lot']
@@ -1169,7 +1169,7 @@ class TestStockFlow(TestStockCommon):
         line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id, 'package_id': pack1.id}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 30, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 25, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
-        inventory.write({'line_ids': [(0, 0, x) for x in line_vals]})
+        inventory.write({'line_ids': [(fields.X2ManyCmd.CREATE, 0, x) for x in line_vals]})
         inventory.action_validate()
         self.assertEqual(packproduct.qty_available, 30, "Wrong qty available for packproduct")
         self.assertEqual(lotproduct.qty_available, 55, "Wrong qty available for lotproduct")
@@ -1180,13 +1180,13 @@ class TestStockFlow(TestStockCommon):
         # Create an inventory that will put the lots without lot to 0 and check that taking without pack will not take it from the pack
         inventory2 = self.InvObj.create({'name': 'Test Partial Lot and Pack2',
                                          'start_empty': True,
-                                         'location_ids': [(4, self.stock_location)]})
+                                         'location_ids': [(fields.X2ManyCmd.LINK, self.stock_location)]})
         inventory2.action_start()
         line_vals = []
         line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 0, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 10, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': lot1.id}]
-        inventory2.write({'line_ids': [(0, 0, x) for x in line_vals]})
+        inventory2.write({'line_ids': [(fields.X2ManyCmd.CREATE, 0, x) for x in line_vals]})
         inventory2.action_validate()
         self.assertEqual(packproduct.qty_available, 40, "Wrong qty available for packproduct")
         self.assertEqual(lotproduct.qty_available, 10, "Wrong qty available for lotproduct")
@@ -1285,7 +1285,7 @@ class TestStockFlow(TestStockCommon):
             'picking_id': picking_pack.id,
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
-            'move_dest_ids': [(4, move_out.id, 0)]})
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, move_out.id, 0)]})
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
@@ -1298,7 +1298,7 @@ class TestStockFlow(TestStockCommon):
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'move_dest_ids': [(4, move_pack.id, 0)]})
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, move_pack.id, 0)]})
 
         # Check incoming shipment move lines state.
         for move in picking_in.move_lines:
@@ -1515,7 +1515,7 @@ class TestStockFlow(TestStockCommon):
         # get one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
                 'product_qty': 1,
@@ -1547,7 +1547,7 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
                 'product_qty': 2,
@@ -1605,7 +1605,7 @@ class TestStockFlow(TestStockCommon):
         # get one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
                 'product_qty': 1,
@@ -1638,7 +1638,7 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
                 'product_qty': 2,
@@ -1715,7 +1715,7 @@ class TestStockFlow(TestStockCommon):
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
-            'move_dest_ids': [(4, move_with_ancestors.id, 0)]})
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, move_with_ancestors.id, 0)]})
         other_move = self.MoveObj.create({
             'name': self.productC.name,
             'product_id': self.productC.id,
@@ -1793,13 +1793,13 @@ class TestStockFlow(TestStockCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
         grp_multi_companies = self.env.ref('base.group_multi_company')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_companies.id)]})
 
         company_2 = self.company
         # Need to add a new company on user.
-        self.env.user.write({'company_ids': [(4, company_2.id)]})
+        self.env.user.write({'company_ids': [(fields.X2ManyCmd.LINK, company_2.id)]})
 
         warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
@@ -1828,7 +1828,7 @@ class TestStockFlow(TestStockCommon):
         product = self.env['product.product'].create({
             'name': 'The product from the other company that I absolutely want',
             'type': 'product',
-            'route_ids': [(4, route_a.id), (4, route_b.id)]
+            'route_ids': [(fields.X2ManyCmd.LINK, route_a.id), (fields.X2ManyCmd.LINK, route_b.id)]
         })
 
         replenish_wizard = self.env['product.replenish'].create({
@@ -1857,13 +1857,13 @@ class TestStockFlow(TestStockCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
         grp_multi_companies = self.env.ref('base.group_multi_company')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(fields.X2ManyCmd.LINK, grp_multi_companies.id)]})
 
         company_2 = self.company
         # Need to add a new company on user.
-        self.env.user.write({'company_ids': [(4, company_2.id)]})
+        self.env.user.write({'company_ids': [(fields.X2ManyCmd.LINK, company_2.id)]})
 
         warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
@@ -1909,13 +1909,13 @@ class TestStockFlow(TestStockCommon):
         product_from_company_2 = self.env['product.product'].create({
             'name': 'The product from the other company that I absolutely want',
             'type': 'product',
-            'route_ids': [(4, route_a.id), (4, route_b.id)]
+            'route_ids': [(fields.X2ManyCmd.LINK, route_a.id), (fields.X2ManyCmd.LINK, route_b.id)]
         })
 
         product_from_company_3 = self.env['product.product'].create({
             'name': 'Ice',
             'type': 'product',
-            'route_ids': [(4, route_a.id), (4, route_c.id)]
+            'route_ids': [(fields.X2ManyCmd.LINK, route_a.id), (fields.X2ManyCmd.LINK, route_c.id)]
         })
 
         f = Form(self.env['stock.picking'], view='stock.view_picking_form')

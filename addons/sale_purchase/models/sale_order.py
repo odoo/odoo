@@ -248,7 +248,7 @@ class SaleOrderLine(models.Model):
             'product_uom': self.product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': fields.Date.from_string(purchase_order.date_order) + relativedelta(days=int(supplierinfo.delay)),
-            'taxes_id': [(6, 0, taxes.ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, taxes.ids)],
             'order_id': purchase_order.id,
             'sale_line_id': self.id,
         }

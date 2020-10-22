@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.fields import X2ManyCmd
 from odoo.exceptions import UserError
 
 
@@ -29,21 +30,21 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 if project.pricing_type == 'employee_rate':
                     default_product = self.env.ref('sale_timesheet.time_product', False)
                     result['line_ids'] = [
-                        (0, 0, {
+                        (X2ManyCmd.CREATE, 0, {
                             'employee_id': e.employee_id.id,
                             'product_id': e.timesheet_product_id.id or default_product.id,
                             'price_unit': e.price_unit if e.timesheet_product_id else default_product.lst_price
                         }) for e in project.sale_line_employee_ids]
                     employee_from_timesheet = project.task_ids.timesheet_ids.employee_id - project.sale_line_employee_ids.employee_id
                     result['line_ids'] += [
-                        (0, 0, {
+                        (X2ManyCmd.CREATE, 0, {
                             'employee_id': e.id,
                             'product_id': default_product.id,
                             'price_unit': default_product.lst_price
                         }) for e in employee_from_timesheet]
                 else:
                     result['line_ids'] = [
-                        (0, 0, {
+                        (X2ManyCmd.CREATE, 0, {
                             'product_id': p.id,
                             'price_unit': p.lst_price
                         }) for p in project.task_ids.timesheet_product_id]

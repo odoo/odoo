@@ -840,7 +840,7 @@ class Picking(models.Model):
                             'package_id': pack.id,
                             'location_id': pack.location_id.id,
                             'location_dest_id': self._get_entire_pack_location_dest(move_lines_to_pack) or picking.location_dest_id.id,
-                            'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
+                            'move_line_ids': [(fields.X2ManyCmd.SET, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
                         move_lines_to_pack.write({
@@ -976,7 +976,7 @@ class Picking(models.Model):
             'views': [(view.id, 'form')],
             'view_id': view.id,
             'target': 'new',
-            'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(4, p.id) for p in self]),
+            'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(fields.X2ManyCmd.LINK, p.id) for p in self]),
         }
 
     def _action_generate_immediate_wizard(self, show_transfers=False):
@@ -989,7 +989,7 @@ class Picking(models.Model):
             'views': [(view.id, 'form')],
             'view_id': view.id,
             'target': 'new',
-            'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(4, p.id) for p in self]),
+            'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(fields.X2ManyCmd.LINK, p.id) for p in self]),
         }
 
     def action_toggle_is_locked(self):
@@ -1298,7 +1298,7 @@ class Picking(models.Model):
                     'picking_id': pick.id,
                     'location_id': False,
                     'location_dest_id': move_line_ids.mapped('location_dest_id').id,
-                    'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
+                    'move_line_ids': [(fields.X2ManyCmd.SET, 0, move_lines_to_pack.ids)],
                     'company_id': pick.company_id.id,
                 })
             move_lines_to_pack.write({

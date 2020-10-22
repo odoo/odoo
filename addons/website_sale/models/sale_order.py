@@ -196,7 +196,7 @@ class SaleOrder(models.Model):
             # save no_variant attributes values
             if no_variant_attribute_values:
                 values['product_no_variant_attribute_value_ids'] = [
-                    (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
+                    (fields.X2ManyCmd.SET, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
                 ]
 
             # add is_custom attribute values that were not received
@@ -211,7 +211,7 @@ class SaleOrder(models.Model):
 
             # save is_custom attributes values
             if custom_values:
-                values['product_custom_attribute_value_ids'] = [(0, 0, {
+                values['product_custom_attribute_value_ids'] = [(fields.X2ManyCmd.CREATE, 0, {
                     'custom_product_template_attribute_value_id': custom_value['custom_product_template_attribute_value_id'],
                     'custom_value': custom_value['custom_value']
                 }) for custom_value in custom_values]

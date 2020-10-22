@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestResourceCommon(TransactionCase):
@@ -11,7 +12,7 @@ class TestResourceCommon(TransactionCase):
             'name': name,
             'tz': tz,
             'attendance_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': '%s_%d' % (name, index),
                     'hour_from': att[0],
                     'hour_to': att[1],
@@ -26,7 +27,7 @@ class TestResourceCommon(TransactionCase):
             'tz': tz,
             'two_weeks_calendar': True,
             'attendance_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': '%s_%d' % (name, index),
                     'hour_from': att[0],
                     'hour_to': att[1],

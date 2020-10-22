@@ -6,6 +6,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseW
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 from odoo.tools import DotDict
+from odoo.fields import X2ManyCmd
 
 ''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -42,13 +43,13 @@ class TestWebsitePriceList(TransactionCase):
         (self.env['product.pricelist'].search([]) - self.env.ref('product.list0')).write({'website_id': False, 'active': False})
         self.benelux = self.env['res.country.group'].create({
             'name': 'BeNeLux',
-            'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
+            'country_ids': [(X2ManyCmd.SET, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
         })
         self.list_benelux = self.env['product.pricelist'].create({
             'name': 'Benelux',
             'selectable': True,
             'website_id': self.website.id,
-            'country_group_ids': [(4, self.benelux.id)],
+            'country_group_ids': [(X2ManyCmd.LINK, self.benelux.id)],
             'sequence': 2,
         })
         item_benelux = self.env['product.pricelist.item'].create({
@@ -64,7 +65,7 @@ class TestWebsitePriceList(TransactionCase):
             'name': 'Christmas',
             'selectable': False,
             'website_id': self.website.id,
-            'country_group_ids': [(4, self.env.ref('base.europe').id)],
+            'country_group_ids': [(X2ManyCmd.LINK, self.env.ref('base.europe').id)],
             'sequence': 20,
         })
         item_christmas = self.env['product.pricelist.item'].create({
@@ -78,7 +79,7 @@ class TestWebsitePriceList(TransactionCase):
             'name': 'EUR',
             'selectable': True,
             'website_id': self.website.id,
-            'country_group_ids': [(4, self.env.ref('base.europe').id)],
+            'country_group_ids': [(X2ManyCmd.LINK, self.env.ref('base.europe').id)],
             'sequence': 3,
             'currency_id': self.env.ref('base.EUR').id,
         })
@@ -92,13 +93,13 @@ class TestWebsitePriceList(TransactionCase):
 
         ca_group = self.env['res.country.group'].create({
             'name': 'Canada',
-            'country_ids': [(6, 0, [self.ref('base.ca')])]
+            'country_ids': [(X2ManyCmd.SET, 0, [self.ref('base.ca')])]
         })
         self.env['product.pricelist'].create({
             'name': 'Canada',
             'selectable': True,
             'website_id': self.website.id,
-            'country_group_ids': [(6, 0, [ca_group.id])],
+            'country_group_ids': [(X2ManyCmd.SET, 0, [ca_group.id])],
             'sequence': 10
         })
         self.args = {
@@ -309,18 +310,18 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         c_EUR = self.env.ref('base.europe')
         c_BENELUX = self.env['res.country.group'].create({
             'name': 'BeNeLux',
-            'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
+            'country_ids': [(X2ManyCmd.SET, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
         })
 
         self.BE = self.env.ref('base.be')
         NL = self.env.ref('base.nl')
-        c_BE = self.env['res.country.group'].create({'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]})
-        c_NL = self.env['res.country.group'].create({'name': 'Netherlands', 'country_ids': [(6, 0, [NL.id])]})
+        c_BE = self.env['res.country.group'].create({'name': 'Belgium', 'country_ids': [(X2ManyCmd.SET, 0, [self.BE.id])]})
+        c_NL = self.env['res.country.group'].create({'name': 'Netherlands', 'country_ids': [(X2ManyCmd.SET, 0, [NL.id])]})
 
-        (self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.w1_pl_select).write({'country_group_ids': [(6, 0, [c_BE.id])]})
-        (self.generic_pl_code_select + self.w1_pl + self.w2_pl).write({'country_group_ids': [(6, 0, [c_BENELUX.id])]})
-        (self.w1_pl_code).write({'country_group_ids': [(6, 0, [c_EUR.id])]})
-        (self.w1_pl_code_select).write({'country_group_ids': [(6, 0, [c_NL.id])]})
+        (self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.w1_pl_select).write({'country_group_ids': [(X2ManyCmd.SET, 0, [c_BE.id])]})
+        (self.generic_pl_code_select + self.w1_pl + self.w2_pl).write({'country_group_ids': [(X2ManyCmd.SET, 0, [c_BENELUX.id])]})
+        (self.w1_pl_code).write({'country_group_ids': [(X2ManyCmd.SET, 0, [c_EUR.id])]})
+        (self.w1_pl_code_select).write({'country_group_ids': [(X2ManyCmd.SET, 0, [c_NL.id])]})
 
         #        pricelist        | selectable | website | code | country group |
         # ----------------------------------------------------------------------|

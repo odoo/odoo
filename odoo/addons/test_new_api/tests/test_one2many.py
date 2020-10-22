@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import fields
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
 
@@ -89,7 +90,7 @@ class One2manyCase(TransactionCase):
     def test_rpcstyle_one_by_one(self):
         """Check lines created with RPC style and appended one by one."""
         for name in range(10):
-            self.multi.lines = [(0, 0, {"name": str(name)})]
+            self.multi.lines = [(fields.X2ManyCmd.CREATE, 0, {"name": str(name)})]
         self.operations()
 
     def test_rpcstyle_one_by_one_on_new(self):
@@ -97,19 +98,19 @@ class One2manyCase(TransactionCase):
             "name": "What is up?"
         })
         for name in range(10):
-            self.multi.lines = [(0, 0, {"name": str(name)})]
+            self.multi.lines = [(fields.X2ManyCmd.CREATE, 0, {"name": str(name)})]
         self.operations()
 
     def test_rpcstyle_single(self):
         """Check lines created with RPC style and added in one step"""
-        self.multi.lines = [(0, 0, {'name': str(name)}) for name in range(10)]
+        self.multi.lines = [(fields.X2ManyCmd.CREATE, 0, {'name': str(name)}) for name in range(10)]
         self.operations()
 
     def test_rpcstyle_single_on_new(self):
         self.multi = self.env["test_new_api.multi"].new({
             "name": "What is up?"
         })
-        self.multi.lines = [(0, 0, {'name': str(name)}) for name in range(10)]
+        self.multi.lines = [(fields.X2ManyCmd.CREATE, 0, {'name': str(name)}) for name in range(10)]
         self.operations()
 
     def test_many2one_integer(self):
@@ -233,10 +234,10 @@ class One2manyCase(TransactionCase):
         This is the behaviour of the form view."""
         parent = self.env['test_new_api.model_parent_m2o'].create({
             'name': 'parent',
-            'child_ids': [(0, 0, {'name': 'A'})],
+            'child_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': 'A'})],
         })
         a = parent.child_ids[0]
-        parent.write({'child_ids': [(4, a.id), (0, 0, {'name': 'B'})]})
+        parent.write({'child_ids': [(fields.X2ManyCmd.LINK, a.id), (fields.X2ManyCmd.CREATE, 0, {'name': 'B'})]})
 
     def test_recomputation_ends(self):
         """ Regression test for neverending recomputation. """

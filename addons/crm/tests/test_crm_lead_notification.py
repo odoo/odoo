@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import TestCrmCommon
+from odoo.fields import X2ManyCmd
 
 
 class NewLeadNotification(TestCrmCommon):
@@ -47,7 +48,7 @@ class NewLeadNotification(TestCrmCommon):
         company1 = self.env['res.company'].create({'name': 'new_company'})
 
         self.env.user.write({
-            'company_ids': [(4, company0.id, False), (4, company1.id, False)],
+            'company_ids': [(X2ManyCmd.LINK, company0.id, False), (X2ManyCmd.LINK, company1.id, False)],
         })
 
         crm_team_model = self.env['ir.model'].search([('model', '=', 'crm.team')])

@@ -97,7 +97,7 @@ class RecurrenceRule(models.Model):
             'rrule': google_recurrence.rrule,
             'google_id': google_recurrence.id,
             'base_event_id': base_event.id,
-            'calendar_event_ids': [(4, base_event.id)],
+            'calendar_event_ids': [(fields.X2ManyCmd.LINK, base_event.id)],
         }
 
     def _google_values(self):

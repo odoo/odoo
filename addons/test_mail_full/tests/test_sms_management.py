@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
+from odoo.fields import X2ManyCmd
 
 
 class TestSMSWizards(TestMailFullCommon, TestRecipients):
@@ -37,7 +38,7 @@ class TestSMSWizards(TestMailFullCommon, TestRecipients):
 
         with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
-            wizard.write({'recipient_ids': [(1, r.id, {'resend': True}) for r in wizard.recipient_ids]})
+            wizard.write({'recipient_ids': [(X2ManyCmd.UPDATE, r.id, {'resend': True}) for r in wizard.recipient_ids]})
             with self.mockSMSGateway():
                 wizard.action_resend()
 
@@ -52,7 +53,7 @@ class TestSMSWizards(TestMailFullCommon, TestRecipients):
 
         with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
-            wizard.write({'recipient_ids': [(1, r.id, {'resend': True, 'sms_number': self.random_numbers[idx]}) for idx, r in enumerate(wizard.recipient_ids.sorted())]})
+            wizard.write({'recipient_ids': [(X2ManyCmd.UPDATE, r.id, {'resend': True, 'sms_number': self.random_numbers[idx]}) for idx, r in enumerate(wizard.recipient_ids.sorted())]})
             with self.mockSMSGateway():
                 wizard.action_resend()
 
@@ -87,7 +88,7 @@ class TestSMSWizards(TestMailFullCommon, TestRecipients):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             self.assertTrue(wizard.has_insufficient_credit)
             self.assertEqual(set(wizard.mapped('recipient_ids.partner_name')), set((self.partner_1 | self.partner_2).mapped('display_name')))
-            wizard.write({'recipient_ids': [(1, r.id, {'resend': True}) for r in wizard.recipient_ids]})
+            wizard.write({'recipient_ids': [(X2ManyCmd.UPDATE, r.id, {'resend': True}) for r in wizard.recipient_ids]})
             with self.mockSMSGateway():
                 wizard.action_resend()
 
@@ -96,7 +97,7 @@ class TestSMSWizards(TestMailFullCommon, TestRecipients):
 
         with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
-            wizard.write({'recipient_ids': [(1, r.id, {'resend': True if r.partner_id == self.partner_1 else False}) for r in wizard.recipient_ids]})
+            wizard.write({'recipient_ids': [(X2ManyCmd.UPDATE, r.id, {'resend': True if r.partner_id == self.partner_1 else False}) for r in wizard.recipient_ids]})
             with self.mockSMSGateway():
                 wizard.action_resend()
 

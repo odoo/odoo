@@ -30,7 +30,7 @@ class TestStockProductionLot(TestStockCommon):
     def test_00_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in the past creates an activity """
 
-        # create product 
+        # create product
         self.productAAA = self.ProductObj.create({
             'name': 'Product AAA',
             'type': 'product',
@@ -61,7 +61,7 @@ class TestStockProductionLot(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location
         })
-        
+
         self.assertEqual(picking_in.move_lines.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
         self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
@@ -112,7 +112,7 @@ class TestStockProductionLot(TestStockCommon):
             ('res_id', '=', self.lot1_productAAA.id)
         ])
         self.assertEqual(activity_count, 0,"As activity is done, there shouldn't be any related activity")
-                
+
         # run the scheduler a third time
         self.env['stock.production.lot']._alert_date_exceeded()
 
@@ -127,9 +127,9 @@ class TestStockProductionLot(TestStockCommon):
     def test_01_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in future does not create an activity """
 
-        # create product 
+        # create product
         self.productBBB = self.ProductObj.create({
-            'name': 'Product BBB', 
+            'name': 'Product BBB',
             'type': 'product',
             'tracking':'lot'
         })
@@ -155,7 +155,7 @@ class TestStockProductionLot(TestStockCommon):
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
-        
+
         self.assertEqual(picking_in.move_lines.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
         self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
@@ -183,7 +183,7 @@ class TestStockProductionLot(TestStockCommon):
     def test_02_stock_production_lot(self):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
-        # create product 
+        # create product
         self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'type': 'product', 'tracking':'lot'})
 
         # create a new lot with with alert date in the past
@@ -202,7 +202,7 @@ class TestStockProductionLot(TestStockCommon):
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
-        
+
         self.assertEqual(picking_in.move_lines.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
         self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
@@ -400,7 +400,7 @@ class TestStockProductionLot(TestStockCommon):
         delivery_1 = picking_form.save()
         delivery_1.action_confirm()
         # ... then create a move line with the non-expired lot and valids the picking.
-        delivery_1.move_line_ids_without_package = [(5, 0), (0, 0, {
+        delivery_1.move_line_ids_without_package = [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.CREATE, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_1.move_lines.location_id.id,
             'location_dest_id': delivery_1.move_lines.location_dest_id.id,
@@ -425,7 +425,7 @@ class TestStockProductionLot(TestStockCommon):
         delivery_2.action_confirm()
         # ... then create a move line for the non-expired lot and for an expired
         # lot and valids the picking.
-        delivery_2.move_line_ids_without_package = [(5, 0), (0, 0, {
+        delivery_2.move_line_ids_without_package = [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.CREATE, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_2.move_lines.location_id.id,
             'location_dest_id': delivery_2.move_lines.location_dest_id.id,
@@ -433,7 +433,7 @@ class TestStockProductionLot(TestStockCommon):
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
             'qty_done': 4,
-        }), (0, 0, {
+        }), (fields.X2ManyCmd.CREATE, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_2.move_lines.location_id.id,
             'location_dest_id': delivery_2.move_lines.location_dest_id.id,
@@ -458,7 +458,7 @@ class TestStockProductionLot(TestStockCommon):
         delivery_3 = picking_form.save()
         delivery_3.action_confirm()
         # ... then create two move lines with expired lot and valids the picking.
-        delivery_3.move_line_ids_without_package = [(5, 0), (0, 0, {
+        delivery_3.move_line_ids_without_package = [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.CREATE, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_3.move_lines.location_id.id,
             'location_dest_id': delivery_3.move_lines.location_dest_id.id,

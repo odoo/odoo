@@ -4,7 +4,7 @@
 import psycopg2
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.fields import Date
+from odoo.fields import Date, X2ManyCmd
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -32,9 +32,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         cat_b = categories.create({'name': 'test_expression_category_B'})
 
         partners = self.env['res.partner']
-        a = partners.create({'name': 'test_expression_partner_A', 'category_id': [(6, 0, [cat_a.id])]})
-        b = partners.create({'name': 'test_expression_partner_B', 'category_id': [(6, 0, [cat_b.id])]})
-        ab = partners.create({'name': 'test_expression_partner_AB', 'category_id': [(6, 0, [cat_a.id, cat_b.id])]})
+        a = partners.create({'name': 'test_expression_partner_A', 'category_id': [(X2ManyCmd.SET, 0, [cat_a.id])]})
+        b = partners.create({'name': 'test_expression_partner_B', 'category_id': [(X2ManyCmd.SET, 0, [cat_b.id])]})
+        ab = partners.create({'name': 'test_expression_partner_AB', 'category_id': [(X2ManyCmd.SET, 0, [cat_a.id, cat_b.id])]})
         c = partners.create({'name': 'test_expression_partner_C'})
 
         # The tests.
@@ -99,7 +99,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         }
         pids = {}
         for name, cat_ids in partners_config.items():
-            pids[name] = partners.create({'name': name, 'category_id': [(6, 0, cat_ids)]}).id
+            pids[name] = partners.create({'name': name, 'category_id': [(X2ManyCmd.SET, 0, cat_ids)]}).id
 
         base_domain = [('id', 'in', list(pids.values()))]
 
@@ -579,7 +579,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # Test2: inheritance + relational fields
         users = self._search(Users, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
-        
+
         # Special =? operator mean "is equal if right is set, otherwise always True"
         users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
@@ -707,8 +707,8 @@ class TestExpression(SavepointCaseWithUserDemo):
         vals = {
             'name': 'OpenERP Test',
             'active': False,
-            'category_id': [(6, 0, [self.partner_category.id])],
-            'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
+            'category_id': [(X2ManyCmd.SET, 0, [self.partner_category.id])],
+            'child_ids': [(X2ManyCmd.CREATE, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
         }
         Partner.create(vals)
         partner = self._search(Partner, [('category_id', 'ilike', 'sellers'), ('active', '=', False)], [('active', '=', False)])
@@ -1317,9 +1317,9 @@ class TestOne2many(TransactionCase):
         self.partner = self.Partner.create({
             'name': 'Foo',
             'bank_ids': [
-                (0, 0, {'acc_number': '123', 'acc_type': 'bank'}),
-                (0, 0, {'acc_number': '456', 'acc_type': 'bank'}),
-                (0, 0, {'acc_number': '789', 'acc_type': 'bank'}),
+                (X2ManyCmd.CREATE, 0, {'acc_number': '123', 'acc_type': 'bank'}),
+                (X2ManyCmd.CREATE, 0, {'acc_number': '456', 'acc_type': 'bank'}),
+                (X2ManyCmd.CREATE, 0, {'acc_number': '789', 'acc_type': 'bank'}),
             ],
         })
 

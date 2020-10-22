@@ -7,6 +7,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
 from odoo.tests import Form
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.fields import X2ManyCmd
 
 
 class TestCreatePicking(common.TestProductCommon):
@@ -29,7 +30,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.po_vals = {
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product_id_1.name,
                     'product_id': self.product_id_1.id,
                     'product_qty': 5.0,
@@ -64,7 +65,7 @@ class TestCreatePicking(common.TestProductCommon):
 
         # create new order line
         self.po.write({'order_line': [
-            (0, 0, {
+            (X2ManyCmd.CREATE, 0, {
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': 5.0,
@@ -118,10 +119,10 @@ class TestCreatePicking(common.TestProductCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'type': 'product',
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
+            'route_ids': [(X2ManyCmd.LINK, self.ref('stock.route_warehouse0_mto')), (X2ManyCmd.LINK, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'seller_ids': [(X2ManyCmd.SET, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
-            'supplier_taxes_id': [(6, 0, [])],
+            'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
         })
 
         customer_move = self.env['stock.move'].create({
@@ -153,7 +154,7 @@ class TestCreatePicking(common.TestProductCommon):
         purchase = purchase_order.create({
             'partner_id': vendor.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': 100.0,
@@ -251,8 +252,8 @@ class TestCreatePicking(common.TestProductCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'type': 'product',
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
+            'route_ids': [(X2ManyCmd.LINK, self.ref('stock.route_warehouse0_mto')), (X2ManyCmd.LINK, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'seller_ids': [(X2ManyCmd.SET, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -399,8 +400,8 @@ class TestCreatePicking(common.TestProductCommon):
             'type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
+            'seller_ids': [(X2ManyCmd.SET, 0, [supplier_info1.id])],
+            'route_ids': [(X2ManyCmd.SET, 0, [route_buy.id, route_mto.id])]
         })
 
         delivery_order = self.env['stock.picking'].create({

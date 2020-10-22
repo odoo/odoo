@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests.common import tagged
 from odoo.tests import Form
+from odoo.fields import X2ManyCmd
 
 
 @tagged('mail_track')
@@ -132,7 +133,7 @@ class TestTracking(TestMailCommon):
 
     def test_create_partner_from_tracking_multicompany(self):
         company1 = self.env['res.company'].create({'name': 'company1'})
-        self.env.user.write({'company_ids': [(4, company1.id, False)]})
+        self.env.user.write({'company_ids': [(X2ManyCmd.LINK, company1.id, False)]})
         self.assertNotEqual(self.env.company, company1)
 
         email_new_partner = "diamonds@rust.com"

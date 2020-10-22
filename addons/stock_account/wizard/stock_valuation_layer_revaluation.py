@@ -130,7 +130,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
             'stock_valuation_layer_ids': [(6, None, [revaluation_svl.id])],
             'date': self.date or fields.Date.today(),
             'move_type': 'entry',
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
                     user=self.env.user.name,
                     previous=self.current_value_svl,
@@ -141,7 +141,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
                 'debit': abs(self.added_value),
                 'credit': 0,
                 'product_id': product_id.id,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
                     user=self.env.user.name,
                     previous=self.current_value_svl,

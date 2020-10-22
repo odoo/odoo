@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestReplenishWizard(TestStockCommon):
@@ -21,8 +22,8 @@ class TestReplenishWizard(TestStockCommon):
             'name': 'product a',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
-            'seller_ids': [(4, self.supplierinfo.id, 0)],
-            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+            'seller_ids': [(X2ManyCmd.LINK, self.supplierinfo.id, 0)],
+            'route_ids': [(X2ManyCmd.LINK, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
 
         # Additional Values required by the replenish wizard
@@ -65,7 +66,7 @@ class TestReplenishWizard(TestStockCommon):
             'name': "Furniture Service",
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
-            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+            'route_ids': [(X2ManyCmd.LINK, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
 
@@ -110,7 +111,7 @@ class TestReplenishWizard(TestStockCommon):
             'name': "Furniture Service",
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
-            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+            'route_ids': [(X2ManyCmd.LINK, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'vendor2', 'email': 'from.test2@example.com'})
@@ -162,7 +163,7 @@ class TestReplenishWizard(TestStockCommon):
             'name': "Furniture Service",
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
-            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+            'route_ids': [(X2ManyCmd.LINK, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'vendor2', 'email': 'from.test2@example.com'})
@@ -205,7 +206,7 @@ class TestReplenishWizard(TestStockCommon):
             'name': "Furniture Service",
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
-            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+            'route_ids': [(X2ManyCmd.LINK, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         supplierinfo1 = self.env['product.supplierinfo'].create({

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 
 import time
 
@@ -33,7 +34,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
@@ -61,7 +62,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for second shipment for 30 kg at 80 euro
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
@@ -88,7 +89,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
@@ -113,7 +114,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 500.0,
@@ -138,21 +139,21 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         NewUSD = self.env['res.currency'].create({
             'name': 'new_usd',
             'symbol': '$²',
-            'rate_ids': [(0, 0, {'rate': 1.2834, 'name': time.strftime('%Y-%m-%d')})],
+            'rate_ids': [(X2ManyCmd.CREATE, 0, {'rate': 1.2834, 'name': time.strftime('%Y-%m-%d')})],
         })
 
         # Create PO for 30000 g at 0.150$/g and 10 kg at 150$/kg
         purchase_order_usd = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
             'currency_id': NewUSD.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                     'name': 'FIFO Ice Cream',
                     'product_id': product_cable_management_box.id,
                     'product_qty': 30,
                     'product_uom': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 0.150,
                     'date_planned': time.strftime('%Y-%m-%d')}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': product_cable_management_box.name,
                     'product_id': product_cable_management_box.id,
                     'product_qty': 10.0,
@@ -173,7 +174,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 49.5,
@@ -195,7 +196,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 10,
@@ -232,7 +233,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 100,
@@ -258,7 +259,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 400,
@@ -279,7 +280,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # Receive purchase order with 50 kg Ice Cream at 50€/kg
         purchase_order_neg = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fifo_negative.id,
                 'product_qty': 50.0,
@@ -299,7 +300,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # Receive purchase order with 600 kg FIFO Ice Cream at 80 euro/kg
         purchase_order_neg2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_fifo_negative.id,
                 'product_qty': 600.0,

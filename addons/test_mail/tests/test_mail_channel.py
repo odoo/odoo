@@ -6,6 +6,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
+from odoo.fields import X2ManyCmd
 
 
 class TestChannelAccessRights(TestMailCommon):
@@ -43,7 +44,7 @@ class TestChannelAccessRights(TestMailCommon):
             self.group_pigs.with_user(self.user_public).read()
 
         # Read a private group when being a member: ok
-        self.group_private.write({'channel_partner_ids': [(4, self.user_public.partner_id.id)]})
+        self.group_private.write({'channel_partner_ids': [(X2ManyCmd.LINK, self.user_public.partner_id.id)]})
         self.group_private.with_user(self.user_public).read()
 
         # Create group: ko, no access rights
@@ -90,7 +91,7 @@ class TestChannelAccessRights(TestMailCommon):
 
     def test_access_rights_followers_portal(self):
         # Do: Chell is added into Pigs members and browse it -> ok for messages, ko for partners (no read permission)
-        self.group_private.write({'channel_partner_ids': [(4, self.user_portal.partner_id.id)]})
+        self.group_private.write({'channel_partner_ids': [(X2ManyCmd.LINK, self.user_portal.partner_id.id)]})
         chell_pigs = self.group_private.with_user(self.user_portal)
         trigger_read = chell_pigs.name
         for message in chell_pigs.message_ids:
@@ -125,7 +126,7 @@ class TestChannelFeatures(TestMailCommon):
 
     def _join_channel(self, channel, partners):
         for partner in partners:
-            channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner.id})]})
+            channel.write({'channel_last_seen_partner_ids': [(X2ManyCmd.CREATE, 0, {'partner_id': partner.id})]})
         channel.invalidate_cache()
 
     def _leave_channel(self, channel, partners):
@@ -294,8 +295,8 @@ class TestChannelModeration(TestMailCommon):
             'name': 'Moderation_1',
             'email_send': True,
             'moderation': True,
-            'channel_partner_ids': [(4, cls.partner_employee.id)],
-            'moderator_ids': [(4, cls.user_employee.id)],
+            'channel_partner_ids': [(X2ManyCmd.LINK, cls.partner_employee.id)],
+            'moderator_ids': [(X2ManyCmd.LINK, cls.user_employee.id)],
         })
 
         # ensure initial data
@@ -310,17 +311,17 @@ class TestChannelModeration(TestMailCommon):
     def test_moderator_consistency(self):
         # moderators should be channel members
         with self.assertRaises(ValidationError):
-            self.channel_1.write({'moderator_ids': [(4, self.user_admin.id)]})
+            self.channel_1.write({'moderator_ids': [(X2ManyCmd.LINK, self.user_admin.id)]})
 
         # member -> moderator or
-        self.channel_1.write({'channel_partner_ids': [(4, self.partner_admin.id)]})
-        self.channel_1.write({'moderator_ids': [(4, self.user_admin.id)]})
+        self.channel_1.write({'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_admin.id)]})
+        self.channel_1.write({'moderator_ids': [(X2ManyCmd.LINK, self.user_admin.id)]})
 
         # member -> moderator ko if no email
-        self.channel_1.write({'moderator_ids': [(3, self.partner_admin.id)]})
+        self.channel_1.write({'moderator_ids': [(X2ManyCmd.UNLINK, self.partner_admin.id)]})
         self.user_admin.write({'email': False})
         with self.assertRaises(ValidationError):
-            self.channel_1.write({'moderator_ids': [(4, self.user_admin.id)]})
+            self.channel_1.write({'moderator_ids': [(X2ManyCmd.LINK, self.user_admin.id)]})
 
     def test_moderation_consistency(self):
         # moderation enabled channels are restricted to mailing lists
@@ -329,19 +330,19 @@ class TestChannelModeration(TestMailCommon):
 
         # moderation enabled channels should always have moderators
         with self.assertRaises(ValidationError):
-            self.channel_1.write({'moderator_ids': [(5, 0)]})
+            self.channel_1.write({'moderator_ids': [(X2ManyCmd.CLEAR, 0)]})
 
     def test_moderation_count(self):
         self.assertEqual(self.channel_1.moderation_count, 0)
         self.channel_1.write({'moderation_ids': [
-            (0, 0, {'email': 'test0@example.com', 'status': 'allow'}),
-            (0, 0, {'email': 'test1@example.com', 'status': 'ban'})
+            (X2ManyCmd.CREATE, 0, {'email': 'test0@example.com', 'status': 'allow'}),
+            (X2ManyCmd.CREATE, 0, {'email': 'test1@example.com', 'status': 'ban'})
         ]})
         self.assertEqual(self.channel_1.moderation_count, 2)
 
     @mute_logger('odoo.addons.mail.models.mail_channel', 'odoo.models.unlink')
     def test_send_guidelines(self):
-        self.channel_1.write({'channel_partner_ids': [(4, self.partner_portal.id), (4, self.partner_admin.id)]})
+        self.channel_1.write({'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_portal.id), (X2ManyCmd.LINK, self.partner_admin.id)]})
         self.channel_1._update_moderation_email([self.partner_admin.email], 'ban')
         with self.mock_mail_gateway():
             self.channel_1.with_user(self.user_employee).send_guidelines()
@@ -354,16 +355,16 @@ class TestChannelModeration(TestMailCommon):
 
     def test_send_guidelines_crash(self):
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_admin.id)],
-            'moderator_ids': [(4, self.user_admin.id), (3, self.user_employee.id)]
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_admin.id)],
+            'moderator_ids': [(X2ManyCmd.LINK, self.user_admin.id), (X2ManyCmd.UNLINK, self.user_employee.id)]
         })
         with self.assertRaises(UserError):
             self.channel_1.with_user(self.user_employee).send_guidelines()
 
     def test_update_moderation_email(self):
         self.channel_1.write({'moderation_ids': [
-            (0, 0, {'email': 'test0@example.com', 'status': 'allow'}),
-            (0, 0, {'email': 'test1@example.com', 'status': 'ban'})
+            (X2ManyCmd.CREATE, 0, {'email': 'test0@example.com', 'status': 'allow'}),
+            (X2ManyCmd.CREATE, 0, {'email': 'test1@example.com', 'status': 'ban'})
         ]})
         self.channel_1._update_moderation_email(['test0@example.com', 'test3@example.com'], 'ban')
         self.assertEqual(len(self.channel_1.moderation_ids), 3)
@@ -374,8 +375,8 @@ class TestChannelModeration(TestMailCommon):
             'name': 'Moderation_1',
             'email_send': True,
             'moderation': True,
-            'channel_partner_ids': [(4, self.partner_employee.id)],
-            'moderator_ids': [(4, self.user_employee.id)],
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_employee.id)],
+            'moderator_ids': [(X2ManyCmd.LINK, self.user_employee.id)],
         })
 
         self.msg_c1_1 = self._add_messages(self.channel_1, 'Body11', author=self.partner_admin, moderation_status='accepted')
@@ -429,8 +430,8 @@ class TestChannelModeration(TestMailCommon):
         self.assertTrue(self.user_employee.is_moderator)
         self.assertFalse(self.user_employee_2.is_moderator)
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_employee_2.id)],
-            'moderator_ids': [(4, self.user_employee_2.id)],
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_employee_2.id)],
+            'moderator_ids': [(X2ManyCmd.LINK, self.user_employee_2.id)],
         })
         self.assertTrue(self.user_employee_2.is_moderator)
 
@@ -445,8 +446,8 @@ class TestChannelModeration(TestMailCommon):
         self.assertEqual(self.user_employee_2.moderation_counter, 0)
 
         self.channel_1.write({
-            'channel_partner_ids': [(4, self.partner_employee_2.id)],
-            'moderator_ids': [(4, self.user_employee_2.id)]
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_employee_2.id)],
+            'moderator_ids': [(X2ManyCmd.LINK, self.user_employee_2.id)]
         })
         self.assertEqual(self.user_employee.moderation_counter, 2)
         self.assertEqual(self.user_employee_2.moderation_counter, 0)

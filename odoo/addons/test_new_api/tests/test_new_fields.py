@@ -24,7 +24,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def setUp(self):
         super(TestFields, self).setUp()
-        self.env.ref('test_new_api.discussion_0').write({'participants': [(4, self.user_demo.id)]})
+        self.env.ref('test_new_api.discussion_0').write({'participants': [(fields.X2ManyCmd.LINK, self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
         # self.env.ref('test_new_api.discussion_0').participants -> 1 user
         # self.env.ref('test_new_api.discussion_0').invalidate_cache()
@@ -286,10 +286,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
         discussion1.invalidate_cache()
-        
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -300,11 +300,11 @@ class TestFields(TransactionCaseWithUserDemo):
         user_demo = self.user_demo
         discussion3 = self.env['test_new_api.discussion'].create({
             'name': 'Stuff',
-            'participants': [(4, user_root.id), (4, user_demo.id)],
+            'participants': [(fields.X2ManyCmd.LINK, user_root.id), (fields.X2ManyCmd.LINK, user_demo.id)],
             'messages': [
-                (0, 0, {'author': user_root.id, 'body': 'one'}),
-                (0, 0, {'author': user_demo.id, 'body': 'two'}),
-                (0, 0, {'author': user_root.id, 'body': 'three'}),
+                (fields.X2ManyCmd.CREATE, 0, {'author': user_root.id, 'body': 'one'}),
+                (fields.X2ManyCmd.CREATE, 0, {'author': user_demo.id, 'body': 'two'}),
+                (fields.X2ManyCmd.CREATE, 0, {'author': user_root.id, 'body': 'three'}),
             ],
         })
         check_stored(discussion3)
@@ -313,9 +313,9 @@ class TestFields(TransactionCaseWithUserDemo):
         # (keep modifications in that order, as they reproduce a former bug!)
         discussion3.write({
             'messages': [
-                (4, discussion3.messages[0].id),
-                (1, discussion3.messages[1].id, {'author': user_root.id}),
-                (2, discussion3.messages[2].id),
+                (fields.X2ManyCmd.LINK, discussion3.messages[0].id),
+                (fields.X2ManyCmd.UPDATE, discussion3.messages[1].id, {'author': user_root.id}),
+                (fields.X2ManyCmd.DELETE, discussion3.messages[2].id),
             ],
         })
         check_stored(discussion3)
@@ -737,7 +737,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # create, and compute amount
         record = model.create({
             'currency_id': currency.id,
-            'line_ids': [(0, 0, {'subtotal': 1.0})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'subtotal': 1.0})],
         })
         check(1.0)
 
@@ -745,7 +745,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # the recomputation of 'total' must prefetch record.currency_id without
         # screwing up the new value in cache
         record.write({
-            'line_ids': [(2, record.line_ids.id), (0, 0, {'subtotal': 1.0})],
+            'line_ids': [(fields.X2ManyCmd.DELETE, record.line_ids.id), (fields.X2ManyCmd.CREATE, 0, {'subtotal': 1.0})],
         })
         check(1.0)
 
@@ -1098,13 +1098,13 @@ class TestFields(TransactionCaseWithUserDemo):
         # create one user per company
         user0 = self.env['res.users'].create({
             'name': 'Foo', 'login': 'foo', 'company_id': company0.id,
-            'company_ids': [(6, 0, [company0.id, company1.id, company2.id])]})
+            'company_ids': [(fields.X2ManyCmd.SET, 0, [company0.id, company1.id, company2.id])]})
         user1 = self.env['res.users'].create({
             'name': 'Bar', 'login': 'bar', 'company_id': company1.id,
-            'company_ids': [(6, 0, [company0.id, company1.id, company2.id])]})
+            'company_ids': [(fields.X2ManyCmd.SET, 0, [company0.id, company1.id, company2.id])]})
         user2 = self.env['res.users'].create({
             'name': 'Baz', 'login': 'baz', 'company_id': company2.id,
-            'company_ids': [(6, 0, [company0.id, company1.id, company2.id])]})
+            'company_ids': [(fields.X2ManyCmd.SET, 0, [company0.id, company1.id, company2.id])]})
 
         # create values for many2one field
         tag0 = self.env['test_new_api.multi.tag'].create({'name': 'Qux'})
@@ -1189,7 +1189,7 @@ class TestFields(TransactionCaseWithUserDemo):
             record.with_user(user0).foo = 'forbidden'
             record.flush()
 
-        user0.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        user0.write({'groups_id': [(fields.X2ManyCmd.LINK, self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
 
         # add ir.rule to prevent access on record
@@ -1322,12 +1322,12 @@ class TestFields(TransactionCaseWithUserDemo):
         # extra tests for x2many fields with default
         cat1 = self.env['test_new_api.category'].create({'name': "Cat1"})
         cat2 = self.env['test_new_api.category'].create({'name': "Cat2"})
-        discussion = discussion.with_context(default_categories=[(4, cat1.id)])
+        discussion = discussion.with_context(default_categories=[(fields.X2ManyCmd.LINK, cat1.id)])
         # no value gives the default value
         new_disc = discussion.new({'name': "Foo"})
         self.assertEqual(new_disc.categories._origin, cat1)
         # value overrides default value
-        new_disc = discussion.new({'name': "Foo", 'categories': [(4, cat2.id)]})
+        new_disc = discussion.new({'name': "Foo", 'categories': [(fields.X2ManyCmd.LINK, cat2.id)]})
         self.assertEqual(new_disc.categories._origin, cat2)
 
     def test_40_new_fields(self):
@@ -1341,14 +1341,14 @@ class TestFields(TransactionCaseWithUserDemo):
             'name': "Stuff",
             'moderator': self.env.uid,
             'messages': [
-                (4, msg0.id),
-                (4, msg1.id), (1, msg1.id, {'body': "YYY"}),
-                (0, 0, {'body': "ZZZ"})
+                (fields.X2ManyCmd.LINK, msg0.id),
+                (fields.X2ManyCmd.LINK, msg1.id), (fields.X2ManyCmd.UPDATE, msg1.id, {'body': "YYY"}),
+                (fields.X2ManyCmd.CREATE, 0, {'body': "ZZZ"})
             ],
             'categories': [
-                (4, cat0.id),
-                (4, cat1.id), (1, cat1.id, {'name': "BBB"}),
-                (0, 0, {'name': "CCC"})
+                (fields.X2ManyCmd.LINK, cat0.id),
+                (fields.X2ManyCmd.LINK, cat1.id), (fields.X2ManyCmd.UPDATE, cat1.id, {'name': "BBB"}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': "CCC"})
             ],
         })
         self.assertFalse(new_disc.id)
@@ -1494,7 +1494,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_41_new_compute(self):
         """ Check recomputation of fields on new records. """
         move = self.env['test_new_api.move'].create({
-            'line_ids': [(0, 0, {'quantity': 1}), (0, 0, {'quantity': 1})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'quantity': 1}), (fields.X2ManyCmd.CREATE, 0, {'quantity': 1})],
         })
         move.flush()
         line = move.line_ids[0]
@@ -1525,7 +1525,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(new_move.line_ids, new_line)
 
         # drop line, and create a new one
-        new_move.line_ids = [(2, new_line.id), (0, 0, {'quantity': 2})]
+        new_move.line_ids = [(fields.X2ManyCmd.DELETE, new_line.id), (fields.X2ManyCmd.CREATE, 0, {'quantity': 2})]
         self.assertEqual(len(new_move.line_ids), 1)
         self.assertFalse(new_move.line_ids.id)
         self.assertEqual(new_move.line_ids.quantity, 2)
@@ -1579,7 +1579,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ test the behavior of one2many related fields """
         partner = self.env['res.partner'].create({
             'name': 'Foo',
-            'child_ids': [(0, 0, {'name': 'Bar'})],
+            'child_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': 'Bar'})],
         })
         multi = self.env['test_new_api.multi'].new()
         multi.partner = partner
@@ -1611,7 +1611,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # writing on very_important_messages should call its domain method
         self.assertIn(message, discussion.very_important_messages)
-        discussion.write({'very_important_messages': [(5,)]})
+        discussion.write({'very_important_messages': [(fields.X2ManyCmd.CLEAR,)]})
         self.assertFalse(discussion.very_important_messages)
         self.assertFalse(message.exists())
 
@@ -1625,7 +1625,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(len(discussion.messages), 3)
         self.assertEqual(len(discussion.important_messages), 0)
         self.assertEqual(len(discussion.very_important_messages), 0)
-        discussion.important_messages = [(0, 0, {
+        discussion.important_messages = [(fields.X2ManyCmd.CREATE, 0, {
             'body': 'What is the answer?',
             'important': True,
         })]
@@ -1726,7 +1726,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(count(message1), 0)
 
         # setting a one2many should not copy translations on the lines
-        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        discussion.copy({'messages': [(fields.X2ManyCmd.SET, 0, message1.ids)]})
         self.assertEqual(count(message), 1)
         self.assertEqual(count(message1), 0)
 
@@ -2045,7 +2045,7 @@ class TestFields(TransactionCaseWithUserDemo):
         tag = self.env['test_new_api.multi.tag'].create({})
         record = self.env['test_new_api.multi.line'].create({
             'name': 'image',
-            'tags': [(4, tag.id)],
+            'tags': [(fields.X2ManyCmd.LINK, tag.id)],
         })
 
         # only one query as admin: reading pivot table
@@ -2105,7 +2105,7 @@ class TestX2many(common.TransactionCase):
         record_a = self.env['test_new_api.model_a'].create({'name': 'a'})
         record_b = self.env['test_new_api.model_b'].create({'name': 'b'})
         record_a.write({
-            'a_restricted_b_ids': [(6, 0, record_b.ids)],
+            'a_restricted_b_ids': [(fields.X2ManyCmd.SET, 0, record_b.ids)],
         })
         with self.assertRaises(psycopg2.IntegrityError):
             with mute_logger('odoo.sql_db'), self.cr.savepoint():
@@ -2119,7 +2119,7 @@ class TestX2many(common.TransactionCase):
         record_a = self.env['test_new_api.model_a'].create({'name': 'a'})
         record_b = self.env['test_new_api.model_b'].create({'name': 'b'})
         record_a.write({
-            'b_restricted_b_ids': [(6, 0, record_b.ids)],
+            'b_restricted_b_ids': [(fields.X2ManyCmd.SET, 0, record_b.ids)],
         })
         with self.assertRaises(psycopg2.IntegrityError):
             with mute_logger('odoo.sql_db'), self.cr.savepoint():
@@ -2157,7 +2157,7 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
 
         # replace active children
-        parent.write({'children_ids': [(6, 0, [child1.id])]})
+        parent.write({'children_ids': [(fields.X2ManyCmd.SET, 0, [child1.id])]})
         act_children = child1
         all_children = child1 + child2 + child4
         self.assertEqual(parent.children_ids, act_children)
@@ -2165,7 +2165,7 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
 
         # replace all children
-        parent.with_context(active_test=False).write({'children_ids': [(6, 0, [child1.id])]})
+        parent.with_context(active_test=False).write({'children_ids': [(fields.X2ManyCmd.SET, 0, [child1.id])]})
         act_children = child1
         all_children = child1
         self.assertEqual(parent.children_ids, act_children)
@@ -2173,7 +2173,7 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
 
         # check recomputation of inactive records
-        parent.write({'children_ids': [(6, 0, child4.ids)]})
+        parent.write({'children_ids': [(fields.X2ManyCmd.SET, 0, child4.ids)]})
         self.assertTrue(child4.parent_active)
         parent.active = False
         self.assertFalse(child4.parent_active)
@@ -2234,9 +2234,9 @@ class TestX2many(common.TransactionCase):
         tagC = tags.create({})
         recs = self.env['test_new_api.multi.line']
         recW = recs.create({})
-        recX = recs.create({'tags': [(4, tagA.id)]})
-        recY = recs.create({'tags': [(4, tagB.id)]})
-        recZ = recs.create({'tags': [(4, tagA.id), (4, tagB.id)]})
+        recX = recs.create({'tags': [(fields.X2ManyCmd.LINK, tagA.id)]})
+        recY = recs.create({'tags': [(fields.X2ManyCmd.LINK, tagB.id)]})
+        recZ = recs.create({'tags': [(fields.X2ManyCmd.LINK, tagA.id), (fields.X2ManyCmd.LINK, tagB.id)]})
         recs = recW + recX + recY + recZ
 
         # test 'in'
@@ -2281,12 +2281,12 @@ class TestX2many(common.TransactionCase):
     def test_search_one2many(self):
         """ Tests search on one2many fields. """
         recs = self.env['test_new_api.multi']
-        recX = recs.create({'lines': [(0, 0, {}), (0, 0, {})]})
-        recY = recs.create({'lines': [(0, 0, {})]})
+        recX = recs.create({'lines': [(fields.X2ManyCmd.CREATE, 0, {}), (fields.X2ManyCmd.CREATE, 0, {})]})
+        recY = recs.create({'lines': [(fields.X2ManyCmd.CREATE, 0, {})]})
         recZ = recs.create({})
         recs = recX + recY + recZ
         line1, line2, line3 = recs.lines
-        line4 = recs.create({'lines': [(0, 0, {})]}).lines
+        line4 = recs.create({'lines': [(fields.X2ManyCmd.CREATE, 0, {})]}).lines
         line0 = line4.create({})
 
         # test 'in'
@@ -2340,7 +2340,7 @@ class TestX2many(common.TransactionCase):
 
     def test_create_batch_m2m(self):
         lines = self.env['test_new_api.multi.line'].create([{
-            'tags': [(0, 0, {'name': str(j)}) for j in range(3)],
+            'tags': [(fields.X2ManyCmd.CREATE, 0, {'name': str(j)}) for j in range(3)],
         } for i in range(3)])
         self.assertEqual(len(lines), 3)
         for line in lines:

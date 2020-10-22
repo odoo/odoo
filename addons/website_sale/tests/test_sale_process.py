@@ -3,7 +3,7 @@
 
 import odoo.tests
 
-from odoo import api
+from odoo import fields, api
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
@@ -37,12 +37,12 @@ class TestUi(HttpCaseWithUserDemo):
         self.product_product_11_product_template = self.env['product.template'].create({
             'name': 'Conference Chair (CONFIG)',
             'list_price': 16.50,
-            'accessory_product_ids': [(4, product_product_7.id)],
+            'accessory_product_ids': [(fields.X2ManyCmd.LINK, product_product_7.id)],
         })
         self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.product_product_11_product_template.id,
             'attribute_id': self.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+            'value_ids': [(fields.X2ManyCmd.LINK, product_attribute_value_1.id), (fields.X2ManyCmd.LINK, product_attribute_value_2.id)],
         })
 
         self.product_product_1_product_template = self.env['product.template'].create({
@@ -121,7 +121,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         return self.env['sale.order'].create({
             'partner_id': partner_id,
             'website_id': self.website.id,
-            'order_line': [(0, 0, {
+            'order_line': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.env['product.product'].create({'name': 'Product A', 'list_price': 100}).id,
                 'name': 'Product A',
             })]

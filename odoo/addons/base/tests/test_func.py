@@ -3,6 +3,7 @@
 
 import functools
 
+from odoo import fields
 from odoo.tests.common import BaseCase
 from odoo.tools import frozendict
 from odoo.tools.func import compose
@@ -61,5 +62,5 @@ class TestFrozendict(BaseCase):
         # dict with tuples, lists, and embedded dicts
         hash(frozendict({
             'user_id': (42, 'Joe'),
-            'line_ids': [(0, 0, {'values': [42]})],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'values': [42]})],
         }))

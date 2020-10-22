@@ -27,7 +27,7 @@ class AccountMove(models.Model):
 
         landed_costs = self.env['stock.landed.cost'].create({
             'vendor_bill_id': self.id,
-            'cost_lines': [(0, 0, {
+            'cost_lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': l.product_id.id,
                 'name': l.product_id.name,
                 'account_id': l.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id,

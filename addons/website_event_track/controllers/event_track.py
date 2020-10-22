@@ -415,7 +415,7 @@ class EventTrackController(http.Controller):
             'partner_phone': post['phone'],
             'partner_biography': plaintext2html(post['biography']),
             'event_id': event.id,
-            'tag_ids': [(6, 0, tags)],
+            'tag_ids': [(fields.X2ManyCmd.SET, 0, tags)],
             'user_id': False,
             'description': plaintext2html(post['description']),
             'image': base64.b64encode(post['image'].read()) if post.get('image') else False

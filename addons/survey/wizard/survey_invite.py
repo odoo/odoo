@@ -214,11 +214,11 @@ class SurveyInvite(models.TransientModel):
             'res_id': None,
             'subject': subject,
             'body_html': body,
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
+            'attachment_ids': [(fields.X2ManyCmd.LINK, att.id) for att in self.attachment_ids],
             'auto_delete': True,
         }
         if answer.partner_id:
-            mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
+            mail_values['recipient_ids'] = [(fields.X2ManyCmd.LINK, answer.partner_id.id)]
         else:
             mail_values['email_to'] = answer.email
 

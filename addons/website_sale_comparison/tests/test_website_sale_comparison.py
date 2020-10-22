@@ -3,7 +3,7 @@
 
 from collections import OrderedDict
 from lxml import etree
-from odoo import tools
+from odoo import fields, tools
 
 import odoo.tests
 
@@ -97,12 +97,12 @@ class TestUi(odoo.tests.HttpCase):
         self.attribute_line_varieties = self.env['product.template.attribute.line'].create([{
             'product_tmpl_id': self.template_margaux.id,
             'attribute_id': self.attribute_varieties.id,
-            'value_ids': [(6, 0, v.ids)],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, v.ids)],
         } for v in self.values_varieties])
         self.attribute_line_vintage = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.template_margaux.id,
             'attribute_id': self.attribute_vintage.id,
-            'value_ids': [(6, 0, self.values_vintage.ids)],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, self.values_vintage.ids)],
         })
         self.variants_margaux = self.template_margaux._get_possible_variants_sorted()
 

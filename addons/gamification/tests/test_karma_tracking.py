@@ -152,8 +152,8 @@ class TestKarmaTrackingCommon(common.SavepointCase):
 
     def test_user_as_erp_manager(self):
         self.test_user.write({'groups_id': [
-            (4, self.env.ref('base.group_partner_manager').id),
-            (4, self.env.ref('base.group_erp_manager').id)
+            (fields.X2ManyCmd.LINK, self.env.ref('base.group_partner_manager').id),
+            (fields.X2ManyCmd.LINK, self.env.ref('base.group_erp_manager').id)
         ]})
         user = self.env['res.users'].with_user(self.test_user).create({
             'name': 'Test Ostérone', 'karma': '32',
@@ -170,8 +170,8 @@ class TestKarmaTrackingCommon(common.SavepointCase):
 
     def test_user_tracking(self):
         self.test_user.write({'groups_id': [
-            (4, self.env.ref('base.group_partner_manager').id),
-            (4, self.env.ref('base.group_system').id)
+            (fields.X2ManyCmd.LINK, self.env.ref('base.group_partner_manager').id),
+            (fields.X2ManyCmd.LINK, self.env.ref('base.group_system').id)
         ]})
         user = self.env['res.users'].with_user(self.test_user).create({
             'name': 'Test Ostérone', 'karma': '32',

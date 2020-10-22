@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 
+from odoo import fields
 from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -26,7 +27,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [self.ref('base.group_user')])],
         })
         ps = (p1 + p2).with_user(user)
         self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
@@ -61,7 +62,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [self.ref('base.group_user')])],
         })
 
         partner_model = self.env['ir.model'].search([('model','=','res.partner')])
@@ -86,7 +87,7 @@ class TestORM(TransactionCase):
         with self.assertRaises(AccessError):
             p1.with_user(user).unlink()
 
-        # Prepare mixed case 
+        # Prepare mixed case
         p2.unlink()
         # read mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):
@@ -216,14 +217,14 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test',
             'login': 'test_m2m_store_trigger',
-            'groups_id': [(6, 0, [])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [])],
         })
         self.assertTrue(user.share)
 
-        group_user.write({'users': [(4, user.id)]})
+        group_user.write({'users': [(fields.X2ManyCmd.LINK, user.id)]})
         self.assertFalse(user.share)
 
-        group_user.write({'users': [(3, user.id)]})
+        group_user.write({'users': [(fields.X2ManyCmd.UNLINK, user.id)]})
         self.assertTrue(user.share)
 
     @mute_logger('odoo.models')
@@ -232,7 +233,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Justine Bridou',
             'login': 'saucisson',
-            'groups_id': [(6, 0, [self.ref('base.group_partner_manager')])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].with_user(user).create({'name': 'Zorro'})
         self.env['ir.property'].with_user(user)._set_multi("ref", "res.partner", {p1.id: "Nain poilu"})
@@ -272,16 +273,16 @@ class TestORM(TransactionCase):
         vals_list = [{
             'name': 'Foo',
             'state_ids': [
-                (0, 0, {'name': 'North Foo', 'code': 'NF'}),
-                (0, 0, {'name': 'South Foo', 'code': 'SF'}),
-                (0, 0, {'name': 'West Foo', 'code': 'WF'}),
-                (0, 0, {'name': 'East Foo', 'code': 'EF'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'North Foo', 'code': 'NF'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'South Foo', 'code': 'SF'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'West Foo', 'code': 'WF'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'East Foo', 'code': 'EF'}),
             ],
         }, {
             'name': 'Bar',
             'state_ids': [
-                (0, 0, {'name': 'North Bar', 'code': 'NB'}),
-                (0, 0, {'name': 'South Bar', 'code': 'SB'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'North Bar', 'code': 'NB'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'South Bar', 'code': 'SB'}),
             ],
         }]
         foo, bar = self.env['res.country'].create(vals_list)

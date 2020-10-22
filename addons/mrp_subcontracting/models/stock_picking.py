@@ -131,7 +131,7 @@ class StockPicking(models.Model):
 
             # Link the finished to the receipt move.
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
-            finished_move.write({'move_dest_ids': [(4, move.id, False)]})
+            finished_move.write({'move_dest_ids': [(fields.X2ManyCmd.LINK, move.id, False)]})
             mo.action_assign()
 
             if move._has_tracked_subcontract_components():

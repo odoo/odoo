@@ -4,6 +4,7 @@ import time
 
 from odoo.tests import tagged, Form
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.fields import X2ManyCmd
 
 
 @tagged('-at_install', 'post_install')
@@ -30,7 +31,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
                 'product_qty': 10.0,
@@ -43,7 +44,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         # Create a draft Purchase Order for second shipment for 30kg at 80€/kg
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
                 'product_qty': 30.0,

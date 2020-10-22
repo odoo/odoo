@@ -348,7 +348,7 @@ class Repair(models.Model):
                     'narration': narration,
                     'line_ids': [],
                     'invoice_origin': repair.name,
-                    'repair_ids': [(4, repair.id)],
+                    'repair_ids': [(fields.X2ManyCmd.LINK, repair.id)],
                     'invoice_line_ids': [],
                     'fiscal_position_id': fpos.id
                 }
@@ -359,7 +359,7 @@ class Repair(models.Model):
                 # if group == True: concatenate invoices by partner and currency
                 invoice_vals = current_invoices_list[0]
                 invoice_vals['invoice_origin'] += ', ' + repair.name
-                invoice_vals['repair_ids'].append((4, repair.id))
+                invoice_vals['repair_ids'].append((fields.X2ManyCmd.LINK, repair.id))
                 if not invoice_vals['narration']:
                     invoice_vals['narration'] = narration
                 else:
@@ -380,11 +380,11 @@ class Repair(models.Model):
                     'name': name,
                     'account_id': account.id,
                     'quantity': operation.product_uom_qty,
-                    'tax_ids': [(6, 0, operation.tax_id.ids)],
+                    'tax_ids': [(fields.X2ManyCmd.SET, 0, operation.tax_id.ids)],
                     'product_uom_id': operation.product_uom.id,
                     'price_unit': operation.price_unit,
                     'product_id': operation.product_id.id,
-                    'repair_line_ids': [(4, operation.id)],
+                    'repair_line_ids': [(fields.X2ManyCmd.LINK, operation.id)],
                 }
 
                 if currency == company.currency_id:
@@ -402,7 +402,7 @@ class Repair(models.Model):
                         'credit': balance < 0.0 and -balance or 0.0,
                         'currency_id': currency.id,
                     })
-                invoice_vals['invoice_line_ids'].append((0, 0, invoice_line_vals))
+                invoice_vals['invoice_line_ids'].append((fields.X2ManyCmd.CREATE, 0, invoice_line_vals))
 
             # Create invoice lines from fees.
             for fee in repair.fees_lines:
@@ -422,11 +422,11 @@ class Repair(models.Model):
                     'name': name,
                     'account_id': account.id,
                     'quantity': fee.product_uom_qty,
-                    'tax_ids': [(6, 0, fee.tax_id.ids)],
+                    'tax_ids': [(fields.X2ManyCmd.SET, 0, fee.tax_id.ids)],
                     'product_uom_id': fee.product_uom.id,
                     'price_unit': fee.price_unit,
                     'product_id': fee.product_id.id,
-                    'repair_fee_ids': [(4, fee.id)],
+                    'repair_fee_ids': [(fields.X2ManyCmd.LINK, fee.id)],
                 }
 
                 if currency == company.currency_id:
@@ -445,7 +445,7 @@ class Repair(models.Model):
                         'credit': balance < 0.0 and -balance or 0.0,
                         'currency_id': currency.id,
                     })
-                invoice_vals['invoice_line_ids'].append((0, 0, invoice_line_vals))
+                invoice_vals['invoice_line_ids'].append((fields.X2ManyCmd.CREATE, 0, invoice_line_vals))
 
         # Create invoices.
         invoices_vals_list_per_company = defaultdict(list)
@@ -573,7 +573,7 @@ class Repair(models.Model):
                 'partner_id': repair.address_id.id,
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_id.id,
-                'move_line_ids': [(0, 0, {'product_id': repair.product_id.id,
+                'move_line_ids': [(fields.X2ManyCmd.CREATE, 0, {'product_id': repair.product_id.id,
                                            'lot_id': repair.lot_id.id,
                                            'product_uom_qty': 0,  # bypass reservation here
                                            'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
@@ -592,7 +592,7 @@ class Repair(models.Model):
             produced_lines = move.move_line_ids
             moves |= move
             moves._action_done()
-            produced_lines.write({'consume_line_ids': [(6, 0, consumed_lines.ids)]})
+            produced_lines.write({'consume_line_ids': [(fields.X2ManyCmd.SET, 0, consumed_lines.ids)]})
             res[repair.id] = move.id
         return res
 

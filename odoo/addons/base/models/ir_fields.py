@@ -16,13 +16,6 @@ def only_ref_fields(record):
 def exclude_ref_fields(record):
     return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
-CREATE = lambda values: (0, False, values)
-UPDATE = lambda id, values: (1, id, values)
-DELETE = lambda id: (2, id, False)
-FORGET = lambda id: (3, id, False)
-LINK_TO = lambda id: (4, id, False)
-DELETE_ALL = lambda: (5, False, False)
-REPLACE_WITH = lambda ids: (6, False, ids)
 
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
@@ -433,9 +426,9 @@ class IrFieldsConverter(models.AbstractModel):
             warnings.extend(ws)
 
         if self._context.get('update_many2many'):
-            return [LINK_TO(id) for id in ids], warnings
+            return [fields.X2ManyCmd.link(id) for id in ids], warnings
         else:
-            return [REPLACE_WITH(ids)], warnings
+            return [fields.X2ManyCmd.set(ids)], warnings
 
     @api.model
     def _str_to_one2many(self, model, field, records):
@@ -485,10 +478,10 @@ class IrFieldsConverter(models.AbstractModel):
                     writable['id'] = record['id']
 
             if id:
-                commands.append(LINK_TO(id))
-                commands.append(UPDATE(id, writable))
+                commands.append(fields.X2ManyCmd.link(id))
+                commands.append(fields.X2ManyCmd.update(id, writable))
             else:
-                commands.append(CREATE(writable))
+                commands.append(fields.X2ManyCmd.create(writable))
 
         return commands, warnings
 

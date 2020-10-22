@@ -3,6 +3,7 @@
 
 from .common import TestSaleCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -135,7 +136,7 @@ class TestSaleOrder(TestSaleCommon):
     def test_sale_with_pricelist_discount_excluded(self):
         """ Test SO with the pricelist 'discount displayed' and check discount and unit price appeared on its lines """
         # Add group 'Discount on Lines' to the user
-        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_discount_per_so_line').id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, self.env.ref('product.group_discount_per_so_line').id)]})
 
         # Set product category on consumable products (for the pricelist item applying on this category)
         self.company_data['product_order_no'].write({'categ_id': self.product_category_1.id})

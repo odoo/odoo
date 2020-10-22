@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -47,7 +48,7 @@ class TestRepair(AccountTestInvoicingCommon):
             'partner_invoice_id': cls.res_partner_address_1.id,
             'location_id': cls.stock_warehouse.lot_stock_id.id,
             'operations': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'location_dest_id': cls.product_product_11.property_stock_production.id,
                     'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_11.get_product_multiline_description_sale(),
@@ -61,7 +62,7 @@ class TestRepair(AccountTestInvoicingCommon):
                 })
             ],
             'fees_lines': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
                     'product_id': cls.product_service_order_repair.id,
                     'product_uom_qty': 1.0,
@@ -83,7 +84,7 @@ class TestRepair(AccountTestInvoicingCommon):
             'partner_invoice_id': cls.res_partner_address_1.id,
             'location_id': cls.stock_warehouse.lot_stock_id.id,
             'operations': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'location_dest_id': cls.product_product_12.property_stock_production.id,
                     'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_12.get_product_multiline_description_sale(),
@@ -97,7 +98,7 @@ class TestRepair(AccountTestInvoicingCommon):
                 })
             ],
             'fees_lines': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
                     'product_id': cls.product_service_order_repair.id,
                     'product_uom_qty': 1.0,
@@ -119,7 +120,7 @@ class TestRepair(AccountTestInvoicingCommon):
             'partner_invoice_id': cls.res_partner_address_1.id,
             'location_id': cls.stock_location_14.id,
             'operations': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'location_dest_id': cls.product_product_13.property_stock_production.id,
                     'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_13.get_product_multiline_description_sale(),
@@ -133,7 +134,7 @@ class TestRepair(AccountTestInvoicingCommon):
                 })
             ],
             'fees_lines': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
                     'product_id': cls.product_service_order_repair.id,
                     'product_uom_qty': 1.0,

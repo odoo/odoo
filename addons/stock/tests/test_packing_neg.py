@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestPackingNeg(TransactionCase):
@@ -24,7 +25,7 @@ class TestPackingNeg(TransactionCase):
             'categ_id': self.ref('product.product_category_1'),
             'list_price': 100.0,
             'standard_price': 70.0,
-            'seller_ids': [(0, 0, {
+            'seller_ids': [(X2ManyCmd.CREATE, 0, {
                 'delay': 1,
                 'name': res_partner_2.id,
                 'min_qty': 2.0,})],
@@ -39,7 +40,7 @@ class TestPackingNeg(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': 'NEG',
                 'product_id': product_neg.id,
                 'product_uom': product_neg.uom_id.id,
@@ -96,7 +97,7 @@ class TestPackingNeg(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': 'NEG',
                 'product_id': product_neg.id,
                 'product_uom': product_neg.uom_id.id,
@@ -153,7 +154,7 @@ class TestPackingNeg(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': 'NEG',
                 'product_id': product_neg.id,
                 'product_uom': product_neg.uom_id.id,

@@ -183,7 +183,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
         self.computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.ssd_attribute.id,
-            'value_ids': [(6, 0, [self.ssd_256.id, self.ssd_512.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.ssd_256.id, self.ssd_512.id])],
         })
 
         computer_ssd_256_after = self._get_product_template_attribute_value(self.ssd_256)
@@ -394,7 +394,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
         self.computer_keyboard_attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.keyboard_attribute.id,
-            'value_ids': [(6, 0, [self.keyboard_included.id, self.keyboard_excluded.id])],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, [self.keyboard_included.id, self.keyboard_excluded.id])],
         })
         self.computer_keyboard_attribute_lines.product_template_value_ids[0].price_extra = 5
         self.computer_keyboard_attribute_lines.product_template_value_ids[1].price_extra = -5

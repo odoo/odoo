@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -14,11 +15,11 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2019-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'line_debit',
                     'account_id': self.company_data['default_account_revenue'].id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'line_credit',
                     'account_id': self.company_data['default_account_revenue'].id,
                 }),
@@ -36,14 +37,14 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2019-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': account.id,
                     'currency_id': self.currency_data['currency'].id,
                     'debit': 100.0,
                     'credit': 0.0,
                     'amount_currency': 200.0,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': account.id,
                     'currency_id': self.currency_data['currency'].id,
                     'debit': 0.0,
@@ -92,21 +93,21 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2019-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': account.id,
                     'currency_id': self.currency_data['currency'].id,
                     'debit': 100.0,
                     'credit': 0.0,
                     'amount_currency': 200.0,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': account.id,
                     'currency_id': self.currency_data['currency'].id,
                     'debit': 0.0,
                     'credit': 50.0,
                     'amount_currency': -100.0,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'account_id': self.company_data['default_account_expense'].id,
                     'currency_id': self.currency_data['currency'].id,
                     'debit': 0.0,

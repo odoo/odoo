@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestPricelist(TransactionCase):
@@ -19,13 +20,13 @@ class TestPricelist(TransactionCase):
         self.public_pricelist = self.env.ref('product.list0')
         self.sale_pricelist_id = self.env['product.pricelist'].create({
             'name': 'Sale pricelist',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                     'compute_price': 'formula',
                     'base': 'list_price',  # based on public price
                     'price_discount': 10,
                     'product_id': self.usb_adapter.id,
                     'applied_on': '0_product_variant',
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'compute_price': 'formula',
                     'base': 'list_price',  # based on public price
                     'price_surcharge': -0.5,

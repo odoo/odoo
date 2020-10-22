@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
 from odoo.tests.common import Form, SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 def _create_accounting_data(env):
@@ -72,7 +73,7 @@ class TestStockValuation(SavepointCase):
             'login': 'pauline',
             'email': 'p.p@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [cls.env.ref('stock.group_stock_user').id])]
         })
 
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
@@ -980,7 +981,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 50.0,
             'price_unit': 0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1017,7 +1018,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 40.0,
             'price_unit': 15.0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1060,7 +1061,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 20.0,
             'price_unit': 25.0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1124,7 +1125,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1163,7 +1164,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 12.0,
             'price_unit': 0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1226,7 +1227,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1280,7 +1281,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1318,7 +1319,7 @@ class TestStockValuation(SavepointCase):
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1357,7 +1358,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 21.0,
             'price_unit': 0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1449,7 +1450,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1478,7 +1479,7 @@ class TestStockValuation(SavepointCase):
             'product_id': self.product2.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product2.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1529,7 +1530,7 @@ class TestStockValuation(SavepointCase):
             'product_id': self.product2.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 11.0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product2.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1664,7 +1665,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1725,7 +1726,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1767,7 +1768,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 12,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1810,7 +1811,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 8.0,
             'price_unit': 0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1892,7 +1893,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1919,7 +1920,7 @@ class TestStockValuation(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'price_unit': 0,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product1.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,

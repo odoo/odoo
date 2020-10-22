@@ -308,7 +308,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'company_id': self.company_id.id,
             'employee_id': self[0].employee_id.id,
             'name': todo[0].name if len(todo) == 1 else '',
-            'expense_line_ids': [(6, 0, todo.ids)]
+            'expense_line_ids': [(fields.X2ManyCmd.SET, 0, todo.ids)]
         })
         return sheet
 
@@ -426,11 +426,11 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 'product_id': expense.product_id.id,
                 'product_uom_id': expense.product_uom_id.id,
                 'analytic_account_id': expense.analytic_account_id.id,
-                'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)],
+                'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, expense.analytic_tag_ids.ids)],
                 'expense_id': expense.id,
                 'partner_id': partner_id,
-                'tax_ids': [(6, 0, expense.tax_ids.ids)],
-                'tax_tag_ids': [(6, 0, taxes['base_tags'])],
+                'tax_ids': [(fields.X2ManyCmd.SET, 0, expense.tax_ids.ids)],
+                'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, taxes['base_tags'])],
                 'currency_id': expense.currency_id.id,
             }
             move_line_values.append(move_line_src)
@@ -455,7 +455,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id,
                     'analytic_account_id': expense.analytic_account_id.id if tax['analytic'] else False,
-                    'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)] if tax['analytic'] else False,
+                    'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, expense.analytic_tag_ids.ids)] if tax['analytic'] else False,
                 }
                 total_amount -= balance
                 total_amount_currency -= move_line_tax_values['amount_currency']
@@ -521,7 +521,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 move_line_dst['payment_id'] = payment.id
 
             # link move lines to move, and move to expense sheet
-            move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
+            move.write({'line_ids': [(fields.X2ManyCmd.CREATE, 0, line) for line in move_line_values]})
             expense.sheet_id.write({'account_move_id': move.id})
 
             if expense.payment_mode == 'company_account':
@@ -608,7 +608,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'unit_amount': price,
             'product_id': product.id if product else None,
             'product_uom_id': product.uom_id.id,
-            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
+            'tax_ids': [(fields.X2ManyCmd.LINK, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
             'company_id': company.id,
             'currency_id': currency_id.id

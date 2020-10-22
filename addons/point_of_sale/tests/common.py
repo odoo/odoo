@@ -73,7 +73,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'split_transactions': True,
             'company_id': cls.env.company.id,
         })
-        cls.pos_config.write({'payment_method_ids': [(4, cls.credit_payment_method.id), (4, cls.bank_payment_method.id), (4, cls.cash_payment_method.id)]})
+        cls.pos_config.write({'payment_method_ids': [(fields.X2ManyCmd.LINK, cls.credit_payment_method.id), (fields.X2ManyCmd.LINK, cls.bank_payment_method.id), (fields.X2ManyCmd.LINK, cls.cash_payment_method.id)]})
 
         # Create POS journal
         cls.pos_config.journal_id = cls.env['account.journal'].create({
@@ -95,7 +95,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
         # assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product
         # as a sale tax
-        cls.product3.taxes_id = [(6, 0, [account_tax_10_incl.id])]
+        cls.product3.taxes_id = [(fields.X2ManyCmd.SET, 0, [account_tax_10_incl.id])]
 
         # create a VAT tax of 5%, which is added to the public price
         account_tax_05_incl = Tax.create({
@@ -119,7 +119,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         cls.product4.company_id = False
         # I assign those 5 percent taxes on the PCSC349 product as a sale taxes
         cls.product4.write(
-            {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
+            {'taxes_id': [(fields.X2ManyCmd.SET, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
 
         # Set account_id in the generated repartition lines. Automatically, nothing is set.
         invoice_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('invoice_repartition_line_ids')
@@ -258,7 +258,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'is_cash_count': True,
             'cash_journal_id': cls.company_data['default_journal_cash'].id,
         })
-        config.write({'payment_method_ids': [(4, cash_split_pm.id), (4, cash_payment_method.id), (4, bank_payment_method.id)]})
+        config.write({'payment_method_ids': [(fields.X2ManyCmd.LINK, cash_split_pm.id), (fields.X2ManyCmd.LINK, cash_payment_method.id), (fields.X2ManyCmd.LINK, bank_payment_method.id)]})
         return config
 
     @classmethod
@@ -396,7 +396,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                     'total_included': price_unit * quantity,
                 }
             )
-            return (0, 0, {
+            return (fields.X2ManyCmd.CREATE, 0, {
                 'discount': 0,
                 'id': randint(1, 1000000),
                 'pack_lot_ids': [],
@@ -409,7 +409,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             })
 
         def create_payment(payment_method, amount):
-            return (0, 0, {
+            return (fields.X2ManyCmd.CREATE, 0, {
                 'amount': amount,
                 'name': fields.Datetime.now(),
                 'payment_method_id': payment_method.id,
@@ -460,7 +460,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         product = cls.env['product.product'].create({
             'type': 'product',
             'available_in_pos': True,
-            'taxes_id': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
+            'taxes_id': [(fields.X2ManyCmd.CLEAR, 0, 0)] if not tax_ids else [(fields.X2ManyCmd.SET, 0, tax_ids)],
             'name': name,
             'categ_id': category.id,
             'lst_price': lst_price,

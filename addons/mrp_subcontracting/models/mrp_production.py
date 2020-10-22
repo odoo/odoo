@@ -31,7 +31,7 @@ class MrpProduction(models.Model):
                 qty = sum(line.product_uom_id._compute_quantity(line.qty_done, product_id.uom_id) for line in lines)
                 move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
                 move['additional'] = True
-                production.move_raw_ids = [(0, 0, move)]
+                production.move_raw_ids = [(fields.X2ManyCmd.CREATE, 0, move)]
                 production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
 
     def subcontracting_record_component(self):

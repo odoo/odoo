@@ -18,7 +18,7 @@ class Channel(models.Model):
             if mail_channel.subscription_department_ids:
                 mail_channel.write(
                     {'channel_partner_ids':
-                        [(4, partner_id) for partner_id in mail_channel.mapped('subscription_department_ids.member_ids.user_id.partner_id').ids]})
+                        [(fields.X2ManyCmd.LINK, partner_id) for partner_id in mail_channel.mapped('subscription_department_ids.member_ids.user_id.partner_id').ids]})
 
     def write(self, vals):
         res = super(Channel, self).write(vals)

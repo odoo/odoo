@@ -240,7 +240,7 @@ class RecurrenceRule(models.Model):
             **values,
             **recurrence_values,
             'base_event_id': event.id,
-            'calendar_event_ids': [(6, 0, detached_events.ids)],
+            'calendar_event_ids': [(fields.X2ManyCmd.SET, 0, detached_events.ids)],
             'count': max(count, 1),
         })
 

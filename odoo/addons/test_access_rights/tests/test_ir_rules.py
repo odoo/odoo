@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -55,7 +56,7 @@ class TestRules(TransactionCase):
         self.env['ir.rule'].create({
             'name': 'Forbid public group',
             'model_id': self.browse_ref('test_access_rights.model_test_access_right_some_obj').id,
-            'groups': [(6, 0, [self.browse_ref('base.group_public').id])],
+            'groups': [(fields.X2ManyCmd.SET, 0, [self.browse_ref('base.group_public').id])],
             'domain_force': "[(0, '=', 1)]"
         })
 
@@ -74,7 +75,7 @@ class TestRules(TransactionCase):
         ids = [self.id1, self.id2]
 
         # create container as superuser, connected to all some_objs
-        container_admin = self.env['test_access_right.container'].create({'some_ids': [(6, 0, ids)]})
+        container_admin = self.env['test_access_right.container'].create({'some_ids': [(fields.X2ManyCmd.SET, 0, ids)]})
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
         # check the container as the public user
@@ -83,14 +84,14 @@ class TestRules(TransactionCase):
         self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
 
         # this should not fail
-        container_user.write({'some_ids': [(6, 0, ids)]})
+        container_user.write({'some_ids': [(fields.X2ManyCmd.SET, 0, ids)]})
         container_user.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
         container_admin.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
         # this removes all records
-        container_user.write({'some_ids': [(5,)]})
+        container_user.write({'some_ids': [(fields.X2ManyCmd.CLEAR,)]})
         container_user.invalidate_cache(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [])
         container_admin.invalidate_cache(['some_ids'])

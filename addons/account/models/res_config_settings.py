@@ -116,7 +116,7 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if self.group_multi_currency:
-            self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
+            self.env.ref('base.group_user').write({'implied_ids': [(fields.X2ManyCmd.LINK, self.env.ref('product.group_sale_pricelist').id)]})
         # install a chart of accounts for the given company (if required)
         if self.env.company == self.company_id and self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             self.chart_template_id._load(15.0, 15.0, self.env.company)

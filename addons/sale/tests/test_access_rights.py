@@ -3,6 +3,7 @@
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import HttpCase, tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -18,8 +19,8 @@ class TestAccessRights(TestSaleCommon):
             'email': 'default_user_salesman_2@example.com',
             'signature': '--\nMark',
             'notification_type': 'email',
-            'groups_id': [(6, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
-            'company_ids': [(6, 0, cls.company_data['company'].ids)],
+            'groups_id': [(X2ManyCmd.SET, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
+            'company_ids': [(X2ManyCmd.SET, 0, cls.company_data['company'].ids)],
             'company_id': cls.company_data['company'].id,
         })
 

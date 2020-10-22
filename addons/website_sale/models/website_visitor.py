@@ -32,7 +32,7 @@ class WebsiteVisitor(models.Model):
         for visitor in self:
             visitor_info = mapped_data.get(visitor.id, {'product_ids': [], 'product_count': 0})
 
-            visitor.product_ids = [(6, 0, visitor_info['product_ids'])]
+            visitor.product_ids = [(fields.X2ManyCmd.SET, 0, visitor_info['product_ids'])]
             visitor.visitor_product_count = visitor_info['product_count']
             visitor.product_count = len(visitor_info['product_ids'])
 

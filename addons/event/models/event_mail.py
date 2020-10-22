@@ -111,7 +111,7 @@ class EventMailScheduler(models.Model):
             if mail.interval_type == 'after_sub':
                 # update registration lines
                 lines = [
-                    (0, 0, {'registration_id': registration.id})
+                    (fields.X2ManyCmd.CREATE, 0, {'registration_id': registration.id})
                     for registration in (mail.event_id.registration_ids - mail.mapped('mail_registration_ids.registration_id'))
                 ]
                 if lines:

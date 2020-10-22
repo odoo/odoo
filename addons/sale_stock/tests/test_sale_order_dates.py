@@ -41,9 +41,9 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
             'partner_id': self.env['res.partner'].create({'name': 'A Customer'}).id,
             'picking_policy': 'direct',
             'order_line': [
-                (0, 0, {'name': product_A.name, 'product_id': product_A.id, 'customer_lead': product_A.sale_delay, 'product_uom_qty': 5}),
-                (0, 0, {'name': product_B.name, 'product_id': product_B.id, 'customer_lead': product_B.sale_delay, 'product_uom_qty': 5}),
-                (0, 0, {'name': product_C.name, 'product_id': product_C.id, 'customer_lead': product_C.sale_delay, 'product_uom_qty': 5})
+                (fields.X2ManyCmd.CREATE, 0, {'name': product_A.name, 'product_id': product_A.id, 'customer_lead': product_A.sale_delay, 'product_uom_qty': 5}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': product_B.name, 'product_id': product_B.id, 'customer_lead': product_B.sale_delay, 'product_uom_qty': 5}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': product_C.name, 'product_id': product_C.id, 'customer_lead': product_C.sale_delay, 'product_uom_qty': 5})
             ],
         })
 
@@ -94,7 +94,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         # I copy a demo Sales Order with committed Date on 2010-07-12
         new_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
-            'order_line': [(0, 0, {
+            'order_line': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "A product",
                 'product_id': self.env['product.product'].create({
                     'name': 'A product',

@@ -5,6 +5,7 @@ import time
 
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError
+from odoo.fields import X2ManyCmd
 
 
 class TestEquipmentMulticompany(TransactionCase):
@@ -37,14 +38,14 @@ class TestEquipmentMulticompany(TransactionCase):
         })
 
         # Create equipment manager.
-        cids = [company_a.id, company_b.id] 
+        cids = [company_a.id, company_b.id]
         equipment_manager = ResUsers.create({
             'name': 'Equipment Manager',
             'company_id': company_a.id,
             'login': 'e_equipment_manager',
             'email': 'eqmanager@yourcompany.example.com',
-            'groups_id': [(6, 0, [group_manager.id])],
-            'company_ids': [(6, 0, [company_a.id, company_b.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_manager.id])],
+            'company_ids': [(X2ManyCmd.SET, 0, [company_a.id, company_b.id])]
         })
 
         # Create equipment user
@@ -53,8 +54,8 @@ class TestEquipmentMulticompany(TransactionCase):
             'company_id': company_b.id,
             'login': 'emp',
             'email': 'empuser@yourcompany.example.com',
-            'groups_id': [(6, 0, [group_user.id])],
-            'company_ids': [(6, 0, [company_b.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_user.id])],
+            'company_ids': [(X2ManyCmd.SET, 0, [company_b.id])]
         })
 
         # create a maintenance team for company A user

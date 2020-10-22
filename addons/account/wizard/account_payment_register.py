@@ -351,12 +351,12 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
-    
+
     @api.model
     def default_get(self, fields_list):
         # OVERRIDE
         res = super().default_get(fields_list)
-        
+
         if 'line_ids' in fields_list and 'line_ids' not in res:
 
             # Retrieve moves to pay from the context.
@@ -394,8 +394,8 @@ class AccountPaymentRegister(models.TransientModel):
             if len(set(available_lines.mapped('account_internal_type'))) > 1:
                 raise UserError(_("You can't register payments for journal items being either all inbound, either all outbound."))
 
-            res['line_ids'] = [(6, 0, available_lines.ids)]
-        
+            res['line_ids'] = [(fields.X2ManyCmd.SET, 0, available_lines.ids)]
+
         return res
 
     # -------------------------------------------------------------------------

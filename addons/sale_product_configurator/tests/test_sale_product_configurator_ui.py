@@ -3,6 +3,7 @@
 
 import odoo.tests
 from .common import TestProductConfiguratorCommon
+from odoo.fields import X2ManyCmd
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -24,7 +25,7 @@ class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
 
     def test_01_product_configurator(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        self.env.ref('base.user_admin').write({'groups_id': [(X2ManyCmd.LINK, self.env.ref('product.group_product_variant').id)]})
         self.start_tour("/web", 'sale_product_configurator_tour', login="admin")
 
     def test_02_product_configurator_advanced(self):
@@ -34,9 +35,9 @@ class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
         #                       the partner
         self.env.ref('base.user_admin').write({
             'groups_id': [
-                (4, self.env.ref('product.group_product_variant').id),
-                (4, self.env.ref('product.group_product_pricelist').id),
-                (4, self.env.ref('sale.group_delivery_invoice_address').id),
+                (X2ManyCmd.LINK, self.env.ref('product.group_product_variant').id),
+                (X2ManyCmd.LINK, self.env.ref('product.group_product_pricelist').id),
+                (X2ManyCmd.LINK, self.env.ref('sale.group_delivery_invoice_address').id),
             ],
         })
 
@@ -83,13 +84,13 @@ class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
+            'value_ids': [(X2ManyCmd.SET, 0, product_attribute.value_ids.ids)],
         } for product_attribute in product_attributes])
         self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
 
     def test_03_product_configurator_edition(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        self.env.ref('base.user_admin').write({'groups_id': [(X2ManyCmd.LINK, self.env.ref('product.group_product_variant').id)]})
         self.start_tour("/web", 'sale_product_configurator_edition_tour', login="admin")
 
     def test_04_product_configurator_single_custom_value(self):
@@ -98,8 +99,8 @@ class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
         #                       the partner
         self.env.ref('base.user_admin').write({
             'groups_id': [
-                (4, self.env.ref('product.group_product_variant').id),
-                (4, self.env.ref('product.group_product_pricelist').id),
+                (X2ManyCmd.LINK, self.env.ref('product.group_product_variant').id),
+                (X2ManyCmd.LINK, self.env.ref('product.group_product_pricelist').id),
             ],
         })
 
@@ -122,7 +123,7 @@ class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
         self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attributes[0].id,
             'product_tmpl_id': product_template.id,
-            'value_ids': [(6, 0, [product_attribute_values[0].id])]
+            'value_ids': [(X2ManyCmd.SET, 0, [product_attribute_values[0].id])]
         }])
         self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
 
@@ -162,10 +163,10 @@ class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
 
         custo_desk = self.product_product_custo_desk.product_variant_ids[0]
         office_chair.update({
-            'optional_product_ids': [(6, 0, [self.product_product_conf_chair_floor_protect.id])]
+            'optional_product_ids': [(X2ManyCmd.SET, 0, [self.product_product_conf_chair_floor_protect.id])]
         })
         custo_desk.update({
-            'optional_product_ids': [(6, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])]
+            'optional_product_ids': [(X2ManyCmd.SET, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])]
         })
-        self.product_product_custo_desk.optional_product_ids = [(4, self.product_product_conf_chair.id)]
+        self.product_product_custo_desk.optional_product_ids = [(X2ManyCmd.LINK, self.product_product_conf_chair.id)]
         self.start_tour("/web", 'sale_product_configurator_optional_products_tour', login="admin")

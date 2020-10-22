@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.fields import X2ManyCmd
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -32,7 +33,7 @@ class AccountDebitNote(models.TransientModel):
         move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only debit posted moves.'))
-        res['move_ids'] = [(6, 0, move_ids.ids)]
+        res['move_ids'] = [(X2ManyCmd.SET, 0, move_ids.ids)]
         return res
 
     @api.depends('move_ids')
@@ -57,7 +58,7 @@ class AccountDebitNote(models.TransientModel):
                 'move_type': type,
             }
         if not self.copy_lines or move.move_type in [('in_refund', 'out_refund')]:
-            default_values['line_ids'] = [(5, 0, 0)]
+            default_values['line_ids'] = [(X2ManyCmd.CLEAR, 0, 0)]
         return default_values
 
     def create_debit(self):

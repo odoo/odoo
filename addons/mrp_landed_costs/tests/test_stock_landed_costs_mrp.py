@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -76,18 +77,18 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'name': "Adviser",
             'login': "fm",
             'email': "accountmanager@yourcompany.com",
-            'groups_id': [(6, 0, [cls.env.ref('account.group_account_manager').id, cls.env.ref('mrp.group_mrp_user').id, cls.env.ref('stock.group_stock_manager').id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [cls.env.ref('account.group_account_manager').id, cls.env.ref('mrp.group_mrp_user').id, cls.env.ref('stock.group_stock_manager').id])]
         })
 
     def test_landed_cost_on_mrp(self):
         inventory = self.env['stock.inventory'].create({
             'name': 'Initial inventory',
-            'line_ids': [(0, 0, {
+            'line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_component1.id,
                 'product_uom_id': self.product_component1.uom_id.id,
                 'product_qty': 500,
                 'location_id': self.warehouse_1.lot_stock_id.id
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_component2.id,
                 'product_uom_id': self.product_component2.uom_id.id,
                 'product_qty': 500,
@@ -128,8 +129,8 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         landed_cost.target_model = 'manufacturing'
 
         self.assertTrue(man_order.id in landed_cost.allowed_mrp_production_ids.ids)
-        landed_cost.mrp_production_ids = [(6, 0, [man_order.id])]
-        landed_cost.cost_lines = [(0, 0, {'product_id': self.landed_cost.id, 'price_unit': 5.0, 'split_method': 'equal'})]
+        landed_cost.mrp_production_ids = [(X2ManyCmd.SET, 0, [man_order.id])]
+        landed_cost.cost_lines = [(X2ManyCmd.CREATE, 0, {'product_id': self.landed_cost.id, 'price_unit': 5.0, 'split_method': 'equal'})]
 
         landed_cost.button_validate()
 

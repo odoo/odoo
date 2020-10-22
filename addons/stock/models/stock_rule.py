@@ -177,7 +177,7 @@ class StockRule(models.Model):
             if new_move._should_bypass_reservation():
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
-                move.write({'move_dest_ids': [(4, new_move.id)]})
+                move.write({'move_dest_ids': [(fields.X2ManyCmd.LINK, new_move.id)]})
             new_move._action_confirm()
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -279,7 +279,7 @@ class StockRule(models.Model):
 
         move_dest_ids = []
         if not self.location_id.should_bypass_reservation():
-            move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
+            move_dest_ids = values.get('move_dest_ids', False) and [(fields.X2ManyCmd.LINK, x.id) for x in values['move_dest_ids']] or []
 
         move_values = {
             'name': name[:2000],
@@ -296,7 +296,7 @@ class StockRule(models.Model):
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,
             'group_id': group_id,
-            'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
+            'route_ids': [(fields.X2ManyCmd.LINK, route.id) for route in values.get('route_ids', [])],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_scheduled,
             'date_deadline': date_deadline,

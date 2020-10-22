@@ -50,18 +50,18 @@ class WebsiteVisitor(models.Model):
         for website in self.mapped('website_id'):
             if not website.channel_id:
                 raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.', website.name))
-        self.website_id.channel_id.write({'user_ids': [(4, self.env.user.id)]})
+        self.website_id.channel_id.write({'user_ids': [(fields.X2ManyCmd.LINK, self.env.user.id)]})
         # Create chat_requests and linked mail_channels
         mail_channel_vals_list = []
         for visitor in self:
             operator = self.env.user
             country = visitor.country_id
             visitor_name = "%s (%s)" % (visitor.display_name, country.name) if country else visitor.display_name
-            channel_partner_to_add = [(4, operator.partner_id.id)]
+            channel_partner_to_add = [(fields.X2ManyCmd.LINK, operator.partner_id.id)]
             if visitor.partner_id:
-                channel_partner_to_add.append((4, visitor.partner_id.id))
+                channel_partner_to_add.append((fields.X2ManyCmd.LINK, visitor.partner_id.id))
             else:
-                channel_partner_to_add.append((4, self.env.ref('base.public_partner').id))
+                channel_partner_to_add.append((fields.X2ManyCmd.LINK, self.env.ref('base.public_partner').id))
             mail_channel_vals_list.append({
                 'channel_partner_ids': channel_partner_to_add,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
@@ -96,7 +96,7 @@ class WebsiteVisitor(models.Model):
         """ Adapt partner in members of related livechats """
         if partner:
             self.mail_channel_ids.channel_partner_ids = [
-                (3, self.env.ref('base.public_partner').id),
-                (4, partner.id),
+                (fields.X2ManyCmd.UNLINK, self.env.ref('base.public_partner').id),
+                (fields.X2ManyCmd.LINK, partner.id),
             ]
         super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)

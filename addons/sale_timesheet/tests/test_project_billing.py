@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -11,7 +12,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
@@ -210,9 +211,9 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         wizard = self.env['project.create.sale.order'].with_context(active_id=self.project_non_billable.id, active_model='project.project').create({
             'partner_id': self.partner_2.id,
             'line_ids': [
-                (0, 0, {'product_id': self.product_delivery_timesheet1.id, 'price_unit': 15, 'employee_id': self.employee_tde.id}),  # product creates no T
-                (0, 0, {'product_id': self.product_delivery_timesheet1.id, 'price_unit': 15, 'employee_id': self.employee_manager.id}),  # product creates no T (same product than previous one)
-                (0, 0, {'product_id': self.product_delivery_timesheet3.id, 'price_unit': self.product_delivery_timesheet3.list_price, 'employee_id': self.employee_user.id}),  # product creates new T in new P
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_delivery_timesheet1.id, 'price_unit': 15, 'employee_id': self.employee_tde.id}),  # product creates no T
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_delivery_timesheet1.id, 'price_unit': 15, 'employee_id': self.employee_manager.id}),  # product creates no T (same product than previous one)
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_delivery_timesheet3.id, 'price_unit': self.product_delivery_timesheet3.list_price, 'employee_id': self.employee_user.id}),  # product creates new T in new P
             ]
         })
 

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
@@ -50,21 +51,21 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
             'name': 'Product A',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [(6, 0, [cls.tax_15pc_excl.id])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [cls.tax_15pc_excl.id])],
         })
 
         cls.product_B = cls.env['product.product'].create({
             'name': 'Product B',
             'list_price': 5,
             'sale_ok': True,
-            'taxes_id': [(6, 0, [cls.tax_15pc_excl.id])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [cls.tax_15pc_excl.id])],
         })
 
         cls.product_C = cls.env['product.product'].create({
             'name': 'Product C',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [(6, 0, [])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [])],
 
         })
 

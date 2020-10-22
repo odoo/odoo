@@ -452,7 +452,7 @@ class PurchaseOrderLine(models.Model):
             'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
-            'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, x) for x in self.move_dest_ids.ids],
             'state': 'draft',
             'purchase_line_id': self.id,
             'company_id': self.order_id.company_id.id,
@@ -462,7 +462,7 @@ class PurchaseOrderLine(models.Model):
             'origin': self.order_id.name,
             'description_picking': description_picking,
             'propagate_cancel': self.propagate_cancel,
-            'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
+            'route_ids': self.order_id.picking_type_id.warehouse_id and [(fields.X2ManyCmd.SET, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
@@ -476,7 +476,7 @@ class PurchaseOrderLine(models.Model):
         supplier = values.get('supplier')
         res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
         res['name'] = line_description
-        res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
+        res['move_dest_ids'] = [(fields.X2ManyCmd.LINK, x.id) for x in values.get('move_dest_ids', [])]
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')

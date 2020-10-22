@@ -8,6 +8,7 @@ from odoo.addons.event_crm.tests.common import TestEventCrmCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.website_event.tests.common import EventDtPatcher
+from odoo.fields import X2ManyCmd
 
 
 class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, MockVisitor):
@@ -39,12 +40,12 @@ class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, M
             'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
             # ticket informations
             'event_ticket_ids': [
-                (5, 0),
-                (0, 0, {
+                (X2ManyCmd.CLEAR, 0),
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'First Ticket',
                     'product_id': cls.event_product.id,
                     'seats_max': 30,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'name': 'Second Ticket',
                     'product_id': cls.event_product.id,
                 })
@@ -66,8 +67,8 @@ class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, M
             'event_id': cls.event_0.id,
             'once_per_order': False,
             'answer_ids': [
-                (0, 0, {'name': 'Q1-Answer1'}),
-                (0, 0, {'name': 'Q1-Answer2'})
+                (X2ManyCmd.CREATE, 0, {'name': 'Q1-Answer1'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Q1-Answer2'})
             ],
         })
         cls.event_question_2 = cls.env['event.question'].create({
@@ -76,8 +77,8 @@ class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, M
             'event_id': cls.event_0.id,
             'once_per_order': True,
             'answer_ids': [
-                (0, 0, {'name': 'Q2-Answer1'}),
-                (0, 0, {'name': 'Q2-Answer2'})
+                (X2ManyCmd.CREATE, 0, {'name': 'Q2-Answer1'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Q2-Answer2'})
             ],
         })
         cls.event_question_3 = cls.env['event.question'].create({
@@ -97,13 +98,13 @@ class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, M
             'email': 'email.%02d@test.example.com' % x,
             'phone': '04560000%02d' % x,
             'registration_answer_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'question_id': cls.event_question_1.id,
                     'value_answer_id': cls.event_question_1.answer_ids[(x % 2)].id,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'question_id': cls.event_question_2.id,
                     'value_answer_id': cls.event_question_2.answer_ids[(x % 2)].id,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'question_id': cls.event_question_3.id,
                     'value_text_box': 'CustomerAnswer%s' % x,
                 })
@@ -164,18 +165,18 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
             'stage_id': self.env.ref('event.event_stage_booked').id,
             'address_id': False,
             'user_id': self.user_demo.id,
-            'tag_ids': [(4, self.event_tag_category_1_tag_1.id)],
+            'tag_ids': [(X2ManyCmd.LINK, self.event_tag_category_1_tag_1.id)],
             # event if 8-18 in Europe/Brussels (DST) (first day: begins at 7, last day: ends at 17)
             'date_tz': 'Europe/Brussels',
             'date_begin': datetime.combine(self.reference_now, time(5, 0)) - timedelta(days=1),
             'date_end': datetime.combine(self.reference_now, time(15, 0)) + timedelta(days=1),
             # ticket informations
             'event_ticket_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Standard',
                     'product_id': self.event_product.id,
                     'price': 0,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'name': 'VIP',
                     'product_id': self.event_product.id,
                     'seats_max': 10,
@@ -213,9 +214,9 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
             'event_id': self.event.id,
             'once_per_order': False,
             'answer_ids': [
-                (0, 0, {'name': 'Consumers'}),
-                (0, 0, {'name': 'Sales'}),
-                (0, 0, {'name': 'Research'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Consumers'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Sales'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Research'}),
             ],
         })
         self.event_question_2 = self.env['event.question'].create({

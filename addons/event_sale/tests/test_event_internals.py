@@ -7,6 +7,7 @@ from unittest.mock import patch
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
 from odoo.tests.common import users
+from odoo.fields import X2ManyCmd
 
 
 class TestEventData(TestEventSaleCommon):
@@ -32,7 +33,7 @@ class TestEventData(TestEventSaleCommon):
 
         event_type.write({
             'use_ticket': True,
-            'event_type_ticket_ids': [(5, 0), (0, 0, {
+            'event_type_ticket_ids': [(X2ManyCmd.CLEAR, 0), (X2ManyCmd.CREATE, 0, {
                 'name': 'First Ticket',
                 'product_id': self.event_product.id,
                 'seats_max': 5,
@@ -97,12 +98,12 @@ class TestEventTicketData(TestEventSaleCommon):
         event = self.event_0.with_user(self.env.user)
         event.write({
             'event_ticket_ids': [
-                (5, 0),
-                (0, 0, {
+                (X2ManyCmd.CLEAR, 0),
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'First Ticket',
                     'product_id': self.event_product.id,
                     'seats_max': 30,
-                }), (0, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
+                }), (X2ManyCmd.CREATE, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
                     'name': 'Second Ticket',
                     'product_id': self.event_product.id,
                     'start_sale_date': date(2020, 1, 10),

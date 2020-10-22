@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestInventory(SavepointCase):
@@ -37,8 +38,8 @@ class TestInventory(SavepointCase):
         # remove them with an inventory adjustment
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
@@ -55,8 +56,8 @@ class TestInventory(SavepointCase):
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product2.id)]
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product2.id)]
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 0)
@@ -89,8 +90,8 @@ class TestInventory(SavepointCase):
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product2.id)]
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product2.id)]
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 0)
@@ -119,8 +120,8 @@ class TestInventory(SavepointCase):
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product2.id)]
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product2.id)]
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 0)
@@ -166,8 +167,8 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'remove product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)]
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)]
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 0)
@@ -196,8 +197,8 @@ class TestInventory(SavepointCase):
         # add 10 products in stock
         inventory = self.env['stock.inventory'].create({
             'name': 'add 10 products 1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)]
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)]
         })
         inventory.action_start()
         self.env['stock.inventory.line'].create({
@@ -227,8 +228,8 @@ class TestInventory(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
         (move_stock_pack + move_pack_cust)._action_confirm()
         move_stock_pack._action_assign()
         self.assertEqual(move_stock_pack.state, 'assigned')
@@ -243,8 +244,8 @@ class TestInventory(SavepointCase):
         # free the reservation of the second move.
         inventory = self.env['stock.inventory'].create({
             'name': 'remove 2 products 1',
-            'location_ids': [(4, self.pack_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.pack_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 8
@@ -263,8 +264,8 @@ class TestInventory(SavepointCase):
         # Make a new inventory adjustment and bring two now products.
         inventory = self.env['stock.inventory'].create({
             'name': 'remove 2 products 1',
-            'location_ids': [(4, self.pack_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.pack_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 10
@@ -307,8 +308,8 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
@@ -417,8 +418,8 @@ class TestInventory(SavepointCase):
         # quantity to 42 and a counted quantity to 42.
         inventory = self.env['stock.inventory'].create({
             'name': 'Default Qty',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
             'prefill_counted_quantity': 'counted',
         })
         inventory.action_start()
@@ -430,8 +431,8 @@ class TestInventory(SavepointCase):
         # quantity to 42 and a counted quantity to 0.
         inventory = self.env['stock.inventory'].create({
             'name': 'Default Qty',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
             'prefill_counted_quantity': 'zero',
         })
         inventory.action_start()
@@ -456,8 +457,8 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         # When a inventory line is created, it must not be marked as outdated
@@ -497,8 +498,8 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(inventory.line_ids.outdated, False)
@@ -529,8 +530,8 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(inventory.line_ids.outdated, False)
@@ -561,8 +562,8 @@ class TestInventory(SavepointCase):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(inventory.line_ids.outdated, False)
@@ -595,14 +596,14 @@ class TestInventory(SavepointCase):
 
         inventory_1 = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory_1.action_start()
         inventory_2 = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory_2.action_start()
         self.assertEqual(inventory_1.line_ids.outdated, False)
@@ -633,8 +634,8 @@ class TestInventory(SavepointCase):
         self.env['stock.quant'].create(vals)
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
         self.assertEqual(inventory.line_ids.outdated, False)
@@ -684,14 +685,14 @@ class TestInventory(SavepointCase):
 
         inventory_1 = self.env['stock.inventory'].create({
             'name': 'product1',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory_1.action_start()
         inventory_2 = self.env['stock.inventory'].create({
             'name': 'product3',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, product3.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, product3.id)],
         })
         inventory_2.action_start()
         self.assertEqual(inventory_1.line_ids.outdated, False)
@@ -713,8 +714,8 @@ class TestInventory(SavepointCase):
         inventory = self.env['stock.inventory'].create({
             'name': 'loc SET - pro SET',
             'exhausted': True,
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
 
@@ -727,7 +728,7 @@ class TestInventory(SavepointCase):
         inventory = self.env['stock.inventory'].create({
             'name': 'loc SET - pro UNSET',
             'exhausted': True,
-            'location_ids': [(4, self.stock_location.id)]
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id)]
         })
         inventory.action_start()
         line_ids_p1 = [l for l in inventory.line_ids if l['product_id']['id'] == self.product1.id]
@@ -751,7 +752,7 @@ class TestInventory(SavepointCase):
         inventory = self.env['stock.inventory'].create({
             'name': 'loc UNSET - pro SET',
             'exhausted': True,
-            'product_ids': [(4, self.product1.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
 
@@ -790,8 +791,8 @@ class TestInventory(SavepointCase):
         inventory = self.env['stock.inventory'].create({
             'name': 'loc SET - pro SET',
             'exhausted': True,
-            'location_ids': [(4, self.stock_location.id), (4, warehouse.lot_stock_id.id)],
-            'product_ids': [(4, self.product1.id)],
+            'location_ids': [(X2ManyCmd.LINK, self.stock_location.id), (X2ManyCmd.LINK, warehouse.lot_stock_id.id)],
+            'product_ids': [(X2ManyCmd.LINK, self.product1.id)],
         })
         inventory.action_start()
 

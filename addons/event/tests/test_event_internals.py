@@ -5,7 +5,7 @@ from datetime import date, datetime, timedelta
 from unittest.mock import patch
 
 from odoo.addons.event.tests.common import TestEventCommon
-from odoo import exceptions
+from odoo import fields, exceptions
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
 from odoo.tests.common import users
 from odoo.tools import mute_logger
@@ -30,7 +30,7 @@ class TestEventData(TestEventCommon):
     def test_event_date_computation(self):
         event = self.event_0.with_user(self.env.user)
         event.write({
-            'registration_ids': [(0, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
+            'registration_ids': [(fields.X2ManyCmd.CREATE, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
             'date_begin': datetime(2020, 1, 31, 15, 0, 0),
             'date_end': datetime(2020, 4, 5, 18, 0, 0),
         })
@@ -110,11 +110,11 @@ class TestEventData(TestEventCommon):
         # change template to a one with mails -> fill event as it is void
         event_type.write({
             'use_mail_schedule': True,
-            'event_type_mail_ids': [(5, 0), (0, 0, {
+            'event_type_mail_ids': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.CREATE, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})],
             'use_ticket': True,
-            'event_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
+            'event_type_ticket_ids': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.CREATE, 0, {'name': 'TestRegistration'})],
         })
         event.write({'event_type_id': event_type.id})
         self.assertEqual(event.date_tz, 'Europe/Paris')
@@ -143,10 +143,10 @@ class TestEventData(TestEventCommon):
         # change template to a one with other tickets -> keep line linked to a registration
         event_type.write({
             'use_mail_schedule': False,
-            'event_type_mail_ids': [(5, 0)],
-            'event_type_ticket_ids': [(5, 0),
-                                      (0, 0, {'name': 'Registration1'}),
-                                      (0, 0, {'name': 'Registration2'})],
+            'event_type_mail_ids': [(fields.X2ManyCmd.CLEAR, 0)],
+            'event_type_ticket_ids': [(fields.X2ManyCmd.CLEAR, 0),
+                                      (fields.X2ManyCmd.CREATE, 0, {'name': 'Registration1'}),
+                                      (fields.X2ManyCmd.CREATE, 0, {'name': 'Registration2'})],
         })
         event._compute_event_ticket_ids()
         event._compute_event_mail_ids()
@@ -162,7 +162,7 @@ class TestEventData(TestEventCommon):
         # change template to a one with different mails -> reset event
         event_type.write({
             'use_mail_schedule': True,
-            'event_type_mail_ids': [(5, 0), (0, 0, {
+            'event_type_mail_ids': [(fields.X2ManyCmd.CLEAR, 0), (fields.X2ManyCmd.CREATE, 0, {
                 'interval_nbr': 3, 'interval_unit': 'days', 'interval_type': 'after_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
         })
@@ -316,11 +316,11 @@ class TestEventTicketData(TestEventCommon):
         event = self.event_0.with_user(self.env.user)
         event.write({
             'event_ticket_ids': [
-                (5, 0),
-                (0, 0, {
+                (fields.X2ManyCmd.CLEAR, 0),
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'First Ticket',
                     'seats_max': 30,
-                }), (0, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
+                }), (fields.X2ManyCmd.CREATE, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
                     'name': 'Second Ticket',
                     'start_sale_date': date(2020, 1, 10),
                     'end_sale_date': date(2020, 2, 10),

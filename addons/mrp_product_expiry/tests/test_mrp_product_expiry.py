@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestStockProductionLot(TestStockCommon):
@@ -52,7 +53,7 @@ class TestStockProductionLot(TestStockCommon):
             'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_apple.id, 'product_qty': 3}),
             ]})
 
         cls.location_stock = cls.env['stock.location'].browse(cls.stock_location)

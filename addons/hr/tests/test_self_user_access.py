@@ -4,6 +4,7 @@
 from collections import OrderedDict
 from itertools import chain
 
+from odoo.fields import X2ManyCmd
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
@@ -64,7 +65,7 @@ class TestSelfAccessProfile(TestHrCommon):
         for xml_id in all_groups_xml_ids:
             all_groups |= self.env.ref(xml_id.strip())
         user_all_groups = new_test_user(self.env, groups='base.group_user', login='hel', name='God')
-        user_all_groups.write({'groups_id': [(4, group.id, False) for group in all_groups]})
+        user_all_groups.write({'groups_id': [(X2ManyCmd.LINK, group.id, False) for group in all_groups]})
         view_infos = self.env['res.users'].with_user(user_all_groups).fields_view_get(view_id=view.id)
         full_fields = view_infos['fields']
 

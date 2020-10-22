@@ -43,7 +43,7 @@ class PortalWizard(models.TransientModel):
                     in_portal = False
                     if contact.user_ids:
                         in_portal = self.env.ref('base.group_portal') in contact.user_ids[0].groups_id
-                    user_changes.append((0, 0, {
+                    user_changes.append((fields.X2ManyCmd.CREATE, 0, {
                         'partner_id': contact.id,
                         'email': contact.email,
                         'in_portal': in_portal,
@@ -137,7 +137,7 @@ class PortalWizardUser(models.TransientModel):
                     user_portal = user
                 wizard_user.write({'user_id': user_portal.id})
                 if not wizard_user.user_id.active or group_portal not in wizard_user.user_id.groups_id:
-                    wizard_user.user_id.write({'active': True, 'groups_id': [(4, group_portal.id)]})
+                    wizard_user.user_id.write({'active': True, 'groups_id': [(fields.X2ManyCmd.LINK, group_portal.id)]})
                     # prepare for the signup process
                     wizard_user.user_id.partner_id.signup_prepare()
                 wizard_user.with_context(active_test=True)._send_email()
@@ -147,9 +147,9 @@ class PortalWizardUser(models.TransientModel):
                 if user and group_portal in user.groups_id:
                     # if user belongs to portal only, deactivate it
                     if len(user.groups_id) <= 1:
-                        user.write({'groups_id': [(3, group_portal.id)], 'active': False})
+                        user.write({'groups_id': [(fields.X2ManyCmd.UNLINK, group_portal.id)], 'active': False})
                     else:
-                        user.write({'groups_id': [(3, group_portal.id)]})
+                        user.write({'groups_id': [(fields.X2ManyCmd.UNLINK, group_portal.id)]})
 
     def _create_user(self):
         """ create a new user for wizard_user.partner_id
@@ -160,7 +160,7 @@ class PortalWizardUser(models.TransientModel):
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
             'company_id': self.env.company.id,
-            'company_ids': [(6, 0, self.env.company.ids)],
+            'company_ids': [(fields.X2ManyCmd.SET, 0, self.env.company.ids)],
         })
 
     def _send_email(self):

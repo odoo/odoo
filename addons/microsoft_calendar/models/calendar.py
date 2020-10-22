@@ -144,19 +144,19 @@ class Meeting(models.Model):
 
             if email in attendees_by_emails:
                 # Update existing attendees
-                commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
+                commands_attendee += [(fields.X2ManyCmd.UPDATE, attendees_by_emails[email].id, {'state': state})]
             else:
                 # Create new attendees
                 partner = self.env['res.partner'].find_or_create(email)
-                commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
-                commands_partner += [(4, partner.id)]
+                commands_attendee += [(fields.X2ManyCmd.CREATE, 0, {'state': state, 'partner_id': partner.id})]
+                commands_partner += [(fields.X2ManyCmd.LINK, partner.id)]
                 if attendee.get('emailAddress').get('name') and not partner.name:
                     partner.name = attendee.get('emailAddress').get('name')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
-                commands_attendee += [(2, odoo_attendee.id)]
-                commands_partner += [(3, odoo_attendee.partner_id.id)]
+                commands_attendee += [(fields.X2ManyCmd.DELETE, odoo_attendee.id)]
+                commands_partner += [(fields.X2ManyCmd.UNLINK, odoo_attendee.partner_id.id)]
         return commands_attendee, commands_partner
 
     @api.model
@@ -172,7 +172,7 @@ class Meeting(models.Model):
                 ('duration_minutes', '=', minutes)
             ], limit=1)
             if alarm and alarm not in event_id.alarm_ids:
-                reminders_commands = [(4, alarm.id)]
+                reminders_commands = [(fields.X2ManyCmd.LINK, alarm.id)]
             elif not alarm:
                 if minutes == 0:
                     interval = 'minutes'
@@ -202,17 +202,17 @@ class Meeting(models.Model):
                         reminder_type=alarm_type_label,
                         duration=duration,
                     )
-                reminders_commands = [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': 'notification'})]
+                reminders_commands = [(fields.X2ManyCmd.CREATE, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': 'notification'})]
 
             alarm_to_rm = event_id.alarm_ids.filtered(lambda a: a.alarm_type == 'notification' and a.id != alarm.id)
             if alarm_to_rm:
-                reminders_commands += [(3, a.id) for a in alarm_to_rm]
+                reminders_commands += [(fields.X2ManyCmd.UNLINK, a.id) for a in alarm_to_rm]
 
         else:
             event_id = self.browse(microsoft_event.odoo_id(self.env))
             alarm_to_rm = event_id.alarm_ids.filtered(lambda a: a.alarm_type == 'notification')
             if alarm_to_rm:
-                reminders_commands = [(3, a.id) for a in alarm_to_rm]
+                reminders_commands = [(fields.X2ManyCmd.UNLINK, a.id) for a in alarm_to_rm]
         return reminders_commands
 
     def _get_attendee_status_o2m(self, attendee):

@@ -3,7 +3,7 @@
 
 import psycopg2
 
-from odoo import api
+from odoo import fields, api
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common
@@ -18,7 +18,7 @@ class TestMailMail(TestMailCommon):
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'email_to': 'test@example.com',
-            'partner_ids': [(4, self.user_employee.partner_id.id)]
+            'partner_ids': [(fields.X2ManyCmd.LINK, self.user_employee.partner_id.id)]
         })
         with self.mock_mail_gateway():
             mail.send()
@@ -38,13 +38,13 @@ class TestMailMailRace(common.TransactionCase):
             'body_html': '<p>Test</p>',
             'notification': True,
             'state': 'outgoing',
-            'recipient_ids': [(4, self.partner.id)]
+            'recipient_ids': [(fields.X2ManyCmd.LINK, self.partner.id)]
         })
         message = self.env['mail.message'].create({
             'subject': 'S',
             'body': 'B',
             'subtype_id': self.ref('mail.mt_comment'),
-            'notification_ids': [(0, 0, {
+            'notification_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'res_partner_id': self.partner.id,
                 'mail_id': mail.id,
                 'notification_type': 'email',

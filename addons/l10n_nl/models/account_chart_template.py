@@ -12,7 +12,7 @@ class AccountChartTemplate(models.Model):
         if company.country_id.code == 'NL':
             account = self.env['account.account'].search([('code', '=', '999999'), ('company_id', '=', self.env.company.id)])
             if account:
-                account.tag_ids = [(4, self.env.ref('l10n_nl.account_tag_12').id)]
+                account.tag_ids = [(fields.X2ManyCmd.LINK, self.env.ref('l10n_nl.account_tag_12').id)]
         return res
 
     @api.model
@@ -21,5 +21,5 @@ class AccountChartTemplate(models.Model):
         if company.country_id.code == 'NL':
             xml_id = self.env.ref('l10n_nl.account_tag_25').id
             res.setdefault('tag_ids', [])
-            res['tag_ids'].append((4, xml_id))
+            res['tag_ids'].append((fields.X2ManyCmd.LINK, xml_id))
         return res

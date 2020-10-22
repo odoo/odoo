@@ -3,6 +3,7 @@
 
 from unittest.mock import patch
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 def just_raise(*args):
@@ -16,7 +17,7 @@ class TestResConfig(TransactionCase):
 
         self.user = self.env.ref('base.user_admin')
         self.company = self.env['res.company'].create({'name': 'oobO'})
-        self.user.write({'company_ids': [(4, self.company.id)], 'company_id': self.company.id})
+        self.user.write({'company_ids': [(X2ManyCmd.LINK, self.company.id)], 'company_id': self.company.id})
         Settings = self.env['res.config.settings'].with_user(self.user.id)
         self.config = Settings.create({})
 
@@ -33,7 +34,7 @@ class TestResConfig(TransactionCase):
         user = self.env['res.users'].create({
             'login': 'My User',
             'company_id': company.id,
-            'company_ids': [(4, company.id)],
+            'company_ids': [(X2ManyCmd.LINK, company.id)],
             'partner_id': partner.id,
         })
 
@@ -49,7 +50,7 @@ class TestResConfig(TransactionCase):
         new_user = self.env['res.users'].create({
             'login': 'My First New User',
             'company_id': company.id,
-            'company_ids': [(4, company.id)],
+            'company_ids': [(X2ManyCmd.LINK, company.id)],
             'partner_id': new_partner.id,
         })
         self.assertTrue(new_user in self.env.ref('base.group_multi_currency').sudo().users)
@@ -63,7 +64,7 @@ class TestResConfig(TransactionCase):
         new_user = self.env['res.users'].create({
             'login': 'My Second New User',
             'company_id': company.id,
-            'company_ids': [(4, company.id)],
+            'company_ids': [(X2ManyCmd.LINK, company.id)],
             'partner_id': new_partner.id,
         })
         self.assertTrue(new_user not in self.env.ref('base.group_multi_currency').sudo().users)

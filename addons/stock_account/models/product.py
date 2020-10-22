@@ -252,7 +252,7 @@ class ProductProduct(models.Model):
                 'ref': product.default_code,
                 'stock_valuation_layer_ids': [(6, None, [stock_valuation_layer.id])],
                 'move_type': 'entry',
-                'line_ids': [(0, 0, {
+                'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                     'name': _(
                         '%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s',
                         user=self.env.user.name,
@@ -264,7 +264,7 @@ class ProductProduct(models.Model):
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': _(
                         '%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s',
                         user=self.env.user.name,
@@ -558,13 +558,13 @@ class ProductProduct(models.Model):
                 'company_id': self.env.company.id,
                 'ref': product.default_code,
                 'stock_valuation_layer_ids': [(6, None, [out_stock_valuation_layer.id])],
-                'line_ids': [(0, 0, {
+                'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                     'name': out_stock_valuation_layer.description,
                     'account_id': debit_account_id,
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': out_stock_valuation_layer.description,
                     'account_id': credit_account_id,
                     'debit': 0,
@@ -594,13 +594,13 @@ class ProductProduct(models.Model):
                 'company_id': self.env.company.id,
                 'ref': product.default_code,
                 'stock_valuation_layer_ids': [(6, None, [out_stock_valuation_layer.id])],
-                'line_ids': [(0, 0, {
+                'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                     'name': out_stock_valuation_layer.description,
                     'account_id': debit_account_id,
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'name': out_stock_valuation_layer.description,
                     'account_id': credit_account_id,
                     'debit': 0,

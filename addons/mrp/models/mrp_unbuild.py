@@ -206,7 +206,7 @@ class MrpUnbuild(models.Model):
         consume_moves._action_done()
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
-        consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
+        consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(fields.X2ManyCmd.SET, 0, produced_move_line_ids.ids)]})
 
         return self.write({'state': 'done'})
 

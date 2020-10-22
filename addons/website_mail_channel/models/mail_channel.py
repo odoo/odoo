@@ -3,7 +3,7 @@
 
 from werkzeug import urls
 
-from odoo import models, tools
+from odoo import fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slug
 
 
@@ -40,7 +40,7 @@ class MailGroup(models.Model):
             })
             template.with_context(token_url=token_url).send_mail(self.id,
                 force_send=True,
-                email_values={'recipient_ids': [(4, partner_id)]}
+                email_values={'recipient_ids': [(fields.X2ManyCmd.LINK, partner_id)]}
             )
 
         return True

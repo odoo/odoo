@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -162,7 +163,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '1992-12-22',
             'invoice_line_ids': [
-                (0, 0, {'quantity': 1, 'price_unit': 42, 'tax_ids': [(6, 0, test_tax.ids)]}),
+                (X2ManyCmd.CREATE, 0, {'quantity': 1, 'price_unit': 42, 'tax_ids': [(X2ManyCmd.SET, 0, test_tax.ids)]}),
             ],
         })
         test_invoice.action_post()

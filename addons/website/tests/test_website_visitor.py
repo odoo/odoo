@@ -9,6 +9,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.tests import common, tagged
+from odoo.fields import X2ManyCmd
 
 
 class MockVisitor(common.BaseCase):
@@ -99,7 +100,7 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': self.partner_portal.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+                'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_portal').id])],
             })
 
     def _get_last_visitor(self):

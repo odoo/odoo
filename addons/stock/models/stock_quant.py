@@ -581,7 +581,7 @@ class StockQuant(models.Model):
             'state': 'confirmed',
             'location_id': location_id.id,
             'location_dest_id': location_dest_id.id,
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_id.id,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': qty,

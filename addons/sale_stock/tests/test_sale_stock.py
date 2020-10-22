@@ -6,6 +6,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -20,7 +21,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.company_data['product_delivery_no'].name,
                 'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': amount,
@@ -41,7 +42,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': p.name,
                     'product_id': p.id,
                     'product_uom_qty': 2,
@@ -118,7 +119,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': p.name,
                 'product_id': p.id,
                 'product_uom_qty': 2,
@@ -184,7 +185,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.product.name,
                 'product_id': self.product.id,
                 'product_uom_qty': 5.0,
@@ -255,7 +256,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.product.name,
                 'product_id': self.product.id,
                 'product_uom_qty': 5.0,
@@ -307,8 +308,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
             ],
         })
         self.so.action_confirm()
@@ -341,8 +342,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # update the two original sale order lines
         self.so.write({
             'order_line': [
-                (1, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
-                (1, self.so.order_line.sorted()[1].id, {'product_uom_qty': 2}),
+                (X2ManyCmd.UPDATE, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
+                (X2ManyCmd.UPDATE, self.so.order_line.sorted()[1].id, {'product_uom_qty': 2}),
             ]
         })
         # a single picking should be created for the new delivery
@@ -358,7 +359,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # add a new sale order lines
         self.so.write({
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
             ]
         })
         self.assertEqual(sum(backorder.move_lines.filtered(lambda m: m.product_id.id == item1.id).mapped('product_qty')), 2)
@@ -377,8 +378,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
             ],
         })
         self.so.action_confirm()
@@ -393,8 +394,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # update the two original sale order lines
         self.so.write({
             'order_line': [
-                (1, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
-                (1, self.so.order_line.sorted()[1].id, {'product_uom_qty': 2}),
+                (X2ManyCmd.UPDATE, self.so.order_line.sorted()[0].id, {'product_uom_qty': 2}),
+                (X2ManyCmd.UPDATE, self.so.order_line.sorted()[1].id, {'product_uom_qty': 2}),
             ]
         })
         # a single picking should be created for the new delivery
@@ -410,7 +411,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         partner2 = self.env['res.partner'].create({'name': 'Another Test Partner'})
         so1 = self.env['sale.order'].create({
             'partner_id': partner1,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': item1.name,
                 'product_id': item1.id,
                 'product_uom_qty': 1,
@@ -447,7 +448,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # sell a dozen
         so1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': item1.name,
                 'product_id': item1.id,
                 'product_uom_qty': 1,
@@ -468,7 +469,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # edit the so line, sell 2 dozen, the move should now be 24 units
         so1.write({
             'order_line': [
-                (1, so1.order_line.id, {'product_uom_qty': 2}),
+                (X2ManyCmd.UPDATE, so1.order_line.id, {'product_uom_qty': 2}),
             ]
         })
         # The above will create a second move, and then the two moves will be merged in _merge_moves`
@@ -494,7 +495,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
         so1.write({
             'order_line': [
-                (1, so1.order_line.id, {'product_uom_qty': 3}),
+                (X2ManyCmd.UPDATE, so1.order_line.id, {'product_uom_qty': 3}),
             ]
         })
         move2 = so1.picking_ids.move_lines.filtered(lambda m: m.product_uom.id == uom_dozen.id)
@@ -525,21 +526,21 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 1,
                     'product_uom': uom_dozen.id,
                     'price_unit': item1.list_price,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 1,
                     'product_uom': uom_dozen.id,
                     'price_unit': item1.list_price,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 1,
@@ -553,7 +554,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(len(so1.picking_ids.move_lines), 3)
         so1.picking_ids.write({
             'move_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': item1.id,
                     'product_uom_qty': 0,
                     'qty_done': 1,
@@ -561,7 +562,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                     'location_id': so1.picking_ids.location_id.id,
                     'location_dest_id': so1.picking_ids.location_dest_id.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': item1.id,
                     'product_uom_qty': 0,
                     'qty_done': 1,
@@ -569,7 +570,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                     'location_id': so1.picking_ids.location_id.id,
                     'location_dest_id': so1.picking_ids.location_dest_id.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': item1.id,
                     'product_uom_qty': 0,
                     'qty_done': 1,
@@ -599,7 +600,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 10,
@@ -638,7 +639,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # Deliver 15 instead of 10.
         so1.write({
             'order_line': [
-                (1, so1.order_line.sorted()[0].id, {'product_uom_qty': 15}),
+                (X2ManyCmd.UPDATE, so1.order_line.sorted()[0].id, {'product_uom_qty': 15}),
             ]
         })
 
@@ -666,7 +667,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
             ],
         })
         line = so.order_line[0]
@@ -695,9 +696,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (X2ManyCmd.CREATE, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
             ],
         })
         self.assertEqual(so.order_line.mapped('free_qty_today'), [10, 5, 0])
@@ -782,7 +783,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 5.0,

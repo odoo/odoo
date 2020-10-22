@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import X2ManyCmd
 
 
 class StockRulesReport(models.TransientModel):
@@ -33,7 +34,7 @@ class StockRulesReport(models.TransientModel):
         if 'warehouse_ids' in fields:
             company = product_tmpl_id.company_id or self.env.company
             warehouse_id = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1).id
-            res['warehouse_ids'] = [(6, 0, [warehouse_id])]
+            res['warehouse_ids'] = [(X2ManyCmd.SET, 0, [warehouse_id])]
         return res
 
     def _prepare_report_data(self):

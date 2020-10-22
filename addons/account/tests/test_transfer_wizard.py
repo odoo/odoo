@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 import time
+
 
 @tagged('post_install', '-at_install')
 class TestTransferWizard(AccountTestInvoicingCommon):
@@ -69,51 +71,51 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         cls.move_1 = cls.env['account.move'].create({
             'journal_id': cls.journal.id,
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_1",
                     'account_id': cls.receivable_account.id,
                     'debit': 500,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_2",
                     'account_id': cls.accounts[0].id,
                     'credit': 500,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_3",
                     'account_id': cls.accounts[0].id,
                     'debit': 800,
                     'partner_id': cls.partner_a.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_4",
                     'account_id': cls.accounts[1].id,
                     'credit': 500,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_5",
                     'account_id': cls.accounts[2].id,
                     'credit': 300,
                     'partner_id': cls.partner_a.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_6",
                     'account_id': cls.accounts[0].id,
                     'debit': 270,
                     'currency_id': cls.test_currency_1.id,
                     'amount_currency': 540,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_7",
                     'account_id': cls.accounts[1].id,
                     'credit': 140,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_8",
                     'account_id': cls.accounts[2].id,
                     'credit': 160,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test1_9",
                     'account_id': cls.accounts[2].id,
                     'debit': 30,
@@ -127,35 +129,35 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         cls.move_2 = cls.env['account.move'].create({
             'journal_id': cls.journal.id,
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_1",
                     'account_id': cls.accounts[1].id,
                     'debit': 400,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_2",
                     'account_id': cls.payable_account.id,
                     'credit': 400,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_3",
                     'account_id': cls.accounts[3].id,
                     'debit': 250,
                     'partner_id': cls.partner_a.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_4",
                     'account_id': cls.accounts[1].id,
                     'debit': 480,
                     'partner_id': cls.partner_b.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_5",
                     'account_id': cls.accounts[2].id,
                     'credit': 730,
                     'partner_id': cls.partner_a.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_6",
                     'account_id': cls.accounts[2].id,
                     'credit': 412,
@@ -163,12 +165,12 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                     'currency_id': cls.test_currency_2.id,
                     'amount_currency': -633,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_7",
                     'account_id': cls.accounts[1].id,
                     'debit': 572,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_8",
                     'account_id': cls.accounts[2].id,
                     'credit': 100,
@@ -176,7 +178,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                     'currency_id': cls.test_currency_2.id,
                     'amount_currency': -123,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': "test2_9",
                     'account_id': cls.accounts[2].id,
                     'credit': 60,

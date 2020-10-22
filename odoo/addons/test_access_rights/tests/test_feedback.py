@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import SUPERUSER_ID
+from odoo import SUPERUSER_ID, fields
 from odoo.exceptions import AccessError
 from odoo.tests import common, TransactionCase
 
@@ -14,7 +14,7 @@ class Feedback(TransactionCase):
         self.user = self.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'groups_id': [(6, 0, self.group2.ids)],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, self.group2.ids)],
         })
 
 
@@ -30,7 +30,7 @@ class TestSudo(Feedback):
             'login': 'demo2',
             'password': 'demo2',
             'partner_id': partner_demo.id,
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
         })
 
         # with_user(user)
@@ -167,7 +167,7 @@ class TestIRRuleFeedback(Feedback):
         res = self.env['ir.rule'].create({
             'name': name,
             'model_id': self.model.id,
-            'groups': [] if global_ else [(4, self.group2.id)],
+            'groups': [] if global_ else [(fields.X2ManyCmd.LINK, self.group2.id)],
             'domain_force': domain,
             'perm_read': False,
             'perm_write': False,
@@ -188,8 +188,8 @@ class TestIRRuleFeedback(Feedback):
 Contact your administrator to request access if necessary.""")
 
         # debug mode
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -215,8 +215,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
             p.with_user(self.user).write({'val': 1})
 
     def test_locals(self):
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]')
         self._make_rule('rule 1', '[("val", "=", 78)]')
         with self.assertRaises(AccessError) as ctx:
@@ -236,8 +236,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         )
 
     def test_globals_all(self):
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
@@ -260,8 +260,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         """ Global rules are AND-eded together, so when an access fails it
         might be just one of the rules, and we want an exact listing
         """
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
@@ -280,8 +280,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         )
 
     def test_combination(self):
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
         self._make_rule('rule 2', '[(0, "=", 1)]')
@@ -307,8 +307,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         """ If one of the failing rules mentions company_id, add a note that
         this might be a multi-company issue.
         """
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
         with self.assertRaises(AccessError) as ctx:
@@ -332,8 +332,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         """ because of prefetching, read() goes through a different codepath
         to apply rules
         """
-        self.env.ref('base.group_no_one').write({'users': [(4, self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [(4, self.user.id)]})
+        self.env.ref('base.group_no_one').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
+        self.env.ref('base.group_user').write({'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
         self._make_rule('rule 1', '[("val", "=", 1)]', global_=True, attr='read')
         with self.assertRaises(AccessError) as ctx:
@@ -374,7 +374,7 @@ class TestFieldGroupFeedback(Feedback):
 
     def test_read(self):
         self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+            {'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
         with self.assertRaises(AccessError) as ctx:
             _ = self.record.forbidden
 
@@ -406,7 +406,7 @@ Fields:
 
     def test_write(self):
         self.env.ref('base.group_no_one').write(
-            {'users': [(4, self.user.id)]})
+            {'users': [(fields.X2ManyCmd.LINK, self.user.id)]})
 
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'forbidden': 1, 'forbidden2': 2})

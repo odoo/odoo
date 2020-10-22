@@ -572,7 +572,7 @@ class ComputeOnchange(models.Model):
             if any(line.foo == record.foo for line in record.line_ids):
                 continue
             # add a line with the same value as 'foo'
-            record.line_ids = [(0, 0, {'foo': record.foo})]
+            record.line_ids = [(fields.X2ManyCmd.CREATE, 0, {'foo': record.foo})]
 
     @api.depends('foo')
     def _compute_tag_ids(self):

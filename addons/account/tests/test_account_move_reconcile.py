@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -76,13 +77,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': cls.cash_basis_transfer_account.id,
             'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[0].ids)],
                 }),
 
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_1.id,
@@ -90,13 +91,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[2].ids)],
                 }),
 
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_1.id,
@@ -112,13 +113,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': cls.cash_basis_transfer_account.id,
             'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[4].ids)],
                 }),
 
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_2.id,
@@ -126,13 +127,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[6].ids)],
                 }),
 
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_2.id,
@@ -235,11 +236,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'debit': 1000.0,    'credit': 0.0,      'account_id': account_id}),
-                (0, 0, {'debit': 200.0,     'credit': 0.0,      'account_id': account_id}),
-                (0, 0, {'debit': 0.0,       'credit': 300.0,    'account_id': account_id}),
-                (0, 0, {'debit': 0.0,       'credit': 400.0,    'account_id': account_id}),
-                (0, 0, {'debit': 0.0,       'credit': 500.0,    'account_id': account_id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 1000.0,    'credit': 0.0,      'account_id': account_id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 200.0,     'credit': 0.0,      'account_id': account_id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 300.0,    'account_id': account_id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 400.0,    'account_id': account_id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 500.0,    'account_id': account_id}),
             ]
         })
         move.action_post()
@@ -327,21 +328,21 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'move_type': 'entry',
                 'date': '2016-01-01',
                 'line_ids': [
-                    (0, 0, {'debit': 1200.0,    'credit': 0.0,      'amount_currency': 3600.0,  'account_id': account_id,   'currency_id': currency_id}),
-                    (0, 0, {'debit': 120.0,     'credit': 0.0,      'amount_currency': 360.0,   'account_id': account_id,   'currency_id': currency_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 1200.0,    'credit': 0.0,      'amount_currency': 3600.0,  'account_id': account_id,   'currency_id': currency_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 120.0,     'credit': 0.0,      'amount_currency': 360.0,   'account_id': account_id,   'currency_id': currency_id}),
 
-                    (0, 0, {'debit': 0.0,       'credit': 1320.0,                               'account_id': account_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 1320.0,                               'account_id': account_id}),
                 ]
             },
             {
                 'move_type': 'entry',
                 'date': '2017-01-01',
                 'line_ids': [
-                    (0, 0, {'debit': 0.0,       'credit': 240.0,    'amount_currency': -480.0,  'account_id': account_id,   'currency_id': currency_id}),
-                    (0, 0, {'debit': 0.0,       'credit': 720.0,    'amount_currency': -1440.0, 'account_id': account_id,   'currency_id': currency_id}),
-                    (0, 0, {'debit': 0.0,       'credit': 1020.0,   'amount_currency': -2040.0, 'account_id': account_id,   'currency_id': currency_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 240.0,    'amount_currency': -480.0,  'account_id': account_id,   'currency_id': currency_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 720.0,    'amount_currency': -1440.0, 'account_id': account_id,   'currency_id': currency_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 1020.0,   'amount_currency': -2040.0, 'account_id': account_id,   'currency_id': currency_id}),
 
-                    (0, 0, {'debit': 1980.0,    'credit': 0.0,                                  'account_id': account_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 1980.0,    'credit': 0.0,                                  'account_id': account_id}),
                 ]
             }
         ])
@@ -461,21 +462,21 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'move_type': 'entry',
                 'date': '2016-01-01',
                 'line_ids': [
-                    (0, 0, {'debit': 1200.0,    'credit': 0.0,      'amount_currency': 3600.0,  'account_id': account_id,   'currency_id': currency1_id}),
-                    (0, 0, {'debit': 780.0,     'credit': 0.0,      'amount_currency': 2340.0,  'account_id': account_id,   'currency_id': currency1_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 1200.0,    'credit': 0.0,      'amount_currency': 3600.0,  'account_id': account_id,   'currency_id': currency1_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 780.0,     'credit': 0.0,      'amount_currency': 2340.0,  'account_id': account_id,   'currency_id': currency1_id}),
 
-                    (0, 0, {'debit': 0.0,       'credit': 1980.0,                               'account_id': account_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 1980.0,                               'account_id': account_id}),
                 ]
             },
             {
                 'move_type': 'entry',
                 'date': '2017-01-01',
                 'line_ids': [
-                    (0, 0, {'debit': 0.0,       'credit': 240.0,    'amount_currency': -960.0,  'account_id': account_id,   'currency_id': currency2_id}),
-                    (0, 0, {'debit': 0.0,       'credit': 720.0,    'amount_currency': -2880.0, 'account_id': account_id,   'currency_id': currency2_id}),
-                    (0, 0, {'debit': 0.0,       'credit': 1020.0,   'amount_currency': -4080.0, 'account_id': account_id,   'currency_id': currency2_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 240.0,    'amount_currency': -960.0,  'account_id': account_id,   'currency_id': currency2_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 720.0,    'amount_currency': -2880.0, 'account_id': account_id,   'currency_id': currency2_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 1020.0,   'amount_currency': -4080.0, 'account_id': account_id,   'currency_id': currency2_id}),
 
-                    (0, 0, {'debit': 1980.0,    'credit': 0.0,                                  'account_id': account_id}),
+                    (X2ManyCmd.CREATE, 0, {'debit': 1980.0,    'credit': 0.0,                                  'account_id': account_id}),
                 ]
             }
         ])
@@ -692,7 +693,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -701,14 +702,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
                     'tax_exigible': False,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'account_id': self.cash_basis_transfer_account.id,
@@ -717,22 +718,22 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 44.45,
                     'credit': 0.0,
                     'account_id': self.extra_receivable_account_1.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 44.45,
                     'credit': 0.0,
                     'account_id': self.extra_receivable_account_2.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 44.45,
                     'credit': 0.0,
                     'account_id': self.extra_receivable_account_2.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'account_id': self.extra_payable_account_1.id,
@@ -744,12 +745,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 33.34,    'account_id': self.extra_receivable_account_1.id}),
-                (0, 0, {'debit': 0.0,       'credit': 11.11,    'account_id': self.extra_receivable_account_1.id}),
-                (0, 0, {'debit': 0.0,       'credit': 88.89,    'account_id': self.extra_receivable_account_2.id}),
-                (0, 0, {'debit': 0.0,       'credit': 0.01,     'account_id': self.extra_receivable_account_2.id}),
-                (0, 0, {'debit': 0.01,      'credit': 0.0,      'account_id': self.extra_payable_account_1.id}),
-                (0, 0, {'debit': 133.34,    'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 33.34,    'account_id': self.extra_receivable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 11.11,    'account_id': self.extra_receivable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 88.89,    'account_id': self.extra_receivable_account_2.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 0.01,     'account_id': self.extra_receivable_account_2.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.01,      'credit': 0.0,      'account_id': self.extra_payable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 133.34,    'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
             ]
         })
 
@@ -895,7 +896,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.34,
                     'amount_currency': -100.0,
@@ -906,7 +907,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 11.10,
                     'amount_currency': -33.33,
@@ -915,7 +916,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
                     'tax_exigible': False,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'amount_currency': -0.01,
@@ -926,28 +927,28 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 14.82,
                     'credit': 0.0,
                     'amount_currency': 44.45,
                     'currency_id': currency_id,
                     'account_id': self.extra_receivable_account_1.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 14.82,
                     'credit': 0.0,
                     'amount_currency': 44.45,
                     'currency_id': currency_id,
                     'account_id': self.extra_receivable_account_2.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 14.82,
                     'credit': 0.0,
                     'amount_currency': 44.45,
                     'currency_id': currency_id,
                     'account_id': self.extra_receivable_account_2.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'amount_currency': -0.01,
@@ -961,12 +962,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 16.67,    'amount_currency': -33.34,  'currency_id': currency_id,     'account_id': self.extra_receivable_account_1.id}),
-                (0, 0, {'debit': 0.0,       'credit': 5.6,      'amount_currency': -11.11,  'currency_id': currency_id,     'account_id': self.extra_receivable_account_1.id}),
-                (0, 0, {'debit': 0.0,       'credit': 44.45,    'amount_currency': -88.89,  'currency_id': currency_id,     'account_id': self.extra_receivable_account_2.id}),
-                (0, 0, {'debit': 0.0,       'credit': 0.01,     'amount_currency': -0.01,   'currency_id': currency_id,     'account_id': self.extra_receivable_account_2.id}),
-                (0, 0, {'debit': 0.01,      'credit': 0.0,      'amount_currency': 0.01,    'currency_id': currency_id,     'account_id': self.extra_payable_account_1.id}),
-                (0, 0, {'debit': 66.72,     'credit': 0.0,                                                                  'account_id': self.company_data['default_account_revenue'].id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 16.67,    'amount_currency': -33.34,  'currency_id': currency_id,     'account_id': self.extra_receivable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 5.6,      'amount_currency': -11.11,  'currency_id': currency_id,     'account_id': self.extra_receivable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 44.45,    'amount_currency': -88.89,  'currency_id': currency_id,     'account_id': self.extra_receivable_account_2.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 0.01,     'amount_currency': -0.01,   'currency_id': currency_id,     'account_id': self.extra_receivable_account_2.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.01,      'credit': 0.0,      'amount_currency': 0.01,    'currency_id': currency_id,     'account_id': self.extra_payable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 66.72,     'credit': 0.0,                                                                  'account_id': self.company_data['default_account_revenue'].id}),
             ]
         })
 
@@ -1116,7 +1117,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 100.0,
                     'amount_currency': -300.0,
@@ -1127,7 +1128,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.33,
                     'amount_currency': -100.0,
@@ -1138,7 +1139,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 133.33,
                     'credit': 0.0,
                     'amount_currency': 400.0,
@@ -1153,14 +1154,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 201.0,
                     'amount_currency': -402.0, # Don't create the full reconcile directly.
                     'currency_id': currency_id,
                     'account_id': self.extra_receivable_account_1.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 201.0,
                     'credit': 0.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1173,14 +1174,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 1.0,
                     'credit': 0.0,
                     'amount_currency': 2.0,
                     'currency_id': currency_id,
                     'account_id': self.extra_receivable_account_1.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 1.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1251,7 +1252,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 100.0,
                     'amount_currency': -300.0,
@@ -1262,7 +1263,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.33,
                     'amount_currency': -100.0,
@@ -1273,7 +1274,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 133.33,
                     'credit': 0.0,
                     'amount_currency': 400.0,
@@ -1288,14 +1289,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 200.0,
                     'amount_currency': -400.0,
                     'currency_id': currency_id,
                     'account_id': self.extra_receivable_account_1.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 200.0,
                     'credit': 0.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1366,7 +1367,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1375,7 +1376,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
@@ -1384,7 +1385,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 133.33,
                     'credit': 0.0,
                     'account_id': self.extra_receivable_account_1.id,
@@ -1396,8 +1397,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 133.33,   'account_id': self.extra_receivable_account_1.id}),
-                (0, 0, {'debit': 133.33,    'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 133.33,   'account_id': self.extra_receivable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 133.33,    'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
             ]
         })
 
@@ -1446,7 +1447,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1456,7 +1457,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
@@ -1466,7 +1467,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 133.33,
                     'credit': 0.0,
                     'account_id': self.extra_receivable_account_1.id,
@@ -1481,7 +1482,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 100.0,
                     'credit': 0.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1491,7 +1492,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 33.33,
                     'credit': 0.0,
                     'account_id': self.cash_basis_transfer_account.id,
@@ -1501,7 +1502,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 133.33,
                     'account_id': self.extra_receivable_account_1.id,
@@ -1561,7 +1562,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'line_ids': [
                 # Base Tax line
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
@@ -1571,7 +1572,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
@@ -1579,7 +1580,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'tax_tag_ids': [(6, 0, self.tax_tags[1].ids)],
                     'tax_exigible': False,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'account_id': self.cash_basis_transfer_account.id,
@@ -1589,7 +1590,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Receivable lines
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'debit': 133.34,
                     'credit': 0.0,
                     'account_id': self.extra_receivable_account_1.id,
@@ -1602,8 +1603,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2017-01-01',
             'line_ids': [
-                (0, 0, {'debit': 0.0,       'credit': 133.34,   'account_id': self.extra_receivable_account_1.id}),
-                (0, 0, {'debit': 133.34,    'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 0.0,       'credit': 133.34,   'account_id': self.extra_receivable_account_1.id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 133.34,    'credit': 0.0,      'account_id': self.company_data['default_account_revenue'].id}),
             ]
         })
 
@@ -1698,12 +1699,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'name': "Misc move",
             'journal_id': self.company_data['default_journal_misc'].id,
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'line 1',
                     'account_id': self.tax_account_1.id,
                     'credit': 300,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'line 2',
                     'account_id': self.company_data['default_account_expense'].id, # Whatever the account here
                     'debit': 300,

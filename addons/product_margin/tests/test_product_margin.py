@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -22,22 +23,22 @@ class TestProductMargin(AccountTestInvoicingCommon):
             {
                 'move_type': 'in_invoice',
                 'partner_id': supplier.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 300.0})],
+                'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 300.0})],
             },
             {
                 'move_type': 'in_invoice',
                 'partner_id': supplier.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 4.0, 'price_unit': 450.0})],
+                'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': ipad.id, 'quantity': 4.0, 'price_unit': 450.0})],
             },
             {
                 'move_type': 'out_invoice',
                 'partner_id': customer.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0})],
+                'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0})],
             },
             {
                 'move_type': 'out_invoice',
                 'partner_id': customer.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 550.0})],
+                'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 550.0})],
             },
         ])
         invoices.action_post()

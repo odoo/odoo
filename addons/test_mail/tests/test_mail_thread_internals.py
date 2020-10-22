@@ -6,6 +6,7 @@ from werkzeug.urls import url_parse, url_decode
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests.common import tagged, HttpCase
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestChatterTweaks(TestMailCommon, TestRecipients):
@@ -153,7 +154,7 @@ class TestMultiCompany(HttpCase):
 
         self.company_A = self.env['res.company'].create({
             'name': 'Company A',
-            'user_ids': [(4, self.ref('base.user_admin'))],
+            'user_ids': [(X2ManyCmd.LINK, self.ref('base.user_admin'))],
         })
 
         self.company_B = self.env['res.company'].create({

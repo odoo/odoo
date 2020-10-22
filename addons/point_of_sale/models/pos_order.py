@@ -191,7 +191,7 @@ class PosOrder(models.Model):
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
             'name': order_line.product_id.display_name,
-            'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
 
@@ -556,7 +556,7 @@ class PosOrder(models.Model):
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.email or self.env.user.email_formatted,
             'email_to': client['email'],
-            'attachment_ids': [(4, receipt.id)],
+            'attachment_ids': [(fields.X2ManyCmd.LINK, receipt.id)],
         }
 
         if self.mapped('account_move'):
@@ -571,7 +571,7 @@ class PosOrder(models.Model):
                 'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'
             })
-            mail_values['attachment_ids'] += [(4, attachment.id)]
+            mail_values['attachment_ids'] += [(fields.X2ManyCmd.LINK, attachment.id)]
 
         mail = self.env['mail.mail'].sudo().create(mail_values)
         mail.send()
@@ -604,8 +604,8 @@ class PosOrder(models.Model):
     def _export_for_ui(self, order):
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         return {
-            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
-            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'lines': [[fields.X2ManyCmd.CREATE, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[fields.X2ManyCmd.CREATE, 0, payment] for payment in order.payment_ids.export_for_ui()],
             'name': order.pos_reference,
             'uid': order.pos_reference[6:],
             'amount_paid': order.amount_paid,
@@ -653,7 +653,7 @@ class PosOrderLine(models.Model):
 
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
-            line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+            line[2]['tax_ids'] = [(fields.X2ManyCmd.SET, 0, [x.id for x in product.taxes_id])]
         # Clean up fields sent by the JS
         line = [
             line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
@@ -778,9 +778,9 @@ class PosOrderLine(models.Model):
             'price_subtotal_incl': orderline.price_subtotal_incl,
             'product_id': orderline.product_id.id,
             'discount': orderline.discount,
-            'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
+            'tax_ids': [[fields.X2ManyCmd.SET, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
             'id': orderline.id,
-            'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+            'pack_lot_ids': [[fields.X2ManyCmd.CREATE, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
         }
 
     def export_for_ui(self):

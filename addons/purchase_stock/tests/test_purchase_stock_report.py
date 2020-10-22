@@ -3,6 +3,7 @@
 
 from odoo.tests.common import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestPurchaseStockReports(TestReportsCommon):
@@ -77,8 +78,8 @@ class TestPurchaseStockReports(TestReportsCommon):
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, grp_multi_routes.id)]})
         # Configure warehouse.
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.reception_steps = 'three_steps'

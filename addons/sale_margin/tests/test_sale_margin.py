@@ -3,6 +3,7 @@
 
 from odoo.tests import common
 from datetime import datetime
+from odoo.fields import X2ManyCmd
 
 
 class TestSaleMargin(common.TransactionCase):
@@ -30,14 +31,14 @@ class TestSaleMargin(common.TransactionCase):
             'date_order': datetime.today(),
             'name': 'Test_SO011',
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': '[CARD] Individual Workplace',
                     'price_unit': 1000.0,
                     'product_uom': self.product_uom_id,
                     'product_uom_qty': 10.0,
                     'state': 'draft',
                     'product_id': self.product_id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Line without product_uom',
                     'price_unit': 1000.0,
                     'product_uom_qty': 10.0,
@@ -61,7 +62,7 @@ class TestSaleMargin(common.TransactionCase):
             'date_order': datetime.today(),
             'name': 'Test_SO012',
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': '[CARD] Individual Workplace',
                     'purchase_price': 40.0,
                     'price_unit': 20.0,
@@ -69,7 +70,7 @@ class TestSaleMargin(common.TransactionCase):
                     'product_uom_qty': 1.0,
                     'state': 'draft',
                     'product_id': self.product_id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Line without product_uom',
                     'price_unit': -100.0,
                     'purchase_price': 0.0,
@@ -97,7 +98,7 @@ class TestSaleMargin(common.TransactionCase):
             'date_order': datetime.today(),
             'name': 'Test_SO013',
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': '[CARD] Individual Workplace',
                     'purchase_price': 0.0,
                     'price_unit': 70.0,
@@ -122,7 +123,7 @@ class TestSaleMargin(common.TransactionCase):
             'date_order': datetime.today(),
             'name': 'Test_SO014',
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': '[CARD] Individual Workplace',
                     'purchase_price': 50.0,
                     'price_unit': 100.0,
@@ -130,7 +131,7 @@ class TestSaleMargin(common.TransactionCase):
                     'product_uom_qty': 3.0,
                     'state': 'draft',
                     'product_id': self.product_id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Line without product_uom',
                     'price_unit': -50.0,
                     'purchase_price': 0.0,

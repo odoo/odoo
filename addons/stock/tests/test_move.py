@@ -4,6 +4,7 @@
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class StockMove(SavepointCase):
@@ -685,7 +686,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf1_location.id,
         })
         self.stock_location.write({
-            'putaway_rule_ids': [(4, putaway.id, 0)]
+            'putaway_rule_ids': [(X2ManyCmd.LINK, putaway.id, 0)]
         })
 
         # creation
@@ -722,7 +723,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf1_location.id,
         })
         self.stock_location.write({
-            'putaway_rule_ids': [(4, putaway.id, 0)],
+            'putaway_rule_ids': [(X2ManyCmd.LINK, putaway.id, 0)],
         })
 
         # creation
@@ -769,7 +770,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf2_location.id,
         })
         self.stock_location.write({
-            'putaway_rule_ids': [(6, 0, [
+            'putaway_rule_ids': [(X2ManyCmd.SET, 0, [
                 putaway_category.id,
                 putaway_product.id
             ])],
@@ -821,7 +822,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf2_location.id,
         })
         self.stock_location.write({
-            'putaway_rule_ids': [(6, 0, [
+            'putaway_rule_ids': [(X2ManyCmd.SET, 0, [
                 putaway_category.id,
                 putaway_product.id,
             ])],
@@ -862,7 +863,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf_location.id,
         })
         self.stock_location.write({
-            'putaway_rule_ids': [(6, 0, [
+            'putaway_rule_ids': [(X2ManyCmd.SET, 0, [
                 putaway.id,
             ])],
         })
@@ -914,7 +915,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf2_location.id,
         })
         self.stock_location.write({
-            'putaway_rule_ids': [(6, 0, [
+            'putaway_rule_ids': [(X2ManyCmd.SET, 0, [
                 putaway_category_all.id,
                 putaway_category_office_furn.id,
             ])],
@@ -967,7 +968,7 @@ class StockMove(SavepointCase):
             'location_out_id': shelf2.id,
         })
         floor1.write({
-            'putaway_rule_ids': [(4, putaway.id, 0)],
+            'putaway_rule_ids': [(X2ManyCmd.LINK, putaway.id, 0)],
         })
 
         # stock move supplier -> rack1
@@ -1579,8 +1580,8 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
 
         (move_stock_pack + move_pack_cust)._action_confirm()
         move_stock_pack._action_assign()
@@ -1622,8 +1623,8 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
 
         (move_stock_pack + move_pack_cust)._action_confirm()
         move_stock_pack._action_assign()
@@ -1676,9 +1677,9 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack_1.id, 0), (4, move_stock_pack_2.id, 0)]})
+        move_stock_pack_1.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_stock_pack_2.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack_1.id, 0), (X2ManyCmd.LINK, move_stock_pack_2.id, 0)]})
 
         (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
@@ -1753,9 +1754,9 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack_1.id, 0), (4, move_stock_pack_2.id, 0)]})
+        move_stock_pack_1.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_stock_pack_2.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack_1.id, 0), (X2ManyCmd.LINK, move_stock_pack_2.id, 0)]})
 
         (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
@@ -1814,9 +1815,9 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, 0), (4, move_pack_cust_2.id, 0)]})
-        move_pack_cust_1.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
-        move_pack_cust_2.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust_1.id, 0), (X2ManyCmd.LINK, move_pack_cust_2.id, 0)]})
+        move_pack_cust_1.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
+        move_pack_cust_2.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
 
         (move_stock_pack + move_pack_cust_1 + move_pack_cust_2)._action_confirm()
 
@@ -1863,7 +1864,7 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
-        move_stock_stock_1.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
+        move_stock_stock_1.write({'move_orig_ids': [(X2ManyCmd.LINK, move_supp_stock_1.id, 0), (X2ManyCmd.LINK, move_supp_stock_2.id, 0)]})
         move_stock_stock_2 = self.env['stock.move'].create({
             'name': 'test_link_assign_6_1',
             'location_id': self.stock_location.id,
@@ -1872,7 +1873,7 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
-        move_stock_stock_2.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
+        move_stock_stock_2.write({'move_orig_ids': [(X2ManyCmd.LINK, move_supp_stock_1.id, 0), (X2ManyCmd.LINK, move_supp_stock_2.id, 0)]})
 
         (move_supp_stock_1 + move_supp_stock_2 + move_stock_stock_1 + move_stock_stock_2)._action_confirm()
         move_supp_stock_1._action_assign()
@@ -1927,8 +1928,8 @@ class StockMove(SavepointCase):
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
         (move_stock_pack + move_pack_cust)._action_confirm()
 
         # the pick should not be reservable because of the rounding of the dozen
@@ -1938,7 +1939,7 @@ class StockMove(SavepointCase):
         self.assertEqual(move_pack_cust.state, 'waiting')
 
         # move the 6 units by adding an unreserved move line
-        move_stock_pack.write({'move_line_ids': [(0, 0, {
+        move_stock_pack.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
             'product_id': self.product.id,
             'product_uom_id': self.uom_unit.id,
             'qty_done': 6,
@@ -1971,7 +1972,7 @@ class StockMove(SavepointCase):
 
         # move a dozen on the backorder to see how we handle the extra move
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_stock_pack.id)])
-        backorder.move_lines.write({'move_line_ids': [(0, 0, {
+        backorder.move_lines.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
             'product_id': self.product.id,
             'product_uom_id': self.uom_dozen.id,
             'qty_done': 1,
@@ -2042,8 +2043,8 @@ class StockMove(SavepointCase):
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
         (move_stock_pack + move_pack_cust)._action_confirm()
 
         move_stock_pack._action_assign()
@@ -2109,8 +2110,8 @@ class StockMove(SavepointCase):
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
         (move_stock_pack + move_pack_cust)._action_confirm()
 
         picking_stock_pack.action_assign()
@@ -2134,7 +2135,7 @@ class StockMove(SavepointCase):
 
         # force the serial number and validate
         lot3 = self.env['stock.production.lot'].search([('name', '=', "lot3")])
-        backorder.write({'move_line_ids': [(0, 0, {
+        backorder.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
             'product_id': self.product_serial.id,
             'product_uom_id': self.uom_unit.id,
             'qty_done': 1,
@@ -2191,8 +2192,8 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(X2ManyCmd.LINK, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(X2ManyCmd.LINK, move_stock_pack.id, 0)]})
 
         (move_stock_pack + move_pack_cust)._action_confirm()
         move_stock_pack._action_assign()
@@ -2321,7 +2322,7 @@ class StockMove(SavepointCase):
         self.assertEqual(move2.state, 'confirmed')
 
         # use the product from the first one
-        move2.write({'move_line_ids': [(0, 0, {
+        move2.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
             'product_id': self.product.id,
             'product_uom_id': self.uom_unit.id,
             'qty_done': 1,
@@ -2379,7 +2380,7 @@ class StockMove(SavepointCase):
         self.assertEqual(move2.state, 'confirmed')
 
         # use the product from the first one
-        move2.write({'move_line_ids': [(0, 0, {
+        move2.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
             'product_id': self.product.id,
             'product_uom_id': self.uom_unit.id,
             'qty_done': 1,
@@ -2416,7 +2417,7 @@ class StockMove(SavepointCase):
         move1.quantity_done = 1
 
         # add a forced move line in `move1`
-        move1.write({'move_line_ids': [(0, 0, {
+        move1.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
             'product_id': self.product.id,
             'product_uom_id': self.uom_unit.id,
             'qty_done': 2,

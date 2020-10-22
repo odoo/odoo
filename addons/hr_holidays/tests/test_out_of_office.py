@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import tagged, users, warmup
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.fields import X2ManyCmd
 
 
 @tagged('out_of_office')
@@ -45,7 +46,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'mail_create_nosubscribe': True,
             'mail_channel_noautofollow': True,
         }).create({
-            'channel_partner_ids': [(4, partner.id), (4, partner2.id)],
+            'channel_partner_ids': [(X2ManyCmd.LINK, partner.id), (X2ManyCmd.LINK, partner2.id)],
             'public': 'private',
             'channel_type': 'chat',
             'email_send': False,

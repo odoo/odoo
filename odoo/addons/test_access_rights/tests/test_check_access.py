@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo.tests
+from odoo import fields
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -11,14 +12,14 @@ class TestAccess(odoo.tests.HttpCase):
         self.portal_user = self.env['res.users'].create({
             'login': 'P',
             'name': 'P',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, [self.env.ref('base.group_portal').id])],
         })
         # a partner that can't be read by the portal user, would typically be a user's
         self.internal_user_partner = self.env['res.partner'].create({'name': 'I'})
 
         self.document = self.env['test_access_right.ticket'].create({
             'name': 'Need help here',
-            'message_partner_ids': [(6, 0, [self.portal_user.partner_id.id,
+            'message_partner_ids': [(fields.X2ManyCmd.SET, 0, [self.portal_user.partner_id.id,
                                             self.internal_user_partner.id])],
         })
 
@@ -46,7 +47,7 @@ class TestAccess(odoo.tests.HttpCase):
         no_access_user = self.env['res.users'].create({
             'login': 'no_access',
             'name': 'no_access',
-            'groups_id': [(5, 0)],
+            'groups_id': [(fields.X2ManyCmd.CLEAR, 0)],
         })
         document = self.env['test_access_right.ticket'].with_user(no_access_user)
         res = document.sudo().name_search('Need help here')

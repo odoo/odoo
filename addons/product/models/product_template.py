@@ -614,7 +614,7 @@ class ProductTemplate(models.Model):
                     else:
                         current_variants_to_create.append({
                             'product_tmpl_id': tmpl_id.id,
-                            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+                            'product_template_attribute_value_ids': [(fields.X2ManyCmd.SET, 0, combination.ids)],
                             'active': tmpl_id.active,
                         })
                         if len(current_variants_to_create) > 1000:
@@ -963,7 +963,7 @@ class ProductTemplate(models.Model):
 
         return Product.sudo().create({
             'product_tmpl_id': self.id,
-            'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids)]
+            'product_template_attribute_value_ids': [(fields.X2ManyCmd.SET, 0, combination._without_no_variant_attributes().ids)]
         })
 
     @tools.ormcache('self.id', 'frozenset(filtered_combination.ids)')

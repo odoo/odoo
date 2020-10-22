@@ -19,7 +19,7 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'registration_ids': [(0, 0, {
+            'registration_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'partner_id': self.user_eventuser.partner_id.id,
                 'name': 'test_reg',
             })],

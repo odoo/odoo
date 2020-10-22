@@ -465,7 +465,7 @@ class SaleOrder(models.Model):
                 discount = max(0, (price_unit - product.price) * 100 / price_unit)
             else:
                 discount = 0
-            lines_to_update.append((1, line.id, {'price_unit': price_unit, 'discount': discount}))
+            lines_to_update.append((fields.X2ManyCmd.UPDATE, line.id, {'price_unit': price_unit, 'discount': discount}))
         self.update({'order_line': lines_to_update})
         self.show_update_pricelist = False
         self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
@@ -512,7 +512,7 @@ class SaleOrder(models.Model):
         if default is None:
             default = {}
         if 'order_line' not in default:
-            default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
+            default['order_line'] = [(fields.X2ManyCmd.CREATE, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
         return super(SaleOrder, self).copy_data(default)
 
     def name_get(self):
@@ -568,7 +568,7 @@ class SaleOrder(models.Model):
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'payment_reference': self.reference,
-            'transaction_ids': [(6, 0, self.transaction_ids.ids)],
+            'transaction_ids': [(fields.X2ManyCmd.SET, 0, self.transaction_ids.ids)],
             'invoice_line_ids': [],
             'company_id': self.company_id.id,
         }
@@ -683,7 +683,7 @@ Reason(s) of this behavior could be:
             if not any(new_line['display_type'] is False for new_line in invoice_lines_vals):
                 raise self._nothing_to_invoice_error()
 
-            invoice_vals['invoice_line_ids'] = [(0, 0, invoice_line_id) for invoice_line_id in invoice_lines_vals]
+            invoice_vals['invoice_line_ids'] = [(fields.X2ManyCmd.CREATE, 0, invoice_line_id) for invoice_line_id in invoice_lines_vals]
 
             invoice_vals_list.append(invoice_vals)
 
@@ -993,7 +993,7 @@ Reason(s) of this behavior could be:
             'amount': sum(self.mapped('amount_total')),
             'currency_id': currency.id,
             'partner_id': partner.id,
-            'sale_order_ids': [(6, 0, self.ids)],
+            'sale_order_ids': [(fields.X2ManyCmd.SET, 0, self.ids)],
             'type': self[0]._get_payment_type(),
         })
 
@@ -1548,10 +1548,10 @@ class SaleOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,
-            'tax_ids': [(6, 0, self.tax_id.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, self.tax_id.ids)],
             'analytic_account_id': self.order_id.analytic_account_id.id,
-            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'sale_line_ids': [(4, self.id)],
+            'analytic_tag_ids': [(fields.X2ManyCmd.SET, 0, self.analytic_tag_ids.ids)],
+            'sale_line_ids': [(fields.X2ManyCmd.LINK, self.id)],
         }
         if optional_values:
             res.update(optional_values)

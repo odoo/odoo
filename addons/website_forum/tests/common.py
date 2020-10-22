@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.fields import X2ManyCmd
 
 KARMA = {
     'ask': 5, 'ans': 10,
@@ -37,21 +38,21 @@ class TestForumCommon(common.SavepointCase):
             'login': 'Armande',
             'email': 'armande.employee@example.com',
             'karma': 0,
-            'groups_id': [(6, 0, [group_employee_id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_employee_id])]
         })
         cls.user_portal = TestUsersEnv.create({
             'name': 'Beatrice Portal',
             'login': 'Beatrice',
             'email': 'beatrice.employee@example.com',
             'karma': 0,
-            'groups_id': [(6, 0, [group_portal_id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_portal_id])]
         })
         cls.user_public = TestUsersEnv.create({
             'name': 'Cedric Public',
             'login': 'Cedric',
             'email': 'cedric.employee@example.com',
             'karma': 0,
-            'groups_id': [(6, 0, [group_public_id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_public_id])]
         })
 
         # Test forum
@@ -86,7 +87,7 @@ class TestForumCommon(common.SavepointCase):
             'name': 'TestQuestion',
             'content': 'I am not a bird.',
             'forum_id': cls.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag2', 'forum_id': cls.forum.id})]
+            'tag_ids': [(X2ManyCmd.CREATE, 0, {'name': 'Tag2', 'forum_id': cls.forum.id})]
         })
         cls.answer = Post.create({
             'name': 'TestAnswer',

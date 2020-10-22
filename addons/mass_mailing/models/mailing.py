@@ -15,6 +15,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
+from odoo.fields import X2ManyCmd
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -53,7 +54,7 @@ class MassMailing(models.Model):
             if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
                 mailing_list = self.env['mailing.list'].search([], limit=2)
                 if len(mailing_list) == 1:
-                    vals['contact_list_ids'] = [(6, 0, [mailing_list.id])]
+                    vals['contact_list_ids'] = [(X2ManyCmd.SET, 0, [mailing_list.id])]
         return vals
 
     @api.model
@@ -578,7 +579,7 @@ class MassMailing(models.Model):
 
             composer_values = {
                 'author_id': author_id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
+                'attachment_ids': [(X2ManyCmd.LINK, attachment.id) for attachment in mailing.attachment_ids],
                 'body': self._prepend_preview(self.body_html, self.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
@@ -586,7 +587,7 @@ class MassMailing(models.Model):
                 'record_name': False,
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
-                'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
+                'mailing_list_ids': [(X2ManyCmd.LINK, l.id) for l in mailing.contact_list_ids],
                 'no_auto_thread': mailing.reply_to_mode != 'thread',
                 'template_id': None,
                 'mail_server_id': mailing.mail_server_id.id,

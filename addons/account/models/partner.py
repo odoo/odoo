@@ -81,14 +81,14 @@ class AccountFiscalPosition(models.Model):
     def _onchange_country_id(self):
         if self.country_id:
             self.zip_from = self.zip_to = self.country_group_id = False
-            self.state_ids = [(5,)]
+            self.state_ids = [(fields.X2ManyCmd.CLEAR,)]
             self.states_count = len(self.country_id.state_ids)
 
     @api.onchange('country_group_id')
     def _onchange_country_group_id(self):
         if self.country_group_id:
             self.zip_from = self.zip_to = self.country_id = False
-            self.state_ids = [(5,)]
+            self.state_ids = [(fields.X2ManyCmd.CLEAR,)]
 
     @api.model
     def _convert_zip_values(self, zip_from='', zip_to=''):

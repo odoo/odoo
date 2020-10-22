@@ -3,6 +3,7 @@
 from odoo.tests import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests import common2
+from odoo.fields import X2ManyCmd
 
 
 class TestMrpCommon(common2.TestStockCommon):
@@ -37,8 +38,8 @@ class TestMrpCommon(common2.TestStockCommon):
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
-                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
+                (X2ManyCmd.CREATE, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
+                (X2ManyCmd.CREATE, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
             ]})
         mo_form = Form(self.env['mrp.production'])
         if picking_type_id:
@@ -95,8 +96,8 @@ class TestMrpCommon(common2.TestStockCommon):
             ],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
             ]})
         cls.bom_2 = cls.env['mrp.bom'].create({
             'product_id': cls.product_5.id,
@@ -105,13 +106,13 @@ class TestMrpCommon(common2.TestStockCommon):
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
-                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
             'type': 'phantom',
             'sequence': 2,
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_4.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_3.id, 'product_qty': 3})
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_4.id, 'product_qty': 2}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_3.id, 'product_qty': 3})
             ]})
         cls.bom_3 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
@@ -120,14 +121,14 @@ class TestMrpCommon(common2.TestStockCommon):
             'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Weld Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
-                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
             ]})
 
         cls.stock_location_14 = cls.env['stock.location'].create({

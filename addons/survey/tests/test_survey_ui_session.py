@@ -82,9 +82,9 @@ class TestUiSession(HttpCase):
             'sequence': 5,
             'question_type': 'simple_choice',
             'suggested_answer_ids': [
-                (4, simple_choice_answer_1.id),
-                (4, simple_choice_answer_2.id),
-                (4, simple_choice_answer_3.id)],
+                (fields.X2ManyCmd.LINK, simple_choice_answer_1.id),
+                (fields.X2ManyCmd.LINK, simple_choice_answer_2.id),
+                (fields.X2ManyCmd.LINK, simple_choice_answer_3.id)],
         })
         scored_choice_answer_1 = self.env['survey.question.answer'].create({
             'value': 'Correct',
@@ -106,10 +106,10 @@ class TestUiSession(HttpCase):
             'sequence': 6,
             'question_type': 'simple_choice',
             'suggested_answer_ids': [
-                (4, scored_choice_answer_1.id),
-                (4, scored_choice_answer_2.id),
-                (4, scored_choice_answer_3.id),
-                (4, scored_choice_answer_4.id)],
+                (fields.X2ManyCmd.LINK, scored_choice_answer_1.id),
+                (fields.X2ManyCmd.LINK, scored_choice_answer_2.id),
+                (fields.X2ManyCmd.LINK, scored_choice_answer_3.id),
+                (fields.X2ManyCmd.LINK, scored_choice_answer_4.id)],
         })
         timed_scored_choice_answer_1 = self.env['survey.question.answer'].create({
             'value': 'Correct',
@@ -133,9 +133,9 @@ class TestUiSession(HttpCase):
             'is_time_limited': True,
             'time_limit': 1,
             'suggested_answer_ids': [
-                (4, timed_scored_choice_answer_1.id),
-                (4, timed_scored_choice_answer_2.id),
-                (4, timed_scored_choice_answer_3.id)],
+                (fields.X2ManyCmd.LINK, timed_scored_choice_answer_1.id),
+                (fields.X2ManyCmd.LINK, timed_scored_choice_answer_2.id),
+                (fields.X2ManyCmd.LINK, timed_scored_choice_answer_3.id)],
         })
 
         # =======================

@@ -4,7 +4,7 @@
 from datetime import datetime as dt
 from datetime import timedelta as td
 
-from odoo import SUPERUSER_ID
+from odoo import fields, SUPERUSER_ID
 from odoo.tests import Form
 from odoo.tests.common import SavepointCase
 
@@ -367,7 +367,7 @@ class TestReorderingRule(SavepointCase):
             "type": "product",
             "uom_id": uom_unit.id,
             "default_code": "A",
-            "route_ids": [(6, 0, purchase_route.ids)],
+            "route_ids": [(fields.X2ManyCmd.SET, 0, purchase_route.ids)],
         })
         default_vendor = self.env["res.partner"].create({
             "name": "Supplier A",

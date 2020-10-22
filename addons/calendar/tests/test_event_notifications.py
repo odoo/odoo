@@ -43,7 +43,7 @@ class TestEventNotifications(SavepointCase, MailCase):
         self.event.active = False
         with self.assertNoNotifications():
             self.event.write({
-                'partner_ids': [(4, self.partner.id)],
+                'partner_ids': [(fields.X2ManyCmd.LINK, self.partner.id)],
                 'active': False,
             })
 
@@ -101,7 +101,7 @@ class TestEventNotifications(SavepointCase, MailCase):
         }):
             self.event.write({
                 'start': self.event.start - relativedelta(days=1),
-                'partner_ids': [(4, self.partner.id)],
+                'partner_ids': [(fields.X2ManyCmd.LINK, self.partner.id)],
             })
 
     def test_bus_notif(self):
@@ -117,8 +117,8 @@ class TestEventNotifications(SavepointCase, MailCase):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
-                    'partner_ids': [(4, self.partner.id)],
-                    'alarm_ids': [(4, alarm.id)]
+                    'partner_ids': [(fields.X2ManyCmd.LINK, self.partner.id)],
+                    'alarm_ids': [(fields.X2ManyCmd.LINK, alarm.id)]
                 })
             bus_message = [{
                 "alarm_id": alarm.id,
@@ -142,8 +142,8 @@ class TestEventNotifications(SavepointCase, MailCase):
         self.event.write({
             'start': now + relativedelta(minutes=15),
             'stop': now + relativedelta(minutes=18),
-            'partner_ids': [(4, self.partner.id)],
-            'alarm_ids': [(4, alarm.id)],
+            'partner_ids': [(fields.X2ManyCmd.LINK, self.partner.id)],
+            'alarm_ids': [(fields.X2ManyCmd.LINK, alarm.id)],
         })
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {

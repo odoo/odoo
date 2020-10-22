@@ -107,7 +107,7 @@ class ChannelUsersRelation(models.Model):
             email_values.update(
                 author_id=self.channel_id.user_id.partner_id.id or self.env.company.partner_id.id,
                 auto_delete=True,
-                recipient_ids=[(4, pid) for pid in email_values['partner_ids']],
+                recipient_ids=[(fields.X2ManyCmd.LINK, pid) for pid in email_values['partner_ids']],
             )
             email_values['body_html'] = template._render_encapsulate(
                 'mail.mail_notification_light', email_values['body_html'],
@@ -446,7 +446,7 @@ class Channel(models.Model):
     def create(self, vals):
         # Ensure creator is member of its channel it is easier for him to manage it (unless it is odoobot)
         if not vals.get('channel_partner_ids') and not self.env.is_superuser():
-            vals['channel_partner_ids'] = [(0, 0, {
+            vals['channel_partner_ids'] = [(fields.X2ManyCmd.CREATE, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]
         if vals.get('description') and not vals.get('description_short'):

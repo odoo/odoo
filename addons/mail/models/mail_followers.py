@@ -361,30 +361,30 @@ GROUP BY fol.id%s%s""" % (
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'partner_id': partner_id,
-                        'subtype_ids': [(6, 0, partner_subtypes[partner_id])],
+                        'subtype_ids': [(fields.X2ManyCmd.SET, 0, partner_subtypes[partner_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
                     new_sids = set(partner_subtypes[partner_id]) - set(sids)
                     old_sids = set(sids  if sids[0] is not None else []) - set(partner_subtypes[partner_id])
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update[fol_id] = {'subtype_ids': [(fields.X2ManyCmd.LINK, sid) for sid in new_sids]}
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update[fol_id] = {'subtype_ids': [(fields.X2ManyCmd.UNLINK, sid) for sid in old_sids]}
             for channel_id in set(channel_ids or []):
                 if channel_id not in doc_cids[res_id]:
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'channel_id': channel_id,
-                        'subtype_ids': [(6, 0, channel_subtypes[channel_id])],
+                        'subtype_ids': [(fields.X2ManyCmd.SET, 0, channel_subtypes[channel_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[2] == channel_id), (False, []))
                     new_sids = set(channel_subtypes[channel_id]) - set(sids)
                     old_sids = set(sids) - set(channel_subtypes[channel_id])
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update[fol_id] = {'subtype_ids': [(fields.X2ManyCmd.LINK, sid) for sid in new_sids]}
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update[fol_id] = {'subtype_ids': [(fields.X2ManyCmd.UNLINK, sid) for sid in old_sids]}
 
         return new, update

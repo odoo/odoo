@@ -33,11 +33,11 @@ class AccountTaxReport(models.Model):
                         if new_tags:
                             tags_to_unlink = line.tag_ids.filtered(lambda x: record == x.mapped('tax_report_line_ids.report_id'))
                             # == instead of in, as we only want tags_to_unlink to contain the tags that are not linked to any other report than the one we're considering
-                            line.write({'tag_ids': [(6, 0, new_tags.ids)]})
+                            line.write({'tag_ids': [(fields.X2ManyCmd.SET, 0, new_tags.ids)]})
                             self.env['account.tax.report.line']._delete_tags_from_taxes(tags_to_unlink.ids)
 
                         elif line.mapped('tag_ids.tax_report_line_ids.report_id').filtered(lambda x: x not in self):
-                            line.write({'tag_ids': [(5, 0, 0)] + line._get_tags_create_vals(line.tag_name, vals['country_id'])})
+                            line.write({'tag_ids': [(fields.X2ManyCmd.CLEAR, 0, 0)] + line._get_tags_create_vals(line.tag_name, vals['country_id'])})
                             tags_cache[cache_key] = line.tag_ids
 
                         else:
@@ -122,7 +122,7 @@ class AccountTaxReportLine(models.Model):
 
             if existing_tags:
                 # We connect the new report line to the already existing tags
-                vals['tag_ids'] = [(6, 0, existing_tags.ids)]
+                vals['tag_ids'] = [(fields.X2ManyCmd.SET, 0, existing_tags.ids)]
             else:
                 # We create new ones
                 vals['tag_ids'] = self._get_tags_create_vals(tag_name, country.id)
@@ -143,7 +143,7 @@ class AccountTaxReportLine(models.Model):
           'tax_negate': False,
           'country_id': country_id,
         }
-        return [(0, 0, minus_tag_vals), (0, 0, plus_tag_vals)]
+        return [(fields.X2ManyCmd.CREATE, 0, minus_tag_vals), (fields.X2ManyCmd.CREATE, 0, plus_tag_vals)]
 
     def write(self, vals):
         tag_name_postponed = None
@@ -192,7 +192,7 @@ class AccountTaxReportLine(models.Model):
                             # linking it to the first report line of the record set
                             first_record = records_to_link[0]
                             tags_to_remove += first_record.tag_ids
-                            first_record.write({'tag_name': tag_name_postponed, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
+                            first_record.write({'tag_name': tag_name_postponed, 'tag_ids': [(fields.X2ManyCmd.CLEAR, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
                             existing_tags = first_record.tag_ids
                             records_to_link -= first_record
 
@@ -200,7 +200,7 @@ class AccountTaxReportLine(models.Model):
                         tags_to_remove += records_to_link.mapped('tag_ids')
                         records_to_link = tags_to_remove.mapped('tax_report_line_ids')
                         self._delete_tags_from_taxes(tags_to_remove.ids)
-                        records_to_link.write({'tag_name': tag_name_postponed, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
+                        records_to_link.write({'tag_name': tag_name_postponed, 'tag_ids': [(fields.X2ManyCmd.DELETE, tag.id) for tag in tags_to_remove] + [(fields.X2ManyCmd.SET, 0, existing_tags.ids)]})
 
                 else:
                     # tag_name was set empty, so we remove the tags on current lines

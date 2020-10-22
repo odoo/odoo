@@ -3,6 +3,7 @@
 
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon
 from odoo.tests import users
+from odoo.fields import X2ManyCmd
 
 
 class TestEventCrm(TestEventFullCommon):
@@ -21,12 +22,12 @@ class TestEventCrm(TestEventFullCommon):
         # adding some tickets to SO
         cls.customer_so.write({
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'event_id': cls.event_0.id,
                     'event_ticket_id': ticket1.id,
                     'product_id': ticket1.product_id.id,
                     'product_uom_qty': cls.TICKET1_COUNT,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'event_id': cls.event_0.id,
                     'event_ticket_id': ticket2.id,
                     'product_id': ticket2.product_id.id,
@@ -82,7 +83,7 @@ class TestEventCrm(TestEventFullCommon):
         public_so = self.env['sale.order'].create({
             'partner_id': public_partner.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'event_id': self.event_0.id,
                     'event_ticket_id': self.event_0.event_ticket_ids[0].id,
                     'product_id': self.event_0.event_ticket_ids[0].product_id.id,

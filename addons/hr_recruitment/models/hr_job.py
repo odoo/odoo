@@ -15,7 +15,7 @@ class Job(models.Model):
         return self.env.company.partner_id
 
     def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+        return [(fields.X2ManyCmd.SET, 0, [self.env.uid])]
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
@@ -54,8 +54,8 @@ class Job(models.Model):
                 unfavorited_jobs |= job
             else:
                 favorited_jobs |= job
-        favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
-        unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
+        favorited_jobs.write({'favorite_user_ids': [(fields.X2ManyCmd.LINK, self.env.uid)]})
+        unfavorited_jobs.write({'favorite_user_ids': [(fields.X2ManyCmd.UNLINK, self.env.uid)]})
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
@@ -114,7 +114,7 @@ class Job(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
+        vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(fields.X2ManyCmd.LINK, self.env.uid)]
         new_job = super(Job, self).create(vals)
         utm_linkedin = self.env.ref("utm.utm_source_linkedin", raise_if_not_found=False)
         if utm_linkedin:

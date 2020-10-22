@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestSurveyRandomize(TransactionCase):
@@ -38,7 +39,7 @@ class TestSurveyRandomize(TransactionCase):
 
         self.survey1 = self.env['survey.survey'].sudo().create({
             'title': "S0",
-            'question_and_page_ids': [(6, 0, question_and_pages.ids)],
+            'question_and_page_ids': [(X2ManyCmd.SET, 0, question_and_pages.ids)],
             'questions_selection': 'random'
         })
 

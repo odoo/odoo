@@ -25,10 +25,10 @@ class StockMoveLine(models.Model):
                 finished_lots |= mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id).move_line_ids.lot_id
                 if finished_lots:
                     produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in finished_lots)
-                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                    line.produce_line_ids = [(fields.X2ManyCmd.SET, 0, produced_move_lines.ids)]
                 else:
                     produced_move_lines = mo.move_finished_ids.move_line_ids
-                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                    line.produce_line_ids = [(fields.X2ManyCmd.SET, 0, produced_move_lines.ids)]
         return res
 
     def _get_similar_move_lines(self):

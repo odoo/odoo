@@ -23,8 +23,8 @@ class TestProjectrecurrence(SavepointCase):
             'name': 'Recurring',
             'allow_recurring_tasks': True,
             'type_ids': [
-                (4, cls.stage_a.id),
-                (4, cls.stage_b.id),
+                (fields.X2ManyCmd.LINK, cls.stage_a.id),
+                (fields.X2ManyCmd.LINK, cls.stage_b.id),
             ]
         })
 

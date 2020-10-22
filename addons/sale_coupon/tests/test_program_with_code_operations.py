@@ -3,6 +3,7 @@
 
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestProgramWithCodeOperations(TestSaleCouponCommon):
@@ -61,7 +62,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(coupon.state, 'used')
 
         # Remove the product A from the sale order
-        order.write({'order_line': [(2, order.order_line[0].id, False)]})
+        order.write({'order_line': [(X2ManyCmd.DELETE, order.order_line[0].id, False)]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 0)
         self.assertEqual(coupon.state, 'new')
@@ -78,7 +79,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         first_pricelist = self.env['product.pricelist'].create({
             'name': 'First pricelist',
             'discount_policy': 'with_discount',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 10,

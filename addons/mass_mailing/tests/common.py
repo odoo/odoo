@@ -3,6 +3,7 @@
 
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_user
+from odoo.fields import X2ManyCmd
 
 
 class MassMailCase(MailCase, MockLinkTracker):
@@ -85,17 +86,17 @@ class MassMailCommon(MailCommon, MassMailCase):
         cls.mailing_list_1 = cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'List1',
             'contact_ids': [
-                (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
-                (0, 0, {'name': 'Gorramts', 'email': 'gorramts@example.com'}),
-                (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Gorramts', 'email': 'gorramts@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
             ]
         })
         cls.mailing_list_2 = cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'List2',
             'contact_ids': [
-                (0, 0, {'name': 'Gilberte', 'email': 'gilberte@example.com'}),
-                (0, 0, {'name': 'Gilberte En Mieux', 'email': 'gilberte@example.com'}),
-                (0, 0, {'name': 'Norbert', 'email': 'norbert@example.com'}),
-                (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Gilberte', 'email': 'gilberte@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Gilberte En Mieux', 'email': 'gilberte@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Norbert', 'email': 'norbert@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
             ]
         })

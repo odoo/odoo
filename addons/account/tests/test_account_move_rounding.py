@@ -2,6 +2,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -19,8 +20,8 @@ class TestAccountMoveRounding(AccountTestInvoicingCommon):
         """
         move = self.env['account.move'].create({
             'line_ids': [
-                (0, 0, {'debit': 100.0 / 3, 'account_id': self.company_data['default_account_revenue'].id}),
-                (0, 0, {'credit': 100.0 / 3, 'account_id': self.company_data['default_account_revenue'].id}),
+                (X2ManyCmd.CREATE, 0, {'debit': 100.0 / 3, 'account_id': self.company_data['default_account_revenue'].id}),
+                (X2ManyCmd.CREATE, 0, {'credit': 100.0 / 3, 'account_id': self.company_data['default_account_revenue'].id}),
             ],
         })
 

@@ -148,11 +148,11 @@ class Project(models.Model):
                 not_fav_projects |= project
 
         # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
+        not_fav_projects.write({'favorite_user_ids': [(fields.X2ManyCmd.LINK, self.env.uid)]})
+        favorite_projects.write({'favorite_user_ids': [(fields.X2ManyCmd.UNLINK, self.env.uid)]})
 
     def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+        return [(fields.X2ManyCmd.SET, 0, [self.env.uid])]
 
     name = fields.Char("Name", index=True, required=True, tracking=True)
     description = fields.Html()
@@ -329,7 +329,7 @@ class Project(models.Model):
             old_to_new_tasks[task.id] = new_task.id
             tasks += new_task
 
-        return project.write({'tasks': [(6, 0, tasks.ids)]})
+        return project.write({'tasks': [(fields.X2ManyCmd.SET, 0, tasks.ids)]})
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -462,8 +462,8 @@ class Project(models.Model):
                 not_fav_projects |= project
 
         # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
+        not_fav_projects.write({'favorite_user_ids': [(fields.X2ManyCmd.LINK, self.env.uid)]})
+        favorite_projects.write({'favorite_user_ids': [(fields.X2ManyCmd.UNLINK, self.env.uid)]})
 
     def action_view_tasks(self):
         action = self.with_context(active_id=self.id, active_ids=self.ids) \
@@ -861,7 +861,7 @@ class Task(models.Model):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
-            task.attachment_ids = [(6, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
+            task.attachment_ids = [(fields.X2ManyCmd.SET, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
 
     @api.depends('project_id.allowed_user_ids', 'project_id.privacy_visibility')
     def _compute_allowed_user_ids(self):
@@ -997,7 +997,7 @@ class Task(models.Model):
         if partner_ids:
             new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
             tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')
-            tasks.write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
+            tasks.write({'allowed_user_ids': [(fields.X2ManyCmd.LINK, user.id) for user in new_allowed_users]})
         return res
 
     # ----------------------------------------
@@ -1165,7 +1165,7 @@ class Task(models.Model):
                 if task.project_id.partner_id:
                     task.partner_id = task.project_id.partner_id
             else:
-                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id 
+                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id
 
     @api.depends('partner_id.email', 'parent_id.email_from')
     def _compute_email_from(self):

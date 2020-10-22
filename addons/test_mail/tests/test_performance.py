@@ -6,6 +6,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
+from odoo.fields import X2ManyCmd
 
 
 @tagged('mail_performance')
@@ -25,7 +26,7 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
         })
 
         # patch registry to simulate a ready environment
@@ -181,7 +182,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'login': 'paul',
             'email': 'user.test.paulette@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
 
         # automatically follow activities, for backward compatibility concerning query count
@@ -267,7 +268,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'default_res_id': test_record.id,
             }).create({
                 'body': '<p>Test Body</p>',
-                'partner_ids': [(4, customer_id)],
+                'partner_ids': [(X2ManyCmd.LINK, customer_id)],
             })
 
         with self.assertQueryCount(__system__=29, emp=32):
@@ -430,7 +431,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'email': 'p.p@example.com',
             'signature': '--\nOlivia',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_portal').id])],
         })
 
         # setup mail gateway
@@ -478,7 +479,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
             'mail_message_id': message.id,
-            'recipient_ids': [(4, pid) for pid in self.partners.ids],
+            'recipient_ids': [(X2ManyCmd.LINK, pid) for pid in self.partners.ids],
         })
         mail_ids = mail.ids
         with self.assertQueryCount(__system__=7, emp=7):
@@ -741,35 +742,35 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'res_id': self.container.id,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
             'attachment_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'test file 0 - %d' % j,
                     'datas': 'data',
                 }) for j in range(2)
             ],
             'notification_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'res_partner_id': self.partners[3].id,
                     'notification_type': 'inbox',
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'res_partner_id': self.partners[4].id,
                     'notification_type': 'email',
                     'notification_status': 'exception',
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'res_partner_id': self.partners[6].id,
                     'notification_type': 'email',
                     'notification_status': 'exception',
                 }),
             ],
             'tracking_value_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'field': name_field.id,
                     'field_desc': 'Name',
                     'old_value_char': 'old 0',
                     'new_value_char': 'new 0',
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'field': customer_id_field.id,
                     'field_desc': 'Customer',
                     'old_value_integer': self.partners[7].id,
@@ -785,30 +786,30 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'res_id': self.container.id,
             'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
             'attachment_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'test file 1 - %d' % j,
                     'datas': 'data',
                 }) for j in range(2)
             ],
             'notification_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'res_partner_id': self.partners[5].id,
                     'notification_type': 'inbox',
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'res_partner_id': self.partners[6].id,
                     'notification_type': 'email',
                     'notification_status': 'exception',
                 }),
             ],
             'tracking_value_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'field': name_field.id,
                     'field_desc': 'Name',
                     'old_value_char': 'old 1',
                     'new_value_char': 'new 1',
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'field': customer_id_field.id,
                     'field_desc': 'Customer',
                     'old_value_integer': self.partners[7].id,
@@ -855,14 +856,14 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'login': 'user_follower_email',
             'email': 'user_follower_email@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
         self.user_follower_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'user_follower_inbox',
             'login': 'user_follower_inbox',
             'email': 'user_follower_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
         self.partner_follower = self.env['res.partner'].with_context(self._quick_create_ctx).create({
             'name': 'partner_follower',
@@ -880,14 +881,14 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'login': 'user_inbox',
             'email': 'user_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
         self.user_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'user_email',
             'login': 'user_email',
             'email': 'user_email@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
         self.partner = self.env['res.partner'].with_context(self._quick_create_ctx).create({
             'name': 'partner',
@@ -907,24 +908,24 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'login': 'user_channel_inbox',
             'email': 'user_channel_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
         self.user_channel_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'user_channel_email',
             'login': 'user_channel_email',
             'email': 'user_channel_email@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_user').id])],
         })
         # channels
         self.channel_inbox = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
             'name': 'channel_inbox',
-            'channel_partner_ids': [(4, self.partner_channel_inbox.id), (4, self.user_channel_inbox.partner_id.id)]
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_channel_inbox.id), (X2ManyCmd.LINK, self.user_channel_inbox.partner_id.id)]
         })
         self.channel_email = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
             'name': 'channel_email',
             'email_send': True,
-            'channel_partner_ids': [(4, self.partner_channel_email.id), (4, self.user_channel_email.partner_id.id)]
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner_channel_email.id), (X2ManyCmd.LINK, self.user_channel_email.partner_id.id)]
         })
         self.vals = [{
             'datas': base64.b64encode(bytes("attachement content %s" % i, 'utf-8')),

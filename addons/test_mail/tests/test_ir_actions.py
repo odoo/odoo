@@ -3,6 +3,7 @@
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
@@ -22,8 +23,8 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         random_partner = self.env['res.partner'].create({'name': 'Thierry Wololo'})
         self.action.write({
             'state': 'followers',
-            'partner_ids': [(4, self.env.ref('base.partner_admin').id), (4, random_partner.id)],
-            'channel_ids': [(4, self.env.ref('mail.channel_all_employees').id)]
+            'partner_ids': [(X2ManyCmd.LINK, self.env.ref('base.partner_admin').id), (X2ManyCmd.LINK, random_partner.id)],
+            'channel_ids': [(X2ManyCmd.LINK, self.env.ref('mail.channel_all_employees').id)]
         })
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | random_partner)

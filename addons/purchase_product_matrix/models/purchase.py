@@ -91,7 +91,7 @@ class PurchaseOrder(models.Model):
                     last_sequence = self.order_line[-1:].sequence
                     if last_sequence:
                         default_po_line_vals['sequence'] = last_sequence
-                    new_lines.append((0, 0, dict(
+                    new_lines.append((fields.X2ManyCmd.CREATE, 0, dict(
                         default_po_line_vals,
                         product_id=product.id,
                         product_qty=qty,

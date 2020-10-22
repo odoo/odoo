@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.fields import X2ManyCmd
 from odoo.exceptions import UserError
 
 
@@ -29,7 +30,7 @@ class MailResendMessage(models.TransientModel):
         if message_id:
             mail_message_id = self.env['mail.message'].browse(message_id)
             notification_ids = mail_message_id.notification_ids.filtered(lambda notif: notif.notification_type == 'email' and notif.notification_status in ('exception', 'bounce'))
-            partner_ids = [(0, 0, {
+            partner_ids = [(X2ManyCmd.CREATE, 0, {
                 "partner_id": notif.res_partner_id.id,
                 "name": notif.res_partner_id.name,
                 "email": notif.res_partner_id.email,
@@ -42,7 +43,7 @@ class MailResendMessage(models.TransientModel):
             else:
                 partner_readonly = not self.env['res.partner'].check_access_rights('write', raise_exception=False)
             rec['partner_readonly'] = partner_readonly
-            rec['notification_ids'] = [(6, 0, notification_ids.ids)]
+            rec['notification_ids'] = [(X2ManyCmd.SET, 0, notification_ids.ids)]
             rec['mail_message_id'] = mail_message_id.id
             rec['partner_ids'] = partner_ids
         else:

@@ -2,6 +2,8 @@
 
 from odoo.tests.common import SavepointCase
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
+
 
 class TestProjectCommon(SavepointCase):
 
@@ -31,25 +33,25 @@ class TestProjectCommon(SavepointCase):
             'email': 'b.t@example.com',
             'signature': 'SignBert',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]})
+            'groups_id': [(X2ManyCmd.SET, 0, [cls.env.ref('base.group_public').id])]})
         cls.user_portal = Users.create({
             'name': 'Chell Gladys',
             'login': 'chell',
             'email': 'chell@gladys.portal',
             'signature': 'SignChell',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
+            'groups_id': [(X2ManyCmd.SET, 0, [cls.env.ref('base.group_portal').id])]})
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
             'login': 'Armande',
             'email': 'armande.projectuser@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_employee.id, user_group_project_user.id])]
         })
         cls.user_projectmanager = Users.create({
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
             'email': 'bastien.projectmanager@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_manager.id])]})
+            'groups_id': [(X2ManyCmd.SET, 0, [user_group_employee.id, user_group_project_manager.id])]})
 
         # Test 'Pigs' project
         cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
@@ -74,11 +76,11 @@ class TestProjectCommon(SavepointCase):
             'alias_name': 'project+goats',
             'partner_id': cls.partner_1.id,
             'type_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'New',
                     'sequence': 1,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'Won',
                     'sequence': 10,
                 })]

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo import tools
+from odoo import fields, tools
 
 
 class TestCRMPLS(TransactionCase):
@@ -31,19 +31,19 @@ class TestCRMPLS(TransactionCase):
             if i < 50:  # tag 1
                 leads_to_create.append({
                     'name': 'lead_tag_%s' % str(i),
-                    'tag_ids': [(4, tag_ids[0])],
+                    'tag_ids': [(fields.X2ManyCmd.LINK, tag_ids[0])],
                     'team_id': team_id
                 })
             elif i < 100:  # tag 2
                 leads_to_create.append({
                     'name': 'lead_tag_%s' % str(i),
-                    'tag_ids': [(4, tag_ids[1])],
+                    'tag_ids': [(fields.X2ManyCmd.LINK, tag_ids[1])],
                     'team_id': team_id
                 })
             else:  # tag 1 and 2
                 leads_to_create.append({
                     'name': 'lead_tag_%s' % str(i),
-                    'tag_ids': [(6, 0, tag_ids)],
+                    'tag_ids': [(fields.X2ManyCmd.SET, 0, tag_ids)],
                     'team_id': team_id
                 })
 
@@ -328,25 +328,25 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 23.51, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.05, 2), 0)
 
-        lead_tag_1.tag_ids = [(5, 0, 0)]  # remove all tags
-        lead_tag_1_2.tag_ids = [(3, tag_ids[1], 0)]  # remove tag 2
+        lead_tag_1.tag_ids = [(fields.X2ManyCmd.CLEAR, 0, 0)]  # remove all tags
+        lead_tag_1_2.tag_ids = [(fields.X2ManyCmd.UNLINK, tag_ids[1], 0)]  # remove tag 2
 
         self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 28.6, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 23.51, 2), 0)  # no impact
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 33.69, 2), 0)
 
-        lead_tag_1.tag_ids = [(4, tag_ids[1])]  # add tag 2
-        lead_tag_2.tag_ids = [(4, tag_ids[0])]  # add tag 1
-        lead_tag_1_2.tag_ids = [(3, tag_ids[0]), (4, tag_ids[1])]  # remove tag 1 / add tag 2
+        lead_tag_1.tag_ids = [(fields.X2ManyCmd.LINK, tag_ids[1])]  # add tag 2
+        lead_tag_2.tag_ids = [(fields.X2ManyCmd.LINK, tag_ids[0])]  # add tag 1
+        lead_tag_1_2.tag_ids = [(fields.X2ManyCmd.UNLINK, tag_ids[0]), (fields.X2ManyCmd.LINK, tag_ids[1])]  # remove tag 1 / add tag 2
 
         self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 23.51, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 28.05, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 23.51, 2), 0)
 
         # go back to initial situation
-        lead_tag_1.tag_ids = [(3, tag_ids[1]), (4, tag_ids[0])]  # remove tag 2 / add tag 1
-        lead_tag_2.tag_ids = [(3, tag_ids[0])]  # remove tag 1
-        lead_tag_1_2.tag_ids = [(4, tag_ids[0])]  # add tag 1
+        lead_tag_1.tag_ids = [(fields.X2ManyCmd.UNLINK, tag_ids[1]), (fields.X2ManyCmd.LINK, tag_ids[0])]  # remove tag 2 / add tag 1
+        lead_tag_2.tag_ids = [(fields.X2ManyCmd.UNLINK, tag_ids[0])]  # remove tag 1
+        lead_tag_1_2.tag_ids = [(fields.X2ManyCmd.LINK, tag_ids[0])]  # add tag 1
 
         self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 33.69, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 23.51, 2), 0)

@@ -34,7 +34,7 @@ class TaxAdjustments(models.TransientModel):
         adjustment_tag = self.tax_report_line_id.tag_ids.filtered(filter_lambda)
 
         # Vals for the amls corresponding to the ajustment tag
-        move_line_vals.append((0, 0, {
+        move_line_vals.append((fields.X2ManyCmd.CREATE, 0, {
             'name': self.reason,
             'debit': is_debit and abs(self.amount) or 0,
             'credit': not is_debit and abs(self.amount) or 0,
@@ -43,7 +43,7 @@ class TaxAdjustments(models.TransientModel):
         }))
 
         # Vals for the counterpart line
-        move_line_vals.append((0, 0, {
+        move_line_vals.append((fields.X2ManyCmd.CREATE, 0, {
             'name': self.reason,
             'debit': not is_debit and abs(self.amount) or 0,
             'credit': is_debit and abs(self.amount) or 0,

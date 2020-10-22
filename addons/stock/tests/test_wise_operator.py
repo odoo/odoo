@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestWiseOperator(TransactionCase):
@@ -40,7 +41,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -87,7 +88,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -112,7 +113,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,

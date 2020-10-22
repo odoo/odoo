@@ -30,7 +30,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'type': 'consu',
             'is_published': True,
             'sale_ok': True,
-            'public_categ_ids': [(4, public_category.id)],
+            'public_categ_ids': [(fields.X2ManyCmd.LINK, public_category.id)],
             'taxes_id': False,
         })
 

@@ -71,7 +71,7 @@ class l10n_eu_service(models.TransientModel):
         string='EU Customers From', required=True)
 
     def _get_repartition_line_copy_values(self, original_rep_lines):
-        return [(0, 0, {
+        return [(fields.X2ManyCmd.CREATE, 0, {
             'factor_percent': line.factor_percent,
             'repartition_type': line.repartition_type,
             'account_id': line.repartition_type == 'tax' and (self.account_collected_id.id or line.account_id.id) or None,
@@ -98,7 +98,7 @@ class l10n_eu_service(models.TransientModel):
             }
             tax = account_tax.create(data_tax)
             if self.fiscal_position_id:
-                account_ids = [(6, 0, self.fiscal_position_id.account_ids.ids)]
+                account_ids = [(fields.X2ManyCmd.SET, 0, self.fiscal_position_id.account_ids.ids)]
             else:
                 account_ids = False
             #create a fiscal position for the country
@@ -111,7 +111,7 @@ class l10n_eu_service(models.TransientModel):
                 'auto_apply': True,
                 'country_id': country.id,
                 'account_ids': account_ids,
-                'tax_ids': [(0, 0, {'tax_src_id': self.tax_id.id, 'tax_dest_id': tax.id})],
+                'tax_ids': [(fields.X2ManyCmd.CREATE, 0, {'tax_src_id': self.tax_id.id, 'tax_dest_id': tax.id})],
             }
             fpos.create(data_fiscal)
 

@@ -5,6 +5,7 @@ from odoo.tests.common import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import ValidationError
+from odoo.fields import X2ManyCmd
 
 
 class TestAutomaticLeaveDates(TestHrHolidaysCommon):
@@ -21,7 +22,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     def test_no_attendances(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'No Attendances',
-            'attendance_ids': [(5, 0, 0)],
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0)],
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -40,15 +41,15 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     def test_single_attendance_on_morning_and_afternoon(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'simple morning + afternoon',
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning',
                                    'hour_from': 8,
                                    'hour_to': 12,
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                }),
-                               (0, 0, {
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday afternoon',
                                    'hour_from': 13,
                                    'hour_to': 17,
@@ -78,22 +79,22 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     def test_multiple_attendance_on_morning(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'multi morning',
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning 1',
                                    'hour_from': 8,
                                    'hour_to': 10,
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                }),
-                               (0, 0, {
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning 2',
                                    'hour_from': 10.25,
                                    'hour_to': 12.25,
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                }),
-                               (0, 0, {
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday afternoon',
                                    'hour_from': 13,
                                    'hour_to': 17,
@@ -122,8 +123,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     def test_attendance_on_morning(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'Morning only',
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'Monday All day',
                                    'hour_from': 8,
                                    'hour_to': 16,
@@ -154,8 +155,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.env.user.tz = 'Europe/Brussels'
         calendar = self.env['resource.calendar'].create({
             'name': 'auto next day',
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'tuesday morning',
                                    'hour_from': 8,
                                    'hour_to': 12,
@@ -184,8 +185,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.env.user.tz = 'Europe/Brussels'
         calendar = self.env['resource.calendar'].create({
             'name': 'auto next day',
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning',
                                    'hour_from': 8,
                                    'hour_to': 12,
@@ -215,8 +216,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'auto next day',
             'two_weeks_calendar': True,
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning odd week',
                                    'hour_from': 8,
                                    'hour_to': 12,
@@ -224,7 +225,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'dayofweek': '0',
                                    'week_type': '0',
                                }),
-                               (0, 0, {
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning even week',
                                    'hour_from': 10,
                                    'hour_to': 12,
@@ -267,8 +268,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'auto next day',
             'two_weeks_calendar': True,
-            'attendance_ids': [(5, 0, 0),
-                               (0, 0, {
+            'attendance_ids': [(X2ManyCmd.CLEAR, 0, 0),
+                               (X2ManyCmd.CREATE, 0, {
                                    'name': 'monday morning odd week',
                                    'hour_from': 8,
                                    'hour_to': 12,

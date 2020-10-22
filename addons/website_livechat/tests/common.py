@@ -19,7 +19,7 @@ class TestLivechatCommon(tests.TransactionCase):
 
         self.livechat_channel = self.env['im_livechat.channel'].create({
             'name': 'The basic channel',
-            'user_ids': [(6, 0, [self.operator.id])]
+            'user_ids': [(fields.X2ManyCmd.SET, 0, [self.operator.id])]
         })
 
         self.max_sessions_per_operator = 5

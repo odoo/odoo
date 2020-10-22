@@ -1829,10 +1829,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for name, value in defaults.items():
             if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
                 # convert a list of ids into a list of commands
-                defaults[name] = [(6, 0, value)]
+                defaults[name] = [(odoo.fields.X2ManyCmd.SET, 0, value)]
             elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
                 # convert a list of dicts into a list of commands
-                defaults[name] = [(0, 0, x) for x in value]
+                defaults[name] = [(odoo.fields.X2ManyCmd.CREATE, 0, x) for x in value]
         defaults.update(values)
         return defaults
 
@@ -1998,7 +1998,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
-        to the query if order should be computed against m2o field. 
+        to the query if order should be computed against m2o field.
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
         :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
@@ -2095,9 +2095,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'field': split[0],
             'groupby': gb,
-            'type': field_type, 
+            'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
-            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field,
         }
@@ -2122,8 +2122,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _read_group_format_result(self, data, annotated_groupbys, groupby, domain):
         """
-            Helper method to format the data contained in the dictionary data by 
-            adding the domain corresponding to its values, the groupbys in the 
+            Helper method to format the data contained in the dictionary data by
+            adding the domain corresponding to its values, the groupbys in the
             context and by properly formatting the date/datetime values.
 
         :param data: a single group
@@ -2202,10 +2202,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 The possible aggregation functions are the ones provided by PostgreSQL
                 (https://www.postgresql.org/docs/current/static/functions-aggregate.html)
                 and 'count_distinct', with the expected meaning.
-        :param list groupby: list of groupby descriptions by which the records will be grouped.  
+        :param list groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string 'field:groupby_function'.  Right now, the only functions supported
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
+                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
@@ -2213,7 +2213,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
-        :param bool lazy: if true, the results are only grouped by the first groupby and the 
+        :param bool lazy: if true, the results are only grouped by the first groupby and the
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
                 done in one call.
         :return: list of dictionaries(one dictionary for each record) containing:
@@ -2370,7 +2370,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
-            # in a sane way 
+            # in a sane way
             result = self._read_group_fill_results(
                 domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                 aggregated_fields, count_field, result, read_group_order=order,
@@ -3916,7 +3916,7 @@ Fields:
             # that this limit is well managed by PostgreSQL.
             # In INSERT queries, we inject integers (small) and larger data (TEXT blocks for
             # example).
-            # 
+            #
             # The problem then becomes: how to "estimate" the right size of the batch to have
             # good performance?
             #
@@ -4521,9 +4521,9 @@ Fields:
                 lines = [rec.copy_data()[0] for rec in self[name].sorted(key='id')]
                 # the lines are duplicated using the wrong (old) parent, but then
                 # are reassigned to the correct one thanks to the (0, 0, ...)
-                default[name] = [(0, 0, line) for line in lines if line]
+                default[name] = [(odoo.fields.X2ManyCmd.CREATE, 0, line) for line in lines if line]
             elif field.type == 'many2many':
-                default[name] = [(6, 0, self[name].ids)]
+                default[name] = [(odoo.fields.X2ManyCmd.SET, 0, self[name].ids)]
             else:
                 default[name] = field.convert_to_write(self[name], self)
 
@@ -6028,7 +6028,7 @@ Fields:
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
-                        result[name] = commands = [(5,)]
+                        result[name] = commands = [(odoo.fields.X2ManyCmd.CLEAR,)]
                         # The purpose of the following line is to enable the prefetching.
                         # In the loop below, line._prefetch_ids actually depends on the
                         # value of record[name] in cache (see prefetch_ids on x2many
@@ -6052,9 +6052,9 @@ Fields:
                                     # send all fields because the web client
                                     # might need them to evaluate modifiers
                                     line_diff = line_snapshot.diff({})
-                                    commands.append((1, line.id, line_diff))
+                                    commands.append((odoo.fields.X2ManyCmd.UPDATE, line.id, line_diff))
                                 else:
-                                    commands.append((4, line.id))
+                                    commands.append((odoo.fields.X2ManyCmd.LINK, line.id))
                 return result
 
         nametree = PrefixTree(self.browse(), field_onchange)
@@ -6266,7 +6266,7 @@ Fields:
         field_generators = self._populate_factories()
         if not field_generators:
             return self.browse() # maybe create an automatic generator?
-            
+
         records_batches = []
         generator = populate.chain_factories(field_generators, self._name)
         while record_count <= min_size or not complete:

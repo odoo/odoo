@@ -6,6 +6,7 @@ from psycopg2 import IntegrityError
 from odoo.tests import tagged, users
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tools.misc import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class BaseFollowersTest(TestMailCommon):
@@ -18,7 +19,7 @@ class BaseFollowersTest(TestMailCommon):
         cls._create_channel_listener()
 
         # allow employee to update partners
-        cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
+        cls.user_employee.write({'groups_id': [(X2ManyCmd.LINK, cls.env.ref('base.group_partner_manager').id)]})
 
         Subtype = cls.env['mail.message.subtype']
         # global

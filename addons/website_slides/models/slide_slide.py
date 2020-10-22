@@ -610,7 +610,7 @@ class Slide(models.Model):
         for new_slide in new_slides:
             new_vote = 1 if upvote else -1
             new_slide.write({
-                'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
+                'slide_partner_ids': [(fields.X2ManyCmd.CREATE, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
             karma_to_add += new_slide.channel_id.karma_gen_slide_vote * (1 if upvote else -1)
 

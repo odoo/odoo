@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
 
 
@@ -26,8 +27,8 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         quantity = 26
 
         # Create a pruchase requisition with type blanket order and two product
-        line1 = (0, 0, {'product_id': self.product_09.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product09})
-        line2 = (0, 0, {'product_id': self.product_13.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product13})
+        line1 = (fields.X2ManyCmd.CREATE, 0, {'product_id': self.product_09.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product09})
+        line2 = (fields.X2ManyCmd.CREATE, 0, {'product_id': self.product_13.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product13})
 
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
@@ -90,7 +91,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             'name': 'Blanket test',
             'quantity_copy': 'none'
         })
-        line1 = (0, 0, {
+        line1 = (fields.X2ManyCmd.CREATE, 0, {
             'product_id': product2.id,
             'product_uom_id': product2.uom_po_id.id,
             'price_unit': 41,

@@ -213,7 +213,7 @@ class PosSession(models.Model):
 
         values.update({
             'name': pos_name,
-            'statement_ids': [(6, 0, statement_ids.ids)],
+            'statement_ids': [(fields.X2ManyCmd.SET, 0, statement_ids.ids)],
             'config_id': config_id,
             'update_stock_at_closing': update_stock_at_closing,
         })
@@ -784,8 +784,8 @@ class PosSession(models.Model):
             'name': name,
             'account_id': account_id,
             'move_id': self.move_id.id,
-            'tax_ids': [(6, 0, tax_ids)],
-            'tax_tag_ids': [(6, 0, base_tags.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_ids)],
+            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, base_tags.ids)],
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
@@ -798,7 +798,7 @@ class PosSession(models.Model):
             'move_id': self.move_id.id,
             'tax_base_amount': abs(base_amount_converted),
             'tax_repartition_line_id': repartition_line_id,
-            'tax_tag_ids': [(6, 0, tag_ids)],
+            'tax_tag_ids': [(fields.X2ManyCmd.SET, 0, tag_ids)],
         }
         return self._debit_amounts(partial_args, amount, amount_converted)
 

@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form, tagged
+from odoo.fields import X2ManyCmd
 from odoo.addons.mrp.tests.common import TestMrpCommon
 import uuid
+
 
 class TestTraceability(TestMrpCommon):
     TRACKING_TYPES = ['none', 'serial', 'lot']
@@ -26,7 +28,7 @@ class TestTraceability(TestMrpCommon):
         stock_id = self.env.ref('stock.stock_location_stock').id
         inventory_adjustment = self.env['stock.inventory'].create({
             'name': 'Initial Inventory',
-            'location_ids': [(4, stock_id)],
+            'location_ids': [(X2ManyCmd.LINK, stock_id)],
         })
         inventory_adjustment.action_start()
         inventory_adjustment.write({
@@ -47,9 +49,9 @@ class TestTraceability(TestMrpCommon):
                 'product_qty': 1.0,
                 'type': 'normal',
                 'bom_line_ids': [
-                    (0, 0, {'product_id': consumed_no_track.id, 'product_qty': 1}),
-                    (0, 0, {'product_id': consumed_lot.id, 'product_qty': 1}),
-                    (0, 0, {'product_id': consumed_serial.id, 'product_qty': 1}),
+                    (X2ManyCmd.CREATE, 0, {'product_id': consumed_no_track.id, 'product_qty': 1}),
+                    (X2ManyCmd.CREATE, 0, {'product_id': consumed_lot.id, 'product_qty': 1}),
+                    (X2ManyCmd.CREATE, 0, {'product_id': consumed_serial.id, 'product_qty': 1}),
                 ],
             })
 
@@ -150,12 +152,12 @@ class TestTraceability(TestMrpCommon):
             'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_1.id, 'product_qty': 1}),
-                (0, 0, {'product_id': product_2.id, 'product_qty': 1})
+                (X2ManyCmd.CREATE, 0, {'product_id': product_1.id, 'product_qty': 1}),
+                (X2ManyCmd.CREATE, 0, {'product_id': product_2.id, 'product_qty': 1})
             ],
             'byproduct_ids': [
-                (0, 0, {'product_id': byproduct_1.id, 'product_qty': 1, 'product_uom_id': byproduct_1.uom_id.id}),
-                (0, 0, {'product_id': byproduct_2.id, 'product_qty': 1, 'product_uom_id': byproduct_2.uom_id.id})
+                (X2ManyCmd.CREATE, 0, {'product_id': byproduct_1.id, 'product_qty': 1, 'product_uom_id': byproduct_1.uom_id.id}),
+                (X2ManyCmd.CREATE, 0, {'product_id': byproduct_2.id, 'product_qty': 1, 'product_uom_id': byproduct_2.uom_id.id})
             ]})
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product_final

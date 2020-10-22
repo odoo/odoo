@@ -6,6 +6,7 @@ import logging
 
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 _logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ class TestPingenSend(HttpCase):
             'partner_id': self.env.ref("base.res_partner_2").id,
             'currency_id': self.env.ref('base.EUR').id,
             'invoice_date': '2018-12-11',
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.env.ref("product.product_product_4").id,
                 'quantity': 1,
                 'price_unit': 42,

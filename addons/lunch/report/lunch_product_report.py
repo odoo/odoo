@@ -77,9 +77,9 @@ class LunchProductReport(models.Model):
     def write(self, values):
         if 'is_favorite' in values:
             if values['is_favorite']:
-                commands = [(4, product_id) for product_id in self.mapped('product_id').ids]
+                commands = [(fields.X2ManyCmd.LINK, product_id) for product_id in self.mapped('product_id').ids]
             else:
-                commands = [(3, product_id) for product_id in self.mapped('product_id').ids]
+                commands = [(fields.X2ManyCmd.UNLINK, product_id) for product_id in self.mapped('product_id').ids]
             self.env.user.write({
                 'favorite_lunch_product_ids': commands,
             })

@@ -125,11 +125,11 @@ class DeliveryCarrier(models.Model):
 
     @api.onchange('state_ids')
     def onchange_states(self):
-        self.country_ids = [(6, 0, self.country_ids.ids + self.state_ids.mapped('country_id.id'))]
+        self.country_ids = [(fields.X2ManyCmd.SET, 0, self.country_ids.ids + self.state_ids.mapped('country_id.id'))]
 
     @api.onchange('country_ids')
     def onchange_countries(self):
-        self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
+        self.state_ids = [(fields.X2ManyCmd.SET, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
 
     # -------------------------- #
     # API for external providers #

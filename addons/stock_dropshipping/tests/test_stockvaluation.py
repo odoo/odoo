@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -18,14 +19,14 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'name': 'Large Desk',
             'type': 'product',
             'categ_id': cls.stock_account_product_categ.id,
-            'taxes_id': [(6, 0, [])],
+            'taxes_id': [(X2ManyCmd.SET, 0, [])],
         })
 
     def _dropship_product1(self):
         # enable the dropship and MTO route on the product
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
-        self.product1.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])]})
+        self.product1.write({'route_ids': [(X2ManyCmd.SET, 0, [dropshipping_route.id, mto_route.id])]})
 
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
@@ -33,7 +34,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'name': vendor1.id,
             'price': 8,
         })
-        self.product1.write({'seller_ids': [(6, 0, [seller1.id])]})
+        self.product1.write({'seller_ids': [(X2ManyCmd.SET, 0, [seller1.id])]})
 
         # sell one unit of this product
         customer1 = self.env['res.partner'].create({'name': 'customer1'})
@@ -41,7 +42,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'partner_id': customer1.id,
             'partner_invoice_id': customer1.id,
             'partner_shipping_id': customer1.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.product1.name,
                 'product_id': self.product1.id,
                 'product_uom_qty': 1,

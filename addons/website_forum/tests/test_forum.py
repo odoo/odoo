@@ -5,6 +5,7 @@ from .common import KARMA, TestForumCommon
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError
+from odoo.fields import X2ManyCmd
 
 
 class TestForum(TestForumCommon):
@@ -138,7 +139,7 @@ class TestForum(TestForumCommon):
             Post.with_user(self.user_portal).create({
                 'name': " Q_0",
                 'forum_id': self.forum.id,
-                'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': self.forum.id})]
+                'tag_ids': [(X2ManyCmd.CREATE, 0, {'name': 'Tag0', 'forum_id': self.forum.id})]
             })
 
         # Portal user asks a question with tags: ok if enough karma
@@ -146,7 +147,7 @@ class TestForum(TestForumCommon):
         Post.with_user(self.user_portal).create({
             'name': " Q0",
             'forum_id': self.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag1', 'forum_id': self.forum.id})]
+            'tag_ids': [(X2ManyCmd.CREATE, 0, {'name': 'Tag1', 'forum_id': self.forum.id})]
         })
         self.assertEqual(self.user_portal.karma, KARMA['tag_create'], 'website_forum: wrong karma generation when asking question')
 
@@ -154,7 +155,7 @@ class TestForum(TestForumCommon):
         Post.with_user(self.user_portal).create({
             'name': " Q0",
             'forum_id': self.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag42', 'forum_id': self.forum.id})]
+            'tag_ids': [(X2ManyCmd.CREATE, 0, {'name': 'Tag42', 'forum_id': self.forum.id})]
         })
         self.assertEqual(self.user_portal.karma, KARMA['post'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
 

@@ -466,12 +466,12 @@ class Meeting(models.Model):
         added_partner_ids = []
         for command in partner_commands:
             op = command[0]
-            if op in (2, 3):  # Remove partner
+            if op in (fields.X2ManyCmd.DELETE, fields.X2ManyCmd.UNLINK):  # Remove partner
                 removed_partner_ids += [command[1]]
-            elif op == 6:  # Replace all
+            elif op == fields.X2ManyCmd.SET:  # Replace all
                 removed_partner_ids += set(self.partner_ids.ids) - set(command[2])  # Don't recreate attendee if partner already attend the event
                 added_partner_ids += set(command[2]) - set(self.partner_ids.ids)
-            elif op == 4:
+            elif op == fields.X2ManyCmd.LINK:
                 added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
             # commands 0 and 1 not supported
 
@@ -480,10 +480,10 @@ class Meeting(models.Model):
                 ('event_id', 'in', self.ids),
                 ('partner_id', 'in', removed_partner_ids),
             ])
-            attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
+            attendee_commands += [[fields.X2ManyCmd.DELETE, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
         attendee_commands += [
-            [0, 0, dict(partner_id=partner_id)]
+            [fields.X2ManyCmd.CREATE, 0, dict(partner_id=partner_id)]
             for partner_id in added_partner_ids
         ]
         return attendee_commands
@@ -558,7 +558,7 @@ class Meeting(models.Model):
         to_update = self.env['calendar.recurrence']
         for event in self:
             if not event.recurrence_id:
-                recurrence_vals += [dict(values, base_event_id=event.id, calendar_event_ids=[(4, event.id)])]
+                recurrence_vals += [dict(values, base_event_id=event.id, calendar_event_ids=[(fields.X2ManyCmd.LINK, event.id)])]
             elif future:
                 to_update |= event.recurrence_id._split_from(event, values)
         self.write({'recurrency': True, 'follow_recurrence': True})
@@ -698,9 +698,9 @@ class Meeting(models.Model):
                             }
                             if user_id:
                                 activity_vals['user_id'] = user_id
-                            values['activity_ids'] = [(0, 0, activity_vals)]
+                            values['activity_ids'] = [(fields.X2ManyCmd.CREATE, 0, activity_vals)]
 
-        self_partner_id = [(4, self.env.user.partner_id.id)]
+        self_partner_id = [(fields.X2ManyCmd.LINK, self.env.user.partner_id.id)]
         vals_list = [
             dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', self_partner_id)))
             for vals in vals_list

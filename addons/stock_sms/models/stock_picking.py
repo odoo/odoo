@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import fields, models, _
 
 import threading
 
@@ -32,7 +32,7 @@ class Picking(models.Model):
 
     def _action_generate_warn_sms_wizard(self):
         view = self.env.ref('stock_sms.view_confirm_stock_sms')
-        wiz = self.env['confirm.stock.sms'].create({'pick_ids': [(4, p.id) for p in self]})
+        wiz = self.env['confirm.stock.sms'].create({'pick_ids': [(fields.X2ManyCmd.LINK, p.id) for p in self]})
         return {
             'name': _('SMS'),
             'type': 'ir.actions.act_window',

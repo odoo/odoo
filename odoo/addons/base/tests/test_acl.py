@@ -3,6 +3,7 @@
 
 from lxml import etree
 
+from odoo import fields
 from odoo.exceptions import AccessError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import TransactionCase
@@ -145,7 +146,7 @@ class TestACL(TransactionCaseWithUserDemo):
             self.assertIsNone(view_arch.get(method))
 
     def test_m2o_field_create_edit_invisibility(self):
-        """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
+        """ Test many2one field Create and Edit option visibility based on access rights of relation field"""
         methods = ['create', 'write']
         company = self.env['res.company'].with_user(self.user_demo)
         company_view = company.fields_view_get(False, 'form')
@@ -156,7 +157,7 @@ class TestACL(TransactionCaseWithUserDemo):
             self.assertEqual(field_node[0].get('can_' + method), 'false')
 
     def test_m2o_field_create_edit_visibility(self):
-        """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
+        """ Test many2one field Create and Edit option visibility based on access rights of relation field"""
         self.erp_system_group.users += self.user_demo
         methods = ['create', 'write']
         company = self.env['res.company'].with_user(self.user_demo)
@@ -179,7 +180,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             'name': 'test_rule1',
             'model_id': model_res_partner.id,
             'domain_force': False,
-            'groups': [(6, 0, group_user.ids)],
+            'groups': [(fields.X2ManyCmd.SET, 0, group_user.ids)],
         })
 
         # read as demo user the partners (one blank domain)
@@ -202,7 +203,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             'name': 'test_rule2',
             'model_id': model_res_partner.id,
             'domain_force': False,
-            'groups': [(6, 0, group_user.ids)],
+            'groups': [(fields.X2ManyCmd.SET, 0, group_user.ids)],
         })
 
         # read as demo user with domains [] and blank
@@ -224,7 +225,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
             'name': 'test_rule3',
             'model_id': model_res_partner.id,
             'domain_force': False,
-            'groups': [(6, 0, group_user.ids)],
+            'groups': [(fields.X2ManyCmd.SET, 0, group_user.ids)],
         })
 
         # read the partners as demo user
@@ -257,7 +258,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         # create a new group with demo user in it, and a complex rule
         group_test = self.env['res.groups'].create({
             'name': 'Test Group',
-            'users': [(6, 0, self.user_demo.ids)],
+            'users': [(fields.X2ManyCmd.SET, 0, self.user_demo.ids)],
         })
 
         # add the rule to the new group, with a domain containing an implicit
@@ -265,7 +266,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         # normalized before combining it
         rule3.write({
             'domain_force': "[('name','!=',False),('id','!=',False)]",
-            'groups': [(6, 0, group_test.ids)],
+            'groups': [(fields.X2ManyCmd.SET, 0, group_test.ids)],
         })
 
         # read the partners again as demo user, which should give results

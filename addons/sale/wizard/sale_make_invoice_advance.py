@@ -88,7 +88,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'campaign_id': order.campaign_id.id,
             'medium_id': order.medium_id.id,
             'source_id': order.source_id.id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': name,
                 'price_unit': amount,
                 'quantity': 1.0,
@@ -139,7 +139,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'product_uom': self.product_id.uom_id.id,
             'product_id': self.product_id.id,
             'analytic_tag_ids': analytic_tag_ids,
-            'tax_id': [(6, 0, tax_ids)],
+            'tax_id': [(fields.X2ManyCmd.SET, 0, tax_ids)],
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }
@@ -186,7 +186,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'type': 'service',
             'invoice_policy': 'order',
             'property_account_income_id': self.deposit_account_id.id,
-            'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, self.deposit_taxes_id.ids)],
             'company_id': False,
         }
 

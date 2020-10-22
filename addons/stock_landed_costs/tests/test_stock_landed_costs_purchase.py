@@ -6,6 +6,7 @@ from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestSt
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -246,25 +247,25 @@ class TestLandedCosts(TestStockLandedCostsCommon):
 
     def _create_landed_costs(self, value, picking_in):
         return self.LandedCost.create(dict(
-            picking_ids=[(6, 0, [picking_in.id])],
+            picking_ids=[(X2ManyCmd.SET, 0, [picking_in.id])],
             account_journal_id=self.expenses_journal.id,
             cost_lines=[
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'equal split',
                     'split_method': 'equal',
                     'price_unit': value['equal_price_unit'],
                     'product_id': self.landed_cost.id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'split by quantity',
                     'split_method': 'by_quantity',
                     'price_unit': value['quantity_price_unit'],
                     'product_id': self.brokerage_quantity.id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'split by weight',
                     'split_method': 'by_weight',
                     'price_unit': value['weight_price_unit'],
                     'product_id': self.transportation_weight.id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'split by volume',
                     'split_method': 'by_volume',
                     'price_unit': value['volume_price_unit'],
@@ -332,10 +333,10 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # Create and validate LC
         lc = self.env['stock.landed.cost'].create(dict(
-            picking_ids=[(6, 0, [receipt.id])],
+            picking_ids=[(X2ManyCmd.SET, 0, [receipt.id])],
             account_journal_id=self.stock_journal.id,
             cost_lines=[
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'equal split',
                     'split_method': 'equal',
                     'price_unit': 99,

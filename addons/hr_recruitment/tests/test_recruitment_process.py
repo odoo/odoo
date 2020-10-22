@@ -4,6 +4,7 @@
 from odoo.tests import common
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.modules.module import get_module_resource
+from odoo.fields import X2ManyCmd
 
 
 class TestRecruitmentProcess(TestHrCommon):
@@ -31,7 +32,7 @@ class TestRecruitmentProcess(TestHrCommon):
             'name': 'HR Recruitment Officer',
             'login': "hrro",
             'email': "hrofcr@yourcompany.com",
-            'groups_id': [(6, 0, [self.env.ref('hr_recruitment.group_hr_recruitment_user').id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('hr_recruitment.group_hr_recruitment_user').id])]
         })
 
         # An applicant is interested in the job position. So he sends a resume by email.

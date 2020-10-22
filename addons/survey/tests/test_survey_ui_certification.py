@@ -3,6 +3,7 @@
 import odoo.tests
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.fields import X2ManyCmd
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -27,13 +28,13 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'attempts_limit': 2,
             'description': """&lt;p&gt;Test your vendor skills!.&lt;/p&gt;""",
             'question_and_page_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'title': 'Products',
                     'sequence': 1,
                     'is_page': True,
                     'question_type': False,
                     'description': '&lt;p&gt;Test your knowledge of your products!&lt;/p&gt;',
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Do we sell Acoustic Bloc Screens?',
                     'sequence': 2,
                     'question_type': 'simple_choice',
@@ -49,7 +50,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'answer_score': 2,
                         })
                     ],
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Select all the existing products',
                     'sequence': 3,
                     'question_type': 'multiple_choice',
@@ -80,7 +81,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'answer_score': -1,
                         })
                     ]
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Select all the available customizations for our Customizable Desk',
                     'sequence': 4,
                     'question_type': 'multiple_choice',
@@ -111,7 +112,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'answer_score': -1,
                         })
                     ]
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'How many versions of the Corner Desk do we have?',
                     'sequence': 5,
                     'question_type': 'simple_choice',
@@ -133,17 +134,17 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'sequence': 4,
                         })
                     ]
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Do you think we have missing products in our catalog? (not rated)',
                     'sequence': 6,
                     'question_type': 'text_box',
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Prices',
                     'sequence': 7,
                     'is_page': True,
                     'question_type': False,
                     'description': """&lt;p&gt;Test your knowledge of our prices.&lt;/p&gt;""",
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'How much do we sell our Cable Management Box?',
                     'sequence': 8,
                     'question_type': 'simple_choice',
@@ -171,7 +172,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'sequence': 6,
                         })
                     ]
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Select all the products that sell for $100 or more',
                     'sequence': 9,
                     'question_type': 'multiple_choice',
@@ -206,7 +207,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'answer_score': -1,
                         }),
                     ]
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'What do you think about our prices (not rated)?',
                     'sequence': 10,
                     'question_type': 'simple_choice',
@@ -229,13 +230,13 @@ class TestUiCertification(HttpCaseWithUserDemo):
                             'sequence': 5,
                         })
                     ]
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'Policies',
                     'sequence': 11,
                     'is_page': True,
                     'question_type': False,
                     'description': """&lt;p&gt;Test your knowledge of our policies.&lt;/p&gt;""",
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'How many days is our money-back guarantee?',
                     'sequence': 12,
                     'question_type': 'numerical_box',
@@ -243,29 +244,29 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'is_scored_question': True,
                     'answer_numerical_box': 30,
                     'answer_score': 1,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it?',
                     'sequence': 13,
                     'question_type': 'date',
                     'is_scored_question': True,
                     'answer_date': '2020-01-08',
                     'answer_score': 1,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?',
                     'sequence': 14,
                     'question_type': 'datetime',
                     'is_scored_question': True,
                     'answer_datetime': '2021-01-07 00:00:01',
                     'answer_score': 1,
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'What day to you think is best for us to start having an annual sale (not rated)?',
                     'sequence': 15,
                     'question_type': 'date',
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'What day and time do you think most customers are most likely to call customer service (not rated)?',
                     'sequence': 16,
                     'question_type': 'datetime',
-                }), (0, 0, {
+                }), (X2ManyCmd.CREATE, 0, {
                     'title': 'How many chairs do you think we should aim to sell in a year (not rated)?',
                     'sequence': 17,
                     'question_type': 'numerical_box',

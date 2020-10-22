@@ -68,7 +68,7 @@ class Channel(models.Model):
         return res
 
     def _default_channel_last_seen_partner_ids(self):
-        return [(0, 0, {"partner_id": self.env.user.partner_id.id})]
+        return [(fields.X2ManyCmd.CREATE, 0, {"partner_id": self.env.user.partner_id.id})]
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
@@ -186,7 +186,7 @@ class Channel(models.Model):
         missing_partner_ids = set(self.mapped('moderator_ids.partner_id').ids) - set(self.mapped('channel_last_seen_partner_ids.partner_id').ids)
         if missing_partner_ids:
             self.channel_last_seen_partner_ids = [
-                (0, 0, {'partner_id': partner_id})
+                (fields.X2ManyCmd.CREATE, 0, {'partner_id': partner_id})
                 for partner_id in missing_partner_ids
             ]
 
@@ -265,13 +265,13 @@ class Channel(models.Model):
 
     def _subscribe_users(self):
         for mail_channel in self:
-            mail_channel.write({'channel_partner_ids': [(4, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
+            mail_channel.write({'channel_partner_ids': [(fields.X2ManyCmd.LINK, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
 
     def action_follow(self):
         self.ensure_one()
         channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
         if not channel_partner:
-            return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
+            return self.write({'channel_last_seen_partner_ids': [(fields.X2ManyCmd.CREATE, 0, {'partner_id': self.env.user.partner_id.id})]})
         return False
 
     def action_unfollow(self):
@@ -279,7 +279,7 @@ class Channel(models.Model):
 
     def _action_unfollow(self, partner):
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
-        result = self.write({'channel_partner_ids': [(3, partner.id)]})
+        result = self.write({'channel_partner_ids': [(fields.X2ManyCmd.UNLINK, partner.id)]})
         # side effect of unsubscribe that wasn't taken into account because
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
@@ -437,13 +437,13 @@ class Channel(models.Model):
                 'author_id': self.env.user.partner_id.id,
                 'body_html': view._render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s", self.name),
-                'recipient_ids': [(4, partner.id)]
+                'recipient_ids': [(fields.X2ManyCmd.LINK, partner.id)]
             }
             mail = self.env['mail.mail'].sudo().create(create_values)
         return True
 
     def _update_moderation_email(self, emails, status):
-        """ This method adds emails into either white or black of the channel list of emails 
+        """ This method adds emails into either white or black of the channel list of emails
             according to status. If an email in emails is already moderated, the method updates the email status.
             :param emails: list of email addresses to put in white or black list of channel.
             :param status: value is 'allow' or 'ban'. Emails are put in white list if 'allow', in black list if 'ban'.
@@ -454,9 +454,9 @@ class Channel(models.Model):
             ('email', 'in', splitted_emails),
             ('channel_id', 'in', self.ids)
         ])
-        cmds = [(1, record.id, {'status': status}) for record in moderated]
+        cmds = [(fields.X2ManyCmd.UPDATE, record.id, {'status': status}) for record in moderated]
         not_moderated = [email for email in splitted_emails if email not in moderated.mapped('email')]
-        cmds += [(0, 0, {'email': email, 'status': status}) for email in not_moderated]
+        cmds += [(fields.X2ManyCmd.CREATE, 0, {'email': email, 'status': status}) for email in not_moderated]
         return self.write({'moderation_ids': cmds})
 
     #------------------------------------------------------
@@ -675,7 +675,7 @@ class Channel(models.Model):
         else:
             # create a new one
             channel = self.create({
-                'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
+                'channel_partner_ids': [(fields.X2ManyCmd.LINK, partner_id) for partner_id in partners_to],
                 'public': 'private',
                 'channel_type': 'chat',
                 'email_send': False,
@@ -821,7 +821,7 @@ class Channel(models.Model):
         # add the partner
         for channel in self:
             partners_to_add = partners - channel.channel_partner_ids
-            channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
+            channel.write({'channel_last_seen_partner_ids': [(fields.X2ManyCmd.CREATE, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
             for partner in partners_to_add:
                 if partner.id != self.env.user.partner_id.id:
                     notification = _('<div class="o_mail_notification">%(author)s invited %(new_partner)s to <a href="#" class="o_channel_redirect" data-oe-id="%(channel_id)s">#%(channel_name)s</a></div>') % {
@@ -931,7 +931,7 @@ class Channel(models.Model):
             'name': name,
             'public': privacy,
             'email_send': False,
-            'channel_partner_ids': [(4, self.env.user.partner_id.id)]
+            'channel_partner_ids': [(fields.X2ManyCmd.LINK, self.env.user.partner_id.id)]
         })
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")

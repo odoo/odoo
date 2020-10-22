@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class AccountJournal(models.Model):
@@ -15,6 +15,6 @@ class AccountJournal(models.Model):
             # Ensure the newly liquidity accounts have the right account tag in order to be part
             # of the Danish financial reports.
             xml_id = self.env.ref('l10n_dk.account_tag_liquidity').id
-            account_vals['tag_ids'] = [(6, 0, [xml_id])]
+            account_vals['tag_ids'] = [(fields.X2ManyCmd.SET, 0, [xml_id])]
 
         return account_vals

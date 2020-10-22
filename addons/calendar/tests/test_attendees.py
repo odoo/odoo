@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo.tests.common import SavepointCase, new_test_user
+from odoo.fields import X2ManyCmd
 
 
 class TestEventNotifications(SavepointCase):
@@ -30,7 +31,7 @@ class TestEventNotifications(SavepointCase):
             'name': "Doom's day",
             'start': datetime(2019, 10, 25, 8, 0),
             'stop': datetime(2019, 10, 27, 18, 0),
-            'partner_ids': [(4, self.partner.id)],
+            'partner_ids': [(X2ManyCmd.LINK, self.partner.id)],
         })
         self.assertTrue(event.attendee_ids, "It should have created an attendee")
         self.assertEqual(event.attendee_ids.partner_id, self.partner, "It should be linked to the partner")
@@ -49,7 +50,7 @@ class TestEventNotifications(SavepointCase):
     def test_existing_attendee_added(self):
         self.event.partner_ids = self.partner
         attendee = self.event.attendee_ids
-        self.event.write({'partner_ids': [(4, self.partner.id)]})  # Add existing partner
+        self.event.write({'partner_ids': [(X2ManyCmd.LINK, self.partner.id)]})  # Add existing partner
         self.assertEqual(self.event.attendee_ids, attendee, "It should not have created an new attendee record")
 
     def test_attendee_add_self(self):

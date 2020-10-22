@@ -33,7 +33,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'date': '%s-07-01' % time.strftime('%Y'),
             'currency_id': self.currency_usd_id,
             'invoice_line_ids': [
-                (0, 0, {'quantity': 1, 'price_unit': 50.0, 'name': 'test'})
+                (fields.X2ManyCmd.CREATE, 0, {'quantity': 1, 'price_unit': 50.0, 'name': 'test'})
             ],
         })
         move.action_post()
@@ -43,7 +43,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'journal_id': self.bank_journal_euro.id,
             'date': '%s-01-01' % time.strftime('%Y'),
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'payment_ref': 'test',
                     'partner_id': partner.id,
                     'amount': 40.0,
@@ -97,7 +97,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'date': time.strftime('%Y-%m-%d'),
             'journal_id': self.bank_journal_usd_id,
             'invoice_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'line that will lead to an exchange gain',
                     'quantity': 1,
                     'price_unit': 2,
@@ -110,13 +110,13 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'journal_id': self.bank_journal_usd_id,
             'date': time.strftime('%Y-%m-%d'),
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'half payment',
                     'partner_id': self.partner_agrolait_id,
                     'amount': 1.0,
                     'date': time.strftime('%Y-%m-%d')
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': 'second half payment',
                     'partner_id': self.partner_agrolait_id,
                     'amount': 1.0,
@@ -182,7 +182,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             credit_line_vals['amount_currency'] = -debit_line_vals['amount_currency']
             vals = {
                 'journal_id': self.bank_journal_euro.id,
-                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+                'line_ids': [(0,0, debit_line_vals), (fields.X2ManyCmd.CREATE, 0, credit_line_vals)]
             }
             move = self.env['account.move'].create(vals)
             move.action_post()
@@ -247,7 +247,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'invoice_date': '%s-07-01' % time.strftime('%Y'),
             'date': '%s-07-01' % time.strftime('%Y'),
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product.id, 'quantity': 1, 'price_unit': 50.0})
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': self.product.id, 'quantity': 1, 'price_unit': 50.0})
             ],
         })
         invoice_b = self.env['account.move'].with_context(default_move_type='in_invoice').create({
@@ -257,7 +257,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'invoice_date': '%s-08-01' % time.strftime('%Y'),
             'date': '%s-08-01' % time.strftime('%Y'),
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product.id, 'quantity': 1, 'price_unit': 50.0})
+                (fields.X2ManyCmd.CREATE, 0, {'product_id': self.product.id, 'quantity': 1, 'price_unit': 50.0})
             ],
         })
         (invoice_a + invoice_b).action_post()
@@ -549,7 +549,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'date': '%s-01-01' % time.strftime('%Y'),
             'currency_id': self.currency_usd_id,
             'invoice_line_ids': [
-                (0, 0, {'quantity': 1, 'price_unit': 100.0, 'name': 'product that cost 100'})
+                (fields.X2ManyCmd.CREATE, 0, {'quantity': 1, 'price_unit': 100.0, 'name': 'product that cost 100'})
             ],
         })
         invoice_cust_1.action_post()
@@ -595,12 +595,12 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'name': 'Pay in 2 installments',
             'line_ids': [
                 # Pay 50% immediately
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'percent',
                     'value_amount': 50,
                 }),
                 # Pay the rest after 14 days
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'days': 14,
                 })

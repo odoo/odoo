@@ -24,7 +24,7 @@ class ImLivechatChannel(models.Model):
         return base64.b64encode(open(image_path, 'rb').read())
 
     def _default_user_ids(self):
-        return [(6, 0, [self._uid])]
+        return [(fields.X2ManyCmd.SET, 0, [self._uid])]
 
     # attribute fields
     name = fields.Char('Name', required=True, help="The name of the channel")
@@ -86,11 +86,11 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     def action_join(self):
         self.ensure_one()
-        return self.write({'user_ids': [(4, self._uid)]})
+        return self.write({'user_ids': [(fields.X2ManyCmd.LINK, self._uid)]})
 
     def action_quit(self):
         self.ensure_one()
-        return self.write({'user_ids': [(3, self._uid)]})
+        return self.write({'user_ids': [(fields.X2ManyCmd.UNLINK, self._uid)]})
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -115,12 +115,12 @@ class ImLivechatChannel(models.Model):
     def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
         # partner to add to the mail.channel
         operator_partner_id = operator.partner_id.id
-        channel_partner_to_add = [(4, operator_partner_id)]
+        channel_partner_to_add = [(fields.X2ManyCmd.LINK, operator_partner_id)]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
             if visitor_user and visitor_user.active:  # valid session user (not public)
-                channel_partner_to_add.append((4, visitor_user.partner_id.id))
+                channel_partner_to_add.append((fields.X2ManyCmd.LINK, visitor_user.partner_id.id))
         return {
             'channel_partner_ids': channel_partner_to_add,
             'livechat_active': True,
@@ -184,7 +184,7 @@ class ImLivechatChannel(models.Model):
             FROM mail_channel c
             LEFT OUTER JOIN mail_message_mail_channel_rel r ON c.id = r.mail_channel_id
             LEFT OUTER JOIN mail_message m ON r.mail_message_id = m.id
-            WHERE c.channel_type = 'livechat' 
+            WHERE c.channel_type = 'livechat'
             AND c.livechat_operator_id in %s
             AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             GROUP BY c.livechat_operator_id

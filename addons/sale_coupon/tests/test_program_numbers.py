@@ -4,6 +4,7 @@
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -174,7 +175,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_percentage': 20.0,
             'rule_minimum_amount': 320.00,
             'discount_apply_on': 'specific_products',
-            'discount_specific_product_ids': [(6, 0, [self.largeCabinet.id])],
+            'discount_specific_product_ids': [(X2ManyCmd.SET, 0, [self.largeCabinet.id])],
         })
         order = self.empty_order
         self.largeCabinet.taxes_id = percent_tax
@@ -278,7 +279,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         # Set tax and prices on products as neeed for the test
         (self.product_A + self.largeCabinet + self.conferenceChair + self.pedalBin + self.drawerBlack).write({'list_price': 100})
-        (self.largeCabinet + self.drawerBlack).write({'taxes_id': [(4, self.tax_15pc_excl.id, False)]})
+        (self.largeCabinet + self.drawerBlack).write({'taxes_id': [(X2ManyCmd.LINK, self.tax_15pc_excl.id, False)]})
         self.conferenceChair.taxes_id = self.tax_10pc_incl
         self.pedalBin.taxes_id = None
         self.product_A.taxes_id = (self.tax_35pc_incl + self.tax_50pc_excl)
@@ -409,7 +410,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_type': 'percentage',
             'discount_percentage': 20.0,
             'discount_apply_on': 'specific_products',
-            'discount_specific_product_ids': [(6, 0, [self.largeCabinet.id])],
+            'discount_specific_product_ids': [(X2ManyCmd.SET, 0, [self.largeCabinet.id])],
         })
         order.recompute_coupon_lines()
         # Note: we have 7 regular Large Cabinets and 3 free Large Cabinets. We should then discount only 4 really paid Large Cabinets
@@ -507,7 +508,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'amount_type': 'percent',
             'amount': 0,
         })
-        fixed_amount_program.discount_line_product_id.write({'taxes_id': [(4, self.tax_0pc_excl.id, False)]})
+        fixed_amount_program.discount_line_product_id.write({'taxes_id': [(X2ManyCmd.LINK, self.tax_0pc_excl.id, False)]})
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.drawerBlack.id,
             'name': 'Drawer Black',
@@ -654,7 +655,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_type': 'percentage',
             'discount_percentage': 25.0,
             'discount_apply_on': 'specific_products',
-            'discount_specific_product_ids': [(6, 0, [self.conferenceChair.id, self.drawerBlack.id])],
+            'discount_specific_product_ids': [(X2ManyCmd.SET, 0, [self.conferenceChair.id, self.drawerBlack.id])],
         })
 
         self.env['sale.order.line'].create({
@@ -682,7 +683,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, 87.00, "Total should be 87.00, see above comment")
 
         # remove Drawer Black case from promotion
-        p_specific_products.discount_specific_product_ids = [(6, 0, [self.conferenceChair.id])]
+        p_specific_products.discount_specific_product_ids = [(X2ManyCmd.SET, 0, [self.conferenceChair.id])]
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "Should still be Conference Chair + Drawer Black + 20% discount line")
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
@@ -697,7 +698,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # =========================================================================
         # PART 2: Same flow but with different taxes on products to ensure discount is split per VAT
         # Add back Drawer Black in promotion
-        p_specific_products.discount_specific_product_ids = [(6, 0, [self.conferenceChair.id, self.drawerBlack.id])]
+        p_specific_products.discount_specific_product_ids = [(X2ManyCmd.SET, 0, [self.conferenceChair.id, self.drawerBlack.id])]
 
         percent_tax = self.env['account.tax'].create({
             'name': "30% Tax",

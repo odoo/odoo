@@ -4,6 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 
 from datetime import datetime
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -16,7 +17,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product_a.name,
                     'product_id': self.product_a.id,
                     'product_qty': 1.0,
@@ -25,7 +26,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'date_planned': datetime.today(),
                     'taxes_id': False,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.product_b.name,
                     'product_id': self.product_b.id,
                     'product_qty': 1.0,

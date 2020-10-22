@@ -4,7 +4,7 @@
 from odoo.tests import Form
 from datetime import datetime, timedelta
 
-from odoo.fields import Datetime as Dt
+from odoo.fields import Datetime as Dt, X2ManyCmd
 from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
@@ -45,12 +45,12 @@ class TestMrpOrder(TestMrpCommon):
         self.product_2.type = 'product'
         inventory = self.env['stock.inventory'].create({
             'name': 'Initial inventory',
-            'line_ids': [(0, 0, {
+            'line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_1.id,
                 'product_uom_id': self.product_1.uom_id.id,
                 'product_qty': 500,
                 'location_id': self.warehouse_1.lot_stock_id.id
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_2.id,
                 'product_uom_id': self.product_2.uom_id.id,
                 'product_qty': 500,
@@ -267,11 +267,11 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
-                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
             ],
             'operation_ids': [
-                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ]
         })
         production_form = Form(self.env['mrp.production'])
@@ -294,8 +294,8 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
-                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
             ],
         })
         production_form = Form(self.env['mrp.production'])
@@ -328,8 +328,8 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
-                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (X2ManyCmd.CREATE, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
             ]
         })
         production_form = Form(self.env['mrp.production'])
@@ -1030,10 +1030,10 @@ class TestMrpOrder(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+                (X2ManyCmd.CREATE, 0, {'product_id': component.id, 'product_qty': 1}),
             ],
             'byproduct_ids': [
-                (0, 0, {'product_id': byproduct.id, 'product_qty': 1, 'product_uom_id': byproduct.uom_id.id})
+                (X2ManyCmd.CREATE, 0, {'product_id': byproduct.id, 'product_qty': 1, 'product_uom_id': byproduct.uom_id.id})
             ]})
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished_product
@@ -1155,7 +1155,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_tmpl_id': plastic_laminate.product_tmpl_id.id,
             'product_uom_id': unit.id,
             'sequence': 1,
-            'bom_line_ids': [(0, 0, {
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': ply_veneer.id,
                 'product_qty': 1,
                 'product_uom_id': unit.id,
@@ -1215,7 +1215,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+            'bom_line_ids': [(X2ManyCmd.CLEAR, 0), (X2ManyCmd.CREATE, 0, {'product_id': product_raw.id})]
         })
 
         mo_form = Form(self.env['mrp.production'])
@@ -1365,7 +1365,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',
-            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})]
+            'bom_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': component.id, 'product_qty': 1})]
         })
         self.env['stock.quant']._update_available_quantity(component, self.stock_location_components, 25.0)
         mo_form = Form(self.env['mrp.production'])

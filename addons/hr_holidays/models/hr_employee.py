@@ -169,7 +169,7 @@ class HrEmployeeBase(models.AbstractModel):
         if values.get('leave_manager_id', False):
             approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
             if approver_group:
-                approver_group.sudo().write({'users': [(4, values['leave_manager_id'])]})
+                approver_group.sudo().write({'users': [(fields.X2ManyCmd.LINK, values['leave_manager_id'])]})
         return super(HrEmployeeBase, self).create(values)
 
     def write(self, values):
@@ -186,7 +186,7 @@ class HrEmployeeBase(models.AbstractModel):
                 old_managers -= self.env['res.users'].browse(values['leave_manager_id'])
                 approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
                 if approver_group:
-                    approver_group.sudo().write({'users': [(4, values['leave_manager_id'])]})
+                    approver_group.sudo().write({'users': [(fields.X2ManyCmd.LINK, values['leave_manager_id'])]})
 
         res = super(HrEmployeeBase, self).write(values)
         # remove users from the Responsible group if they are no longer leave managers

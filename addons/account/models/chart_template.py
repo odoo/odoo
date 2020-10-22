@@ -259,7 +259,7 @@ class AccountChartTemplate(models.Model):
                 'name': _('Cash Difference Loss'),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
                 'user_type_id': self.env.ref('account.data_account_type_expenses').id,
-                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+                'tag_ids': [(fields.X2ManyCmd.SET, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
             })
 
@@ -268,7 +268,7 @@ class AccountChartTemplate(models.Model):
                 'name': _('Cash Difference Gain'),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
                 'user_type_id': self.env.ref('account.data_account_type_revenue').id,
-                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+                'tag_ids': [(fields.X2ManyCmd.SET, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
             })
 
@@ -668,9 +668,9 @@ class AccountChartTemplate(models.Model):
                 'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
                 'reconcile': account_template.reconcile,
                 'note': account_template.note,
-                'tax_ids': [(6, 0, tax_ids)],
+                'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_ids)],
                 'company_id': company.id,
-                'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
+                'tag_ids': [(fields.X2ManyCmd.SET, 0, [t.id for t in account_template.tag_ids])],
             }
         return val
 
@@ -731,7 +731,7 @@ class AccountChartTemplate(models.Model):
             'rule_type': account_reconcile_model.rule_type,
             'auto_reconcile': account_reconcile_model.auto_reconcile,
             'to_check': account_reconcile_model.to_check,
-            'match_journal_ids': [(6, None, account_reconcile_model.match_journal_ids.ids)],
+            'match_journal_ids': [(fields.X2ManyCmd.SET, None, account_reconcile_model.match_journal_ids.ids)],
             'match_nature': account_reconcile_model.match_nature,
             'match_amount': account_reconcile_model.match_amount,
             'match_amount_min': account_reconcile_model.match_amount_min,
@@ -746,15 +746,15 @@ class AccountChartTemplate(models.Model):
             'match_total_amount': account_reconcile_model.match_total_amount,
             'match_total_amount_param': account_reconcile_model.match_total_amount_param,
             'match_partner': account_reconcile_model.match_partner,
-            'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
-            'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
-            'line_ids': [(0, 0, {
+            'match_partner_ids': [(fields.X2ManyCmd.SET, None, account_reconcile_model.match_partner_ids.ids)],
+            'match_partner_category_ids': [(fields.X2ManyCmd.SET, None, account_reconcile_model.match_partner_category_ids.ids)],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'account_id': acc_template_ref[line.account_id.id],
                 'label': line.label,
                 'amount_type': line.amount_type,
                 'force_tax_included': line.force_tax_included,
                 'amount_string': line.amount_string,
-                'tax_ids': [[4, tax_template_ref[tax.id], 0] for tax in line.tax_ids],
+                'tax_ids': [[fields.X2ManyCmd.LINK, tax_template_ref[tax.id], 0] for tax in line.tax_ids],
             }) for line in account_reconcile_model_lines],
         }
 
@@ -918,7 +918,7 @@ class AccountTaxTemplate(models.Model):
             'price_include': self.price_include,
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
-            'children_tax_ids': [(6, 0, children_ids)],
+            'children_tax_ids': [(fields.X2ManyCmd.SET, 0, children_ids)],
             'tax_exigibility': self.tax_exigibility,
         }
 
@@ -1047,7 +1047,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
         an ORM-compliant version of it if it does.
         """
         if tags_list and all(isinstance(elem, int) for elem in tags_list):
-            return [(6, False, tags_list)]
+            return [(fields.X2ManyCmd.SET, False, tags_list)]
         return tags_list
 
     @api.constrains('invoice_tax_id', 'refund_tax_id')
@@ -1064,17 +1064,17 @@ class AccountTaxRepartitionLineTemplate(models.Model):
             raise ValidationError(_("The following tax report lines are used in some tax distribution template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.", str(lines_without_tag.mapped('name'))))
 
     def get_repartition_line_create_vals(self, company):
-        rslt = [(5, 0, 0)]
+        rslt = [(fields.X2ManyCmd.CLEAR, 0, 0)]
         for record in self:
             tags_to_add = self.env['account.account.tag']
             tags_to_add += record.plus_report_line_ids.mapped('tag_ids').filtered(lambda x: not x.tax_negate)
             tags_to_add += record.minus_report_line_ids.mapped('tag_ids').filtered(lambda x: x.tax_negate)
             tags_to_add += record.tag_ids
 
-            rslt.append((0, 0, {
+            rslt.append((fields.X2ManyCmd.CREATE, 0, {
                 'factor_percent': record.factor_percent,
                 'repartition_type': record.repartition_type,
-                'tag_ids': [(6, 0, tags_to_add.ids)],
+                'tag_ids': [(fields.X2ManyCmd.SET, 0, tags_to_add.ids)],
                 'company_id': company.id,
                 'use_in_tax_closing': record.use_in_tax_closing
             }))

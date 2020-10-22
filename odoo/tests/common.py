@@ -54,7 +54,8 @@ except ImportError:
 
 import odoo
 import pprint
-from odoo import api
+from odoo import api, fields
+from odoo.fields import X2ManyCmd
 from odoo.service import security
 
 
@@ -132,7 +133,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
+    groups_id = [(X2ManyCmd.SET, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
@@ -2034,7 +2035,7 @@ class Form(object):
                         vs = dict(vs.changed_items())
 
                     if c == 1 and not vs:
-                        it.append((4, rid, False))
+                        it.append((X2ManyCmd.LINK, rid, False))
                     elif c in (0, 1):
                         it.append((c, rid, self._onchange_values_(subfields, vs)))
                     else:
@@ -2063,13 +2064,13 @@ class Form(object):
             subfields = descr['views']['edition']['fields']
             # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
-                if command[0] == 0:
-                    v.append((0, 0, {
+                if command[0] == X2ManyCmd.CREATE:
+                    v.append((X2ManyCmd.CREATE, 0, {
                         k: self._cleanup_onchange(subfields[k], v, None)
                         for k, v in command[2].items()
                         if k in subfields
                     }))
-                elif command[0] == 1:
+                elif command[0] == X2ManyCmd.UPDATE:
                     record_id = command[1]
                     c.discard(record_id)
                     stored = current_values.get(record_id)
@@ -2089,17 +2090,17 @@ class Form(object):
                             stored._changed.add(field)
                             stored[field] = value
 
-                    v.append((1, record_id, stored))
-                elif command[0] == 2:
+                    v.append((X2ManyCmd.UPDATE, record_id, stored))
+                elif command[0] == X2ManyCmd.DELETE:
                     c.discard(command[1])
-                    v.append((2, command[1], False))
-                elif command[0] == 4:
+                    v.append((X2ManyCmd.DELETE, command[1], False))
+                elif command[0] == X2ManyCmd.LINK:
                     c.discard(command[1])
-                    v.append((1, command[1], None))
-                elif command[0] == 5:
+                    v.append((X2ManyCmd.UPDATE, command[1], None))
+                elif command[0] == X2ManyCmd.CLEAR:
                     v = []
             # explicitly mark all non-relinked (or modified) records as deleted
-            for id_ in c: v.append((2, id_, False))
+            for id_ in c: v.append((X2ManyCmd.DELETE, id_, False))
             return v
         elif descr['type'] == 'many2many':
             # onchange result is a bunch of commands, normalize to single 6
@@ -2108,20 +2109,20 @@ class Form(object):
             else:
                 ids = list(current[0][2])
             for command in value:
-                if command[0] == 1:
+                if command[0] == X2ManyCmd.UPDATE:
                     ids.append(command[1])
-                elif command[0] == 3:
+                elif command[0] == X2ManyCmd.UNLINK:
                     ids.remove(command[1])
-                elif command[0] == 4:
+                elif command[0] == X2ManyCmd.LINK:
                     ids.append(command[1])
-                elif command[0] == 5:
+                elif command[0] == X2ManyCmd.CLEAR:
                     del ids[:]
-                elif command[0] == 6:
+                elif command[0] == X2ManyCmd.SET:
                     ids[:] = command[2]
                 else:
                     raise ValueError(
                         "Unsupported M2M command %d" % command[0])
-            return [(6, False, ids)]
+            return [(X2ManyCmd.SET, False, ids)]
 
         return value
 
@@ -2170,7 +2171,7 @@ class O2MForm(Form):
         commands = proxy._parent._values[proxy._field]
         values = self._values_to_save()
         if self._index is None:
-            commands.append((0, 0, values))
+            commands.append((X2ManyCmd.CREATE, 0, values))
         else:
             index = proxy._command_index(self._index)
             (c, id_, vs) = commands[index]
@@ -2181,7 +2182,7 @@ class O2MForm(Form):
                     vs = UpdateDict()
                 assert isinstance(vs, UpdateDict), type(vs)
                 vs.update(values)
-                commands[index] = (1, id_, vs)
+                commands[index] = (X2ManyCmd.UPDATE, id_, vs)
             else:
                 raise AssertionError("Expected command type 0 or 1, found %s" % c)
 
@@ -2322,8 +2323,8 @@ class O2MProxy(X2MProxy):
             # record not saved yet -> just remove the command
             del commands[cidx]
         elif command == 1:
-            # record already saved, replace by 2
-            commands[cidx] = (2, rid, 0)
+            # record already saved, replace by DELETE cmd
+            commands[cidx] = (X2ManyCmd.DELETE, rid, 0)
         else:
             raise AssertionError("Expected command 0 or 1, got %s" % commands[cidx])
         # remove reified record
@@ -2417,9 +2418,9 @@ def record_to_values(fields, record):
         if descr['type'] == 'many2one':
             v = v and v[0]
         elif descr['type'] == 'many2many':
-            v = [(6, 0, v or [])]
+            v = [(X2ManyCmd.SET, 0, v or [])]
         elif descr['type'] == 'one2many':
-            v = [(1, r, None) for r in v or []]
+            v = [(X2ManyCmd.UPDATE, r, None) for r in v or []]
         elif descr['type'] == 'datetime' and isinstance(v, datetime):
             v = odoo.fields.Datetime.to_string(v)
         elif descr['type'] == 'date' and isinstance(v, date):
@@ -2430,7 +2431,7 @@ def record_to_values(fields, record):
 def _cleanup_from_default(type_, value):
     if not value:
         if type_ == 'many2many':
-            return [(6, False, [])]
+            return [(X2ManyCmd.SET, False, [])]
         elif type_ == 'one2many':
             return []
         elif type_ in ('integer', 'float'):
@@ -2438,7 +2439,7 @@ def _cleanup_from_default(type_, value):
         return value
 
     if type_ == 'one2many':
-        return [c for c in value if c[0] != 6]
+        return [c for c in value if c[0] != X2ManyCmd.SET]
     elif type_ == 'datetime' and isinstance(value, datetime):
         return odoo.fields.Datetime.to_string(value)
     elif type_ == 'date' and isinstance(value, date):

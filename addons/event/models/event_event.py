@@ -59,14 +59,14 @@ class EventType(models.Model):
     def _compute_event_type_mail_ids(self):
         for template in self:
             if not template.use_mail_schedule:
-                template.event_type_mail_ids = [(5, 0)]
+                template.event_type_mail_ids = [(fields.X2ManyCmd.CLEAR, 0)]
             elif not template.event_type_mail_ids:
-                template.event_type_mail_ids = [(0, 0, {
+                template.event_type_mail_ids = [(fields.X2ManyCmd.CREATE, 0, {
                     'notification_type': 'mail',
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_id': self.env.ref('event.event_subscription').id,
-                }), (0, 0, {
+                }), (fields.X2ManyCmd.CREATE, 0, {
                     'notification_type': 'mail',
                     'interval_nbr': 10,
                     'interval_unit': 'days',
@@ -78,9 +78,9 @@ class EventType(models.Model):
     def _compute_event_type_ticket_ids(self):
         for template in self:
             if not template.use_ticket:
-                template.event_type_ticket_ids = [(5, 0)]
+                template.event_type_ticket_ids = [(fields.X2ManyCmd.CLEAR, 0)]
             elif not template.event_type_ticket_ids:
-                template.event_type_ticket_ids = [(0, 0, {
+                template.event_type_ticket_ids = [(fields.X2ManyCmd.CREATE, 0, {
                     'name': _('Registration'),
                 })]
 
@@ -400,10 +400,10 @@ class EventEvent(models.Model):
 
             # lines to keep: those with already sent emails or registrations
             mails_toremove = event._origin.event_mail_ids.filtered(lambda mail: not mail.mail_sent and not(mail.mail_registration_ids))
-            command = [(3, mail.id) for mail in mails_toremove]
+            command = [(fields.X2ManyCmd.UNLINK, mail.id) for mail in mails_toremove]
             if event.event_type_id.use_mail_schedule:
                 command += [
-                    (0, 0, {
+                    (fields.X2ManyCmd.CREATE, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
                     }) for line in event.event_type_id.event_type_mail_ids
@@ -440,12 +440,12 @@ class EventEvent(models.Model):
             # lines to keep: those with existing registrations
             if tickets_tokeep_ids:
                 tickets_toremove = event._origin.event_ticket_ids.filtered(lambda ticket: ticket.id not in tickets_tokeep_ids)
-                command = [(3, ticket.id) for ticket in tickets_toremove]
+                command = [(fields.X2ManyCmd.UNLINK, ticket.id) for ticket in tickets_toremove]
             else:
-                command = [(5, 0)]
+                command = [(fields.X2ManyCmd.CLEAR, 0)]
             if event.event_type_id.use_ticket:
                 command += [
-                    (0, 0, {
+                    (fields.X2ManyCmd.CREATE, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                     }) for line in event.event_type_id.event_type_ticket_ids

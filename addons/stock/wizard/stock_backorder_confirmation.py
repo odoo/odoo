@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import X2ManyCmd
 from odoo.tools.float_utils import float_compare
 
 
@@ -30,7 +31,7 @@ class StockBackorderConfirmation(models.TransientModel):
         res = super().default_get(fields)
         if 'backorder_confirmation_line_ids' in fields and res.get('pick_ids'):
             res['backorder_confirmation_line_ids'] = [
-                (0, 0, {'to_backorder': True, 'picking_id': pick_id})
+                (X2ManyCmd.CREATE, 0, {'to_backorder': True, 'picking_id': pick_id})
                 for pick_id in res['pick_ids'][0][2]
             ]
             # default_get returns x2m values as [(6, 0, ids)]

@@ -3,6 +3,7 @@
 
 from odoo.tests.common import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestSaleStockReports(TestReportsCommon):
@@ -32,7 +33,7 @@ class TestSaleStockReports(TestReportsCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
+                (X2ManyCmd.CREATE, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
             ],
         })
         bom_double_chococake = self.env['mrp.bom'].create({
@@ -42,7 +43,7 @@ class TestSaleStockReports(TestReportsCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_chococake.id, 'product_qty': 2}),
+                (X2ManyCmd.CREATE, 0, {'product_id': product_chococake.id, 'product_qty': 2}),
             ],
         })
 
@@ -110,7 +111,7 @@ class TestSaleStockReports(TestReportsCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_apple.id, 'product_qty': 5}),
+                (X2ManyCmd.CREATE, 0, {'product_id': product_apple.id, 'product_qty': 5}),
             ],
         })
         # Creates a MO and validates the pick components.

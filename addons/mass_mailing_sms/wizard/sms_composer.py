@@ -83,7 +83,7 @@ class SMSComposer(models.TransientModel):
                 trace_values = self._prepare_mass_sms_trace_values(record, sms_values)
                 sms_values.update({
                     'mailing_id': self.mailing_id.id,
-                    'mailing_trace_ids': [(0, 0, trace_values)],
+                    'mailing_trace_ids': [(fields.X2ManyCmd.CREATE, 0, trace_values)],
                 })
         return result
 

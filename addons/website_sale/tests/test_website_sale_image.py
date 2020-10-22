@@ -6,6 +6,7 @@ import io
 from PIL import Image
 
 import odoo.tests
+from odoo.fields import X2ManyCmd
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -89,14 +90,14 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # create the template, without creating the variants
         template = self.env['product.template'].with_context(create_product_product=True).create({
             'name': 'A Colorful Image',
-            'product_template_image_ids': [(0, 0, {'name': 'image 1', 'image_1920': image_gif}), (0, 0, {'name': 'image 4', 'image_1920': image_svg})],
+            'product_template_image_ids': [(X2ManyCmd.CREATE, 0, {'name': 'image 1', 'image_1920': image_gif}), (X2ManyCmd.CREATE, 0, {'name': 'image 4', 'image_1920': image_svg})],
         })
 
         # set the color attribute and values on the template
         line = self.env['product.template.attribute.line'].create([{
             'attribute_id': product_attribute.id,
             'product_tmpl_id': template.id,
-            'value_ids': [(6, 0, attr_values.ids)]
+            'value_ids': [(X2ManyCmd.SET, 0, attr_values.ids)]
         }])
         value_red = line.product_template_value_ids[0]
         value_green = line.product_template_value_ids[1]
@@ -115,7 +116,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         product_red = template._get_variant_for_combination(value_red)
         product_red.write({
             'image_1920': blue_image,
-            'product_variant_image_ids': [(0, 0, {'name': 'image 2', 'image_1920': image_bmp})],
+            'product_variant_image_ids': [(X2ManyCmd.CREATE, 0, {'name': 'image 2', 'image_1920': image_bmp})],
         })
 
         self.assertEqual(template.image_1920, blue_image)
@@ -124,7 +125,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         product_green = template._get_variant_for_combination(value_green)
         product_green.write({
             'image_1920': green_image,
-            'product_variant_image_ids': [(0, 0, {'name': 'image 3', 'image_1920': image_png})],
+            'product_variant_image_ids': [(X2ManyCmd.CREATE, 0, {'name': 'image 3', 'image_1920': image_png})],
         })
 
         # now set the red image on the first variant, that works because

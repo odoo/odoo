@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestProcRule(TransactionCase):
@@ -25,7 +26,7 @@ class TestProcRule(TransactionCase):
         product_route = self.env['stock.location.route'].create({
             'name': 'Stock -> output route',
             'product_selectable': True,
-            'rule_ids': [(0, 0, {
+            'rule_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Stock -> output rule',
                 'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
@@ -36,7 +37,7 @@ class TestProcRule(TransactionCase):
 
         # Set this route on `product.product_product_3`
         self.product.write({
-            'route_ids': [(4, product_route.id)]})
+            'route_ids': [(X2ManyCmd.LINK, product_route.id)]})
 
         # Create Delivery Order of 10 `product.product_product_3` from Output -> Customer
         product = self.product
@@ -46,7 +47,7 @@ class TestProcRule(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': '/',
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
@@ -93,7 +94,7 @@ class TestProcRule(TransactionCase):
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
             'date_deadline': deadline,
-            'move_dest_ids': [(4, move_dest.id)],
+            'move_dest_ids': [(X2ManyCmd.LINK, move_dest.id)],
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'quantity_done': 10,
@@ -216,7 +217,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move.date.date(), date.today())
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
-        delivery_picking.write({'move_lines': [(0, 0, {
+        delivery_picking.write({'move_lines': [(X2ManyCmd.CREATE, 0, {
             'name': 'Extra Move',
             'product_id': self.productB.id,
             'product_uom': self.uom_unit.id,
@@ -314,7 +315,7 @@ class TestProcRuleLoad(TransactionCase):
             'picking_type_id': warehouse.in_type_id.id,
         })
         (products[50] | products[99] | products[150] | products[199]).write({
-            'route_ids': [(4, wrong_route.id)]
+            'route_ids': [(X2ManyCmd.LINK, wrong_route.id)]
         })
         self.env['procurement.group'].run_scheduler()
         self.assertTrue(self.env['stock.move'].search([('product_id', 'in', products.ids)]))

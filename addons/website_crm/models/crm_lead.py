@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, SUPERUSER_ID
+from odoo.fields import X2ManyCmd
 
 
 class Lead(models.Model):
@@ -40,7 +41,7 @@ class Lead(models.Model):
     def _merge_data(self, fields):
         merged_data = super(Lead, self)._merge_data(fields)
         # add all the visitors from all lead to merge
-        merged_data['visitor_ids'] = [(6, 0, self.visitor_ids.ids)]
+        merged_data['visitor_ids'] = [(X2ManyCmd.SET, 0, self.visitor_ids.ids)]
         return merged_data
 
     def website_form_input_filter(self, request, values):

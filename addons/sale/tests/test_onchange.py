@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.fields import X2ManyCmd
 
 
 class TestOnchangeProductId(TransactionCase):
@@ -40,7 +41,7 @@ class TestOnchangeProductId(TransactionCase):
 
         product_tmpl_id = self.product_tmpl_model.create(dict(name="Voiture",
                                                               list_price=121,
-                                                              taxes_id=[(6, 0, [tax_include_id.id])]))
+                                                              taxes_id=[(X2ManyCmd.SET, 0, [tax_include_id.id])]))
 
         product_id = product_tmpl_id.product_variant_id
 
@@ -75,7 +76,7 @@ class TestOnchangeProductId(TransactionCase):
 
         christmas_pricelist = self.env['product.pricelist'].create({
             'name': 'Christmas pricelist',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'date_start': "2017-12-01",
                 'date_end': "2017-12-24",
                 'compute_price': 'percentage',
@@ -83,7 +84,7 @@ class TestOnchangeProductId(TransactionCase):
                 'percent_price': 20,
                 'applied_on': '3_global',
                 'name': 'Pre-Christmas discount'
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'date_start': "2017-12-25",
                 'date_end': "2017-12-31",
                 'compute_price': 'percentage',
@@ -124,7 +125,7 @@ class TestOnchangeProductId(TransactionCase):
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
         goup_discount_id = self.ref('product.group_discount_per_so_line')
-        self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, goup_discount_id, 0)]})
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',
             'factor_inv': 10,
@@ -135,7 +136,7 @@ class TestOnchangeProductId(TransactionCase):
         christmas_pricelist = self.env['product.pricelist'].create({
             'name': 'Christmas pricelist',
             'discount_policy': 'without_discount',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'date_start': "2017-12-01",
                 'date_end': "2017-12-30",
                 'compute_price': 'percentage',
@@ -177,12 +178,12 @@ class TestOnchangeProductId(TransactionCase):
         })
         partner = self.res_partner_model.create(dict(name="George"))
         goup_discount_id = self.ref('product.group_discount_per_so_line')
-        self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, goup_discount_id, 0)]})
 
         first_pricelist = self.env['product.pricelist'].create({
             'name': 'First pricelist',
             'discount_policy': 'without_discount',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 10,
@@ -194,7 +195,7 @@ class TestOnchangeProductId(TransactionCase):
         second_pricelist = self.env['product.pricelist'].create({
             'name': 'Second pricelist',
             'discount_policy': 'without_discount',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'compute_price': 'formula',
                 'base': 'pricelist',
                 'base_pricelist_id': first_pricelist.id,
@@ -252,7 +253,7 @@ class TestOnchangeProductId(TransactionCase):
             'name': 'First pricelist',
             'currency_id': other_currency.id,
             'discount_policy': 'with_discount',
-            'item_ids': [(0, 0, {
+            'item_ids': [(X2ManyCmd.CREATE, 0, {
                 'compute_price': 'percentage',
                 'base': 'list_price',
                 'percent_price': 10,

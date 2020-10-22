@@ -22,7 +22,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'partner_id': self.partner1.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -31,7 +31,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
                 'price_subtotal': 450 * (1 - 5/100.0) * 2,
                 'price_subtotal_incl': 450 * (1 - 5/100.0) * 2,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,
@@ -93,8 +93,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         inventory = self.env['stock.inventory'].create({
             'name': 'add product2',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product2.id)],
+            'location_ids': [(fields.X2ManyCmd.LINK, self.stock_location.id)],
+            'product_ids': [(fields.X2ManyCmd.LINK, self.product2.id)],
         })
         inventory.action_start()
 
@@ -134,7 +134,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'company_id': self.env.company.id,
             'session_id': current_session.id,
             'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'id': 1,
                 'product_id': self.product2.id,
@@ -217,7 +217,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -226,7 +226,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,
@@ -282,7 +282,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0003",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -291,7 +291,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0004",
                 'product_id': self.product4.id,
                 'price_unit': 300,
@@ -346,7 +346,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
             'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0005",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -355,7 +355,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0006",
                 'product_id': self.product4.id,
                 'price_unit': 300,
@@ -426,7 +426,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'partner_id': self.partner1.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -435,7 +435,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,
@@ -562,7 +562,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'price_subtotal': 0.9,
               'price_subtotal_incl': 1.04,
               'qty': 1,
-              'tax_ids': [(6, 0, self.led_lamp.taxes_id.ids)]}]],
+              'tax_ids': [(fields.X2ManyCmd.SET, 0, self.led_lamp.taxes_id.ids)]}]],
            'name': 'Order 00042-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -596,7 +596,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'price_subtotal': 1.2,
               'price_subtotal_incl': 1.38,
               'qty': 1,
-              'tax_ids': [(6, 0, self.whiteboard_pen.taxes_id.ids)]}]],
+              'tax_ids': [(fields.X2ManyCmd.SET, 0, self.whiteboard_pen.taxes_id.ids)]}]],
            'name': 'Order 00043-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -712,9 +712,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'module_account': False,
             'journal_id': sale_journal.id,
             'use_pricelist': True,
-            'available_pricelist_ids': [(6, 0, eur_pricelist.ids)],
+            'available_pricelist_ids': [(fields.X2ManyCmd.SET, 0, eur_pricelist.ids)],
             'pricelist_id': eur_pricelist.id,
-            'payment_method_ids': [(6, 0, self.bank_payment_method.ids)]
+            'payment_method_ids': [(fields.X2ManyCmd.SET, 0, self.bank_payment_method.ids)]
         })
 
         # I click on create a new session button
@@ -731,7 +731,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'pricelist_id': eur_pricelist.id,
             'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -740,7 +740,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,
@@ -826,7 +826,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'session_id': current_session.id,
             'partner_id': self.partner1.id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
-            'lines': [(0, 0, {
+            'lines': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0001",
                 'product_id': self.product3.id,
                 'price_unit': 450,
@@ -834,7 +834,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'qty': 2.0,
                 'price_subtotal': 855,
                 'price_subtotal_incl': 855,
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,

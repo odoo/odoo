@@ -38,7 +38,7 @@ class AccountTestInvoicingCommon(SavepointCase):
             'name': 'Because I am accountman!',
             'login': 'accountman',
             'password': 'accountman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
+            'groups_id': [(fields.X2ManyCmd.SET, 0, cls.env.user.groups_id.ids), (fields.X2ManyCmd.LINK, cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'accountman@test.com'
 
@@ -51,7 +51,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
 
         user.write({
-            'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
+            'company_ids': [(fields.X2ManyCmd.SET, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
             'company_id': cls.company_data['company'].id,
         })
 
@@ -72,8 +72,8 @@ class AccountTestInvoicingCommon(SavepointCase):
             'standard_price': 800.0,
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [(6, 0, cls.tax_sale_a.ids)],
-            'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, cls.tax_sale_a.ids)],
+            'supplier_taxes_id': [(fields.X2ManyCmd.SET, 0, cls.tax_purchase_a.ids)],
         })
         cls.product_b = cls.env['product.product'].create({
             'name': 'product_b',
@@ -82,8 +82,8 @@ class AccountTestInvoicingCommon(SavepointCase):
             'standard_price': 160.0,
             'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
             'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
-            'taxes_id': [(6, 0, (cls.tax_sale_a + cls.tax_sale_b).ids)],
-            'supplier_taxes_id': [(6, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, (cls.tax_sale_a + cls.tax_sale_b).ids)],
+            'supplier_taxes_id': [(fields.X2ManyCmd.SET, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
         })
 
         # ==== Fiscal positions ====
@@ -117,14 +117,14 @@ class AccountTestInvoicingCommon(SavepointCase):
             'name': '30% Advance End of Following Month',
             'note': 'Payment terms: 30% Advance End of Following Month',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'percent',
                     'value_amount': 30.0,
                     'sequence': 400,
                     'days': 0,
                     'option': 'day_after_invoice_date',
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'value_amount': 0.0,
                     'sequence': 500,
@@ -287,7 +287,7 @@ class AccountTestInvoicingCommon(SavepointCase):
             'amount_type': 'group',
             'amount': 0.0,
             'children_tax_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': '%s (child 1)' % tax_name,
                     'amount_type': 'percent',
                     'amount': 20.0,
@@ -327,7 +327,7 @@ class AccountTestInvoicingCommon(SavepointCase):
                         }),
                     ],
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': '%s (child 2)' % tax_name,
                     'amount_type': 'percent',
                     'amount': 10.0,
@@ -632,7 +632,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             'partner_id': partner_id or self.partner_agrolait_id,
             'invoice_date': date_invoice,
             'date': date_invoice,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': 'product that cost %s' % invoice_amount,
                 'quantity': 1,
                 'price_unit': invoice_amount,
@@ -669,7 +669,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             'journal_id': bank_journal.id,
             'date': time.strftime('%Y') + '-07-15',
             'name': 'payment' + invoice_record.name,
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'payment_ref': 'payment',
                 'partner_id': self.partner_agrolait_id,
                 'amount': amount,

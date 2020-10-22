@@ -3,6 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo.exceptions import AccessError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -23,7 +24,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             'name': 'Purchase user',
             'login': 'purchaseUser',
             'email': 'pu@odoo.com',
-            'groups_id': [(6, 0, [group_purchase_user.id, group_employee.id, group_partner_manager.id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [group_purchase_user.id, group_employee.id, group_partner_manager.id])],
         })
 
         cls.vendor = cls.env['res.partner'].create({

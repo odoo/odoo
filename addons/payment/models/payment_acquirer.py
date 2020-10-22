@@ -174,9 +174,9 @@ class PaymentAcquirer(models.Model):
         electronic = self.env.ref('payment.account_payment_method_electronic_in')
         if self.token_implemented and self.payment_flow == 's2s':
             if electronic not in self.inbound_payment_method_ids:
-                self.inbound_payment_method_ids = [(4, electronic.id)]
+                self.inbound_payment_method_ids = [(fields.X2ManyCmd.LINK, electronic.id)]
         elif electronic in self.inbound_payment_method_ids:
-            self.inbound_payment_method_ids = [(2, electronic.id)]
+            self.inbound_payment_method_ids = [(fields.X2ManyCmd.DELETE, electronic.id)]
 
     @api.onchange('state')
     def onchange_state(self):
@@ -260,7 +260,7 @@ class PaymentAcquirer(models.Model):
         account = self.env['account.account'].create(account_vals)
         inbound_payment_method_ids = []
         if self.token_implemented and self.payment_flow == 's2s':
-            inbound_payment_method_ids.append((4, self.env.ref('payment.account_payment_method_electronic_in').id))
+            inbound_payment_method_ids.append((fields.X2ManyCmd.LINK, self.env.ref('payment.account_payment_method_electronic_in').id))
         return {
             'name': self.name,
             'code': self.name.upper(),

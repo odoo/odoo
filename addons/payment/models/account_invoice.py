@@ -76,7 +76,7 @@ class AccountMove(models.Model):
             'amount': sum(self.mapped('amount_residual')),
             'currency_id': currency.id,
             'partner_id': partner.id,
-            'invoice_ids': [(6, 0, self.ids)],
+            'invoice_ids': [(fields.X2ManyCmd.SET, 0, self.ids)],
         })
 
         transaction = self.env['payment.transaction'].create(vals)

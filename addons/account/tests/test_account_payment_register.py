@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -31,11 +32,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         cls.company_data['default_journal_bank'].write({
             'payment_debit_account_id': cls.payment_debit_account_id.id,
             'payment_credit_account_id': cls.payment_credit_account_id.id,
-            'inbound_payment_method_ids': [(6, 0, (
+            'inbound_payment_method_ids': [(X2ManyCmd.SET, 0, (
                 cls.manual_payment_method_in.id,
                 cls.custom_payment_method_in.id,
             ))],
-            'outbound_payment_method_ids': [(6, 0, (
+            'outbound_payment_method_ids': [(X2ManyCmd.SET, 0, (
                 cls.env.ref('account.account_payment_method_manual_out').id,
                 cls.custom_payment_method_out.id,
                 cls.manual_payment_method_out.id,
@@ -49,7 +50,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
         })
         cls.out_invoice_1.action_post()
         cls.out_invoice_2 = cls.env['account.move'].create({
@@ -58,7 +59,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
         })
         (cls.out_invoice_1 + cls.out_invoice_2).action_post()
 
@@ -68,14 +69,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
         })
         cls.in_invoice_2 = cls.env['account.move'].create({
             'move_type': 'in_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
         })
         cls.in_invoice_3 = cls.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -83,7 +84,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_b.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 3000.0})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': cls.product_a.id, 'price_unit': 3000.0})],
         })
         (cls.in_invoice_1 + cls.in_invoice_2 + cls.in_invoice_3).action_post()
 

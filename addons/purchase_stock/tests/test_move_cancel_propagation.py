@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import tagged
 from .common import PurchaseTestCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestMoveCancelPropagation(PurchaseTestCommon):
@@ -19,8 +20,8 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         product = self.env['product.product'].create({
             'name': 'Geyser',
             'type': 'product',
-            'route_ids': [(4, self.route_mto), (4, self.route_buy)],
-            'seller_ids': [(6, 0, [seller.id])],
+            'route_ids': [(X2ManyCmd.LINK, self.route_mto), (X2ManyCmd.LINK, self.route_buy)],
+            'seller_ids': [(X2ManyCmd.SET, 0, [seller.id])],
         })
         self.picking_out = self.env['stock.picking'].create({
             'location_id': self.warehouse.out_type_id.default_location_src_id.id,
@@ -265,8 +266,8 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         product_car = self.env['product.product'].create({
             'name': 'Car',
             'type': 'product',
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
+            'route_ids': [(X2ManyCmd.LINK, self.ref('stock.route_warehouse0_mto')), (X2ManyCmd.LINK, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'seller_ids': [(X2ManyCmd.SET, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         customer_picking = self.env['stock.picking'].create({

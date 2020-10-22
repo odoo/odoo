@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.tests.common import SMSCase
+from odoo.fields import X2ManyCmd
 
 
 class TestSMSSchedule(TestEventCommon, SMSCase):
@@ -29,12 +30,12 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
 
         cls.event_0.write({
             'event_mail_ids': [
-                (0, 0, {  # right at subscription
+                (X2ManyCmd.CREATE, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'notification_type': 'sms',
                     'sms_template_id': cls.sms_template_sub.id}),
-                (0, 0, {  # 3 days before event
+                (X2ManyCmd.CREATE, 0, {  # 3 days before event
                     'interval_nbr': 3,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',

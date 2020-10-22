@@ -3,6 +3,7 @@
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users
+from odoo.fields import X2ManyCmd
 
 
 class TestMailingListMerge(MassMailCommon):
@@ -15,7 +16,7 @@ class TestMailingListMerge(MassMailCommon):
         cls.mailing_list_3 = cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'ListC',
             'contact_ids': [
-                (0, 0, {'name': 'Norberto', 'email': 'norbert@example.com'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Norberto', 'email': 'norbert@example.com'}),
             ]
         })
 
@@ -27,7 +28,7 @@ class TestMailingListMerge(MassMailCommon):
         # duplicates are appearing in C
 
         result_list = self.env['mailing.list.merge'].create({
-            'src_list_ids': [(4, list_id) for list_id in [self.mailing_list_1.id, self.mailing_list_2.id]],
+            'src_list_ids': [(X2ManyCmd.LINK, list_id) for list_id in [self.mailing_list_1.id, self.mailing_list_2.id]],
             'dest_list_id': self.mailing_list_3.id,
             'merge_options': 'existing',
             'new_list_name': False,

@@ -3,6 +3,7 @@
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestRobustness(SavepointCase):
@@ -202,7 +203,7 @@ class TestRobustness(SavepointCase):
         (move1 + move2)._action_confirm()
 
         with self.assertRaises(ValidationError):
-            move1.write({'move_line_ids': [(0, 0, {
+            move1.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': product1.id,
                 'product_uom_id': self.uom_unit.id,
                 'qty_done': 1,
@@ -212,7 +213,7 @@ class TestRobustness(SavepointCase):
             })]})
 
         with self.assertRaises(ValidationError):
-            move2.write({'move_line_ids': [(0, 0, {
+            move2.write({'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': product2.id,
                 'product_uom_id': self.uom_unit.id,
                 'qty_done': 1,

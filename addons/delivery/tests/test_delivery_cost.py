@@ -2,6 +2,7 @@
 
 from odoo.tests import common, Form
 from odoo.tools import float_compare
+from odoo.fields import X2ManyCmd
 
 
 @common.tagged('post_install', '-at_install')
@@ -58,7 +59,7 @@ class TestDeliveryCost(common.TransactionCase):
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
             'pricelist_id': self.pricelist.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product_4.id,
                 'product_uom_qty': 1,
@@ -72,7 +73,7 @@ class TestDeliveryCost(common.TransactionCase):
             'code': 'X2020',
             'name': 'Product Sales - (test)',
             'user_type_id': self.account_data.id,
-            'tag_ids': [(6, 0, {
+            'tag_ids': [(X2ManyCmd.SET, 0, {
                 self.account_tag_operating.id
             })]
         })
@@ -116,13 +117,13 @@ class TestDeliveryCost(common.TransactionCase):
             'partner_invoice_id': self.partner_address_13.id,
             'partner_shipping_id': self.partner_address_13.id,
             'pricelist_id': self.pricelist.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Service on demand',
                 'product_id': self.product_consultant.id,
                 'product_uom_qty': 24,
                 'product_uom': self.product_uom_hour.id,
                 'price_unit': 75.00,
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'name': 'On Site Assistance',
                 'product_id': self.product_2.id,
                 'product_uom_qty': 30,

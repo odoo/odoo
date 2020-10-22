@@ -26,7 +26,7 @@ class TestTrackSuggestions(TestEventTrackOnlineCommon):
             'name': 'Track 1',
             'location_id': location_1.id,
             'event_id': self.event_0.id,
-            'tag_ids': [(4, tag_1.id), (4, tag_2.id)],
+            'tag_ids': [(fields.X2ManyCmd.LINK, tag_1.id), (fields.X2ManyCmd.LINK, tag_2.id)],
             'date': date + timedelta(hours=-1),
         }, {
             'name': 'Track 2',
@@ -37,24 +37,24 @@ class TestTrackSuggestions(TestEventTrackOnlineCommon):
             'name': 'Track 3',
             'location_id': location_2.id,
             'event_id': self.event_0.id,
-            'tag_ids': [(4, tag_1.id), (4, tag_3.id), (4, tag_4.id)],
+            'tag_ids': [(fields.X2ManyCmd.LINK, tag_1.id), (fields.X2ManyCmd.LINK, tag_3.id), (fields.X2ManyCmd.LINK, tag_4.id)],
             'date': date,
         }, {
             'name': 'Track 4',
             'event_id': self.event_0.id,
-            'tag_ids': [(4, tag_1.id), (4, tag_2.id)],
+            'tag_ids': [(fields.X2ManyCmd.LINK, tag_1.id), (fields.X2ManyCmd.LINK, tag_2.id)],
             'date': date,
         }, {
             'name': 'Track 5',
             'event_id': self.event_0.id,
-            'tag_ids': [(4, tag_1.id), (4, tag_3.id)],
+            'tag_ids': [(fields.X2ManyCmd.LINK, tag_1.id), (fields.X2ManyCmd.LINK, tag_3.id)],
             'wishlisted_by_default': True,
             'date': date,
         }, {
             'name': 'Track 6',
             'location_id': location_1.id,
             'event_id': self.event_0.id,
-            'tag_ids': [(4, tag_1.id), (4, tag_3.id)],
+            'tag_ids': [(fields.X2ManyCmd.LINK, tag_1.id), (fields.X2ManyCmd.LINK, tag_3.id)],
             'date': date,
         }])
 
@@ -109,7 +109,7 @@ class TestTrackSuggestions(TestEventTrackOnlineCommon):
                 'Returned track should the one with the most common tags')
 
             # remove tags, now based on location
-            all_suggestions.sudo().write({'tag_ids': [(5,)]})
+            all_suggestions.sudo().write({'tag_ids': [(fields.X2ManyCmd.CLEAR,)]})
             track_suggestion = current_track._get_track_suggestions(limit=1)
             self.assertEqual(
                 track_suggestion, track_6,

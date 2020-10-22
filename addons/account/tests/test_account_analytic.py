@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -13,8 +14,8 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
         cls.env.user.write({
             'groups_id': [
-                (4, cls.env.ref('analytic.group_analytic_accounting').id),
-                (4, cls.env.ref('analytic.group_analytic_tags').id),
+                (X2ManyCmd.LINK, cls.env.ref('analytic.group_analytic_accounting').id),
+                (X2ManyCmd.LINK, cls.env.ref('analytic.group_analytic_tags').id),
             ],
         })
 
@@ -31,13 +32,13 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': '2019-01-01',
             'line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'line_debit',
                     'account_id': self.company_data['default_account_revenue'].id,
                     'analytic_account_id': self.test_analytic_account.id,
                     'analytic_tag_ids': [(6, 0, self.test_analytic_tag.ids)],
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'line_credit',
                     'account_id': self.company_data['default_account_revenue'].id,
                 }),

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import fields, api
 from odoo.tests import tagged, common
 
 
@@ -39,8 +40,8 @@ class TestMatrixCommon(common.HttpCase):
             'type': "consu",
             'uom_id': self.ref("uom.product_uom_unit"),
             'uom_po_id': self.ref("uom.product_uom_unit"),
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)]
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)]
             }) for attribute in product_attributes],
         })

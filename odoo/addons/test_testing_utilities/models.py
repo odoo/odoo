@@ -92,7 +92,7 @@ class M2MChange(models.Model):
         for r in self:
             r.write({
                 'm2m': [
-                    (0, False, {'name': str(n)})
+                    (fields.X2ManyCmd.CREATE, False, {'name': str(n)})
                     for n, v in zip_longest(range(r.count), r.m2m or [])
                     if v is None
                 ]
@@ -177,7 +177,7 @@ class O2MDefault(models.Model):
 
     def _default_subs(self):
         return [
-            (0, 0, {'v': 5})
+            (fields.X2ManyCmd.CREATE, 0, {'v': 5})
         ]
     value = fields.Integer(default=1)
     v = fields.Integer()
@@ -290,8 +290,8 @@ class O2MChangesParent(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         for line in self.line_ids:
-            line.line_ids = [(2, l.id, False) for l in line.line_ids] + [
-                (0, 0, {'v': 0, 'vv': 0})
+            line.line_ids = [(fields.X2ManyCmd.DELETE, l.id, False) for l in line.line_ids] + [
+                (fields.X2ManyCmd.CREATE, 0, {'v': 0, 'vv': 0})
             ]
 
 class O2MChangesChildren(models.Model):

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.event.tests.common import TestEventCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestEventQuestionCommon(TestEventCommon):
@@ -16,8 +17,8 @@ class TestEventQuestionCommon(TestEventCommon):
             'event_type_id': cls.event_type_complex.id,
             'once_per_order': False,
             'answer_ids': [
-                (0, 0, {'name': 'Q1-Answer1'}),
-                (0, 0, {'name': 'Q1-Answer2'})
+                (X2ManyCmd.CREATE, 0, {'name': 'Q1-Answer1'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Q1-Answer2'})
             ],
         })
         cls.event_question_2 = cls.env['event.question'].create({
@@ -26,8 +27,8 @@ class TestEventQuestionCommon(TestEventCommon):
             'event_type_id': cls.event_type_complex.id,
             'once_per_order': True,
             'answer_ids': [
-                (0, 0, {'name': 'Q2-Answer1'}),
-                (0, 0, {'name': 'Q2-Answer2'})
+                (X2ManyCmd.CREATE, 0, {'name': 'Q2-Answer1'}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Q2-Answer2'})
             ],
         })
         cls.event_question_3 = cls.env['event.question'].create({

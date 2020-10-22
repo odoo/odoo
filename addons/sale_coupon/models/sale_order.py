@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
             'is_reward_line': True,
             'name': _("Free Product") + " - " + program.reward_product_id.name,
             'product_uom': program.reward_product_id.uom_id.id,
-            'tax_id': [(4, tax.id, False) for tax in taxes],
+            'tax_id': [(fields.X2ManyCmd.LINK, tax.id, False) for tax in taxes],
         }
 
     def _get_paid_order_lines(self):
@@ -139,7 +139,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': 1.0,
                 'product_uom': program.discount_line_product_id.uom_id.id,
                 'is_reward_line': True,
-                'tax_id': [(4, tax.id, False) for tax in program.discount_line_product_id.taxes_id],
+                'tax_id': [(fields.X2ManyCmd.LINK, tax.id, False) for tax in program.discount_line_product_id.taxes_id],
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
@@ -157,7 +157,7 @@ class SaleOrder(models.Model):
                         'product_uom_qty': 1.0,
                         'product_uom': program.discount_line_product_id.uom_id.id,
                         'is_reward_line': True,
-                        'tax_id': [(4, tax.id, False) for tax in taxes],
+                        'tax_id': [(fields.X2ManyCmd.LINK, tax.id, False) for tax in taxes],
                     }
         elif program.discount_apply_on in ['specific_products', 'on_order']:
             if program.discount_apply_on == 'specific_products':
@@ -186,7 +186,7 @@ class SaleOrder(models.Model):
                             'product_uom_qty': 1.0,
                             'product_uom': program.discount_line_product_id.uom_id.id,
                             'is_reward_line': True,
-                            'tax_id': [(4, tax.id, False) for tax in taxes],
+                            'tax_id': [(fields.X2ManyCmd.LINK, tax.id, False) for tax in taxes],
                         }
 
         # If there is a max amount for discount, we might have to limit some discount lines or completely remove some lines
@@ -214,7 +214,7 @@ class SaleOrder(models.Model):
             return [self._get_reward_values_product(program)]
 
     def _create_reward_line(self, program):
-        self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
+        self.write({'order_line': [(fields.X2ManyCmd.CREATE, False, value) for value in self._get_reward_line_values(program)]})
 
     def _create_reward_coupon(self, program):
         # if there is already a coupon that was set as expired, reactivate that one instead of creating a new one
@@ -305,7 +305,7 @@ class SaleOrder(models.Model):
                 if program.promo_applicability == 'on_next_order':
                     order._create_reward_coupon(program)
                 elif program.discount_line_product_id.id not in self.order_line.mapped('product_id').ids:
-                    self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
+                    self.write({'order_line': [(fields.X2ManyCmd.CREATE, False, value) for value in self._get_reward_line_values(program)]})
                 order.no_code_promo_program_ids |= program
 
     def _update_existing_reward_lines(self):

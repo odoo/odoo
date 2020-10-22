@@ -8,6 +8,7 @@ from odoo.tests.common import users
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event_questions.controllers.main import WebsiteEvent
 from odoo.addons.website_event_questions.tests.common import TestEventQuestionCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestEventData(TestEventQuestionCommon):
@@ -66,12 +67,12 @@ class TestEventData(TestEventQuestionCommon):
         self.assertEqual(registrations, [
             {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': 2,
             'registration_answer_ids': [
-                (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 5}),
-                (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
-                (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]},
+                (X2ManyCmd.CREATE, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 5}),
+                (X2ManyCmd.CREATE, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
+                (X2ManyCmd.CREATE, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]},
             {'name': 'Geluchat', 'email': 'geluchat@gmail.com', 'phone': '+32777777777', 'event_ticket_id': 3,
             'registration_answer_ids': [
-                (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 9}),
-                (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
-                (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]}
+                (X2ManyCmd.CREATE, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 9}),
+                (X2ManyCmd.CREATE, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
+                (X2ManyCmd.CREATE, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]}
         ])

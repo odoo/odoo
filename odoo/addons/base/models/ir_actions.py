@@ -522,7 +522,7 @@ class IrActionsServer(models.Model):
         if self.link_field_id:
             record = self.env[self.model_id.model].browse(self._context.get('active_id'))
             if self.link_field_id.ttype in ['one2many', 'many2many']:
-                record.write({self.link_field_id.name: [(4, res.id)]})
+                record.write({self.link_field_id.name: [(fields.X2ManyCmd.LINK, res.id)]})
             else:
                 record.write({self.link_field_id.name: res.id})
 

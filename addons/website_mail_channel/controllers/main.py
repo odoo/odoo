@@ -104,12 +104,12 @@ class MailGroup(http.Controller):
             # add or remove channel members
             if unsubscribe:
                 channel.check_access_rule('read')
-                channel.sudo().write({'channel_partner_ids': [(3, partner_id) for partner_id in partner_ids]})
+                channel.sudo().write({'channel_partner_ids': [(fields.X2ManyCmd.UNLINK, partner_id) for partner_id in partner_ids]})
                 return "off"
             else:  # add partner to the channel
                 request.session['partner_id'] = partner_ids[0]
                 channel.check_access_rule('read')
-                channel.sudo().write({'channel_partner_ids': [(4, partner_id) for partner_id in partner_ids]})
+                channel.sudo().write({'channel_partner_ids': [(fields.X2ManyCmd.LINK, partner_id) for partner_id in partner_ids]})
             return "on"
 
         else:
@@ -230,7 +230,7 @@ class MailGroup(http.Controller):
             return request.render('website_mail_channel.invalid_token_subscription')
 
         # add partner
-        channel.sudo().write({'channel_partner_ids': [(4, partner_id)]})
+        channel.sudo().write({'channel_partner_ids': [(fields.X2ManyCmd.LINK, partner_id)]})
 
         return request.render("website_mail_channel.confirmation_subscription", {'subscribing': True})
 
@@ -258,6 +258,6 @@ class MailGroup(http.Controller):
             return request.render('website_mail_channel.invalid_token_subscription')
 
         # remove partner
-        channel.sudo().write({'channel_partner_ids': [(3, partner_id)]})
+        channel.sudo().write({'channel_partner_ids': [(fields.X2ManyCmd.UNLINK, partner_id)]})
 
         return request.render("website_mail_channel.confirmation_subscription", {'subscribing': False})

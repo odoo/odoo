@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.fields import X2ManyCmd
 
 
 class TestSaleFlow(TestSaleCommonBase):
@@ -12,7 +13,7 @@ class TestSaleFlow(TestSaleCommonBase):
         user = cls.env['res.users'].create({
             'name': 'Because I am saleman!',
             'login': 'saleman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
+            'groups_id': [(X2ManyCmd.SET, 0, cls.env.user.groups_id.ids), (X2ManyCmd.LINK, cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'saleman@test.com'
 
@@ -51,7 +52,7 @@ class TestSaleFlow(TestSaleCommonBase):
             'analytic_account_id': self.analytic_account.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.company_data['product_order_cost'].name,
                     'product_id': self.company_data['product_order_cost'].id,
                     'product_uom_qty': 2,
@@ -59,7 +60,7 @@ class TestSaleFlow(TestSaleCommonBase):
                     'product_uom': self.company_data['product_order_cost'].uom_id.id,
                     'price_unit': self.company_data['product_order_cost'].list_price,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': self.company_data['product_delivery_cost'].name,
                     'product_id': self.company_data['product_delivery_cost'].id,
                     'product_uom_qty': 4,

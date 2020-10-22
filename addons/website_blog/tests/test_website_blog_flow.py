@@ -6,6 +6,7 @@ from odoo.tests.common import users
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.fields import X2ManyCmd
 
 
 class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
@@ -17,7 +18,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'login': 'portal_user',
             'email': 'portal_user@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [group_portal.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_portal.id])]
         })
 
     def test_website_blog_followers(self):

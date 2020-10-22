@@ -7,6 +7,7 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.fields import X2ManyCmd
 
 
 class TestPartnerAssign(TransactionCase):
@@ -135,7 +136,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'name': 'Poor Partner (not integrating one)',
             'email': 'poor.partner@ododo.com',
             'login': 'poorpartner',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+            'groups_id': [(X2ManyCmd.SET, 0, [self.env.ref('base.group_portal').id])],
         })
         # try to accept a lead that is not mine
         with self.assertRaises(AccessError):

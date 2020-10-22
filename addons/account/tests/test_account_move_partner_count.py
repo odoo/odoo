@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -14,14 +15,14 @@ class TestAccountMovePartnerCount(AccountTestInvoicingCommon):
                 'date': '2017-01-01',
                 'invoice_date': '2017-01-01',
                 'partner_id': self.partner_a.id,
-                'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
+                'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'name': 'aaaa', 'price_unit': 100.0})],
             },
             {
                 'move_type': 'in_invoice',
                 'date': '2017-01-01',
                 'invoice_date': '2017-01-01',
                 'partner_id': self.partner_a.id,
-                'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
+                'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'name': 'aaaa', 'price_unit': 100.0})],
             },
         ]).action_post()
 

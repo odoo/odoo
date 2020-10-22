@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.modules.module import get_module_resource
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.fields import X2ManyCmd
 
 from contextlib import contextmanager
 from unittest.mock import patch
@@ -25,7 +26,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
                 'code': 'test_edi',
             })
         cls.journal = cls.company_data['default_journal_sale']
-        cls.journal.edi_format_ids = [(6, 0, cls.edi_format.ids)]
+        cls.journal.edi_format_ids = [(X2ManyCmd.SET, 0, cls.edi_format.ids)]
 
     ####################################################
     # EDI helpers

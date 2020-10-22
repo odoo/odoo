@@ -250,7 +250,7 @@ class StockRule(models.Model):
         res = {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
-            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
+            'move_dest_ids': [(fields.X2ManyCmd.LINK, x.id) for x in values.get('move_dest_ids', [])]
         }
         orderpoint_id = values.get('orderpoint_id')
         if orderpoint_id:

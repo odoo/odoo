@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.fields import X2ManyCmd
 from odoo.osv import expression
 from odoo.tools import float_is_zero
 from odoo.tools import float_compare, float_round, float_repr
@@ -67,9 +68,9 @@ class AccountBankStmtCashWizard(models.Model):
         balance = self.env.context.get('balance')
         statement_id = self.env.context.get('statement_id')
         if 'start_bank_stmt_ids' in fields and not vals.get('start_bank_stmt_ids') and statement_id and balance == 'start':
-            vals['start_bank_stmt_ids'] = [(6, 0, [statement_id])]
+            vals['start_bank_stmt_ids'] = [(X2ManyCmd.SET, 0, [statement_id])]
         if 'end_bank_stmt_ids' in fields and not vals.get('end_bank_stmt_ids') and statement_id and balance == 'close':
-            vals['end_bank_stmt_ids'] = [(6, 0, [statement_id])]
+            vals['end_bank_stmt_ids'] = [(X2ManyCmd.SET, 0, [statement_id])]
 
         return vals
 
@@ -317,7 +318,7 @@ class AccountBankStatement(models.Model):
 
                         st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
                         st_line_vals['counterpart_account_id'] = stmt.journal_id.profit_account_id.id
-                        
+
                     self.env['account.bank.statement.line'].create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
@@ -849,7 +850,7 @@ class AccountBankStatementLine(models.Model):
 
             to_write = {'statement_line_id': st_line.id}
             if 'line_ids' not in vals_list[i]:
-                to_write['line_ids'] = [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_id=counterpart_account_id)]
+                to_write['line_ids'] = [(X2ManyCmd.CREATE, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_id=counterpart_account_id)]
 
             st_line.move_id.write(to_write)
 
@@ -977,15 +978,15 @@ class AccountBankStatementLine(models.Model):
             journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency else False
 
             line_vals_list = self._prepare_move_line_default_vals()
-            line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
+            line_ids_commands = [(X2ManyCmd.UPDATE, liquidity_lines.id, line_vals_list[0])]
 
             if suspense_lines:
-                line_ids_commands.append((1, suspense_lines.id, line_vals_list[1]))
+                line_ids_commands.append((X2ManyCmd.UPDATE, suspense_lines.id, line_vals_list[1]))
             else:
-                line_ids_commands.append((0, 0, line_vals_list[1]))
+                line_ids_commands.append((X2ManyCmd.CREATE, 0, line_vals_list[1]))
 
             for line in other_lines:
-                line_ids_commands.append((2, line.id))
+                line_ids_commands.append((X2ManyCmd.DELETE, line.id))
 
             st_line.move_id.write({
                 'partner_id': st_line.partner_id.id,
@@ -1091,12 +1092,12 @@ class AccountBankStatementLine(models.Model):
                 # Preserve the rate of the statement line.
                 payment_vals['line_ids'] = [
                     # Receivable / Payable line.
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         **line_vals,
                     }),
 
                     # Liquidity line.
-                    (0, 0, {
+                    (X2ManyCmd.CREATE, 0, {
                         **line_vals,
                         'amount_currency': -line_vals['amount_currency'],
                         'debit': line_vals['credit'],
@@ -1195,8 +1196,8 @@ class AccountBankStatementLine(models.Model):
 
         # ==== Create & reconcile lines on the bank statement line ====
 
-        to_create_commands = [(0, 0, open_balance_vals)] if open_balance_vals else []
-        to_delete_commands = [(2, line.id) for line in suspense_lines + other_lines]
+        to_create_commands = [(X2ManyCmd.CREATE, 0, open_balance_vals)] if open_balance_vals else []
+        to_delete_commands = [(X2ManyCmd.DELETE, line.id) for line in suspense_lines + other_lines]
 
         # Cleanup previous lines.
         self.move_id.with_context(check_move_validity=False, skip_account_move_synchronization=True, force_delete=True).write({
@@ -1246,5 +1247,5 @@ class AccountBankStatementLine(models.Model):
         for st_line in self:
             st_line.with_context(force_delete=True).write({
                 'to_check': False,
-                'line_ids': [(5, 0)] + [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
+                'line_ids': [(X2ManyCmd.CLEAR, 0)] + [(X2ManyCmd.CREATE, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })

@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
         template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
         # --- first, process the list of products from the template
-        order_lines = [(5, 0, 0)]
+        order_lines = [(fields.X2ManyCmd.CLEAR, 0, 0)]
         for line in template.sale_order_template_line_ids:
             data = self._compute_line_data_for_template_change(line)
 
@@ -126,16 +126,16 @@ class SaleOrder(models.Model):
                     'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
                 })
 
-            order_lines.append((0, 0, data))
+            order_lines.append((fields.X2ManyCmd.CREATE, 0, data))
 
         self.order_line = order_lines
         self.order_line._compute_tax_id()
 
         # then, process the list of optional products from the template
-        option_lines = [(5, 0, 0)]
+        option_lines = [(fields.X2ManyCmd.CLEAR, 0, 0)]
         for option in template.sale_order_template_option_ids:
             data = self._compute_option_data_for_template_change(option)
-            option_lines.append((0, 0, data))
+            option_lines.append((fields.X2ManyCmd.CREATE, 0, data))
 
         self.sale_order_option_ids = option_lines
 

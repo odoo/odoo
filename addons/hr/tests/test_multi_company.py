@@ -4,6 +4,7 @@
 from odoo.tests import Form
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.base.models.qweb import QWebException
+from odoo.fields import X2ManyCmd
 
 
 class TestMultiCompany(TestHrCommon):
@@ -17,8 +18,8 @@ class TestMultiCompany(TestHrCommon):
             {'name': 'Machin', 'company_id': self.company_2.id},
         ])
         self.res_users_hr_officer.company_ids = [
-            (4, self.company_1.id),
-            (4, self.company_2.id),
+            (X2ManyCmd.LINK, self.company_1.id),
+            (X2ManyCmd.LINK, self.company_2.id),
         ]
         self.res_users_hr_officer.company_id = self.company_1.id
 

@@ -5,6 +5,7 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
 import pytz
 from datetime import datetime, date
 from odoo.tests.common import SavepointCase, new_test_user
+from odoo.fields import X2ManyCmd
 
 
 class TestSyncGoogle2Odoo(SavepointCase):
@@ -61,7 +62,7 @@ class TestSyncGoogle2Odoo(SavepointCase):
             'stop': date(2020, 1, 6),
             'google_id': google_id,
             'user_id': self.env.user.id,
-            'partner_ids': [(6, 0, self.env.user.partner_id.ids)]  # current user is attendee
+            'partner_ids': [(X2ManyCmd.SET, 0, self.env.user.partner_id.ids)]  # current user is attendee
         })
         gevent = GoogleEvent([{
             'id': google_id,
@@ -78,7 +79,7 @@ class TestSyncGoogle2Odoo(SavepointCase):
             'stop': date(2020, 1, 6),
             'google_id': google_id,
             'user_id': False,  # Not the current user
-            'partner_ids': [(6, 0, self.env.user.partner_id.ids)]  # current user is attendee
+            'partner_ids': [(X2ManyCmd.SET, 0, self.env.user.partner_id.ids)]  # current user is attendee
         })
         gevent = GoogleEvent([{
             'id': google_id,
@@ -99,7 +100,7 @@ class TestSyncGoogle2Odoo(SavepointCase):
             'stop': date(2020, 1, 6),
             'google_id': google_id,
             'user_id': False,  # user is not owner
-            'partner_ids': [(6, 0, user.partner_id.ids)],  # but user is attendee
+            'partner_ids': [(X2ManyCmd.SET, 0, user.partner_id.ids)],  # but user is attendee
         })
         gevent = GoogleEvent([{
             'id': google_id,

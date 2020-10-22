@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -52,8 +53,8 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
             'sequence': 5,
             'children_tax_ids': [
-                (4, cls.fixed_tax.id, 0),
-                (4, cls.percent_tax.id, 0)
+                (X2ManyCmd.LINK, cls.fixed_tax.id, 0),
+                (X2ManyCmd.LINK, cls.percent_tax.id, 0)
             ]
         })
         cls.group_tax_bis = cls.env['account.tax'].create({
@@ -62,8 +63,8 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
             'sequence': 6,
             'children_tax_ids': [
-                (4, cls.fixed_tax.id, 0),
-                (4, cls.percent_tax.id, 0)
+                (X2ManyCmd.LINK, cls.fixed_tax.id, 0),
+                (X2ManyCmd.LINK, cls.percent_tax.id, 0)
             ]
         })
         cls.group_tax_percent = cls.env['account.tax'].create({
@@ -72,8 +73,8 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
             'sequence': 6,
             'children_tax_ids': [
-                (4, cls.percent_tax.id, 0),
-                (4, cls.percent_tax_bis.id, 0)
+                (X2ManyCmd.LINK, cls.percent_tax.id, 0),
+                (X2ManyCmd.LINK, cls.percent_tax_bis.id, 0)
             ]
         })
         cls.group_of_group_tax = cls.env['account.tax'].create({
@@ -82,8 +83,8 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
             'sequence': 7,
             'children_tax_ids': [
-                (4, cls.group_tax.id, 0),
-                (4, cls.group_tax_bis.id, 0)
+                (X2ManyCmd.LINK, cls.group_tax.id, 0),
+                (X2ManyCmd.LINK, cls.group_tax_bis.id, 0)
             ]
         })
         cls.tax_with_no_account = cls.env['account.tax'].create({
@@ -431,14 +432,14 @@ class TestTax(TestTaxCommon):
             'include_base_amount': True,
             'sequence': 1,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
         })
         tax_2 = self.env['account.tax'].create({
@@ -447,14 +448,14 @@ class TestTax(TestTaxCommon):
             'amount': 10,
             'sequence': 2,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
         })
         tax_3 = self.env['account.tax'].create({
@@ -464,14 +465,14 @@ class TestTax(TestTaxCommon):
             'price_include': True,
             'sequence': 3,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
         })
         tax_4 = self.env['account.tax'].create({
@@ -480,14 +481,14 @@ class TestTax(TestTaxCommon):
             'amount': 10,
             'sequence': 4,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
         })
         tax_5 = self.env['account.tax'].create({
@@ -497,14 +498,14 @@ class TestTax(TestTaxCommon):
             'price_include': True,
             'sequence': 5,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
         })
         taxes = tax_1 + tax_2 + tax_3 + tax_4 + tax_5
@@ -560,14 +561,14 @@ class TestTax(TestTaxCommon):
             'amount_type': 'percent',
             'amount': 21,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -100.0}),
             ],
         })
 
@@ -606,22 +607,22 @@ class TestTax(TestTaxCommon):
             'amount_type': 'percent',
             'amount': 3,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
             ],
         })
 
@@ -668,22 +669,22 @@ class TestTax(TestTaxCommon):
             'amount_type': 'percent',
             'amount': 3,
             'invoice_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -50.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'base', 'factor_percent': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -50.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': 25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
+                (X2ManyCmd.CREATE, 0, {'repartition_type': 'tax', 'factor_percent': -25.0}),
             ],
         })
 
@@ -853,8 +854,8 @@ class TestTax(TestTaxCommon):
         self.tax_0_percent.price_include = True
         self.tax_8_percent.price_include = True
 
-        self.group_tax.children_tax_ids = [(6, 0, self.tax_0_percent.ids)]
-        self.group_tax_bis.children_tax_ids = [(6, 0, self.tax_8_percent.ids)]
+        self.group_tax.children_tax_ids = [(X2ManyCmd.SET, 0, self.tax_0_percent.ids)]
+        self.group_tax_bis.children_tax_ids = [(X2ManyCmd.SET, 0, self.tax_8_percent.ids)]
 
         res1 = (self.tax_8_percent | self.tax_0_percent).compute_all(15.55, quantity=8.0)
         self._check_compute_all_results(

@@ -504,7 +504,7 @@ class AccountPayment(models.Model):
 
         for pay in self:
             statement_ids = query_res.get(pay.id, [])
-            pay.reconciled_statement_ids = [(6, 0, statement_ids)]
+            pay.reconciled_statement_ids = [(fields.X2ManyCmd.SET, 0, statement_ids)]
             pay.reconciled_statements_count = len(statement_ids)
 
     # -------------------------------------------------------------------------
@@ -565,7 +565,7 @@ class AccountPayment(models.Model):
                     to_write[k] = v
 
             if 'line_ids' not in vals_list[i]:
-                to_write['line_ids'] = [(0, 0, line_vals) for line_vals in pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)]
+                to_write['line_ids'] = [(fields.X2ManyCmd.CREATE, 0, line_vals) for line_vals in pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)]
 
             pay.move_id.write(to_write)
 
@@ -701,15 +701,15 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
             line_ids_commands = [
-                (1, liquidity_lines.id, line_vals_list[0]),
-                (1, counterpart_lines.id, line_vals_list[1]),
+                (fields.X2ManyCmd.UPDATE, liquidity_lines.id, line_vals_list[0]),
+                (fields.X2ManyCmd.UPDATE, counterpart_lines.id, line_vals_list[1]),
             ]
 
             for line in writeoff_lines:
-                line_ids_commands.append((2, line.id))
+                line_ids_commands.append((fields.X2ManyCmd.DELETE, line.id))
 
             if writeoff_lines:
-                line_ids_commands.append((0, 0, line_vals_list[2]))
+                line_ids_commands.append((fields.X2ManyCmd.CREATE, 0, line_vals_list[2]))
 
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.

@@ -3,6 +3,7 @@
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
+from odoo.fields import X2ManyCmd
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -35,12 +36,12 @@ class TestMrpAccount(TestMrpCommon):
             'product_qty': 4.0,
             'consumption': 'flexible',
             'operation_ids': [
-                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                (X2ManyCmd.CREATE, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
+                (X2ManyCmd.CREATE, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
             ]})
         cls.dining_table = cls.env['product.product'].create({
             'name': 'Table (MTO)',
@@ -76,30 +77,30 @@ class TestMrpAccount(TestMrpCommon):
             'sequence': 3,
             'consumption': 'flexible',
             'operation_ids': [
-                (0, 0, {'workcenter_id': cls.mrp_workcenter.id, 'name': 'Manual Assembly'}),
+                (X2ManyCmd.CREATE, 0, {'workcenter_id': cls.mrp_workcenter.id, 'name': 'Manual Assembly'}),
             ],
         })
         cls.mrp_bom_desk.write({
             'bom_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': cls.product_table_sheet.id,
                     'product_qty': 1,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 1,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': cls.product_table_leg.id,
                     'product_qty': 4,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 2,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': cls.product_bolt.id,
                     'product_qty': 4,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
                     'sequence': 3,
                     'operation_id': cls.mrp_bom_desk.operation_ids.id}),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'product_id': cls.product_screw.id,
                     'product_qty': 10,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
@@ -145,22 +146,22 @@ class TestMrpAccount(TestMrpCommon):
         self.product_table_sheet.tracking = 'none'
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory Product Table',
-            'line_ids': [(0, 0, {
+            'line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_table_sheet.id,  # tracking serial
                 'product_uom_id': self.product_table_sheet.uom_id.id,
                 'product_qty': 20,
                 'location_id': self.source_location_id
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_table_leg.id,  # tracking lot
                 'product_uom_id': self.product_table_leg.uom_id.id,
                 'product_qty': 20,
                 'location_id': self.source_location_id
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_bolt.id,
                 'product_uom_id': self.product_bolt.uom_id.id,
                 'product_qty': 20,
                 'location_id': self.source_location_id
-            }), (0, 0, {
+            }), (X2ManyCmd.CREATE, 0, {
                 'product_id': self.product_screw.id,
                 'product_uom_id': self.product_screw.uom_id.id,
                 'product_qty': 200000,

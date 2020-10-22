@@ -3,6 +3,7 @@
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -43,7 +44,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_3',
             'picking_type_id': self.warehouse.in_type_id.id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'product_id': product_landed_cost_3.id,
                 'product_uom_qty': 13,
                 'product_uom': product_uom_unit_round_1.id,
@@ -61,7 +62,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_4',
             'picking_type_id': self.warehouse.in_type_id.id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'product_id': product_landed_cost_4.id,
                 'product_uom_qty': 1,
                 'product_uom': self.ref('uom.product_uom_dozen'),
@@ -91,7 +92,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         default_vals.update({
             'picking_ids': [picking_landed_cost_3.id],
             'account_journal_id': self.expenses_journal,
-            'cost_lines': [(0, 0, {'product_id': virtual_interior_design.id})],
+            'cost_lines': [(X2ManyCmd.CREATE, 0, {'product_id': virtual_interior_design.id})],
             'valuation_adjustment_lines': [],
         })
         stock_landed_cost_2 = self.env['stock.landed.cost'].new(default_vals)
@@ -128,7 +129,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         default_vals.update({
             'picking_ids': [picking_landed_cost_4.id],
             'account_journal_id': self.expenses_journal,
-            'cost_lines': [(0, 0, {'product_id': virtual_interior_design.id})],
+            'cost_lines': [(X2ManyCmd.CREATE, 0, {'product_id': virtual_interior_design.id})],
             'valuation_adjustment_lines': [],
         })
         stock_landed_cost_3 = self.env['stock.landed.cost'].new(default_vals)

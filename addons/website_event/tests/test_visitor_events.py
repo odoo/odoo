@@ -18,12 +18,12 @@ class TestVisitorEvents(TestEventCommon):
 
         [main_visitor, child_visitor] = self.env['website.visitor'].create([{
             'name': 'Main Visitor',
-            'event_registration_ids': [(0, 0, {
+            'event_registration_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'event_id': self.event_0.id
             })]
         }, {
             'name': 'Child Visitor',
-            'event_registration_ids': [(0, 0, {
+            'event_registration_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'event_id': event_1.id
             })]
         }])

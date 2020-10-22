@@ -32,7 +32,7 @@ class CrmTeam(models.Model):
         return team or self.env['crm.team'].search(domain or [], limit=1)
 
     def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+        return [(fields.X2ManyCmd.SET, 0, [self.env.uid])]
 
     name = fields.Char('Sales Team', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -67,8 +67,8 @@ class CrmTeam(models.Model):
     def _inverse_is_favorite(self):
         sudoed_self = self.sudo()
         to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
-        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
-        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
+        to_fav.write({'favorite_user_ids': [(fields.X2ManyCmd.LINK, self.env.uid)]})
+        (sudoed_self - to_fav).write({'favorite_user_ids': [(fields.X2ManyCmd.UNLINK, self.env.uid)]})
         return True
 
     def _compute_dashboard_button_name(self):
@@ -124,7 +124,7 @@ class CrmTeam(models.Model):
 
     def _add_members_to_favorites(self):
         for team in self:
-            team.favorite_user_ids = [(4, member.id) for member in team.member_ids]
+            team.favorite_user_ids = [(fields.X2ManyCmd.LINK, member.id) for member in team.member_ids]
 
     # ------------------------------------------------------------
     # GRAPH

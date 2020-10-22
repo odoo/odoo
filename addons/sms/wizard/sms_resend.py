@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, exceptions, fields, models
+from odoo.fields import X2ManyCmd
 
 
 class SMSRecipient(models.TransientModel):
@@ -29,7 +30,7 @@ class SMSResend(models.TransientModel):
         result = super(SMSResend, self).default_get(fields)
         if 'recipient_ids' in fields and result.get('mail_message_id'):
             mail_message_id = self.env['mail.message'].browse(result['mail_message_id'])
-            result['recipient_ids'] = [(0, 0, {
+            result['recipient_ids'] = [(X2ManyCmd.CREATE, 0, {
                 'notification_id': notif.id,
                 'resend': True,
                 'failure_type': notif.failure_type,

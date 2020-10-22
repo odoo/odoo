@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 
 import time
 
@@ -34,7 +35,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
         purchase_order_1 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Average Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
@@ -62,7 +63,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
@@ -87,7 +88,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_lines': [(X2ManyCmd.CREATE, 0, {
                 'name': 'outgoing_shipment_avg_move',
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
@@ -108,7 +109,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         # Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
         purchase_order_3 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_qty': 500.0,

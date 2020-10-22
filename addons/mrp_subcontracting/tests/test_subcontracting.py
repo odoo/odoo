@@ -4,6 +4,7 @@
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.fields import X2ManyCmd
 
 from odoo.tests import tagged
 
@@ -432,7 +433,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             ('name', '=', 'Resupply Subcontractor on Order')
         ])
         (self.comp1 + self.comp2).write({
-            'route_ids': [(4, resupply_sub_on_order_route.id)]
+            'route_ids': [(X2ManyCmd.LINK, resupply_sub_on_order_route.id)]
         })
 
         picking_form = Form(self.env['stock.picking'])

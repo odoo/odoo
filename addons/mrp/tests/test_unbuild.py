@@ -4,6 +4,7 @@
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestUnbuild(TestMrpCommon):
@@ -11,7 +12,7 @@ class TestUnbuild(TestMrpCommon):
         super(TestUnbuild, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.env.ref('base.group_user').write({
-            'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]
+            'implied_ids': [(X2ManyCmd.LINK, self.env.ref('stock.group_production_lot').id)]
         })
 
     def test_unbuild_standart(self):
@@ -500,8 +501,8 @@ class TestUnbuild(TestMrpCommon):
         product_route = self.env['stock.location.route'].create({
             'name': 'QC/Unbuild -> Stock',
             'warehouse_selectable': True,
-            'warehouse_ids': [(4, warehouse.id)],
-            'rule_ids': [(0, 0, {
+            'warehouse_ids': [(X2ManyCmd.LINK, warehouse.id)],
+            'rule_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Send Matrial QC/Unbuild -> Stock',
                 'action': 'push',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
@@ -532,8 +533,8 @@ class TestUnbuild(TestMrpCommon):
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': component1.id, 'product_qty': 1}),
-                (0, 0, {'product_id': component2.id, 'product_qty': 1})
+                (X2ManyCmd.CREATE, 0, {'product_id': component1.id, 'product_qty': 1}),
+                (X2ManyCmd.CREATE, 0, {'product_id': component2.id, 'product_qty': 1})
             ]})
 
         # Set on hand quantity

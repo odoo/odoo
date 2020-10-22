@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
+from odoo import fields, tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -62,8 +62,8 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             'tax_dest_id': cls.new_tax_17.id,
         })
         fpos.write({
-            'account_ids': [(6, 0, account_fpos.ids)],
-            'tax_ids': [(6, 0, tax_fpos.ids)],
+            'account_ids': [(fields.X2ManyCmd.SET, 0, account_fpos.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_fpos.ids)],
         })
         return fpos
 
@@ -80,8 +80,8 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
             'tax_src_id': cls.taxes['tax7'].id,
         })
         fpos_no_tax_dest.write({
-            'account_ids': [(6, 0, account_fpos.ids)],
-            'tax_ids': [(6, 0, tax_fpos.ids)],
+            'account_ids': [(fields.X2ManyCmd.SET, 0, account_fpos.ids)],
+            'tax_ids': [(fields.X2ManyCmd.SET, 0, tax_fpos.ids)],
         })
         return fpos_no_tax_dest
 

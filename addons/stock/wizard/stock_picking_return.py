@@ -46,7 +46,7 @@ class ReturnPicking(models.TransientModel):
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
         move_dest_exists = False
-        product_return_moves = [(5,)]
+        product_return_moves = [(fields.X2ManyCmd.CLEAR,)]
         if self.picking_id and self.picking_id.state != 'done':
             raise UserError(_("You may only return Done pickings."))
         # In case we want to set specific default values (e.g. 'to_refund'), we must fetch the
@@ -62,7 +62,7 @@ class ReturnPicking(models.TransientModel):
                 move_dest_exists = True
             product_return_moves_data = dict(product_return_moves_data_tmpl)
             product_return_moves_data.update(self._prepare_stock_return_picking_line_vals_from_move(move))
-            product_return_moves.append((0, 0, product_return_moves_data))
+            product_return_moves.append((fields.X2ManyCmd.CREATE, 0, product_return_moves_data))
         if self.picking_id and not product_return_moves:
             raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
         if self.picking_id:
@@ -158,8 +158,8 @@ class ReturnPicking(models.TransientModel):
                 move_dest_to_link |= return_line.move_id.move_orig_ids.mapped('returned_move_ids')\
                     .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))\
                     .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))
-                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link]
-                vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
+                vals['move_orig_ids'] = [(fields.X2ManyCmd.LINK, m.id) for m in move_orig_to_link]
+                vals['move_dest_ids'] = [(fields.X2ManyCmd.LINK, m.id) for m in move_dest_to_link]
                 r.write(vals)
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))

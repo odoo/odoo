@@ -2,6 +2,7 @@
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import mute_logger, ustr
+from odoo.fields import X2ManyCmd
 
 
 @tagged('-at_install', 'post_install')
@@ -36,7 +37,7 @@ class TestConfirmUnsubscribe(common.HttpCase):
 
     def test_wrong_token(self):
         self.mailing_list.sudo().write({
-            'channel_partner_ids': [(4, self.partner.id, False)]
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner.id, False)]
         })
         self.token = 'XXX'
 
@@ -44,7 +45,7 @@ class TestConfirmUnsubscribe(common.HttpCase):
 
     def test_successful_unsubscribe(self):
         self.mailing_list.sudo().write({
-            'channel_partner_ids': [(4, self.partner.id, False)]
+            'channel_partner_ids': [(X2ManyCmd.LINK, self.partner.id, False)]
         })
 
         self._unsubscribe_check("You have been correctly unsubscribed")

@@ -10,7 +10,7 @@ import math
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import http, tools, _
+from odoo import fields, http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -574,7 +574,7 @@ class WebsiteSlides(WebsiteProfile):
             'description': kw.get('description'),
             'channel_type': kw.get('channel_type', 'documentation'),
             'user_id': request.env.user.id,
-            'tag_ids': [(6, 0, tag_ids)],
+            'tag_ids': [(fields.X2ManyCmd.SET, 0, tag_ids)],
             'allow_comment': bool(kw.get('allow_comment')),
         }
 
@@ -649,7 +649,7 @@ class WebsiteSlides(WebsiteProfile):
                 return {'error': _('You cannot add tags to this course.')}
 
         tag = self._create_or_get_channel_tag(tag_id, group_id)
-        tag.write({'channel_ids': [(4, channel.id, 0)]})
+        tag.write({'channel_ids': [(fields.X2ManyCmd.LINK, channel.id, 0)]})
 
         return {'url': "/slides/%s" % (slug(channel))}
 
@@ -875,7 +875,7 @@ class WebsiteSlides(WebsiteProfile):
             'sequence': sequence,
             'question': question,
             'slide_id': slide_id,
-            'answer_ids': [(0, 0, {
+            'answer_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'sequence': answer['sequence'],
                 'text_value': answer['text_value'],
                 'is_correct': answer['is_correct'],

@@ -8,7 +8,7 @@ from unicodedata import normalize
 import psycopg2
 import werkzeug
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, consteq, ustr
@@ -194,7 +194,7 @@ class WebsitePayment(http.Controller):
                 pass
 
         # Check reference
-        reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        reference_values = order_id and {'sale_order_ids': [(fields.X2ManyCmd.LINK, order_id)]} or {}
         values['reference'] = env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
 
         # Check acquirer
@@ -261,7 +261,7 @@ class WebsitePayment(http.Controller):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         order_id = kwargs.get('order_id')
 
-        reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        reference_values = order_id and {'sale_order_ids': [(fields.X2ManyCmd.LINK, order_id)]} or {}
         reference = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
 
         values = {
@@ -274,9 +274,9 @@ class WebsitePayment(http.Controller):
         }
 
         if order_id:
-            values['sale_order_ids'] = [(6, 0, [order_id])]
+            values['sale_order_ids'] = [(fields.X2ManyCmd.SET, 0, [order_id])]
 
-        reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        reference_values = order_id and {'sale_order_ids': [(fields.X2ManyCmd.LINK, order_id)]} or {}
         reference_values.update(acquirer_id=int(acquirer_id))
         values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
@@ -315,7 +315,7 @@ class WebsitePayment(http.Controller):
         }
 
         if order_id:
-            values['sale_order_ids'] = [(6, 0, [int(order_id)])]
+            values['sale_order_ids'] = [(fields.X2ManyCmd.SET, 0, [int(order_id)])]
 
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         PaymentProcessing.add_payment_transaction(tx)

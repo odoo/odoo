@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.fields import X2ManyCmd
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
@@ -25,7 +26,7 @@ class MrpImmediateProduction(models.TransientModel):
         if 'immediate_production_line_ids' in fields:
             if self.env.context.get('default_mo_ids'):
                 res['mo_ids'] = self.env.context['default_mo_ids']
-                res['immediate_production_line_ids'] = [(0, 0, {'to_immediate': True, 'production_id': mo_id[1]}) for mo_id in res['mo_ids']]
+                res['immediate_production_line_ids'] = [(X2ManyCmd.CREATE, 0, {'to_immediate': True, 'production_id': mo_id[1]}) for mo_id in res['mo_ids']]
         return res
 
     mo_ids = fields.Many2many('mrp.production', 'mrp_production_production_rel')

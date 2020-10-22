@@ -254,7 +254,7 @@ class ProductTemplateAttributeLine(models.Model):
         # Remove all values while archiving to make sure the line is clean if it
         # is ever activated again.
         if not values.get('active', True):
-            values['value_ids'] = [(5, 0, 0)]
+            values['value_ids'] = [(fields.X2ManyCmd.CLEAR, 0, 0)]
         res = super(ProductTemplateAttributeLine, self).write(values)
         if 'active' in values:
             self.flush()
@@ -478,7 +478,7 @@ class ProductTemplateAttributeValue(models.Model):
         # value (counting also the values that are archived).
         single_values = self.filtered(lambda ptav: len(ptav.attribute_line_id.product_template_value_ids) == 1)
         for ptav in single_values:
-            ptav.ptav_product_variant_ids.write({'product_template_attribute_value_ids': [(3, ptav.id, 0)]})
+            ptav.ptav_product_variant_ids.write({'product_template_attribute_value_ids': [(fields.X2ManyCmd.UNLINK, ptav.id, 0)]})
         # Try to remove the variants before deleting to potentially remove some
         # blocking references.
         self.ptav_product_variant_ids._unlink_or_archive()

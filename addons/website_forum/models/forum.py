@@ -194,12 +194,12 @@ class Forum(models.Model):
             elif vals['privacy'] == 'public':
                 # The forum is public, the menu must be also public
                 vals['authorized_group_id'] = False
-                self.menu_id.write({'group_ids': [(5, 0, 0)]})
+                self.menu_id.write({'group_ids': [(fields.X2ManyCmd.CLEAR, 0, 0)]})
             elif vals['privacy'] == 'connected':
                 vals['authorized_group_id'] = False
-                self.menu_id.write({'group_ids': [(6, 0, [self.env.ref('base.group_portal').id, self.env.ref('base.group_user').id])]})
+                self.menu_id.write({'group_ids': [(fields.X2ManyCmd.SET, 0, [self.env.ref('base.group_portal').id, self.env.ref('base.group_user').id])]})
         if 'authorized_group_id' in vals and vals['authorized_group_id']:
-            self.menu_id.write({'group_ids': [(6, 0, [vals['authorized_group_id']])]})
+            self.menu_id.write({'group_ids': [(fields.X2ManyCmd.SET, 0, [vals['authorized_group_id']])]})
 
         res = super(Forum, self).write(vals)
         if 'active' in vals:
@@ -229,10 +229,10 @@ class Forum(models.Model):
                 else:
                     # check if user have Karma needed to create need tag
                     if user.exists() and user.karma >= self.karma_tag_create and len(tag) and len(tag[1:].strip()):
-                        post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
+                        post_tags.append((fields.X2ManyCmd.CREATE, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 existing_keep.append(int(tag))
-        post_tags.insert(0, [6, 0, existing_keep])
+        post_tags.insert(0, [fields.X2ManyCmd.SET, 0, existing_keep])
         return post_tags
 
     def _compute_website_url(self):
@@ -582,13 +582,13 @@ class Post(models.Model):
                 post.parent_id.message_post_with_view(
                     'website_forum.forum_post_template_new_answer',
                     subject=_('Re: %s', post.parent_id.name),
-                    partner_ids=[(4, p.id) for p in tag_partners],
+                    partner_ids=[(fields.X2ManyCmd.LINK, p.id) for p in tag_partners],
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_forum.mt_answer_new'))
             elif post.state == 'active' and not post.parent_id:
                 post.message_post_with_view(
                     'website_forum.forum_post_template_new_question',
                     subject=post.name,
-                    partner_ids=[(4, p.id) for p in tag_partners],
+                    partner_ids=[(fields.X2ManyCmd.LINK, p.id) for p in tag_partners],
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_forum.mt_question_new'))
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;

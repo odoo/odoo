@@ -3,6 +3,7 @@
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestInvite(TestMailCommon):
@@ -18,7 +19,7 @@ class TestInvite(TestMailCommon):
             'default_res_model': 'mail.test.simple',
             'default_res_id': test_record.id
         }).with_user(self.user_employee).create({
-            'partner_ids': [(4, test_partner.id), (4, self.user_admin.partner_id.id)],
+            'partner_ids': [(X2ManyCmd.LINK, test_partner.id), (X2ManyCmd.LINK, self.user_admin.partner_id.id)],
             'send_mail': True})
         with self.mock_mail_gateway():
             mail_invite.add_followers()

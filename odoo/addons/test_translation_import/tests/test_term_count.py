@@ -5,6 +5,7 @@ import base64
 import io
 
 import odoo
+from odoo import fields
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
 from odoo.tools.translate import _, _lt, TranslationFileReader, TranslationModuleReader
@@ -258,7 +259,7 @@ class TestTermCount(common.TransactionCase):
         export = self.env["base.language.export"].create({
             'lang': 'dot',
             'format': 'po',
-            'modules': [(6, 0, [module.id])]
+            'modules': [(fields.X2ManyCmd.SET, 0, [module.id])]
         })
         export.act_getfile()
         po_file = export.data
@@ -360,7 +361,7 @@ class TestTranslationFlow(common.TransactionCase):
         export = self.env["base.language.export"].create({
             'lang': 'fr_FR',
             'format': 'po',
-            'modules': [(6, 0, [module.id])]
+            'modules': [(fields.X2ManyCmd.SET, 0, [module.id])]
         })
         export.act_getfile()
         po_file = export.data
@@ -394,7 +395,7 @@ class TestTranslationFlow(common.TransactionCase):
         export = self.env["base.language.export"].create({
             'lang': 'fr_FR',
             'format': 'csv',
-            'modules': [(6, 0, [module.id])]
+            'modules': [(fields.X2ManyCmd.SET, 0, [module.id])]
         })
         export.act_getfile()
         po_file = export.data

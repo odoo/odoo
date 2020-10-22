@@ -3,6 +3,7 @@
 
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common
 
@@ -130,10 +131,10 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'moderator': False,
             'participants': [],
             'messages': [
-                (4, message1.id),
-                (4, message2.id),
-                (1, message2.id, {'body': "XYZ"}),
-                (0, 0, {
+                (fields.X2ManyCmd.LINK, message1.id),
+                (fields.X2ManyCmd.LINK, message2.id),
+                (fields.X2ManyCmd.UPDATE, message2.id, {'body': "XYZ"}),
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': "[%s] %s" % ('', USER.name),
                     'body': "ABC",
                     'author': USER.id,
@@ -146,22 +147,22 @@ class TestOnChange(SavepointCaseWithUserDemo):
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertEqual(result['value']['messages'], [
-            (5,),
-            (1, message1.id, {
+            (fields.X2ManyCmd.CLEAR,),
+            (fields.X2ManyCmd.UPDATE, message1.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "ABC",
                 'author': USER.name_get()[0],
                 'size': 3,
                 'important': False,
             }),
-            (1, message2.id, {
+            (fields.X2ManyCmd.UPDATE, message2.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "XYZ",          # this must be sent back
                 'author': USER.name_get()[0],
                 'size': 3,
                 'important': False,
             }),
-            (0, 0, {
+            (fields.X2ManyCmd.CREATE, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "ABC",
                 'author': USER.name_get()[0],
@@ -175,11 +176,11 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = dict(values, name='{generate_dummy_message}')
         result = self.Discussion.with_context(generate_dummy_message=True).onchange(values, 'name', one_level_fields)
         self.assertEqual(result['value']['messages'], [
-            (5,),
-            (4, message1.id),
-            (4, message2.id),
-            (0, 0, {}),
-            (0, 0, {}),
+            (fields.X2ManyCmd.CLEAR,),
+            (fields.X2ManyCmd.LINK, message1.id),
+            (fields.X2ManyCmd.LINK, message2.id),
+            (fields.X2ManyCmd.CREATE, 0, {}),
+            (fields.X2ManyCmd.CREATE, 0, {}),
         ])
 
     def test_onchange_one2many_reference(self):
@@ -217,8 +218,8 @@ class TestOnChange(SavepointCaseWithUserDemo):
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
-            (5,),
-            (0, REFERENCE, {
+            (fields.X2ManyCmd.CLEAR,),
+            (fields.X2ManyCmd.CREATE, REFERENCE, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
                 'author': USER.name_get()[0],
@@ -248,7 +249,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(values, {
             'name': partner1.name,
             'partner': partner1.id,
-            'lines': [(6, 0, [line1.id])],
+            'lines': [(fields.X2ManyCmd.SET, 0, [line1.id])],
         })
 
         # modify 'partner'
@@ -259,8 +260,8 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
-            'lines': [(6, 0, [line1.id]),
-                      (0, 0, {'name': False, 'partner': False, 'tags': [(5,)]})],
+            'lines': [(fields.X2ManyCmd.SET, 0, [line1.id]),
+                      (fields.X2ManyCmd.CREATE, 0, {'name': False, 'partner': False, 'tags': [(fields.X2ManyCmd.CLEAR,)]})],
         }
         self.env.cache.invalidate()
 
@@ -268,16 +269,16 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(result['value'], {
             'name': partner2.name,
             'lines': [
-                (5,),
-                (1, line1.id, {
+                (fields.X2ManyCmd.CLEAR,),
+                (fields.X2ManyCmd.UPDATE, line1.id, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [(5,)],
+                    'tags': [(fields.X2ManyCmd.CLEAR,)],
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [(5,)],
+                    'tags': [(fields.X2ManyCmd.CLEAR,)],
                 }),
             ],
         })
@@ -286,26 +287,26 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
-            'lines': [(6, 0, [line1.id]),
-                      (0, 0, {'name': False,
+            'lines': [(fields.X2ManyCmd.SET, 0, [line1.id]),
+                      (fields.X2ManyCmd.CREATE, 0, {'name': False,
                               'partner': False,
-                              'tags': [(5,), (0, 0, {'name': 'Tag'})]})],
+                              'tags': [(fields.X2ManyCmd.CLEAR,), (0, 0, {'name': 'Tag'})]})],
         }
         self.env.cache.invalidate()
         result = multi.onchange(values, 'partner', field_onchange)
         expected_value = {
             'name': partner2.name,
             'lines': [
-                (5,),
-                (1, line1.id, {
+                (fields.X2ManyCmd.CLEAR,),
+                (fields.X2ManyCmd.UPDATE, line1.id, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [(5,)],
+                    'tags': [(fields.X2ManyCmd.CLEAR,)],
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': partner2.name,
                     'partner': (partner2.id, partner2.name),
-                    'tags': [(5,), (0, 0, {'name': 'Tag'})],
+                    'tags': [(fields.X2ManyCmd.CLEAR,), (0, 0, {'name': 'Tag'})],
                 }),
             ],
         }
@@ -343,9 +344,9 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': discussion.name,
             'moderator': demo.id,
-            'categories': [(4, cat.id) for cat in discussion.categories],
-            'messages': [(4, msg.id) for msg in discussion.messages],
-            'participants': [(4, usr.id) for usr in discussion.participants],
+            'categories': [(fields.X2ManyCmd.LINK, cat.id) for cat in discussion.categories],
+            'messages': [(fields.X2ManyCmd.LINK, msg.id) for msg in discussion.messages],
+            'participants': [(fields.X2ManyCmd.LINK, usr.id) for usr in discussion.participants],
         }
         self.env.cache.invalidate()
         result = discussion.onchange(values, 'moderator', field_onchange)
@@ -353,7 +354,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertIn('participants', result['value'])
         self.assertItemsEqual(
             result['value']['participants'],
-            [(5,)] + [(4, user.id) for user in discussion.participants + demo],
+            [(fields.X2ManyCmd.CLEAR,)] + [(fields.X2ManyCmd.LINK, user.id) for user in discussion.participants + demo],
         )
 
     def test_onchange_default(self):
@@ -400,16 +401,16 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(field_onchange.get('messages'), '1')
 
         self.assertEqual(len(discussion.messages), 3)
-        messages = [(4, msg.id) for msg in discussion.messages]
-        messages[0] = (1, messages[0][1], {'body': 'test onchange'})
+        messages = [(fields.X2ManyCmd.LINK, msg.id) for msg in discussion.messages]
+        messages[0] = (fields.X2ManyCmd.UPDATE, messages[0][1], {'body': 'test onchange'})
         lines = ["%s:%s" % (m.name, m.body) for m in discussion.messages]
         lines[0] = "%s:%s" % (discussion.messages[0].name, 'test onchange')
         values = {
             'name': discussion.name,
             'moderator': demo.id,
-            'categories': [(4, cat.id) for cat in discussion.categories],
+            'categories': [(fields.X2ManyCmd.LINK, cat.id) for cat in discussion.categories],
             'messages': messages,
-            'participants': [(4, usr.id) for usr in discussion.participants],
+            'participants': [(fields.X2ManyCmd.LINK, usr.id) for usr in discussion.participants],
             'message_concat': False,
         }
         result = discussion.onchange(values, 'messages', field_onchange)
@@ -457,18 +458,18 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = {
             'name': "Foo Bar",
             'moderator': demo.id,
-            'categories': [(4, cat.id) for cat in discussion.categories],
-            'messages': [(4, msg.id) for msg in discussion.messages],
-            'participants': [(4, usr.id) for usr in discussion.participants],
-            'important_messages': [(4, msg.id) for msg in discussion.important_messages],
-            'important_emails': [(4, eml.id) for eml in discussion.important_emails],
+            'categories': [(fields.X2ManyCmd.LINK, cat.id) for cat in discussion.categories],
+            'messages': [(fields.X2ManyCmd.LINK, msg.id) for msg in discussion.messages],
+            'participants': [(fields.X2ManyCmd.LINK, usr.id) for usr in discussion.participants],
+            'important_messages': [(fields.X2ManyCmd.LINK, msg.id) for msg in discussion.important_messages],
+            'important_emails': [(fields.X2ManyCmd.LINK, eml.id) for eml in discussion.important_emails],
         }
         self.env.cache.invalidate()
         result = discussion.onchange(values, 'name', field_onchange)
 
         self.assertEqual(
             result['value']['important_emails'],
-            [(5,), (1, email.id, {
+            [(fields.X2ManyCmd.CLEAR,), (fields.X2ManyCmd.UPDATE, email.id, {
                 'name': u'[Foo Bar] %s' % USER.name,
                 'body': BODY,
                 'author': USER.name_get()[0],
@@ -581,8 +582,8 @@ class TestComputeOnchange(common.TransactionCase):
         # manually update 'baz' and 'lines' to test copy attribute
         record.write({
             'baz': "baz1",
-            'line_ids': [(0, 0, {'foo': 'bar'})],
-            'tag_ids': [(4, tag_bar.id)],
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {'foo': 'bar'})],
+            'tag_ids': [(fields.X2ManyCmd.LINK, tag_bar.id)],
         })
         self.assertEqual(record.bar, "foo1")
         self.assertEqual(record.baz, "baz1")
@@ -728,10 +729,10 @@ class TestComputeOnchange(common.TransactionCase):
         record = self.env['test_new_api.model_parent_m2o'].create({
             'name': 'Family',
             'child_ids': [
-                (0, 0, {'name': 'W', 'cost': 10}),
-                (0, 0, {'name': 'X', 'cost': 10}),
-                (0, 0, {'name': 'Y'}),
-                (0, 0, {'name': 'Z'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'W', 'cost': 10}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'X', 'cost': 10}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Y'}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'Z'}),
             ],
         })
         record.flush()

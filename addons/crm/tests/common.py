@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
-from odoo import tools
+from odoo import fields, tools
 
 INCOMING_EMAIL = """Return-Path: {return_path}
 X-Original-To: {to}
@@ -54,7 +54,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
 
         (cls.user_sales_manager | cls.user_sales_leads | cls.user_sales_salesman).write({
-            'groups_id': [(4, cls.env.ref('crm.group_use_lead').id)]
+            'groups_id': [(fields.X2ManyCmd.LINK, cls.env.ref('crm.group_use_lead').id)]
         })
 
         cls.env['crm.stage'].search([]).write({'sequence': 9999})  # ensure search will find test data first
@@ -268,7 +268,7 @@ class TestLeadConvertCommon(TestCrmCommon):
             'use_opportunities': True,
             'company_id': False,
             'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_salesman.id)],
+            'member_ids': [(fields.X2ManyCmd.LINK, cls.user_sales_salesman.id)],
         })
         cls.stage_team_convert_1 = cls.env['crm.stage'].create({
             'name': 'New',
@@ -309,7 +309,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             groups='sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead',
         )
         cls.sales_team_convert.write({
-            'member_ids': [(4, cls.user_sales_leads_convert.id)]
+            'member_ids': [(fields.X2ManyCmd.LINK, cls.user_sales_leads_convert.id)]
         })
 
         cls.lead_w_partner = cls.env['crm.lead'].create({

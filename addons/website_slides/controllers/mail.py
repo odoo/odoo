@@ -5,7 +5,7 @@ import werkzeug
 
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http
+from odoo import fields, http
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
@@ -59,7 +59,7 @@ class SlidesPortalChatter(PortalChatter):
             raise NotFound()
         message.sudo().write({
             'body': message_body,
-            'attachment_ids': [(4, aid) for aid in attachment_ids],
+            'attachment_ids': [(fields.X2ManyCmd.LINK, aid) for aid in attachment_ids],
         })
 
         # update rating

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_slides.tests import common
+from odoo.fields import X2ManyCmd
 
 
 class TestCoursePurchaseFlow(common.SlidesCase):
@@ -31,7 +32,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.customer.id,
             'order_line': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': course_product.name,
                     'product_id': course_product.id,
                     'product_uom_qty': 1,

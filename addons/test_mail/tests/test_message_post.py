@@ -11,6 +11,7 @@ from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger, formataddr
 from odoo.api import call_kw
+from odoo.fields import X2ManyCmd
 
 
 class TestMessagePost(TestMailCommon, TestRecipients):
@@ -257,7 +258,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
     def test_post_post_w_template(self):
         test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         self.user_employee.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+            'groups_id': [(X2ManyCmd.LINK, self.env.ref('base.group_partner_manager').id)],
         })
         _attachments = [{
             'name': 'first.txt',
@@ -274,7 +275,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         email_2 = 'test2@example.com'
         email_3 = self.partner_1.email
         self._create_template('mail.test.simple', {
-            'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
+            'attachment_ids': [(X2ManyCmd.CREATE, 0, _attachments[0]), (X2ManyCmd.CREATE, 0, _attachments[1])],
             'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
             'email_to': '%s, %s' % (email_1, email_2),
             'email_cc': '%s' % email_3,

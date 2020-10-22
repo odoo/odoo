@@ -20,7 +20,7 @@ class AccountJournal(models.Model):
             mx_tags = self.env['account.account'].mx_search_tags(res.get('code', ''))
             if mx_tags:
                 res.update({
-                    'tag_ids': [(6, 0, [tag.id for tag in mx_tags])]
+                    'tag_ids': [(fields.X2ManyCmd.SET, 0, [tag.id for tag in mx_tags])]
                 })
         return res
 

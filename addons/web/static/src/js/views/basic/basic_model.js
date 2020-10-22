@@ -118,25 +118,25 @@ var x2ManyCommands = {
         return [x2ManyCommands.DELETE, id, false];
     },
     // (3, id[, _]) removes relation, but not linked record itself
-    FORGET: 3,
-    forget: function (id) {
-        return [x2ManyCommands.FORGET, id, false];
+    UNLINK: 3,
+    unlink: function (id) {
+        return [x2ManyCommands.UNLINK, id, false];
     },
     // (4, id[, _])
-    LINK_TO: 4,
-    link_to: function (id) {
-        return [x2ManyCommands.LINK_TO, id, false];
+    LINK: 4,
+    link: function (id) {
+        return [x2ManyCommands.LINK, id, false];
     },
     // (5[, _[, _]])
-    DELETE_ALL: 5,
-    delete_all: function () {
-        return [5, false, false];
+    CLEAR: 5,
+    clear: function () {
+        return [x2ManyCommands.CLEAR, false, false];
     },
     // (6, _, ids) replaces all linked records with provided ids
-    REPLACE_WITH: 6,
-    replace_with: function (ids) {
-        return [6, false, ids];
-    }
+    SET: 6,
+    set: function (ids) {
+        return [x2ManyCommands.SET, false, ids];
+    },
 };
 
 var BasicModel = AbstractModel.extend({
@@ -3296,7 +3296,7 @@ var BasicModel = AbstractModel.extend({
                     // because 1) performance-wise it doesn't change anything
                     // and 2) to guard against concurrent updates (policy: force
                     // a complete override of the actual value of the m2m)
-                    commands[fieldName].push(x2ManyCommands.replace_with(realIDs));
+                    commands[fieldName].push(x2ManyCommands.set(realIDs));
                     _.each(relRecordCreated, function (relRecord) {
                         var changes = self._generateChanges(relRecord, options);
                         commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
@@ -3328,20 +3328,20 @@ var BasicModel = AbstractModel.extend({
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
-                                command = x2ManyCommands.link_to(list.res_ids[i]);
+                                command = x2ManyCommands.link(list.res_ids[i]);
                             }
                             commands[fieldName].push(command);
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             if (!relRecord) {
-                                commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
+                                commands[fieldName].push(x2ManyCommands.link(list.res_ids[i]));
                                 continue;
                             }
                             changes = this._generateChanges(relRecord, _.extend({}, options, {changesOnly: true}));
                             if (!this.isNew(relRecord.id)) {
                                 // the subrecord already exists in db
-                                commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));
+                                commands[fieldName].push(x2ManyCommands.link(relRecord.res_id));
                                 delete changes.id;
                                 if (!_.isEmpty(changes)) {
                                     commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
@@ -3376,7 +3376,7 @@ var BasicModel = AbstractModel.extend({
                     // add delete commands
                     for (i = 0; i < removedIds.length; i++) {
                         if (list._forceM2MUnlink) {
-                            commands[fieldName].push(x2ManyCommands.forget(removedIds[i]));
+                            commands[fieldName].push(x2ManyCommands.unlink(removedIds[i]));
                         } else {
                             commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
                         }

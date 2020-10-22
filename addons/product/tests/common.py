@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import fields, api
 from odoo.tests import common
 
 
@@ -72,7 +73,7 @@ class TestProductCommon(common.SavepointCase):
             'name': 'Sofa',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': cls.prod_att_1.id,
                 'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id, cls.prod_attr1_v3.id])]
             })]
@@ -113,6 +114,6 @@ class TestAttributesCommon(common.SavepointCase):
         cls.attributes = cls.env['product.attribute'].create([{
                 'name': name,
                 'create_variant': 'no_variant',
-                'value_ids': [(0, 0, {'name': n}) for n in range(10)]
+                'value_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': n}) for n in range(10)]
             } for name in cls.att_names
         ])

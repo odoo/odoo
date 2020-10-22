@@ -12,7 +12,7 @@ import os
 import tempfile
 from subprocess import Popen, PIPE
 
-from .. import api
+from .. import api, fields
 from . import ustr, config
 from .safe_eval import safe_eval
 
@@ -184,7 +184,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                         and view_data.get(fk, False) \
                         and isinstance(view_data[fk], list) \
                         and not isinstance(view_data[fk][0], tuple) :
-                    view_data[fk] = [(6, 0, view_data[fk])]
+                    view_data[fk] = [(fields.X2ManyCmd.SET, 0, view_data[fk])]
 
             action_name = action.get('name')
             try:

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.tests.common import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -13,7 +14,7 @@ class TestTourRenderInvoiceReport(AccountTestInvoicingHttpCommon):
 
         cls.env.user.write({
             'groups_id': [
-                (6, 0, (cls.env.ref('account.group_account_invoice') + cls.env.ref('base.group_system')).ids),
+                (X2ManyCmd.SET, 0, (cls.env.ref('account.group_account_invoice') + cls.env.ref('base.group_system')).ids),
             ],
         })
 
@@ -23,7 +24,7 @@ class TestTourRenderInvoiceReport(AccountTestInvoicingHttpCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 100.0}),
+                (X2ManyCmd.CREATE, 0, {'name': 'line1', 'price_unit': 100.0}),
             ],
         })
         cls.out_invoice.action_post()

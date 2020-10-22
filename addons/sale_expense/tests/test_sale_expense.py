@@ -4,11 +4,12 @@
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
-    
+
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
 
@@ -17,7 +18,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.company_data['product_delivery_no'].name,
                 'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': 2,

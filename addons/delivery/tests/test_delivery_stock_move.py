@@ -2,6 +2,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -49,7 +50,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
             'pricelist_id': self.pricelist_id.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': 'Cable Management Box',
                 'product_id': self.product_cable_management_box.id,
                 'product_uom_qty': 2,

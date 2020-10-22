@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields, api
 from odoo.addons.survey.tests.common import TestSurveyCommon
 
 
@@ -112,7 +113,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         answer.write({
             'state': 'done',
             'user_input_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'question_id': question.id,
                     'answer_type': 'suggestion',
                     'answer_score': 1 if good_answers else 0,

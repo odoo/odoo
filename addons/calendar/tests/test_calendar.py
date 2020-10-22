@@ -201,7 +201,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         calendar_event = self.env['calendar.event'].create({
             'name': 'Meeting with partner',
-            'activity_ids': [(6, False, activity_id.ids)],
+            'activity_ids': [(fields.X2ManyCmd.SET, False, activity_id.ids)],
             'start': '2018-11-12 21:00:00',
             'stop': '2018-11-13 00:00:00',
         })
@@ -239,7 +239,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'stop': "2018-10-18 00:00:00",
             'stop_date': "2018-10-18",
             'allday': True,
-            'activity_ids': [(6, False, activity_id.ids)],
+            'activity_ids': [(fields.X2ManyCmd.SET, False, activity_id.ids)],
         })
 
         # Check output in UTC
@@ -273,7 +273,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.env['res.partner'].create({'name': 'testuser0', 'email': u'bob@example.com'}),
             self.env['res.partner'].create({'name': 'testuser1', 'email': u'alice@example.com'}),
         ]
-        partner_ids = [(6, False, [p.id for p in partners]),]
+        partner_ids = [(fields.X2ManyCmd.SET, False, [p.id for p in partners]),]
         now = fields.Datetime.now()
         m = self.CalendarEvent.create({
             'name': "mailTest1",
@@ -294,7 +294,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.env['res.partner'].create({'name': 'testuser3', 'email': u'carl@example.com'}),
             self.env['res.partner'].create({'name': 'testuser4', 'email': u'alain@example.com'}),
             ])
-        partner_ids = [(6, False, [p.id for p in partners]),]
+        partner_ids = [(fields.X2ManyCmd.SET, False, [p.id for p in partners]),]
         m.write({
             'partner_ids': partner_ids,
             'recurrence_update': 'all_events',

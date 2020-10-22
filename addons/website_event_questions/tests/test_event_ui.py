@@ -17,15 +17,15 @@ class TestUi(tests.HttpCase):
             'name': 'Design Fair New York',
             'date_begin': fields.Datetime.now() - relativedelta(days=15),
             'date_end': fields.Datetime.now() + relativedelta(days=15),
-            'event_ticket_ids': [(0, 0, {
+            'event_ticket_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': 'Free',
                 'start_sale_date': fields.Datetime.now() - relativedelta(days=15)
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'name': 'Other',
                 'start_sale_date': fields.Datetime.now() - relativedelta(days=15)
             })],
             'website_published': True,
-            'question_ids': [(0, 0, {
+            'question_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'title': 'Meal Type',
                 'question_type': 'simple_choice',
                 'answer_ids': [
@@ -33,10 +33,10 @@ class TestUi(tests.HttpCase):
                     (0, 0, {'name': 'Vegetarian'}),
                     (0, 0, {'name': 'Pastafarian'})
                 ]
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'title': 'Allergies',
                 'question_type': 'text_box'
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'title': 'How did you learn about this event?',
                 'question_type': 'simple_choice',
                 'once_per_order': True,

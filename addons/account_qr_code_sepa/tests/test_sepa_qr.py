@@ -2,6 +2,7 @@
 
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.fields import X2ManyCmd
 
 
 class TestSEPAQRCode(AccountTestInvoicingCommon):
@@ -30,7 +31,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
             'partner_bank_id': cls.acc_sepa_iban.id,
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [
-                (0, 0, {'quantity': 1, 'price_unit': 100})
+                (X2ManyCmd.CREATE, 0, {'quantity': 1, 'price_unit': 100})
             ],
         })
 

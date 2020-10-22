@@ -4,6 +4,7 @@
 from odoo.exceptions import AccessError
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('-at_install', 'post_install')
@@ -20,13 +21,13 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'name': 'Le Grand Jojo User',
             'login': 'grand.jojo',
             'email': 'grand.jojo@chansonbelge.com',
-            'groups_id': [(6, 0, [group_sale_user.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_sale_user.id])]
         })
         cls.user_purchaseperson = cls.env['res.users'].with_context(no_reset_password=True).create({
             'name': 'Jean-Luc Fonck',
             'login': 'jl.fonck',
             'email': 'jl.fonck@chansonbelge.com',
-            'groups_id': [(6, 0, [group_purchase_user.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [group_purchase_user.id])]
         })
 
     def test_access_saleperson(self):

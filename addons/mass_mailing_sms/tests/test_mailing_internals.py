@@ -5,6 +5,7 @@ from ast import literal_eval
 
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
 from odoo.tests.common import users
+from odoo.fields import X2ManyCmd
 
 
 class TestMassMailValues(MassSMSCommon):
@@ -56,6 +57,6 @@ class TestMassMailValues(MassSMSCommon):
         # default for mailing list: depends upon contact_list_ids
         self.assertEqual(literal_eval(mailing.mailing_domain), [])
         mailing.write({
-            'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)]
+            'contact_list_ids': [(X2ManyCmd.LINK, self.mailing_list_1.id), (X2ManyCmd.LINK, self.mailing_list_2.id)]
         })
         self.assertEqual(literal_eval(mailing.mailing_domain), [('list_ids', 'in', (self.mailing_list_1 | self.mailing_list_2).ids)])

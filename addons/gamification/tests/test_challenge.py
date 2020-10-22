@@ -3,6 +3,7 @@
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestGamificationCommon(TransactionCaseWithUserDemo):
@@ -18,7 +19,7 @@ class TestGamificationCommon(TransactionCaseWithUserDemo):
             'name': 'R2D2',
             'login': 'r2d2@openerp.com',
             'email': 'r2d2@openerp.com',
-            'groups_id': [(6, 0, [employees_group.id])]
+            'groups_id': [(X2ManyCmd.SET, 0, [employees_group.id])]
         })
         self.badge_good_job = self.env.ref('gamification.badge_good_job')
 

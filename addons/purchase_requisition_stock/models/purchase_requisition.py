@@ -27,7 +27,7 @@ class PurchaseRequisition(models.Model):
             'user_id': False,
             'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
             'company_id': company_id.id,
-            'line_ids': [(0, 0, {
+            'line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': product_id.id,
                 'product_uom_id': product_uom.id,
                 'product_qty': product_qty,
@@ -44,5 +44,5 @@ class PurchaseRequisitionLine(models.Model):
 
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         res = super(PurchaseRequisitionLine, self)._prepare_purchase_order_line(name, product_qty, price_unit, taxes_ids)
-        res['move_dest_ids'] = self.move_dest_id and [(4, self.move_dest_id.id)] or []
+        res['move_dest_ids'] = self.move_dest_id and [(fields.X2ManyCmd.LINK, self.move_dest_id.id)] or []
         return res

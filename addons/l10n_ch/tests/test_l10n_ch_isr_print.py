@@ -3,6 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import ValidationError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -50,7 +51,7 @@ class ISRTest(AccountTestInvoicingCommon):
             'partner_bank_id': isr_bank_account.id,
             'currency_id': self.env.ref('base.CHF').id,
             'invoice_date': '2019-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_a.id})],
         })
         invoice_chf.action_post()
         self.assertTrue(self.print_isr(invoice_chf))
@@ -61,7 +62,7 @@ class ISRTest(AccountTestInvoicingCommon):
             'partner_bank_id': isr_bank_account.id,
             'currency_id': self.env.ref('base.EUR').id,
             'invoice_date': '2019-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id})],
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {'product_id': self.product_a.id})],
         })
         invoice_eur.action_post()
         self.assertFalse(self.print_isr(invoice_eur))

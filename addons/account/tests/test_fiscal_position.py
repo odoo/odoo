@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.fields import X2ManyCmd
 
 
 class TestFiscalPosition(common.SavepointCase):
@@ -103,7 +104,7 @@ class TestFiscalPosition(common.SavepointCase):
         assert_fp(ben, self.be_nat, "BE-NAT should match before EU-INTRA due to lower sequence")
 
         # Remove BE from EU group, now BE-NAT should be the fallback match before the wildcard WORLD
-        self.be.write({'country_group_ids': [(3, self.eu.id)]})
+        self.be.write({'country_group_ids': [(X2ManyCmd.UNLINK, self.eu.id)]})
         self.assertTrue(jc.vat) # VAT set
         assert_fp(jc, self.be_nat, "BE-NAT should match as fallback even w/o VAT match")
 
@@ -121,7 +122,7 @@ class TestFiscalPosition(common.SavepointCase):
         assert_fp(george, self.fr_b2b_zip100, "FR-B2B with zip range should have precedence")
 
         # States
-        self.fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(4, self.state_fr.id)], sequence=70))
+        self.fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(X2ManyCmd.LINK, self.state_fr.id)], sequence=70))
         george.state_id = self.state_fr
         assert_fp(george, self.fr_b2b_zip100, "FR-B2B with zip should have precedence over states")
         george.zip = False

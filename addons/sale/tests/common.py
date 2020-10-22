@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.common import SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestSaleCommonBase(SavepointCase):
@@ -25,24 +26,24 @@ class TestSaleCommonBase(SavepointCase):
                 'email': 'default_user_salesman@example.com',
                 'signature': '--\nMark',
                 'notification_type': 'email',
-                'groups_id': [(6, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
-                'company_ids': [(6, 0, company.ids)],
+                'groups_id': [(X2ManyCmd.SET, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
+                'company_ids': [(X2ManyCmd.SET, 0, company.ids)],
                 'company_id': company.id,
             }),
             'default_user_portal': Users.create({
                 'name': 'default_user_portal',
                 'login': 'default_user_portal.comp%s' % company.id,
                 'email': 'default_user_portal@gladys.portal',
-                'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])],
-                'company_ids': [(6, 0, company.ids)],
+                'groups_id': [(X2ManyCmd.SET, 0, [cls.env.ref('base.group_portal').id])],
+                'company_ids': [(X2ManyCmd.SET, 0, company.ids)],
                 'company_id': company.id,
             }),
             'default_user_employee': Users.create({
                 'name': 'default_user_employee',
                 'login': 'default_user_employee.comp%s' % company.id,
                 'email': 'default_user_employee@example.com',
-                'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
-                'company_ids': [(6, 0, company.ids)],
+                'groups_id': [(X2ManyCmd.SET, 0, [cls.env.ref('base.group_user').id])],
+                'company_ids': [(X2ManyCmd.SET, 0, company.ids)],
                 'company_id': company.id,
             }),
 
@@ -70,8 +71,8 @@ class TestSaleCommonBase(SavepointCase):
                 'uom_po_id': cls.env.ref('uom.product_uom_unit').id,
                 'default_code': 'SERV_DEL',
                 'invoice_policy': 'delivery',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_service_order': cls.env['product.product'].with_company(company).create({
                 'name': 'product_service_order',
@@ -84,8 +85,8 @@ class TestSaleCommonBase(SavepointCase):
                 'description': 'Example of product to invoice on order',
                 'default_code': 'PRE-PAID',
                 'invoice_policy': 'order',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_order_cost': cls.env['product.product'].with_company(company).create({
                 'name': 'product_order_cost',
@@ -99,8 +100,8 @@ class TestSaleCommonBase(SavepointCase):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'cost',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_delivery_cost': cls.env['product.product'].with_company(company).create({
                 'name': 'product_delivery_cost',
@@ -114,8 +115,8 @@ class TestSaleCommonBase(SavepointCase):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'cost',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_order_sales_price': cls.env['product.product'].with_company(company).create({
                 'name': 'product_order_sales_price',
@@ -129,8 +130,8 @@ class TestSaleCommonBase(SavepointCase):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'sales_price',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_delivery_sales_price': cls.env['product.product'].with_company(company).create({
                 'name': 'product_delivery_sales_price',
@@ -144,8 +145,8 @@ class TestSaleCommonBase(SavepointCase):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'sales_price',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_order_no': cls.env['product.product'].with_company(company).create({
                 'name': 'product_order_no',
@@ -159,8 +160,8 @@ class TestSaleCommonBase(SavepointCase):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'no',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
             'product_delivery_no': cls.env['product.product'].with_company(company).create({
                 'name': 'product_delivery_no',
@@ -174,8 +175,8 @@ class TestSaleCommonBase(SavepointCase):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'no',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'taxes_id': [(X2ManyCmd.SET, 0, [])],
+                'supplier_taxes_id': [(X2ManyCmd.SET, 0, [])],
             }),
         })
 

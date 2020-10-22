@@ -53,7 +53,7 @@ class PosConfig(models.Model):
 
     def write(self, vals):
         if ('is_table_management' in vals and vals['is_table_management'] == False):
-            vals['floor_ids'] = [(5, 0, 0)]
+            vals['floor_ids'] = [(fields.X2ManyCmd.CLEAR, 0, 0)]
         if ('is_order_printer' in vals and vals['is_order_printer'] == False):
-            vals['printer_ids'] = [(5, 0, 0)]
+            vals['printer_ids'] = [(fields.X2ManyCmd.CLEAR, 0, 0)]
         return super(PosConfig, self).write(vals)

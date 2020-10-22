@@ -121,7 +121,7 @@ class Attendee(models.Model):
                 attachment_values = []
                 if ics_file:
                     attachment_values = [
-                        (0, 0, {'name': 'invitation.ics',
+                        (fields.X2ManyCmd.CREATE, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]

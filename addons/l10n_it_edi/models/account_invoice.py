@@ -269,7 +269,7 @@ class AccountMove(models.Model):
             'email_from': self.env.company.l10n_it_address_send_fatturapa,
             'reply_to': self.env.company.l10n_it_address_send_fatturapa,
             'mail_server_id': self.env.company.l10n_it_mail_pec_server_id.id,
-            'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
+            'attachment_ids': [(fields.X2ManyCmd.SET, 0, self.l10n_it_einvoice_id.ids)],
         })
 
         mail_fattura = self.env['mail.mail'].sudo().with_context(wo_bounce_return_path=True).create({

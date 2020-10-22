@@ -140,7 +140,7 @@ class Child(models.Model):
                         'product_uom_qty': 0,
                         'qty_done': quantity_done,
                     })
-                    move.write({'move_line_ids': [(4, move_line.id)]})
+                    move.write({'move_line_ids': [(fields.X2ManyCmd.LINK, move_line.id)]})
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:

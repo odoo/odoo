@@ -50,17 +50,17 @@ class EventEvent(models.Model):
 
             if questions_tokeep_ids:
                 questions_toremove = event._origin.question_ids.filtered(lambda question: question.id not in questions_tokeep_ids)
-                command = [(3, question.id) for question in questions_toremove]
+                command = [(fields.X2ManyCmd.UNLINK, question.id) for question in questions_toremove]
             else:
-                command = [(5, 0)]
+                command = [(fields.X2ManyCmd.CLEAR, 0)]
             if event.event_type_id.use_mail_schedule:
                 command += [
-                    (0, 0, {
+                    (fields.X2ManyCmd.CREATE, 0, {
                         'title': question.title,
                         'question_type': question.question_type,
                         'sequence': question.sequence,
                         'once_per_order': question.once_per_order,
-                        'answer_ids': [(0, 0, {
+                        'answer_ids': [(fields.X2ManyCmd.CREATE, 0, {
                             'name': answer.name,
                             'sequence': answer.sequence
                         }) for answer in question.answer_ids],

@@ -4,6 +4,7 @@
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.tests.common import users
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestMassMailing(TestMassMailCommon):
@@ -80,17 +81,17 @@ class TestMassMailing(TestMassMailCommon):
         mailing_list_1 = self.env['mailing.list'].create({
             'name': 'A',
             'contact_ids': [
-                (4, mailing_contact_1.id),
-                (4, mailing_contact_2.id),
-                (4, mailing_contact_3.id),
-                (4, mailing_contact_5.id),
+                (X2ManyCmd.LINK, mailing_contact_1.id),
+                (X2ManyCmd.LINK, mailing_contact_2.id),
+                (X2ManyCmd.LINK, mailing_contact_3.id),
+                (X2ManyCmd.LINK, mailing_contact_5.id),
             ]
         })
         mailing_list_2 = self.env['mailing.list'].create({
             'name': 'B',
             'contact_ids': [
-                (4, mailing_contact_3.id),
-                (4, mailing_contact_4.id),
+                (X2ManyCmd.LINK, mailing_contact_3.id),
+                (X2ManyCmd.LINK, mailing_contact_4.id),
             ]
         })
         # contact_1 is optout but same email is not optout from the same list
@@ -107,7 +108,7 @@ class TestMassMailing(TestMassMailCommon):
             'subject': 'MailingSubject',
             'body_html': '<p>Hello ${object.name}</p>',
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
-            'contact_list_ids': [(4, ml.id) for ml in mailing_list_1 | mailing_list_2],
+            'contact_list_ids': [(X2ManyCmd.LINK, ml.id) for ml in mailing_list_1 | mailing_list_2],
         })
         mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):

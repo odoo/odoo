@@ -66,7 +66,7 @@ class TestStockValuation(TransactionCase):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -113,7 +113,7 @@ class TestStockValuation(TransactionCase):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -166,7 +166,7 @@ class TestStockValuation(TransactionCase):
             'partner_id': self.partner_id.id,
             'currency_id': eur_currency.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -226,7 +226,7 @@ class TestStockValuation(TransactionCase):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -258,7 +258,7 @@ class TestStockValuation(TransactionCase):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -363,7 +363,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -388,7 +388,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po2 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
@@ -501,7 +501,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'taxes_id': [(4, tax_with_no_account.id)],
@@ -562,7 +562,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
@@ -580,7 +580,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'date': date_po,
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': 'Test',
                 'price_unit': 100.0,
                 'product_id': self.product1.id,
@@ -683,7 +683,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
@@ -691,7 +691,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'price_unit': 100.0,
                     'date_planned': date_po,
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_standard.name,
                     'product_id': product_standard.id,
                     'product_qty': 1.0,
@@ -713,7 +713,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'invoice_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': self.product1.name,
                     'price_subtotal': 100.0,
                     'price_unit': 100.0,
@@ -722,7 +722,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'quantity': 1.0,
                     'account_id': self.stock_input_account.id,
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_standard.name,
                     'price_subtotal': 70.0,
                     'price_unit': 70.0,
@@ -855,7 +855,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_avg.name,
                     'product_id': product_avg.id,
                     'product_qty': 1.0,
@@ -887,7 +887,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'invoice_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_avg.name,
                     'price_unit': 30.0,
                     'product_id': product_avg.id,
@@ -1030,7 +1030,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'partner_id': self.partner_id.id,
             'date_order': date_po,
             'order_line': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_avg.name,
                     'product_id': product_avg.id,
                     'product_qty': 10.0,
@@ -1063,7 +1063,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'invoice_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_avg.name,
                     'price_unit': 20.0,
                     'product_id': product_avg.id,
@@ -1093,7 +1093,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
             'invoice_line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'name': product_avg.name,
                     'price_unit': 40.0,
                     'product_id': product_avg.id,

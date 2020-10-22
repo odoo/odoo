@@ -28,7 +28,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         user = new_test_user(self.env, login='fru',
                              groups='base.group_user,base.group_erp_manager,base.group_partner_manager',
                              company_id=main_company.id,
-                             company_ids=[(6, 0, main_company.ids)])
+                             company_ids=[(fields.X2ManyCmd.SET, 0, main_company.ids)])
         Company = self.env['res.company']
         Company = Company.with_user(user)
         Company = Company.with_company(main_company)

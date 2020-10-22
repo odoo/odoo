@@ -226,7 +226,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'lst_price': 110.0,
-            'taxes_id': [(6, 0, tax_price_include.ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, tax_price_include.ids)],
         })
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
@@ -371,7 +371,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'lst_price': 110.0,
-            'taxes_id': [(6, 0, tax_price_include_1.ids)],
+            'taxes_id': [(fields.X2ManyCmd.SET, 0, tax_price_include_1.ids)],
         })
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
@@ -874,7 +874,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': 'test line',
                 'price_unit': 0.025,
                 'quantity': 1,
@@ -894,7 +894,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
         })
         invoice_2.write({
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'name': 'test line',
                 'price_unit': 0.025,
                 'quantity': 1,
@@ -2050,10 +2050,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             move.write({
                 'invoice_date': False,
                 'line_ids': [
-                    (1, move.line_ids.filtered(lambda line: line.tax_line_id.id == self.tax_line_vals_1['tax_line_id']).id, {
+                    (fields.X2ManyCmd.UPDATE, move.line_ids.filtered(lambda line: line.tax_line_id.id == self.tax_line_vals_1['tax_line_id']).id, {
                         'amount_currency': -200.0,
                     }),
-                    (1, move.line_ids.filtered(lambda line: line.date_maturity).id, {
+                    (fields.X2ManyCmd.UPDATE, move.line_ids.filtered(lambda line: line.date_maturity).id, {
                         'amount_currency': 1430.0,
                     }),
                 ],
@@ -2146,10 +2146,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # - The journal entry must be balanced before / after the post.
         move.write({
             'line_ids': [
-                (1, move.line_ids.filtered(lambda line: line.tax_line_id.id == self.tax_line_vals_1['tax_line_id']).id, {
+                (fields.X2ManyCmd.UPDATE, move.line_ids.filtered(lambda line: line.tax_line_id.id == self.tax_line_vals_1['tax_line_id']).id, {
                     'amount_currency': -200.0,
                 }),
-                (1, move.line_ids.filtered(lambda line: line.date_maturity).id, {
+                (fields.X2ManyCmd.UPDATE, move.line_ids.filtered(lambda line: line.date_maturity).id, {
                     'amount_currency': 1430.0,
                 }),
             ],
@@ -2508,14 +2508,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         zero_balance_payment_term = self.env['account.payment.term'].create({
             'name': 'zero_balance_payment_term',
             'line_ids': [
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'percent',
                     'value_amount': 100.0,
                     'sequence': 10,
                     'days': 0,
                     'option': 'day_after_invoice_date',
                 }),
-                (0, 0, {
+                (fields.X2ManyCmd.CREATE, 0, {
                     'value': 'balance',
                     'value_amount': 0.0,
                     'sequence': 20,
@@ -2585,10 +2585,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.env.ref('account.account_payment_term_immediate').id,
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 38.73553, 'quantity': 38.0}),
-                (0, 0, {'name': 'line2', 'price_unit': 4083.19000, 'quantity': 222.0}),
-                (0, 0, {'name': 'line3', 'price_unit': 49.45257, 'quantity': 35.0}),
-                (0, 0, {'name': 'line4', 'price_unit': 17.99000, 'quantity': 1.0}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'line1', 'price_unit': 38.73553, 'quantity': 38.0}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'line2', 'price_unit': 4083.19000, 'quantity': 222.0}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'line3', 'price_unit': 49.45257, 'quantity': 35.0}),
+                (fields.X2ManyCmd.CREATE, 0, {'name': 'line4', 'price_unit': 17.99000, 'quantity': 1.0}),
             ],
         })
 
@@ -2688,7 +2688,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'partner_id': partner.id,
             'journal_id': journal.id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'product_id': product.id,
                 'price_unit': 1000.0,
             })],

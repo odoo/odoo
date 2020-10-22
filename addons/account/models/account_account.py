@@ -279,8 +279,8 @@ class AccountAccount(models.Model):
                 # If so, we need to merge all those lines into one before modifying its balance
                 opening_move_line = account_op_lines[0]
                 if len(account_op_lines) > 1:
-                    merge_write_cmd = [(1, opening_move_line.id, {'debit': op_aml_debit, 'credit': op_aml_credit, 'partner_id': None ,'name': _("Opening balance")})]
-                    unlink_write_cmd = [(2, line.id) for line in account_op_lines[1:]]
+                    merge_write_cmd = [(fields.X2ManyCmd.UPDATE, opening_move_line.id, {'debit': op_aml_debit, 'credit': op_aml_credit, 'partner_id': None ,'name': _("Opening balance")})]
+                    unlink_write_cmd = [(fields.X2ManyCmd.DELETE, line.id) for line in account_op_lines[1:]]
                     opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
 
                 if amount:

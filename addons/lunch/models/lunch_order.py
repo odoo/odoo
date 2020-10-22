@@ -129,7 +129,7 @@ class LunchOrder(models.Model):
         # This also forces us to invalidate the cache for topping_ids_2 and topping_ids_3 that
         # could have changed through topping_ids_1 without the cache knowing about it
         toppings = self._extract_toppings(values)
-        values['topping_ids_1'] = [(6, 0, toppings)]
+        values['topping_ids_1'] = [(fields.X2ManyCmd.SET, 0, toppings)]
         self.invalidate_cache(['topping_ids_2', 'topping_ids_3'])
 
         if merge_needed:

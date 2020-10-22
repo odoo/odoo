@@ -54,7 +54,7 @@ class AccountPayment(models.Model):
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
-            'invoice_ids': [(6, 0, self.invoice_ids.ids)],
+            'invoice_ids': [(fields.X2ManyCmd.SET, 0, self.invoice_ids.ids)],
             'payment_token_id': self.payment_token_id.id,
             'acquirer_id': self.payment_token_id.acquirer_id.id,
             'payment_id': self.id,

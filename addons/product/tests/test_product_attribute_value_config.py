@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import SavepointCase
 from odoo.tools import mute_logger
+from odoo.fields import X2ManyCmd
 
 
 class TestProductAttributeValueCommon(SavepointCase):
@@ -51,7 +52,7 @@ class TestProductAttributeValueCommon(SavepointCase):
         cls.computer_ssd_attribute_lines = cls.env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.ssd_attribute.id,
-            'value_ids': [(6, 0, [cls.ssd_256.id, cls.ssd_512.id])],
+            'value_ids': [(X2ManyCmd.SET, 0, [cls.ssd_256.id, cls.ssd_512.id])],
         })
         cls.computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
         cls.computer_ssd_attribute_lines.product_template_value_ids[1].price_extra = 400
@@ -77,7 +78,7 @@ class TestProductAttributeValueCommon(SavepointCase):
         cls.computer_ram_attribute_lines = cls.env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.ram_attribute.id,
-            'value_ids': [(6, 0, [cls.ram_8.id, cls.ram_16.id, cls.ram_32.id])],
+            'value_ids': [(X2ManyCmd.SET, 0, [cls.ram_8.id, cls.ram_16.id, cls.ram_32.id])],
         })
         cls.computer_ram_attribute_lines.product_template_value_ids[0].price_extra = 20
         cls.computer_ram_attribute_lines.product_template_value_ids[1].price_extra = 40
@@ -109,7 +110,7 @@ class TestProductAttributeValueCommon(SavepointCase):
         cls.computer_hdd_attribute_lines = cls.env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.hdd_attribute.id,
-            'value_ids': [(6, 0, [cls.hdd_1.id, cls.hdd_2.id, cls.hdd_4.id])],
+            'value_ids': [(X2ManyCmd.SET, 0, [cls.hdd_1.id, cls.hdd_2.id, cls.hdd_4.id])],
         })
         cls.computer_hdd_attribute_lines.product_template_value_ids[0].price_extra = 2
         cls.computer_hdd_attribute_lines.product_template_value_ids[1].price_extra = 4
@@ -117,7 +118,7 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     def _add_ram_exclude_for(self):
         self._get_product_value_id(self.computer_ram_attribute_lines, self.ram_16).update({
-            'exclude_for': [(0, 0, {
+            'exclude_for': [(X2ManyCmd.CREATE, 0, {
                 'product_tmpl_id': self.computer.id,
                 'value_ids': [(6, 0, [self._get_product_value_id(self.computer_hdd_attribute_lines, self.hdd_1).id])]
             })]
@@ -144,7 +145,7 @@ class TestProductAttributeValueCommon(SavepointCase):
         cls.computer_case_size_attribute_lines = cls.env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.computer_case.id,
             'attribute_id': cls.size_attribute.id,
-            'value_ids': [(6, 0, [cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
+            'value_ids': [(X2ManyCmd.SET, 0, [cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
         })
 
     def _get_product_value_id(self, product_template_attribute_lines, product_attribute_value):
@@ -170,7 +171,7 @@ class TestProductAttributeValueCommon(SavepointCase):
 
     def _add_exclude(self, m1, m2, product_template=False):
         m1.update({
-            'exclude_for': [(0, 0, {
+            'exclude_for': [(X2ManyCmd.CREATE, 0, {
                 'product_tmpl_id': (product_template or self.computer).id,
                 'value_ids': [(6, 0, [m2.id])]
             })]
@@ -281,7 +282,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.env['product.template.attribute.line'].create({
             'product_tmpl_id': mouse.id,
             'attribute_id': color_attribute.id,
-            'value_ids': [(6, 0, [color_red.id, color_green.id])],
+            'value_ids': [(X2ManyCmd.SET, 0, [color_red.id, color_green.id])],
         })
 
         mouse_color_red = self._get_product_template_attribute_value(color_red, mouse)
@@ -313,12 +314,12 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
         self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+            'product_template_attribute_value_ids': [(X2ManyCmd.SET, 0, combination.ids)],
             'active': False,
         })
         self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+            'product_template_attribute_value_ids': [(X2ManyCmd.SET, 0, combination.ids)],
             'active': True,
         })
         self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
@@ -458,7 +459,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             self.env['product.template.attribute.line'].create([{
                 'attribute_id': product_attribute.id,
                 'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, product_attribute.value_ids.ids)]
+                'value_ids': [(X2ManyCmd.SET, 0, product_attribute.value_ids.ids)]
             }])
 
         # Get a value in the middle for each attribute to make sure it would
@@ -493,7 +494,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         # CASE: clear_caches in product.product create
         variant = self.env['product.product'].create({
             'product_tmpl_id': self.computer.id,
-            'product_template_attribute_value_ids': [(6, 0, combination.ids)],
+            'product_template_attribute_value_ids': [(X2ManyCmd.SET, 0, combination.ids)],
         })
         self.assertEqual(variant, self.computer._get_variant_for_combination(combination))
 
@@ -519,14 +520,14 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             self.env['product.template.attribute.line'].create({
                 'product_tmpl_id': self.computer_case.id,
                 'attribute_id': self.hdd_attribute.id,
-                'value_ids': [(6, 0, [])],
+                'value_ids': [(X2ManyCmd.SET, 0, [])],
             })
 
         with self.assertRaises(ValidationError, msg="value attribute must match line attribute"):
             self.env['product.template.attribute.line'].create({
                 'product_tmpl_id': self.computer_case.id,
                 'attribute_id': self.ram_attribute.id,
-                'value_ids': [(6, 0, [self.ssd_256.id])],
+                'value_ids': [(X2ManyCmd.SET, 0, [self.ssd_256.id])],
             })
 
         with self.assertRaises(UserError, msg="can't change the attribute of an attribute line"):

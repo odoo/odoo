@@ -4,6 +4,7 @@
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
+from odoo.fields import X2ManyCmd
 
 
 @tagged('-at_install', 'post_install')
@@ -19,7 +20,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [(X2ManyCmd.CREATE, 0, {
                 'name': self.company_data['product_order_sales_price'].name,
                 'product_id': self.company_data['product_order_sales_price'].id,
                 'product_uom_qty': 2.0,
@@ -34,7 +35,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'journal_id': self.company_data['default_journal_purchase'].id,
             'accounting_date': '2017-01-01',
             'expense_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'expense_1',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_order_sales_price'].id,
@@ -43,7 +44,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'expense_2',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_delivery_sales_price'].id,
@@ -52,7 +53,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'expense_3',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_order_sales_price'].id,
@@ -61,7 +62,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'expense_4',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_delivery_sales_price'].id,
@@ -70,7 +71,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'expense_5',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_delivery_sales_price'].id,

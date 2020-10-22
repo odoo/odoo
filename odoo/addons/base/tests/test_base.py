@@ -3,7 +3,7 @@
 
 import ast
 
-from odoo import SUPERUSER_ID
+from odoo import SUPERUSER_ID, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
@@ -13,7 +13,7 @@ from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 class TestSafeEval(BaseCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
-        expected = (1, {"a": {2.5}}, [None, u"foo"])
+        expected = (fields.X2ManyCmd.UPDATE, {"a": {2.5}}, [None, u"foo"])
         actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
         self.assertEqual(actual, expected)
 
@@ -25,13 +25,13 @@ class TestSafeEval(BaseCase):
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """
-        expected = (1, {"a": 9 * 2}, (True, False, None))
+        expected = (fields.X2ManyCmd.UPDATE, {"a": 9 * 2}, (True, False, None))
         actual = safe_eval('(1, {"a": 9 * 2}, (True, False, None))')
         self.assertEqual(actual, expected, "Simple python expressions are not working with safe_eval")
 
     def test_02_literal_eval(self):
         """ Try simple literal definition to verify it works with literal_eval """
-        expected = (1, {"a": 9}, (True, False, None))
+        expected = (fields.X2ManyCmd.UPDATE, {"a": 9}, (True, False, None))
         actual = ast.literal_eval('(1, {"a": 9}, (True, False, None))')
         self.assertEqual(actual, expected, "Simple python expressions are not working with literal_eval")
 
@@ -196,7 +196,7 @@ class TestBase(TransactionCase):
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
-        # turn on sync again       
+        # turn on sync again
         p1.write({'type': 'contact'})
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -366,8 +366,8 @@ class TestBase(TransactionCase):
                                       'phone': '1122334455',
                                       'email': 'info@sunhelm.com',
                                       'vat': 'BE0477472701',
-                                      'child_ids': [(4, p0.id),
-                                                    (0, 0, {'name': 'Alrik Greenthorn',
+                                      'child_ids': [(fields.X2ManyCmd.LINK, p0.id),
+                                                    (fields.X2ManyCmd.CREATE, 0, {'name': 'Alrik Greenthorn',
                                                             'email': 'agr@sunhelm.com'})]})
         p1 = res_partner.create({'name': 'Otto Blackwood',
                                  'email': 'otto.blackwood@sunhelm.com',
@@ -376,7 +376,7 @@ class TestBase(TransactionCase):
                                   'email': 'ggr@sunhelm.com',
                                   'parent_id': p1.id})
         p2 = res_partner.search([('email', '=', 'agr@sunhelm.com')], limit=1)
-        sunhelm.write({'child_ids': [(0, 0, {'name': 'Ulrik Greenthorn',
+        sunhelm.write({'child_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': 'Ulrik Greenthorn',
                                              'email': 'ugr@sunhelm.com'})]})
         p3 = res_partner.search([('email', '=', 'ugr@sunhelm.com')], limit=1)
 
@@ -554,8 +554,8 @@ class TestPartnerRecursion(TransactionCase):
         """ Indirect hacky write to create cycle in children """
         p3b = self.p1.create({'name': 'Elmtree Grand-Child 1.2', 'parent_id': self.p2.id})
         with self.assertRaises(ValidationError):
-            self.p2.write({'child_ids': [(1, self.p3.id, {'parent_id': p3b.id}),
-                                         (1, p3b.id, {'parent_id': self.p3.id})]})
+            self.p2.write({'child_ids': [(fields.X2ManyCmd.UPDATE, self.p3.id, {'parent_id': p3b.id}),
+                                         (fields.X2ManyCmd.UPDATE, p3b.id, {'parent_id': self.p3.id})]})
 
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
@@ -605,7 +605,7 @@ class TestParentStore(TransactionCase):
         """ Duplicate the children then reassign them to the new parent (2nd method). """
         new_cat1 = self.cat1.copy()
         new_cat2 = self.cat2.copy()
-        new_cat0 = self.cat0.copy({'child_ids': [(6, 0, (new_cat1 + new_cat2).ids)]})
+        new_cat0 = self.cat0.copy({'child_ids': [(fields.X2ManyCmd.SET, 0, (new_cat1 + new_cat2).ids)]})
         new_struct = new_cat0.search([('parent_id', 'child_of', new_cat0.id)])
         self.assertEqual(len(new_struct), 4, "After duplication, the new object must have the childs records")
         old_struct = new_cat0.search([('parent_id', 'child_of', self.cat0.id)])
@@ -617,7 +617,7 @@ class TestParentStore(TransactionCase):
         new_cat1 = self.cat1.copy()
         new_cat2 = self.cat2.copy()
         new_cat0 = self.cat0.copy({'child_ids': []})
-        new_cat0.write({'child_ids': [(4, new_cat1.id), (4, new_cat2.id)]})
+        new_cat0.write({'child_ids': [(fields.X2ManyCmd.LINK, new_cat1.id), (fields.X2ManyCmd.LINK, new_cat2.id)]})
         new_struct = new_cat0.search([('parent_id', 'child_of', new_cat0.id)])
         self.assertEqual(len(new_struct), 4, "After duplication, the new object must have the childs records")
         old_struct = new_cat0.search([('parent_id', 'child_of', self.cat0.id)])
@@ -649,8 +649,8 @@ class TestGroups(TransactionCase):
         # four groups with no cycle, check them all together
         a = self.env['res.groups'].create({'name': 'A'})
         b = self.env['res.groups'].create({'name': 'B'})
-        c = self.env['res.groups'].create({'name': 'G', 'implied_ids': [(6, 0, (a + b).ids)]})
-        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [(6, 0, c.ids)]})
+        c = self.env['res.groups'].create({'name': 'G', 'implied_ids': [(fields.X2ManyCmd.SET, 0, (a + b).ids)]})
+        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [(fields.X2ManyCmd.SET, 0, c.ids)]})
         self.assertTrue((a + b + c + d)._check_m2m_recursion('implied_ids'))
 
         # create a cycle and check

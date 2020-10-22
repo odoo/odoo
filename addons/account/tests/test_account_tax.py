@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -17,7 +18,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'date': '2019-01-01',
             'invoice_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'name': 'invoice_line',
                     'quantity': 1.0,
                     'price_unit': 100.0,

@@ -5,6 +5,7 @@ from odoo.tests import Form
 from odoo.tests.common import SavepointCase
 from odoo.tools import float_round
 from odoo.exceptions import UserError
+from odoo.fields import X2ManyCmd
 
 
 class TestPackingCommon(SavepointCase):
@@ -238,7 +239,7 @@ class TestPacking(TestPackingCommon):
         picking.action_put_in_pack()
         pack1 = self.env['stock.quant.package'].search([])[-1]
         picking.write({
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.productB.id,
                 'product_uom_qty': 7.0,
                 'qty_done': 7.0,
@@ -250,7 +251,7 @@ class TestPacking(TestPackingCommon):
             })]
         })
         picking.write({
-            'move_line_ids': [(0, 0, {
+            'move_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'product_id': self.productA.id,
                 'product_uom_qty': 5.0,
                 'qty_done': 5.0,
@@ -291,7 +292,7 @@ class TestPacking(TestPackingCommon):
             **{'product_id': self.productA.id, 'quantity': 355.4},  # important number
         })
         package = self.env['stock.quant.package'].create({
-            **location_dict, **{'quant_ids': [(6, 0, [quant.id])]},
+            **location_dict, **{'quant_ids': [(X2ManyCmd.SET, 0, [quant.id])]},
         })
         location_dict.update({
             'state': 'draft',
@@ -309,7 +310,7 @@ class TestPacking(TestPackingCommon):
             **location_dict,
             **{
                 'picking_type_id': self.warehouse.in_type_id.id,
-                'move_lines': [(6, 0, [move.id])],
+                'move_lines': [(X2ManyCmd.SET, 0, [move.id])],
         }})
 
         picking.action_confirm()
@@ -372,9 +373,9 @@ class TestPacking(TestPackingCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_step_rule = self.env.ref('stock.group_adv_location')
         grp_pack = self.env.ref('stock.group_tracking_lot')
-        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
-        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.UNLINK, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.UNLINK, grp_multi_step_rule.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.UNLINK, grp_pack.id)]})
         self.warehouse.reception_steps = 'two_steps'
         # Settings of receipt.
         self.warehouse.in_type_id.show_operations = True
@@ -402,7 +403,7 @@ class TestPacking(TestPackingCommon):
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
         })
-        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+        self.stock_location.putaway_rule_ids = [(X2ManyCmd.LINK, putaway_A.id, 0), (X2ManyCmd.LINK, putaway_B.id, 0)]
 
         # Create a new receipt with the two products.
         receipt_form = Form(self.env['stock.picking'])
@@ -504,9 +505,9 @@ class TestPacking(TestPackingCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_step_rule = self.env.ref('stock.group_adv_location')
         grp_pack = self.env.ref('stock.group_tracking_lot')
-        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
-        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.UNLINK, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.UNLINK, grp_multi_step_rule.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.UNLINK, grp_pack.id)]})
         self.warehouse.reception_steps = 'two_steps'
         # Settings of receipt.
         self.warehouse.in_type_id.show_operations = True
@@ -538,7 +539,7 @@ class TestPacking(TestPackingCommon):
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_B.id,
         })
-        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+        self.stock_location.putaway_rule_ids = [(X2ManyCmd.LINK, putaway_A.id, 0), (X2ManyCmd.LINK, putaway_B.id, 0)]
         # location_form = Form(self.stock_location)
         # location_form.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0), ],
         # self.stock_location = location_form.save()

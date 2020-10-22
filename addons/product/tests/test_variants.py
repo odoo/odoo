@@ -7,6 +7,7 @@ import io
 from PIL import Image
 
 from . import common
+from odoo import fields, api
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, Form
 
@@ -21,9 +22,9 @@ class TestVariantsSearch(TransactionCase):
         self.size_attr_value_l = self.env['product.attribute.value'].create({'name': 'L', 'attribute_id': self.size_attr.id})
         self.product_shirt_template = self.env['product.template'].create({
             'name': 'Shirt',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
-                'value_ids': [(6, 0, [self.size_attr_value_l.id])],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, [self.size_attr_value_l.id])],
             })]
         })
         return res
@@ -80,7 +81,7 @@ class TestVariants(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id)],
             })]
@@ -95,10 +96,10 @@ class TestVariants(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v2.id)],
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id)],
             })]
@@ -113,10 +114,10 @@ class TestVariants(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v2.id)],
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id)],
             })]
@@ -140,10 +141,10 @@ class TestVariants(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id), (4, self.size_attr_value_l.id)],
             })]
@@ -171,17 +172,17 @@ class TestVariants(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
-            }), (0, 0, {
+            }), (fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id)],
             })]
         })
         size_attribute_line = test_template.attribute_line_ids.filtered(lambda line: line.attribute_id == self.size_attr)
         test_template.write({
-            'attribute_line_ids': [(1, size_attribute_line.id, {
+            'attribute_line_ids': [(fields.X2ManyCmd.UPDATE, size_attribute_line.id, {
                 'value_ids': [(4, self.size_attr_value_l.id)],
             })]
         })
@@ -189,7 +190,7 @@ class TestVariants(common.TestProductCommon):
     def test_variants_copy(self):
         template = self.env['product.template'].create({
             'name': 'Test Copy',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id)],
             })]
@@ -267,7 +268,7 @@ class TestVariantsNoCreate(common.TestProductCommon):
         self.size = self.env['product.attribute'].create({
             'name': 'Size',
             'create_variant': 'no_variant',
-            'value_ids': [(0, 0, {'name': 'S'}), (0, 0, {'name': 'M'}), (0, 0, {'name': 'L'})],
+            'value_ids': [(fields.X2ManyCmd.CREATE, 0, {'name': 'S'}), (fields.X2ManyCmd.CREATE, 0, {'name': 'M'}), (fields.X2ManyCmd.CREATE, 0, {'name': 'L'})],
         })
         self.size_S = self.size.value_ids[0]
         self.size_M = self.size.value_ids[1]
@@ -279,7 +280,7 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size.id,
                 'value_ids': [(4, self.size_S.id)],
             })],
@@ -297,7 +298,7 @@ class TestVariantsNoCreate(common.TestProductCommon):
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size.id,
                 'value_ids': [(4, self.size_S.id)],
             })],
@@ -311,9 +312,9 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size.id,
-                'value_ids': [(6, 0, self.size.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, self.size.value_ids.ids)],
             })],
         })
         self.assertEqual(len(template.product_variant_ids), 1)
@@ -329,9 +330,9 @@ class TestVariantsNoCreate(common.TestProductCommon):
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.size.id,
-                'value_ids': [(6, 0, self.size.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, self.size.value_ids.ids)],
             })],
         })
         self.assertEqual(len(template.product_variant_ids), 1)
@@ -344,11 +345,11 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [
-                (0, 0, { # no variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # no variants for this one
                     'attribute_id': self.size.id,
                     'value_ids': [(4, self.size_S.id)],
                 }),
-                (0, 0, { # two variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # two variants for this one
                     'attribute_id': self.prod_att_1.id,
                     'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
                 }),
@@ -371,11 +372,11 @@ class TestVariantsNoCreate(common.TestProductCommon):
 
         template.write({
             'attribute_line_ids': [
-                (0, 0, { # no variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # no variants for this one
                     'attribute_id': self.size.id,
                     'value_ids': [(4, self.size_S.id)],
                 }),
-                (0, 0, { # two variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # two variants for this one
                     'attribute_id': self.prod_att_1.id,
                     'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
                 }),
@@ -394,11 +395,11 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [
-                (0, 0, { # no variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # no variants for this one
                     'attribute_id': self.size.id,
-                    'value_ids': [(6, 0, self.size.value_ids.ids)],
+                    'value_ids': [(fields.X2ManyCmd.SET, 0, self.size.value_ids.ids)],
                 }),
-                (0, 0, { # two variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # two variants for this one
                     'attribute_id': self.prod_att_1.id,
                     'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
                 }),
@@ -421,11 +422,11 @@ class TestVariantsNoCreate(common.TestProductCommon):
 
         template.write({
             'attribute_line_ids': [
-                (0, 0, { # no variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # no variants for this one
                     'attribute_id': self.size.id,
-                    'value_ids': [(6, 0, self.size.value_ids.ids)],
+                    'value_ids': [(fields.X2ManyCmd.SET, 0, self.size.value_ids.ids)],
                 }),
-                (0, 0, { # two variants for this one
+                (fields.X2ManyCmd.CREATE, 0, { # two variants for this one
                     'attribute_id': self.prod_att_1.id,
                     'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
                 }),
@@ -444,16 +445,16 @@ class TestVariantsNoCreate(common.TestProductCommon):
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [
-                (0, 0, { # one variant for this one
+                (fields.X2ManyCmd.CREATE, 0, { # one variant for this one
                     'attribute_id': self.prod_att_1.id,
-                    'value_ids': [(6, 0, self.prod_attr1_v1.ids)],
+                    'value_ids': [(fields.X2ManyCmd.SET, 0, self.prod_attr1_v1.ids)],
                 }),
             ],
         })
         self.assertEqual(len(template.product_variant_ids), 1)
-        template.attribute_line_ids = [(0, 0, {
+        template.attribute_line_ids = [(fields.X2ManyCmd.CREATE, 0, {
             'attribute_id': self.size.id,
-            'value_ids': [(6, 0, self.size_S.ids)],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, self.size_S.ids)],
         })]
         self.assertEqual(len(template.product_variant_ids), 1)
         # no_variant attribute should not appear on the variant
@@ -465,9 +466,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
     def test_01_create_no_variant(self):
         toto = self.env['product.template'].create({
             'name': 'Toto',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
             }) for attribute in self.attributes],
         })
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
@@ -478,9 +479,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.attributes.write({'create_variant': 'dynamic'})
         toto = self.env['product.template'].create({
             'name': 'Toto',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
             }) for attribute in self.attributes],
         })
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
@@ -492,9 +493,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         with self.assertRaises(UserError):
             self.env['product.template'].create({
                 'name': 'Toto',
-                'attribute_line_ids': [(0, 0, {
+                'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                     'attribute_id': attribute.id,
-                    'value_ids': [(6, 0, attribute.value_ids.ids)],
+                    'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
                 }) for attribute in self.attributes],
             })
 
@@ -502,9 +503,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.attributes[:5].write({'create_variant': 'dynamic'})
         toto = self.env['product.template'].create({
             'name': 'Toto',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
             }) for attribute in self.attributes],
         })
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
@@ -515,9 +516,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.attributes[:2].write({'create_variant': 'always'})
         toto = self.env['product.template'].create({
             'name': 'Toto',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
             }) for attribute in self.attributes],
         })
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
@@ -529,9 +530,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.attributes[5:].write({'create_variant': 'always'})
         toto = self.env['product.template'].create({
             'name': 'Toto',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
             }) for attribute in self.attributes],
         })
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
@@ -543,9 +544,9 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.attributes[6:].write({'create_variant': 'always'})
         toto = self.env['product.template'].create({
             'name': 'Toto',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': attribute.id,
-                'value_ids': [(6, 0, attribute.value_ids.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, attribute.value_ids.ids)],
             }) for attribute in self.attributes],
         })
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
@@ -576,7 +577,7 @@ class TestVariantsImages(common.TestProductCommon):
         ptal = self.env['product.template.attribute.line'].create({
             'attribute_id': product_attribute.id,
             'product_tmpl_id': self.template.id,
-            'value_ids': [(6, 0, color_values.ids)],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, color_values.ids)],
         })
 
         for color_value in ptal.product_template_value_ids[1:]:
@@ -821,7 +822,7 @@ class TestVariantsArchive(common.TestProductCommon):
         self.assertFalse(archived_variants)
 
         # CASE: empty combination, this generates a new variant
-        self.template.write({'attribute_line_ids': [(2, self.ptal_color.id)]})
+        self.template.write({'attribute_line_ids': [(fields.X2ManyCmd.DELETE, self.ptal_color.id)]})
         self._assert_0color_x_0size()
         archived_variants = self._get_archived_variants()
         self.assertEqual(archived_variants, variants_2x1)
@@ -865,7 +866,7 @@ class TestVariantsArchive(common.TestProductCommon):
 
         # CASE: remove one value, line becoming single value
         variants_2x2 = self.template.product_variant_ids
-        self.ptal_size.write({'value_ids': [(3, self.pav_size_m.id)]})
+        self.ptal_size.write({'value_ids': [(fields.X2ManyCmd.UNLINK, self.pav_size_m.id)]})
         self._assert_2color_x_1size()
         self.assertEqual(self.template.product_variant_ids, variants_2x2[0] + variants_2x2[2])
         archived_variants = self._get_archived_variants()
@@ -873,7 +874,7 @@ class TestVariantsArchive(common.TestProductCommon):
         self.assertEqual(archived_variants, variants_2x2[1] + variants_2x2[3])
 
         # CASE: add back the value
-        self.ptal_size.write({'value_ids': [(4, self.pav_size_m.id)]})
+        self.ptal_size.write({'value_ids': [(fields.X2ManyCmd.LINK, self.pav_size_m.id)]})
         self._assert_2color_x_2size()
         self.assertEqual(self.template.product_variant_ids, variants_2x2)
         archived_variants = self._get_archived_variants()
@@ -881,7 +882,7 @@ class TestVariantsArchive(common.TestProductCommon):
 
         # CASE: remove one value, line becoming single value, and then remove
         # the remaining value
-        self.ptal_size.write({'value_ids': [(3, self.pav_size_m.id)]})
+        self.ptal_size.write({'value_ids': [(fields.X2ManyCmd.UNLINK, self.pav_size_m.id)]})
         self._remove_ptal_size()
         self._assert_2color_x_0size()
         self.assertFalse(self.template.product_variant_ids & variants_2x2)
@@ -979,9 +980,9 @@ class TestVariantsArchive(common.TestProductCommon):
         # Define a template with only color attribute & white value
         template = self.env['product.template'].create({
             'name': 'test product',
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': pa_color.id,
-                'value_ids': [(6, 0, [pav_color_white.id])],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, [pav_color_white.id])],
             })],
         })
 
@@ -994,7 +995,7 @@ class TestVariantsArchive(common.TestProductCommon):
 
         # Adding a new value to an existing attribute should not archive the variant
         template.write({
-            'attribute_line_ids': [(1, template.attribute_line_ids[0].id, {
+            'attribute_line_ids': [(fields.X2ManyCmd.UPDATE, template.attribute_line_ids[0].id, {
                 'attribute_id': pa_color.id,
                 'value_ids': [(4, pav_color_black.id, False)],
             })]
@@ -1003,7 +1004,7 @@ class TestVariantsArchive(common.TestProductCommon):
 
         # Removing an attribute value should archive the product using it
         template.write({
-            'attribute_line_ids': [(1, template.attribute_line_ids[0].id, {
+            'attribute_line_ids': [(fields.X2ManyCmd.UPDATE, template.attribute_line_ids[0].id, {
                 'value_ids': [(3, pav_color_white.id, 0)],
             })]
         })
@@ -1016,12 +1017,12 @@ class TestVariantsArchive(common.TestProductCommon):
         # Creating a product with the same attributes for testing duplicates
         product_white_duplicate = Product.create({
             'product_tmpl_id': template.id,
-            'product_template_attribute_value_ids': [(6, 0, [ptav_white.id])],
+            'product_template_attribute_value_ids': [(fields.X2ManyCmd.SET, 0, [ptav_white.id])],
             'active': False,
         })
         # Reset archiving for the next assert
         template.write({
-            'attribute_line_ids': [(1, template.attribute_line_ids[0].id, {
+            'attribute_line_ids': [(fields.X2ManyCmd.UPDATE, template.attribute_line_ids[0].id, {
                 'value_ids': [(4, pav_color_white.id, 0)],
             })]
         })
@@ -1030,24 +1031,24 @@ class TestVariantsArchive(common.TestProductCommon):
 
         # Adding a new attribute should archive the old variant
         template.write({
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': pa_size.id,
-                'value_ids': [(6, 0, [pav_size_s.id, pav_size_m.id])],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, [pav_size_s.id, pav_size_m.id])],
             })]
         })
         self.assertFalse(product_white.active)
 
         # Reset archiving for the next assert
         template.write({
-            'attribute_line_ids': [(3, template.attribute_line_ids[1].id, 0)]
+            'attribute_line_ids': [(fields.X2ManyCmd.UNLINK, template.attribute_line_ids[1].id, 0)]
         })
         self.assertTrue(product_white.active)
 
         # Adding a no_variant attribute should not archive the product
         template.write({
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': pa_material.id,
-                'value_ids': [(6, 0, [pav_material_wood.id])],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, [pav_material_wood.id])],
             })]
         })
         self.assertTrue(product_white.active)
@@ -1072,9 +1073,9 @@ class TestVariantsArchive(common.TestProductCommon):
             self.assertEqual(self.ptav_size_m.product_attribute_value_id, self.pav_size_m)
 
     def _get_add_all_attributes_command(self):
-        return [(0, 0, {
+        return [(fields.X2ManyCmd.CREATE, 0, {
             'attribute_id': pa.id,
-            'value_ids': [(6, 0, pa.value_ids.ids)],
+            'value_ids': [(fields.X2ManyCmd.SET, 0, pa.value_ids.ids)],
         }) for pa in self.pa_color + self.pa_size]
 
     def _get_archived_variants(self):
@@ -1086,22 +1087,22 @@ class TestVariantsArchive(common.TestProductCommon):
         ])
 
     def _remove_ptal_size(self):
-        self.template.write({'attribute_line_ids': [(2, self.ptal_size.id)]})
+        self.template.write({'attribute_line_ids': [(fields.X2ManyCmd.DELETE, self.ptal_size.id)]})
 
     def _add_ptal_size_s_m(self):
         self.template.write({
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.pa_size.id,
-                'value_ids': [(6, 0, (self.pav_size_s + self.pav_size_m).ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, (self.pav_size_s + self.pav_size_m).ids)],
             })],
         })
         self._update_size_vars(self.template.attribute_line_ids[-1])
 
     def _add_ptal_size_s(self):
         self.template.write({
-            'attribute_line_ids': [(0, 0, {
+            'attribute_line_ids': [(fields.X2ManyCmd.CREATE, 0, {
                 'attribute_id': self.pa_size.id,
-                'value_ids': [(6, 0, self.pav_size_s.ids)],
+                'value_ids': [(fields.X2ManyCmd.SET, 0, self.pav_size_s.ids)],
             })],
         })
         self._update_size_vars(self.template.attribute_line_ids[-1])

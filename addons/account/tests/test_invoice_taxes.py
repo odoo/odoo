@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
+from odoo.fields import X2ManyCmd
 
 
 @tagged('post_install', '-at_install')
@@ -45,8 +46,8 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount_type': 'group',
             'amount': 21,
             'children_tax_ids': [
-                (4, cls.percent_tax_1_incl.id),
-                (4, cls.percent_tax_2.id)
+                (X2ManyCmd.LINK, cls.percent_tax_1_incl.id),
+                (X2ManyCmd.LINK, cls.percent_tax_2.id)
             ],
             'sequence': 40,
         })
@@ -81,7 +82,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         vals = {
             'move_type': inv_type,
             'partner_id': self.partner_a.id,
-            'invoice_line_ids': [(0, 0, {
+            'invoice_line_ids': [(X2ManyCmd.CREATE, 0, {
                 'name': 'xxxx',
                 'quantity': 1,
                 'price_unit': amount,
@@ -273,24 +274,24 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount_type': 'percent',
             'amount': 10,
             'invoice_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'base',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'tax',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'base',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'tax',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
@@ -363,24 +364,24 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount_type': 'percent',
             'amount': 10,
             'invoice_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'base',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'tax',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'base',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'repartition_type': 'tax',
                     'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_neg.ids)],

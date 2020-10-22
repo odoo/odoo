@@ -4,6 +4,7 @@
 from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, SavepointCase
+from odoo.fields import X2ManyCmd
 
 
 class TestReportsCommon(SavepointCase):
@@ -627,13 +628,13 @@ class TestReports(TestReportsCommon):
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(X2ManyCmd.LINK, grp_multi_routes.id)]})
         # Warehouse config.
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.reception_steps = 'three_steps'
         # Product config.
-        self.product.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        self.product.write({'route_ids': [(X2ManyCmd.LINK, self.env.ref('stock.route_warehouse0_mto').id)]})
         # Create a RR
         pg1 = self.env['procurement.group'].create({})
         reordering_rule = self.env['stock.warehouse.orderpoint'].create({
@@ -851,11 +852,11 @@ class TestReports(TestReportsCommon):
             'name': 'Game Joy',
             'type': 'product',
             'attribute_line_ids': [
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'attribute_id': product_attr_color.id,
                     'value_ids': [(6, 0, [color_gray.id, color_blue.id])]
                 }),
-                (0, 0, {
+                (X2ManyCmd.CREATE, 0, {
                     'attribute_id': product_attr_size.id,
                     'value_ids': [(6, 0, [size_pocket.id, size_xl.id])]
                 }),

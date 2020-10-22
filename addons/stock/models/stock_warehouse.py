@@ -219,7 +219,7 @@ class Warehouse(models.Model):
                     for rule_item in warehouse._get_routes_values().values():
                         for depend in rule_item.get('depends', []):
                             depends.add(depend)
-                    values = {'resupply_route_ids': [(4, route.id) for route in warehouse.resupply_route_ids]}
+                    values = {'resupply_route_ids': [(fields.X2ManyCmd.LINK, route.id) for route in warehouse.resupply_route_ids]}
                     for depend in depends:
                         values.update({depend: warehouse[depend]})
                     warehouse.write(values)
@@ -259,10 +259,10 @@ class Warehouse(models.Model):
             group_user = self.env.ref('base.group_user')
             group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
             if max_cnt['company_id_count'] <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
-                group_user.write({'implied_ids': [(3, group_stock_multi_warehouses.id)]})
-                group_stock_multi_warehouses.write({'users': [(3, user.id) for user in group_user.users]})
+                group_user.write({'implied_ids': [(fields.X2ManyCmd.UNLINK, group_stock_multi_warehouses.id)]})
+                group_stock_multi_warehouses.write({'users': [(fields.X2ManyCmd.UNLINK, user.id) for user in group_user.users]})
             if max_cnt['company_id_count'] > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
-                group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, self.env.ref('stock.group_stock_multi_locations').id)]})
+                group_user.write({'implied_ids': [(fields.X2ManyCmd.LINK, group_stock_multi_warehouses.id), (fields.X2ManyCmd.LINK, self.env.ref('stock.group_stock_multi_locations').id)]})
 
     @api.model
     def _update_partner_data(self, partner_id, company_id):
@@ -430,7 +430,7 @@ class Warehouse(models.Model):
             if route_data['route_create_values'].get('warehouse_selectable', False) or route_data['route_update_values'].get('warehouse_selectable', False):
                 routes.append(self[route_field])
         return {
-            'route_ids': [(4, route.id) for route in routes],
+            'route_ids': [(fields.X2ManyCmd.LINK, route.id) for route in routes],
         }
 
     def _get_routes_values(self):
