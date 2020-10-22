@@ -84,6 +84,8 @@ var PublicRoot = publicWidget.RootWidget.extend({
             $('input, textarea').placeholder();
         }
 
+        this.$el.children().on('error.datetimepicker', this._onDateTimePickerError.bind(this));
+
         return Promise.all(defs);
     },
 
@@ -315,6 +317,15 @@ var PublicRoot = publicWidget.RootWidget.extend({
      */
     _onDisableOnClick: function (ev) {
         $(ev.currentTarget).addClass('disabled');
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onDateTimePickerError: function (ev) {
+        return false;
     },
 });
 
