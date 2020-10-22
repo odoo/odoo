@@ -2603,6 +2603,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 line_form.price_unit = 0.89500
         move_form.save()
 
+    def test_out_invoice_multiple_switch_payment_terms(self):
+        # assertNotUnbalancedEntryWhenSaving
+        with Form(self.invoice) as move_form:
+            move_form.partner_id = self.partner_b # Switch to 30% in advance payment terms
+            move_form.partner_id = self.partner_a # Back to immediate payment term
+
     def test_out_invoice_multi_company(self):
         ''' Ensure the properties are found on the right company.
         '''

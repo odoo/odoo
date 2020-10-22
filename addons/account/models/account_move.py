@@ -3487,7 +3487,7 @@ class AccountMoveLine(models.Model):
             # As we can't express such synchronization as computed fields without cycling, we need to do it both
             # in onchange and in create/write. So, if something changed in accounting [resp. business] fields,
             # business [resp. accounting] fields are recomputed.
-            if any(field in cleaned_vals for field in ACCOUNTING_FIELDS):
+            if any(field in vals for field in ACCOUNTING_FIELDS):
                 balance = line.currency_id and line.amount_currency or line.debit - line.credit
                 price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
                 to_write = line._get_fields_onchange_balance(
