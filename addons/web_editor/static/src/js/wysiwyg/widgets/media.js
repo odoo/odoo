@@ -383,6 +383,7 @@ var FileWidget = SearchableMediaWidget.extend({
             media.id, {
                 query: media.query || '',
                 is_dynamic_svg: !!media.isDynamicSVG,
+                dynamic_colors: media.dynamicColors,
             }
         ]));
         let mediaAttachments = [];
@@ -395,10 +396,15 @@ var FileWidget = SearchableMediaWidget.extend({
             });
         }
         const selected = this.selectedAttachments.concat(mediaAttachments).map(attachment => {
-            // Color-customize dynamic SVGs with the primary theme color
+            // Color-customize dynamic SVGs with the theme colors
             if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
                 const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
-                colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
+                colorCustomizedURL.searchParams.forEach((value, key) => {
+                    const match = key.match(/^c([1-5])$/);
+                    if (match) {
+                        colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
+                    }
+                })
                 attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
             }
             return attachment;
@@ -886,13 +892,21 @@ var ImageWidget = FileWidget.extend({
         }
         const result = await this._super(number, offset);
         // Color-substitution for dynamic SVG attachment
-        const primaryColor = getCSSVariableValue('o-color-1');
+        const primaryColors = {};
+        for (let color = 1; color <= 5; color++) {
+            primaryColors[color] = getCSSVariableValue('o-color-' + color);
+        }
         this.attachments.forEach(attachment => {
             if (attachment.image_src.startsWith('/')) {
                 const newURL = new URL(attachment.image_src, window.location.origin);
-                // Set the main color of dynamic SVGs to o-color-1
+                // Set the main colors of dynamic SVGs to o-color-1~5
                 if (attachment.image_src.startsWith('/web_editor/shape/')) {
-                    newURL.searchParams.set('c1', primaryColor);
+                    newURL.searchParams.forEach((value, key) => {
+                        const match = key.match(/^c([1-5])$/);
+                        if (match) {
+                            newURL.searchParams.set(key, primaryColors[match[1]]);
+                        }
+                    })
                 } else {
                     // Set height so that db images load faster
                     newURL.searchParams.set('height', 2 * this.MIN_ROW_HEIGHT);
@@ -1026,17 +1040,25 @@ var ImageWidget = FileWidget.extend({
             try {
                 const response = await fetch(mediaUrl);
                 if (response.headers.get('content-type') === 'image/svg+xml') {
-                    const svg = await response.text();
-                    const colorRegex = new RegExp(DEFAULT_PALETTE['1'], 'gi');
-                    if (colorRegex.test(svg)) {
-                        const fileName = mediaUrl.split('/').pop();
-                        const file = new File([svg.replace(colorRegex, getCSSVariableValue('o-color-1'))], fileName, {
+                    let svg = await response.text();
+                    const fileName = mediaUrl.split('/').pop();
+                    const dynamicColors = {};
+                    const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
+                    svg = svg.replace(combinedColorsRegex, match => {
+                        const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
+                        const colorKey = 'c' + colorId
+                        dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                        return dynamicColors[colorKey];
+                    });
+                    if (Object.keys(dynamicColors).length) {
+                        const file = new File([svg], fileName, {
                             type: "image/svg+xml",
                         });
                         img.src = URL.createObjectURL(file);
                         const media = this.libraryMedia.find(media => media.id === parseInt(cell.dataset.mediaId));
                         if (media) {
                             media.isDynamicSVG = true;
+                            media.dynamicColors = dynamicColors;
                         }
                         // We changed the src: wait for the next load event to do the styling
                         return;
