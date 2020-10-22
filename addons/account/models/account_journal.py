@@ -133,6 +133,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'inbound')],
         string='Inbound Payment Methods',
         compute='_compute_inbound_payment_method_ids',
+        ondelete="restrict",
         store=True,
         readonly=False,
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
@@ -150,6 +151,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'outbound')],
         string='Outbound Payment Methods',
         compute='_compute_outbound_payment_method_ids',
+        ondelete="restrict",
         store=True,
         readonly=False,
         help="Manual:Pay bill by cash or any other method outside of Odoo.\n"
