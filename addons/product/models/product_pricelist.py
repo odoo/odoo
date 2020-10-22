@@ -173,7 +173,6 @@ class Pricelist(models.Model):
             # which case the price_uom_id contains that UoM.
             # The final price will be converted to match `qty_uom_id`.
             qty_uom_id = self._context.get('uom') or product.uom_id.id
-            price_uom_id = product.uom_id.id
             qty_in_product_uom = qty
             if qty_uom_id != product.uom_id.id:
                 try:
