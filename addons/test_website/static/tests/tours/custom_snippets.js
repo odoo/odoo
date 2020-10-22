@@ -51,6 +51,10 @@ tour.register('test_custom_snippet', {
         trigger: ".modal-dialog button span:contains('Save')",
     },
     {
+        content: "confirm reload",
+        trigger: ".modal-dialog button span:contains('Save and Reload')",
+    },
+    {
         content: "go to blocks",
         trigger: ".o_we_add_snippet_btn",
     },
