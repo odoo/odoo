@@ -32,6 +32,10 @@ odoo.define('web.AbstractRendererOwl', function () {
             this._suppressFocusableElements();
         }
 
+        getLocalState() {}
+        giveFocus() {}
+        setLocalState() {}
+
         /**
          * Suppresses 'tabindex' property on any focusable element located inside
          * root elements defined in the `this.sampleDataTargets` object and assigns
