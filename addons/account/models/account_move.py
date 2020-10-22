@@ -638,7 +638,7 @@ class AccountMove(models.Model):
                     'grouping_dict': False,
                 })
                 taxes_map_entry['amount'] += tax_vals['amount']
-                taxes_map_entry['tax_base_amount'] += tax_vals['base']
+                taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line)
                 taxes_map_entry['grouping_dict'] = grouping_dict
             line.tax_exigible = tax_exigible
 
@@ -657,9 +657,8 @@ class AccountMove(models.Model):
                     self.line_ids -= taxes_map_entry['tax_line']
                 continue
 
-            tax_base_amount = (-1 if self.is_inbound() else 1) * taxes_map_entry['tax_base_amount']
             # tax_base_amount field is expressed using the company currency.
-            tax_base_amount = currency._convert(tax_base_amount, self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
+            tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'], self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
             # Recompute only the tax_base_amount.
             if taxes_map_entry['tax_line'] and recompute_tax_base_amount:
@@ -703,6 +702,16 @@ class AccountMove(models.Model):
 
             if in_draft_mode:
                 taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance(force_computation=True))
+
+    @api.model
+    def _get_base_amount_to_display(self, base_amount, tax_rep_ln):
+        """ The base amount returned for taxes by compute_all has is the balance
+        of the base line. For inbound operations, positive sign is on credit, so
+        we need to invert the sign of this amount before displaying it.
+        """
+        if tax_rep_ln.invoice_tax_id.type_tax_use == 'sale' or tax_rep_ln.refund_tax_id.type_tax_use == 'purchase':
+            return -base_amount
+        return base_amount
 
     def update_lines_tax_exigibility(self):
         if all(account.user_type_id.type not in {'payable', 'receivable'} for account in self.mapped('line_ids.account_id')):
