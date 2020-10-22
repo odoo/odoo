@@ -922,6 +922,43 @@ QUnit.test('Attachments that have been unlinked from server should be visually u
     );
 });
 
+QUnit.test('The chatter should be clear when creating a new record after having displayed a chatter for an existing record', async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({ display_name: "Partner1", id: 12 });
+
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        View: FormView,
+        model: 'res.partner',
+        res_id: 12,
+        arch: `
+            <form>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+
+    await afterNextRender(() => {
+        document.querySelector('.o_form_button_create').click();
+    });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "There should only be one message"
+    );
+
+    assert.strictEqual(
+        document.querySelector('.o_Message_content').textContent,
+        'Creating a new record...',
+        "The message should be the new record message",
+    );
+});
+
 });
 });
 });
