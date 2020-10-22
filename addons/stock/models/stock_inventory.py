@@ -80,6 +80,69 @@ class Inventory(models.Model):
                 raise UserError(_('You can only delete a draft inventory adjustment. If the inventory adjustment is not done, you can cancel it.'))
         return super(Inventory, self).unlink()
 
+<<<<<<< HEAD
+=======
+    @api.model
+    def _selection_filter(self):
+        """ Get the list of filter allowed according to the options checked
+        in 'Settings\Warehouse'. """
+        res_filter = [
+            ('none', _('All products')),
+            ('category', _('One product category')),
+            ('product', _('One product only')),
+            ('partial', _('Select products manually'))]
+
+        if self.user_has_groups('stock.group_tracking_owner'):
+            res_filter += [('owner', _('One owner only')), ('product_owner', _('One product for a specific owner'))]
+        if self.user_has_groups('stock.group_production_lot'):
+            res_filter.append(('lot', _('One Lot/Serial Number')))
+        if self.user_has_groups('stock.group_tracking_lot'):
+            res_filter.append(('pack', _('A Pack')))
+        return res_filter
+
+    @api.onchange('filter')
+    def _onchange_filter(self):
+        if self.filter not in ('product', 'product_owner'):
+            self.product_id = False
+        if self.filter != 'lot':
+            self.lot_id = False
+        if self.filter not in ('owner', 'product_owner'):
+            self.partner_id = False
+        if self.filter != 'pack':
+            self.package_id = False
+        if self.filter != 'category':
+            self.category_id = False
+        if self.filter != 'product':
+            self.exhausted = False
+        if self.filter == 'product':
+            self.exhausted = True
+            if self.product_id:
+                return {'domain': {'product_id': [('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)]}}
+
+    @api.onchange('location_id')
+    def _onchange_location_id(self):
+        if self.location_id.company_id:
+            self.company_id = self.location_id.company_id
+
+    @api.one
+    @api.constrains('filter', 'product_id', 'lot_id', 'partner_id', 'package_id')
+    def _check_filter_product(self):
+        if self.filter == 'none' and self.product_id and self.location_id and self.lot_id:
+            return
+        if self.filter not in ('product', 'product_owner') and self.product_id:
+            raise ValidationError(_('The selected product doesn\'t belong to that owner..'))
+        if self.filter != 'lot' and self.lot_id:
+            raise ValidationError(_('The selected lot number doesn\'t exist.'))
+        if self.filter not in ('owner', 'product_owner') and self.partner_id:
+            raise ValidationError(_('The selected owner doesn\'t have the proprietary of that product.'))
+        if self.filter != 'pack' and self.package_id:
+            raise ValidationError(_('The selected inventory options are not coherent, the package doesn\'t exist.'))
+
+    def action_reset_product_qty(self):
+        self.mapped('line_ids').write({'product_qty': 0})
+        return True
+
+>>>>>>> 357a61e96e7... temp
     def action_validate(self):
         if not self.exists():
             return
