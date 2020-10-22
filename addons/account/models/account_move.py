@@ -643,7 +643,7 @@ class AccountMove(models.Model):
                 })
                 taxes_map_entry['balance'] += tax_vals['amount']
                 taxes_map_entry['amount_currency'] += tax_vals.get('amount_currency', 0.0)
-                taxes_map_entry['tax_base_amount'] += tax_vals['base']
+                taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line)
                 taxes_map_entry['grouping_dict'] = grouping_dict
             line.tax_exigible = tax_exigible
 
@@ -654,12 +654,11 @@ class AccountMove(models.Model):
                 taxes_map_entry['grouping_dict'] = False
 
             tax_line = taxes_map_entry['tax_line']
-            tax_base_amount = -taxes_map_entry['tax_base_amount'] if self.is_inbound() else taxes_map_entry['tax_base_amount']
 
             if not tax_line and not taxes_map_entry['grouping_dict']:
                 continue
             elif tax_line and recompute_tax_base_amount:
-                tax_line.tax_base_amount = tax_base_amount
+                tax_line.tax_base_amount = taxes_map_entry['tax_base_amount']
             elif tax_line and not taxes_map_entry['grouping_dict']:
                 # The tax line is no longer used, drop it.
                 self.line_ids -= tax_line
@@ -668,7 +667,7 @@ class AccountMove(models.Model):
                     'amount_currency': taxes_map_entry['amount_currency'],
                     'debit': taxes_map_entry['balance'] > 0.0 and taxes_map_entry['balance'] or 0.0,
                     'credit': taxes_map_entry['balance'] < 0.0 and -taxes_map_entry['balance'] or 0.0,
-                    'tax_base_amount': tax_base_amount,
+                    'tax_base_amount': taxes_map_entry['tax_base_amount'],
                 })
             else:
                 create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
@@ -686,7 +685,7 @@ class AccountMove(models.Model):
                     'amount_currency': taxes_map_entry['amount_currency'],
                     'debit': taxes_map_entry['balance'] > 0.0 and taxes_map_entry['balance'] or 0.0,
                     'credit': taxes_map_entry['balance'] < 0.0 and -taxes_map_entry['balance'] or 0.0,
-                    'tax_base_amount': tax_base_amount,
+                    'tax_base_amount': taxes_map_entry['tax_base_amount'],
                     'exclude_from_invoice_tab': True,
                     'tax_exigible': tax.tax_exigibility == 'on_invoice',
                     **taxes_map_entry['grouping_dict'],
@@ -695,6 +694,16 @@ class AccountMove(models.Model):
             if in_draft_mode:
                 tax_line._onchange_amount_currency()
                 tax_line._onchange_balance()
+
+    @api.model
+    def _get_base_amount_to_display(self, base_amount, tax_rep_ln):
+        """ The base amount returned for taxes by compute_all has is the balance
+        of the base line. For inbound operations, positive sign is on credit, so
+        we need to invert the sign of this amount before displaying it.
+        """
+        if tax_rep_ln.invoice_tax_id.type_tax_use == 'sale' or tax_rep_ln.refund_tax_id.type_tax_use == 'purchase':
+            return -base_amount
+        return base_amount
 
     def update_lines_tax_exigibility(self):
         if all(account.user_type_id.type not in {'payable', 'receivable'} for account in self.mapped('line_ids.account_id')):
