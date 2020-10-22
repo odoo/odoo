@@ -15,6 +15,7 @@ class WebsiteSaleCouponDelivery(WebsiteSaleDelivery):
 
         if order:
             order.recompute_coupon_lines()
+            order.validate_taxes_on_sales_order()
             free_shipping_lines = order._get_free_shipping_lines()
 
         if free_shipping_lines:
