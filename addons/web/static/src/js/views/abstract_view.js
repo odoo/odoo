@@ -30,6 +30,8 @@ var AbstractController = require('web.AbstractController');
 const ControlPanel = require('web.ControlPanel');
 const SearchPanel = require("web/static/src/js/views/search_panel.js");
 var mvc = require('web.mvc');
+const RendererWrapper = require('web.RendererWrapper');
+const { isComponent } = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
 const { Component } = owl;
@@ -333,6 +335,23 @@ var AbstractView = Factory.extend({
             this.model = this._super.apply(this, arguments);
         }
         return this.model;
+    },
+    /**
+     * Correctly creates a Renderer instance depending on
+     * it is a widget or component.
+     *
+     * @override
+     * @param {Widget} parent
+     * @param {Object} state
+     * @returns {Renderer|RendererWrapper}
+     */
+    getRenderer: function (parent, state) {
+        if (isComponent(this.config.Renderer)) {
+            state = Object.assign({}, state, this.rendererParams);
+            return new RendererWrapper(parent, this.config.Renderer, state);
+        } else {
+            return this._super(...arguments);
+        }
     },
     /**
      * This is useful to customize the actual class to use before calling

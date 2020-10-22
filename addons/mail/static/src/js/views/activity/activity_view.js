@@ -36,14 +36,6 @@ const ActivityView = BasicView.extend({
         this.rendererParams.templates = _.findWhere(this.arch.children, { 'tag': 'templates' });
         this.controllerParams.title = this.arch.attrs.string;
     },
-    /**
-     *
-     * @override
-     */
-    getRenderer(parent, state) {
-        state = Object.assign({}, state, this.rendererParams);
-        return new RendererWrapper(null, this.config.Renderer, state);
-    },
 });
 
 view_registry.add('activity', ActivityView);
