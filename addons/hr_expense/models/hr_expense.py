@@ -441,6 +441,13 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             for tax in taxes['taxes']:
                 balance = expense.currency_id._convert(tax['amount'], company_currency, expense.company_id, account_date)
                 amount_currency = tax['amount']
+
+                if tax['tax_repartition_line_id']:
+                    rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
+                    base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                else:
+                    base_amount = None
+
                 move_line_tax_values = {
                     'name': tax['name'],
                     'quantity': 1,
@@ -450,7 +457,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                     'account_id': tax['account_id'] or move_line_src['account_id'],
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
                     'tax_tag_ids': tax['tag_ids'],
-                    'tax_base_amount': tax['base'],
+                    'tax_base_amount': base_amount,
                     'expense_id': expense.id,
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id,
