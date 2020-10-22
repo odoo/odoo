@@ -316,6 +316,13 @@ class PosOrder(models.Model):
                     # amount_tax = currency_id.with_context(date=date_order).compute(tax['amount'], cur_company, round=round_tax)
                 else:
                     amount_tax = tax['amount']
+
+                if tax['tax_repartition_line_id']:
+                    rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
+                    base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                else:
+                    base_amount = None
+
                 data = {
                     'name': _('Tax') + ' ' + tax['name'],
                     'product_id': line.product_id.id,
@@ -327,7 +334,7 @@ class PosOrder(models.Model):
                     'partner_id': partner_id,
                     'order_id': order.id,
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
-                    'tax_base_amount': tax['base'],
+                    'tax_base_amount': base_amount,
                     'tag_ids': tax['tag_ids'],
                 }
                 if currency_id != cur_company:
