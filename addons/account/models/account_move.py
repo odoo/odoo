@@ -311,6 +311,12 @@ class AccountMove(models.Model):
                             if tags_need_inversion:
                                 tax_tags_orm_cmd = [(6, 0, self.env['account.move.line']._revert_signed_tags(self.env['account.account.tag'].browse(line_vals['tag_ids'][0][2])).ids)]
 
+                            if line_vals['tax_repartition_line_id']:
+                                rep_ln = self.env['account.tax.repartition.line'].browse(line_vals['tax_repartition_line_id'])
+                                base_amount = self.env['account.move']._get_base_amount_to_display(line_vals['base'], rep_ln)
+                            else:
+                                base_amount = None
+
                              # Create a new tax_line.
                             amount = line_vals['amount']
                             to_create_vals = {
@@ -327,7 +333,7 @@ class AccountMove(models.Model):
                                 'company_currency_id': self.company_id.currency_id.id,
                                 'tax_repartition_line_id': line_vals['tax_repartition_line_id'],
                                 'tag_ids': tax_tags_orm_cmd,
-                                'tax_base_amount': line_vals['base'],
+                                'tax_base_amount': base_amount,
                             }
                             # N.B. currency_id/amount_currency are not set because if we have two lines with the same tax
                             # and different currencies, we have no idea which currency set on this line.
@@ -335,6 +341,16 @@ class AccountMove(models.Model):
 
             # Keep record of the values used as taxes the last time this method has been run.
             line.tax_line_grouping_key = _build_grouping_key(line)
+
+    @api.model
+    def _get_base_amount_to_display(self, base_amount, tax_rep_ln):
+        """ The base amount returned for taxes by compute_all has is the balance
+        of the base line. For inbound operations, positive sign is on credit, so
+        we need to invert the sign of this amount before displaying it.
+        """
+        if tax_rep_ln.invoice_tax_id.type_tax_use == 'sale' or tax_rep_ln.refund_tax_id.type_tax_use == 'purchase':
+            return -base_amount
+        return base_amount
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
