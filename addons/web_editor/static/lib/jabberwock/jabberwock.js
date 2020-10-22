@@ -21744,11 +21744,25 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const domObjects = await super.render(format, contents);
             const link = domObjects[0];
             if ('tag' in link) {
-                const dbclickCallback = () => {
-                    this.engine.editor.execCommand('openLinkDialog');
-                };
+                let dbclickCallback;
                 const savedAttach = link.attach;
                 link.attach = (el) => {
+                    dbclickCallback = async (ev) => {
+                        ev.preventDefault();
+                        const layout = this.engine.editor.plugins.get(Layout);
+                        const domEngine = layout.engines.dom;
+                        const nodes = domEngine.getNodes(el);
+                        await this.engine.editor.execCommand('setSelection', {
+                            vSelection: {
+                                anchorNode: nodes[0],
+                                anchorPosition: RelativePosition.BEFORE,
+                                focusNode: nodes[nodes.length - 1],
+                                focusPosition: RelativePosition.AFTER,
+                                direction: Direction.FORWARD,
+                            },
+                        });
+                        this.engine.editor.execCommand('openLinkDialog');
+                    };
                     if (savedAttach) {
                         savedAttach(el);
                     }
@@ -23637,8 +23651,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         <t t-zone="tools"/>
                     </div>
                     <div class="d-flex flex-grow-1 overflow-auto">
-                        <t t-zone="snippetManipulators"/>
-                        <t t-zone="main"/>
+                        <t-theme name="default">
+                            <t t-zone="snippetManipulators"/>
+                            <t t-zone="main"/>
+                        </t-theme>
                     </div>
                 </div>
                 <t t-zone="main_sidebar"/>
@@ -23686,11 +23702,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
                             const zone = new ZoneNode({ managedZones: ['editable'] });
                             zone.editable = true;
                             div.append(zone);
-                            if (options.devicePreview) {
-                                const theme = new ThemeNode();
-                                theme.append(div);
-                                return [theme];
-                            }
                             return [div];
                         },
                     },
@@ -23731,8 +23742,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 this.configure(DevicePreview, {
                     getTheme(editor) {
                         const layout = editor.plugins.get(Layout);
-                        const domLayout = layout.engines.dom;
-                        return domLayout.components.main[0];
+                        return layout.engines.dom.root.firstDescendant(ThemeNode);
                     },
                 });
             }
