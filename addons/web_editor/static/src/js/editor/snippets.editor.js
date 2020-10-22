@@ -1152,10 +1152,14 @@ var SnippetsMenu = Widget.extend({
         });
 
         const $autoFocusEls = $('.o_we_snippet_autofocus');
+<<<<<<< HEAD
         if ($autoFocusEls.length) {
             this._activateSnippet($autoFocusEls.first());
         }
         this._textToolsSwitchingEnabled = true;
+=======
+        this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
+>>>>>>> 04934947fb5... temp
 
         // Add tooltips on we-title elements whose text overflows
         this.$el.tooltip({
@@ -1181,6 +1185,22 @@ var SnippetsMenu = Widget.extend({
                     return this.classList.contains('active') ? false : this.dataset.title;
                 },
             });
+<<<<<<< HEAD
+=======
+
+            // Trigger a resize event once entering edit mode as the snippets
+            // menu will take part of the screen width (delayed because of
+            // animation). (TODO wait for real animation end)
+            setTimeout(() => {
+                this.$window.trigger('resize');
+
+                // Hacky way to prevent to switch to text tools on editor
+                // start. Only allow switching after some delay. Switching to
+                // tools is only useful for out-of-snippet texts anyway, so
+                // snippet texts can still be enabled immediately.
+                this._mutex.exec(() => this._textToolsSwitchingEnabled = true);
+            }, 1000);
+>>>>>>> 04934947fb5... temp
         });
     },
     /**
@@ -2728,8 +2748,16 @@ var SnippetsMenu = Widget.extend({
         if (!this._textToolsSwitchingEnabled) {
             return;
         }
-        if (!$.summernote.core.range.create()) {
-            // Sometimes not enough...
+        const range = $.summernote.core.range.create();
+        if (!range) {
+            return;
+        }
+        if (range.sc === range.ec && range.sc.nodeType === Node.ELEMENT_NODE
+                && range.sc.classList.contains('oe_structure')
+                && range.sc.children.length === 0) {
+            // Do not switch to text tools if the cursor is in an empty
+            // oe_structure (to encourage using snippets there and actually
+            // avoid breaking tours which suppose the snippet list is visible).
             return;
         }
         this.textEditorPanelEl.classList.add('d-block');
