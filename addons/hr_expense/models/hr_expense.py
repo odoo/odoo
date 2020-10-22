@@ -186,7 +186,7 @@ class HrExpense(models.Model):
 
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
-        
+
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
             product = product.filtered(lambda p: p.default_code == "EXP_GEN") or product[0]
@@ -423,6 +423,13 @@ class HrExpense(models.Model):
                 if different_currency:
                     amount = expense.currency_id._convert(amount, company_currency, expense.company_id, account_date)
                     amount_currency = tax['amount']
+
+                if tax['tax_repartition_line_id']:
+                    rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
+                    base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                else:
+                    base_amount = None
+
                 move_line_tax_values = {
                     'name': tax['name'],
                     'quantity': 1,
@@ -432,7 +439,7 @@ class HrExpense(models.Model):
                     'account_id': tax['account_id'] or move_line_src['account_id'],
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
                     'tax_tag_ids': tax['tag_ids'],
-                    'tax_base_amount': tax['base'],
+                    'tax_base_amount': base_amount,
                     'expense_id': expense.id,
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id if different_currency else False,
