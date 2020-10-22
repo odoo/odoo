@@ -9,4 +9,4 @@ class ResCompany(models.Model):
     def _localization_use_documents(self):
         """ Chilean localization use documents """
         self.ensure_one()
-        return self.country_id == self.env.ref('base.cl') or super()._localization_use_documents()
+        return self.country_id.code == "CL" or super()._localization_use_documents()

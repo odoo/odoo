@@ -21,7 +21,7 @@ class L10nLatamDocumentType(models.Model):
           * format the document_number against a pattern and return it
         """
         self.ensure_one()
-        if self.country_id != self.env.ref('base.cl'):
+        if self.country_id.code != "CL":
             return super()._format_document_number(document_number)
 
         if not document_number:
