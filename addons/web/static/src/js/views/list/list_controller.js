@@ -351,7 +351,8 @@ var ListController = BasicController.extend({
         let state = this.model.get(this.handle);
         let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
-        return new DataExport(this, state, defaultExportFields, groupedBy,
+        let orderedBy = this.renderer.state.orderedBy;
+        return new DataExport(this, state, defaultExportFields, groupedBy, orderedBy,
             this.getActiveDomain(), this.getSelectedIds());
     },
     /**

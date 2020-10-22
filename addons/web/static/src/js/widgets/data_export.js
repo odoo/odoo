@@ -34,7 +34,7 @@ var DataExport = Dialog.extend({
      * @param {Object} record
      * @param {string[]} defaultExportFields
      */
-    init: function (parent, record, defaultExportFields, groupedBy, activeDomain, idsToExport) {
+    init: function (parent, record, defaultExportFields, groupedBy, orderedBy, activeDomain, idsToExport) {
         var options = {
             title: _t("Export Data"),
             buttons: [
@@ -47,6 +47,7 @@ var DataExport = Dialog.extend({
         this.record = record;
         this.defaultExportFields = defaultExportFields;
         this.groupby = groupedBy;
+        this.orderby = orderedBy;
         this.exports = new data.DataSetSearch(this, 'ir.exports', this.record.getContext());
         this.rowIndex = 0;
         this.rowIndexLevel = 0;
@@ -162,6 +163,10 @@ var DataExport = Dialog.extend({
         }
 
         framework.blockUI();
+        let orderby = [];
+        for (const [key, order] of Object.entries(this.orderby)) {
+            orderby.push(`${order.name}` + (order.asc && ' asc' || ' desc'));
+        }
         this.getSession().get_file({
             url: '/web/export/' + exportFormat,
             data: {
@@ -171,6 +176,7 @@ var DataExport = Dialog.extend({
                     ids: idsToExport,
                     domain: this.domain,
                     groupby: this.groupby,
+                    orderby: orderby.join(","),
                     context: pyUtils.eval('contexts', [this.record.getContext()]),
                     import_compat: this.isCompatibleMode,
                 })

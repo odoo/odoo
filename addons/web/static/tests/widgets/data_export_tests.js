@@ -268,6 +268,67 @@ QUnit.module('widgets', {
         list.destroy();
     });
 
+    QUnit.test('Exporting records after sorting listview', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo.sortable = true;
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: "<tree><field name='foo'/></tree>",
+            viewOptions: {
+                hasSidebar: true,
+            },
+            session: {
+                get_file: function (params) {
+                    let data = JSON.parse(params.data.data);
+                    assert.strictEqual(data.orderby, "foo asc",
+                        "orderby should pass after sorting listview while exporting");
+                    params.complete();
+                },
+            },
+            mockRPC: function (route) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV' },
+                        {tag: 'xls', label: 'Excel' },
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            children: false,
+                            field_type: 'char',
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: 'Foo',
+                            value: "foo",
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_column_sortable').eq(0));
+
+        // Open the export modal
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+
+        assert.strictEqual($('.modal .o_export_tree_item:visible').length, 1,
+            "There should be only one item visible");
+
+        await testUtils.dom.click($('.modal span:contains(Export)'));
+        await testUtils.dom.click($('.modal span:contains(Close)'));
+
+        list.destroy();
+    });
+
     QUnit.test('Direct export button invisible', async function (assert) {
         assert.expect(1)
 
