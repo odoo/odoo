@@ -225,7 +225,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
-                if ("mailing.mailing" === self.model) {
+                if (self.field.sanitize && self.field.sanitize_tags) {
                     options.noVideos = true;
                 }
                 options.prettifyHtml = false;

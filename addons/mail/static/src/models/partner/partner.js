@@ -22,6 +22,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('active' in data) {
+                data2.active = data.active;
+            }
             if ('country' in data) {
                 if (!data.country) {
                     data2.country = [['unlink-all']];
@@ -210,35 +213,22 @@ function factory(dependencies) {
          * @private
          */
         static async _fetchImStatus() {
-            let toFetchPartnersLocalIds = [];
-            let partnerIdToLocalId = {};
-            const toFetchPartners = this.all(partner => partner.im_status !== null);
-            for (const partner of toFetchPartners) {
-                toFetchPartnersLocalIds.push(partner.localId);
-                partnerIdToLocalId[partner.id] = partner.localId;
+            const partnerIds = [];
+            for (const partner of this.all()) {
+                if (partner.im_status !== 'im_partner') {
+                    partnerIds.push(partner.id);
+                }
             }
-            if (!toFetchPartnersLocalIds.length) {
+            if (partnerIds.length === 0) {
                 return;
             }
             const dataList = await this.env.services.rpc({
                 route: '/longpolling/im_status',
                 params: {
-                    partner_ids: toFetchPartnersLocalIds.map(partnerLocalId =>
-                        this.get(partnerLocalId).id
-                    ),
+                    partner_ids: partnerIds,
                 },
             }, { shadow: true });
-            for (const { id, im_status } of dataList) {
-                this.insert({ id, im_status });
-                delete partnerIdToLocalId[id];
-            }
-            // partners with no im_status => set null
-            for (const noImStatusPartnerLocalId of Object.values(partnerIdToLocalId)) {
-                const partner = this.get(noImStatusPartnerLocalId);
-                if (partner) {
-                    partner.update({ im_status: null });
-                }
-            }
+            this.insert(dataList);
         }
 
         /**

@@ -221,7 +221,9 @@ var SnippetEditor = Widget.extend({
             top: offset.top,
         });
         this.$('.o_handles').css('height', $target.outerHeight());
-        this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
+
+        const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
+        this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 25);
     },
     /**
      * DOMElements have a default name which appears in the overlay when they
@@ -809,7 +811,7 @@ var SnippetEditor = Widget.extend({
     /**
      * Called when the 'mouse wheel' is used when hovering over the overlay.
      * Disable the pointer events to prevent page scrolling from stopping.
-     * 
+     *
      * @private
      * @param {Event} ev
      */
@@ -1048,7 +1050,6 @@ var SnippetsMenu = Widget.extend({
 
         const $autoFocusEls = $('.o_we_snippet_autofocus');
         this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
-        this._textToolsSwitchingEnabled = true;
 
         // Add tooltips on we-title elements whose text overflows
         this.$el.tooltip({
@@ -1080,6 +1081,12 @@ var SnippetsMenu = Widget.extend({
             // animation). (TODO wait for real animation end)
             setTimeout(() => {
                 this.$window.trigger('resize');
+
+                // Hacky way to prevent to switch to text tools on editor
+                // start. Only allow switching after some delay. Switching to
+                // tools is only useful for out-of-snippet texts anyway, so
+                // snippet texts can still be enabled immediately.
+                this._mutex.exec(() => this._textToolsSwitchingEnabled = true);
             }, 1000);
         });
     },
@@ -2475,8 +2482,16 @@ var SnippetsMenu = Widget.extend({
         if (!this._textToolsSwitchingEnabled) {
             return;
         }
-        if (!$.summernote.core.range.create()) {
-            // Sometimes not enough...
+        const range = $.summernote.core.range.create();
+        if (!range) {
+            return;
+        }
+        if (range.sc === range.ec && range.sc.nodeType === Node.ELEMENT_NODE
+                && range.sc.classList.contains('oe_structure')
+                && range.sc.children.length === 0) {
+            // Do not switch to text tools if the cursor is in an empty
+            // oe_structure (to encourage using snippets there and actually
+            // avoid breaking tours which suppose the snippet list is visible).
             return;
         }
         this.textEditorPanelEl.classList.add('d-block');

@@ -1709,6 +1709,12 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        &.o_top_cover > .o_handles > .o_overlay_options_wrap {
+            top: auto;
+            bottom: -$o-we-handles-offset-to-hide;
+            transform: translate(-50%, 110%);
+        }
+
         &.o_we_overlay_preview {
             pointer-events: none;
 
