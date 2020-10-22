@@ -230,6 +230,7 @@ class ImLivechatChannel(models.Model):
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if info['available']:
             info['options'] = self._get_channel_infos()
+            info['options']['current_partner_id'] = self.env.user.partner_id.id
             info['options']["default_username"] = username
         return info
 
