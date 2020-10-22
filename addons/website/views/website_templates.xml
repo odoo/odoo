@@ -1237,7 +1237,7 @@
     </xpath>
     <xpath expr="//ul[@id='top_menu']/t" position="after">
         <li class="o_offcanvas_logo_container order-last navbar-toggler py-4 order-1 mt-auto text-center border-0">
-            <a href="/" class="o_offcanvas_logo text-center">My Website</a>
+            <a href="/" class="o_offcanvas_logo text-center"><t t-esc="website.name"/></a>
         </li>
     </xpath>
 </template>
@@ -1286,7 +1286,7 @@
 
 <template id="option_header_brand_name" inherit_id="website.placeholder_header_brand" name="Header Brand Name" active="False">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a href="/" t-attf-class="navbar-brand #{_link_class}">My Website</a>
+        <a href="/" t-attf-class="navbar-brand #{_link_class}"><t t-esc="website.name"/></a>
     </xpath>
 </template>
 
@@ -1439,6 +1439,24 @@
     </xpath>
 </template>
 
+<template id="placeholder_footer_brand" name="Placeholder Footer Brand">
+    <span id="o_fake_footer_brand"/><!-- Need a fake element so that the menu is still placed correctly -->
+</template>
+
+<template id="option_footer_brand_logo" inherit_id="website.placeholder_footer_brand" name="Footer Brand Logo" active="True">
+    <xpath expr="//*[@id='o_fake_footer_brand']" position="replace">
+        <a href="/" t-attf-class="o_footer_logo logo #{_link_class}">
+            <span t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+        </a>
+    </xpath>
+</template>
+
+<template id="option_footer_brand_name" inherit_id="website.placeholder_footer_brand" name="Footer Brand Name" active="False">
+    <xpath expr="//*[@id='o_fake_footer_brand']" position="replace">
+        <a href="/" t-attf-class="o_footer_logo #{_link_class}"><t t-esc="website.name"/></a>
+    </xpath>
+</template>
+
 <template id="template_footer_centered" inherit_id="website.layout" name="Centered" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
@@ -1467,9 +1485,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-2 offset-lg-5">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_footer_brand"/>
                         </div>
                     </div>
                 </div>
@@ -1536,9 +1552,7 @@
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-2 pt16 pb16">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_footer_brand"/>
                         </div>
                         <div class="col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start pt16 pb16">
                             <ul class="list-inline mb-0 ml-3">
@@ -1618,9 +1632,7 @@
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-2 pb16">
-                            <a href="/" class="o_footer_logo logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
-                            </a>
+                            <t t-call="website.placeholder_footer_brand"/>
                         </div>
                         <div class="col-lg-10 pb16 text-right">
                             <ul class="list-inline mb-0">
