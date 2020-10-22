@@ -521,12 +521,17 @@ class StockMove(models.Model):
     @api.model
     def _run_fifo_vacuum(self):
         # Call `_fifo_vacuum` on concerned moves
+        if self._context.get('companies_to_vacuum'):
+            companies = self._context['companies_to_vacuum']
+        else:
+            companies = self.env.user.company_id.ids
         fifo_valued_products = self.env['product.product']
         fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
         fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
-        moves_to_vacuum = self.search(
-            [('product_id', 'in', fifo_valued_products.ids), ('remaining_qty', '<', 0)] + self._get_all_base_domain())
-        moves_to_vacuum._fifo_vacuum()
+        for company in companies:
+            moves_to_vacuum = self.search(
+                [('product_id', 'in', fifo_valued_products.ids), ('remaining_qty', '<', 0)] + self._get_all_base_domain(company_id=company))
+            moves_to_vacuum._fifo_vacuum()
 
     @api.multi
     def _get_accounting_data_for_valuation(self):
@@ -763,6 +768,10 @@ class ProcurementGroup(models.Model):
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
-        self.env['stock.move']._run_fifo_vacuum()
+        if not company_id:
+            all_companies = self.env['res.company'].search([]).ids
+            self.env['stock.move'].with_context(companies_to_vacuums=all_companies)._run_fifo_vacuum()
+        else:
+            self.env['stock.move'].with_context(companies_to_vacuum=[company_id])._run_fifo_vacuum()
         if use_new_cursor:
             self._cr.commit()
