@@ -419,7 +419,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @private
      */
     _onShowThemesClick: function () {
-        this.$el.find('#o_scroll, .o_snippet_search_filter, .o_mail_theme_selector').toggleClass('d-none');
+        const $mailThemeSelector = this.$el.find('.o_mail_theme_selector');
+        const $panels = this.$el.find('#o_scroll, .o_snippet_search_filter, .o_we_customize_panel');
+        if ($mailThemeSelector.hasClass('d-none')) {
+            $mailThemeSelector.removeClass('d-none');
+            $panels.addClass('d-none');
+        } else {
+            $mailThemeSelector.addClass('d-none');
+            $panels.removeClass('d-none');
+        }
         this.$el.one('click', '.o_we_add_snippet_btn, .o_we_customize_snippet_btn',  () => this._closeThemes());
     },
     /**
