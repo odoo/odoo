@@ -2584,8 +2584,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ('name', '=', self.env['account.move.line']._fields['price_unit']._digits),
         ]).digits = 5
 
-        self.env['res.currency.rate'].search([]).unlink()
-
         invoice = self.env['account.move'].create({
             'type': 'out_invoice',
             'invoice_date': '2019-01-01',
@@ -2601,7 +2599,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 line_form.account_id = self.company_data['default_account_revenue']
                 line_form.tax_ids.clear()
                 line_form.price_unit = 0.89500
-        move_form.save()
 
     def test_out_invoice_multiple_switch_payment_terms(self):
         # assertNotUnbalancedEntryWhenSaving
