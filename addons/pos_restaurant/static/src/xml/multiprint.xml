@@ -10,8 +10,8 @@
 
     <t t-name="NameWrapped">
         <t t-foreach="change.name_wrapped.slice(1)" t-as="wrapped_line">
-            <div>
-                <span class="pos-receipt-right-align" t-esc="wrapped_line"/>
+            <div style="text-align: right">
+                <span t-esc="wrapped_line"/>
             </div>
         </t>
     </t>

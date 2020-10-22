@@ -11,6 +11,7 @@ from . import test_func
 from . import test_image
 from . import test_ir_actions
 from . import test_ir_attachment
+from . import test_ir_cron
 from . import test_ir_http
 from . import test_ir_filters
 from . import test_ir_model

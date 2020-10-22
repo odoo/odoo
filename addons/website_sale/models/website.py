@@ -243,15 +243,27 @@ class Website(models.Model):
         self.ensure_one()
         partner = self.env.user.partner_id
         sale_order_id = request.session.get('sale_order_id')
+        check_fpos = False
         if not sale_order_id and not self.env.user._is_public():
             last_order = partner.last_website_so_id
             if last_order:
                 available_pricelists = self.get_pricelist_available()
                 # Do not reload the cart of this user last visit if the cart uses a pricelist no longer available.
                 sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
+                check_fpos = True
 
         # Test validity of the sale_order_id
         sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
+
+        # Do not reload the cart of this user last visit if the Fiscal Position has changed.
+        if check_fpos and sale_order:
+            fpos_id = (
+                self.env['account.fiscal.position']
+                .with_context(force_company=sale_order.company_id.id)
+                .get_fiscal_position(sale_order.partner_id.id, delivery_id=sale_order.partner_shipping_id.id)
+            )
+            if sale_order.fiscal_position_id.id != fpos_id:
+                sale_order = None
 
         if not (sale_order or force_create or code):
             if request.session.get('sale_order_id'):
