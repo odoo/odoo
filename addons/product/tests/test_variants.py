@@ -259,6 +259,31 @@ class TestVariants(common.TestProductCommon):
         self.assertTrue(variant_1.active)
         self.assertTrue(template.active)
 
+    def test_archive_all_variants(self):
+        template = self.env['product.template'].create({
+            'name': 'template'
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [(0, False, {
+                'attribute_id': self.size_attr.id,
+                'value_ids': [
+                    (4, self.size_attr.value_ids[0].id, self.size_attr_value_s),
+                    (4, self.size_attr.value_ids[1].id, self.size_attr_value_m)
+                ],
+            })]
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        variant_1 = template.product_variant_ids[0]
+        variant_2 = template.product_variant_ids[1]
+        template.product_variant_ids.toggle_active()
+        self.assertFalse(variant_1.active, 'Should archive all variants')
+        self.assertFalse(template.active, 'Should archive related template')
+        variant_1.toggle_active()
+        self.assertTrue(variant_1.active, 'Should activate variant')
+        self.assertFalse(variant_2.active, 'Should not re-activate other variant')
+        self.assertTrue(template.active, 'Should re-activate template')
 
 class TestVariantsNoCreate(common.TestProductCommon):
 
