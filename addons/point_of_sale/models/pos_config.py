@@ -322,7 +322,7 @@ class PosConfig(models.Model):
 
     @api.constrains('cash_control')
     def _check_session_state(self):
-        open_session = self.env['pos.session'].search([('config_id', '=', self.id), ('state', '!=', 'closed')])
+        open_session = self.env['pos.session'].search([('config_id', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
         if open_session:
             raise ValidationError(_("You are not allowed to change the cash control status while a session is already opened."))
 
