@@ -162,9 +162,9 @@
             <i t-if="icon" t-att-class="icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
+            <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
         </button>
-        <ul t-if="state.open" class="o_dropdown_menu dropdown-menu show" role="menu"
+        <ul t-if="state.open" t-attf-class="o_dropdown_menu dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
             t-on-item-selected="_onItemSelected"
             >
             <t t-set="currentGroup" t-value="null"/>
@@ -1566,8 +1566,8 @@
 </div>
 
 <div t-name="ExportDialog" class="o_export">
-    <div class="row o-export-panel no-gutters">
-        <div class="col-6 d-flex o_left_panel">
+    <div class="row o-export-panel">
+        <div class="col-12 col-md-6 d-flex o_left_panel">
             <div class="form-check o_import_compat">
                 <input class="form-check-input" id="o-update-data" type="checkbox"/>
                 <label class="form-check-label" for="o-update-data">
@@ -1582,7 +1582,7 @@
             </div>
             <div class="border o_left_field_panel"/>
         </div>
-        <div class="col-6 d-flex o_right_panel">
+        <div class="col-12 col-md-6 d-flex o_right_panel mt-3 mt-md-0">
             <div class="o_export_format">
                 <strong>Export Format:</strong>
             </div>

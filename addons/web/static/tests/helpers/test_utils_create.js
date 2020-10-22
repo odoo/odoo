@@ -374,6 +374,8 @@ odoo.define('web.test_utils_create', function (require) {
      *   after this method returns
      * @param {Boolean} [params.doNotDisableAHref=false] will not preventDefault on the A elements of the view if true.
      *    Default is false.
+     * @param {Boolean} [params.touchScreen=false] will add the o_touch_device to the webclient (flag used to define a
+     *   device with a touch screen. Default value is false
      * @returns {Promise<AbstractController>} the instance of the view
      */
     async function createView(params) {
@@ -381,7 +383,7 @@ odoo.define('web.test_utils_create', function (require) {
         const widget = new Widget();
         // reproduce the DOM environment of views
         const webClient = Object.assign(document.createElement('div'), {
-            className: 'o_web_client',
+            className: params.touchScreen ? 'o_web_client o_touch_device' : 'o_web_client',
         });
         const actionManager = Object.assign(document.createElement('div'), {
             className: 'o_action_manager',
