@@ -28,8 +28,10 @@ class PaymentAcquirerTest(models.Model):
     @api.model
     def test_s2s_form_process(self, data):
         """ Return a minimal token to allow proceeding to transaction creation. """
+        ref = uuid4()
         payment_token = self.env['payment.token'].sudo().create({
-            'acquirer_ref': uuid4(),
+            'name': 'Test - %s' % str(ref)[:4],
+            'acquirer_ref': ref,
             'acquirer_id': int(data['acquirer_id']),
             'partner_id': int(data['partner_id'])
         })
@@ -42,3 +44,6 @@ class PaymentTransactionTest(models.Model):
     def test_create(self, values):
         """Automatically set the transaction as successful upon creation. """
         return {'date': datetime.now(), 'state': 'done'}
+
+    def test_s2s_do_transaction(self, **kwargs):
+        self.execute_callback()
