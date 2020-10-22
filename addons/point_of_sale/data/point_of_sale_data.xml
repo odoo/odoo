@@ -26,7 +26,10 @@
             <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
         </record>
 
-        <record id="product_category_pos" model="product.category" forcecreate="False">
+        <!-- Multidados: Comentado para Evitar Conflito do Conteudo Excluido
+                         ao instalar o Modulo depois de bases populadas -->
+
+        <!-- <record id="product_category_pos" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">PoS</field>
         </record>
@@ -36,7 +39,7 @@
             <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="default_code">TIPS</field>
             <field name="available_in_pos" eval="True"/>
-        </record>
+        </record> -->
 
         <record model="pos.config" id="pos_config_main">
             <field name="name">Shop</field>
@@ -44,7 +47,7 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
         </record>
 
-        <record id="product_product_consumable" model="product.product">
+        <!-- <record id="product_product_consumable" model="product.product">
             <field name="name">Miscellaneous</field>
             <field name="available_in_pos">True</field>
             <field name="standard_price">13.0</field>
@@ -55,7 +58,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">MISC</field>
             <field name="image" type="base64" file="point_of_sale/static/img/product_product_49-image.jpg"/>
-        </record>
+        </record> -->
 
         <record id="pos_sale_journal" model="account.journal">
             <field name="name">POS Sale Journal</field>
