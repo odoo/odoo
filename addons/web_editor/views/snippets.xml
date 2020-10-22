@@ -180,7 +180,13 @@
                                 data-name="bg_image_opt"
                                 data-dependencies="bg_image_opt"/>
             </we-row>
-            <we-colorpicker string="  ⌙ Dynamic color" data-dynamic-color="true" data-name="dynamic_color_opt"/>
+            <we-row string=" ⌙ Dyn. Colors" title="Dynamic Colors" data-name="dynamic_color_opt"><!-- &emsp; -->
+                <we-colorpicker data-dynamic-color="true" data-color-name="c1"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c2"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c3"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c4"/>
+                <we-colorpicker data-dynamic-color="true" data-color-name="c5"/>
+            </we-row>
         </div>
 
         <div data-js="BackgroundPosition"
@@ -372,7 +378,13 @@
     </div>
 
     <div data-js="DynamicSvg" data-selector="img">
-        <we-colorpicker string="Dynamic color" data-color="true"/>
+        <we-row string="Dynamic Colors" data-name="colors">
+            <we-colorpicker data-color="true" data-color-name="c1"/>
+            <we-colorpicker data-color="true" data-color-name="c2"/>
+            <we-colorpicker data-color="true" data-color-name="c3"/>
+            <we-colorpicker data-color="true" data-color-name="c4"/>
+            <we-colorpicker data-color="true" data-color-name="c5"/>
+        </we-row>
     </div>
 </template>
 
