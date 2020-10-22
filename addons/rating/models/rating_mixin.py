@@ -59,10 +59,10 @@ class RatingMixin(models.AbstractModel):
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
     rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', compute_sudo=True)
 
-    @api.depends('rating_ids.rating')
+    @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_last_value(self):
         for record in self:
-            ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id)], limit=1)
+            ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id), ('consumed', '=', True)], limit=1)
             record.rating_last_value = ratings and ratings.rating or 0
 
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
