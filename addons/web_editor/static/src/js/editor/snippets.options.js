@@ -3782,7 +3782,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
                 return;
         }
         const newURL = new URL(currentSrc, window.location.origin);
-        newURL.searchParams.set('c1', normalizeColor(widgetValue));
+        newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         await this.editorHelpers.setStyle(this.editor, this.$target.get(), 'background-image', `url('${src}')`);
@@ -3825,12 +3825,12 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName) {
+    _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'background':
                 return getBgImageURL(this.$target[0]);
             case 'dynamicColor':
-                return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get('c1');
+                return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get(params.colorName);
         }
         return this._super(...arguments);
     },
@@ -3838,7 +3838,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'dynamic_color_opt') {
+        if ('colorName' in params) {
+            const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
+            return src.searchParams.has(params.colorName);
+        } else if (widgetName === 'dynamic_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
@@ -3956,7 +3959,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _renderCustomXML(uiFragment) {
         Object.keys(this._getDefaultColors()).map(colorName => {
             uiFragment.querySelector('[data-name="colors"]')
-                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}">`)[0]);
+                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
         });
 
         uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
@@ -4814,7 +4817,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
                 return;
         }
         const newURL = new URL(target.src, window.location.origin);
-        newURL.searchParams.set('c1', normalizeColor(widgetValue));
+        newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         await this.editorHelpers.setAttribute(this.editor, target, 'src', src);
@@ -4833,7 +4836,16 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
     _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'color':
-                return new URL(this.$target[0].src, window.location.origin).searchParams.get('c1');
+                return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if ('colorName' in params) {
+            return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
         }
         return this._super(...arguments);
     },
