@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 STREET_FIELDS = ['street_name', 'street_number', 'street_number2']
-
+DEFAULT_STREET_FORMAT = '%(street_number)s/%(street_number2)s %(street_name)s'
 
 class ResCountry(models.Model):
     _inherit = 'res.country'
@@ -20,7 +20,7 @@ class ResCountry(models.Model):
              "\n%(street_name)s: the name of the street"
              "\n%(street_number)s: the house number"
              "\n%(street_number2)s: the door number",
-        default='%(street_number)s/%(street_number2)s %(street_name)s', required=True)
+        default=DEFAULT_STREET_FORMAT, required=True)
 
 class Partner(models.Model):
     _inherit = ['res.partner']
