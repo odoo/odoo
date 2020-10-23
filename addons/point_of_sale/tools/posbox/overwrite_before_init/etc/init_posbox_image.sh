@@ -20,8 +20,6 @@ echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 locale-gen
 source ~/.bashrc
 
-apt-mark hold firmware-brcm80211
-# upgrade firmware-brcm80211 broke access point on rpi4
 apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
@@ -98,7 +96,7 @@ rm -rfv /usr/share/doc
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
-# this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
+# this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspios
 # so we install the latest pyusb that works with this libusb.
 # Even in stretch, we had an error with langid (but worked otherwise)
 # We fixe the version of evdev to 1.2.0 because in 1.3.0 we have a RuntimeError in 'get_event_loop()'

@@ -48,84 +48,85 @@ create_partition () {
      echo 'p';                                  # print
      echo 'w') |fdisk "${PARTITION}"       # write and quit
 
-    PART_RASPBIAN_ROOT=$(sudo fdisk -l | tail -n 1 | awk '{print $1}')
+    PART_RASPIOS_ROOT=$(sudo fdisk -l | tail -n 1 | awk '{print $1}')
     sleep 5
 
     # Clean partition
     mount -o remount,rw /
     partprobe # apply changes to partitions
     resize2fs "${PART_ODOO_ROOT}"
-    mkfs.ext4 -Fv "${PART_RASPBIAN_ROOT}" # change file sytstem
+    mkfs.ext4 -Fv "${PART_RASPIOS_ROOT}" # change file sytstem
 
     echo "end fdisking"
 }
 
-download_raspbian () {
-    if  [ ! -f *raspbian*.img ] ; then
-        # download latest Raspbian image and check integrity
-        LATEST_RASPBIAN=$(curl -LIsw %{url_effective} http://downloads.raspberrypi.org/raspbian_lite_latest | tail -n 1)
-        wget -c "${LATEST_RASPBIAN}"
-        RASPBIAN=$(echo *raspbian*.zip)
-        wget -c "${LATEST_RASPBIAN}".sha256
-        CHECK=$(sha256sum -c "${RASPBIAN}".sha256)
-        if [ "${CHECK}" != "${RASPBIAN}: OK" ]
+download_raspios () {
+    if  [ ! -f *raspios*.img ] ; then
+        # download latest Raspios image and check integrity
+        LATEST_RASPIOS=$(curl -LIsw %{url_effective} http://downloads.raspberrypi.org/raspios_lite_armhf_latest | tail -n 1)
+        wget -c "${LATEST_RASPIOS}"
+        RASPIOS=$(echo *raspios*.zip)
+        wget -c "${LATEST_RASPIOS}".sha256
+        CHECK=$(sha256sum -c "${RASPIOS}".sha256)
+        if [ "${CHECK}" != "${RASPIOS}: OK" ]
         then
             # Checksum is not correct so clean and reset self-flashing
             mount -o remount,rw /
-            # Clean raspbian img
-            rm "${RASPBIAN}" "${RASPBIAN}".sha256
+            # Clean raspios img
+            rm "${RASPIOS}" "${RASPIOS}".sha256
 
             rm start_upgrade
-            echo "Error_Raspbian_Download"
+            echo "Error_Raspios_Download"
             exit 0
         fi
-        unzip "${RASPBIAN}"
+        unzip "${RASPIOS}"
     fi
 
-    echo "end dowloading raspbian"
+    echo "end dowloading raspios"
 }
 
-copy_raspbian () {
+copy_raspios () {
     umount -v /boot
 
-    # mapper raspbian
-    PART_RASPBIAN_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
+    # mapper raspios
+    PART_RASPIOS_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
     PART_ODOO_ROOT=$(fdisk -l | tail -n 2 | awk 'NR==1 {print $1}')
     PART_BOOT=$(fdisk -l | tail -n 3 | awk 'NR==1 {print $1}')
-    RASPBIAN=$(echo *raspbian*.img)
-    LOOP_RASPBIAN=$(kpartx -avs "${RASPBIAN}")
-    LOOP_RASPBIAN_ROOT=$(echo "${LOOP_RASPBIAN}" | tail -n 1 | awk '{print $3}')
-    LOOP_RASPBIAN_ROOT="/dev/mapper/${LOOP_RASPBIAN_ROOT}"
-    LOOP_BOOT=$(echo "${LOOP_RASPBIAN}" | tail -n 2 | awk 'NR==1 {print $3}')
+    RASPIOS=$(echo *raspios*.img)
+    LOOP_RASPIOS=$(kpartx -avs "${RASPIOS}")
+    LOOP_RASPIOS_ROOT=$(echo "${LOOP_RASPIOS}" | tail -n 1 | awk '{print $3}')
+    LOOP_RASPIOS_ROOT="/dev/mapper/${LOOP_RASPIOS_ROOT}"
+    LOOP_BOOT=$(echo "${LOOP_RASPIOS}" | tail -n 2 | awk 'NR==1 {print $3}')
     LOOP_BOOT="/dev/mapper/${LOOP_BOOT}"
 
     mount -o remount,rw /
-    # copy raspbian
-    dd if="${LOOP_RASPBIAN_ROOT}" of="${PART_RASPBIAN_ROOT}" bs=4M status=progress
-    e2fsck -fv "${PART_RASPBIAN_ROOT}" # resize2fs requires clean fs
+    # copy raspios
+    dd if="${LOOP_RASPIOS_ROOT}" of="${PART_RASPIOS_ROOT}" bs=4M status=progress
+    e2fsck -fv "${PART_RASPIOS_ROOT}" # resize2fs requires clean fs
 
     # Modify startup
-    mkdir -v raspbian
-    mount -v "${PART_RASPBIAN_ROOT}" raspbian
-    resize2fs "${PART_RASPBIAN_ROOT}"
-    chroot raspbian/ /bin/bash -c "sudo apt-get -y install kpartx"
+    mkdir -v raspios
+    mount -v "${PART_RASPIOS_ROOT}" raspios
+    resize2fs "${PART_RASPIOS_ROOT}"
+    chroot raspios/ /bin/bash -c "sudo apt-get -y update"
+    chroot raspios/ /bin/bash -c "sudo apt-get -y install kpartx"
     PATH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    cp -v "${PATH_DIR}"/upgrade.sh raspbian/home/pi/
-    NBR_LIGNE=$(sed -n -e '$=' raspbian/etc/rc.local)
-    sed -ie "${NBR_LIGNE}"'i\. /home/pi/upgrade.sh; copy_iot' raspbian/etc/rc.local
-    cp -v /etc/fstab raspbian/etc/fstab
-    sed -ie "s/$(echo ${PART_ODOO_ROOT} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPBIAN_ROOT} | sed -e 's/\//\\\//g')/g" raspbian/etc/fstab
-    mkdir raspbian/home/pi/config
-    find /home/pi -maxdepth 1 -type f ! -name ".*" -exec cp {} raspbian/home/pi/config/ \;
+    cp -v "${PATH_DIR}"/upgrade.sh raspios/home/pi/
+    NBR_LIGNE=$(sed -n -e '$=' raspios/etc/rc.local)
+    sed -ie "${NBR_LIGNE}"'i\. /home/pi/upgrade.sh; copy_iot' raspios/etc/rc.local
+    cp -v /etc/fstab raspios/etc/fstab
+    sed -ie "s/$(echo ${PART_ODOO_ROOT} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPIOS_ROOT} | sed -e 's/\//\\\//g')/g" raspios/etc/fstab
+    mkdir raspios/home/pi/config
+    find /home/pi -maxdepth 1 -type f ! -name ".*" -exec cp {} raspios/home/pi/config/ \;
 
     # download latest IoT Box image and check integrity
-    wget -c 'https://nightly.odoo.com/master/iotbox/iotbox-latest.zip' -O raspbian/iotbox-latest.zip
-    wget -c 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt' -O raspbian/SHA1SUMS.txt
-    cd raspbian/
+    wget -c 'https://nightly.odoo.com/master/iotbox/iotbox-latest.zip' -O raspios/iotbox-latest.zip
+    wget -c 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt' -O raspios/SHA1SUMS.txt
+    cd raspios/
     CHECK=$(sha1sum -c --ignore-missing SHA1SUMS.txt)
     cd ..
 
-    umount -v raspbian
+    umount -v raspios
     if [ "${CHECK}" != "iotbox-latest.zip: OK" ]
     then
         # Checksum is not correct so clean and reset self-flashing
@@ -143,11 +144,11 @@ copy_raspbian () {
     mkdir -v boot
     mount -v "${PART_BOOT}" boot
     PART_IOT_BOOT_ID=$(grep -oP '(?<=root=).*(?=rootfstype)' boot/cmdline.txt)
-    sed -ie "s/$(echo ${PART_IOT_BOOT_ID} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPBIAN_ROOT} | sed -e 's/\//\\\//g')/g" boot/cmdline.txt
+    sed -ie "s/$(echo ${PART_IOT_BOOT_ID} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPIOS_ROOT} | sed -e 's/\//\\\//g')/g" boot/cmdline.txt
     umount -v boot
 
-    kpartx -dv "${RASPBIAN}"
-    rm -v "${RASPBIAN}"
+    kpartx -dv "${RASPIOS}"
+    rm -v "${RASPIOS}"
 
     reboot
 }
@@ -201,11 +202,11 @@ copy_iot () {
 
 cleanup () {
     # clean partitions
-    PART_RASPBIAN_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
-    mkfs.ext4 -Fv "${PART_RASPBIAN_ROOT}" # format file sytstem
-    wipefs -a "${PART_RASPBIAN_ROOT}"
+    PART_RASPIOS_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
+    mkfs.ext4 -Fv "${PART_RASPIOS_ROOT}" # format file sytstem
+    wipefs -a "${PART_RASPIOS_ROOT}"
 
-    PARTITION=$(echo "${PART_RASPBIAN_ROOT}" | sed 's/..$//')
+    PARTITION=$(echo "${PART_RASPIOS_ROOT}" | sed 's/..$//')
 
     (echo 'p';                                  # print
      echo 'd';                                  # delete partition

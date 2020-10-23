@@ -95,6 +95,15 @@ class MockModels {
                 },
                 records: [],
             },
+            // Fake model to simulate "hardcoded" commands from python
+            'mail.channel_command': {
+                fields: {
+                    channel_types: { type: 'binary' }, // array is expected
+                    help: { type: 'char' },
+                    name: { type: 'char' },
+                },
+                records: [],
+            },
             'mail.followers': {
                 fields: {
                     channel_id: { type: 'integer' },
@@ -221,6 +230,17 @@ class MockModels {
                     im_status: { string: "IM Status", type: 'char' },
                     name: { string: "Name", type: 'char' },
                     partner_id: { string: "Related partners", type: 'many2one', relation: 'res.partner' },
+                },
+                records: [],
+            },
+            'res.fake': {
+                fields: {
+                    email_cc: { type: 'char' },
+                    partner_ids: {
+                        string: "Related partners",
+                        type: 'many2one',
+                        relation: 'res.partner'
+                    },
                 },
                 records: [],
             },

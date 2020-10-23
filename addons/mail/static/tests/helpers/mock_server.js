@@ -332,6 +332,9 @@ MockServer.include({
      * @returns {Object}
      */
     _mockRouteMailGetSuggestedRecipient(model, res_ids) {
+        if (model === 'res.fake') {
+            return this._mockResFake_MessageGetSuggestedRecipients(model, res_ids);
+        }
         return this._mockMailThread_MessageGetSuggestedRecipients(model, res_ids);
     },
     /**
@@ -395,6 +398,8 @@ MockServer.include({
 
         const shortcodes = this._getRecords('mail.shortcode', []);
 
+        const commands = this._getRecords('mail.channel_command', []);
+
         const starredCounter = this._getRecords('mail.message', [
             ['starred_partner_ids', 'in', this.currentPartnerId],
         ]).length;
@@ -405,11 +410,7 @@ MockServer.include({
                 channel_direct_message: directMessageInfos,
                 channel_private_group: privateGroupInfos,
             },
-            commands: [{
-                channel_types: ["channel", "chat"],
-                help: "List users in the current channel",
-                name: "who",
-            }],
+            commands,
             current_partner: currentPartnerFormat,
             current_user_id: this.currentUserId,
             mail_failures: mailFailures,
@@ -743,12 +744,16 @@ MockServer.include({
                 ['is_read', '=', false],
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
-            return Object.assign({}, channel, {
+            const res = Object.assign({}, channel, {
                 info: extra_info,
                 last_message_id: lastMessageId,
                 members,
                 message_needaction_counter: messageNeedactionCounter,
             });
+            if (channel.channel_type === 'channel') {
+                delete res.members;
+            }
+            return res;
         });
     },
     /**
@@ -983,10 +988,12 @@ MockServer.include({
         } else {
             partner_id = this.currentPartnerId;
         }
+        const partner = this._getRecords('res.partner', [['id', '=', partner_id]]);
         const data = {
             'info': 'typing_status',
             'is_typing': is_typing,
             'partner_id': partner_id,
+            'partner_name': partner.name,
         };
         const notifications = [];
         for (const channel of channels) {
@@ -1481,6 +1488,44 @@ MockServer.include({
         return result;
     },
     /**
+     * Simulates `_message_get_suggested_recipients` on `res.fake`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockResFake_MessageGetSuggestedRecipients(model, ids) {
+        const result = {};
+        const records = this._getRecords(model, [['id', 'in', ids]]);
+
+        for (const record of records) {
+            result[record.id] = [];
+            if (record.email_cc) {
+                result[record.id].push([
+                    false,
+                    record.email_cc,
+                    'CC email',
+                ]);
+            }
+            const partners = this._getRecords(
+                'res.partner',
+                [['id', 'in', record.partner_ids]],
+            );
+            if (partners.length) {
+                for (const partner of partners) {
+                    result[record.id].push([
+                        partner.id,
+                        partner.display_name,
+                        'Email partner',
+                    ]);
+                }
+            }
+        }
+
+        return result;
+    },
+    /**
      * Simulates `message_post` on `mail.thread`.
      *
      * @private
@@ -1714,9 +1759,11 @@ MockServer.include({
             { active_test: false }
         )[0];
         return {
-            "id": partner.id,
-            "display_name": partner.display_name,
             "active": partner.active,
+            "display_name": partner.display_name,
+            "id": partner.id,
+            "im_status": partner.im_status,
+            "name": partner.name,
         };
     },
 });

@@ -108,6 +108,7 @@ function factory(dependencies) {
                 is_typing,
                 last_message_id,
                 partner_id,
+                partner_name,
             } = data;
             switch (info) {
                 case 'channel_fetched':
@@ -124,6 +125,7 @@ function factory(dependencies) {
                     return this._handleNotificationChannelTypingStatus(channelId, {
                         is_typing,
                         partner_id,
+                        partner_name,
                     });
                 default:
                     return this._handleNotificationChannelMessage(channelId, data);
@@ -344,8 +346,9 @@ function factory(dependencies) {
          * @param {Object} param1
          * @param {boolean} param1.is_typing
          * @param {integer} param1.partner_id
+         * @param {string} param1.partner_name
          */
-        _handleNotificationChannelTypingStatus(channelId, { is_typing, partner_id }) {
+        _handleNotificationChannelTypingStatus(channelId, { is_typing, partner_id, partner_name }) {
             const channel = this.env.models['mail.thread'].findFromIdentifyingData({
                 id: channelId,
                 model: 'mail.channel',
@@ -353,7 +356,10 @@ function factory(dependencies) {
             if (!channel) {
                 return;
             }
-            const partner = this.env.models['mail.partner'].insert({ id: partner_id });
+            const partner = this.env.models['mail.partner'].insert({
+                id: partner_id,
+                name: partner_name,
+            });
             if (partner === this.env.messaging.currentPartner) {
                 // Ignore management of current partner is typing notification.
                 return;
@@ -469,7 +475,15 @@ function factory(dependencies) {
             const convertedData = this.env.models['mail.thread'].convertData(
                 Object.assign({ model: 'mail.channel' }, data)
             );
-
+            if (!convertedData.members) {
+                // channel_info does not return all members of channel for
+                // performance reasons, but code is expecting to know at
+                // least if the current partner is member of it.
+                // (e.g. to know when to display "invited" notification)
+                // Current partner can always be assumed to be a member of
+                // channels received through this notification.
+                convertedData.members = [['link', this.env.messaging.currentPartner]];
+            }
             let channel = this.env.models['mail.thread'].findFromIdentifyingData(convertedData);
             const wasCurrentPartnerMember = (
                 channel &&
