@@ -673,9 +673,11 @@ function factory(dependencies) {
             this.update({
                 suggestedChannels: [[
                     'insert-and-replace',
-                    mentions.map(data =>
-                        this.env.models['mail.thread'].convertData(data))
-                    ]],
+                    mentions.map(data => {
+                        const threadData = this.env.models['mail.thread'].convertData(data);
+                        return Object.assign({ model: 'mail.channel' }, threadData);
+                    })
+                ]],
             });
 
             if (this.suggestedChannels[0]) {

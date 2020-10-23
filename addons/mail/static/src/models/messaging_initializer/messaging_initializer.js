@@ -163,7 +163,9 @@ function factory(dependencies) {
                     // channels received at init.
                     convertedData.members = [['link', this.env.messaging.currentPartner]];
                 }
-                const channel = this.env.models['mail.thread'].insert(convertedData);
+                const channel = this.env.models['mail.thread'].insert(
+                    Object.assign({ model: 'mail.channel' }, convertedData)
+                );
                 // flux specific: channels received at init have to be
                 // considered pinned. task-2284357
                 if (!channel.isPinned) {
