@@ -213,7 +213,8 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="#{ o._get_name_invoice_report() }" t-lang="lang"/>
+                    <t t-if="o._get_name_invoice_report() == 'account.report_invoice_document'"
+                        t-call="account.report_invoice_document" t-lang="lang"/>
                 </t>
             </t>
         </template>
@@ -223,7 +224,8 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
                     <t t-set="print_with_payments" t-value="True"/>
-                    <t t-call="#{ o._get_name_invoice_report() }" t-lang="lang"/>
+                    <t t-if="o._get_name_invoice_report() == 'account.report_invoice_document'"
+                        t-call="account.report_invoice_document" t-lang="lang"/>
                 </t>
             </t>
         </template>
