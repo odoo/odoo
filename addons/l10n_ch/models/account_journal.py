@@ -18,14 +18,15 @@ class AccountJournal(models.Model):
         ('ch', 'Switzerland')
     ], ondelete={'ch': lambda recs: recs.write({'invoice_reference_model': 'odoo'})})
 
-    @api.model
-    def create(self, vals):
-        rslt = super(AccountJournal, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        journals = super(AccountJournal, self).create(vals_list)
 
-        # The call to super() creates the related bank_account_id field
-        if 'l10n_ch_postal' in vals:
-            rslt.l10n_ch_postal = vals['l10n_ch_postal']
-        return rslt
+        for journal, vals in zip(journals, vals_list):
+            # The call to super() creates the related bank_account_id field
+            if 'l10n_ch_postal' in vals:
+                journal.l10n_ch_postal = vals['l10n_ch_postal']
+        return journals
 
     def write(self, vals):
         rslt = super(AccountJournal, self).write(vals)
