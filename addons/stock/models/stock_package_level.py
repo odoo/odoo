@@ -138,15 +138,16 @@ class StockPackageLevel(models.Model):
                         'company_id': package_level.company_id.id,
                     })
 
-    @api.model
-    def create(self, vals):
-        result = super(StockPackageLevel, self).create(vals)
-        if vals.get('location_dest_id'):
-            result.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
-            result.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})
-        if result.picking_id.state != 'draft' and result.location_id and result.location_dest_id and not result.move_ids and not result.move_line_ids:
-            result._generate_moves()
-        return result
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super(StockPackageLevel, self).create(vals_list)
+        for result in recs:
+            if result.location_dest_id:
+                result.move_line_ids.write({'location_dest_id': result.location_dest_id.id})
+                result.move_ids.write({'location_dest_id': result.location_dest_id.id})
+            if result.picking_id.state != 'draft' and result.location_id and result.location_dest_id and not result.move_ids and not result.move_line_ids:
+                result._generate_moves()
+        return recs
 
     def write(self, vals):
         result = super(StockPackageLevel, self).write(vals)

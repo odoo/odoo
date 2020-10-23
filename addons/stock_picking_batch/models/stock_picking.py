@@ -13,12 +13,11 @@ class StockPicking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Batch associated to this transfer', copy=False)
 
-    @api.model
-    def create(self, vals):
-        res = super().create(vals)
-        if vals.get('batch_id'):
-            res.batch_id._sanity_check()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        pickings = super().create(vals_list)
+        pickings.batch_id._sanity_check()
+        return pickings
 
     def write(self, vals):
         res = super().write(vals)

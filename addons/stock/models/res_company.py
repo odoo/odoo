@@ -156,33 +156,33 @@ class Company(models.Model):
         company_todo_sequence._create_scrap_sequence()
 
     def _create_per_company_locations(self):
-        self.ensure_one()
         self._create_transit_location()
         self._create_inventory_loss_location()
         self._create_production_location()
         self._create_scrap_location()
 
     def _create_per_company_sequences(self):
-        self.ensure_one()
         self._create_scrap_sequence()
 
     def _create_per_company_picking_types(self):
-        self.ensure_one()
+        return
 
     def _create_per_company_rules(self):
-        self.ensure_one()
+        return
 
-    @api.model
-    def create(self, vals):
-        company = super(Company, self).create(vals)
-        company.sudo()._create_per_company_locations()
-        company.sudo()._create_per_company_sequences()
-        company.sudo()._create_per_company_picking_types()
-        company.sudo()._create_per_company_rules()
-        self.env['stock.warehouse'].sudo().create({
-            'name': company.name,
-            'code': self.env.context.get('default_code') or company.name[:5],
-            'company_id': company.id,
-            'partner_id': company.partner_id.id
-        })
-        return company
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super(Company, self).create(vals_list)
+        companies_sudo = companies.sudo()
+        companies_sudo._create_per_company_locations()
+        companies_sudo._create_per_company_sequences()
+        companies_sudo._create_per_company_picking_types()
+        companies_sudo._create_per_company_rules()
+        for company in companies_sudo:
+            company.env['stock.warehouse'].create({
+                'name': company.name,
+                'code': self.env.context.get('default_code') or company.name[:5],
+                'company_id': company.id,
+                'partner_id': company.partner_id.id
+            })
+        return companies
