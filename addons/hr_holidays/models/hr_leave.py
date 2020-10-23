@@ -1174,14 +1174,10 @@ class HolidaysRequest(models.Model):
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
         for holiday in self:
-            start = UTC.localize(holiday.date_from).astimezone(timezone(holiday.employee_id.tz or 'UTC'))
-            end = UTC.localize(holiday.date_to).astimezone(timezone(holiday.employee_id.tz or 'UTC'))
             note = _(
-                'New %(leave_type)s Request created by %(user)s from %(start)s to %(end)s',
+                'New %(leave_type)s Request created by %(user)s',
                 leave_type=holiday.holiday_status_id.name,
                 user=holiday.create_uid.name,
-                start=start,
-                end=end
             )
             if holiday.state == 'draft':
                 to_clean |= holiday
