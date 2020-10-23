@@ -127,11 +127,12 @@ class SaleOrderTemplateLine(models.Model):
             self.product_uom_id = self.product_id.uom_id.id
             self.name = self.product_id.get_product_multiline_description_sale()
 
-    @api.model
-    def create(self, values):
-        if values.get('display_type', self.default_get(['display_type'])['display_type']):
-            values.update(product_id=False, product_uom_qty=0, product_uom_id=False)
-        return super(SaleOrderTemplateLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('display_type', self.default_get(['display_type'])['display_type']):
+                values.update(product_id=False, product_uom_qty=0, product_uom_id=False)
+        return super().create(vals_list)
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
