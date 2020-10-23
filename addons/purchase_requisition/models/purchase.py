@@ -87,14 +87,15 @@ class PurchaseOrder(models.Model):
                 po.requisition_id.action_done()
         return res
 
-    @api.model
-    def create(self, vals):
-        purchase = super(PurchaseOrder, self).create(vals)
-        if purchase.requisition_id:
-            purchase.message_post_with_view('mail.message_origin_link',
-                    values={'self': purchase, 'origin': purchase.requisition_id},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
-        return purchase
+    @api.model_create_multi
+    def create(self, vals_list):
+        purchases = super().create(vals_list)
+        for purchase in purchases:
+            if purchase.requisition_id:
+                purchase.message_post_with_view('mail.message_origin_link',
+                        values={'self': purchase, 'origin': purchase.requisition_id},
+                        subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
+        return purchases
 
     def write(self, vals):
         result = super(PurchaseOrder, self).write(vals)
