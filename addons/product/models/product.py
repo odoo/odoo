@@ -375,6 +375,7 @@ class ProductProduct(models.Model):
             self.invalidate_cache()
             # `_get_first_possible_variant_id` depends on variants active state
             self.clear_caches()
+            self._on_toggle_active()
         return res
 
     @api.multi
@@ -719,6 +720,23 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination)
+
+    def _on_toggle_active(self):
+        """ Archiving related product.template if there is not any more active product.product
+        (and vice versa, unarchiving the related product template if there is now an active product.product) """
+        self = self.with_context(active_test=True)
+        # We deactivate product templates which are active with no active variants.
+        tmpl_to_deactivate = self.filtered(lambda product: (product.product_tmpl_id.active
+                                                            and not product.product_tmpl_id.product_variant_ids)
+                                           ).mapped('product_tmpl_id')
+        # We activate product templates which are inactive with active variants.
+        tmpl_to_activate = self.filtered(lambda product: (not product.product_tmpl_id.active
+                                                          and product.product_tmpl_id.product_variant_ids)
+                                         ).mapped('product_tmpl_id')
+        if tmpl_to_activate:
+            tmpl_to_activate.write({'active': True})
+        if tmpl_to_deactivate:
+            tmpl_to_deactivate.write({'active': False})
 
 
 class ProductPackaging(models.Model):

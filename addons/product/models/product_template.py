@@ -374,7 +374,7 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         tools.image_resize_images(vals)
         res = super(ProductTemplate, self).write(vals)
-        if 'attribute_line_ids' in vals or vals.get('active'):
+        if 'attribute_line_ids' in vals or (vals.get('active') and not self.product_variant_ids):
             self.create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
