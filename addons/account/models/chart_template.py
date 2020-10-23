@@ -1018,25 +1018,26 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     plus_report_line_ids = fields.Many2many(string="Plus Tax Report Lines", relation='account_tax_repartition_plus_report_line', comodel_name='account.tax.report.line', copy=True, help="Tax report lines whose '+' tag will be assigned to move lines by this repartition line")
     minus_report_line_ids = fields.Many2many(string="Minus Report Lines", relation='account_tax_repartition_minus_report_line', comodel_name='account.tax.report.line', copy=True, help="Tax report lines whose '-' tag will be assigned to move lines by this repartition line")
 
-    @api.model
-    def create(self, vals):
-        if vals.get('plus_report_line_ids'):
-            vals['plus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('plus_report_line_ids'):
+                vals['plus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
 
-        if vals.get('minus_report_line_ids'):
-            vals['minus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['minus_report_line_ids'])
+            if vals.get('minus_report_line_ids'):
+                vals['minus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['minus_report_line_ids'])
 
-        if vals.get('tag_ids'):
-            vals['tag_ids'] = self._convert_tag_syntax_to_orm(vals['tag_ids'])
+            if vals.get('tag_ids'):
+                vals['tag_ids'] = self._convert_tag_syntax_to_orm(vals['tag_ids'])
 
-        if vals.get('use_in_tax_closing') is None:
-            if not vals.get('account_id'):
-                vals['use_in_tax_closing'] = False
-            else:
-                internal_group = self.env['account.account.template'].browse(vals.get('account_id')).user_type_id.internal_group
-                vals['use_in_tax_closing'] = not (internal_group == 'income' or internal_group == 'expense')
+            if vals.get('use_in_tax_closing') is None:
+                if not vals.get('account_id'):
+                    vals['use_in_tax_closing'] = False
+                else:
+                    internal_group = self.env['account.account.template'].browse(vals.get('account_id')).user_type_id.internal_group
+                    vals['use_in_tax_closing'] = not (internal_group == 'income' or internal_group == 'expense')
 
-        return super(AccountTaxRepartitionLineTemplate, self).create(vals)
+        return super().create(vals_list)
 
     @api.model
     def _convert_tag_syntax_to_orm(self, tags_list):

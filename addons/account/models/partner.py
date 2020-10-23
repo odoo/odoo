@@ -99,13 +99,14 @@ class AccountFiscalPosition(models.Model):
             zip_to = zip_to.rjust(max_length, '0')
         return zip_from, zip_to
 
-    @api.model
-    def create(self, vals):
-        zip_from = vals.get('zip_from')
-        zip_to = vals.get('zip_to')
-        if zip_from and zip_to:
-            vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
-        return super(AccountFiscalPosition, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            zip_from = vals.get('zip_from')
+            zip_to = vals.get('zip_to')
+            if zip_from and zip_to:
+                vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
+        return super(AccountFiscalPosition, self).create(vals_list)
 
     def write(self, vals):
         zip_from = vals.get('zip_from')
