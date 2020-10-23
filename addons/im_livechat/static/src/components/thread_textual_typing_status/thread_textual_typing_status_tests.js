@@ -66,8 +66,9 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: this.env.messaging.publicPartner.id,
             is_typing: true,
+            partner_id: this.env.messaging.publicPartner.id,
+            partner_name: this.env.messaging.publicPartner.name,
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);

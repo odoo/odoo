@@ -603,8 +603,12 @@ class Channel(models.Model):
                     info['is_pinned'] = partner_channel.is_pinned
 
             # add members infos
-            partner_ids = channel_partners.mapped('partner_id').ids
-            info['members'] = [partner_infos[partner] for partner in partner_ids]
+            if channel.channel_type != 'channel':
+                # avoid sending potentially a lot of members for big channels
+                # exclude chat and other small channels from this optimization because they are
+                # assumed to be smaller and it's important to know the member list for them
+                partner_ids = channel_partners.mapped('partner_id').ids
+                info['members'] = [partner_infos[partner] for partner in partner_ids]
             if channel.channel_type != 'channel':
                 info['seen_partners_info'] = [{
                     'id': cp.id,
@@ -851,6 +855,7 @@ class Channel(models.Model):
                 'info': 'typing_status',
                 'is_typing': is_typing,
                 'partner_id': self.env.user.partner_id.id,
+                'partner_name': self.env.user.partner_id.name,
             }
             notifications.append([(self._cr.dbname, 'mail.channel', channel.id), data]) # notify backend users
             notifications.append([channel.uuid, data]) # notify frontend users

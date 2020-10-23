@@ -153,9 +153,17 @@ function factory(dependencies) {
                 // there might be a lot of channels, insert each of them one by
                 // one asynchronously to avoid blocking the UI
                 await this.async(() => new Promise(resolve => setTimeout(resolve)));
-                const channel = this.env.models['mail.thread'].insert(
-                    this.env.models['mail.thread'].convertData(channelData)
-                );
+                const convertedData = this.env.models['mail.thread'].convertData(channelData);
+                if (!convertedData.members) {
+                    // channel_info does not return all members of channel for
+                    // performance reasons, but code is expecting to know at
+                    // least if the current partner is member of it.
+                    // (e.g. to know when to display "invited" notification)
+                    // Current partner can always be assumed to be a member of
+                    // channels received at init.
+                    convertedData.members = [['link', this.env.messaging.currentPartner]];
+                }
+                const channel = this.env.models['mail.thread'].insert(convertedData);
                 // flux specific: channels received at init have to be
                 // considered pinned. task-2284357
                 if (!channel.isPinned) {

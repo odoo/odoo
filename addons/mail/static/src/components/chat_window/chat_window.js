@@ -135,6 +135,9 @@ class ChatWindow extends Component {
         if (!this._threadRef.comp || !this.chatWindow.threadViewer) {
             return;
         }
+        this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
+            this._threadRef.comp.getScrollHeight()
+        );
         this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
             this._threadRef.comp.getScrollTop()
         );

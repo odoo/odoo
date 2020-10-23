@@ -23,12 +23,13 @@ QUnit.module('chat_window_manager_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign(
+            const { afterEvent, env, widget } = await start(Object.assign(
                 { hasChatWindow: true, hasMessagingMenu: true },
                 params,
                 { data: this.data }
             ));
             this.debug = params && params.debug;
+            this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
         };
@@ -812,7 +813,20 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
+        },
+        message: "should wait until channel 20 scrolled to 142 after setting this value manually",
+        predicate: ({ scrollTop, threadViewer }) => {
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20 &&
+                scrollTop === 142
+            );
+        },
+    });
     assert.strictEqual(
         document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
@@ -826,7 +840,18 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
         "chat window scrollTop should still be the same after home menu is hidden"
     );
 
-    await afterNextRender(() => this.showHomeMenu());
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => this.showHomeMenu(),
+        message: "should wait until channel 20 restored its scroll to 142 after hiding the home menu",
+        predicate: ({ scrollTop, threadViewer }) => {
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20 &&
+                scrollTop === 142
+            );
+        },
+    });
     assert.strictEqual(
         document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
@@ -1552,7 +1577,20 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
         document.querySelector(`.o_NotificationList_preview`).click()
     );
     // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => {
+            document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
+        },
+        message: "should wait until channel 20 scrolled to 142 after setting this value manually",
+        predicate: ({ scrollTop, threadViewer }) => {
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20 &&
+                scrollTop === 142
+            );
+        },
+    });
     assert.strictEqual(
         document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,
@@ -1568,7 +1606,19 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     );
 
     // unfold chat window
-    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector('.o_ChatWindow_header').click(),
+        message: "should wait until channel 20 restored its scroll position to 142",
+        predicate: ({ scrollTop, threadViewer }) => {
+            return (
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20 &&
+                scrollTop === 142
+
+            );
+        },
+    }));
     assert.strictEqual(
         document.querySelector(`.o_ThreadView_messageList`).scrollTop,
         142,

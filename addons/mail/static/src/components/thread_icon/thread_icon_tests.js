@@ -75,8 +75,9 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 17,
             is_typing: true,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -96,8 +97,9 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 17,
             is_typing: false,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);

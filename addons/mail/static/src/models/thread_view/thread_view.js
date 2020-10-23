@@ -80,6 +80,21 @@ function factory(dependencies) {
          * @private
          * @returns {integer|undefined}
          */
+        _computeThreadCacheInitialScrollHeight() {
+            if (!this.threadCache) {
+                return clear();
+            }
+            const threadCacheInitialScrollHeight = this.threadCacheInitialScrollHeights[this.threadCache.localId];
+            if (threadCacheInitialScrollHeight !== undefined) {
+                return threadCacheInitialScrollHeight;
+            }
+            return clear();
+        }
+
+        /**
+         * @private
+         * @returns {integer|undefined}
+         */
         _computeThreadCacheInitialScrollPosition() {
             if (!this.threadCache) {
                 return clear();
@@ -264,6 +279,13 @@ function factory(dependencies) {
             inverse: 'threadViews',
             related: 'threadViewer.threadCache',
         }),
+        threadCacheInitialScrollHeight: attr({
+            compute: '_computeThreadCacheInitialScrollHeight',
+            dependencies: [
+                'threadCache',
+                'threadCacheInitialScrollHeights',
+            ],
+        }),
         threadCacheInitialScrollPosition: attr({
             compute: '_computeThreadCacheInitialScrollPosition',
             dependencies: [
@@ -276,6 +298,13 @@ function factory(dependencies) {
          */
         threadCacheIsLoading: attr({
             related: 'threadCache.isLoading',
+        }),
+        /**
+         * List of saved initial scroll heights of thread caches.
+         */
+        threadCacheInitialScrollHeights: attr({
+            default: {},
+            related: 'threadViewer.threadCacheInitialScrollHeights',
         }),
         /**
          * List of saved initial scroll positions of thread caches.
