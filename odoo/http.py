@@ -447,7 +447,10 @@ def route(route=None, **kw):
                    database. Mainly used by the framework and authentication
                    modules. There request code will not have any facilities to access
                    the database nor have any configuration indicating the current
-                   database nor the current user.
+                   database nor the current user. NOTE: If this method is used in a
+                   server with more than one database active then the module must be
+                   pre-loaded using the server_wide_modules configuration or the --load
+                   CLI option for the endpoint to be made available.
     :param methods: A sequence of http methods this route applies to. If not
                     specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
