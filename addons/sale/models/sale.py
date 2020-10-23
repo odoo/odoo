@@ -963,11 +963,11 @@ Reason(s) of this behavior could be:
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
-        groups = super(SaleOrder, self)._notify_get_groups()
+        groups = super(SaleOrder, self)._notify_get_groups(msg_vals=msg_vals)
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):

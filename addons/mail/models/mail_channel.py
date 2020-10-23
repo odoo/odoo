@@ -364,12 +364,12 @@ class Channel(models.Model):
         ]).unlink()
         self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        groups = super(Channel, self)._notify_get_groups()
+        groups = super(Channel, self)._notify_get_groups(msg_vals=msg_vals)
         for (index, (group_name, group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
                 groups[index] = (group_name, lambda partner: False, group_data)
