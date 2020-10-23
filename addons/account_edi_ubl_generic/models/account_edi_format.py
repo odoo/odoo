@@ -1,34 +1,31 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
-from odoo.tests.common import Form
-from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo import models
 
-from datetime import datetime
 import base64
-
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
     ####################################################
-    # account_edi_ubl override
+    # Import
     ####################################################
 
     def _is_ubl(self, filename, tree):
-        if self.code != 'ubl_2_1':
-            return super()._is_ubl(filename, tree)
-        return super()._is_generic_ubl(filename, tree)
+        return self.code == 'ubl_2_1' and super()._is_generic_ubl(filename, tree)
 
     ####################################################
     # Export
     ####################################################
+
+    def _get_ubl_values(self, invoice):
+        values = super()._get_ubl_values(invoice)
+        if self.code != 'ubl_2_1':
+            return values
+
+        values['ubl_version'] = '2.1'
+        return values
 
     def _export_ubl(self, invoice):
         self.ensure_one()
@@ -70,3 +67,15 @@ class AccountEdiFormat(models.Model):
         if self.code != 'ubl_2_1':
             return super()._is_embedding_to_invoice_pdf_needed()
         return False  # ubl must not be embedded to PDF.
+
+    def _create_invoice_from_xml_tree(self, filename, tree):
+        self.ensure_one()
+        if self._is_ubl(filename, tree):
+            return self._import_ubl(tree, self.env['account.move'])
+        return super()._create_invoice_from_xml_tree(filename, tree)
+
+    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
+        self.ensure_one()
+        if self._is_ubl(filename, tree):
+            return self._import_ubl(tree, invoice)
+        return super()._update_invoice_from_xml_tree(filename, tree, invoice)

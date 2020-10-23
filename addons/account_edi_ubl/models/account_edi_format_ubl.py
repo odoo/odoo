@@ -14,6 +14,9 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
+    ''' This edi_format is "abstract" meaning that it provides an additional layer for similar edi_format (formats deriving from
+    UBL) that share some functionnalities, but needs to be extended to be used.
+    '''
     _inherit = 'account.edi.format'
 
     ####################################################
@@ -21,43 +24,59 @@ class AccountEdiFormat(models.Model):
     ####################################################
 
     def _is_generic_ubl(self, filename, tree):
+        ''' Does this file look like an generic UBL ?
+
+        :param filename: the name of the file.
+        :param tree:     the tree to decode.
+        :returns:        true if tree represents an UBL, False otherwise.
+        '''
         return tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice'
 
-    ####################################################
-    # Hooks
-    ####################################################
-
-    def _is_ubl(self, filename, tree):
-        ''' Checks if the xml can be imported with this UBL implementation. See `_is_generic_ubl`.
-            Note that you need to override _create_invoice_from_xml_tree/_update_invoice_from_xml_tree or _import_ubl
-            if you want to customize import, otherwise generic import will be used.
-
-            TO OVERRIDE
-        '''
-        return False  # we must check self.code which does not exist here because we're in an abstract format.
-
-    def _get_ubl_values(self, invoice):
-        ''' Get the necessary values to generate the XML. These values will be used in the qweb template when rendering.
-        Needed values differ depending on the implementation of the UBL, as (sub)template can be overriden or called dynamically.
+    def _get_ubl_partner_values(self, partner):
+        ''' Get the necessary values of the partner to generate the xml.
         TO OVERRIDE
 
-        :returns:   a dictionary with the value used in the template has key and the value as value.
+        :returns:   a dictionary with the values.
+        '''
+        return {'partner': partner}
+
+    def _get_ubl_values(self, invoice):
+        ''' Get the necessary values to generate the XML.
+        TO OVERRIDE
+
+        :returns:   a dictionary with the values.
         '''
         def format_monetary(amount):
             # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
             return float_repr(amount, invoice.currency_id.decimal_places)
 
+        bank_account = invoice.partner_bank_id
+
         return {
             'invoice': invoice,
-            'ubl_version': 2.1,
             'type_code': 380 if invoice.move_type == 'out_invoice' else 381,
-            'payment_means_code': 42 if invoice.journal_id.bank_account_id else 31,
+            'payment_means_code': 42 if bank_account else 31,
             'format_monetary': format_monetary,
+            'bank_account': bank_account,
+            'customer': self._get_ubl_partner_values(invoice.commercial_partner_id),
+            'supplier': self._get_ubl_partner_values(invoice.company_id.partner_id.commercial_partner_id),
         }
 
     ####################################################
     # Import
     ####################################################
+
+    def _get_ubl_namespaces(self, tree):
+        ''' If the namespace is declared with xmlns='...', the namespaces map contains the 'None' key that causes an
+        TypeError: empty namespace prefix is not supported in XPath
+        Then, we need to remap arbitrarily this key.
+
+        :param tree: An instance of etree.
+        :return: The namespaces map without 'None' key.
+        '''
+        namespaces = tree.nsmap
+        namespaces['inv'] = namespaces.pop(None)
+        return namespaces
 
     def _import_ubl(self, tree, invoice):
         """ Decodes an UBL invoice into an invoice.
@@ -67,19 +86,7 @@ class AccountEdiFormat(models.Model):
         :returns:       the invoice where the UBL data was imported.
         """
 
-        def _get_ubl_namespaces():
-            ''' If the namespace is declared with xmlns='...', the namespaces map contains the 'None' key that causes an
-            TypeError: empty namespace prefix is not supported in XPath
-            Then, we need to remap arbitrarily this key.
-
-            :param tree: An instance of etree.
-            :return: The namespaces map without 'None' key.
-            '''
-            namespaces = tree.nsmap
-            namespaces['inv'] = namespaces.pop(None)
-            return namespaces
-
-        namespaces = _get_ubl_namespaces()
+        namespaces = self._get_ubl_namespaces(tree)
 
         def _find_value(xpath, element=tree):
             return self._find_value(xpath, element, namespaces)
@@ -126,12 +133,15 @@ class AccountEdiFormat(models.Model):
             if elements:
                 invoice_form.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', elements[0].text)], limit=1)
 
+            vat = _find_value('//cac:AccountingSupplierParty/cac:Party//cac:PartyTaxScheme/cbc:CompanyID') or \
+                _find_value('//cac:AccountingSupplierParty/cac:Party/cbc:EndpointID[@schemeID="GLN"]')
+
             # Partner
             invoice_form.partner_id = self._retrieve_partner(
                 name=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name'),
                 phone=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone'),
                 mail=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail'),
-                vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ID'),
+                vat=vat,
             )
 
             # Regenerate PDF
@@ -202,19 +212,3 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.tax_ids.add(tax)
 
         return invoice_form.save()
-
-    ####################################################
-    # Account.edi.format override
-    ####################################################
-
-    def _create_invoice_from_xml_tree(self, filename, tree):
-        self.ensure_one()
-        if self._is_ubl(filename, tree):
-            return self._import_ubl(tree, self.env['account.move'])
-        return super()._create_invoice_from_xml_tree(filename, tree)
-
-    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
-        self.ensure_one()
-        if self._is_ubl(filename, tree):
-            return self._import_ubl(tree, invoice)
-        return super()._update_invoice_from_xml_tree(filename, tree, invoice)

@@ -35,14 +35,21 @@ class AccountEdiFormat(models.Model):
             return super()._is_embedding_to_invoice_pdf_needed()
         return False  # ubl must not be embedded to PDF.
 
-    ####################################################
-    # account_edi_ubl override
-    ####################################################
+    def _create_invoice_from_xml_tree(self, filename, tree):
+        self.ensure_one()
+        if self._is_ubl(filename, tree):
+            return self._import_ubl(tree, self.env['account.move'])
+        return super()._create_invoice_from_xml_tree(filename, tree)
 
-    def _is_ubl(self, filename, tree):
-        if self.code != 'efff_1':
-            return super()._is_ubl(filename, tree)
-        return super()._is_generic_ubl(filename, tree)
+    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
+        self.ensure_one()
+        if self._is_ubl(filename, tree):
+            return self._import_ubl(tree, invoice)
+        return super()._update_invoice_from_xml_tree(filename, tree, invoice)
+
+    ####################################################
+    # Export
+    ####################################################
 
     def _get_ubl_values(self, invoice):
         values = super()._get_ubl_values(invoice)
@@ -55,10 +62,6 @@ class AccountEdiFormat(models.Model):
 
         return values
 
-    ####################################################
-    # Export
-    ####################################################
-
     def _export_efff(self, invoice):
         self.ensure_one()
         # Create file content.
@@ -70,3 +73,10 @@ class AccountEdiFormat(models.Model):
             'datas': base64.encodebytes(xml_content),
             'mimetype': 'application/xml',
         })
+
+    ####################################################
+    # Import
+    ####################################################
+
+    def _is_ubl(self, filename, tree):
+        return self.code == 'efff_1' and super()._is_generic_ubl(filename, tree)
