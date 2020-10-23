@@ -2706,3 +2706,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice_onchange = move_form.save()
 
         _check_invoice_values(invoice_onchange)
+
+    def test_out_invoice_multiple_switch_payment_terms(self):
+        ''' When switching immediate payment term to 30% advance then back to immediate payment term, ensure the
+        receivable line is back to its previous value. If some business fields are not well updated, it could lead to a
+        recomputation of debit/credit when writing and then, an unbalanced journal entry.
+        '''
+        # assertNotUnbalancedEntryWhenSaving
+        with Form(self.invoice) as move_form:
+            move_form.invoice_payment_term_id = self.pay_terms_b    # Switch to 30% in advance payment terms
+            move_form.invoice_payment_term_id = self.pay_terms_b    # Back to immediate payment term
