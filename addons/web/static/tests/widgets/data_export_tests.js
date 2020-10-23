@@ -372,7 +372,8 @@ QUnit.module('widgets', {
                         }, {
                             name: 'bar',
                             label: 'Bar',
-                        }]
+                        }],
+                        orderby: "",
                     }, "should be called with correct params")
                     args.complete();
                 },
@@ -419,8 +420,9 @@ QUnit.module('widgets', {
                         }, {
                             name: 'bar',
                             label: 'Bar',
-                        }]
-                    }, "should be called with correct params")
+                        }],
+                        orderby: "",
+                    }, "should be called with correct params");
                     args.complete();
                 },
             },
