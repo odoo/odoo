@@ -319,11 +319,12 @@ class PosOrder(models.Model):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
         return super(PosOrder, self).unlink()
 
-    @api.model
-    def create(self, values):
-        session = self.env['pos.session'].browse(values['session_id'])
-        values = self._complete_values_from_session(session, values)
-        return super(PosOrder, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            session = self.env['pos.session'].browse(values['session_id'])
+            self._complete_values_from_session(session, values)
+        return super().create(vals_list)
 
     @api.model
     def _complete_values_from_session(self, session, values):
