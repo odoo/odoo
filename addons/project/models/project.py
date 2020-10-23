@@ -346,16 +346,16 @@ class Project(models.Model):
             self.map_tasks(project.id)
         return project
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # Prevent double project creation
-        self = self.with_context(mail_create_nosubscribe=True)
-        project = super(Project, self).create(vals)
-        if not vals.get('subtask_project_id'):
-            project.subtask_project_id = project.id
-        if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
-            project.allowed_user_ids |= project.partner_id.user_ids
-        return project
+        projects = super(Project, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        for project in projects:
+            if not project.subtask_project_id:
+                project.subtask_project_id = project.id
+            if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
+                project.allowed_user_ids |= project.partner_id.user_ids
+        return projects
 
     def write(self, vals):
         allowed_users_changed = 'allowed_portal_user_ids' in vals or 'allowed_internal_user_ids' in vals

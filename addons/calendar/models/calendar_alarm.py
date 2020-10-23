@@ -57,9 +57,9 @@ class Alarm(models.Model):
             return False
         return cron.toggle(model=self._name, domain=[('alarm_type', '=', 'email')])
 
-    @api.model
-    def create(self, values):
-        result = super(Alarm, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super(Alarm, self).create(vals_list)
         self._update_cron()
         return result
 

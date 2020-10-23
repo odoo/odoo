@@ -82,21 +82,22 @@ class CouponProgram(models.Model):
         if self.discount_type == 'fixed_amount':
             self.discount_apply_on = 'on_order'
 
-    @api.model
-    def create(self, vals):
-        program = super(CouponProgram, self).create(vals)
-        if not vals.get('discount_line_product_id', False):
-            discount_line_product_id = self.env['product.product'].create({
-                'name': program.reward_id.display_name,
-                'type': 'service',
-                'taxes_id': False,
-                'supplier_taxes_id': False,
-                'sale_ok': False,
-                'purchase_ok': False,
-                'lst_price': 0, #Do not set a high value to avoid issue with coupon code
-            })
-            program.write({'discount_line_product_id': discount_line_product_id.id})
-        return program
+    @api.model_create_multi
+    def create(self, vals_list):
+        programs = super().create(vals_list)
+        for program in programs:
+            if not program.discount_line_product_id:
+                discount_line_product_id = self.env['product.product'].create({
+                    'name': program.reward_id.display_name,
+                    'type': 'service',
+                    'taxes_id': False,
+                    'supplier_taxes_id': False,
+                    'sale_ok': False,
+                    'purchase_ok': False,
+                    'lst_price': 0, #Do not set a high value to avoid issue with coupon code
+                })
+                program.write({'discount_line_product_id': discount_line_product_id.id})
+        return programs
 
     def write(self, vals):
         res = super(CouponProgram, self).write(vals)

@@ -33,17 +33,18 @@ class ResourceMixin(models.AbstractModel):
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
 
-    @api.model
-    def create(self, values):
-        if not values.get('resource_id'):
-            resource_vals = {'name': values.get(self._rec_name)}
-            tz = (values.pop('tz', False) or
-                  self.env['resource.calendar'].browse(values.get('resource_calendar_id')).tz)
-            if tz:
-                resource_vals['tz'] = tz
-            resource = self.env['resource.resource'].create(resource_vals)
-            values['resource_id'] = resource.id
-        return super(ResourceMixin, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get('resource_id'):
+                resource_vals = {'name': values.get(self._rec_name)}
+                tz = (values.pop('tz', False) or
+                    self.env['resource.calendar'].browse(values.get('resource_calendar_id')).tz)
+                if tz:
+                    resource_vals['tz'] = tz
+                resource = self.env['resource.resource'].create(resource_vals)
+                values['resource_id'] = resource.id
+        return super(ResourceMixin, self).create(vals_list)
 
     def copy_data(self, default=None):
         if default is None:

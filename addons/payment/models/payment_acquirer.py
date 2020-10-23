@@ -301,11 +301,11 @@ class PaymentAcquirer(models.Model):
             journals += acquirer.journal_id
         return journals
 
-    @api.model
-    def create(self, vals):
-        record = super(PaymentAcquirer, self).create(vals)
-        record._check_required_if_provider()
-        return record
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(PaymentAcquirer, self).create(vals_list)
+        records._check_required_if_provider()
+        return records
 
     def write(self, vals):
         result = super(PaymentAcquirer, self).write(vals)
