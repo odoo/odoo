@@ -204,26 +204,27 @@ class Channel(models.Model):
         else:
             self.moderator_ids |= self.env.user
 
-    @api.model
-    def create(self, vals):
-        # ensure image at quick create
-        if not vals.get('image_128'):
-            defaults = self.default_get(['image_128'])
-            vals['image_128'] = defaults['image_128']
+    @api.model_create_multi
+    def create(self, vals_list):
+        defaults = self.default_get(['image_128'])
+        for vals in vals_list:
+            # ensure image at quick create
+            if not vals.get('image_128'):
+                vals['image_128'] = defaults['image_128']
 
         # Create channel and alias
-        channel = super(Channel, self.with_context(
+        channels = super(Channel, self.with_context(
             mail_create_nolog=True, mail_create_nosubscribe=True)
-        ).create(vals)
+        ).create(vals_list)
 
-        if vals.get('group_ids'):
-            channel._subscribe_users()
+        channels._subscribe_users()
 
         # make channel listen itself: posting on a channel notifies the channel
         if not self._context.get('mail_channel_noautofollow'):
-            channel.message_subscribe(channel_ids=[channel.id])
+            for channel in channels:
+                channel.message_subscribe(channel_ids=[channel.id])
 
-        return channel
+        return channels
 
     def unlink(self):
         # Delete mail.channel
@@ -265,7 +266,12 @@ class Channel(models.Model):
 
     def _subscribe_users(self):
         for mail_channel in self:
-            mail_channel.write({'channel_partner_ids': [(4, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
+            if mail_channel.group_ids:
+                mail_channel.write({
+                    'channel_partner_ids': [
+                        (4, pid) for pid in mail_channel.group_ids.users.partner_id.ids
+                    ],
+                })
 
     def action_follow(self):
         self.ensure_one()
