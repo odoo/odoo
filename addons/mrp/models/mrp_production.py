@@ -312,7 +312,7 @@ class MrpProduction(models.Model):
         for production in self:
             production.move_finished_ids.date_deadline = production.date_deadline
 
-    @api.depends("workorder_ids")
+    @api.depends("workorder_ids.date_planned_start", "workorder_ids.date_planned_finished")
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
