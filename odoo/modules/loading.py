@@ -7,9 +7,12 @@
 
 import itertools
 import logging
+import os
 import sys
 import threading
 import time
+
+from lxml import etree
 
 import odoo
 import odoo.modules.db
@@ -25,6 +28,49 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
 
+def _get_files_of_kind(kind, package):
+    if kind == 'demo':
+        kind = ['demo_xml', 'demo']
+    elif kind == 'data':
+        kind = ['init_xml', 'update_xml', 'data']
+    if isinstance(kind, str):
+        kind = [kind]
+    files = []
+    for k in kind:
+        for f in package.data[k]:
+            files.append(f)
+            if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
+                # init_xml, update_xml and demo_xml are deprecated except
+                # for the case of init_xml with csv and sql files as
+                # we can't specify noupdate for those file.
+                correct_key = 'demo' if k.count('demo') else 'data'
+                _logger.warning(
+                    "module %s: key '%s' is deprecated in favor of '%s' for file '%s'.",
+                    package.name, k, correct_key, f
+                )
+    return files
+
+
+def extract_data_models(package):
+    """
+    Extracts **all** models that should be loaded in order to create records from a module's
+    data files.
+    """
+    models = tools.OrderedSet()
+    for path in _get_files_of_kind('data', package):
+        # only take into account xml and csv data files: a lot of this code is copied over from
+        # tools/convert.py for proper file type filtering and opening and reading the files
+        # properly
+        fname, ext = os.path.splitext(os.path.basename(path))
+        ext = ext.lower()
+        if ext == '.xml':
+            with tools.file_open(os.path.join(package.name, path), 'rb') as fd:
+                models |= tools.OrderedSet(etree.parse(fd).getroot().xpath('//record/@model'))
+        elif ext == '.csv':
+            models.add(fname.split('-')[0])
+    return models
+
+
 def load_data(cr, idref, mode, kind, package, report):
     """
 
@@ -34,33 +80,10 @@ def load_data(cr, idref, mode, kind, package, report):
     init mode.
 
     """
-
-    def _get_files_of_kind(kind):
-        if kind == 'demo':
-            kind = ['demo_xml', 'demo']
-        elif kind == 'data':
-            kind = ['init_xml', 'update_xml', 'data']
-        if isinstance(kind, str):
-            kind = [kind]
-        files = []
-        for k in kind:
-            for f in package.data[k]:
-                files.append(f)
-                if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
-                    # init_xml, update_xml and demo_xml are deprecated except
-                    # for the case of init_xml with csv and sql files as
-                    # we can't specify noupdate for those file.
-                    correct_key = 'demo' if k.count('demo') else 'data'
-                    _logger.warning(
-                        "module %s: key '%s' is deprecated in favor of '%s' for file '%s'.",
-                        package.name, k, correct_key, f
-                    )
-        return files
-
     try:
         if kind in ('demo', 'test'):
             threading.currentThread().testing = True
-        for filename in _get_files_of_kind(kind):
+        for filename in _get_files_of_kind(kind, package):
             _logger.info("loading %s/%s", package.name, filename)
             noupdate = False
             if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
@@ -171,6 +194,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             or hasattr(package, "update")
             or package.state in ("to install", "to upgrade")
         )
+
+        mode = 'update'
+        if hasattr(package, 'init') or package.state == 'to install':
+            mode = 'init'
+
         if needs_update:
             if package.name != 'base':
                 registry.setup_models(cr)
@@ -189,6 +217,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         loaded_modules.append(package.name)
         if needs_update:
+            if mode == 'update':
+                model_names |= extract_data_models(package)
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry.setup_models(cr)
@@ -202,10 +232,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check |= set(model_names) & models_updated
 
         idref = {}
-
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
-            mode = 'init'
 
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
