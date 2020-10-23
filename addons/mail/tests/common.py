@@ -422,6 +422,25 @@ class MailCase(MockEmail):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
+
+    def _generate_notify_recipients(self, partners):
+        """ Tool method to generate recipients data according to structure used
+        in notification methods. Purpose is to allow testing of internals of
+        some notification methods, notably testing links or group-based notification
+        details.
+
+        See notably ``MailThread._notify_compute_recipients()``.
+        """
+        return [
+            {'id': partner.id,
+             'active': True,
+             'share': partner.partner_share,
+             'groups': partner.user_ids.groups_id.ids,
+             'notif': partner.user_ids.notification_type or 'email',
+             'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+            } for partner in partners
+        ]
+
     # ------------------------------------------------------------
     # MAIL ASSERTS WRAPPERS
     # ------------------------------------------------------------

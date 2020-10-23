@@ -1208,13 +1208,13 @@ class Task(models.Model):
             return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
-        groups = super(Task, self)._notify_get_groups()
-
+        groups = super(Task, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
@@ -1226,7 +1226,7 @@ class Task(models.Model):
         new_group = ('group_project_user', group_func, {})
 
         if not self.user_id and not self.stage_id.fold:
-            take_action = self._notify_get_action_link('assign')
+            take_action = self._notify_get_action_link('assign', **msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group[2]['actions'] = project_actions
 
