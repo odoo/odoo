@@ -7,10 +7,13 @@ const components = {
 
 const {
     afterEach,
+    afterNextRender,
     beforeEach,
     createRootComponent,
     start,
 } = require('mail/static/src/utils/test_utils.js');
+
+const Bus = require('web.Bus');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -206,6 +209,11 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
 QUnit.test('activity mark done popover mark done and schedule next', async function (assert) {
     assert.expect(6);
 
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        assert.step('activity_action');
+        throw new Error("The do-action event should not be triggered when the route doesn't return an action");
+    });
     await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
@@ -214,7 +222,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], 12);
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
-                return;
+                return false;
             }
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 // 'unlink' on non-existing record raises a server crash
@@ -222,6 +230,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
             }
             return this._super(...arguments);
         },
+        env: { bus },
     });
     const activity = this.env.models['mail.activity'].create({
         canWrite: true,
@@ -234,10 +243,50 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
     let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopover_feedback');
     feedbackTextarea.focus();
     document.execCommand('insertText', false, 'This task is done');
-    document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
+    await afterNextRender(() => {
+        document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
+    });
     assert.verifySteps(
         ['action_feedback_schedule_next'],
-        "Mark done and schedule next button should call the right rpc"
+        "Mark done and schedule next button should call the right rpc and not trigger an action"
+    );
+});
+
+QUnit.test('[technical] activity mark done & schedule next with new action', async function (assert) {
+    assert.expect(3);
+
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        assert.step('activity_action');
+        assert.deepEqual(
+            payload.action,
+            { type: 'ir.actions.act_window' },
+            "The content of the action should be correct"
+        );
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                return { type: 'ir.actions.act_window' };
+            }
+            return this._super(...arguments);
+        },
+        env: { bus },
+    });
+    const activity = this.env.models['mail.activity'].create({
+        canWrite: true,
+        category: 'not_upload_file',
+        id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
+    });
+    await this.createActivityMarkDonePopoverComponent(activity);
+
+    await afterNextRender(() => {
+        document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
+    });
+    assert.verifySteps(
+        ['activity_action'],
+        "The action returned by the route should be executed"
     );
 });
 

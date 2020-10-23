@@ -204,6 +204,10 @@ function factory(dependencies) {
             this.thread.refresh();
             const thread = this.thread;
             this.delete();
+            if (!action) {
+                thread.refreshActivities();
+                return;
+            }
             this.env.bus.trigger('do-action', {
                 action,
                 options: {
