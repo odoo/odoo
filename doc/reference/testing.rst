@@ -556,9 +556,9 @@ Instead of the tedious manual, or programmatic, specification of test data,
 one can use this feature to fill a database on demand with the desired number of test data.
 This can be used to detect diverse bugs or performance issues in tested flows.
 
-To specify this feature for a given model, the following methods and attributes can be defined.
-
 .. _reference/testing/populate/methods:
+
+To specify this feature for a given model, the following methods and attributes can be defined.
 
 .. currentmodule:: odoo.models
 
