@@ -162,6 +162,13 @@ class MessageList extends Component {
     /**
      * @returns {integer}
      */
+    getScrollHeight() {
+        return this.el.scrollHeight;
+    }
+
+    /**
+     * @returns {integer}
+     */
     getScrollTop() {
         return this.el.scrollTop;
     }
@@ -323,9 +330,13 @@ class MessageList extends Component {
         if (threadCache.messages.length > 0) {
             if (this.threadView.threadCacheInitialScrollPosition !== undefined) {
                 if (this.props.hasScrollAdjust) {
-                    this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+                    if (this.el.scrollHeight === this.threadView.threadCacheInitialScrollHeight) {
+                        this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+                        isProcessed = true;
+                    }
+                } else {
+                    isProcessed = true;
                 }
-                isProcessed = true;
             } else {
                 const lastMessage = threadCache.lastMessage;
                 if (this.messageRefFromId(lastMessage.id)) {
@@ -348,8 +359,9 @@ class MessageList extends Component {
      * @param {Object} hint
      */
     _adjustFromChatWindowUnfolded(hint) {
-        this._adjustScrollFromModel();
-        this.threadView.markComponentHintProcessed(hint);
+        if (this._adjustScrollFromModel()) {
+            this.threadView.markComponentHintProcessed(hint);
+        }
     }
 
     /**
@@ -357,8 +369,9 @@ class MessageList extends Component {
      * @param {Object} hint
      */
     _adjustFromHomeMenuHidden(hint) {
-        this._adjustScrollFromModel();
-        this.threadView.markComponentHintProcessed(hint);
+        if (this._adjustScrollFromModel()) {
+            this.threadView.markComponentHintProcessed(hint);
+        }
     }
 
     /**
@@ -366,8 +379,9 @@ class MessageList extends Component {
      * @param {Object} hint
      */
     _adjustFromHomeMenuShown(hint) {
-        this._adjustScrollFromModel();
-        this.threadView.markComponentHintProcessed(hint);
+        if (this._adjustScrollFromModel()) {
+            this.threadView.markComponentHintProcessed(hint);
+        }
     }
 
     /**
@@ -423,14 +437,21 @@ class MessageList extends Component {
 
     /**
      * @private
+     * @returns {boolean} whether the adjustment should be considered processed
      */
     _adjustScrollFromModel() {
         if (
             this.threadView.threadCacheInitialScrollPosition !== undefined &&
             this.props.hasScrollAdjust
         ) {
-            this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+            if (this.el.scrollHeight === this.threadView.threadCacheInitialScrollHeight) {
+                this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+                return true;
+            } else {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
@@ -560,6 +581,7 @@ class MessageList extends Component {
             ? scrollTop >= this.el.scrollHeight - this.el.clientHeight - margin
             : scrollTop <= margin;
         this.threadView.update({ hasAutoScrollOnMessageReceived });
+        this.threadView.threadViewer.saveThreadCacheScrollHeightAsInitial(this.el.scrollHeight);
         this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop);
         if (!this._isAutoLoadOnScrollActive) {
             return;
