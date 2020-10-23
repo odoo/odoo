@@ -157,7 +157,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             this.currentOrder.finalized = true;
 
             let syncedOrderBackendIds = [];
-
             try {
                 if (this.currentOrder.is_to_invoice()) {
                     syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
@@ -185,6 +184,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     });
                 }
             }
+
+            await this._preShowScreen();
 
             this.showScreen(this.nextScreen);
 
@@ -352,6 +353,11 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             newOrder.paymentlines.on('change', this.render, this);
             NumberBuffer.reset();
             await this.render();
+        }
+        // Does nothing for the basic module, used for the "in-place" inheritance
+        async _preShowScreen() {
+            console.log("TEST");
+            return true;
         }
     }
     PaymentScreen.template = 'PaymentScreen';
