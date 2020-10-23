@@ -74,3 +74,6 @@
 .o_we_flip_x.o_we_flip_y {
     transform: scale(-1);
 }
+.o_we_shape.o_we_flip_x, .o_we_shape.o_we_flip_y {
+    height: calc(100% + 0.25px); // fix browser issue when rendering SVG background image with CSS transform
+}
