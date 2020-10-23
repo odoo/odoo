@@ -293,13 +293,15 @@ class MassMailing(models.Model):
     # ORM
     # ------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        if values.get('subject') and not values.get('name'):
-            values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        now = fields.Datetime.now()
+        for values in vals_list:
+            if values.get('subject') and not values.get('name'):
+                values['name'] = "%s %s" % (values['subject'], now)
+            if values.get('body_html'):
+                values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super().create(vals_list)
 
     def write(self, values):
         if values.get('body_html'):
