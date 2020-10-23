@@ -351,7 +351,7 @@
 
         <div id="o_wslides_sidebar_collapse" class="collapse d-md-block">
             <table class="table table-sm mt-3">
-                <tr>
+                <tr t-if="channel.user_id">
                     <th class="border-top-0">Responsible</th>
                     <td class="border-top-0"><span t-field="channel.user_id"/></td>
                 </tr>
