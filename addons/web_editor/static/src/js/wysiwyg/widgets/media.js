@@ -257,8 +257,10 @@ var FileWidget = SearchableMediaWidget.extend({
         var allImgClassModifiers = /(^|\s+)(rounded-circle|shadow|rounded|img-thumbnail|mx-auto)([^\s]*)/g;
         this.media.className = this.media.className && this.media.className
             .replace('o_we_custom_image', '')
-            .replace(allImgClasses, ' ')
-            .replace(allImgClassModifiers, ' ');
+            .replace(allImgClasses, ' ');
+        if (this.$media.attr("data-preserveclassmodifiers") !== 'true') {
+            this.media.className = this.media.className && this.media.className.replace(allImgClassModifiers, ' ');
+        }
     },
     /**
      * Returns the domain for attachments used in media dialog.
