@@ -383,10 +383,14 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 });
             }
 
-            $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
-            $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
-            $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
-            $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
+            if ($("label[for='zip']").length) {
+                $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
+                $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
+            }
+            if ($("label[for='zip']").length) {
+                $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
+                $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
+            }
         });
     },
     /**
