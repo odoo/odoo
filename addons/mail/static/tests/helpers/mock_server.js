@@ -743,12 +743,16 @@ MockServer.include({
                 ['is_read', '=', false],
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
-            return Object.assign({}, channel, {
+            const res = Object.assign({}, channel, {
                 info: extra_info,
                 last_message_id: lastMessageId,
                 members,
                 message_needaction_counter: messageNeedactionCounter,
             });
+            if (channel.channel_type === 'channel') {
+                delete res.members;
+            }
+            return res;
         });
     },
     /**
@@ -983,10 +987,12 @@ MockServer.include({
         } else {
             partner_id = this.currentPartnerId;
         }
+        const partner = this._getRecords('res.partner', [['id', '=', partner_id]]);
         const data = {
             'info': 'typing_status',
             'is_typing': is_typing,
             'partner_id': partner_id,
+            'partner_name': partner.name,
         };
         const notifications = [];
         for (const channel of channels) {
@@ -1714,9 +1720,11 @@ MockServer.include({
             { active_test: false }
         )[0];
         return {
-            "id": partner.id,
-            "display_name": partner.display_name,
             "active": partner.active,
+            "display_name": partner.display_name,
+            "id": partner.id,
+            "im_status": partner.im_status,
+            "name": partner.name,
         };
     },
 });

@@ -62,6 +62,18 @@ class ThreadView extends Component {
     }
 
     /**
+     * Get the scroll height in the message list.
+     *
+     * @returns {integer|undefined}
+     */
+    getScrollHeight() {
+        if (!this._messageListRef.comp) {
+            return undefined;
+        }
+        return this._messageListRef.comp.getScrollHeight();
+    }
+
+    /**
      * Get the scroll position in the message list.
      *
      * @returns {integer|undefined}
