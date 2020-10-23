@@ -36,19 +36,10 @@ tour.register('account_tour', {
         content: _t("Customize the prefix and number to fit your needs."),
         run: 'text SALE/0000000001'
     }, {
-        trigger: "div[name=partner_id] input",
+        trigger: "div[name=partner_id]",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: _t("Write a company name to <b>create one</b> or <b>see suggestions</b>."),
         position: "bottom",
-    }, {
-        trigger: ".o_m2o_dropdown_option a:contains('Create')",
-        extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Select first partner"),
-        auto: true,
-    }, {
-        trigger: ".modal-content button.btn-primary",
-        extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu."),
     }, {
         trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a:not([data-context])",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
