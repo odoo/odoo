@@ -25,12 +25,11 @@ class Channel(models.Model):
 
         return action
 
-    @api.model
-    def create(self, vals):
-        channel = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
-        if channel.forum_id:
-            channel.forum_id.privacy = False
-        return channel
+    @api.model_create_multi
+    def create(self, vals_list):
+        channels = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        channels.forum_id.privacy = False
+        return channels
 
     def write(self, vals):
         old_forum = self.forum_id

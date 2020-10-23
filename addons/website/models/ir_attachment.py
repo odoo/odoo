@@ -17,12 +17,14 @@ class Attachment(models.Model):
     key = fields.Char(help='Technical field used to resolve multiple attachments in a multi-website environment.')
     website_id = fields.Many2one('website')
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         website = self.env['website'].get_current_website(fallback=False)
-        if website and 'website_id' not in vals and 'not_force_website_id' not in self.env.context:
-            vals['website_id'] = website.id
-        return super(Attachment, self).create(vals)
+        if website and 'not_force_website_id' not in self.env.context:
+            for vals in vals_list:
+                if 'website_id' not in vals:
+                    vals['website_id'] = website.id
+        return super(Attachment, self).create(vals_list)
 
     @api.model
     def get_serving_groups(self):
