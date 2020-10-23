@@ -122,14 +122,16 @@ class GoalDefinition(models.Model):
                     error=e
                 ))
 
-    @api.model
-    def create(self, vals):
-        definition = super(GoalDefinition, self).create(vals)
-        if definition.computation_mode in ('count', 'sum'):
-            definition._check_domain_validity()
-        if vals.get('field_id'):
-            definition._check_model_validity()
-        return definition
+    @api.model_create_multi
+    def create(self, vals_list):
+        definitions = super(GoalDefinition, self).create(vals_list)
+        definitions.filtered_domain([
+            ('computation_mode', 'in', ['count', 'sum']),
+        ])._check_domain_validity()
+        definitions.filtered_domain([
+            ('field_id', '=', 'True'),
+        ])._check_model_validity()
+        return definitions
 
     def write(self, vals):
         res = super(GoalDefinition, self).write(vals)
@@ -386,9 +388,9 @@ class Goal(models.Model):
         next goal update."""
         return self.write({'state': 'inprogress'})
 
-    @api.model
-    def create(self, vals):
-        return super(Goal, self.with_context(no_remind_goal=True)).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super(Goal, self.with_context(no_remind_goal=True)).create(vals_list)
 
     def write(self, vals):
         """Overwrite the write method to update the last_update field to today
