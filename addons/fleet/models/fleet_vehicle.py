@@ -212,21 +212,17 @@ class FleetVehicle(models.Model):
         res.append(('id', search_operator, res_ids))
         return res
 
-    @api.model
-    def create(self, vals):
-        res = super(FleetVehicle, self).create(vals)
-        if 'driver_id' in vals and vals['driver_id']:
-            res.create_driver_history(vals['driver_id'])
-        if 'future_driver_id' in vals and vals['future_driver_id']:
-            state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-            states = res.mapped('state_id').ids
-            if not state_waiting_list or state_waiting_list.id not in states:
-                future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-                if self.vehicle_type == 'bike':
-                    future_driver.sudo().write({'plan_to_change_bike': True})
-                if self.vehicle_type == 'car':
-                    future_driver.sudo().write({'plan_to_change_car': True})
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        vehicles = super(FleetVehicle, self).create(vals_list)
+        state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
+        vehicles.create_driver_history()
+        driver_change = vehicles.filtered(
+            lambda v: v.future_driver_id and(not state_waiting_list or v.state_id != state_waiting_list)
+        ).sudo()
+        driver_change.filtered_domain([('vehicle_type', '=', 'car')]).write({'plan_to_change_car': True})
+        driver_change.filtered_domain([('vehicle_type', '=', 'bike')]).write({'plan_to_change_bike': True})
+        return vehicles
 
     def write(self, vals):
         if 'driver_id' in vals and vals['driver_id']:
@@ -255,13 +251,14 @@ class FleetVehicle(models.Model):
             ('date_end', '=', False)
         ]).write({'date_end': fields.Date.today()})
 
-    def create_driver_history(self, driver_id):
-        for vehicle in self:
-            self.env['fleet.vehicle.assignation.log'].create({
-                'vehicle_id': vehicle.id,
-                'driver_id': driver_id,
-                'date_start': fields.Date.today(),
-            })
+    def create_driver_history(self, driver_id=None):
+        today = fields.Date.today()
+        log_vals = [{
+            'vehicle_id': vehicle.id,
+            'driver_id': driver_id or vehicle.driver_id.id,
+            'date_start': today,
+        } for vehicle in self if driver_id or vehicle.driver_id]
+        self.env['fleet.vehicle.assignation.log'].create(log_vals)
 
     def action_accept_driver_change(self):
         self._close_driver_history()

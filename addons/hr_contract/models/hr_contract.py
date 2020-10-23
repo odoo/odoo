@@ -212,14 +212,17 @@ class Contract(models.Model):
 
         return res
 
-    @api.model
-    def create(self, vals):
-        contracts = super(Contract, self).create(vals)
-        if vals.get('state') == 'open':
-            contracts._assign_open_contract()
-        open_contracts = contracts.filtered(lambda c: c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done')
+    @api.model_create_multi
+    def create(self, vals_list):
+        contracts = super().create(vals_list)
+        contracts.filtered_domain([('state', '=', 'open')])._assign_open_contract()
+        contracts_to_sync = contracts.filtered(
+            lambda c: c.employee_id and c.resource_calendar_id and (
+                c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done'
+            )
+        )
         # sync contract calendar -> calendar employee
-        for contract in open_contracts.filtered(lambda c: c.employee_id and c.resource_calendar_id):
+        for contract in contracts_to_sync:
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
         return contracts
 

@@ -161,16 +161,22 @@ class HrEmployeeBase(models.AbstractModel):
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
-    @api.model
-    def create(self, values):
-        if 'parent_id' in values:
-            manager = self.env['hr.employee'].browse(values['parent_id']).user_id
-            values['leave_manager_id'] = values.get('leave_manager_id', manager.id)
-        if values.get('leave_manager_id', False):
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'parent_id' in values and not values.get('leave_manager_id'):
+                manager = self.env['hr.employee'].browse(values['parent_id']).user_id
+                values['leave_manager_id'] = values.get('leave_manager_id', manager.id)
+        new_manager_ids = set([
+            values['leave_manager_id']
+            for values in vals_list
+            if values.get('leave_manager_id')
+        ])
+        if new_manager_ids:
             approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
             if approver_group:
-                approver_group.sudo().write({'users': [(4, values['leave_manager_id'])]})
-        return super(HrEmployeeBase, self).create(values)
+                approver_group.sudo().write({'users': [(4, manager_id) for manager_id in new_manager_ids]})
+        return super(HrEmployeeBase, self).create(vals_list)
 
     def write(self, values):
         if 'parent_id' in values:

@@ -46,16 +46,17 @@ class Department(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive departments.'))
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.
-        department = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals)
-        manager = self.env['hr.employee'].browse(vals.get("manager_id"))
-        if manager.user_id:
-            department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
-        return department
+        departments = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        for department in departments:
+            manager = department.manager_id
+            if manager.user_id:
+                department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
+        return departments
 
     def write(self, vals):
         """ If updating manager of a department, we need to update all the employees

@@ -41,10 +41,10 @@ class Job(models.Model):
             job.no_of_employee = result.get(job.id, 0)
             job.expected_employees = result.get(job.id, 0) + job.no_of_recruitment
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ We don't want the current user to be follower of all created job """
-        return super(Job, self.with_context(mail_create_nosubscribe=True)).create(values)
+        return super(Job, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

@@ -112,18 +112,19 @@ class Job(models.Model):
             })
         return values
 
-    @api.model
-    def create(self, vals):
-        vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
-        new_job = super(Job, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
+        jobs = super().create(vals_list)
         utm_linkedin = self.env.ref("utm.utm_source_linkedin", raise_if_not_found=False)
         if utm_linkedin:
-            source_vals = {
+            source_vals = [{
                 'source_id': utm_linkedin.id,
-                'job_id': new_job.id,
-            }
+                'job_id': job.id,
+            } for job in jobs]
             self.env['hr.recruitment.source'].create(source_vals)
-        return new_job
+        return jobs
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')

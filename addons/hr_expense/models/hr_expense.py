@@ -857,11 +857,14 @@ class HrExpenseSheet(models.Model):
             if any(expense.company_id != sheet.company_id for expense in sheet.expense_line_ids):
                 raise ValidationError(_('An expense report must contain only lines from the same company.'))
 
-    @api.model
-    def create(self, vals):
-        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)).create(vals)
-        sheet.activity_update()
-        return sheet
+    @api.model_create_multi
+    def create(self, vals_list):
+        sheets = super(
+            HrExpenseSheet,
+            self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)
+        ).create(vals_list)
+        sheets.activity_update()
+        return sheets
 
     def unlink(self):
         for expense in self:
