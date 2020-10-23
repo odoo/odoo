@@ -108,6 +108,7 @@ copy_raspios () {
     mkdir -v raspios
     mount -v "${PART_RASPIOS_ROOT}" raspios
     resize2fs "${PART_RASPIOS_ROOT}"
+    chroot raspios/ /bin/bash -c "sudo apt-get -y update"
     chroot raspios/ /bin/bash -c "sudo apt-get -y install kpartx"
     PATH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     cp -v "${PATH_DIR}"/upgrade.sh raspios/home/pi/
