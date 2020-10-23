@@ -258,11 +258,38 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (!this.isShown() || !this.$snippetBlock.length || !this.$snippetBlock.is(':visible')) {
+        if (!this.isShown() || !this.$snippetBlock.length) {
             return;
         }
+
         const $modal = this.$snippetBlock.find('.modal');
         const $target = $modal.length ? $modal : this.$snippetBlock;
+        const targetEl = $target[0];
+
+        // Check first if the target is still visible, otherwise we have to
+        // hide it. When covering all element after scroll for instance it may
+        // have been hidden (part of an affixed header for example) or it may
+        // be outside of the viewport (the whole header during an effect for
+        // example).
+        const rect = targetEl.getBoundingClientRect();
+        const vpWidth = window.innerWidth || document.documentElement.clientWidth;
+        const vpHeight = window.innerHeight || document.documentElement.clientHeight;
+        const isInViewport = (
+            rect.bottom > -0.1 &&
+            rect.right > -0.1 &&
+            (vpHeight - rect.top) > -0.1 &&
+            (vpWidth - rect.left) > -0.1
+        );
+        const hasSize = ( // :visible not enough for images
+            Math.abs(rect.bottom - rect.top) > 0.01 &&
+            Math.abs(rect.right - rect.left) > 0.01
+        );
+        if (!isInViewport || !hasSize || !this.$snippetBlock.is(`:visible`)) {
+            this.toggleOverlayVisibility(false);
+            return;
+        }
+
+        // Now cover the element
         const offset = $target.offset();
         var manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
@@ -1105,13 +1132,19 @@ var SnippetsMenu = Widget.extend({
         // On keydown add a class on the active overlay to hide it and show it
         // again when the mouse moves
         this.$document.on('keydown.snippets_menu', () => {
+            this.__overlayKeyWasDown = true;
             this.snippetEditors.forEach(editor => {
                 editor.toggleOverlayVisibility(false);
             });
         });
         this.$document.on('mousemove.snippets_menu, mousedown.snippets_menu', _.throttle(() => {
+            if (!this.__overlayKeyWasDown) {
+                return;
+            }
+            this.__overlayKeyWasDown = false;
             this.snippetEditors.forEach(editor => {
                 editor.toggleOverlayVisibility(true);
+                editor.cover();
             });
             this.updateCurrentSnippetEditorOverlay();
         }, 250));
