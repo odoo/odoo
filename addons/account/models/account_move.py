@@ -702,7 +702,7 @@ class AccountMove(models.Model):
                 })
 
             if in_draft_mode:
-                taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance())
+                taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance(force_computation=True))
 
     def update_lines_tax_exigibility(self):
         if all(account.user_type_id.type not in {'payable', 'receivable'} for account in self.mapped('line_ids.account_id')):
@@ -810,7 +810,7 @@ class AccountMove(models.Model):
                 cash_rounding_line = create_method(rounding_line_vals)
 
             if in_draft_mode:
-                cash_rounding_line.update(cash_rounding_line._get_fields_onchange_balance())
+                cash_rounding_line.update(cash_rounding_line._get_fields_onchange_balance(force_computation=True))
 
         existing_cash_rounding_line = self.line_ids.filtered(lambda line: line.is_rounding_line)
 
@@ -946,7 +946,7 @@ class AccountMove(models.Model):
                     })
                 new_terms_lines += candidate
                 if in_draft_mode:
-                    candidate.update(candidate._get_fields_onchange_balance())
+                    candidate.update(candidate._get_fields_onchange_balance(force_computation=True))
             return new_terms_lines
 
         existing_terms_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
