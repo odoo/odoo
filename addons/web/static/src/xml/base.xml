@@ -897,7 +897,7 @@
             <div class="o_mask"/>
             <div class="o_pie_value"/>
         </div>
-        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+        <span t-if="widget.showString &amp;&amp; widget.string"><t t-esc="widget.string"/></span>
     </div>
 </t>
 <t t-name="FieldStatus.content">

@@ -5282,6 +5282,29 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('percentpie widget should not display string if show_string option passed to false', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="int_field" widget="percentpie" options="{\'show_string\': false}"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_percent_pie.o_field_widget .o_pie').length, 1,
+            "should have a pie chart");
+        assert.strictEqual(form.$('.o_field_percent_pie span').length, 0,
+            "should not have a string after pie");
+
+        form.destroy();
+    });
+
     QUnit.test('percentpie widget in form view with value > 50%', function (assert) {
         assert.expect(12);
 

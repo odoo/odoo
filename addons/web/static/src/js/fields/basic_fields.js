@@ -2292,6 +2292,10 @@ var FieldPercentPie = AbstractField.extend({
     template: 'FieldPercentPie',
     supportedFieldTypes: ['integer', 'float'],
 
+    init: function () {
+        this._super.apply(this, arguments);
+        this.showString = 'show_string' in this.nodeOptions ? this.nodeOptions.showString : true;
+    },
     /**
      * Register some useful references for later use throughout the widget.
      *
