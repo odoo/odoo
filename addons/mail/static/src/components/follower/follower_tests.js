@@ -336,7 +336,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         isEditable: true,
         partner: [['insert', {
             email: "bla@bla.bla",
-            id: this.env.session.partner_id,
+            id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
         }]],
     });
