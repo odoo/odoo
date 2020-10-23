@@ -233,9 +233,13 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
+            if not self.previous_activity_type_id or\
+             (self.previous_activity_type_id and self.date_deadline == self._calculate_date_deadline(self.previous_activity_type_id) \
+                or self.date_deadline == self._calculate_date_deadline(self.activity_type_id)):
+                self.previous_activity_type_id = self.activity_type_id
+                self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
             if self.activity_type_id.summary:
                 self.summary = self.activity_type_id.summary
-            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
             self.user_id = self.activity_type_id.default_user_id or self.env.user
             if self.activity_type_id.default_description:
                 self.note = self.activity_type_id.default_description
