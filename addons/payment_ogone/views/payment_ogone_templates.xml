@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="ogone_inline_template">
+            <div t-attf-id="ogone-iframe-container_{{acquirer_id}}">
+                <iframe t-attf-id="oe_ogone_iframe_{{id}}" t-attf-name="oe_ogone_iframe_{{id}}" class="oe_ogone_iframe">
+                </iframe>
+            </div>
+        </template>
+
+        <template id="ogone_feedback" name="Payment processing page">
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <t t-call-assets="web.assets_common"/>
+                    <t t-call-assets="web.assets_frontend"/>
+                    <script type="text/javascript" src="/payment_ogone/static/src/js/payment_feedback.js"/>
+                    <link rel="stylesheet" type="text/scss" href="/payment_ogone/static/src/scss/payment_form.scss"/>
+                </t>
+                <!--  Small spinner running in an iframe  -->
+                <div class="p-5 o_payment_feedback" id="payment_feedback">
+                    <div class="row">
+                        <div class="mx-auto align-self-center o_ogone_spinner">
+                            <i class="fa fa-spinner fa-pulse fa-5x"/>
+                            <!-- The content here is handled by JS -->
+                        </div>
+                        <div class="o_ogone_error_message">
+                            <div class="ogone_error">
+                                The payment could not be processed. See the following error from the payment
+                                acquirer for more information.
+                            </div>
+                            <div class="o_ogone_error_name"/>
+                            <div class="o_btn_back">
+                                <a role="button" id="btn_payment_status" class="btn btn-link btn-primary">
+                                    Go back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

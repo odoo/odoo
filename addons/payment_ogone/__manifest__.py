@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Ingenico Payment Acquirer',
+    'name': 'Ogone Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 360,
-    'summary': 'Payment Acquirer: Ingenico Implementation',
+    'summary': 'Payment Acquirer: Ogone Implementation',
     'version': '1.0',
-    'description': """Ingenico Payment Acquirer""",
+    'description': """Ogone Payment Acquirer""",
     'depends': ['payment'],
     'data': [
+        'views/assets.xml',
         'views/payment_views.xml',
-        'views/payment_ingenico_templates.xml',
+        'views/payment_ogone_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
     'installable': True,
     'application': True,
-    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
 }

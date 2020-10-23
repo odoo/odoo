@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+<!--        arj fixme no update 1-->
+        <record id="payment.payment_acquirer_ogone" model="payment.acquirer">
+            <field name="name">Ogone</field>
+            <field name="image_128" type="base64" file="payment_ogone/static/src/img/ingenico_icon.png"/>
+            <field name="provider">ogone</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="inline_template_view_id" ref="ogone_inline_template"/>
+            <field name="support_authorization">False</field>
+            <field name="support_fees_computation">False</field>
+            <field name="support_tokenization">True</field>
+            <field name="allow_tokenization">True</field>
+        </record>
+    </data>
+</odoo>

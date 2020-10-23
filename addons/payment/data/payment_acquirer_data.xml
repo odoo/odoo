@@ -51,12 +51,12 @@
                                                         ref("payment.payment_icon_cc_american_express")])]'/>
     </record>
 
-    <record id="payment_acquirer_ingenico" model="payment.acquirer">
+    <record id="payment_acquirer_ogone" model="payment.acquirer">
         <field name="name">Ingenico</field>
         <field name="display_as">Credit Card (powered by Ingenico)</field>
         <field name="sequence">2</field>
-        <field name="image_128" type="base64" file="payment_ingenico/static/src/img/ingenico_icon.png"/>
-        <field name="module_id" ref="base.module_payment_ingenico"/>
+        <field name="image_128" type="base64" file="payment_ogone/static/src/img/ingenico_icon.png"/>
+        <field name="module_id" ref="base.module_payment_ogone"/>
         <field name="description" type="html">
             <p>
                 Ingenico Payment Services (formerly Ogone) supports a wide range of payment methods: credit cards, debit cards, bank transfers, Bancontact, iDeal, Giropay.
