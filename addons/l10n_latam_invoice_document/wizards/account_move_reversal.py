@@ -15,6 +15,7 @@ class AccountMoveReversal(models.TransientModel):
 
     @api.depends('l10n_latam_document_type_id')
     def _compute_l10n_latam_manual_document_number(self):
+        self.l10n_latam_manual_document_number = False
         for rec in self.filtered('move_ids'):
             move = rec.move_ids[0]
             if move.journal_id and move.journal_id.l10n_latam_use_documents:
