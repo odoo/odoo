@@ -72,12 +72,13 @@ class Digest(models.Model):
     def _onchange_periodicity(self):
         self.next_run_date = self._get_next_run_date()
 
-    @api.model
-    def create(self, vals):
-        digest = super(Digest, self).create(vals)
-        if not digest.next_run_date:
-             digest.next_run_date = digest._get_next_run_date()
-        return digest
+    @api.model_create_multi
+    def create(self, vals_list):
+        digests = super().create(vals_list)
+        for digest in digests:
+            if not digest.next_run_date:
+                digest.next_run_date = digest._get_next_run_date()
+        return digests
 
     # ------------------------------------------------------------
     # ACTIONS

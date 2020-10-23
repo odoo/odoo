@@ -77,35 +77,37 @@ class SnailmailLetter(models.Model):
         for res in self:
             res.reference = "%s,%s" % (res.model, res.res_id)
 
-    @api.model
-    def create(self, vals):
-        msg_id = self.env[vals['model']].browse(vals['res_id']).message_post(
-            body=_("Letter sent by post with Snailmail"),
-            message_type='snailmail'
-        )
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            msg_id = self.env[vals['model']].browse(vals['res_id']).message_post(
+                body=_("Letter sent by post with Snailmail"),
+                message_type='snailmail',
+            )
 
-        partner_id = self.env['res.partner'].browse(vals['partner_id'])
-        vals.update({
-            'message_id': msg_id.id,
-            'street': partner_id.street,
-            'street2': partner_id.street2,
-            'zip': partner_id.zip,
-            'city': partner_id.city,
-            'state_id': partner_id.state_id.id,
-            'country_id': partner_id.country_id.id,
-        })
-        letter = super(SnailmailLetter, self).create(vals)
+            partner_id = self.env['res.partner'].browse(vals['partner_id'])
+            vals.update({
+                'message_id': msg_id.id,
+                'street': partner_id.street,
+                'street2': partner_id.street2,
+                'zip': partner_id.zip,
+                'city': partner_id.city,
+                'state_id': partner_id.state_id.id,
+                'country_id': partner_id.country_id.id,
+            })
+        letters = super().create(vals_list)
 
-        self.env['mail.notification'].sudo().create({
-            'mail_message_id': msg_id.id,
-            'res_partner_id': partner_id.id,
-            'notification_type': 'snail',
-            'letter_id': letter.id,
-            'is_read': True,  # discard Inbox notification
-            'notification_status': 'ready',
-        })
+        for letter in letters:
+            self.env['mail.notification'].sudo().create({
+                'mail_message_id': letter.message_id.id,
+                'res_partner_id': letter.partner_id.id,
+                'notification_type': 'snail',
+                'letter_id': letter.id,
+                'is_read': True,  # discard Inbox notification
+                'notification_status': 'ready',
+            })
 
-        return letter
+        return letters
 
     def _fetch_attachment(self):
         """
