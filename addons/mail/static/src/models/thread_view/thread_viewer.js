@@ -13,7 +13,27 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @param {string} scrollTop
+         * @param {integer} scrollHeight
+         */
+        saveThreadCacheScrollHeightAsInitial(scrollHeight) {
+            if (!this.threadCache) {
+                return;
+            }
+            if (this.chatter) {
+                // Initial scroll height is disabled for chatter because it is
+                // too complex to handle correctly and less important
+                // functionally.
+                return;
+            }
+            this.update({
+                threadCacheInitialScrollHeights: Object.assign({}, this.threadCacheInitialScrollHeights, {
+                    [this.threadCache.localId]: scrollHeight,
+                }),
+            });
+        }
+
+        /**
+         * @param {integer} scrollTop
          */
         saveThreadCacheScrollPositionsAsInitial(scrollTop) {
             if (!this.threadCache) {
@@ -229,6 +249,15 @@ function factory(dependencies) {
                 'stringifiedDomain',
                 'thread',
             ],
+        }),
+        /**
+         * Determines the initial scroll height of thread caches, which is the
+         * scroll height at the time the last scroll position was saved.
+         * Useful to only restore scroll position when the corresponding height
+         * is available, otherwise the restore makes no sense.
+         */
+        threadCacheInitialScrollHeights: attr({
+            default: {},
         }),
         /**
          * Determines the initial scroll positions of thread caches.
