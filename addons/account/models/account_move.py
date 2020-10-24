@@ -2366,7 +2366,7 @@ class AccountMove(models.Model):
         for move in to_post:
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
-            if move.auto_post and move.date > fields.Date.context_today(self):
+            if move.auto_post and soft and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
 
