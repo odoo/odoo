@@ -12335,6 +12335,12 @@ msgstr "이름만으로는 새 '%s' 레코드를 만들 수 없습니다. 이러
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr "현재 사용자가 사용하고 있는 언어는 비활성화할 수 없습니다."
 
@@ -28073,15 +28079,6 @@ msgid ""
 msgstr ""
 "이 작업은 다음 그룹에만 허용됩니다 :\n"
 "%(groups_list)s"
-
-#. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"다른 트랜잭션이 이미 동일한 no-gap 시퀀스를 사용하고 있기 때문에 이 트랜잭션이 실행되지 않았습니다. 나중에 다시 시도하세요."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep

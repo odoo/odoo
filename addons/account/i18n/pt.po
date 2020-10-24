@@ -24,6 +24,7 @@
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # João Carvalho <jpldcarvalho+github@gmail.com>, 2020
+# Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: João Carvalho <jpldcarvalho+github@gmail.com>, 2020\n"
+"Last-Translator: Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +73,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Factura (Ref ${object.name or 'n/d'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -101,7 +102,7 @@ msgstr "%s (cópia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (arredondamento)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -158,7 +159,7 @@ msgstr "30% de Adiantamento; Final do Mês Seguinte"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr ""
+msgstr "30% Agora, Balanço 60 Dias"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -529,7 +530,7 @@ msgstr "<span>Ver</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in General Ledger\">Balanço na C.Geral</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1019,7 +1020,7 @@ msgstr "Diário de Conta"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr ""
+msgstr "Grupo de Diários"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
@@ -1113,7 +1114,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr ""
+msgstr "Linha de Relatório de Impostos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1187,7 +1188,7 @@ msgstr "Contas não conciliadas"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr ""
+msgstr "Primeiros 2 dígitos do conta "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1474,7 +1475,7 @@ msgstr "Adicionar um Diário "
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Add a journal group"
-msgstr ""
+msgstr "Adicione um grupo de diários"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
