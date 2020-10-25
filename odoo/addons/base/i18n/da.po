@@ -18,8 +18,8 @@
 # JonathanStein <jstein@image.dk>, 2020
 # Jesper Carstensen <info@danodoo.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# nle_odoo, 2020
 # Mads Søndergaard, 2020
+# nle_odoo, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
@@ -12255,6 +12255,14 @@ msgid ""
 msgstr ""
 "Kan ikke oprette ny '%s' posteringer udelukkende fra deres navn. Opret "
 "venligst disse posteringer manuelt, og prøv at importere dem igen."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+"Kan ikke deaktivere et sprog som på nuværende tidspunkt anvendes af "
+"kontakter."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -28027,16 +28035,6 @@ msgid ""
 msgstr ""
 "Denne operation er tilladt for grupperne:\n"
 "%(groups_list)s"
-
-#. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"Denne transaktion blev ikke gennemført, eftersom en anden transaktion "
-"allerede anvender den samme no-gap sekvens. Prøv venligst igen senere."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep

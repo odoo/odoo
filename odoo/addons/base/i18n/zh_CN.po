@@ -11418,6 +11418,12 @@ msgstr "无法仅从名称中创建新的%s记录。请手动创建这些记录�
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr "不能撤消当前用户使用的语言。"
 
@@ -26886,14 +26892,6 @@ msgid ""
 msgstr ""
 "组允许此操作：\n"
 "%(groups_list)s"
-
-#. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
