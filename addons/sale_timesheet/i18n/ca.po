@@ -10,6 +10,7 @@
 # M Palau <mpalau@tda.ad>, 2019
 # Arnau Ros, 2019
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
+# jabelchi <jabelchi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
+"Last-Translator: jabelchi <jabelchi@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -886,7 +887,7 @@ msgstr "Comanda de venda"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
 msgid "Sales Order Confirmation Date"
-msgstr ""
+msgstr "Data de confirmació de la comanda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_id
@@ -1288,6 +1289,12 @@ msgstr ""
 msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:76
+#, python-format
+msgid "You can not modify timesheets from different employees"
 msgstr ""
 
 #. module: sale_timesheet
