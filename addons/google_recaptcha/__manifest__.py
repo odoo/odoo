@@ -4,7 +4,7 @@
 {
     'name': 'Google reCAPTCHA integration',
     'category': 'Hidden',
-    'version': '1.0',
+    'version': '1.1',
     'description': """
         This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.
     """,
