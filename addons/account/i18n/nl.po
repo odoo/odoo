@@ -4315,6 +4315,9 @@ msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
+"Datum (inclusief) waarop de nummers opnieuw zijn gerangschikt. Indien niet "
+"ingesteld, worden alle boekingen tot het einde van de periode opnieuw "
+"gerangschikt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
@@ -4505,6 +4508,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
+"Geef aan in welke dagboeken deze rekening kan worden gebruikt. Indien leeg, "
+"kan in alle dagboeken worden gebruikt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5046,13 +5051,13 @@ msgstr "Boekingen zijn gehashed vanuit %s(%s)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries are not from the same account: %s != %s"
-msgstr ""
+msgstr "Boekingen zijn niet van dezelfde rekening: %s != %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries doesn't belong to the same company: %s != %s"
-msgstr ""
+msgstr "Boekingen behoren niet tot hetzelfde bedrijf: %s != %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5969,6 +5974,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
+"Indien aangevinkt, ontvangt de boekhoudkundige boeking of factuur een hash "
+"zodra deze is geboekt en kan deze niet meer worden gewijzigd."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6641,7 +6648,7 @@ msgstr "Is Afgeletterd met een Bankafschrift"
 #: model:ir.model.fields,field_description:account.field_account_move__is_move_sent
 #: model:ir.model.fields,field_description:account.field_account_payment__is_move_sent
 msgid "Is Move Sent"
-msgstr ""
+msgstr "Is boeking verzonden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__printed
@@ -7573,6 +7580,8 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
+"Aflettercode voor deze regel, 'P' als deze slechts gedeeltelijk is "
+"afgelettert, of de naam van de volledige afteterring als deze bestaat."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -7661,7 +7670,7 @@ msgstr "Memoriaal boekingen"
 #: code:addons/account/models/account_partial_reconcile.py:0
 #, python-format
 msgid "Missing foreign currencies on partials having ids: %s"
-msgstr ""
+msgstr "Ontbrekende vreemde valuta op gedeeltelijke transacties met ID's: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -7981,7 +7990,7 @@ msgstr "November"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
 msgid "Num Journals Without Account"
-msgstr ""
+msgstr "Aantal dagboeken zonder rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -8044,6 +8053,8 @@ msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
 msgstr ""
+"Aantal maanden in het verleden om rekening mee te houden bij het toepassen "
+"van dit model."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -8084,6 +8095,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoice(s)."
 msgstr ""
+"Odoo laat u toe om een afschriftregel direct met de gerelateerde\n"
+"verkoop- of leveranciersfactuur af te letteren. "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -8238,7 +8251,7 @@ msgstr "Openingssaldo"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__opening_balance
 msgid "Opening balance value for this account."
-msgstr ""
+msgstr "Openingsbalanswaarde voor deze rekening."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__opening_credit
@@ -8306,7 +8319,7 @@ msgstr "Bron"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_move_id
 msgid "Origin Tax Cash Basis Entry"
-msgstr ""
+msgstr "Bron kassttelsel BTW boeking"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
@@ -8321,7 +8334,7 @@ msgstr "Herkomst van betaling"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 msgid "Originator Statement Line"
-msgstr ""
+msgstr "Initiator bankafschriftregel "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -8375,6 +8388,12 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
+"Uitgaande betalingen die worden geactiveerd door "
+"leveranciersfacturen/creditfacfuren, worden geboekt op de rekening voor "
+"openstaande betalingen en weergegeven als blauwe regels bij het afletteren. "
+"Tijdens het afletterproces worden de betreffende transacties afgelettert met"
+" boekingen op de rekening voor openstaande betalingen in plaats van de "
+"rekening voor te betalen bedragen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8577,7 +8596,7 @@ msgstr "Relatiesoort"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr ""
+msgstr "Relatiemapping voor aflettermodellen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
@@ -8927,6 +8946,8 @@ msgstr "Stel een positieve afrondingswaarde in."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
+"Stel ten minste één van de afletter-teksten in om een relatiemapping te "
+"maken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9022,6 +9043,8 @@ msgid ""
 "Posted journal entry must have an unique sequence number per company.\n"
 "Problematic numbers: %s\n"
 msgstr ""
+"Geboekte boekingen moeten een uniek volgnummer per bedrijf hebben.\n"
+"Problematische nummers: %s\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10363,7 +10386,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__sequence_prefix
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 msgid "Sequence Prefix"
-msgstr ""
+msgstr "Reeks voorvoegsel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
@@ -10372,6 +10395,9 @@ msgid ""
 " first). This order is applied locally per section (so, children of the same"
 " line are always rendered one after the other)."
 msgstr ""
+"Volgorde die de volgorde van de regels in het rapport bepaalt (kleinere "
+"komen eerst). Deze volgorde wordt lokaal per sectie toegepast (dus "
+"onderliggende van dezelfde regel worden altijd achter elkaar weergegeven)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
@@ -10482,11 +10508,13 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
+"Kortere naam gebruikt voor weergave. De boekingen van dit dagboek krijgen "
+"standaard ook een naam met dit voorvoegsel."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "Toon volledige boekhoudkundige opties - Alleen lezen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -10590,6 +10618,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
+"Sommige boekingsregels bestaan al met deze rekening, maar in andere "
+"dagboeken dan de toegestane."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -10729,7 +10759,7 @@ msgstr "Afschriften"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_ids
 msgid "Statements matched to this payment"
-msgstr ""
+msgstr "Afschriften die bij deze betaling horen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -10860,6 +10890,8 @@ msgid ""
 "Tag name and formula are mutually exclusive, they should not be set together"
 " on the same tax report line."
 msgstr ""
+"Labelnaam en formule sluiten elkaar uit, ze mogen niet samen op dezelfde "
+"BTW-rapportregel worden ingesteld."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -10954,7 +10986,7 @@ msgstr "BTW kasbasis dagboek"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr ""
+msgstr "BTW afsluitboeking"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -12047,7 +12079,7 @@ msgstr ""
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr ""
+msgstr "De boeking van waaruit deze kasstelsel BTW boeking is aangemaakt."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12506,6 +12538,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"Er is geen BTW kasstelsel dagboek gedefinieerd voor dit bedrijf: '%s'\n"
+"Configureer het onder Boekhouding/Configuratie/Instellingen"
 
 #. module: account
 #: code:addons/account/models/company.py:0

@@ -36,7 +36,7 @@ msgstr "\"URL naar\" kan niet leeg zijn."
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must start with a leading slash."
-msgstr ""
+msgstr "\"URL naar\" moet beginnen met een schuine slash."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -136,6 +136,8 @@ msgid ""
 "(see e.g. Opinion\n"
 "            04/2012 on Cookie Consent Exemption by the EU Art.29 WP)."
 msgstr ""
+"(zie bijvoorbeeld Opinion\n"
+"04/2012 over vrijstelling van toestemming voor cookies door de EU, artikel 29 WP)."
 
 #. module: website
 #. openerp-web
@@ -145,6 +147,8 @@ msgid ""
 "* provided that your analytics is anonymized, which is not the\n"
 "            case by default with Google Analytics."
 msgstr ""
+"* op voorwaarde dat uw analyses geanonimiseerd zijn, wat niet de\n"
+"case standaard met Google Analytics."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_address_logo
@@ -162,6 +166,8 @@ msgid ""
 ".\n"
 "                                                The website will still work if you reject or discard those cookies."
 msgstr ""
+".\n"
+"De website werkt nog steeds als u deze cookies weigert of verwijdert."
 
 #. module: website
 #. openerp-web
@@ -357,6 +363,10 @@ msgid ""
 "                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
 "                    <code class=\"ml-4\">Allow: *</code>"
 msgstr ""
+"<br/><br/>\n"
+"                    Voorbeeld van regel:<br/>\n"
+"                    <code class=\"ml-4\">Niet toestaan: /web/login</code><br/>\n"
+"                    <code class=\"ml-4\">Toestaan: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -379,7 +389,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
 msgid "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px; font-weight: bold;\">Pakkende kop</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -399,7 +409,7 @@ msgstr "<font style=\"font-size: 62px;\">Slide titel</font>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 msgid "<font style=\"font-size: 62px;\">Win $20</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\">Win $20</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title
@@ -572,7 +582,7 @@ msgstr "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_dish
 msgid "<i>Add a description here</i>"
-msgstr ""
+msgstr "<i>Voeg hier een beschrijving toe</i>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -622,6 +632,9 @@ msgid ""
 "                                            <i class=\"fa fa-info\"/>: type some of the first chars after 'google' is enough, we'll guess the rest.\n"
 "                                        </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                            <i class=\"fa fa-info\"/>: typ enkele van de eerste tekens na 'google' voldoende is, we raden het rest.\n"
+"                                        </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -919,7 +932,7 @@ msgstr "Een relatie is gekoppeld aan slechts één bezoeker."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "A short description of this great feature."
-msgstr ""
+msgstr "Een korte beschrijving van deze geweldige functie."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -1048,6 +1061,7 @@ msgstr "Voeg een Google lettertype toe"
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid "Add a caption to enhance the meaning of this image."
 msgstr ""
+"Voeg een bijschrift toe om de betekenis van deze afbeelding te versterken."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -1057,7 +1071,7 @@ msgstr "Voeg een geweldige slogan toe"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Add a menu description."
-msgstr ""
+msgstr "Voeg een menubeschrijving toe."
 
 #. module: website
 #. openerp-web
@@ -1101,6 +1115,8 @@ msgid ""
 "Adding a font requires a reload of the page. This will save all your "
 "changes."
 msgstr ""
+"Om een lettertype toe te voegen, moet de pagina opnieuw worden geladen. "
+"Hiermee worden al uw wijzigingen opgeslagen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1140,6 +1156,9 @@ msgid ""
 "do. She mentors 100+ in-house developers and looks after the community of "
 "thousands of developers."
 msgstr ""
+"Aline is een van de iconische mensen in het leven die kunnen zeggen dat ze "
+"houden van wat ze doen. Ze begeleidt meer dan 100 interne ontwikkelaars en "
+"zorgt voor de gemeenschap van duizenden ontwikkelaars."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__
@@ -1211,14 +1230,14 @@ msgstr "Kostenplaatsen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Analytics cookies and privacy information."
-msgstr ""
+msgstr "Analytics cookies en privacy-informatie."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Anchor copied to clipboard<br>Link: %s"
-msgstr ""
+msgstr "Anker gekopieerd naar klembord<br> Link: %s"
 
 #. module: website
 #. openerp-web
@@ -1325,6 +1344,8 @@ msgid ""
 "Authenticate users, protect user data and allow the website to deliver the services users expects,\n"
 "                                                such as maintaining the content of their cart, or allowing file uploads."
 msgstr ""
+"Verifieer gebruikers, bescherm gebruikersgegevens en laat de website de diensten leveren die gebruikers verwachten,\n"
+"zoals het bijhouden van de inhoud van hun winkelwagentje of het uploaden van bestanden."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_search
@@ -1346,7 +1367,7 @@ msgstr "Beschikbaar op de website"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Backdrop"
-msgstr ""
+msgstr "Achtergrond"
 
 #. module: website
 #. openerp-web
@@ -1376,7 +1397,7 @@ msgstr "Achtergrond positie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Bar Horizontal"
-msgstr ""
+msgstr "Balk horizontaal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -1411,7 +1432,7 @@ msgstr "Prachtige snippets"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Beef Carpaccio"
-msgstr ""
+msgstr "Rundercarpaccio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1443,7 +1464,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Bootstrap-based templates"
-msgstr ""
+msgstr "Bootstrap-gebaseerde sjablonen"
 
 #. module: website
 #. openerp-web
@@ -1510,6 +1531,8 @@ msgstr ""
 #, python-format
 msgid "By clicking on this banner, you give us permission to collect data."
 msgstr ""
+"Door op deze banner te klikken, geeft u ons toestemming om gegevens te "
+"verzamelen."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -1587,6 +1610,8 @@ msgid ""
 "Change theme in a few clicks, and browse through Odoo's catalog of\n"
 "                            ready-to-use themes available in our app store."
 msgstr ""
+"Verander het thema in een paar klikken en blader door Odoo's catalogus van\n"
+"kant-en-klare thema's beschikbaar in onze app store."
 
 #. module: website
 #. openerp-web
@@ -1596,6 +1621,9 @@ msgid ""
 "Changing the color palette will reset all your color customizations, are you"
 " sure you want to proceed?"
 msgstr ""
+"Als u het kleurenpalet wijzigt, worden al uw kleuraanpassingen gereset. Weet"
+" u zeker dat u wilt doorgaan? Als u het kleurenpalet wijzigt, worden al uw "
+"kleuraanpassingen gereset. Weet u zeker dat u wilt doorgaan?"
 
 #. module: website
 #. openerp-web
@@ -1606,6 +1634,9 @@ msgid ""
 "changes, are you sure you want to proceed? Be careful that changing the "
 "theme will reset all your color customizations."
 msgstr ""
+"Om het thema te veranderen, moet u de editor verlaten. Hiermee worden al uw "
+"wijzigingen opgeslagen. Weet u zeker dat u wilt doorgaan? Pas op dat als u "
+"het thema wijzigt, al uw kleuraanpassingen worden gereset."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -1615,17 +1646,17 @@ msgstr "Grafiek"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 msgid "Check out now and get $20 off your first order."
-msgstr ""
+msgstr "Bekijk nu en ontvang € 20 korting op uw eerste bestelling."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Cheese Onion Rings"
-msgstr ""
+msgstr "Kaas uienringen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Chefs Fresh Soup of the Day"
-msgstr ""
+msgstr "Chef-koks verse soep van de dag"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
@@ -1701,6 +1732,8 @@ msgid ""
 "Click and change content directly from the front-end: no complex back\n"
 "                            end to deal with."
 msgstr ""
+"Klik en verander inhoud rechtstreeks vanaf de front-end: geen complexe achterkant\n"
+"einde om mee om te gaan."
 
 #. module: website
 #. openerp-web
@@ -1759,7 +1792,7 @@ msgstr "Sluiten"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Close Button Color"
-msgstr ""
+msgstr "Kleur van afsluitknop"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1788,6 +1821,11 @@ msgid ""
 "resize and duplicate the blocks to create your own layout. Add images or "
 "icons to customize the blocks."
 msgstr ""
+"Kleurblokken zijn een eenvoudige en effectieve manier om uw <b>inhoud te "
+"presenteren en te markeren</b>. Kies een afbeelding of een kleur voor de "
+"achtergrond. U kunt de blokken zelfs vergroten of verkleinen en dupliceren "
+"om uw eigen lay-out te creëren. Voeg afbeeldingen of pictogrammen toe om de "
+"blokken aan te passen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -1951,7 +1989,7 @@ msgstr "Cookiebeleid"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "Cookie bars may significantly impair the experience"
-msgstr ""
+msgstr "Cookie bars kunnen de ervaring aanzienlijk verminderen"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_cookies_bar
@@ -1972,6 +2010,15 @@ msgid ""
 "                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer\n"
 "                            better site experiences and tools in the future."
 msgstr ""
+"Cookies zijn kleine stukjes tekst die door onze servers naar uw computer of apparaat worden gestuurd wanneer u onze services opent.\n"
+"Ze worden opgeslagen in uw browser en later teruggestuurd naar onze servers, zodat we contextuele inhoud kunnen bieden.\n"
+"Zonder cookies zou het gebruik van internet een veel frustrerender ervaring zijn.\n"
+"We gebruiken ze om uw activiteiten op onze website te ondersteunen. Bijvoorbeeld uw sessie (zodat u niet opnieuw hoeft in te loggen) of uw winkelwagen.\n"
+"\n"
+"Cookies worden ook gebruikt om ons te helpen uw voorkeuren te begrijpen op basis van eerdere of huidige activiteit op onze website (de pagina's die u heeft\n"
+"bezocht), uw taal en land, waardoor wij u betere diensten kunnen verlenen.\n"
+"We gebruiken ook cookies om ons te helpen geaggregeerde gegevens over siteverkeer en site-interactie samen te stellen, zodat we deze kunnen aanbieden\n"
+"betere site-ervaringen en tools in de toekomst."
 
 #. module: website
 #. openerp-web
@@ -2023,7 +2070,7 @@ msgstr "Cover eigenschappen"
 #. module: website
 #: model:ir.model,name:website.model_website_cover_properties_mixin
 msgid "Cover Properties Website Mixin"
-msgstr ""
+msgstr "Omslageigenschappen Website Mixin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -2051,6 +2098,8 @@ msgid ""
 "Create your page from scratch by dragging and dropping pre-made,\n"
 "                            fully customizable building blocks."
 msgstr ""
+"Maak uw pagina helemaal opnieuw door vooraf gemaakte bestanden te slepen en neer te zetten,\n"
+"volledig aanpasbare bouwstenen."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__create_uid
@@ -2109,14 +2158,14 @@ msgstr "Aangepast einde van <body> code"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom end of body code"
-msgstr ""
+msgstr "Aangepast einde van de body-code"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom head code"
-msgstr ""
+msgstr "Aangepaste header-code"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
@@ -2132,7 +2181,7 @@ msgstr "Klanten"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Customization tool"
-msgstr ""
+msgstr "Tool voor aanpassingen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -2287,6 +2336,9 @@ msgid ""
 "Deleting a font requires a reload of the page. This will save all your "
 "changes and reload the page, are you sure you want to proceed?"
 msgstr ""
+"Als u een lettertype wilt verwijderen, moet de pagina opnieuw worden "
+"geladen. Hiermee worden al uw wijzigingen opgeslagen en wordt de pagina "
+"opnieuw geladen. Weet u zeker dat u wilt doorgaan?"
 
 #. module: website
 #. openerp-web
@@ -2311,7 +2363,7 @@ msgstr "Omschrijvingen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Design features"
-msgstr ""
+msgstr "Ontwerpkenmerken"
 
 #. module: website
 #. openerp-web
@@ -2333,7 +2385,7 @@ msgstr "Autoplay uitschakelen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Disappearing"
-msgstr ""
+msgstr "Verdwijnend"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2357,7 +2409,7 @@ msgstr "Negeren"
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "Discard & Edit in backend"
-msgstr ""
+msgstr "Negeer en bewerken in backend"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -2599,6 +2651,8 @@ msgid ""
 "Easily design your own Odoo templates thanks to clean HTML\n"
 "                            structure and bootstrap CSS."
 msgstr ""
+"Ontwerp eenvoudig uw eigen Odoo-sjablonen dankzij schone HTML\n"
+"structuur en bootstrap CSS."
 
 #. module: website
 #. openerp-web
@@ -2701,11 +2755,13 @@ msgstr "E-mail ondersteuning"
 msgid ""
 "Enter code that will be added before the </body> of every page of your site."
 msgstr ""
+"Voer de code in die vóór de </body> van elke pagina van uw site wordt "
+"toegevoegd."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Enter code that will be added into every page of your site"
-msgstr ""
+msgstr "Voer de code in die wordt toegevoegd aan elke pagina van uw site"
 
 #. module: website
 #. openerp-web
@@ -2714,6 +2770,8 @@ msgstr ""
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr ""
+"Voer de code in die zal worden toegevoegd aan de <head> van elke pagina van "
+"uw site."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2733,7 +2791,7 @@ msgstr "Evenement"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Event heading"
-msgstr ""
+msgstr "Event heading"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -2808,7 +2866,7 @@ msgstr "Kon \"%s\" niet installeren"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Farm Friendly Chicken Supreme"
-msgstr ""
+msgstr "Farm Friendly Chicken Supreme"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2857,7 +2915,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Filet Mignon 8oz"
-msgstr ""
+msgstr "Filet Mignon 8ogr"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -2868,7 +2926,7 @@ msgstr "Vullen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Fill and justify"
-msgstr ""
+msgstr "Invullen en uitvullen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -2915,7 +2973,7 @@ msgstr "Eerste pagina die linkt naar deze weergave"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fit content"
-msgstr ""
+msgstr "Passende inhoud"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2964,7 +3022,7 @@ msgstr "Sjabloon voettekst"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "For session cookies, authentification and analytics*,"
-msgstr ""
+msgstr "Voor sessiecookies, authenticatie en analyse *,"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2988,6 +3046,9 @@ msgid ""
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing, and customer experience strategies."
 msgstr ""
+"Oprichter en chief visionair, Tony is de drijvende kracht achter het bedrijf. Hij houd van\n"
+"zijn handen vol houden door mee te werken aan de ontwikkeling van de software,\n"
+"marketing- en klantervaringsstrategieën."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
@@ -2997,7 +3058,7 @@ msgstr "Gratis registratie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Friends' Faces"
-msgstr ""
+msgstr "Gezichten van vrienden"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -3179,6 +3240,7 @@ msgstr "Google Search console"
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
 msgstr ""
+"Google-sleutel of Schakel in om toegang te krijgen tot het eerste antwoord"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3193,6 +3255,11 @@ msgid ""
 " story will sound fake and lack emotion. No one will be interested. Write "
 "for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
+"Geweldige verhalen zijn <b>voor iedereen</b>, zelfs als ze maar <b>voor één "
+"persoon</b> zijn geschreven. Als je probeert te schrijven met een breed, "
+"algemeen publiek in gedachten, zal je verhaal nep klinken en emotie missen. "
+"Niemand zal geïnteresseerd zijn. Schrijf voor één persoon. Als het echt is "
+"voor de ene, is het echt voor de rest."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -3203,6 +3270,12 @@ msgid ""
 "small quirks like word choices or phrases. Write from your point of view, "
 "not from someone else's experience."
 msgstr ""
+"Geweldige verhalen hebben een <b>persoonlijkheid</b>. Overweeg om een "
+"geweldig verhaal te vertellen dat persoonlijkheid geeft. Het schrijven van "
+"een verhaal met persoonlijkheid voor potentiële klanten helpt bij het maken "
+"van een relatie. Dit komt tot uiting in kleine eigenaardigheden zoals "
+"woordkeuzes of zinsdelen. Schrijf vanuit jouw standpunt, niet vanuit de "
+"ervaring van iemand anders."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -3271,7 +3344,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__has_social_default_image
 msgid "Has Social Default Image"
-msgstr ""
+msgstr "Heeft een sociale standaardafbeelding"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
@@ -3354,6 +3427,8 @@ msgid ""
 "Here is an overview of the cookies that may be stored on your device when "
 "you visit our website:"
 msgstr ""
+"Hier is een overzicht van de cookies die op uw apparaat kunnen worden "
+"opgeslagen wanneer u onze website bezoekt:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -3512,6 +3587,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "If set, replaces the website logo as the default social share image."
 msgstr ""
+"Indien ingesteld, vervangt het het logo van de website als de "
+"standaardafbeelding voor sociaal delen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -3554,6 +3631,9 @@ msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
 msgstr ""
+"Als u de huidige bewerkingen verwijdert, gaan alle niet-opgeslagen "
+"wijzigingen verloren. U kunt annuleren om terug te keren naar de "
+"bewerkingsmodus."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
@@ -3639,7 +3719,7 @@ msgstr "Inline"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Inner"
-msgstr ""
+msgstr "Binnenste"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -3647,11 +3727,13 @@ msgid ""
 "Insert text styles like headers, bold, italic, lists, and fonts with\n"
 "                            a simple WYSIWYG editor. Flexible and easy to use."
 msgstr ""
+"Voeg tekststijlen zoals kopteksten, vet, cursief, lijsten en lettertypen in met\n"
+"een eenvoudige WYSIWYG-editor. Flexibel en gebruiksvriendelijk."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow
 msgid "Inset"
-msgstr ""
+msgstr "Inzet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3735,6 +3817,10 @@ msgid ""
 "numbers and improves them. She is determined to drive success and delivers "
 "her professional acumen to bring the company to the next level."
 msgstr ""
+"Iris, met haar internationale ervaring, helpt ons de cijfers gemakkelijk te "
+"begrijpen en te verbeteren. Ze is vastbesloten om succes te stimuleren en "
+"levert haar professionele inzicht om het bedrijf naar een hoger niveau te "
+"tillen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
@@ -3785,6 +3871,9 @@ msgid ""
 "It appears you are in debug=assets mode, all theme customization options "
 "require a page reload in this mode."
 msgstr ""
+"Het lijkt erop dat u zich in de modus debug = assets bevindt, alle opties "
+"voor het aanpassen van thema's vereisen dat de pagina opnieuw wordt geladen "
+"in deze modus."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3794,6 +3883,10 @@ msgid ""
 "            we recommend you to try to use the new color system, which is\n"
 "            still customizable."
 msgstr ""
+"Het lijkt erop dat uw website nog steeds het oude kleurensysteem van\n"
+"Odoo 13.0 op sommige plaatsen. We hebben ervoor gezorgd dat het nog steeds werkt, maar\n"
+"we raden u aan om het nieuwe kleursysteem te gebruiken, welke\n"
+"nog steeds aanpasbaar is."
 
 #. module: website
 #. openerp-web
@@ -4040,7 +4133,7 @@ msgstr "Achtergrond lay-out"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background Color"
-msgstr ""
+msgstr "Layout achtergrondkleur"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -4348,6 +4441,9 @@ msgid ""
 "Commercial Director in the software industry, Mich has helped the company to"
 " get where it is today. Mich is among the best minds."
 msgstr ""
+"Mich gaat graag uitdagingen aan. Met zijn meerjarige ervaring als "
+"commercieel directeur in de software-industrie heeft Mich het bedrijf "
+"geholpen om te komen waar het nu is. Mich is een van de knapste koppen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -4419,6 +4515,10 @@ msgid ""
 "push notification. If they have completed one of your forms, you can send "
 "them an SMS, or call them right away while they are browsing your website."
 msgstr ""
+"Volg uw bezoekers terwijl ze op uw website browsen met de Odoo Social app. "
+"Betrek ze met slechts één klik via een livechatverzoek of een pushmelding. "
+"Als ze een van uw formulieren hebben ingevuld, kunt u ze een sms sturen of "
+"ze meteen bellen terwijl ze op uw website browsen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -4524,7 +4624,7 @@ msgstr "Smal"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Network Advertising Initiative opt-out page"
-msgstr ""
+msgstr "Afmeldingspagina voor Network Advertising Initiative"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4661,6 +4761,8 @@ msgid ""
 "Note that some third-party services may install additional cookies on your "
 "browser in order to identify you."
 msgstr ""
+"Houd er rekening mee dat sommige services van derden aanvullende cookies in "
+"uw browser kunnen installeren om u te identificeren."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4715,7 +4817,7 @@ msgstr "Bij verlaten"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "On Hover"
-msgstr ""
+msgstr "Bij muis-over"
 
 #. module: website
 #. openerp-web
@@ -4749,6 +4851,8 @@ msgid ""
 "Once the user closes the popup, it won't be shown again for that period of "
 "time."
 msgstr ""
+"Zodra de gebruiker de pop-up sluit, wordt deze gedurende die periode niet "
+"meer weergegeven."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -4826,7 +4930,7 @@ msgstr "Uitlijning"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow
 msgid "Outset"
-msgstr ""
+msgstr "Begin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -5270,6 +5374,8 @@ msgid ""
 "Remember information about the preferred look or behavior of the website, "
 "such as your preferred language or region."
 msgstr ""
+"Onthoud informatie over het uiterlijk of het gedrag van de website, zoals uw"
+" voorkeurstaal of regio."
 
 #. module: website
 #. openerp-web
@@ -5321,7 +5427,7 @@ msgstr "Terugzetten naar initiële versie (harde reset)."
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #, python-format
 msgid "Respecting your privacy is our priority."
-msgstr ""
+msgstr "Het respecteren van uw privacy is onze prioriteit."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -5733,7 +5839,7 @@ msgstr "Naar beneden schuiven"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Left"
-msgstr ""
+msgstr "Schuif links"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -5743,7 +5849,7 @@ msgstr "Naar rechts schuiven"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Up"
-msgstr ""
+msgstr "Schuif omhoog"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -6372,7 +6478,7 @@ msgstr "Tip: Search Engine Optimization (SEO)"
 #: model:digest.tip,name:website.digest_tip_website_1
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_1
 msgid "Tip: Use royalty-free photos"
-msgstr ""
+msgstr "Tip: gebruik royaltyvrije foto's"
 
 #. module: website
 #. openerp-web
@@ -6405,6 +6511,11 @@ msgid ""
 "will recommend you the best keywords to target. Then adapt your title and "
 "description accordingly to boost your traffic."
 msgstr ""
+"Om meer bezoekers te krijgen, moet u zich richten op zoekwoorden die vaak in"
+" Google worden gezocht. Met de ingebouwde SEO-tool zal Odoo u, zodra u een "
+"paar trefwoorden definieert, de beste trefwoorden aanbevelen die u kunt "
+"targeten. Pas vervolgens uw titel en beschrijving dienovereenkomstig aan om "
+"uw bezoekersaantallen te stimuleren."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6541,7 +6652,7 @@ msgstr "Transparant op deze pagina"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Tuna and Salmon Burger"
-msgstr ""
+msgstr "Tonijn en zalmburger"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -6643,6 +6754,8 @@ msgid ""
 "Understand how visitors engage with our website, via Google Analytics.\n"
 "                                                Learn more about"
 msgstr ""
+"Begrijp hoe bezoekers omgaan met onze website, via Google Analytics.\n"
+"Leer meer over"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.index_management
@@ -6712,7 +6825,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_default_share_image
 msgid "Use a image by default for sharing"
-msgstr ""
+msgstr "Gebruik standaard een afbeelding om te delen"
 
 #. module: website
 #. openerp-web
@@ -6742,6 +6855,9 @@ msgid ""
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
 msgstr ""
+"Gebruik deze snippet om verschillende soorten componenten samen te stellen "
+"met een links of rechts uitgelijnde afbeelding naast tekstuele inhoud. "
+"Dupliceer het element om een lijst te maken die aan uw behoeften voldoet."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -6749,6 +6865,9 @@ msgid ""
 "Use this snippet to presents your content in a slideshow-like format. Don't "
 "write about products or services here, write about solutions."
 msgstr ""
+"Gebruik deze snippet om uw inhoud in een op een diavoorstelling lijkende "
+"indeling te presenteren.Schrijf hier niet over producten of diensten, "
+"schrijf over oplossingen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -6805,6 +6924,8 @@ msgid ""
 "Used to make advertising more engaging to users and more valuable to publishers and advertisers,\n"
 "                                                such as providing more relevant ads when you visit other websites that display ads or to improve reporting on ad campaign performance."
 msgstr ""
+"Wordt gebruikt om advertenties aantrekkelijker te maken voor gebruikers en waardevoller voor uitgevers en adverteerders,\n"
+"zoals het aanbieden van relevantere advertenties wanneer u andere websites bezoekt waarop advertenties worden weergegeven of om de rapportage over de prestaties van advertentiecampagnes te verbeteren."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_country_group_ids
@@ -6936,7 +7057,7 @@ msgstr "Zichtbaarheid wachtwoord"
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__visibility_password_display
 #: model:ir.model.fields,field_description:website.field_website_page__visibility_password_display
 msgid "Visibility Password Display"
-msgstr ""
+msgstr "Zichtbaarheid wachtwoordweergave"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__group_ids
@@ -7082,6 +7203,8 @@ msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
 "standard for compliance."
 msgstr ""
+"We ondersteunen momenteel geen Do Not Track-signalen, aangezien er geen "
+"industriestandaard is voor naleving."
 
 #. module: website
 #. openerp-web
@@ -7096,6 +7219,8 @@ msgid ""
 "We may not be able to provide the best service to you if you reject those "
 "cookies, but the website will work."
 msgstr ""
+"We kunnen u mogelijk niet de beste service bieden als u die cookies weigert,"
+" maar de website werkt wel."
 
 #. module: website
 #. openerp-web
@@ -7104,7 +7229,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
 msgid "We use cookies to provide you a better user experience."
-msgstr ""
+msgstr "We gebruiken cookies om u een betere gebruikerservaring te bieden."
 
 #. module: website
 #. openerp-web
@@ -7114,6 +7239,9 @@ msgid ""
 "We use them to store info about your habits on our website. It will helps us"
 " to provide you the very best experience and customize what you see."
 msgstr ""
+"We gebruiken ze om informatie over uw gewoontes op onze website op te slaan."
+" Het helpt ons om u de allerbeste ervaring te bieden en om te personaliseren"
+" wat u ziet."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -7399,6 +7527,8 @@ msgstr "Breedte"
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
 msgstr ""
+"Wordt voorafgegaan door http in canonieke URL's als er geen schema is "
+"opgegeven"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
@@ -7455,11 +7585,13 @@ msgid ""
 "You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.\n"
 "                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies."
 msgstr ""
+"U kunt ervoor kiezen om uw computer u te laten waarschuwen telkens wanneer een cookie wordt verzonden, of u kunt ervoor kiezen om alle cookies uit te schakelen.\n"
+"Elke browser is een beetje anders, dus kijk in het Help-menu van uw browser voor de juiste manier om uw cookies aan te passen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "You can edit colors and backgrounds to highlight features."
-msgstr ""
+msgstr "U kunt kleuren en achtergronden bewerken om objecten te markeren."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -7516,12 +7648,14 @@ msgstr ""
 #: code:addons/website/models/res_config_settings.py:0
 #, python-format
 msgid "You haven't defined your domain"
-msgstr ""
+msgstr "U heeft uw domein niet gedefinieerd"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr ""
+"U kunt zich afmelden voor het gebruik van cookies door een derde partij door"
+" de"
 
 #. module: website
 #. openerp-web
@@ -7594,6 +7728,8 @@ msgid ""
 "Your experience may be degraded if you discard those cookies, but the "
 "website will still work."
 msgstr ""
+"Uw ervaring kan verslechteren als u die cookies weggooit, maar de website "
+"zal nog steeds werken."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -7629,6 +7765,8 @@ msgid ""
 "__gads (Google)<br/>\n"
 "                                            __gac (Google)"
 msgstr ""
+"__gads (Google)<br/>\n"
+"                                            __gac (Google)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -7715,6 +7853,10 @@ msgid ""
 "                                            utm_source (Odoo)<br/>\n"
 "                                            utm_medium (Odoo)"
 msgstr ""
+"im_livechat_previous_operator_pid (Odoo)<br/>\n"
+"                                            utm_campaign (Odoo)<br/>\n"
+"                                            utm_source (Odoo)<br/>\n"
+"                                            utm_medium (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -7742,6 +7884,10 @@ msgid ""
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
 msgstr ""
+"van\n"
+"uw bezoekers. We raden je aan ze te vermijden, tenzij je dat hebt gedaan\n"
+"geverifieerd bij een juridisch adviseur dat u absoluut een cookie nodig heeft\n"
+"toestemming in uw land."
 
 #. module: website
 #. openerp-web

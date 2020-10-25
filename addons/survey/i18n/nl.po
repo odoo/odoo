@@ -414,12 +414,12 @@ msgstr "<span class=\"text-muted\">Succes</span>"
 msgid ""
 "<span class=\"text-muted\">The code is found on the screen in front of "
 "you</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">De code staat op het scherm voor je.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "<span>Code is incorrect. Please try again.</span>"
-msgstr ""
+msgstr "<span>Code is onjuist. Probeer het a.u.b. opnieuw.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -472,7 +472,7 @@ msgstr "Er heeft zich een probleem voorgedaan"
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
 msgid "A question is either skipped, either answered. Not both."
-msgstr ""
+msgstr "Een vraag wordt overgeslagen of beantwoord. Niet beide."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
@@ -565,6 +565,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
 msgstr ""
+"Alle \"Is een gescoorde vraag = Waar\" en \"Vraagtype: Datum\" vragen hebben"
+" een antwoord nodig."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
@@ -572,6 +574,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
+"Alle \"Is een gescoorde vraag = Waar\" en \"Vraagtype: Datum\" vragen hebben"
+" een antwoord nodig."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -581,7 +585,7 @@ msgstr "Alle vragen"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "All surveys"
-msgstr ""
+msgstr "Alle enquêtes"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -591,12 +595,13 @@ msgstr "Commentaren toestaan"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
 msgid "An access token must be unique!"
-msgstr ""
+msgstr "Een toegangstoken moet uniek zijn!"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_answer_score
 msgid "An answer score for a non-multiple choice question cannot be negative!"
 msgstr ""
+"Een antwoordscore voor een niet-meerkeuzevraag mag niet negatief zijn!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -621,7 +626,7 @@ msgstr "Antwoord deadline"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
 msgid "Answer that will trigger the display the current question."
-msgstr ""
+msgstr "Antwoord waarmee de huidige vraag wordt weergegeven."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -689,6 +694,8 @@ msgid ""
 "Attendee nickname, mainly used to identify him in the survey session "
 "leaderboard."
 msgstr ""
+"Bijnaam van deelnemer, voornamelijk gebruikt om hem te identificeren in het "
+"scorebord van de enquêtesessie."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -698,7 +705,7 @@ msgstr "Deelnemers zijn de vraag aan het beantwoorden..."
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_speed_rating
 msgid "Attendees get more points if they answer quickly"
-msgstr ""
+msgstr "Bezoekers krijgen meer punten als ze snel antwoorden."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
@@ -937,13 +944,13 @@ msgstr "E-mail opstellen"
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
 msgid "Computing score requires a question in arguments."
-msgstr ""
+msgstr "Het berekenen van de score vereist een vraag in argumenten."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_conditional
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Conditional Display"
-msgstr ""
+msgstr "Voorwaardelijke weergave"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -963,7 +970,7 @@ msgstr "Contact"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_conditional_questions
 msgid "Contains conditional questions"
-msgstr ""
+msgstr "Bevat voorwaardelijke vragen."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body
@@ -998,32 +1005,32 @@ msgstr "Correct antwoord"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_datetime
 msgid "Correct date and time answer for this question."
-msgstr ""
+msgstr "Correct datum- en tijdantwoord voor deze vraag."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_date
 msgid "Correct date answer"
-msgstr ""
+msgstr "Juiste datumantwoord"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_date
 msgid "Correct date answer for this question."
-msgstr ""
+msgstr "Juiste datumantwoord voor deze vraag."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_datetime
 msgid "Correct datetime answer"
-msgstr ""
+msgstr "Juiste datum antwoord"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_numerical_box
 msgid "Correct number answer for this question."
-msgstr ""
+msgstr "Juiste cijferantwoord voor deze vraag."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_numerical_box
 msgid "Correct numerical answer"
-msgstr ""
+msgstr "Juist numeriek antwoord."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1098,17 +1105,17 @@ msgstr "Huidige vraag"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_start_time
 msgid "Current Question Start Time"
-msgstr ""
+msgstr "Huidige starttijd van de vraag"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_start_time
 msgid "Current Session Start Time"
-msgstr ""
+msgstr "Starttijd huidige sessie"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_time_limited
 msgid "Currently only supported for live sessions."
-msgstr ""
+msgstr "Momenteel alleen ondersteund voor live-sessies."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1213,6 +1220,8 @@ msgid ""
 "Display images in addition to answer label. Valid only for simple / multiple"
 " choice questions."
 msgstr ""
+"Geef naast het antwoordlabel ook afbeeldingen weer. Alleen geldig voor "
+"eenvoudige / meerkeuzevragen."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__draft
@@ -1293,7 +1302,7 @@ msgstr "Finale scorebord"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Finished surveys"
-msgstr ""
+msgstr "Afgeronde enquêtes"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
@@ -1405,6 +1414,8 @@ msgid ""
 "If Number is selected, it will display the number of questions answered on "
 "the total number of question to answer."
 msgstr ""
+"Als Nummer is geselecteerd, wordt het aantal beantwoorde vragen weergegeven "
+"op het totale aantal te beantwoorden vragen."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
@@ -1423,11 +1434,15 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 msgid ""
 "If checked, this option will save the user's answer as its email address."
 msgstr ""
+"Indien aangevinkt, zal deze optie het antwoord van de gebruiker opslaan als "
+"zijn e-mailadres."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_nickname
 msgid "If checked, this option will save the user's answer as its nickname."
 msgstr ""
+"Indien aangevinkt, zal deze optie het antwoord van de gebruiker opslaan als "
+"zijn bijnaam."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_conditional
@@ -1435,6 +1450,8 @@ msgid ""
 "If checked, this question will be displayed only \n"
 "        if the specified conditional answer have been selected in a previous question"
 msgstr ""
+"Indien aangevinkt, wordt deze vraag alleen weergegeven\n"
+"          als het gespecificeerde voorwaardelijke antwoord is geselecteerd in een eerdere vraag."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -1470,6 +1487,8 @@ msgid ""
 "If randomized is selected, you can configure the number of random questions "
 "by section. This mode is ignored in live session."
 msgstr ""
+"Als willekeurig is geselecteerd, kun je het aantal willekeurige vragen per "
+"sectie configureren. Deze modus wordt genegeerd in live-sessies."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -1500,6 +1519,8 @@ msgid ""
 "Include this question as part of quiz scoring. Requires an answer and answer"
 " score to be taken into account."
 msgstr ""
+"Neem deze vraag op als onderdeel van de quizscore. Dit vereist een antwoord "
+"en een antwoordscore om rekening mee te houden."
 
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
@@ -1551,6 +1572,7 @@ msgstr "Is in een sessie"
 #: model:ir.model.fields,help:survey.field_survey_user_input__is_session_answer
 msgid "Is that user input part of a survey session or not."
 msgstr ""
+"Is die invoer van de gebruiker onderdeel van een enquêtesessie of niet?"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__sequence
@@ -1953,7 +1975,7 @@ msgstr "Een pagina met alle vragen"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Only survey users can manage sessions."
-msgstr ""
+msgstr "Alleen enquêtegebruikers kunnen sessies beheren."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2034,7 +2056,7 @@ msgstr "Geslaagd"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Pay attention to the host screen until the next question."
-msgstr ""
+msgstr "Let op bij het host scherm tot de volgende vraag."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__percent
@@ -2085,7 +2107,7 @@ msgstr "Afdrukken"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Progression Mode"
-msgstr ""
+msgstr "Progressiemodus"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -2103,17 +2125,17 @@ msgstr "Vraag (als matrix rij)"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_answer_count
 msgid "Question Answers Count"
-msgstr ""
+msgstr "Telling beantwoorde vragen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question Time Limit"
-msgstr ""
+msgstr "Limiet voor vragen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__question_time_limit_reached
 msgid "Question Time Limit Reached"
-msgstr ""
+msgstr "Tijdslimiet voor vragen bereikt"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_type
@@ -2124,7 +2146,7 @@ msgstr "Vraag type"
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_question_id
 msgid ""
 "Question containing the triggering answer to display the current question."
-msgstr ""
+msgstr "Vraag met het activerende antwoord om de huidige vraag weer te geven."
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
@@ -2205,7 +2227,7 @@ msgstr "Opnieuw proberen"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_speed_rating
 msgid "Reward quick answers"
-msgstr ""
+msgstr "Beloon snelle antwoorden."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -2260,7 +2282,7 @@ msgstr "Bewaren als gebruiker e-mail"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as user nickname"
-msgstr ""
+msgstr "Opslaan als gebruiker's nickname."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_score
@@ -2282,12 +2304,12 @@ msgstr "Score voor deze keuze"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_score
 msgid "Score value for a correct answer to this question."
-msgstr ""
+msgstr "Scorewaarde voor een juist antwoord op deze vraag."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_scored_question
 msgid "Scored"
-msgstr ""
+msgstr "Gescoord"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_type
@@ -2448,7 +2470,7 @@ msgstr "Sorry, nog niemand heeft deze enquete beantwoord."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Sorry, you have not been fast enough."
-msgstr ""
+msgstr "Sorry, je bent niet snel genoeg geweest."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -2598,12 +2620,12 @@ msgstr "Fase enquête"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Time Limit"
-msgstr ""
+msgstr "Tijdslimiet voor onderzoek"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_time_limit_reached
 msgid "Survey Time Limit Reached"
-msgstr ""
+msgstr "Tijdslimiet voor enquête bereikt"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
@@ -2613,7 +2635,7 @@ msgstr "Enquête titel"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_start_url
 msgid "Survey URL"
-msgstr ""
+msgstr "Enquête-URL"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -2707,7 +2729,7 @@ msgstr "De badge moet voor elke enquete uniek zijn!"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_question_id
 msgid "The current question of the survey session."
-msgstr ""
+msgstr "De huidige vraag van de enquêtesessie."
 
 #. module: survey
 #. openerp-web
@@ -2765,23 +2787,23 @@ msgstr "De pagina waarnaar u zocht is niet geautoriseerd."
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_scoring_success_min_check
 msgid "The percentage of success has to be defined between 0 and 100."
-msgstr ""
+msgstr "Het succespercentage moet worden gedefinieerd tussen 0 en 100."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_time_limited
 msgid "The question is limited in time"
-msgstr ""
+msgstr "De vraag is beperkt in tijd"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "The session will begin automatically when the host starts."
-msgstr ""
+msgstr "De sessie begint automatisch wanneer de host start."
 
 #. module: survey
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The survey has already started."
-msgstr ""
+msgstr "De enquête is al begonnen."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
@@ -2794,6 +2816,8 @@ msgid ""
 "The time at which the current question has started, used to handle the timer"
 " for attendees."
 msgstr ""
+"Het tijdstip waarop de huidige vraag is begonnen, wordt gebruikt om de timer"
+" voor deelnemers af te handelen."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_time_limit_check
@@ -2812,7 +2836,7 @@ msgstr "De gebruiker heeft de certificering niet gehaald"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 msgid "There was an error during the validation of the survey."
-msgstr ""
+msgstr "Er is een fout opgetreden tijdens de validatie van de enquête."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__column_nb
@@ -2849,6 +2873,8 @@ msgid ""
 "This code will be used by your attendees to reach your session. Feel free to"
 " customize it however you like!"
 msgstr ""
+"Deze code wordt door je bezoekers gebruikt om je sessie te bereiken. Voel je"
+" vrij om het naar wens aan te passen!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -2890,7 +2916,7 @@ msgstr "Dit bericht wordt getoond als de enquête voltooid is"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_tree
 msgid "This question depends on another question's answer."
-msgstr ""
+msgstr "Deze vraag hangt af van een antwoord op een andere vraag."
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -2927,7 +2953,7 @@ msgstr "Tijdslimiet (minuten)"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__time_limit
 msgid "Time limit (seconds)"
-msgstr ""
+msgstr "Tijdslimiet (seconden)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
@@ -2947,12 +2973,12 @@ msgstr "Totale score"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_id
 msgid "Triggering Answer"
-msgstr ""
+msgstr "Antwoord triggeren"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_id
 msgid "Triggering Question"
-msgstr ""
+msgstr "Vraag triggeren"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -3014,6 +3040,8 @@ msgid ""
 "Use this field to add additional explanations about your question or to "
 "illustrate it with pictures or a video"
 msgstr ""
+"Gebruik dit veld om extra uitleg over je vraag toe te voegen of om deze te "
+"illustreren met afbeeldingen of een video"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
@@ -3083,6 +3111,8 @@ msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
 msgstr ""
+"We hebben je antwoord geregistreerd! Wacht tot de host naar de volgende "
+"vraag gaat."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
@@ -3099,6 +3129,7 @@ msgstr "Website communicatie geschiedenis"
 msgid ""
 "Whether or not we want to show the attendees leaderboard for this survey."
 msgstr ""
+"Of we het scorebord van de deelnemers voor deze enquête willen laten zien."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3191,7 +3222,7 @@ msgstr "voor afstuderen van"
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "is proud to award this certificate to"
-msgstr ""
+msgstr "is er trots op dit certificaat toe te kennen aan"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
