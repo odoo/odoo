@@ -81,6 +81,8 @@ class PosPaymentMethod(models.Model):
     def get_latest_adyen_status(self, pos_config_name):
         self.ensure_one()
 
+        self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
+
         # Poll the status of the terminal if there's no new
         # notification we received. This is done so we can quickly
         # notify the user if the terminal is no longer reachable due
@@ -89,7 +91,6 @@ class PosPaymentMethod(models.Model):
 
         latest_response = self.sudo().adyen_latest_response
         latest_response = json.loads(latest_response) if latest_response else False
-        self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
 
         return {
             'latest_response': latest_response,
