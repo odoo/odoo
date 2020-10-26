@@ -30,13 +30,13 @@
                     <t t-if="widget.dashboards_data.sales.summary.order_count">
                         <h2 class="col-lg-7 col-12">
                             <t t-if="widget.date_range=='week'">
-                                <h2>Sales Since Last Week</h2>
+                                Sales Since Last Week
                             </t>
                             <t t-elif="widget.date_range=='month'">
-                                <h2>Sales Since Last Month</h2>
+                                Sales Since Last Month
                             </t>
                             <t t-elif="widget.date_range=='year'">
-                                <h2>Sales Since Last Year</h2>
+                                Sales Since Last Year
                             </t>
                             <t t-else="">Sales</t>
                         </h2>
