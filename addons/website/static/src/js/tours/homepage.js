@@ -8,6 +8,7 @@ var _t = core._t;
 
 tour.register("homepage", {
     url: "/",
+    sequence: 1010,
 }, [{
     trigger: "a[data-action=edit]",
     content: _t("<b>Click Edit</b> to start designing your homepage."),

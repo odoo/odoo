@@ -240,8 +240,17 @@
             <field name="url">/</field>
             <field name="target">self</field>
         </record>
+        <record id="action_website_edit" model="ir.actions.act_url">
+            <!--
+                be aware, this record has been added just after the 14.0
+                freeze and could be missing on first installed db.
+            -->
+            <field name="name">Website Edit Mode</field>
+            <field name="url">/?enable_editor=1</field>
+            <field name="target">self</field>
+        </record>
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_website"/>
+            <field name="action_id" ref="action_website_edit"/>
             <field name="state">open</field>
         </record>
 
