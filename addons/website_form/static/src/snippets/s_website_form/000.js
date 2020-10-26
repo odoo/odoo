@@ -82,7 +82,7 @@ odoo.define('website_form.s_website_form', function (require) {
             this.$target.find('button').off('click');
 
             // Empty imputs
-            this.$target.find('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea').val('');
+            this.$target[0].reset();
 
             // Remove saving of the error colors
             this.$target.find('.o_has_error').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
