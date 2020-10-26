@@ -92,14 +92,6 @@ class IrTranslationImport(object):
         # referencing non-existent data.
         cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % self._table)
 
-        # detect the xml_translate fields, where the src must be the same
-        env = api.Environment(cr, SUPERUSER_ID, {})
-        src_relevant_fields = []
-        for model in env:
-            for field_name, field in env[model]._fields.items():
-                if hasattr(field, 'translate') and callable(field.translate):
-                    src_relevant_fields.append("%s,%s" % (model, field_name))
-
         count = 0
         # Step 2: insert new or upsert non-noupdate translations
         if self._overwrite:
