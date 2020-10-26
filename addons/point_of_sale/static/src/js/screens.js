@@ -2316,14 +2316,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var client = order.get_client();
         if (order.is_to_email() && (!client || client && !utils.is_email(client.email))) {
             var title = !client
-                ? 'Please select the customer'
-                : 'Please provide valid email';
+                ? _t('Please select the customer')
+                : _t('Please provide valid email');
             var body = !client
-                ? 'You need to select the customer before you can send the receipt via email.'
-                : 'This customer does not have a valid email address, define one or do not send an email.';
+                ? _t('You need to select the customer before you can send the receipt via email.')
+                : _t('This customer does not have a valid email address, define one or do not send an email.');
             this.gui.show_popup('confirm', {
-                'title': _t(title),
-                'body': _t(body),
+                'title': title,
+                'body': body,
                 confirm: function () {
                     this.gui.show_screen('clientlist');
                 },
