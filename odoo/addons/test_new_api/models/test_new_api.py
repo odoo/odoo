@@ -1147,3 +1147,9 @@ class ComputeMember(models.Model):
         container = self.env['test_new_api.compute.container']
         for member in self:
             member.container_id = container.search([('name', '=', member.name)], limit=1)
+
+class SimpleInherit(models.Model):
+    _name = _description = 'test_new_api.inherit.simple'
+    _inherits = {'res.country': 'country_id'}
+
+    country_id = fields.Many2one('res.country', required=True, ondelete='cascade')

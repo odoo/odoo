@@ -3823,8 +3823,9 @@ Fields:
                 for parent, data in zip(parents, parent_data_list):
                     data['stored'][parent_name] = parent.id
 
-        # create records with stored fields
-        records = self._create(data_list)
+        # create records with stored fields, dropping `default_{field}` keys
+        # from the env for sub-field creations as well as return
+        records = self.with_context(clean_context(self.env.context))._create(data_list)
 
         # protect fields being written against recomputation
         protected = [(data['protected'], data['record']) for data in data_list]
@@ -3856,7 +3857,7 @@ Fields:
                 for batch in batches:
                     for record, vals in batch:
                         record._update_cache(vals)
-                    batch_recs = self.concat(*(record for record, vals in batch))
+                    batch_recs = self.with_context(records.env.context).concat(*(record for record, vals in batch))
                     fields[0].determine_inverse(batch_recs)
 
         # check Python constraints for non-stored inversed fields
