@@ -5,7 +5,6 @@ from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.tools.float_utils import float_compare
 
 import logging
-import pprint
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +17,7 @@ class TransferPaymentAcquirer(models.Model):
     ], default='transfer', ondelete={'transfer': 'set default'})
 
     @api.model
-    def _create_missing_journal_for_acquirers(self, company=None):
+    def _create_missing_journals(self, company=None):
         # By default, the wire transfer method uses the default Bank journal.
         company = company or self.env.company
         acquirers = self.env['payment.acquirer'].search(
@@ -28,9 +27,10 @@ class TransferPaymentAcquirer(models.Model):
             [('type', '=', 'bank'), ('company_id', '=', company.id)], limit=1)
         if bank_journal:
             acquirers.write({'journal_id': bank_journal.id})
-        return super(TransferPaymentAcquirer, self)._create_missing_journal_for_acquirers(company=company)
+        return super(TransferPaymentAcquirer, self)._create_missing_journals(company=company)
 
-    def transfer_get_form_action_url(self):
+    @api.model
+    def _transfer_get_redirect_action_url(self):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self):
@@ -66,38 +66,3 @@ class TransferPaymentAcquirer(models.Model):
         if not values.get('pending_msg', False) and all(not acquirer.pending_msg and acquirer.provider != 'transfer' for acquirer in self) and values.get('provider') == 'transfer':
             values['pending_msg'] = self._format_transfer_data()
         return super(TransferPaymentAcquirer, self).write(values)
-
-
-class TransferPaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
-
-    @api.model
-    def _transfer_form_get_tx_from_data(self, data):
-        reference, amount, currency_name = data.get('reference'), data.get('amount'), data.get('currency_name')
-        tx = self.search([('reference', '=', reference)])
-
-        if not tx or len(tx) > 1:
-            error_msg = _('received data for reference %s') % (pprint.pformat(reference))
-            if not tx:
-                error_msg += _('; no order found')
-            else:
-                error_msg += _('; multiple order found')
-            _logger.info(error_msg)
-            raise ValidationError(error_msg)
-
-        return tx
-
-    def _transfer_form_get_invalid_parameters(self, data):
-        invalid_parameters = []
-
-        if float_compare(float(data.get('amount') or '0.0'), self.amount, 2) != 0:
-            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
-        if data.get('currency') != self.currency_id.name:
-            invalid_parameters.append(('currency', data.get('currency'), self.currency_id.name))
-
-        return invalid_parameters
-
-    def _transfer_form_validate(self, data):
-        _logger.info('Validated transfer payment for tx %s: set as pending' % (self.reference))
-        self._set_transaction_pending()
-        return True
