@@ -1998,3 +1998,11 @@ we-select.o_we_shape_menu {
 .o_main_sidebar:not(.o_loaded) #oe_snippets {
     display: none !important;
 }
+
+.o_we_force_no_transition {
+    // Note: this is forced through a CSS class instead of inline style to avoid
+    // overridding existing inline styles or forgetting to restore them as the
+    // code evolves. We may need to increase the CSS priority of this. It will
+    // also not work to override important inline style... this is a limitation.
+    transition: none !important;
+}
