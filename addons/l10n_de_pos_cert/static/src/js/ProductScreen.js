@@ -15,7 +15,6 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
             if (!this.currentOrder.isTransactionStarted()) {
 //                this.currentOrder.startTransaction();
             }
-            console.log("WE TAKE OVER");
         }
     }
 

@@ -10,7 +10,6 @@ odoo.define('l10n_de_pos_cert.Api', function(require) {
         0:  'NULL',
     };
 
-
     class Api {
         constructor() {
             this.apiUrl = 'https://kassensichv.io/api/v1/';
@@ -21,7 +20,6 @@ odoo.define('l10n_de_pos_cert.Api', function(require) {
             this.clientId = '88b7278e-a6df-4103-b939-7843538a1f6d';
         }
         _authenticate() {
-            console.log("authenticate");
             return $.ajax({
                 url: this.apiUrl + 'auth',
                 method: 'POST',
@@ -31,14 +29,13 @@ odoo.define('l10n_de_pos_cert.Api', function(require) {
                 }
             }).then((data) => {
                 this.token = data.access_token;
-            }).catch(() => {
-                setTimeout(this._authenticate, 3000);
+            }).catch((error) => {
+                return Promise.reject(error);
             });
         }
         async createTransaction(order) {
-            console.log("create");
             if (!this.token) {
-                await this._authenticate();
+                await this._authenticate(); //  If there's an error, a promise is created with a rejected value
             }
             return $.ajax({
                 url: `${this.apiUrl}tss/${this.tssId}/tx/${order.getUuid()}`,
@@ -52,11 +49,14 @@ odoo.define('l10n_de_pos_cert.Api', function(require) {
                 },
             }).then(function(data) {
                 order.setLastRevision(data.latest_revision);
+                order.startTransaction();
             }).catch(async (error) => {
-                if (error.status === 401) {
+                if (error.status === 401) {  // Need to update the token
                     await this._authenticate();
                     return this.createTransaction(order);
                 }
+                // Return a Promise with rejected value for error that are not handled here
+                return Promise.reject(error);
             });
         }
         /*
@@ -136,10 +136,14 @@ odoo.define('l10n_de_pos_cert.Api', function(require) {
                 order.setTseInformation('signatureAlgorithm', data.signature.algorithm);
                 order.setTseInformation('signaturePublickKey', data.signature.public_key);
                 order.setTseInformation('clientSerialnumber', data.client_serial_number);
-                console.log("GG REQUEST SENT");
-            }).catch(function() {
-                console.log("rip");
-            });
+            }).catch(async (error) => {
+                if (error.status === 401) {  // Need to update the token
+                    await this._authenticate();
+                    return this.finishShortTransaction(order);
+                }
+                // Return a Promise with rejected value for error that are not handled here
+                return Promise.reject(error);
+            });;
         }
     }
 
