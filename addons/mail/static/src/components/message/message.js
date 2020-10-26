@@ -79,7 +79,6 @@ class Message extends Component {
                 partnerRoot,
                 thread,
                 threadHasSeenIndicators: thread && thread.hasSeenIndicators,
-                threadMassMailing: thread && thread.mass_mailing,
             };
         }, {
             compareDepth: {
