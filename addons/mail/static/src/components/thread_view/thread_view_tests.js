@@ -452,13 +452,12 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
     );
 });
 
-QUnit.test('show message subject if thread is mailing channel', async function (assert) {
+QUnit.test('show message subject when subject is not the same as the thread name', async function (assert) {
     assert.expect(3);
 
     this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        mass_mailing: true,
         name: "General",
         public: 'public',
     });
@@ -493,6 +492,39 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
+    );
+});
+
+QUnit.test('do not show message subject when subject is the same as the thread name', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 100,
+        name: "Salutations, voyageur",
+        public: 'public',
+    });
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        model: 'mail.channel',
+        res_id: 100,
+        subject: "Salutations, voyageur",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "should not display subject of the message"
     );
 });
 
