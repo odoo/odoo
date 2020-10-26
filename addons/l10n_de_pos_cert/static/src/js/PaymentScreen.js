@@ -21,6 +21,8 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                                 'Check the internet connection then try to validate the order again'
                             );
                             await this.showPopup('OfflineErrorPopup', { title, body });
+                        } else if (error.status === 401 && error.source === 'authenticate') {
+                            await this.showForbiddenPopup();
                         } else {
                             const title = this.env._t('Unknown error');
                             const body = this.env._t(
@@ -42,6 +44,8 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                                 'Do not delete your browsing, cookies and cache data in the meantime !'
                             );
                             await this.showPopup('OfflineErrorPopup', { title, body });
+                        } else if (error.status === 401 && error.source === 'authenticate') {
+                            await this.showForbiddenPopup();
                         } else {
                             const title = this.env._t('Unknown error');
                             const body = this.env._t(
@@ -52,6 +56,13 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                     });
                 }
             }
+        }
+        async showForbiddenPopup() {
+            const title = this.env._t('Forbidden access to Fiskaly');
+            const body = this.env._t(
+                'It seems that your Fiskaly API key and/or secret are wrong.'
+            );
+            await this.showPopup('ErrorPopup', { title, body });
         }
     };
 

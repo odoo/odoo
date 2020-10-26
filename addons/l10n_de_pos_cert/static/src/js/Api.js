@@ -30,6 +30,7 @@ odoo.define('l10n_de_pos_cert.Api', function(require) {
             }).then((data) => {
                 this.token = data.access_token;
             }).catch((error) => {
+                error.source = 'authenticate';
                 return Promise.reject(error);
             });
         }
