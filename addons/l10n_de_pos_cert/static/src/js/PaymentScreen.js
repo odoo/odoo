@@ -26,7 +26,7 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                             const body = this.env._t(
                                 'An unknown error has occurred ! Please, contact Odoo.'
                             );
-                            await this.showPopup('Error', { title, body });
+                            await this.showPopup('ErrorPopup', { title, body });
                         }
                     });
                 }
@@ -47,7 +47,7 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                             const body = this.env._t(
                                 'An unknown error has occurred ! Please, cancel the order by deleting it and contact Odoo.'
                             );
-                            await this.showPopup('Error', { title, body });
+                            await this.showPopup('ErrorPopup', { title, body });
                         }
                     });
                 }
