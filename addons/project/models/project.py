@@ -997,7 +997,7 @@ class Task(models.Model):
         if partner_ids:
             new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
             tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')
-            tasks.write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
+            tasks.sudo().write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
         return res
 
     # ----------------------------------------
