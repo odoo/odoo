@@ -4684,6 +4684,10 @@ Fields:
         """ stuff to do right after the registry is built """
         pass
 
+    def _unregister_hook(self):
+        """ Clean up what `~._register_hook` has done. """
+        pass
+
     @classmethod
     def _patch_method(cls, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
