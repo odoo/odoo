@@ -33,6 +33,12 @@ class Meeting(models.Model):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active'}
 
+    @api.model
+    def _restart_google_sync(self):
+        self.env['calendar.event'].search(self._get_sync_domain()).write({
+            'need_sync': True,
+        })
+
     @api.model_create_multi
     def create(self, vals_list):
         return super().create([
