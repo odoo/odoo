@@ -3227,6 +3227,7 @@
                                 isInSubComponent = true;
                                 break;
                             }
+                            el = el.parentElement;
                         }
                         if (isInSubComponent) {
                             continue;
@@ -5314,9 +5315,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.0.12';
-    __info__.date = '2020-10-22T11:39:30.850Z';
-    __info__.hash = '392185a';
+    __info__.version = '1.0.13';
+    __info__.date = '2020-10-26T07:38:42.693Z';
+    __info__.hash = 'd615ffd';
     __info__.url = 'https://github.com/odoo/owl';
 
 
