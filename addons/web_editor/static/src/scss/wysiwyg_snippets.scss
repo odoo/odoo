@@ -1902,3 +1902,11 @@ we-select.o_we_shape_menu {
     position: fixed;
     right: $o-we-sidebar-width;
 }
+
+.o_we_force_no_transition {
+    // Note: this is forced through a CSS class instead of inline style to avoid
+    // overridding existing inline styles or forgetting to restore them as the
+    // code evolves. We may need to increase the CSS priority of this. It will
+    // also not work to override important inline style... this is a limitation.
+    transition: none !important;
+}
