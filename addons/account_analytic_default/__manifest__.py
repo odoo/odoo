@@ -17,7 +17,7 @@ Allows to automatically select analytic accounts based on criterions:
     * Company
     * Date
     """,
-    'depends': ['sale_stock'],
+    'depends': ['sale'],
     'data': [
         'security/ir.model.access.csv',
         'security/account_analytic_default_security.xml',
