@@ -861,7 +861,9 @@ class Website(models.Model):
                 record['lastmod'] = page['write_date'].date()
             yield record
 
-    def _get_website_pages(self, domain=[], order='name', limit=None):
+    def _get_website_pages(self, domain=None, order='name', limit=None):
+        if domain is None:
+            domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         return pages
