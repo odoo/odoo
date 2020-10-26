@@ -1141,3 +1141,11 @@ body.editor_enable.editor_has_snippets {
 .o_container_preview {
     outline: 2px dashed $o-we-handles-accent-color;
 }
+
+.o_we_force_no_transition {
+    // Note: this is forced through a CSS class instead of inline style to avoid
+    // overridding existing inline styles or forgetting to restore them as the
+    // code evolves. We may need to increase the CSS priority of this. It will
+    // also not work to override important inline style... this is a limitation.
+    transition: none !important;
+}

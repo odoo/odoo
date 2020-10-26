@@ -1569,9 +1569,8 @@ const SnippetOptionWidget = Widget.extend({
         // property has an effect or not. Also, changing a css property via the
         // editor should not show any transition as previews would not be done
         // immediately, which is not good for the user experience.
-        const originalInlineTransition = this.$target[0].style.transition;
-        this.$target[0].style.setProperty('transition', 'none', 'important');
-        const _restoreTransitions = () => this.$target[0].style.setProperty('transition', originalInlineTransition || '');
+        this.$target[0].classList.add('o_we_force_no_transition');
+        const _restoreTransitions = () => this.$target[0].classList.remove('o_we_force_no_transition');
 
         if (params.cssProperty === 'background-color') {
             this.$target.trigger('background-color-event', previewMode);
@@ -1893,6 +1892,12 @@ const SnippetOptionWidget = Widget.extend({
                     }
                 }
 
+                // Disable all transitions for the duration of the style check
+                // as we want to know the final value of a property to properly
+                // update the UI.
+                this.$target[0].classList.add('o_we_force_no_transition');
+                const _restoreTransitions = () => this.$target[0].classList.remove('o_we_force_no_transition');
+
                 const styles = window.getComputedStyle(this.$target[0]);
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
@@ -1915,6 +1920,9 @@ const SnippetOptionWidget = Widget.extend({
                 if (cssValues.length === 2 && weUtils.areCssValuesEqual(cssValues[1], cssValues[0], params.cssProperty, this.$target)) {
                     cssValues.pop();
                 }
+
+                _restoreTransitions();
+
                 return cssValues.join(' ');
             }
         }
