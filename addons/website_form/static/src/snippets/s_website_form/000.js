@@ -89,7 +89,9 @@ odoo.define('website_form.s_website_form', function (require) {
         send: function (e) {
             e.preventDefault(); // Prevent the default submit behavior
              // Prevent users from crazy clicking
-            this.$target.find('.s_website_form_send, .o_website_form_send').addClass('disabled'); // !compatibility
+            this.$target.find('.s_website_form_send, .o_website_form_send')
+                .addClass('disabled')    // !compatibility
+                .attr('disabled', 'disabled');
 
             var self = this;
 
@@ -150,7 +152,9 @@ odoo.define('website_form.s_website_form', function (require) {
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
                 // Restore send button behavior
-                self.$target.find('.s_website_form_send, .o_website_form_send').removeClass('disabled'); // !compatibility
+                self.$target.find('.s_website_form_send, .o_website_form_send')
+                    .removeAttr('disabled')
+                    .removeClass('disabled'); // !compatibility
                 result_data = JSON.parse(result_data);
                 if (!result_data.id) {
                     // Failure, the server didn't return the created record ID
@@ -281,7 +285,9 @@ odoo.define('website_form.s_website_form', function (require) {
 
         update_status: function (status) {
             if (status !== 'success') { // Restore send button behavior if result is an error
-                this.$target.find('.s_website_form_send, .o_website_form_send').removeClass('disabled'); // !compatibility
+                this.$target.find('.s_website_form_send, .o_website_form_send')
+                    .removeAttr('disabled')
+                    .removeClass('disabled'); // !compatibility
             }
             var $result = this.$('#s_website_form_result, #o_website_form_result'); // !compatibility
 
