@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="tax_report" model="account.tax.report">
-        <field name="name">Tax Report</field>
+        <field name="name">Romanian Tax Report</field>
         <field name="country_id" ref="base.ro"/>
     </record>
 
@@ -278,7 +278,7 @@
     </record>
 
     <record id="account_tax_report_ro_baza_rd102" model="account.tax.report.line">
-        <field name="name">10_2 - BAZA</field>
+        <field name="name">10_2 - BAZA - Achizitii de bunuri şi prestări de servicii nedeductibile 50% taxabile cu cota 9%</field>
         <field name="code">tax_ro_baza_rd102</field>
         <field name="sequence" eval="31"/>
         <field name="formula">0.5 * tax_ro_baza_rd252</field>
@@ -312,7 +312,6 @@
         <field name="parent_id" ref="account_tax_report_ro_tva_livrari"/>
         <field name="report_id" ref="tax_report"/>
     </record>
-
     <record id="account_tax_report_ro_baza_rd111" model="account.tax.report.line">
         <field name="name">11.1 - BAZA - Livrări de bunuri şi prestări de servicii taxabile cu cota 5%</field>
         <field name="tag_name">11_1 - BAZA</field>
@@ -351,6 +350,7 @@
 
     <record id="account_tax_report_ro_baza_rd12" model="account.tax.report.line">
         <field name="name">12 - BAZA - Achiziţii de bunuri şi servicii supuse măsurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversă) , din care:</field>
+        <field name="tag_name">12 - BAZA</field>
         <field name="code">tax_ro_baza_rd12</field>
         <field name="sequence" eval="39"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_livrari"/>
@@ -359,6 +359,7 @@
 
     <record id="account_tax_report_ro_tva_rd12" model="account.tax.report.line">
         <field name="name">12 - TVA - Achiziţii de bunuri şi servicii supuse măsurilor de simplificare pentru care beneficiarul este obligat la plata TVA (taxare inversă) , din care:</field>
+        <field name="tag_name">12 - TVA</field>
         <field name="code">tax_ro_tva_rd12</field>
         <field name="sequence" eval="40"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_livrari"/>
@@ -653,17 +654,16 @@
     </record>
 
     <record id="account_tax_report_ro_baza_rd24" model="account.tax.report.line">
-        <field name="name">24 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
-        <field name="tag_name">24 - BAZA</field>
+        <field name="name">24 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.27</field>
         <field name="code">tax_ro_baza_rd24</field>
+        <field name="tag_name" eval="None"/>
         <field name="sequence" eval="70"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_ro_tva_rd24" model="account.tax.report.line">
-        <field name="name">24 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
-        <field name="tag_name">24 - TVA</field>
+        <field name="name">24 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.27</field>
         <field name="code">tax_ro_tva_rd24</field>
         <field name="sequence" eval="71"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
@@ -671,8 +671,8 @@
     </record>
 
     <record id="account_tax_report_ro_baza_rd241" model="account.tax.report.line">
-        <field name="name">24.1 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
-        <field name="tag_name">24.1 - BAZA</field>
+        <field name="name">24.1 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.27</field>
+        <field name="tag_name">24_1 - BAZA</field>
         <field name="code">tax_ro_baza_rd241</field>
         <field name="sequence" eval="72"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_rd24"/>
@@ -680,7 +680,7 @@
     </record>
 
     <record id="account_tax_report_ro_tva_rd241" model="account.tax.report.line">
-        <field name="name">24.1 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.25</field>
+        <field name="name">24.1 - TVA - Achiziţii de bunuri şi servicii taxabile cu cota de 19%, altele decat cele de la rd.27</field>
         <field name="tag_name">24_1 - TVA</field>
         <field name="code">tax_ro_tva_rd241</field>
         <field name="sequence" eval="73"/>
@@ -706,9 +706,13 @@
         <field name="report_id" ref="tax_report"/>
     </record>
 
+    <record id="account_tax_report_ro_baza_rd24" model="account.tax.report.line">
+        <field name="formula">tax_ro_baza_rd241 + 0.5 * tax_ro_baza_rd242</field>
+    </record>
+
     <record id="account_tax_report_ro_baza_rd25" model="account.tax.report.line">
         <field name="name">25 - BAZA - Achiziţii de bunuri şi servicii taxabile cu cota de 9%</field>
-        <field name="tag_name">25 - BAZA</field>
+        <field name="tag_name" eval="None"/>
         <field name="code">tax_ro_baza_rd25</field>
         <field name="sequence" eval="76"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
@@ -760,9 +764,13 @@
         <field name="report_id" ref="tax_report"/>
     </record>
 
+    <record id="account_tax_report_ro_baza_rd25" model="account.tax.report.line">
+        <field name="formula">tax_ro_baza_rd251 + 0.5 * tax_ro_baza_rd252</field>
+    </record>
+
     <record id="account_tax_report_ro_baza_rd26" model="account.tax.report.line">
         <field name="name">26 - BAZA - Achiziţii de bunuri taxabile cu cota de 5%</field>
-        <field name="tag_name">26 - BAZA</field>
+        <field name="tag_name" eval="None"/>
         <field name="code">tax_ro_baza_rd26</field>
         <field name="sequence" eval="82"/>
         <field name="parent_id" ref="account_tax_report_ro_baza_achiz"/>
@@ -771,7 +779,6 @@
 
     <record id="account_tax_report_ro_tva_rd26" model="account.tax.report.line">
         <field name="name">26 - TVA - Achiziţii de bunuri taxabile cu cota de 5%</field>
-        <field name="tag_name">26 - TVA</field>
         <field name="code">tax_ro_tva_rd26</field>
         <field name="sequence" eval="83"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_achiz"/>
@@ -812,6 +819,10 @@
         <field name="sequence" eval="87"/>
         <field name="parent_id" ref="account_tax_report_ro_tva_rd26"/>
         <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="account_tax_report_ro_baza_rd26" model="account.tax.report.line">
+        <field name="formula">tax_ro_baza_rd261 + 0.5 * tax_ro_baza_rd262</field>
     </record>
 
     <record id="account_tax_report_ro_baza_rd27" model="account.tax.report.line">
@@ -985,5 +996,22 @@
         <field name="formula">tax_ro_tva_intracom_eu_a + tax_ro_tva_achiz + tax_ro_tva_rd33 + tax_ro_tva_rd34 + tax_ro_tva_rd35</field>
         <field name="report_id" ref="tax_report"/>
     </record>
+
+    <record id="account_tax_report_ro_tva_rd40" model="account.tax.report.line">
+        <field name="name">40 - TVA - Diferenţe de TVA de plată stabilite de organele de inspecţie fiscală prin decizie comunicată şi neachitate până la data depunerii decontului de  TVA </field>
+        <field name="tag_name">40 - TVA</field>
+        <field name="code">tax_ro_tva_rd40</field>
+        <field name="sequence" eval="110"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+    <record id="account_tax_report_ro_tva_rd43" model="account.tax.report.line">
+        <field name="name">43 - TVA - Diferenţe negative de TVA stabilite de organele de inspecţie fiscală prin decizie comunicată până la data depunerii decontului de TVA </field>
+        <field name="tag_name">43 - TVA</field>
+        <field name="code">tax_ro_tva_rd43</field>
+        <field name="sequence" eval="111"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+
 
 </odoo>
