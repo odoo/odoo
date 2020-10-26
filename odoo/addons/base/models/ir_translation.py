@@ -110,8 +110,8 @@ class IrTranslationImport(object):
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
                             DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
-                            WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
-                       """ % (self._model_table, self._table))
+                            WHERE (EXCLUDED.comments = 'openerp-web' OR %s.comments != 'openerp-web' OR %s.value IS NULL OR %s.value='') AND EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
+                       """ % (self._model_table, self._table, self._model_table, self._model_table, self._model_table))
             count += cr.rowcount
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, lang, res_id, src, type, value, module, state, comments
