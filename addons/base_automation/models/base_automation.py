@@ -332,6 +332,16 @@ class BaseAutomation(models.Model):
                 for field_name in action_rule.on_change_fields.split(","):
                     Model._onchange_methods[field_name.strip()].append(method)
 
+    def _unregister_hook(self):
+        """ Remove the patches installed by _register_hook() """
+        NAMES = ['create', '_write', 'unlink', '_onchange_methods']
+        for Model in self.env.registry.values():
+            for name in NAMES:
+                try:
+                    delattr(Model, name)
+                except AttributeError:
+                    pass
+
     @api.model
     def _check_delay(self, action, record, record_dt):
         if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
