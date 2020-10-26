@@ -1304,13 +1304,17 @@ class HttpCaseCommon(BaseCase):
             return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
 
         start_time = time.time()
+        max_time = start_time + timeout
         request_threads = get_http_request_threads()
-        self._logger.info('waiting for threads: %s', request_threads)
 
-        for thread in request_threads:
-            thread.join(timeout - (time.time() - start_time))
+        while request_threads and time.time() < max_time:
+            self._logger.info('waiting for threads: %s', request_threads)
 
-        request_threads = get_http_request_threads()
+            for thread in request_threads:
+                thread.join(max_time - time.time())
+
+            request_threads = get_http_request_threads()
+
         for thread in request_threads:
             self._logger.info("Stop waiting for thread %s handling request for url %s",
                                     thread.name, getattr(thread, 'url', '<UNKNOWN>'))
