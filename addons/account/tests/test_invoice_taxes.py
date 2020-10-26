@@ -317,9 +317,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': []},
-            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids},
-            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids},
+            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': [],                      'tax_base_amount': 0},
+            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000},
+            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0},
         ])
 
         # === Tax in credit ===
@@ -407,9 +407,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': []},
-            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids},
-            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids},
+            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': [],                      'tax_base_amount': 0},
+            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000},
+            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0},
         ])
 
         # === Tax in credit ===
