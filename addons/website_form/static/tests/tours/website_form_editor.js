@@ -550,6 +550,10 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".o_website_form_send"
         },
         {
+            content:  "Check send button is disabled",
+            trigger:  ".o_website_form_send:disabled"
+        },
+        {
             content:  "Check form is submitted without errors",
             trigger:  ".alert-success:contains('Your message has been sent successfully.')"
         }
