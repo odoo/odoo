@@ -21,7 +21,7 @@ class CustomerPortal(CustomerPortal):
         if 'purchase_count' in counters:
             values['purchase_count'] = request.env['purchase.order'].search_count([
                 ('state', 'in', ['purchase', 'done', 'cancel'])
-            ])
+            ]) if request.env['purchase.order'].check_access_rights('read', raise_exception=False) else 0
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
