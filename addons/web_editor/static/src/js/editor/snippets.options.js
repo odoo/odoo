@@ -2038,6 +2038,15 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise|undefined}
      */
     selectStyle: async function (previewMode, widgetValue, params) {
+        // Disable all transitions for the duration of the method as many
+        // comparisons will be done on the element to know if applying a
+        // property has an effect or not. Also, changing a css property via the
+        // editor should not show any transition as previews would not be done
+        // immediately, which is not good for the user experience.
+        const originalInlineTransition = this.$target[0].style.transition;
+        this.$target[0].style.setProperty('transition', 'none', 'important');
+        const _restoreTransitions = () => this.$target[0].style.setProperty('transition', originalInlineTransition || '');
+
         if (params.cssProperty === 'background-color') {
             this.$target.trigger('background-color-event', previewMode);
         }
@@ -2075,6 +2084,7 @@ const SnippetOptionWidget = Widget.extend({
                     // property we are editing, nothing more has to be done.
                     // (except adding the extra class)
                     this.$target.addClass(params.extraClass);
+                    _restoreTransitions();
                     if (previewMode === false) await this.updateChangesInWysiwyg();
                     return;
                 }
@@ -2132,6 +2142,7 @@ const SnippetOptionWidget = Widget.extend({
             this.$target.toggleClass(params.extraClass, hasUserValue);
         }
 
+        _restoreTransitions();
         if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
