@@ -1114,7 +1114,7 @@ var ControlPanelModel = mvc.Model.extend({
                         domain: favorite.domain,
                         groupBys: groupBys,
                         // we want to keep strings as long as possible
-                        context: favorite.context,
+                        context: JSON.stringify(context),
                         orderedBy: orderedBy,
                         userId: userId,
                         serverSideId: favorite.id,
