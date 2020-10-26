@@ -556,6 +556,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.error('At least one test failed when loading the modules.')
 
         # STEP 8: call _register_hook on every model
+        # This is done *exactly once* when the registry is being loaded. See the
+        # management of those hooks in `Registry.setup_models`: all the calls to
+        # setup_models() done here do not mess up with hooks, as registry.ready
+        # is False.
         env = api.Environment(cr, SUPERUSER_ID, {})
         for model in env.values():
             model._register_hook()
