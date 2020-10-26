@@ -1813,15 +1813,16 @@ exports.Orderline = Backbone.Model.extend({
 
         var round_tax = this.pos.company.tax_calculation_rounding_method != 'round_globally';
 
+        var initial_currency_rounding = currency_rounding;
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
         // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount, prec){
-             return round_pr((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100, prec);
+        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
+             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
         }
 
-        var base = round_pr(price_unit * quantity, currency_rounding);
+        var base = round_pr(price_unit * quantity, initial_currency_rounding);
 
         var sign = 1;
         if(base < 0){
@@ -1841,7 +1842,7 @@ exports.Orderline = Backbone.Model.extend({
 
         _(taxes.reverse()).each(function(tax){
             if(tax.include_base_amount){
-                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
+                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
                 incl_fixed_amount = 0.0;
                 incl_percent_amount = 0.0;
                 incl_division_amount = 0.0;
@@ -1867,7 +1868,7 @@ exports.Orderline = Backbone.Model.extend({
             i -= 1;
         });
 
-        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
+        var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
         var total_included = total_excluded;
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
