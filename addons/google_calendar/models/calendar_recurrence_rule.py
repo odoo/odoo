@@ -80,6 +80,12 @@ class RecurrenceRule(models.Model):
         return {'rrule'}
 
     @api.model
+    def _restart_google_sync(self):
+        self.env['calendar.recurrence'].search(self._get_sync_domain()).write({
+            'need_sync': True,
+        })
+
+    @api.model
     def _sync_google2odoo(self, *args, **kwargs):
         synced_recurrences = super()._sync_google2odoo(*args, **kwargs)
         detached_events = synced_recurrences._apply_recurrence()

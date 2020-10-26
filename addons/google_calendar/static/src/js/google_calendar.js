@@ -9,6 +9,7 @@ const CalendarRenderer = require('calendar.CalendarRenderer');
 const CalendarController = require('calendar.CalendarController');
 const CalendarModel = require('calendar.CalendarModel');
 const viewRegistry = require('web.view_registry');
+const session = require('web.session');
 
 var _t = core._t;
 
@@ -63,7 +64,7 @@ const GoogleCalendarModel = CalendarModel.include({
                 local_context: context, // LUL TODO remove this local_context
             }
         }, {shadow}).then(function (result) {
-            if (result.status === "need_config_from_admin" || result.status === "need_auth") {
+            if (["need_config_from_admin", "need_auth", "sync_stopped"].includes(result.status)) {
                 self.google_is_sync = false;
             } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
                 self.google_is_sync = true;
@@ -71,11 +72,22 @@ const GoogleCalendarModel = CalendarModel.include({
             return result
         });
     },
+
+    archiveRecords: function (ids, model) {
+        return this._rpc({
+                model: model,
+                method: 'action_archive',
+                args: [ids],
+                context: session.user_context,
+            });
+    },
 })
 
 const GoogleCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
         syncGoogleCalendar: '_onGoogleSyncCalendar',
+        stopGoogleSynchronization: '_onStopGoogleSynchronization',
+        archiveRecord: '_onArchiveRecord',
     }),
 
 
@@ -94,7 +106,7 @@ const GoogleCalendarController = CalendarController.include({
     _onGoogleSyncCalendar: function (event) {
         var self = this;
 
-        return this.model._syncGoogleCalendar().then(function (o) {
+        return this._restartGoogleSynchronization().then(() => {return this.model._syncGoogleCalendar();}).then(function (o) {
             if (o.status === "need_auth") {
                 Dialog.alert(self, _t("You will be redirected to Google to authorize access to your calendar!"), {
                     confirm_callback: function() {
@@ -117,19 +129,94 @@ const GoogleCalendarController = CalendarController.include({
                 }
             } else if (o.status === "need_refresh") {
                 self.reload();
+                return event.data.on_refresh();
             }
         }).then(event.data.on_always, event.data.on_always);
-    }
+    },
+
+    _onStopGoogleSynchronization: function (event) {
+        var self = this;
+        Dialog.confirm(this, _t("You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"), {
+            confirm_callback: function() {
+                return self._rpc({
+                    model: 'res.users',
+                    method: 'stop_google_synchronization',
+                    args: [[self.context.uid]],
+                }).then(() => {
+                    self.displayNotification({
+                        title: _t("Success"),
+                        message: _t("The synchronization with Google calendar was successfully stopped."),
+                        type: 'success',
+                    });
+                }).then(event.data.on_confirm);
+            },
+            title: _t('Confirmation'),
+        });
+
+        return event.data.on_always();
+    },
+
+    _restartGoogleSynchronization: function () {
+        return this._rpc({
+            model: 'res.users',
+            method: 'restart_google_synchronization',
+            args: [[this.context.uid]],
+        });
+    },
+
+    _onArchiveRecord: function (event) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
+            confirm_callback: function () {
+                self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+                    self.reload();
+                });
+            }
+        });
+    },
 });
 
 const GoogleCalendarRenderer = CalendarRenderer.include({
+    custom_events: _.extend({}, CalendarRenderer.prototype.custom_events, {
+        archive_event: '_onArchiveEvent',
+    }),
+
     events: _.extend({}, CalendarRenderer.prototype.events, {
         'click .o_google_sync_button': '_onGoogleSyncCalendar',
+        'click .o_stop_google_sync_button': '_onStopGoogleSynchronization',
     }),
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    _initGooglePillButton: function() {
+        this.$googleStopButton.css({"cursor":"pointer", "font-size":"0.9em"});
+        var switchBadgeClass = (elem) => {elem.toggleClass('badge-success'); elem.toggleClass('badge-danger');};
+        this.$('.o_stop_google_sync_button').hover(() => {
+            switchBadgeClass(this.$googleStopButton);
+            this.$googleStopButton.html("<i class='fa mr-2 fa-times'/>".concat(_t("Stop the Synchronization")));
+        }, () => {
+            switchBadgeClass(this.$googleStopButton);
+            this.$googleStopButton.html("<i class='fa mr-2 fa-check'/>".concat(_t("Synched with Google")));
+        });
+    },
+
+    _getGoogleButton: function () {
+        return $('<button/>', {
+            type: 'button',
+            html: _t("Sync with <b>Google</b>"),
+            class: 'o_google_sync_button w-100 m-auto btn btn-secondary'
+        });
+    },
+
+    _getGoogleStopButton: function () {
+        return  $('<span/>', {
+            html: _t("Synched with Google"),
+            class: 'w-100 badge badge-pill badge-success border-0 o_stop_google_sync_button'
+        })
+        .prepend($('<i/>', {class: "fa mr-2 fa-check"}));
+    },
 
     /**
      * Adds the Sync with Google button in the sidebar
@@ -140,21 +227,13 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
         var self = this;
         this._super.apply(this, arguments);
         this.$googleButton = $();
+        this.$googleStopButton = $();
         if (this.model === "calendar.event") {
             if (this.state.google_is_sync) {
-                this.$googleButton = $('<span/>', {
-                                    html: _t("Synched with Google"),
-                                    class: 'w-100 badge badge-pill badge-success border-0'
-                                })
-                                .prepend($('<i/>', {class: "fa mr-2 fa-check"}))
-                                .appendTo(self.$sidebar);
+                this.$googleStopButton = this._getGoogleStopButton().appendTo(self.$sidebar);
+                this._initGooglePillButton();
             } else {
-                this.$googleButton = $('<button/>', {
-                                    type: 'button',
-                                    html: _t("Sync with <b>Google</b>"),
-                                    class: 'o_google_sync_button w-100 m-auto btn btn-secondary'
-                                })
-                                .appendTo(self.$sidebar);
+                this.$googleButton = this._getGoogleButton().appendTo(self.$sidebar);
             }
         }
     },
@@ -176,7 +255,35 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
             on_always: function () {
                 self.$googleButton.prop('disabled', false);
             },
+            on_refresh: function () {
+                if (_.isEmpty(self.$googleStopButton)) {
+                    self.$googleStopButton = self._getGoogleStopButton();
+                }
+                self.$googleButton.replaceWith(self.$googleStopButton);
+                self._initGooglePillButton();
+            }
         });
+    },
+
+    _onStopGoogleSynchronization: function() {
+        var self = this;
+        this.$googleStopButton.prop('disabled', true);
+        this.trigger_up('stopGoogleSynchronization' , {
+            on_confirm: function () {
+                if (_.isEmpty(self.$googleButton)) {
+                    self.$googleButton = self._getGoogleButton();
+                }
+                self.$googleStopButton.replaceWith(self.$googleButton);
+            },
+            on_always: function() {
+                self.$googleStopButton.prop('disabled', false);
+            }
+        });
+    },
+
+    _onArchiveEvent: function (event) {
+        this._unselectEvent();
+        this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10)});
     },
 });
 
