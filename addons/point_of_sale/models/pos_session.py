@@ -397,6 +397,7 @@ class PosSession(models.Model):
                         -1 if line['amount'] < 0 else 1,
                         # for taxes
                         tuple((tax['id'], tax['account_id'], tax['tax_repartition_line_id']) for tax in line['taxes']),
+                        line['base_tags'],
                     )
                     sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'])
                     # Combine tax lines
@@ -643,11 +644,13 @@ class PosSession(models.Model):
         # The 'is_refund' parameter is used to compute the tax tags. Ultimately, the tags are part
         # of the key used for summing taxes. Since the POS UI doesn't support the tags, inconsistencies
         # may arise in 'Round Globally'.
+        check_refund = lambda x: x.qty * x.price_unit < 0
         if self.company_id.tax_calculation_rounding_method == 'round_globally':
-            is_refund = all(line.qty < 0 for line in order_line.order_id.lines)
+            is_refund = all(check_refund(line) for line in order_line.order_id.lines)
         else:
-            is_refund = order_line.qty < 0
-        taxes = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund).get('taxes', [])
+            is_refund = check_refund(order_line)
+        tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
+        taxes = tax_data['taxes']
         date_order = order_line.order_id.date_order
         taxes = [{'date_order': date_order, **tax} for tax in taxes]
         return {
@@ -655,6 +658,7 @@ class PosSession(models.Model):
             'income_account_id': get_income_account(order_line).id,
             'amount': order_line.price_subtotal,
             'taxes': taxes,
+            'base_tags': tuple(tax_data['base_tags']),
         }
 
     def _get_split_receivable_vals(self, payment, amount, amount_converted):
@@ -683,23 +687,19 @@ class PosSession(models.Model):
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
     def _get_sale_vals(self, key, amount, amount_converted):
-        account_id, sign, tax_keys = key
+        account_id, sign, tax_keys, base_tag_ids = key
         tax_ids = set(tax[0] for tax in tax_keys)
         applied_taxes = self.env['account.tax'].browse(tax_ids)
         title = 'Sales' if sign == 1 else 'Refund'
         name = '%s untaxed' % title
         if applied_taxes:
             name = '%s with %s' % (title, ', '.join([tax.name for tax in applied_taxes]))
-        base_tags = applied_taxes\
-            .mapped('invoice_repartition_line_ids' if sign == 1 else 'refund_repartition_line_ids')\
-            .filtered(lambda line: line.repartition_type == 'base')\
-            .tag_ids
         partial_vals = {
             'name': name,
             'account_id': account_id,
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
-            'tag_ids': [(6, 0, base_tags.ids)],
+            'tag_ids': [(6, 0, base_tag_ids)],
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
