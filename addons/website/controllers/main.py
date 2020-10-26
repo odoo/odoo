@@ -576,5 +576,5 @@ class WebsiteBinary(http.Controller):
     def favicon(self, **kw):
         website = request.website
         response = request.redirect(website.image_url(website, 'favicon'), code=301)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % (365 * 24 * 60)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
         return response
