@@ -314,12 +314,10 @@ class Registry(Mapping):
         def transitive_dependencies(field, seen=[]):
             if field in seen:
                 return
-            for seq1 in dependencies[field]:
+            for seq1 in dependencies.get(field, ()):
                 yield seq1
-                exceptions = (Exception,) if field.base_field.manual else ()
-                with ignore(*exceptions):
-                    for seq2 in transitive_dependencies(seq1[-1], seen + [field]):
-                        yield concat(seq1[:-1], seq2)
+                for seq2 in transitive_dependencies(seq1[-1], seen + [field]):
+                    yield concat(seq1[:-1], seq2)
 
         def concat(seq1, seq2):
             if seq1 and seq2:
