@@ -578,7 +578,7 @@ function factory(dependencies) {
             let startIndex = 0;
             for (const match of inputMentions) {
                 const suggestionDelimiter = match[0];
-                const matchName = owl.utils.escape(match.substring(1).replace(new RegExp('\u00a0', 'g'), ' '));
+                const matchNameEscaped = match.substring(1).replace(new RegExp('\u00a0', 'g'), ' ');
                 const endIndex = body.indexOf(match, startIndex) + match.length;
                 let field = "mentionedPartners";
                 let model = "res.partner";
@@ -589,9 +589,9 @@ function factory(dependencies) {
                     cssClass = "o_channel_redirect";
                 }
                 const mention = this[field].find(mention =>
-                    mention.name === matchName
+                    owl.utils.escape(mention.name) === matchNameEscaped
                 );
-                let mentionLink = suggestionDelimiter + matchName;
+                let mentionLink = suggestionDelimiter + matchNameEscaped;
                 if (mention) {
                     const baseHREF = this.env.session.url('/web');
                     const href = `href='${baseHREF}#model=${model}&id=${mention.id}'`;
@@ -599,7 +599,7 @@ function factory(dependencies) {
                     const dataOeId = `data-oe-id='${mention.id}'`;
                     const dataOeModel = `data-oe-model='${model}'`;
                     const target = `target='_blank'`;
-                    mentionLink = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} >${suggestionDelimiter}${matchName}</a>`;
+                    mentionLink = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} >${suggestionDelimiter}${matchNameEscaped}</a>`;
                 }
                 substrings.push(body.substring(startIndex, body.indexOf(match, startIndex)));
                 substrings.push(mentionLink);
