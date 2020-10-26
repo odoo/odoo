@@ -2715,4 +2715,4 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # assertNotUnbalancedEntryWhenSaving
         with Form(self.invoice) as move_form:
             move_form.invoice_payment_term_id = self.pay_terms_b    # Switch to 30% in advance payment terms
-            move_form.invoice_payment_term_id = self.pay_terms_b    # Back to immediate payment term
+            move_form.invoice_payment_term_id = self.pay_terms_a    # Back to immediate payment term
