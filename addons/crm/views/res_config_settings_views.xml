@@ -82,18 +82,15 @@
                                     <field name="predictive_lead_scoring_fields_str" invisible="1"/>
                                 </div>
                                 <div class="mt16">
-                                    Start Date: Consider leads created as of the
+                                    Consider leads created as of the
                                     <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
-                                    <field name="predictive_lead_scoring_start_date" required="1"/>
+                                    <field name="predictive_lead_scoring_start_date" class="oe_inline" required="1"/>
                                 </div>
                                 <div class="mt16" groups="base.group_erp_manager">
                                     <div class="text-muted">
-                                        By <b>updating lead probabilities</b>, you will regenerate the frequency table and recompute the probability of all the leads.
-                                        This can be useful after changing the start date (you need to save first !) or to ensure every lead probabilities are up to date.
-                                        <br/>
-                                        This can take up to several minutes depending on the number of leads you have !!!
+                                        Use this button to update the probabilities of all leads. This can take up to several minutes depending on how many there are.
                                     </div>
-                                    <button name="action_reset_lead_probabilities" type="object" string="Update" class="btn-primary"/>
+                                    <button name="action_reset_lead_probabilities" type="object" string="Update Probabilities" class="btn-primary"/>
                                 </div>
                             </div>
                         </div>
