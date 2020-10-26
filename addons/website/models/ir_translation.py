@@ -26,7 +26,7 @@ class IrTranslation(models.Model):
         # Add specific view translations
         self.env.cr.execute("""
             INSERT INTO ir_translation(name, lang, res_id, src, type, value, module, state, comments)
-            SELECT DISTINCT ON (specific.id, t.lang, md5(src)) t.name, t.lang, specific.id, t.src, t.type, t.value, t.module, t.state, t.comments
+            SELECT DISTINCT ON (specific.id, t.lang, md5(src), is_web) t.name, t.lang, specific.id, t.src, t.type, t.value, t.module, t.state, t.comments
               FROM ir_translation t
              INNER JOIN ir_ui_view generic
                 ON t.type = 'model_terms' AND t.name = 'ir.ui.view,arch_db' AND t.res_id = generic.id
@@ -35,7 +35,7 @@ class IrTranslation(models.Model):
              WHERE t.lang IN %s and t.module IN %s
                AND generic.website_id IS NULL AND generic.type = 'qweb'
                AND specific.website_id IS NOT NULL""" + conflict_clause.format(
-                   "(type, name, lang, res_id, md5(src))"
+                   "(type, name, lang, res_id, md5(src), is_web)"
         ), (tuple(langs), tuple(modules)))
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)

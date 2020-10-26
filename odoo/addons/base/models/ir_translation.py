@@ -108,8 +108,8 @@ class IrTranslationImport(object):
                            FROM %s
                            WHERE type = 'code'
                            AND noupdate IS NOT TRUE
-                           ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                           ON CONFLICT (type, lang, md5(src), is_web) WHERE type = 'code'
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments, is_web) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments, EXCLUDED.is_web)
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
@@ -129,7 +129,7 @@ class IrTranslationImport(object):
                            FROM %s
                            WHERE type = 'model_terms'
                            AND noupdate IS NOT TRUE
-                           ON CONFLICT (type, name, lang, res_id, md5(src))
+                           ON CONFLICT (type, name, lang, res_id, md5(src), is_web)
                             DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
@@ -175,11 +175,16 @@ class IrTranslation(models.Model):
     # aka gettext extracted-comments - we use them to flag openerp-web translation
     # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
     comments = fields.Text(string='Translation comments', index=True)
+    is_web = fields.Boolean(compute="_compute_is_web", store=True, index=True)
 
     _sql_constraints = [
         ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
          'Language code of translation item must be among known languages'),
     ]
+
+    def _compute_is_web(self):
+        for r in self:
+            r.is_web = r.comments == 'openerp-web'
 
     @api.model
     def _get_languages(self):
@@ -191,9 +196,9 @@ class IrTranslation(models.Model):
         tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
         # Cover 'model_terms' type
         tools.create_unique_index(self._cr, 'ir_translation_unique', self._table,
-                                  ['type', 'name', 'lang', 'res_id', 'md5(src)'])
+                                  ['type', 'name', 'lang', 'res_id', 'md5(src)', 'is_web'])
         if not tools.index_exists(self._cr, 'ir_translation_code_unique'):
-            self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src)) WHERE type = 'code'")
+            self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src), is_web) WHERE type = 'code'")
         if not tools.index_exists(self._cr, 'ir_translation_model_unique'):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_model_unique ON ir_translation (type, lang, name, res_id) WHERE type = 'model'")
 
