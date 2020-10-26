@@ -13,6 +13,7 @@ class Partner(models.Model):
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id', 'calendar_event_id', string='Meetings', copy=False)
     opportunity_count = fields.Integer("Opportunity", compute='_compute_opportunity_count')
     meeting_count = fields.Integer("# Meetings", compute='_compute_meeting_count')
+    parent_name_default = fields.Char(compute="_compute_parent_name_default", inverse="_inverse_parent_name_default")
 
     @api.model
     def default_get(self, fields):
@@ -33,6 +34,7 @@ class Partner(models.Model):
                     state_id=lead.state_id.id,
                     country_id=lead.country_id.id,
                     zip=lead.zip,
+                    parent_name_default=lead.partner_name,
                 )
         return rec
 
@@ -46,6 +48,14 @@ class Partner(models.Model):
     def _compute_meeting_count(self):
         for partner in self:
             partner.meeting_count = len(partner.meeting_ids)
+
+    @api.depends()
+    def _compute_parent_name_default(self):
+        pass
+
+    @api.depends()
+    def _inverse_parent_name_default(self):
+        pass
 
     @api.multi
     def schedule_meeting(self):

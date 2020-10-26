@@ -119,4 +119,18 @@
             </field>
         </record>
 
+        <!-- Add parent_name_default. TODO in master: move to base module -->
+        <record id="view_partner_simple_form_crm" model="ir.ui.view">
+            <field name="name">view.res.partner.simplified.form.crm.inherited</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="context">{'default_is_company': True, 'show_vat': True, 'default_name': parent_name_default}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="parent_name_default" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
 </odoo>
