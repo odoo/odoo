@@ -1,13 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_adyen
+# 	* payment_adyen
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Albena Mincheva <albena_vicheva@abv.bg>, 2020
+# Maria Boyadjieva <marabo2000@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,69 +22,99 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:186
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; открити множество поръчки"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:184
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; не е открита поръчка"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:234
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: feedback error"
-msgstr ""
+msgstr "Adyen: грешка при обратна връзка"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:196
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr ""
+msgstr "Adyen: невалиден търговецSig, получен %s, изчислен %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:182
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr ""
+msgstr "Adyen: получени данни за референция %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:175
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
 msgstr ""
+"Adyen: получени данни с липсваща референция (%s) или липсваща pspReference "
+"(%s)"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Име за показване"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr ""
+msgstr "Как да конфигурирате сметката си Adyen?"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Последно променено на"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
-msgstr ""
+msgstr "Търговска сметка"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Обработчик на плащане"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платежна транзакция"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Доставчик"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
 msgid "Skin Code"
-msgstr ""
+msgstr "Skin Code"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
 msgid "Skin HMAC Key"
-msgstr ""
+msgstr "Skin HMAC Key"

@@ -1,20 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_mail_channel
+# 	* website_mail_channel
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Mark Lee <odoos@soti.33mail.com>, 2018
+# Martin Trigaux, 2020
+# JH CHOI <hwangtog@gmail.com>, 2020
+# Linkup <link-up@naver.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,27 +22,107 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid "- <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "- <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"- <i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Attachments\" "
+"title=\"Attachments\"/>"
+msgstr ""
+"- <i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Attachments\" "
+"title=\"Attachments\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-envelope-o\"/> send mail"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> 메일 보내기"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-file-o\"/> archives"
-msgstr ""
+msgstr "<i class=\"fa fa-file-o\"/> 보관"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "<i class=\"fa fa-times\"/> unsubscribe"
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
+msgid "<i class=\"fa fa-times\"/> unsubscribe"
+msgstr "<i class=\"fa fa-times\"/> 구독 취소"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
@@ -80,8 +159,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -163,8 +242,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature:\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -212,27 +291,20 @@ msgid ""
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:17
-#, python-format
-msgid "Add a Subscribe Button"
-msgstr "구독 버튼 추가"
-
-#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
-msgstr "혼자서는 조금 할 수 있지만 함께 한다면 더많이 할 수 있습니다"
+msgstr "혼자서는 조금할 수 있지만 함께 한다면 더 많이 할 수 있습니다"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Archives"
-msgstr "보관 메시지"
+msgstr "보관"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "Avatar"
-msgstr ""
+msgstr "아바타"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -252,31 +324,31 @@ msgid "By thread"
 msgstr "스레드별"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "Change Discussion List"
-msgstr "토론 목록 변경"
-
-#. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Confirm subscription to ${object.name}"
-msgstr ""
+msgstr "${object.name}에 대한 구독 확인"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to ${object.name}"
+msgstr "${object.name}에 대한 구독 취소 확인"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel_options
+msgid "Create a public discussion group in your backend"
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
-#, python-format
-msgid "Discussion List"
-msgstr "토론 목록"
+#: model:ir.model,name:website_mail_channel.model_mail_channel
+msgid "Discussion Channel"
+msgstr "메일 및 채팅 채널"
 
 #. module: website_mail_channel
-#: model:ir.model,name:website_mail_channel.model_mail_channel
-msgid "Discussion channel"
-msgstr "의논/토의 채널"
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__display_name
+msgid "Display Name"
+msgstr "이름 표시"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -289,22 +361,37 @@ msgid "Group"
 msgstr "그룹"
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "확인 링크가 잘못되었거나 만료되었습니다."
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_website____last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
-#: model:website.menu,name:website_mail_channel.menu_mailing_list
+#, python-format
 msgid "Mailing Lists"
-msgstr "메일링 목록"
+msgstr "메일보내기 목록"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:20
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Mailing-List"
-msgstr "메일 그룹"
+msgstr "메일보내기-목록"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -312,6 +399,8 @@ msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
 "float-right\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
+"구독 취소하시겠습니까? 여기 있습니다! <span class=\"fa fa-2x fa-arrow-down float-right\" "
+"role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
@@ -319,7 +408,7 @@ msgid "Outgoing Mails"
 msgstr "발신 메일"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:21
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Post to"
 msgstr "게시 장소"
@@ -332,43 +421,48 @@ msgstr "참조"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Stay in touch with our Community"
-msgstr "우리와 연락을 유지"
+msgstr "커뮤니티와 연락을 유지하십시오"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "Subscribe"
 msgstr "구독"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.not_subscribed
 msgid "The address"
-msgstr ""
+msgstr "주소"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:245
+#: code:addons/website_mail_channel/controllers/main.py:0
 #, python-format
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
 "mailing list"
-msgstr ""
+msgstr "%s 주소는 이미 탈퇴했거나 메일보내기 목록에 가입한 적이 없습니다."
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "구독 취소"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
-msgid "You have been correctly"
-msgstr ""
+#: model:ir.model,name:website_mail_channel.model_website
+msgid "Website"
+msgstr "웹사이트"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "You have been correctly"
+msgstr "올바르게 되었습니다"
+
+#. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "a confirmation email has been sent."
-msgstr ""
+msgstr "확인을 위한 이메일이 발송되었습니다."
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -389,12 +483,16 @@ msgid ""
 "                    list, you may want to check that the address was\n"
 "                    correct."
 msgstr ""
+"이미 구독을 취소했거나 \n"
+"                      메일보내기 목록에 구독을 신청하지 않았습니다. \n"
+"                      주소가 올바른지 \n"
+"                      확인하는 것이 좋습니다."
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "mailing list archives"
-msgstr "보관된 메일 그룹"
+msgstr "보관된 메일보내기 목록"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -402,6 +500,8 @@ msgid ""
 "members<br/>\n"
 "                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
+"멤버<br/>\n"
+"                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -426,20 +526,20 @@ msgstr "보기"
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "subscribed"
-msgstr ""
+msgstr "구독중"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "메일보내기 목록."
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "unsubscribed"
-msgstr ""
+msgstr "구독 취소됨"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "your email..."
 msgstr "귀하의 이메일..."

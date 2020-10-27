@@ -1,20 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_account
+# 	* google_account
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
-# Budi Iskandar <budiiskandar11@gmail.com>, 2017
+# Martin Trigaux, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Budi Iskandar <budiiskandar11@gmail.com>, 2017\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,48 +20,33 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_create_uid
-msgid "Created by"
-msgstr "Dibuat oleh"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_create_date
-msgid "Created on"
-msgstr "Dibuat pada"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_display_name
+#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_id
+#: model:ir.model,name:google_account.model_google_service
+msgid "Google Service"
+msgstr ""
+
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service__id
 msgid "ID"
 msgstr "ID"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service___last_update
+#: model:ir.model.fields,field_description:google_account.field_google_service____last_update
 msgid "Last Modified on"
 msgstr "Terakhir diubah pada"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
-msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_write_date
-msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:171
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:119
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -72,34 +54,9 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:55
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr ""
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:149
-#, python-format
-msgid ""
-"Something went wrong during your token generation. Maybe your Authorization "
-"Code is invalid or already expired [%s]"
-msgstr ""
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:192
-#, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Terjadi kesalahan pada permintaan layanan ke google"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:130
-#, python-format
-msgid "The account for the Google service '%s' is not configured"
-msgstr ""
-
-#. module: google_account
-#: model:ir.model,name:google_account.model_google_service
-msgid "google.service"
-msgstr "google.service"

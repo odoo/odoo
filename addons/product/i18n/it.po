@@ -10,7 +10,6 @@
 # David Minneci <david@numeko.it>, 2020
 # maiolif <maiolif@mgftools.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
-# Lorenzo Battistini <lb@takobi.online>, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
 # Martin Trigaux, 2020
@@ -204,9 +203,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un prodotto stoccabile è un prodotto per il quale gestisci lo stock. L'applicazione magazzino deve essere installata\n"
-"Un prodotto di consumo è un prodotto per il quale lo stock non è gestito.\n"
-"Un servizio è un prodotto non materiale che fornisci."
+"Un prodotto stoccabile è un prodotto per il quale vengono gestite le scorte. È necessario installare l'applicazione magazzino.\n"
+"Un prodotto di consumo è un prodotto per il quale non vengono gestite le scorte.\n"
+"Un servizio è un prodotto fornito in modo immateriale."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -541,7 +540,7 @@ msgstr "Calcola prezzo"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair (CONFIG)"
-msgstr ""
+msgstr "Sedia da conferenza (configurabile)"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
@@ -588,7 +587,7 @@ msgstr "Quantità contenuta"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Black"
-msgstr "Scrivania angolare nera"
+msgstr "Scrivania angolare sinistra"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -708,7 +707,7 @@ msgstr "Rif. cliente"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk (CONFIG)"
-msgstr ""
+msgstr "Scrivania personalizzata (configurabile)"
 
 #. module: product
 #: model:product.product,uom_name:product.expense_hotel
@@ -733,7 +732,8 @@ msgstr "Listino prezzi in %(currency)s predefinito"
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Unità di misura predefinita per ogni operazione di stoccaggio."
+msgstr ""
+"Unità di misura predefinita usata per tutte le operazioni di magazzino."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -754,12 +754,12 @@ msgstr "Definisci i listini prezzi del fornitore"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "Indicare unità di misura del volume"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Indicare unità di misura del peso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -776,13 +776,13 @@ msgstr "Descrizione"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr "Combinazione con scrivania"
+msgstr "Scrivania combinata"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr "Supporto da scrivania con schermo"
+msgstr "Scrivania con divisorio"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_3
@@ -1031,7 +1031,7 @@ msgstr ""
 #: model:product.product,name:product.expense_hotel
 #: model:product.template,name:product.expense_hotel_product_template
 msgid "Hotel Accommodation"
-msgstr "Sistemazione in hotel"
+msgstr "Pernottamento in albergo"
 
 #. module: product
 #: model:product.product,uom_name:product.product_product_1
@@ -1104,7 +1104,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
-"Se non selezionato, consente di nascondere il listino prezzi senza "
+"Se non selezionata, consente di nascondere il listino prezzi senza "
 "rimuoverlo."
 
 #. module: product
@@ -1113,7 +1113,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
-"Se non selezionato, consente di nascondere il prodotto senza rimuoverlo."
+"Se non selezionata, consente di nascondere il prodotto senza rimuoverlo."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_1920
@@ -1182,7 +1182,7 @@ msgstr "Non attivo"
 #: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
-msgstr "Posto di lavoro individuale"
+msgstr "Postazione di lavoro privata"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -2245,7 +2245,7 @@ msgstr "Acciaio"
 #: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
-msgstr "Scatola di stoccaggio"
+msgstr "Scatola portaoggetti"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -2539,7 +2539,7 @@ msgstr "Nome unità di misura "
 #: model:product.template,uom_name:product.product_product_9_product_template
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Units"
-msgstr "Unità"
+msgstr "unità"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2718,13 +2718,13 @@ msgstr "Fornitori"
 #: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr "Home staging virtuale"
+msgstr "Allestimento virtuale abitazione"
 
 #. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
-msgstr "Design di interni virtuale"
+msgstr "Progettazione di interni virtuale"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume

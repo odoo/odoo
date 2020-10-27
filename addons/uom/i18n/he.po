@@ -3,22 +3,19 @@
 # 	* uom
 # 
 # Translators:
-# Martin Trigaux, 2019
-# ExcaliberX <excaliberx@gmail.com>, 2019
-# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
-# Amit Spilman <amit@laylinetech.com>, 2019
+# Martin Trigaux, 2020
+# ExcaliberX <excaliberx@gmail.com>, 2020
+# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2020
+# Yihya Hugirat <hugirat@gmail.com>, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Amit Spilman <amit@laylinetech.com>, 2019\n"
+"POT-Creation-Date: 2020-10-02 14:12+0000\n"
+"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +30,9 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey\">\n"
+"                                    למשל: 1*(יחידה בסיסית)=יחס*(יחידה זו)\n"
+"                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -41,6 +41,9 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey\">\n"
+"                                    למשל: 1*(יחידה זו)=יחס*(יחידה בסיסית)\n"
+"                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -50,17 +53,17 @@ msgstr "פעיל"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "הוסף יחידת מידה חדשה"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "הוסף קטגורית יחידת מידה חדשה"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Archived"
-msgstr "התווסף לארכיון"
+msgstr "בארכיון"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -70,10 +73,11 @@ msgstr "יחס גדול יותר"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr ""
+msgstr "גדול מיחידת המידה הבסיסית"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Category"
 msgstr "קטגוריה"
 
@@ -83,8 +87,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"המרה בין יחידות מידה יכולה להתרחש רק אם הם שייכים לאותה קטגוריה. ההמרה תיעשה"
-" על בסיס יחסי."
+"המרה בין יחידות מידה יכולה להתרחש רק אם הן שייכות לאותה קטגוריה. ההמרה תיעשה"
+" על בסיס היחס בניהן."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -104,31 +108,6 @@ msgid "Days"
 msgstr "ימים"
 
 #. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
-msgid "Default Length"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
-msgid "Default Units"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
-msgid "Default Volume"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__weight
-msgid "Default Weight"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__working_time
-msgid "Default Working Time"
-msgstr ""
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
@@ -137,7 +116,12 @@ msgstr "הצג שם"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
-msgstr ""
+msgstr "תריסרים"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "קבץ לפי"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -150,6 +134,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"בכמה פעמים יחידת מידה זו גדולה מיחידת המידה הבסיסית בקטגוריה זו: 1 * (יחידה "
+"זו) = יחס * (יחידת מידה בסיסית)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -157,6 +143,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"בכמה יחידה זו גדולה יותר או קטנה יותר ביחס ליחידת המידה הבסיסית של קטגוריה "
+"זו: 1 * (יחידת מידה בסיסית) = יחס * (יחידה זו)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -185,27 +173,22 @@ msgstr "עדכון אחרון ב"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
-msgstr "אורך/מרחק"
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_litre
-msgid "Liters"
-msgstr ""
+msgstr "אורך / מרחק"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr ""
+msgstr "נהל יחידות מידה מרובות"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "יחידת מידה"
+msgstr "יחידת מידה של מוצר"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "קטגוריות יחידת מידה של מוצר"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -215,7 +198,7 @@ msgstr "יחס"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "יחידת מידה בסיסית לקטגוריה זו"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -225,12 +208,12 @@ msgstr "דיוק עיגול"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr ""
+msgstr "חפש יחידת מידה"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "קטן מיחידת המידה הבסיסית"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -238,28 +221,30 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"הכמות המחושבת תהיה כפולה של ערך זה. השתמש ב 1.0 עבור יחידת מידה שלא ניתן "
+"לפצל אותה עוד יותר, כגון חתיכה."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "יחס ההמרה של יחידת מידה לא יכול להיות 0 !"
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "מקדם ההמרה של יחידת המידה הבסיסית חייב להיות שווה ל 1 ."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "דיוק העיגול חייב להיות חיובי."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
-"category than the unit of measure %s defined on the product. Please correct "
+"category as the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
@@ -270,20 +255,10 @@ msgid "Type"
 msgstr "סוג"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
-msgid "Type of Measure"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
-msgid "Type of measurement category"
-msgstr ""
-
-#. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
+msgstr "בטל את הסימון של שדה \"פעיל\" כדי להשבית את יחידת המידה ללא מחיקתה."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -298,12 +273,12 @@ msgstr "יחידת מידה"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr ""
+msgstr "קטגורית יחידת מידה"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr ""
+msgstr "יחידה"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -315,13 +290,13 @@ msgstr "יחידות מידה"
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "קטגוריות יחידות מידה"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "קטגוריית יחידת מידה"
+msgstr "קטגוריות יחידת מידה"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -331,6 +306,8 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"ניתן להמיר יחידות מידה השייכות לאותה קטגוריה.\n"
+"            לדוגמא: בקטגוריה:   <i>'זמן'</i>, יהיו יחידות המידה הבאות: שעות, ימים."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -339,12 +316,14 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"קטגורית יחידה מידה %s צריכה להכיל יחידת מידה בסיסית. אם יצרת קטגוריה חדשה, "
+"אנא הגדר קודם כל את יחידת המידה הבסיסית."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "קטגורית יחידת מידה %s צריכה להכיל יחידת מידה בסיסית אחת בלבד."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -362,15 +341,10 @@ msgid "Working Time"
 msgstr "זמן עבודה"
 
 #. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_category_uom_category_unique_type
-msgid "You can have only one category per measurement type."
-msgstr ""
-
-#. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
+msgstr "אינך יכול למחוק יחידת מידה זו מכיוון שהיא משמשת את המערכת."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -379,6 +353,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"אתה לא יכול למחוק יחידת מידה זו מכיוון שהיא משמשת את המערכת. אתה צריך להעביר"
+" אותה לארכיון."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -386,6 +362,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"עליך להגדיר יחס המרה בין מספר \n"
+"            יחידות שונות באותה קטגוריה."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -394,22 +372,32 @@ msgstr "ס\"מ"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz"
+msgid "fl oz (US)"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "foot(ft)"
+msgid "ft"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
-msgid "gals"
+msgid "gal (US)"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "inches"
+msgid "in"
+msgstr "ב"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
 msgstr ""
 
 #. module: uom
@@ -424,20 +412,25 @@ msgstr "ק\"מ"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lbs"
+msgid "lb"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "miles"
+msgid "mi"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "ozs"
+msgid "oz"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt"
-msgstr "כמות"
+msgid "qt (US)"
+msgstr ""

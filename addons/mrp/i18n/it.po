@@ -48,6 +48,12 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Bozza: OdP non ancora confermato.\n"
+" * Confermato: OdP confermato, vengono attivate le regole di magazzino e il riordino dei componenti.\n"
+" * In corso: produzione avviata (su OdP o su OdL).\n"
+" * Da chiudere: produzione completata, l'OdP deve essere chiuso.\n"
+" * Completato: OdP chiuso, i movimenti di magazzino vengono registrati. \n"
+" * Annullato: OdP annullato, non può più essere confermato."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -1134,7 +1140,7 @@ msgstr "Conferma \"Cancella\""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Confirmed"
-msgstr "Confermata"
+msgstr "Confermato"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1368,7 +1374,8 @@ msgstr "Tempo di produzione preimpostato "
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Unità di misura predefinita per ogni operazione di stoccaggio."
+msgstr ""
+"Unità di misura predefinita usata per tutte le operazioni di magazzino."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -1635,7 +1642,7 @@ msgstr "Errore"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
-msgstr "Si è verificata un'eccezione durante l'ordine di produzione:"
+msgstr "Si è verificata un'eccezione sugli ordini di produzione:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2327,7 +2334,8 @@ msgstr "Punto di stoccaggio dove il sistema cercherà i componenti"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "Ubicazione dove il sistema immagazzinerà i prodotti finiti."
+msgstr ""
+"Ubicazione dove il sistema effettua lo stoccaggio dei prodotti finiti."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_dest_id
@@ -3141,7 +3149,7 @@ msgstr "Pianificazione"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Problemi nella pianificazione"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_plastic_laminate
@@ -3153,13 +3161,13 @@ msgstr "Laminato plastico"
 #: model:product.product,name:mrp.product_product_wood_ply
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
 msgid "Ply Layer"
-msgstr ""
+msgstr "Pannello multistrato"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_ply_veneer
 #: model:product.template,name:mrp.product_product_ply_veneer_product_template
 msgid "Ply Veneer"
-msgstr ""
+msgstr "Legno impiallacciato"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
@@ -3704,7 +3712,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #, python-format
 msgid "Scrap"
-msgstr "Scarto"
+msgstr "Scarta"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_count
@@ -3888,8 +3896,8 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
-"Alcuni ordini di lavoro sono già stati eseguiti, non è possibile annullare "
-"la pianificazione di questo ordine di produzione."
+"Impossibile annullare la pianificazione dell'ordine di produzione, alcuni "
+"ordini di lavoro sono già stati completati."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3898,8 +3906,8 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
-"Alcuni ordini di lavoro sono già iniziati, non è possibile annullare la "
-"pianificazione di questo ordine di produzione."
+"Impossibile annullare la pianificazione dell'ordine di produzione, alcuni "
+"ordini di lavoro sono già stati avviati."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -4063,13 +4071,13 @@ msgstr "Subappalto"
 #: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Table"
-msgstr "Tabella"
+msgstr "Tavolo"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_table_kit
 #: model:product.template,name:mrp.product_product_table_kit_product_template
 msgid "Table Kit"
-msgstr "Tabella Kit"
+msgstr "Kit tavolo"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_leg
@@ -4642,7 +4650,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unplan"
-msgstr "Annullare la pianificazione"
+msgstr "Annulla pianificazione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_unread
@@ -4796,7 +4804,7 @@ msgstr "Avvisi"
 #: model:product.product,name:mrp.product_product_wood_wear
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
-msgstr "Strato di usura"
+msgstr "Legno laminato"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
@@ -5313,7 +5321,7 @@ msgstr "giorni"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "from location"
-msgstr ""
+msgstr "dall'ubicazione"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

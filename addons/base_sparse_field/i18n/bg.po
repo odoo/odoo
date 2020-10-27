@@ -1,16 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_sparse_field
+# 	* base_sparse_field
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2020
+# aleksandar ivanov, 2020
+# Albena Mincheva <albena_vicheva@abv.bg>, 2020
+# Maria Boyadjieva <marabo2000@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,122 +23,143 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_boolean
-msgid "Boolean"
-msgstr ""
+#: model:ir.model,name:base_sparse_field.model_base
+msgid "Base"
+msgstr "База"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:24
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
+msgid "Boolean"
+msgstr "Булев"
+
+#. module: base_sparse_field
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr ""
+msgstr "Промяната на системата за съхранение на полето \"%s\" не е позволена."
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_char
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__char
 msgid "Char"
-msgstr ""
+msgstr "Работа"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_create_uid
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_uid
 msgid "Created by"
 msgstr "Създадено от"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_create_date
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_date
 msgid "Created on"
 msgstr "Създадено на"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_data
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__data
 msgid "Data"
-msgstr ""
+msgstr "Дата"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_display_name
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
 msgstr "Име за показване"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
+msgid "Field Type"
+msgstr "Вид поле"
+
+#. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_ir_model_fields
 msgid "Fields"
-msgstr ""
+msgstr "Полета"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_float
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__float
 msgid "Float"
-msgstr ""
+msgstr "Плаваща запетая"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_id
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields_serialization_field_id
+#: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid ""
 "If set, this field will be stored in the sparse structure of the "
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Ако е настроено, това поле ще бъде съхранено в структура на полето за "
+"сериализация, вместо да има собствена колона в базата данни. След "
+"създаването това не може да се промени."
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_integer
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
-msgstr ""
+msgstr "Цяло число"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test___last_update
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields____last_update
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
 msgid "Last Modified on"
 msgstr "Последно променено на"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_write_uid
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
 msgid "Last Updated by"
 msgstr "Последно обновено от"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_write_date
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_date
 msgid "Last Updated on"
 msgstr "Последно обновено на"
 
 #. module: base_sparse_field
-#: selection:sparse_fields.test,selection:0
+#: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
 msgid "One"
-msgstr ""
+msgstr "Едно"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_partner
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
 msgid "Partner"
 msgstr "Партньор"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:26
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "Преименуването на произволно поле \"%s\" не е позволено"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_selection
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__selection
 msgid "Selection"
-msgstr ""
+msgstr "Селекция"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields_serialization_field_id
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid "Serialization Field"
-msgstr ""
+msgstr "Поле за сериализация"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:38
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
-msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
-
-#. module: base_sparse_field
-#: selection:sparse_fields.test,selection:0
-msgid "Two"
+msgid "Serialization field %r not found for sparse field %s!"
 msgstr ""
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
-msgid "sparse_fields.test"
+msgid "Sparse fields Test"
+msgstr ""
+
+#. module: base_sparse_field
+#: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
+msgid "Two"
+msgstr "Две"
+
+#. module: base_sparse_field
+#: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
+msgid "serialized"
 msgstr ""

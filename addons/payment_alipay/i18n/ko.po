@@ -1,0 +1,160 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Martin Trigaux, 2020
+# JH CHOI <hwangtog@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid ""
+"\n"
+"                        Only transactions in Chinese Yuan (CNY) are allowed for Alipay Express Checkout.\n"
+"\n"
+"                        If you wish to use another currency than CNY for your transactions, switch your\n"
+"                        configuration to a Cross-border account on the Alipay payment acquirer in Odoo.\n"
+"                    "
+msgstr ""
+"\n"
+"                        알리페이 익스프레스 체크아웃은 중국 위안화(CNY) 거래만 허용됩니다.\n"
+"\n"
+"                        거래에 CNY 이외의 통화를 사용하려면 환경 설정을 \n"
+"                        Odoo의 알리페이 결제 매입사의 국경 간 공급 계정으로 전환합니다.\n"
+"                    "
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid ""
+"  * Cross-border: For the Overseas seller \n"
+"  * Express Checkout: For the Chinese Seller"
+msgstr ""
+"  * 국경 간 공급 : 해외 판매자용 \n"
+"  * 익스프레스 체크아웃 : 중국 판매자용"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; 다중 주문 발견"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; 주문이 없습니다"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid "Account"
+msgstr "계정"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+msgid "Alipay"
+msgstr "알리페이"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "알리페이 판매자 이메일"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "Alipay: invalid sign, received %s, computed %s, for data %s"
+msgstr "알리페이 : 유효하지 않은 서명, %s 수신되고 %s 계산됨. %s 데이터 사용"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "Alipay: received data for reference %s"
+msgstr "알리페이 : 참조 %s에 대한 데이터를 수신했습니다."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "Alipay: received data with missing reference (%s) or txn_id (%s)"
+msgstr "알리페이 : 누락된 참조(%s) 또는 txn_id(%s)를 포함한 데이터를 수신했습니다."
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "국경 간 공급"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese Merchant)"
+msgstr "익스프레스 체크아웃(중국 판매자 전용)"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "MD5 서명 키"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "판매자 협력사 ID"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "결제 매입사"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "결제 처리"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "공급업체"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid ""
+"The MD5 private key is the 32-byte string which is composed of English "
+"letters and numbers."
+msgstr "MD5 개인 키는 영어 문자와 숫자로 구성된 32바이트 문자열입니다."
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid ""
+"The Merchant Partner ID is used to ensure communications coming from Alipay "
+"are valid and secured."
+msgstr "판매자 협력사 ID는 알리페이에서 오는 통신이 유효하고 안전하게 유지되도록 하는 데 사용됩니다."
