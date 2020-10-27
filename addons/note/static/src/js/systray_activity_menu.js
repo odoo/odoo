@@ -68,19 +68,7 @@ ActivityMenu.include({
     _onActivityFilterClick: function (ev) {
         var $el = $(ev.currentTarget);
         if (!$el.hasClass("o_note")) {
-            var data = _.extend({}, $el.data(), $(ev.target).data());
-            if (data.res_model === "note.note" && data.filter === "my") {
-                this.do_action({
-                    type: 'ir.actions.act_window',
-                    name: data.model_name,
-                    res_model:  data.res_model,
-                    views: [[false, 'kanban'], [false, 'form'], [false, 'list']]
-                }, {
-                    clear_breadcrumbs: true,
-                });
-            } else {
-                this._super.apply(this, arguments);
-            }
+            this._super.apply(this, arguments);
         }
     },
     /**
