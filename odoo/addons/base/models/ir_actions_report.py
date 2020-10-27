@@ -793,6 +793,7 @@ class IrActionsReport(models.Model):
         if not data:
             data = {}
         data.setdefault('report_type', 'text')
+        data.setdefault('__keep_empty_lines', True)
         data = self._get_rendering_context(docids, data)
         return self._render_template(self.sudo().report_name, data), 'text'
 
