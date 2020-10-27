@@ -1,38 +1,82 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_multilang
-#
+# 
 # Translators:
-# William Surya Permana <zarambie_game@yahoo.com>, 2015
+# William Surya Permana <zarambie_game@yahoo.com>, 2020
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
+# Bonny Useful <bonny.useful@gmail.com>, 2020
+# Edy Kend <edy@azmall.co.id>, 2020
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2020
+# Ryanto The <ry.the77@gmail.com>, 2020
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:20+0000\n"
-"PO-Revision-Date: 2015-10-20 07:19+0000\n"
-"Last-Translator: William Surya Permana <zarambie_game@yahoo.com>\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
-"id/)\n"
-"Language: id\n"
+"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
 msgid "Account"
-msgstr "Akun"
+msgstr "Rekening"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Template Bagan Akun"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_account_tag
+msgid "Account Tag"
+msgstr "Tag Akun"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
+msgid ""
+"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "Akun Analitik"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_res_country_state
+msgid "Country state"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
+msgid "Display on Invoices"
+msgstr "Tampilkan pada Faktur"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
 msgid "Fiscal Position"
 msgstr "Posisi Fiskal"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
+msgid "Fiscal Position Template"
+msgstr "Template Posisi Fiskal"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_base_language_install
+msgid "Install Language"
+msgstr "Pasang Bahasa"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
@@ -40,16 +84,50 @@ msgid "Journal"
 msgstr "Jurnal"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_journal__name
+msgid "Journal Name"
+msgstr "Nama Jurnal"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__description
+msgid "Label on Invoices"
+msgstr "Label pada Faktur"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_fiscal_position__note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr "Referensi hukum yang harus dicetak pada faktur."
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__note
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
+msgid "Notes"
+msgstr "Catatan"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
 msgid "Spoken Languages"
 msgstr "Bahasa Ucapan"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
+msgid "State Name"
+msgstr "Nama Propinsi"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
+"loaded at the time of installation of this localization module and copied in"
+" the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
 msgstr ""
 "Tuliskan di sini bahasa dari terjemahan cetakan mana yang akan dimuat pada "
@@ -63,26 +141,22 @@ msgid "Tax"
 msgstr "Pajak"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Cetakan Posisi Fiskal"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
+msgid "Tax Name"
+msgstr "Nama pajak"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Cetakan Bagan Akun"
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
+msgstr "Template untuk Posisi Fiskal"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
 msgid "Templates for Accounts"
-msgstr "Cetakan Akun"
+msgstr "Template untuk Akun"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "Cetakan Perpajakan"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+msgstr "Template untuk Perpajakan"

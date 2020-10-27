@@ -3,21 +3,22 @@
 # 	* base_setup
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Fishfur A Banter <fishfurbanter@gmail.com>, 2019
-# ExcaliberX <excaliberx@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
-# Amit Spilman <amit@laylinetech.com>, 2019
+# Martin Trigaux, 2020
+# ExcaliberX <excaliberx@gmail.com>, 2020
+# Yihya Hugirat <hugirat@gmail.com>, 2020
+# hed shefetr <hed@laylinetech.com>, 2020
+# דודי מלכה <Dudimalka6@gmail.com>, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# Amit Spilman <amit@laylinetech.com>, 2020
+# Ofir Blum <ofir.blum@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Amit Spilman <amit@laylinetech.com>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Ofir Blum <ofir.blum@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "(Community Edition)"
-msgstr ""
+msgstr "(מהדורת קהילה)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -42,6 +43,11 @@ msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -51,23 +57,16 @@ msgid ""
 "                                        </span>\n"
 "                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
 "                                            Active Users\n"
+"                                        </span>"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                            Company\n"
 "                                        </span>\n"
-"\n"
-"                                        <br/>"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">\n"
-"                                                Languages\n"
-"                                            </span>"
-msgstr ""
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
 "                                            Companies\n"
 "                                        </span>\n"
 "                                        <br/>"
@@ -76,9 +75,22 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                                Language\n"
+"                                            </span>\n"
+"                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                                Languages\n"
+"                                            </span>"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
 "<span class=\"o_form_label\">Document Layout</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">עיצוב מסמך</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -86,7 +98,7 @@ msgid ""
 "<span class=\"o_form_label\">Format</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">פורמט</span>\n"
+"<span class=\"o_form_label\">תבנית</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_setup
@@ -94,6 +106,13 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
+msgstr ""
+"<strong>שמור</strong> דף זה וחזור לכאן כדי לבחור את הספק הגיאוגרפי שלך."
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
 
 #. module: base_setup
@@ -105,7 +124,7 @@ msgstr "<strong>שמור</strong> דף זה וחזור לכאן כדי להגד�
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "About"
-msgstr ""
+msgstr "על אודות"
 
 #. module: base_setup
 #: code:addons/base_setup/controllers/main.py:0
@@ -118,20 +137,25 @@ msgstr "הגישה נדחתה"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode"
-msgstr "הפעלת מצב פיתוח"
+msgstr "הפעל את מצב המפתח"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with assets)"
-msgstr ""
+msgstr "הפעל את מצב המפתח (עם נכסים)"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with tests assets)"
+msgstr "הפעל את מצב המפתח (עם נכסי בדיקות)"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Add Language"
 msgstr ""
 
 #. module: base_setup
@@ -142,40 +166,45 @@ msgstr "הוסף משוב נעים וכיפי כדי להניע את העובד�
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "אפשר למשתמשים לסנכרן את היומן שלהם עם יומן Google"
+msgstr "אפשר למשתמשים לסנכרן את היומן שלהם עם יומן גוגל"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
+msgid "Allow the users to synchronize their calendar with Outlook Calendar"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "אפשר למשתמשים לייבא נתונים מקובצי CSV / XLS / XLSX / ODS"
+msgstr "אפשר למשתמשים לייבא נתונים מקבצי CSV / XLS / XLSX / ODS"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "מאפשר לעבוד בסביבת מרובת מטבעות"
+msgstr "אפשר לעבוד בסביבת מרובת מטבעות"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
 msgid "Asterisk (VoIP)"
-msgstr ""
+msgstr "כוכבית (VoIP)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_drive
 msgid "Attach Google documents to any record"
-msgstr "צרף את מסמכי Google לכל רשומה"
+msgstr "צרף את מסמכי גוגל לכל רשומה"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
-msgstr ""
+msgstr "העשר את בסיס אנשי הקשר שלך באופן אוטומטי עם נתוני החברה"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "Automatically generate counterpart documents for orders/invoices between "
 "companies"
-msgstr ""
+msgstr "הפק באופן אוטומטי מסמכים מקבילים להזמנות / חשבוניות בין חברות"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -187,18 +216,18 @@ msgstr "מסמכים עסקיים"
 msgid ""
 "By default, new users get highest access rights for all installed apps."
 msgstr ""
-"כברירת מחדל, משתמשים חדשים מקבלים זכויות גישה גבוהות ביותר עבור כל "
-"האפליקציות המותקנות."
+"כברירת מחדל, משתמשים חדשים מקבלים את ההרשאות הגבוהות ביותר עבור כל היישומים "
+"המותקנים."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr ""
+msgstr "בחר את עיצוב המסמכים שלך"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
 msgid "Collaborative Pads"
-msgstr ""
+msgstr "Collaborative Pads"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -213,7 +242,7 @@ msgstr "חברה"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
 msgid "Company Informations"
-msgstr ""
+msgstr "מידע על החברה"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
@@ -223,12 +252,12 @@ msgstr "שם החברה"
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "Config Settings"
-msgstr "הגדרות תצורה"
+msgstr "הגדר הגדרות"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr ""
+msgstr "הגדר עיצוב מסמך"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -236,8 +265,8 @@ msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
 "company sells/buys to another of your company."
 msgstr ""
-"הגדר את חוקי החברה כדי ליצור באופן אוטומטי SO / PO כאשר אחת מהחברות שלך "
-"מוכרת / קונה לחברה אחרת שלך."
+"הגדר את חוקי החברה כדי ליצור אוטומטית הזמנת לקוח/הזמנת רכש כאשר אחת מהחברות "
+"שלך מוכרת / קונה מחברה אחרת שלך."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -249,12 +278,12 @@ msgstr "אנשי קשר"
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "Copyright © 2004"
-msgstr ""
+msgstr "זכויות יוצרים © 2004"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
-msgstr "צור וצרף מסמכים של Google Drive לכל רשומה"
+msgstr "צור וצרף מסמכים של גוגל דרייב לכל רשומה"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -266,20 +295,27 @@ msgstr "כותרת תחתונה מותאמת אישית"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Deactivate the developer mode"
-msgstr ""
+msgstr "בטל את מצב המפתח"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "זכויות גישה המוגדרות כברירת מחדל"
+msgstr "הרשאות ברירת מחדל"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Developer Tools"
-msgstr ""
+msgstr "כלים למפתח"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_setup.field_res_users__display_name
+msgid "Display Name"
+msgstr "שם תצוגה"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -288,7 +324,19 @@ msgstr "תבנית מסמך"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Documentation"
+msgstr "תיעוד"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
+msgstr "ערוך עיצוב"
+
+#. module: base_setup
+#. openerp-web
+#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
+#, python-format
+msgid "Email addresses already existing: %s."
 msgstr ""
 
 #. module: base_setup
@@ -296,7 +344,7 @@ msgstr ""
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Enter e-mail address"
-msgstr ""
+msgstr "הזן את כתובת הדוא\"ל"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
@@ -306,7 +354,7 @@ msgstr "שרתי דוא\"ל חיצוניים"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
-msgstr "חלץ ונתח נתוני Odoo מגיליון אלקטרוני של Google"
+msgstr "חלץ ונתח נתוני Odoo מגיליון אלקטרוני של גוגל"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -328,7 +376,7 @@ msgstr "תבנית"
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "GNU LGPL Licensed"
-msgstr ""
+msgstr "מורשה ברישיון הציבורי הכללי המוקטן של גנו (LGPL)"
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
@@ -344,17 +392,17 @@ msgstr "תרגומים של Gengo"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr ""
+msgstr "מיקום גיאוגרפי"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
-msgstr ""
+msgstr "מקם גיאוגרפית "
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "GeoLocalize your partners"
-msgstr ""
+msgstr "מקם גיאוגרפית את הלקוחות/ספקים שלך"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -364,12 +412,12 @@ msgstr "לוח שנה של גוגל"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Drive"
-msgstr "Google Drive"
+msgstr "גוגל דרייב"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_spreadsheet
 msgid "Google Spreadsheet"
-msgstr "גיליון אלקטרוני של Google"
+msgstr "גיליון אלקטרוני של גוגל"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
@@ -377,9 +425,16 @@ msgid "HTTP Routing"
 msgstr "ניתוב HTTP"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http__id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_setup.field_res_users__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr "יבוא ויצוא"
+msgstr "ייבוא וייצוא"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -389,6 +444,13 @@ msgstr "אינטגרציות"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
+msgstr "עסקאות בין-חברתיות"
+
+#. module: base_setup
+#. openerp-web
+#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
+#, python-format
+msgid "Invalid email addresses: %s."
 msgstr ""
 
 #. module: base_setup
@@ -396,14 +458,14 @@ msgstr ""
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite"
-msgstr ""
+msgstr "הזמן"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite New Users"
-msgstr ""
+msgstr "הזמן משתמשים חדשים"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -417,9 +479,16 @@ msgid "Languages"
 msgstr "שפות"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http____last_update
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:base_setup.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "שונה לאחרונה ב - "
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Layout"
-msgstr "פריסה"
+msgstr "עיצוב"
 
 #. module: base_setup
 #. openerp-web
@@ -430,28 +499,33 @@ msgstr "טען נתוני הדגמה"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Manage Companies"
+msgid "Manage API Keys"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Manage Companies"
+msgstr "נהל חברות"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
 msgid "Manage Inter Company"
-msgstr ""
+msgstr "נהל בין-חברתי"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr ""
+msgstr "נהל שפות"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr ""
+msgstr "נהל משתמשים"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Multi-Company"
-msgstr ""
+msgstr "רב-חברתי"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
@@ -461,17 +535,17 @@ msgstr "מטבעות מרובים"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr ""
+msgstr "מספר המשתמשים הפעילים"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
 msgid "Number of Companies"
-msgstr "כמות חברות"
+msgstr "מספר חברות"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr ""
+msgstr "מספר שפות"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -490,33 +564,43 @@ msgstr "Odoo"
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "Odoo S.A."
-msgstr ""
+msgstr "יישומי Odoo"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Apple Store"
-msgstr ""
+msgstr "בחנות אפל"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Google Play"
+msgstr "בחנות גוגל"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Outlook Calendar"
 msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__paperformat_id
 msgid "Paper format"
-msgstr "פורמט נייר"
+msgstr "תבנית נייר"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr ""
+msgstr "השלמה אוטומטית של לקוח/ספק"
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Pending Invitations:"
+msgstr "הזמנות ממתינות:"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Permissions"
 msgstr ""
 
 #. module: base_setup
@@ -532,7 +616,7 @@ msgstr "שלח SMS"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr ""
+msgstr "שלח הודעות טקסט לאנשי הקשר שלך"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -542,7 +626,7 @@ msgstr "הגדר זכויות גישה מותאמות אישית עבור משת
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set the paper format of printed documents"
-msgstr "הגדר את תבנית נייר של מסמכים מודפסים"
+msgstr "הגדר את תבנית הנייר של מסמכים מודפסים"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -556,37 +640,23 @@ msgstr "הצג אפקט"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Statistics"
-msgstr "סטטיסטיקה"
+msgid "Synchronize your calendar with Google Calendar"
+msgstr "סנכרן את לוח השנה שלך עם לוח השנה של גוגל"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Google Calendar"
-msgstr "סנכרן את היומן עם יומן Google"
-
-#. module: base_setup
-#. openerp-web
-#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
-#, python-format
-msgid "The following email addresses already exist: %s."
-msgstr ""
-
-#. module: base_setup
-#. openerp-web
-#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
-#, python-format
-msgid "The following email addresses are invalid: %s."
+msgid "Synchronize your calendar with Outlook"
 msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
 msgid "Translate Your Website with Gengo"
-msgstr "תרגם את האתר שלך עם Gengo"
+msgstr "תרגם את אתר האינטרנט שלך עם Gengo"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
-msgstr "תרגם את האתר שלך עם Gengo"
+msgstr "תרגם את אתר האינטרנט שלך עם Gengo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -596,7 +666,7 @@ msgstr "ספריית תמונות Unplash"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr ""
+msgstr "עדכן מידע"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -606,7 +676,7 @@ msgstr "השתמש באישורי LDAP כדי להיכנס"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr "השתמש בחשבונות חיצוניים כדי להיכנס (Google, Facebook וכו ')"
+msgstr "השתמש בחשבונות חיצוניים כדי להיכנס (גוגל,פייסבוק וכו ')"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
@@ -616,7 +686,7 @@ msgstr "השתמש בספקי אימות חיצוניים (OAuth)"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external pads in Odoo Notes"
-msgstr ""
+msgstr "השתמש ב pads חיצוניים בהערות Odoo"
 
 #. module: base_setup
 #. openerp-web
@@ -634,8 +704,8 @@ msgid ""
 "companies. When selecting one item, the company data and logo are auto-"
 "filled."
 msgstr ""
-"בעת אכלוס פנקס הכתובות שלך, Odoo מספק רשימה של חברות תואמות. בעת בחירת פריט "
-"אחד, נתוני החברה והלוגו מלאים אוטומטית."
+"בעת מילוי פנקס הכתובות שלך, Odoo מספק רשימה של חברות תואמות. בעת בחירת פריט "
+"אחד, נתוני החברה והלוגו מתמלאים אוטומטית."
 
 #. module: base_setup
 #. openerp-web
@@ -643,3 +713,14 @@ msgstr ""
 #, python-format
 msgid "more"
 msgstr "עוד"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"reCAPTCHA is a free service that protects your website from spam and abuse."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
+msgid "reCAPTCHA: Easy on Humans, Hard on Bots"
+msgstr ""

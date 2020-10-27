@@ -3,25 +3,52 @@
 # 	* lunch
 # 
 # Translators:
-# Jakub Lohnisky <jakub@lepremier.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Martin Trigaux, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jakub Lohnisky <jakub@lepremier.cz>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Martin Trigaux, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Jiří Podhorecký, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_5
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon "
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -227,6 +254,7 @@ msgstr "Vyžaduje akci"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__active
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -241,12 +269,17 @@ msgstr "Aktivity"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekorace výjimky aktivity"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
 msgid "Activity State"
 msgstr "Stav aktivity"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
 
 #. module: lunch
 #. openerp-web
@@ -256,7 +289,7 @@ msgid "Add"
 msgstr "Přidat"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_temp
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Add To Cart"
 msgstr ""
 
@@ -295,17 +328,20 @@ msgstr "Částka"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
 msgid "Archived"
 msgstr "Archivováno"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_order_temp__available_toppings_1
-#: model:ir.model.fields,help:lunch.field_lunch_order_temp__available_toppings_2
-#: model:ir.model.fields,help:lunch.field_lunch_order_temp__available_toppings_3
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_1
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_2
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_3
 msgid "Are extras available for this product"
-msgstr ""
+msgstr "Pro tento produkt jsou k dispozici doplňky"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
@@ -323,18 +359,52 @@ msgid "Availability"
 msgstr "Dostupnost"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__available_toppings_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
 msgid "Available Toppings 1"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__available_toppings_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_2
 msgid "Available Toppings 2"
+msgstr "Dostupné polevy 2"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_3
+msgid "Available Toppings 3"
+msgstr "Dostupné polevy 3"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__available_toppings_3
-msgid "Available Toppings 3"
+#: model:lunch.product,description:lunch.product_bacon
+#: model:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_cheese_burger_0
+#: model:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_1
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_burger
+msgid "Burger"
 msgstr ""
 
 #. module: lunch
@@ -364,7 +434,7 @@ msgstr "Zrušeno"
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
-msgstr ""
+msgstr "Hotovostní pohyby"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
@@ -390,6 +460,33 @@ msgid "Chat notification"
 msgstr ""
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "Sýrový burger"
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_4
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -404,11 +501,14 @@ msgid ""
 msgstr ""
 
 #. module: lunch
-#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
-msgid ""
-"Click on the <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> to announce that the order is ordered.<br>\n"
-"            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
-"            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> to announce that the order isn't available."
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
 msgstr ""
 
 #. module: lunch
@@ -436,6 +536,13 @@ msgstr "Nastavení konfigurace"
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
 msgid "Configuration"
 msgstr "Konfigurace"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_controller_common.js:0
+#, python-format
+msgid "Configure Your Order"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -477,11 +584,15 @@ msgid "Create a new product for lunch"
 msgstr "Vytvořit nový produkt na oběd"
 
 #. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create new lunch alerts"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_uid
@@ -494,7 +605,6 @@ msgstr "Vytvořeno od"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_date
@@ -506,7 +616,6 @@ msgstr "Vytvořeno"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__currency_id
@@ -535,14 +644,14 @@ msgstr "Dodání"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__description
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__description
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__product_description
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__product_description
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__description
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__description
 msgid "Description"
 msgstr "Popis"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_temp
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Discard"
 msgstr "Zrušit"
 
@@ -557,12 +666,14 @@ msgstr "Zobrazit"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_company__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_users__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
@@ -574,9 +685,9 @@ msgid "Don't forget the alerts displayed in the reddish area"
 msgstr "Nezapomeňte na upozornění zobrazená v načervenalé oblasti"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__edit
-msgid "Edit Mode"
-msgstr ""
+#: model:lunch.product.category,name:lunch.categ_drinks
+msgid "Drinks"
+msgstr "Nápoje"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
@@ -592,12 +703,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
 msgid "Employee who ordered last week"
-msgstr ""
+msgstr "Zaměstnanec, který si objednal minulý týden"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
 msgid "Employee who ordered last year"
-msgstr ""
+msgstr "Zaměstnanec, který si objednal minulý rok"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__everyone
@@ -605,54 +716,39 @@ msgid "Everyone"
 msgstr "Kdokoli"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_label_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_1
 msgid "Extra 1 Label"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_quantity_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_quantity_1
 msgid "Extra 1 Quantity"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_label_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_2
 msgid "Extra 2 Label"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_quantity_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_quantity_2
 msgid "Extra 2 Quantity"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_label_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_3
 msgid "Extra 3 Label"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_quantity_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_quantity_3
 msgid "Extra 3 Quantity"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_ids_1
-msgid "Extra Garniture"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_ids_2
-msgid "Extra Garniture 2"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__topping_ids_3
-msgid "Extra Garniture 3"
 msgstr ""
 
 #. module: lunch
@@ -698,12 +794,17 @@ msgstr "Sledující"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Sledující (Kanály)"
+msgstr "Sledující (kanály)"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Sledující (Partneři)"
+msgstr "Sledující (partneři)"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
@@ -716,10 +817,22 @@ msgid "Formatted Email"
 msgstr "Formátovaný e-mail"
 
 #. module: lunch
+#: model:lunch.order,product_description:lunch.order_line_2
+#: model:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_friday
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_friday
 msgid "Friday"
 msgstr "Pátek"
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_3
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
@@ -728,6 +841,12 @@ msgstr "Pátek"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "Seskupit podle"
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_club
+#: model:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr ""
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
@@ -761,12 +880,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__id
+#: model:ir.model.fields,field_description:lunch.field_res_company__id
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__id
+#: model:ir.model.fields,field_description:lunch.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -792,7 +913,6 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__image_1920
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1920
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_1920
 msgid "Image"
@@ -805,12 +925,17 @@ msgid "Image 1024"
 msgstr "Obrázek 1024"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__image_128
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__image_128
 msgid "Image 128"
 msgstr "Obrázek 128"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__image_1920
+msgid "Image 1920"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_256
@@ -825,9 +950,9 @@ msgid "Image 512"
 msgstr "Obrázek 512"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_temp
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Informations, allergens, ..."
-msgstr ""
+msgstr "Informace, alergeny, ..."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__available_today
@@ -837,12 +962,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
 msgid "Is Follower"
-msgstr "je Sledující"
+msgstr "Je sledující"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
 msgid "Last Lunch Location"
-msgstr ""
+msgstr "Místo posledního oběda"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert____last_update
@@ -850,12 +975,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_location____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_order____last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping____last_update
+#: model:ir.model.fields,field_description:lunch.field_res_company____last_update
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:lunch.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -869,7 +996,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_uid
@@ -882,7 +1008,6 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_date
@@ -944,9 +1069,21 @@ msgid "Lunch Kanban"
 msgstr ""
 
 #. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/js/lunch_list_view.js:0
+#, python-format
+msgid "Lunch List"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_location_action
 #: model:ir.model,name:lunch.model_lunch_location
 msgid "Lunch Locations"
+msgstr "Místa oběda"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
 msgstr ""
 
 #. module: lunch
@@ -960,11 +1097,6 @@ msgid "Lunch Order"
 msgstr "Obědnávka obědu"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_temp
-msgid "Lunch Order Temp"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
 msgstr "Obědový produkt"
@@ -975,9 +1107,19 @@ msgid "Lunch Product Category"
 msgstr "Kategorie obědového produktu"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "Oběd losos 20ks"
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
-msgstr ""
+msgstr "Dodavatel obědů"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "Oběd Temaki mix 3ks"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
@@ -1001,7 +1143,7 @@ msgstr ""
 #: model:ir.cron,cron_name:lunch.ir_cron_lunch
 #: model:ir.cron,name:lunch.ir_cron_lunch
 msgid "Lunch: automatic email send"
-msgstr ""
+msgstr "Oběd: automatické odesílání e-mailů"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1026,7 +1168,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Maximum overdraft that your employees can reach"
-msgstr ""
+msgstr "Maximální přečerpání, kterého mohou vaši zaměstnanci dosáhnout"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
@@ -1055,6 +1197,16 @@ msgid "Monday"
 msgstr "Pondělí"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "Můj účet"
@@ -1068,7 +1220,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "Můj účet byl seskupen"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
@@ -1078,7 +1230,7 @@ msgstr "Můj oběd"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "My Order History"
-msgstr ""
+msgstr "Moje historie objednávek"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action
@@ -1091,6 +1243,11 @@ msgstr "Moje objednávky"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "Název"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__is_new
@@ -1162,7 +1319,7 @@ msgstr "Not Received"
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/js/lunch_kanban_controller.js:0
+#: code:addons/lunch/static/src/js/lunch_controller_common.js:0
 #, python-format
 msgid "Not enough money in your wallet"
 msgstr ""
@@ -1229,7 +1386,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_2__1
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_3__1
 msgid "Only One"
-msgstr ""
+msgstr "Jen jeden"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -1245,12 +1402,12 @@ msgstr "Datum objednání"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
 msgid "Order Time"
-msgstr ""
+msgstr "Čas objednávky"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action_order
 msgid "Order Your Lunch"
-msgstr ""
+msgstr "Objednejte si oběd"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1259,7 +1416,7 @@ msgstr "Strom objednávkových řádek"
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch_kanban.xml:0
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #, python-format
 msgid "Order now"
 msgstr "Objednat teď"
@@ -1282,12 +1439,17 @@ msgstr "Objednávky pro ${ctx['order']['company_name']}"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
-msgstr ""
+msgstr "Přečerpání"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
 msgid "PM"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
 msgstr ""
 
 #. module: lunch
@@ -1311,6 +1473,33 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pizza
+msgid "Pizza"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.order,name:lunch.order_line_2
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__price
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__price
@@ -1320,7 +1509,6 @@ msgstr "Cena"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__product_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__product_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__product_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
@@ -1342,11 +1530,10 @@ msgstr "kategorie produktů"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Categories Form"
-msgstr ""
+msgstr "Formulář kategorií produktů"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__product_category
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__category_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__category_id
@@ -1361,7 +1548,6 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__product_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__name
 msgid "Product Name"
@@ -1374,6 +1560,12 @@ msgid "Product Search"
 msgstr "Hledání produktu"
 
 #. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "Product is no longer available."
+msgstr ""
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_report
 msgid "Product report"
 msgstr ""
@@ -1383,6 +1575,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:lunch.lunch_product_action_statbutton
 #: model:ir.ui.menu,name:lunch.lunch_product_menu
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_kanban
 msgid "Products"
 msgstr "Produkty"
 
@@ -1403,12 +1596,12 @@ msgstr "Strom produktů"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__quantity
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__quantity
 msgid "Quantity"
 msgstr "Množství"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Receive"
 msgstr "Obdržet"
 
@@ -1439,13 +1632,23 @@ msgid "Responsible User"
 msgstr "Zodpovědný uživatel"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "Losos a avokádo"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sandwich
+msgid "Sandwich"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_saturday
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_saturday
 msgid "Saturday"
 msgstr "Sobota"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_temp
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Save"
 msgstr "Uložit"
 
@@ -1465,7 +1668,7 @@ msgstr "Vyberte produkt a do poznámky vložte poznámky k objednávce."
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
 msgid "Send Order By"
-msgstr ""
+msgstr "Odeslat objednávku od"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
@@ -1479,8 +1682,8 @@ msgid "Show Until"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__note
-msgid "Special Instructions"
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
 msgstr ""
 
 #. module: lunch
@@ -1510,7 +1713,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street
 msgid "Street"
-msgstr "ulice"
+msgstr "Ulice"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -1541,8 +1744,31 @@ msgid "Sunday"
 msgstr "Neděle"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
 msgid "The number of products related to this category"
+msgstr "Počet produktů souvisejících s touto kategorií"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The product category is archived. The user have to unarchive the category or"
+" change the category of the product."
 msgstr ""
 
 #. module: lunch
@@ -1564,17 +1790,17 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
 msgid "There is no product available today"
-msgstr ""
+msgstr "V současné době není k dispozici žádný produkt"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_topping__topping_category
 msgid "This field is a technical field"
-msgstr ""
+msgstr "Toto pole je technické pole"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
 msgid "This field is used in order to "
-msgstr ""
+msgstr "Toto pole se používá za účelem"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
@@ -1602,7 +1828,7 @@ msgstr "Časové pásmo"
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/js/lunch_kanban_widget.js:0
+#: code:addons/lunch/static/src/js/lunch_widget.js:0
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__new
 #, python-format
 msgid "To Order"
@@ -1637,6 +1863,33 @@ msgid "Today's Orders"
 msgstr "Dnešní objednávky"
 
 #. module: lunch
+#: model:lunch.order,product_description:lunch.order_line_5
+#: model:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_margherita
+#: model:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr ""
@@ -1658,7 +1911,7 @@ msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch_kanban.xml:0
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
@@ -1669,7 +1922,6 @@ msgstr "Celkem"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__price
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__price_total
 msgid "Total Price"
 msgstr "Celková cena"
 
@@ -1680,9 +1932,19 @@ msgid "Tuesday"
 msgstr "Úterý"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr ""
+
+#. module: lunch
+#: model:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ zaznamenané výjimečné aktivity."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_unread
@@ -1703,10 +1965,9 @@ msgstr "Konec"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__user_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__user_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__user_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__user_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__user_id
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model:res.groups,name:lunch.group_lunch_user
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "User"
 msgstr "Uživatel"
 
@@ -1752,29 +2013,31 @@ msgid ""
 "You are trying to impersonate another user, but this can only be done by a "
 "lunch manager"
 msgstr ""
+"Pokoušíte se vydávat za jiného uživatele, ale to může provést pouze vedoucí "
+"oběda"
 
 #. module: lunch
-#: code:addons/lunch/wizard/lunch_line_wizard.py:0
+#: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You have to order one and only one %s"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/wizard/lunch_line_wizard.py:0
+#: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You should order at least one %s"
 msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch_kanban.xml:0
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #, python-format
 msgid "Your Account"
 msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch_kanban.xml:0
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #, python-format
 msgid ""
 "Your cart\n"
@@ -1790,17 +2053,17 @@ msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch_kanban.xml:0
+#: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #, python-format
 msgid "Your order"
-msgstr ""
+msgstr "Vaše objednávka"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid ""
-"Your wallet does not contain enough money to order that.To add some money to"
-" your wallet, please contact your lunch manager."
+"Your wallet does not contain enough money to order that. To add some money "
+"to your wallet, please contact your lunch manager."
 msgstr ""
 
 #. module: lunch
@@ -1841,3 +2104,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
 msgstr ""
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
+msgid "on"
+msgstr "na"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
+msgid "to"
+msgstr "k"

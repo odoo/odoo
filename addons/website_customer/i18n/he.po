@@ -3,19 +3,18 @@
 # 	* website_customer
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Fishfur A Banter <fishfurbanter@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Yihya Hugirat <hugirat@gmail.com>, 2020
+# דודי מלכה <Dudimalka6@gmail.com>, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +25,7 @@ msgstr ""
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr ""
+msgstr "<span class=\"fa fa-1x fa-tags\"/> הכל"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
@@ -34,6 +33,8 @@ msgid ""
 "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
 "link\" title=\"External link\"/>"
 msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
@@ -44,18 +45,18 @@ msgstr "פעיל"
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Countries"
-msgstr "כל המדינות"
+msgstr "כל הארצות"
 
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
+msgid "All Industries"
 msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Archived"
-msgstr "התווסף לארכיון"
+msgstr "בארכיון"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
@@ -65,7 +66,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "יכול לפרסם"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -75,7 +76,7 @@ msgstr "שם קטגוריה"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
-msgstr ""
+msgstr "מחלקה"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
@@ -85,12 +86,12 @@ msgstr "סגור"
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
 msgid "Contact"
-msgstr "איש קשר"
+msgstr "צור קשר"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
-msgstr "צור תג איש קשר חדש"
+msgstr "צור תגית איש קשר חדשה"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
@@ -103,12 +104,16 @@ msgid "Created on"
 msgstr "נוצר ב-"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
+#: model:ir.model.fields,field_description:website_customer.field_website__display_name
 msgid "Display Name"
 msgstr "הצג שם"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__id
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
+#: model:ir.model.fields,field_description:website_customer.field_website__id
 msgid "ID"
 msgstr "תעודה מזהה"
 
@@ -120,10 +125,12 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "מפורסם"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner____last_update
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
+#: model:ir.model.fields,field_description:website_customer.field_website____last_update
 msgid "Last Modified on"
 msgstr "שינוי אחרון ב"
 
@@ -142,7 +149,7 @@ msgstr "עדכון אחרון ב"
 msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
-msgstr "נהל תגיי אנשי קשר כדי לסווג אותם טוב יותר למטרות מעקב וניתוח."
+msgstr "נהל תגיות אנשי קשר כדי לסווג אותם טוב יותר למטרות מעקב וניתוח."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -170,22 +177,23 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
-msgstr "שותפים"
+msgstr "לקוחות"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
-msgstr "הפניות"
+msgstr "מזהים"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
-msgstr ""
+msgstr "הפניות לפי ארץ"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
+msgid "References by Industries"
 msgstr ""
 
 #. module: website_customer
@@ -206,7 +214,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
-msgstr "כתובת האתר המלאה כדי לגשת למסמך דרך האתר."
+msgstr "כתובת האתר המלאה לגישה למסמך דרך אתר האינטרנט."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -216,7 +224,12 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
-msgstr "גלוי באתר הנוכחי"
+msgstr "גלוי באתר האינטרנט הנוכחי"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "אתר אינטרנט"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -229,7 +242,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
 msgid "Website URL"
-msgstr "כתובת אתר (url)"
+msgstr "כתובת אתר אינטרנט"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids

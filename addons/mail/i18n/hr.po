@@ -3,28 +3,32 @@
 # 	* mail
 # 
 # Translators:
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
-# Mario Jureša <mario.juresa@uvid.hr>, 2019
-# Marko Carević <marko.carevic@live.com>, 2019
-# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
-# Ivan Marijanović <ivanm101@yahoo.com>, 2019
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Davor Bojkić <davor.bojkic@storm.hr>, 2019
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
-# Tina Milas, 2019
+# Marko Carević <marko.carevic@live.com>, 2020
+# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2020
+# Ivan Marijanović <ivanm101@yahoo.com>, 2020
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
+# Jasmina Otročak <jasmina@uvid.hr>, 2020
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
+# Miro Sertić, 2020
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2020
+# Davor Bojkić <davor.bojkic@storm.hr>, 2020
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2020
+# Tina Milas, 2020
+# Milan Tribuson <one.mile.code@gmail.com>, 2020
+# Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"Last-Translator: Vojislav Opačić <vojislav.opacic@gmail.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +44,17 @@ msgstr ""
 "Ovaj kanal je privatni, da bi se priključili ljudi moraju biti pozvani."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "${object.partner_id.lang}"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_activity.py:0
+#, python-format
+msgid "%(activity_name)s: %(summary)s assigned to you"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
@@ -53,26 +68,10 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/services/mail_manager.js:0
-#, python-format
-msgid "%d Messages"
-msgstr "%d poruka"
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid ""
-"%s \n"
-"(inactive)"
-msgstr ""
+msgstr "%ddana kasni"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -81,49 +80,15 @@ msgid "%s (copy)"
 msgstr "%s (kopija)"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js:0
-#, python-format
-msgid "%s and %s are typing..."
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "%s created"
 msgstr "%s kreiran"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js:0
-#, python-format
-msgid "%s is typing..."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js:0
-#, python-format
-msgid "%s, %s and more are typing..."
-msgstr ""
-
-#. module: mail
-#: code:addons/mail/models/mail_activity.py:0
-#, python-format
-msgid "%s: %s assigned to you"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "&nbsp;("
-msgstr "&nbsp;("
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -136,13 +101,6 @@ msgstr ""
 #, python-format
 msgid ", due on"
 msgstr ", dospjelo na"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "-------- Show older messages --------"
-msgstr "-------- Pokaži starije poruke --------"
 
 #. module: mail
 #. openerp-web
@@ -163,6 +121,13 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "0 Today"
+msgstr "0 Danas"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
+msgid ""
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">No record for this model</b>"
 msgstr ""
 
 #. module: mail
@@ -171,9 +136,9 @@ msgstr ""
 msgid ""
 "<br><br>\n"
 "            Type <b>@username</b> to mention someone, and grab his attention.<br>\n"
-"            Type <b>#channel</b>.to mention a channel.<br>\n"
+"            Type <b>#channel</b> to mention a channel.<br>\n"
 "            Type <b>/command</b> to execute a command.<br>\n"
-"            Type <b>:shortcut</b> to insert canned responses in your message.<br>"
+"            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
 
 #. module: mail
@@ -217,13 +182,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
-#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_short
-msgid ""
-"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
-" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
-"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
-"groups=\"base.group_user\"/>"
+#: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
+msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 msgstr ""
 
 #. module: mail
@@ -278,13 +238,13 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr ""
+msgstr "<p>Ovdje stvorite kanal.</p>"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/models/threads/create_mode_document_thread.js:0
+#: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
-msgid "<p>Creating a new record...</p>"
+msgid "<p>Create a public or private channel.</p>"
 msgstr ""
 
 #. module: mail
@@ -310,6 +270,11 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
+msgid "<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">Force a language: </span>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
@@ -319,7 +284,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Djelatnost</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -401,28 +366,6 @@ msgstr ""
 "transformirati u \"Good Morning\"."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Accept"
-msgstr "Prihvati"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Accept selected messages"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Accept |"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__accepted
 msgid "Accepted"
 msgstr "Prihvaćeno"
@@ -452,7 +395,7 @@ msgstr "Za napraviti"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Radni prozor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -476,6 +419,7 @@ msgstr "Standardno aktivirano kod pretplate"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__active
+#: model:ir.model.fields,field_description:mail.field_mail_channel__active
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
 msgstr "Aktivan"
@@ -488,15 +432,16 @@ msgstr "Aktivna domena"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:0
+#: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
 #: model:ir.ui.menu,name:mail.menu_mail_activities
+#: model:mail.message.subtype,name:mail.mt_activities
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
-#: model:mail.message.subtype,name:mail.mt_activities
 #, python-format
 msgid "Activities"
 msgstr "Aktivnosti"
@@ -504,7 +449,6 @@ msgstr "Aktivnosti"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/views/activity/activity_view.js:0
-#: code:addons/mail/static/src/xml/chatter.xml:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_type_id
@@ -524,7 +468,7 @@ msgstr "Aktivnost"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -546,6 +490,13 @@ msgid "Activity Type"
 msgstr "Vrsta aktivnosti"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_icon
+#: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
+#: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -556,35 +507,18 @@ msgstr "Tipovi aktivnosti"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Vrsta korisničke aktivnosti"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Activity type"
-msgstr ""
+msgstr "Vrsta aktivnosti"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Add"
-msgstr "Dodaj"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Add Attachments"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__channel_ids
 #: model:ir.model.fields,field_description:mail.field_ir_cron__channel_ids
-#, python-format
 msgid "Add Channels"
 msgstr "Dodaj kanal"
 
@@ -594,13 +528,10 @@ msgid "Add Email Blacklist"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__partner_ids
 #: model:ir.model.fields,field_description:mail.field_ir_cron__partner_ids
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__followers
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
-#, python-format
 msgid "Add Followers"
 msgstr "Dodaj sljedbenike"
 
@@ -618,20 +549,6 @@ msgid "Add Sign"
 msgstr "Dodaj potpis"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__user_signature
-#: model:ir.model.fields,field_description:mail.field_mail_template__user_signature
-msgid "Add Signature"
-msgstr "Dodaj potpis"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Add a channel"
-msgstr "Dodaj kanal"
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
@@ -644,9 +561,9 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:0
+#: code:addons/mail/static/src/xml/text_emojis.xml:0
 #, python-format
-msgid "Add attachment"
+msgid "Add an emoji"
 msgstr ""
 
 #. module: mail
@@ -659,13 +576,6 @@ msgstr "Dodaj kanale kojima ide obavijest..."
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
 msgstr "Dodaj kontakte kojima ide obavijest..."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Add this email address to white list of people"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -692,7 +602,6 @@ msgstr "Alarm"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_id
-#: model:ir.model.fields,field_description:mail.field_res_users__alias_id
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Alias"
@@ -702,7 +611,6 @@ msgstr "Alias"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_contact
-#: model:ir.model.fields,field_description:mail.field_res_users__alias_contact
 msgid "Alias Contact Security"
 msgstr "Alias kontakt za osiguranje"
 
@@ -739,14 +647,6 @@ msgid "Aliases"
 msgstr "Aliasi"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:0
-#: code:addons/mail/static/src/xml/systray.xml:0
-#, python-format
-msgid "All"
-msgstr "Sve"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Allowed Emails"
 msgstr ""
@@ -757,23 +657,13 @@ msgid "Always Allow"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/models/res_partner.py:0
 #, python-format
-msgid "Always Allow |"
+msgid "An email is required for find_or_create to work"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/models/mail_failure.js:0
-#, python-format
-msgid "An error occurred when sending an email"
-msgstr ""
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/models/mail_channel.py:0
-#: code:addons/mail/static/src/js/models/messages/message.js:0
 #, python-format
 msgid "Anonymous"
 msgstr "Anoniman"
@@ -790,21 +680,16 @@ msgstr ""
 " na generirani id poruke."
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
 msgid "Applies to"
 msgstr "Odnosi se na"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid "Apply"
-msgstr "Primijeni"
-
-#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_search
 msgid "Archived"
 msgstr "Arhivirano"
 
@@ -840,6 +725,7 @@ msgstr "Priloži datoteku"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_attachment
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__attachment_ids
 msgid "Attachment"
 msgstr "Prilog"
 
@@ -855,15 +741,11 @@ msgid "Attachment Count"
 msgstr "Broj priloga"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__attachment_ids
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
-#, python-format
 msgid "Attachments"
 msgstr "Privitci"
 
@@ -891,11 +773,6 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "Author Signature (mass mail only)"
-msgstr "Potpis autora (samo za masovnu poštu)"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__author_id
 #: model:ir.model.fields,help:mail.field_mail_mail__author_id
 #: model:ir.model.fields,help:mail.field_mail_message__author_id
@@ -918,7 +795,6 @@ msgid "Authorized Group"
 msgstr "Ovlaštena grupa"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__auto_delete
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,field_description:mail.field_mail_template__auto_delete
 msgid "Auto Delete"
@@ -945,40 +821,8 @@ msgid "Automated activity"
 msgstr ""
 
 #. module: mail
-#: model:ir.model,name:mail.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:0
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Avatar"
-msgstr "Avatar"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Ban"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
-msgid "Ban List"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Ban this email address"
 msgstr ""
 
 #. module: mail
@@ -992,35 +836,33 @@ msgid "Base"
 msgstr "Osnovica"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Be careful with channels following internal notifications"
-msgstr "Budite oprezni s kanalima koji prate interne obavijesti"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Best regards,"
 msgstr "Lijepi pozdrav,"
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.mail_blacklist_action
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Blacklist"
-msgstr ""
+msgstr "Crna lista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Blacklist Date"
+msgstr "Datum crne liste"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_blacklist_action
+msgid "Blacklisted Email Addresses"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__body_html
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__body_html
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
-#: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Body"
 msgstr "Tijelo"
 
@@ -1032,15 +874,12 @@ msgid "Bounce"
 msgstr "Odbij"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__bounce
-#, python-format
 msgid "Bounced"
 msgstr "Odbijeno"
 
 #. module: mail
-#: code:addons/mail/models/mail_cc_mixin.py:0
+#: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
 msgstr ""
@@ -1057,7 +896,6 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -1079,10 +917,7 @@ msgid "Cancel notification in failure"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__canceled
-#, python-format
 msgid "Canceled"
 msgstr "Otkazano"
 
@@ -1108,20 +943,29 @@ msgid "Carbon copy message recipients"
 msgstr "Primatelji skrivene kopije"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__email_cc
+#: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
+msgid "Carbon copy recipients"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
 msgstr "Carbon copy primatelji (ovdje se mogu koristiti zamjenski tekstovi)"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_company__catchall
+#: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
+msgid "Catchall"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_cc
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_cc
 msgid "Cc"
 msgstr "Cc (kopija)"
 
@@ -1132,26 +976,11 @@ msgid "Change the background color of the related activities of this type."
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Changed"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
-msgid "Changed Field"
-msgstr "Promijenjeno polje"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__channel_id
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__channel_id
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__channel
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
-#, python-format
 msgid "Channel"
 msgstr "Kanal"
 
@@ -1176,18 +1005,6 @@ msgid "Channel black/white list"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Channel settings"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/systray.xml:0
-#: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_mail__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
@@ -1195,7 +1012,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
-#, python-format
 msgid "Channels"
 msgstr "Kanali prodaje"
 
@@ -1204,15 +1020,6 @@ msgstr "Kanali prodaje"
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
 msgstr "Kanali/Partner"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/systray.xml:0
-#: code:addons/mail/static/src/xml/systray.xml:0
-#, python-format
-msgid "Chat"
-msgstr "Chat"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__chat
@@ -1225,39 +1032,24 @@ msgid "Chat Shortcode"
 msgstr "Kratki kod Čavrljanja"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
-msgid "Chat Status"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
 msgid "Child Messages"
 msgstr "Podređene poruke"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
-msgid "Choose a language:"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Choose an example"
 msgstr "Izaberi primjer"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 #, python-format
 msgid "Close"
 msgstr "Zatvori"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/abstract_thread_window.xml:0
-#, python-format
-msgid "Close chat window"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__closed
@@ -1275,7 +1067,6 @@ msgid "Comma-separated ids of recipient partners"
 msgstr "Ids primatelja odvojeni zarezima"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__partner_to
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
@@ -1284,12 +1075,12 @@ msgstr ""
 "tekstovi)"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
 msgstr "Adrese primatelja odvojene zarezom"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__email_to
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr "Adrese primatelja odvojene zarezom"
@@ -1331,18 +1122,14 @@ msgid "Configure your activity types"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Congratulations, your inbox is empty"
-msgstr "Čestitamo! Vaš inbox je prazan"
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Configure your own email servers"
+msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Congratulations, your inbox is empty!"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
+msgid "Confirm"
+msgstr "Potvrdi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__smtp
@@ -1383,13 +1170,6 @@ msgid "Conversation is minimized"
 msgstr "Razgovor je minimiziran"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:0
-#, python-format
-msgid "Conversations"
-msgstr "Razgovori"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
@@ -1404,23 +1184,9 @@ msgid "Create"
 msgstr "Kreiraj"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Create %s (Private)"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Create %s (Public)"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Next Activity"
-msgstr ""
+msgstr "Stvorite sljedeću aktivnost"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
@@ -1430,13 +1196,13 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
-msgid "Create a new %(document)s"
+msgid "Create new %(document)s"
 msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
-msgid "Create a new %(document)s by sending an email to %(email_link)s"
+msgid "Create new %(document)s by sending an email to %(email_link)s"
 msgstr ""
 
 #. module: mail
@@ -1445,11 +1211,11 @@ msgid "Created By"
 msgstr "Kreirao"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_activity__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_uid
@@ -1462,6 +1228,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__create_uid
 msgid "Created by"
@@ -1470,12 +1237,12 @@ msgstr "Kreirao"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_date
@@ -1488,6 +1255,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_template__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__create_date
 #, python-format
@@ -1511,6 +1279,13 @@ msgid "Current user is a moderator of the channel"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_bounced_content
+#: model:ir.model.fields,field_description:mail.field_mail_channel__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
 msgid "Custom channel name"
 msgstr ""
@@ -1528,19 +1303,13 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Dates"
-msgstr "Datumi"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
 msgid "Days"
-msgstr "Dani"
+msgstr "Dani/a"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
@@ -1556,7 +1325,7 @@ msgstr "Poštovani"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__decoration_type
 msgid "Decoration Type"
-msgstr ""
+msgstr "Vrsta dekoracije"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
@@ -1571,7 +1340,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr ""
+msgstr "Zadana sljedeća aktivnost"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -1584,7 +1353,7 @@ msgid "Default User"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__null_value
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__null_value
 #: model:ir.model.fields,field_description:mail.field_mail_template__null_value
 msgid "Default Value"
 msgstr "Zadana vrijednost"
@@ -1597,13 +1366,11 @@ msgid "Default Values"
 msgstr "Zadane vrijednosti"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__use_default_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
 msgstr "Zadani primatelji"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__use_default_to
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
 msgid ""
 "Default recipients of the record:\n"
@@ -1620,19 +1387,24 @@ msgid "Define a new chat shortcode"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
+msgid "Delay Label"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr ""
+msgstr "Tip kašnjenja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
-msgstr ""
+msgstr "Jedinica kašnjenja"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/composer.xml:0
-#: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/composer.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 #, python-format
 msgid "Delete"
@@ -1647,11 +1419,6 @@ msgstr "Briši poruke"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
 msgid "Delete Message Copy"
 msgstr "Briši kopiju poruke"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
-msgid "Delete sent emails (mass mailing only)"
-msgstr "Briši poslane poruke (samo masovna pošta)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -1677,20 +1444,9 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Direct Messages"
-msgstr "Izravne poruke"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#: code:addons/mail/static/src/js/discuss.js:0
 #: code:addons/mail/static/src/xml/activity.xml:0
-#: code:addons/mail/static/src/xml/composer.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 #, python-format
 msgid "Discard"
 msgstr "Odbaci"
@@ -1706,21 +1462,8 @@ msgid "Discard mail delivery failures"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Discard selected messages"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Discard |"
-msgstr ""
-
-#. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
+#: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Discuss"
@@ -1742,14 +1485,23 @@ msgid "Dismiss notification for resend by model"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__display_name
+#: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
+#: model:ir.model.fields,field_description:mail.field_base_partner_merge_automatic_wizard__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_actions_server__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_http__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_model__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_model_fields__display_name
+#: model:ir.model.fields,field_description:mail.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_address_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_alias__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__display_name
@@ -1759,17 +1511,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract__display_name
+#: model:ir.model.fields,field_description:mail.field_res_company__display_name
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mail.field_res_groups__display_name
+#: model:ir.model.fields,field_description:mail.field_res_partner__display_name
+#: model:ir.model.fields,field_description:mail.field_res_users__display_name
 msgid "Display Name"
 msgstr "Naziv"
 
@@ -1797,13 +1556,6 @@ msgstr ""
 "masovno slanje pošte)"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:0
-#, python-format
-msgid "Do you really want to delete %s?"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
 msgstr "Dokument"
@@ -1822,6 +1574,11 @@ msgstr "Model dokumenta"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
 msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentacija"
 
 #. module: mail
 #. openerp-web
@@ -1850,29 +1607,16 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Download"
 msgstr "Preuzimanje"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:0
-#: code:addons/mail/static/src/xml/composer.xml:0
-#, python-format
-msgid "Drag Files Here"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Dropdown menu"
 msgstr "Padajući izbornik"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Dropdown menu - Followers"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -1913,43 +1657,29 @@ msgstr "Uredi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "Izmjeni partnere"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid "Edit Subscription of "
-msgstr "Uredi pretplatu "
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Edit subscription"
-msgstr "Uredi pretplatu "
-
-#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__partner_email
+#: model:ir.model.fields,field_description:mail.field_mail_followers__email
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__email
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__email
+#: model:ir.model.fields,field_description:mail.field_res_partner__email
+#: model:ir.model.fields,field_description:mail.field_res_users__email
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_type__email
+#: model:mail.activity.type,name:mail.mail_activity_data_email
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
-#: model:mail.activity.type,name:mail.mail_activity_data_email
 msgid "Email"
 msgstr "E-pošta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Email Address"
 msgstr "E-mail adresa"
-
-#. module: mail
-#: model:ir.model,name:mail.model_mail_address_mixin
-msgid "Email Address Mixin"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1964,9 +1694,10 @@ msgstr "Alias e-maila"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr ""
+msgstr "Mixin za e-mail aliase"
 
 #. module: mail
+#: model:ir.ui.menu,name:mail.mail_blacklist_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
 msgstr ""
@@ -1982,7 +1713,12 @@ msgid "Email Configuration"
 msgstr "Postavke email-a"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
+msgid "Email Mass Mailing"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Email Preview"
 msgstr "Pregled e-maila"
 
@@ -1992,18 +1728,13 @@ msgid "Email Search"
 msgstr "Pretraga e-pošte"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_notification__notification_status
-msgid "Email Status"
-msgstr "Status poruke"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__template_id
 msgid "Email Template"
 msgstr "Predložak e-maila"
 
 #. module: mail
-#: model:ir.model,name:mail.model_email_template_preview
+#: model:ir.model,name:mail.model_mail_template_preview
 msgid "Email Template Preview"
 msgstr "Pregled e-mail predloška"
 
@@ -2021,15 +1752,6 @@ msgstr "Nit e-pošte"
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
 msgid "Email address already exists!"
 msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_users__alias_id
-msgid ""
-"Email address internally associated with this user. Incoming emails will "
-"appear in the user's notifications."
-msgstr ""
-"E-mail adresa interno povezana s ovim korisnikom. Dolazni e-mail će se "
-"pojaviti u korisnikovim obavijestima."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
@@ -2076,6 +1798,11 @@ msgid "Email message"
 msgstr "E-mail poruka"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_followers__email
+msgid "Email of the related partner (if exist) or False"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
 msgstr ""
@@ -2094,10 +1821,9 @@ msgid "Emails"
 msgstr "E-mailovi"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:0
-#, python-format
-msgid "Emojis"
+#: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
+#: model:ir.model.fields,field_description:mail.field_mail_message__is_internal
+msgid "Employee Only"
 msgstr ""
 
 #. module: mail
@@ -2111,14 +1837,16 @@ msgid "Envelope Example"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__danger
-#, python-format
 msgid "Error"
 msgstr "Greška"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__error_msg
+msgid "Error Message"
+msgstr "Poruka greške:"
 
 #. module: mail
 #: code:addons/mail/models/update.py:0
@@ -2162,18 +1890,13 @@ msgstr "Greška: Sljedbenik mora biti partner ili kanal (ali ne oboje)."
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__public
 msgid "Everyone"
-msgstr "Svatko"
+msgstr "Svi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
 #: model:mail.activity.type,name:mail.mail_activity_data_warning
 msgid "Exception"
 msgstr "Iznimka"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
-msgid "Exception Activities"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2191,10 +1914,16 @@ msgid "Failed"
 msgstr "Neuspjelo"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:0
+#: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template %r using values %r"
-msgstr "Neuspješno generianje predloška %r korištenjem vrijednosti %r"
+msgid "Failed to render template : %s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Failed to render template : %s (%d)"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -2235,8 +1964,9 @@ msgid "Feedback"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__model_object_field
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_object_field
+#: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
 msgid "Field"
 msgstr "Polje"
 
@@ -2295,7 +2025,7 @@ msgid "Fields"
 msgstr "Polja"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__copyvalue
+#: model:ir.model.fields,help:mail.field_mail_render_mixin__copyvalue
 #: model:ir.model.fields,help:mail.field_mail_template__copyvalue
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
@@ -2308,13 +2038,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__folded
 msgid "Folded"
 msgstr "Omotano"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Follow"
-msgstr "Slijedi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
@@ -2358,45 +2081,32 @@ msgid "Followers Form"
 msgstr "Obrazac pratitelja"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Followers of"
-msgstr "Sljedbenici od"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
 msgstr "Samo sljedbenici"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Following"
-msgstr "Slijedi"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
+#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
+#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__email_from
+#: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
+msgid "Formatted Email"
+msgstr "Oblikovani e-mail"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
 msgstr "Od"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Full composer"
-msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2412,7 +2122,7 @@ msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Gateway"
 msgstr "Prolaz"
 
@@ -2458,12 +2168,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP usmjeravanje"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr ""
+msgstr "Poslati e-poštom"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
@@ -2514,6 +2224,15 @@ msgid "Help message"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Hi,<br/>\n"
+"The following email sent to %s cannot be accepted because this is a private email address.\n"
+"Only allowed people can contact us at this address."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
 msgid "Hidden"
 msgstr "Skriveno"
@@ -2524,23 +2243,30 @@ msgid "Hide the subtype in the follower options"
 msgstr "Sakrij podtip u opcijama pratitelja"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_manager.js:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "History"
-msgstr "Povijest"
+#: model:ir.model.fields,help:mail.field_mail_mail__is_internal
+#: model:ir.model.fields,help:mail.field_mail_message__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__id
+#: model:ir.model.fields,field_description:mail.field_base_module_uninstall__id
+#: model:ir.model.fields,field_description:mail.field_base_partner_merge_automatic_wizard__id
+#: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__id
+#: model:ir.model.fields,field_description:mail.field_ir_actions_server__id
+#: model:ir.model.fields,field_description:mail.field_ir_attachment__id
+#: model:ir.model.fields,field_description:mail.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:mail.field_ir_http__id
+#: model:ir.model.fields,field_description:mail.field_ir_model__id
+#: model:ir.model.fields,field_description:mail.field_ir_model_fields__id
+#: model:ir.model.fields,field_description:mail.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__id
-#: model:ir.model.fields,field_description:mail.field_mail_address_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_alias__id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__id
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__id
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__id
@@ -2550,17 +2276,24 @@ msgstr "Povijest"
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__id
 #: model:ir.model.fields,field_description:mail.field_mail_notification__id
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__id
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__id
 #: model:ir.model.fields,field_description:mail.field_mail_template__id
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__id
 #: model:ir.model.fields,field_description:mail.field_mail_thread__id
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__id
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__id
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__id
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract__id
+#: model:ir.model.fields,field_description:mail.field_res_company__id
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mail.field_res_groups__id
+#: model:ir.model.fields,field_description:mail.field_res_partner__id
+#: model:ir.model.fields,field_description:mail.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -2589,20 +2322,13 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_id
 msgid "Id of the followed resource"
 msgstr "Id resursa koji se prati"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Idle"
-msgstr "Prazan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction
@@ -2631,7 +2357,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__send_mail
@@ -2641,14 +2367,6 @@ msgid ""
 msgstr ""
 "Ako je označeno, partneri će primiti e-mail upozorenje da su dodani u "
 "sljedbenike dokumenta."
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__user_signature
-#: model:ir.model.fields,help:mail.field_mail_template__user_signature
-msgid ""
-"If checked, the user's signature will be appended to the text version of the"
-" message"
-msgstr "Ako je odabrano, potpis korisnika biti će dodan tekst verziji poruke."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_fields__tracking
@@ -2667,7 +2385,6 @@ msgstr ""
 " nije postavljeno, e-mail će biti poslan što prije moguće."
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__scheduled_date
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
@@ -2676,6 +2393,15 @@ msgstr ""
 "Ako je postavljeno, menadžer reda čekanja poslat će e-mail nakon datuma. Ako"
 " nije postavljeno, e-mail će biti poslan što prije moguće. Jinja2 zamjenski "
 "tekst se može koristiti."
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_bounced_content
+#: model:ir.model.fields,help:mail.field_mail_channel__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -2687,6 +2413,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_followers__is_active
+msgid ""
+"If the related partner is active (if exist) or if related channel exist"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
@@ -2694,15 +2426,6 @@ msgid ""
 msgstr ""
 "Ako ste postavili catch-all domenu e-maila preusmjerenu na Odoo server, "
 "unesite naziv domene ovdje."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid ""
-"If you remove a follower, he won't be notified of any email or discussion on"
-" this document. Do you really want to remove %s?"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2720,10 +2443,16 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_channel__image_128
 #, python-format
 msgid "Image"
 msgstr "Slika"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
+msgid "Image is a link"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -2732,13 +2461,7 @@ msgid "Inactive Alias"
 msgstr "Neaktivni alias"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_manager.js:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_type__inbox
-#, python-format
 msgid "Inbox"
 msgstr "Pristigla pošta"
 
@@ -2750,6 +2473,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/activity.xml:0
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Info"
@@ -2781,13 +2505,13 @@ msgstr "Samo interno"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__recipient
 msgid "Invalid email address"
-msgstr ""
+msgstr "Nepostojeća email adresa"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr ""
+msgstr "Nepostojeća email adresa %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -2800,60 +2524,17 @@ msgstr ""
 "'Vrijednost'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_address_mixin.py:0
-#: code:addons/mail/models/mail_address_mixin.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/controllers/main.py:0
-#, python-format
-msgid "Invalid token in route %s"
-msgstr "Netočan token u smjeru %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Poziv"
-
-#. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
-msgid "Invitation to follow %s: %s"
-msgstr "Poziv za praćenje %s: %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Invite"
-msgstr "Pozovi"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid "Invite Follower"
-msgstr "Pozovi pratitelja"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Invite people"
-msgstr "Pozovi osobe"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Invite people to #%s"
-msgstr "Pozovite ljude na #%s"
+msgid "Invitation to follow %(document_model)s: %(document_name)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2866,14 +2547,19 @@ msgid "Invited people only"
 msgstr "Samo pozvani"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
-msgid "Is Allowed"
+#: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
+msgid "Is Active"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
+msgid "Is Allowed"
+msgstr "Dopušteno"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Is Banned"
-msgstr ""
+msgstr "Zabranjeno"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -2904,7 +2590,7 @@ msgstr "Je pretplaćen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
-msgstr ""
+msgstr "Razgovor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -2914,7 +2600,7 @@ msgstr "Je član"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_moderator
 msgid "Is moderator"
-msgstr ""
+msgstr "Moderator"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_pinned
@@ -2932,7 +2618,7 @@ msgid "Join a group"
 msgstr "Priključi se grupi"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__lang
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__lang
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Jezik"
@@ -2943,14 +2629,23 @@ msgid "Last Fetched"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview____last_update
+#: model:ir.model.fields,field_description:mail.field_base_module_uninstall____last_update
+#: model:ir.model.fields,field_description:mail.field_base_partner_merge_automatic_wizard____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_actions_server____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_attachment____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_config_parameter____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_http____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_model____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_model_fields____last_update
+#: model:ir.model.fields,field_description:mail.field_ir_ui_view____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_activity____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_address_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_alias____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist____last_update
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_channel____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message____last_update
@@ -2960,17 +2655,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_moderation____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_notification____last_update
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_template____last_update
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_thread____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite____last_update
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract____last_update
+#: model:ir.model.fields,field_description:mail.field_res_company____last_update
+#: model:ir.model.fields,field_description:mail.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:mail.field_res_groups____last_update
+#: model:ir.model.fields,field_description:mail.field_res_partner____last_update
+#: model:ir.model.fields,field_description:mail.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
@@ -2981,12 +2683,12 @@ msgid "Last Seen"
 msgstr "Zadnje viđeno"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_activity__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_uid
@@ -2999,18 +2701,19 @@ msgstr "Zadnje viđeno"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_date
@@ -3023,6 +2726,7 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_template__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__write_date
 msgid "Last Updated on"
@@ -3054,9 +2758,7 @@ msgid "Leave"
 msgstr "Odsustvo"
 
 #. module: mail
-#. openerp-web
 #: code:addons/mail/models/mail_channel.py:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Leave this channel"
 msgstr "Napusti ovaj kanal"
@@ -3102,19 +2804,14 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Loading"
 msgstr "Učitavanje"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Loading older messages..."
-msgstr ""
-
-#. module: mail
-#. openerp-web
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Loading..."
@@ -3122,19 +2819,12 @@ msgstr "Učitavanje..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composers/chatter_composer.js:0
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
 msgstr "Zapisnik"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Log a note. Followers will not be notified."
-msgstr "Priljavi bilježku. Sljedbenici neće biti obaviješteni."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3154,21 +2844,9 @@ msgstr "Prijavi internu bilješku"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Log note"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Log or schedule an activity"
-msgstr ""
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
+#: code:addons/mail/static/src/xml/activity.xml:0
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_id
 #, python-format
@@ -3191,6 +2869,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
+#: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Blacklist"
 msgstr ""
 
@@ -3200,22 +2879,14 @@ msgid "Mail Blacklist mixin"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Mail Body"
-msgstr "Sadržaj maila"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
 msgstr "Obrazac mail kanala"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:0
-#, python-format
-msgid "Mail Delivery Failed"
-msgstr "Isporuka pošte nije uspjela"
+#: model:ir.model,name:mail.model_mail_render_mixin
+msgid "Mail Render Mixin"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -3276,28 +2947,14 @@ msgstr "Glavni prilog"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Manage Messages"
-msgstr ""
+msgstr "Upravljaj porukama"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Mark Done"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Mark all as read"
-msgstr "Označi sve kao pročitano"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Mark all read"
-msgstr "Označi sve pročitane"
+msgstr "Označi kao Urađeno"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3306,31 +2963,11 @@ msgstr "Označi kao izvršeno"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Mark as Read"
-msgstr "Označi kao pročitano"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Mark as Todo"
-msgstr "Označi sa 'Za obaviti'"
-
-#. module: mail
-#. openerp-web
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Mark as done"
 msgstr "Označi kao izvršeno"
-
-#. module: mail
-#: model:ir.ui.menu,name:mail.mail_blacklist_menu
-msgid "Mass Mail Blacklist"
-msgstr ""
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -3368,7 +3005,7 @@ msgstr "Spojeno sa sljedećim partnerima:"
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
-#: model_terms:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Message"
 msgstr "Poruka"
 
@@ -3412,6 +3049,12 @@ msgid "Message are pending moderation"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_mail__description
+#: model:ir.model.fields,help:mail.field_mail_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr "Opis poruke: ili predmet ili početak tijela"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
 msgid "Message recipients (emails)"
 msgstr "Primatelji poruke (e-maila)"
@@ -3422,16 +3065,9 @@ msgid "Message references, such as identifiers of previous messages"
 msgstr "Reference poruke, poput identifikatora prethodnih poruka"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Message sent in \""
-msgstr "Poruka poslana u \""
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
-msgid "Message should be a valid Message instance"
+msgid "Message should be a valid EmailMessage instance"
 msgstr ""
 
 #. module: mail
@@ -3515,13 +3151,6 @@ msgstr ""
 "kasnije ponovno pregledate."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Messages marked as read will appear in the history."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
@@ -3529,13 +3158,6 @@ msgid ""
 msgstr ""
 "Poruke s internom podvrstom vidljive se samo zaposlenicima, odnosno "
 "članovima base_user group"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/models/threads/mailbox.js:0
-#, python-format
-msgid "Missing domain for mailbox with ID '%s'"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_id
@@ -3570,10 +3192,7 @@ msgid "Models"
 msgstr "Modeli"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_manager.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
-#, python-format
 msgid "Moderate Messages"
 msgstr ""
 
@@ -3613,25 +3232,23 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation"
+msgstr "Moderiranje"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
+msgid "Moderation List"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Moderation Queue"
-msgstr ""
+msgstr "Lista za moderiranje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__moderation_status
 #: model:ir.model.fields,field_description:mail.field_mail_message__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Status moderiranja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_counter
@@ -3641,18 +3258,18 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_moderator
 msgid "Moderator"
-msgstr ""
+msgstr "Moderator"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
-msgstr ""
+msgstr "Moderatori"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "Moderatori moraju imati email adresu"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -3670,7 +3287,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Deinstalacija modula"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__months
@@ -3678,9 +3295,9 @@ msgid "Months"
 msgstr "Mjeseci"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
+#: model:ir.model.fields,field_description:mail.field_mail_followers__name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
 #: model:ir.model.fields,field_description:mail.field_mail_template__name
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3695,7 +3312,11 @@ msgid "Name get of the related document."
 msgstr "Ime prezueto iz povezanog dokumenta"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__report_name
+#: model:ir.model.fields,help:mail.field_mail_followers__name
+msgid "Name of the related partner (if exist) or the related channel"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__report_name
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
@@ -3717,26 +3338,7 @@ msgstr "Potrebna akcija"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__need_moderation
 #: model:ir.model.fields,field_description:mail.field_mail_message__need_moderation
 msgid "Need moderation"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_notification__res_partner_id
-msgid "Needaction Recipient"
-msgstr "Primatelj potrebne akcije"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "New Channel"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "New Message"
-msgstr ""
+msgstr "Potrebno moderiranje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
@@ -3769,37 +3371,6 @@ msgid "New Value Text"
 msgstr "Tekst nove vrijednosti"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_manager.js:0
-#: code:addons/mail/static/src/js/thread_windows/thread_window.js:0
-#: code:addons/mail/static/src/xml/systray.xml:0
-#: code:addons/mail/static/src/xml/systray.xml:0
-#, python-format
-msgid "New message"
-msgstr "Nova poruka"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "New messages"
-msgstr "Nove poruke"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "New messages appear here."
-msgstr "Nove poruke se pojavljuju ovdje."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "New people"
-msgstr "Nove osobe"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "New values"
 msgstr ""
@@ -3810,9 +3381,11 @@ msgid ""
 "Newcomers on this moderated channel will automatically receive the "
 "guidelines."
 msgstr ""
+"Novi članovi ovog moderiranog kanala će automatski zaprimiti smjernice."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Next"
@@ -3822,6 +3395,13 @@ msgstr "Sljedeći"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Activities"
 msgstr "Sljedeće aktivnosti"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/activity.js:0
+#, python-format
+msgid "Next Activity"
+msgstr "Sljedeća aktivnost"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
@@ -3847,72 +3427,32 @@ msgstr "Tip sljedeće aktivnosti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
 msgid "Next activities available"
-msgstr ""
+msgstr "Sljedeće aktivnosti dostupne"
 
 #. module: mail
 #: code:addons/mail/models/mail_notification.py:0
 #, python-format
 msgid "No Error"
+msgstr "Bez greške"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__no_record
+msgid "No Record"
 msgstr ""
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:0
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "No activities planned."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:0
-#, python-format
-msgid "No conversation yet..."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/activity_view.xml:0
-#, python-format
-msgid "No data to display"
-msgstr "Nema podataka za prikaz"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid "No follower"
-msgstr "Nije sljedbenik"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "No history messages"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "No matches found"
-msgstr "Nema pronađenih rezultata"
+msgstr "Nema planiranih aktivnosti."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/tools/debug_manager.js:0
 #, python-format
 msgid "No message available"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "No message matches your search. Try to change your search filters."
-msgstr ""
-"Nijedna poruka ne odgovara Vašem pretraživanju. Pokušajte promijeniti Vaše "
-"filtere pretraživanja."
+msgstr "Nema dostupnih poruka"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_resend_message.py:0
@@ -3924,13 +3464,6 @@ msgstr ""
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "No recipient found."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "No starred messages"
 msgstr ""
 
 #. module: mail
@@ -3946,7 +3479,6 @@ msgid "None"
 msgstr "Ništa"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_address_mixin__email_normalized
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
@@ -3962,14 +3494,8 @@ msgid "Note"
 msgstr "Bilješka"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Note by"
-msgstr "Bilješka od"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__notification_type
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Notification"
 msgstr "Obavijest"
@@ -3992,9 +3518,12 @@ msgid "Notification: Delete Notifications older than 6 Month"
 msgstr ""
 
 #. module: mail
+#: model:ir.actions.act_window,name:mail.mail_notification_action
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notification_ids
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__notification_ids
+#: model:ir.ui.menu,name:mail.mail_notification_menu
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_tree
 msgid "Notifications"
 msgstr "Obavijesti"
 
@@ -4035,7 +3564,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -4077,13 +3606,6 @@ msgstr "Broj nepročitanih poruka"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "Odoo"
 msgstr "Odoo"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Offline"
-msgstr "Odspojen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -4132,20 +3654,6 @@ msgstr ""
 "ponovno je pregledati."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid "One follower"
-msgstr "Jedan pratitelj"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Online"
-msgstr "Online"
-
-#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -4170,13 +3678,6 @@ msgid "Open"
 msgstr "Otvori"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Open Channel in Discuss to moderate"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "Otvori dokument"
@@ -4185,27 +3686,6 @@ msgstr "Otvori dokument"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
 msgstr "Otvori nadređeni dokument"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Open chat"
-msgstr "Otvori chat"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_windows/thread_window.js:0
-#, python-format
-msgid "Open document"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_windows/thread_window.js:0
-#, python-format
-msgid "Open in Discuss"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
@@ -4221,7 +3701,11 @@ msgstr ""
 "stvaranje novih zapisa u potpunosti."
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__mail_server_id
+#: model:ir.model.fields,help:mail.field_mail_notification__mail_id
+msgid "Optional mail_mail ID. Used mainly to optimize searches."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__mail_server_id
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
@@ -4231,13 +3715,12 @@ msgstr ""
 "sa najvišim prioritetom."
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__report_template
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_template
 msgid "Optional report to print and attach"
 msgstr "Izborno izvješće za ispisati i pridodati"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__lang
+#: model:ir.model.fields,help:mail.field_mail_render_mixin__lang
 #: model:ir.model.fields,help:mail.field_mail_template__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
@@ -4251,18 +3734,11 @@ msgstr ""
 "${object.partner_id.lang}."
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__null_value
+#: model:ir.model.fields,help:mail.field_mail_render_mixin__null_value
 #: model:ir.model.fields,help:mail.field_mail_template__null_value
 msgid "Optional value to use if the target field is empty"
 msgstr ""
 "Opcionalna vrijednost koja će se koristiti ako je ciljano polje prazno"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/models/threads/dm_chat.js:0
-#, python-format
-msgid "Out of office until %s"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -4271,7 +3747,6 @@ msgid "Outgoing"
 msgstr "Odlazno"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__mail_server_id
 msgid "Outgoing Mail Server"
 msgstr "Odlazni E-mail poslužitelj"
@@ -4313,9 +3788,10 @@ msgstr "Vlasnik"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "PDF file"
-msgstr ""
+msgstr "PDF datoteka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
@@ -4385,7 +3861,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
-msgid "Partner with additionnal information for mail resend"
+msgid "Partner with additional information for mail resend"
 msgstr ""
 
 #. module: mail
@@ -4397,22 +3873,7 @@ msgstr "Partneri s potrebnom akcijom"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__pending_moderation
 msgid "Pending Moderation"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Pending moderation"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Pending moderation messages appear here."
-msgstr ""
+msgstr "Čeka na moderiranje"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_notify
@@ -4424,17 +3885,16 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_moderation__status__ban
 msgid "Permanent Ban"
-msgstr ""
+msgstr "Trajna zabrana"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__auto_delete
-#: model:ir.model.fields,help:mail.field_mail_mail__auto_delete
-#: model:ir.model.fields,help:mail.field_mail_template__auto_delete
-msgid "Permanently delete this email after sending it, to save space"
-msgstr "Trajno obriši ovaj e-mail nakon slanja, radi uštede prostora"
+#: model:ir.model.fields,field_description:mail.field_res_partner__phone
+#: model:ir.model.fields,field_description:mail.field_res_users__phone
+msgid "Phone"
+msgstr "Telefon"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__copyvalue
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template__copyvalue
 msgid "Placeholder Expression"
 msgstr "Rerzerviran izraz"
@@ -4454,51 +3914,22 @@ msgstr "Planirano"
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Planned activities"
-msgstr ""
+msgstr "Planirane aktivnosti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/composers/chatter_composer.js:0
-#, python-format
-msgid "Please complete customer's informations"
-msgstr ""
+msgstr "Planirano u"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr ""
+msgstr "Molimo kontaktirajte nas koristeći "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Please find below the guidelines of the"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Please wait"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Please wait..."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/composers/basic_composer.js:0
-#, python-format
-msgid "Please, wait while the file is uploading."
-msgstr "Molimo, pričekajte dok se datoteka ne učita"
+msgstr "Molimo da dole pogledate smjernice za "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
@@ -4512,7 +3943,6 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_contact
-#: model:ir.model.fields,help:mail.field_res_users__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -4523,6 +3953,16 @@ msgstr ""
 "- svatko: svatko može objaviti poruku\n"
 "- partneri: samo autentificirani partner\n"
 "- pratitelji: samo pratitelji srodne dokumentacije\n"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
+msgid "Post on Multiple Documents"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
+msgid "Post on a document"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4549,7 +3989,11 @@ msgid "Preferred reply address"
 msgstr "Željena adresa odgovora"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__reply_to
+#: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
+msgid "Preferred response address"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
 msgid "Preferred response address (placeholders may be used here)"
 msgstr "Preferirana adresa za odgovor"
@@ -4557,7 +4001,6 @@ msgstr "Preferirana adresa za odgovor"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #, python-format
@@ -4565,12 +4008,13 @@ msgid "Preview"
 msgstr "Pregled"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Preview of"
 msgstr "Pregled"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Previous"
@@ -4584,6 +4028,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Print"
 msgstr "Ispis"
@@ -4593,20 +4038,6 @@ msgstr "Ispis"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Privacy"
 msgstr "Privatnost"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Private channel"
-msgstr "Privatni kanal"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Public Channels"
-msgstr "Javni kanali"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -4621,13 +4052,6 @@ msgid "Publisher: Update Notification"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Quick search..."
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Re:"
@@ -4639,31 +4063,15 @@ msgid "Read Date"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_windows/thread_window.js:0
-#, python-format
-msgid "Read less"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_windows/thread_window.js:0
-#: code:addons/mail/static/src/xml/thread_window.xml:0
-#, python-format
-msgid "Read more"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Ready"
-msgstr "Spremno"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
 msgid "Ready to Send"
 msgstr "Spremno za slanje"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__reason
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
+msgid "Reason"
+msgstr "Razlog"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
@@ -4672,45 +4080,37 @@ msgid "Received"
 msgstr "Primljeno"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Received by Everyone"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Received by:"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__partner_id
+#: model:ir.model.fields,field_description:mail.field_mail_notification__res_partner_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Recipient"
 msgstr "Primatelj"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__partner_ids
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-#: model_terms:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "Primatelji"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
-msgstr ""
+msgstr "Preporučeni tip aktivnosti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__next_type_ids
 msgid "Recommended Next Activities"
 msgstr "Preporučene sljedeće aktivnosti"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
+msgid "Record"
+msgstr "Zapis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
@@ -4724,7 +4124,7 @@ msgstr "ID niti zapisa"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Zapisi:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -4734,28 +4134,7 @@ msgstr "Reference"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Regards,"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Reject"
-msgstr "Odbijeno"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Reject selected messages"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Reject |"
-msgstr ""
+msgstr "Pozdrav,"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__rejected
@@ -4773,7 +4152,6 @@ msgid "Related Document ID"
 msgstr "Povezani ID dokumenta"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__model
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model
 #: model:ir.model.fields,field_description:mail.field_mail_mail__model
@@ -4786,6 +4164,11 @@ msgstr "Povezani model dokumenta"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
 msgid "Related Document Model Name"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__mail_template_id
+msgid "Related Mail Template"
 msgstr ""
 
 #. module: mail
@@ -4804,17 +4187,8 @@ msgid "Relation field"
 msgstr "Relacijsko polje"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Remove message with explanation"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Remove message without explanation"
+#: model:ir.model,name:mail.model_mail_blacklist_remove
+msgid "Remove email from blacklist wizard"
 msgstr ""
 
 #. module: mail
@@ -4824,31 +4198,7 @@ msgstr ""
 "Ukloni dodatnu akciju da se ovaj predložak koristi na povezanim dokumentima"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
-#, python-format
-msgid "Remove this follower"
-msgstr "Ukloni sljedbenika"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Rename"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Rename conversation"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
-#, python-format
 msgid "Reply"
 msgstr "Odgovori"
 
@@ -4862,19 +4212,23 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__reply_to
 msgid "Reply-To"
 msgstr "Odgovori na"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__report_name
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_name
 msgid "Report Filename"
 msgstr "Naziv datoteke izvještaja"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
+msgid "Requesting Partner"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -4893,6 +4247,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Reset Zoom"
@@ -4930,6 +4285,7 @@ msgstr "RT/HTML poruka"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Rotate"
 msgstr ""
@@ -4944,11 +4300,6 @@ msgstr "SMTP poslužitelj"
 #: model:ir.model.fields,field_description:mail.field_res_users__user_id
 msgid "Salesperson"
 msgstr "Prodavač"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__res_id
-msgid "Sample Document"
-msgstr "Primjer dokumenta"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4966,13 +4317,6 @@ msgid "Save as new template"
 msgstr "Spremi kao novi predložak"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_windows/abstract_thread_window.js:0
-#, python-format
-msgid "Say something"
-msgstr "Reci nešto"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
 msgstr "Planer"
@@ -4986,11 +4330,17 @@ msgstr "Zakaži aktivnost"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
+#, python-format
+msgid "Schedule activities to help you get things done."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/activity_view.xml:0
-#: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Schedule activity"
-msgstr ""
+msgstr "Raspored aktivnosti"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -5003,12 +4353,12 @@ msgstr "Zakaži aktivnost"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Zakažite aktivnost"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model:ir.model.fields,field_description:mail.field_mail_template__scheduled_date
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__scheduled_date
 msgid "Scheduled Date"
 msgstr "Planirani datum"
 
@@ -5041,35 +4391,7 @@ msgid "Search: %s"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Seen by Everyone"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Seen by:"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Select All"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Select all messages to moderate"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__model_object_field
+#: model:ir.model.fields,help:mail.field_mail_render_mixin__model_object_field
 #: model:ir.model.fields,help:mail.field_mail_template__model_object_field
 msgid ""
 "Select target field from the related document model.\n"
@@ -5089,12 +4411,7 @@ msgid "Selected group of users"
 msgstr "Odabrana grupa korisnika"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/composers/basic_composer.js:0
-#: code:addons/mail/static/src/js/discuss.js:0
-#: code:addons/mail/static/src/xml/composer.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-#, python-format
 msgid "Send"
 msgstr "Pošalji"
 
@@ -5126,22 +4443,8 @@ msgid "Send Now"
 msgstr "Pošalji odmah"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Send a message"
-msgstr "Pošalji poruku"
-
-#. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Send explanation to author"
 msgstr ""
 
 #. module: mail
@@ -5155,19 +4458,16 @@ msgid "Send guidelines to new subscribers"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "Send message"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__email_send
 msgid "Send messages by email"
 msgstr "Pošalji poruke e-mailom"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__email_from
+#: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
+msgid "Sender address"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_from
 msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
@@ -5177,27 +4477,10 @@ msgstr ""
 "ukoliko je podešen, ili e-mail adresa."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_field.js:0
-#, python-format
-msgid "Sending Error"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Sends messages by email"
-msgstr "Šalje poruke e-mailom"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__sent
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__sent
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
-#, python-format
 msgid "Sent"
 msgstr "Poslano"
 
@@ -5213,6 +4496,17 @@ msgid "Server Action"
 msgstr "Serverske radnje"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_channel__active
+msgid "Set active to false to hide the channel without removing it."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__description
+#: model:ir.model.fields,field_description:mail.field_mail_message__description
+msgid "Short description"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
 msgid "Shortcodes"
@@ -5224,33 +4518,23 @@ msgid "Shortcut"
 msgstr "Prečac"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#: code:addons/mail/static/src/xml/chatter.xml:0
+#: code:addons/mail/models/mail_channel.py:0
 #, python-format
-msgid "Show"
-msgstr "Prikaži"
+msgid "Show a helper message"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
-#, python-format
-msgid "Show an helper message"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__ref_ir_act_window
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
 msgid "Sidebar action"
 msgstr "Bočna akcija"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__ref_ir_act_window
 #: model:ir.model.fields,help:mail.field_mail_template__ref_ir_act_window
 msgid ""
 "Sidebar action to make this template available on records of the related "
@@ -5258,6 +4542,11 @@ msgid ""
 msgstr ""
 "Bočna akcija kako bi ovaj predložak bio dostupan na zapisima povezanog "
 "modela dokumenta"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
+msgid "Source"
+msgstr "Izvor"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -5272,13 +4561,8 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_manager.js:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred
 #: model:ir.model.fields,field_description:mail.field_mail_message__starred
-#, python-format
 msgid "Starred"
 msgstr "Sa zvjezdicom"
 
@@ -5290,6 +4574,8 @@ msgstr "Stanje"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__state
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__status
+#: model:ir.model.fields,field_description:mail.field_mail_notification__notification_status
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Status"
@@ -5305,34 +4591,33 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__sub_model_object_field
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_model_object_field
 msgid "Sub-field"
 msgstr "Podređeno polje"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__sub_object
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_object
 msgid "Sub-model"
 msgstr "Podređeni model"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:0
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__subject
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject
 #: model:ir.model.fields,field_description:mail.field_mail_mail__subject
 #: model:ir.model.fields,field_description:mail.field_mail_message__subject
 #: model:ir.model.fields,field_description:mail.field_mail_template__subject
-#, python-format
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__subject
 msgid "Subject"
 msgstr "Predmet"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__subject
 #: model:ir.model.fields,help:mail.field_mail_template__subject
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Subject (placeholders may be used here)"
@@ -5342,13 +4627,6 @@ msgstr "Naslov"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Subject..."
 msgstr "Naslov..."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Subject:"
-msgstr "Predmet:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -5378,10 +4656,20 @@ msgid "Summary"
 msgstr "Sažetak"
 
 #. module: mail
+#: model:ir.model,name:mail.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Sistemski parametar"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
 msgid "System notification"
 msgstr "Sistemska obavijest"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
+msgid "Targeted model"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -5401,8 +4689,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model_id
 msgid ""
-"Technical field to keep trace of the model at the beginning of the edition "
-"for UX related behaviour"
+"Technical field to keep track of the model at the start of editing to "
+"support UX related behaviour"
 msgstr ""
 
 #. module: mail
@@ -5412,13 +4700,31 @@ msgid "Technical name of the user on the record"
 msgstr ""
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.wizard_email_template_preview
+#: model:ir.actions.act_window,name:mail.mail_template_preview_action
 msgid "Template Preview"
 msgstr "Pregled predloška"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__preview_lang
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
 msgid "Template Preview Language"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Template rendering for language should be called with a list of IDs."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Template rendering should be called only using on a list of IDs."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Template rendering supports only jinja or qweb."
 msgstr ""
 
 #. module: mail
@@ -5447,14 +4753,20 @@ msgid "The 'Due Date In' value can't be negative."
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid "The e-mail alias is already used. Please enter another one."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
 msgid "The email address must be unique per channel !"
-msgstr ""
+msgstr "Email adresa mora biti jedinstvena po kanalu !"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
+msgstr "Email poslan na"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -5507,6 +4819,11 @@ msgstr ""
 "pronađe sistemskog korisnika za tu adresu."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
+msgid "The queue manager will send the email after the date"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
@@ -5525,8 +4842,8 @@ msgid "The shortcut which must be replaced in the Chat Messages"
 msgstr "Prečac koji mora biti zamijenjen u chat porukama"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__model_id
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
+#: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
 msgstr "Tip dokumenta s kojim se može koristiti ovaj predložak"
 
@@ -5540,15 +4857,19 @@ msgstr "Ovaj"
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "This action will send an email."
+msgstr "Ova akcija će poslati email."
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
+msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
 msgid "This field is case insensitive."
-msgstr ""
+msgstr "Ovo polje ne razlikuje mala i velika slova."
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_address_mixin__email_normalized
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__email_normalized
 #: model:ir.model.fields,help:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,help:mail.field_res_users__email_normalized
@@ -5567,6 +4888,16 @@ msgstr ""
 " pozivanja."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
+#: model:ir.model.fields,help:mail.field_mail_mail__auto_delete
+#: model:ir.model.fields,help:mail.field_mail_template__auto_delete
+msgid ""
+"This option permanently removes any track of email after send, including "
+"from the Technical menu in the Settings, in order to preserve storage space "
+"of your Odoo database."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
@@ -5580,17 +4911,16 @@ msgstr "Nit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
+#: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
 msgstr "Do"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
 msgid "To (Emails)"
 msgstr "Za (E-mail)"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_email_template_preview__partner_to
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__partner_to
 msgid "To (Partners)"
@@ -5603,16 +4933,7 @@ msgstr "Za napraviti"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#: code:addons/mail/static/src/xml/thread_window.xml:0
-#, python-format
-msgid "To:"
-msgstr "Za:"
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
-#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
@@ -5651,7 +4972,7 @@ msgstr ""
 "rekonstrukciju praćenja i generiranje statistika na modelu."
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Tracking"
 msgstr "Praćenje"
 
@@ -5695,7 +5016,7 @@ msgstr "Vrsta"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr ""
+msgstr "Vrsta kašnjenja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -5716,7 +5037,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5727,33 +5048,32 @@ msgstr "UUID"
 #: code:addons/mail/models/mail_mail.py:0
 #, python-format
 msgid "Unable to connect to SMTP Server"
-msgstr ""
+msgstr "Nije moguće povezati se na HTTP server"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
+"E-mail se ne može evidentirati, molimo podesite e-mail adresu pošiljatelja"
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:0
+#: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_windows/abstract_thread_window.js:0
-#, python-format
-msgid "Undefined"
-msgstr "Nedefiniran"
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
+msgid "Unblacklist"
+msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/followers.xml:0
+#: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
-msgid "Unfollow"
-msgstr "Ne slijedi više"
+msgid "Unblacklisting Reason: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_alias_unique
@@ -5763,14 +5083,9 @@ msgstr ""
 "Nažalost ovaj e-mail alias se već koristi, molimo odaberite jedinstveni"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
-msgid "Unit"
-msgstr "Jedinica"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
 msgid "Unit of delay"
-msgstr ""
+msgstr "Jedinica kašnjenja"
 
 #. module: mail
 #: code:addons/mail/models/mail_notification.py:0
@@ -5802,54 +5117,9 @@ msgid "Unread Messages Counter"
 msgstr "Brojač nepročitanih poruka"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/abstract_thread_window.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
-#, python-format
 msgid "Unread messages"
 msgstr "Nepročitane poruke"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Unselect All"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Unselect all messages to moderate"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Unstar all"
-msgstr "Ukloni zvjezdicu sa svih"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Unstar all messages"
-msgstr "Ukloni zvjezdicu sa svih poruka"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "Unsubscribe"
-msgstr "Odjava"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "Odjavljen"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -5861,6 +5131,12 @@ msgstr ""
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Unsupported search filter on moderation status"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Unsuspected None"
 msgstr ""
 
 #. module: mail
@@ -5878,27 +5154,6 @@ msgstr ""
 #, python-format
 msgid "Upload file"
 msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Uploaded"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Uploading"
-msgstr "Učitavanje"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/composers/basic_composer.js:0
-#, python-format
-msgid "Uploading error"
-msgstr "Greška pri preuzimanju"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
@@ -5920,22 +5175,14 @@ msgid "Use template"
 msgstr "Koristi predložak"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Use your own email servers"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
 msgstr "Koristi se za poredak podtipova."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
-#, python-format
 msgid "User"
 msgstr "Korisnik"
 
@@ -5948,14 +5195,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#: code:addons/mail/static/src/xml/thread_window.xml:0
-#, python-format
-msgid "User name"
 msgstr ""
 
 #. module: mail
@@ -5973,8 +5212,8 @@ msgstr "Korisnici"
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
-msgid "Users in this channel: %s %s and you."
-msgstr "Korisnici na ovom kanalu: %s %s i Vi."
+msgid "Users in this channel: %(members)s %(dots)s and you."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5986,6 +5225,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Video"
@@ -6023,13 +5263,6 @@ msgstr "Tip pogleda"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "View all the attachments of the current record"
-msgstr ""
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Viewer"
@@ -6037,8 +5270,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#: code:addons/mail/static/src/xml/followers.xml:0
+#: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"
@@ -6049,7 +5281,7 @@ msgid "Weeks"
 msgstr "Tjedni"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__sub_model_object_field
+#: model:ir.model.fields,help:mail.field_mail_render_mixin__sub_model_object_field
 #: model:ir.model.fields,help:mail.field_mail_template__sub_model_object_field
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
@@ -6059,7 +5291,7 @@ msgstr ""
 "ciljanog polja unutar odredišnog modela dokumenta (pod-model)."
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__sub_object
+#: model:ir.model.fields,help:mail.field_mail_render_mixin__sub_object
 #: model:ir.model.fields,help:mail.field_mail_template__sub_object
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
@@ -6102,52 +5334,16 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:0
-#, python-format
-msgid "Write something..."
-msgstr "Napišite nešto..."
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
-#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "Jučer"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "You added <b>%s</b> to the conversation."
-msgstr "Dodali ste <b>%s</b> u razgovor."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "You are alone in this channel."
 msgstr "Sami ste na ovom kanalu."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "You are going to ban: %s. Do you confirm the action?"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "You are going to discard %s messages. Do you confirm the action?"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid "You are going to discard 1 message. Do you confirm the action?"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -6167,23 +5363,6 @@ msgstr "Vi ste u privatnom razgovoru sa <b>@%s</b>."
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Vi ste u kanalu <b>#%s</b>."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/discuss.js:0
-#, python-format
-msgid ""
-"You are the administrator of this channel. Are you sure you want to "
-"unsubscribe?"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid ""
-"You can mark any message as 'starred', and it shows up in this mailbox."
-msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:0
@@ -6206,6 +5385,14 @@ msgstr ""
 "modulima."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -6225,33 +5412,11 @@ msgid "You have been assigned to the"
 msgstr "Dodijeljen Vam je"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
-#, python-format
-msgid "You have been invited to: "
-msgstr "Pozvani ste da:"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "You have no message to moderate"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/user_menu.xml:0
-#, python-format
-msgid "You have set a chat message."
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview__attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
 msgid ""
 "You may attach files to this template, to be added to all emails created "
@@ -6261,51 +5426,9 @@ msgstr ""
 "e-mailovima kreiranim iz ovog predloška"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
-#, python-format
-msgid "You unpinned your conversation with <b>%s</b>."
-msgstr "Otkačili ste Vaš razgovor s <b>%s</b>."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
-#, python-format
-msgid "You unsubscribed from <b>%s</b>."
-msgstr "Otkazali ste pretplatu na <b>%s</b>."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "You:"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_field.js:0
-#, python-format
-msgid "Your message has not been sent."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "Your message is pending moderation"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/discuss.xml:0
-#, python-format
-msgid "Your message was rejected by moderator."
 msgstr ""
 
 #. module: mail
@@ -6318,13 +5441,8 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/ir_actions.py:0
-#, python-format
-msgid "Your template should define email_from"
-msgstr "Predložak treba definirati email_from"
-
-#. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Zoom In"
@@ -6332,6 +5450,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Zoom Out"
@@ -6350,13 +5469,18 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
-msgid "alias %s: %s"
+msgid "alias %(name)s: %(error)s"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "assigned you an activity"
 msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "sastanci članova uprave"
 
 #. module: mail
 #. openerp-web
@@ -6378,11 +5502,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "channel."
 msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "created"
-msgstr "kreirano"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -6408,29 +5527,10 @@ msgstr "npr. Raspraviti o prijedlogu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/followers.js:0
-#, python-format
-msgid "followers"
-msgstr "Sljedbenici"
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "for"
 msgstr "za"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
-#, python-format
-msgid "from"
-msgstr "od"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "from:"
-msgstr "od:"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -6439,26 +5539,29 @@ msgstr "općenito"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "has been"
-msgstr "je bio"
+msgid "has been created from:"
+msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
+msgid "has been modified from:"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
+#: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "less"
+#: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
+msgid "mail_blacklist_removal"
 msgstr ""
 
 #. module: mail
@@ -6468,21 +5571,9 @@ msgid "model %s does not accept document creation"
 msgstr "model %s ne prihvaća kreiranje dokumenta"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
-msgid "modified"
-msgstr "modificirano"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months
 msgid "months"
 msgstr "mjeseci"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "more"
-msgstr "više"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6497,11 +5588,8 @@ msgid "now"
 msgstr "sada"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
-#, python-format
 msgid "on"
 msgstr "na"
 
@@ -6514,28 +5602,21 @@ msgid "or"
 msgstr "ili"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_widget.js:0
-#, python-format
-msgid "read less"
-msgstr "čitaj manje"
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/thread_widget.js:0
-#, python-format
-msgid "read more"
-msgstr "pročitaj više"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "zapis:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
-msgid "reply to missing document (%s,%s), fall back on document creation"
+msgid ""
+"reply to missing document (%(model)s,%(thread)s), fall back on document "
+"creation"
 msgstr ""
 
 #. module: mail
@@ -6553,16 +5634,21 @@ msgid "restricted to channel members"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
+#: code:addons/mail/models/models.py:0
 #, python-format
 msgid "restricted to followers"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
+#: code:addons/mail/models/models.py:0
 #, python-format
 msgid "restricted to known authors"
 msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "prodaja"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6576,21 +5662,8 @@ msgid "team."
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:0
-#, python-format
-msgid "this document"
-msgstr "ovaj dokument"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "to close for"
-msgstr ""
-
-#. module: mail
-#: code:addons/mail/models/mail_thread.py:0
-#, python-format
-msgid "unknown error"
 msgstr ""
 
 #. module: mail
@@ -6600,16 +5673,15 @@ msgid "unknown target model %s"
 msgstr "nepoznati odredišni model %s"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/attachment_box.js:0
-#: code:addons/mail/static/src/js/models/messages/abstract_message.js:0
-#, python-format
-msgid "unnamed"
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
+msgid "using"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
-msgid "using"
+#. openerp-web
+#: code:addons/mail/static/src/xml/many2one_avatar_user.xml:0
+#, python-format
+msgid "value"
 msgstr ""
 
 #. module: mail

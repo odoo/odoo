@@ -3,17 +3,17 @@
 # 	* sale_expense
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Martin Trigaux, 2020
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,19 +27,27 @@ msgid "# of Expenses"
 msgstr "Зардлын #"
 
 #. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
-msgstr "Зардал емайлээр илгээх"
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "Activate Expense Emails"
-msgstr "емайлээр зардал илгээлтийг идэвхижүүлэх"
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__analytic_account_id
+msgid "Analytic Account"
+msgstr "Шинжилгээний данс"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 msgid "Can be reinvoiced"
 msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+msgid "Customer to Reinvoice"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -52,6 +60,14 @@ msgstr "Зардал"
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
 msgstr "Зардлууд"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -71,22 +87,19 @@ msgid "Journal Item"
 msgstr "Журналын бичилт"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense____last_update
+#: model:ir.model.fields,field_description:sale_expense.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
 msgid "Product Template"
 msgstr "Барааны загвар"
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
-msgid "Reinvoice Customer"
-msgstr ""
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
 msgid "Sales Order"
 msgstr "Борлуулалтын захиалга"
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid ""
-"Take a snapshot of your expenses and submit your expenses by email.<br>"
-msgstr ""

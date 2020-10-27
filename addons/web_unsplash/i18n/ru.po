@@ -3,16 +3,19 @@
 # 	* web_unsplash
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,16 +26,16 @@ msgstr ""
 #. module: web_unsplash
 #: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>Создать ключ доступа</i>"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
 msgid "Access Key"
-msgstr ""
+msgstr "Ключ доступа"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:57
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Apply"
 msgstr "Применить"
@@ -40,124 +43,133 @@ msgstr "Применить"
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
 msgid "Config Settings"
-msgstr "Настройки конфигурации"
+msgstr "Конфигурационные настройки"
 
 #. module: web_unsplash
-#: code:addons/web_unsplash/controllers/main.py:86
+#: model:ir.model.fields,field_description:web_unsplash.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:web_unsplash.field_res_users__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: web_unsplash
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash URL!"
-msgstr ""
+msgstr "ОШИБКА: Неизвестное Unsplash URL!"
 
 #. module: web_unsplash
-#: code:addons/web_unsplash/controllers/main.py:34
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
 msgid "ERROR: Unknown Unsplash notify URL!"
-msgstr ""
+msgstr "ОШИБКА: Неизвестное сообщение Unsplash URL!"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:52
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Generate an access key"
-msgstr ""
+msgstr "Создать ключ доступа"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:56
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "How to find my Unsplash Application ID?"
-msgstr ""
+msgstr "Как найти мой ID приложения Unsplash?"
+
+#. module: web_unsplash
+#: model:ir.model.fields,field_description:web_unsplash.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__id
+#: model:ir.model.fields,field_description:web_unsplash.field_res_users__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: web_unsplash
+#: model:ir.model.fields,field_description:web_unsplash.field_ir_qweb_field_image____last_update
+#: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:web_unsplash.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Paste your access key here"
-msgstr ""
+msgstr "Вставьте ваш ключ доступа здесь"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:54
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Paste your application ID here"
-msgstr ""
+msgstr "Вставьте ваш ID приложения здесь"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
-msgid "Photos not found"
+msgid "Photos (via Unsplash)"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:84
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Please check your Unsplash access key and application ID."
-msgstr ""
+msgstr "Проверьте ключ доступа и ID программы Unsplash."
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:93
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
-msgstr ""
+msgstr "Проверьте подключение к интернету или обратитесь к администратору."
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Изображение поля Qweb"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:17
-#, python-format
-msgid "Search among my images for:"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:21
-#, python-format
-msgid "Search from Unsplash for:"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Search is temporarily unavailable"
-msgstr ""
+msgstr "Поиск временно недоступен"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:90
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Something went wrong"
-msgstr ""
+msgstr "Что-то пошло не так"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
 " a better account."
 msgstr ""
+"Превышен максимальное количество поисков. Повторите попытку через час или "
+"расширьте свой аккаунт."
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:81
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Unauthorized Key"
-msgstr ""
+msgstr "незарегистрированный ключ"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:0
 #, python-format
 msgid "Unsplash requires an access key and an application ID"
-msgstr ""
+msgstr "Unsplash требует ключ доступа и ID программы"
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_users

@@ -3,16 +3,15 @@
 # 	* account_payment
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +22,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "&amp;times;"
-msgstr "&amp;цаг;"
+msgstr "&amp;times;"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -111,6 +110,11 @@ msgstr ""
 "inline\"> Хүлээгдэж буй</span></span>"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
@@ -120,7 +124,12 @@ msgstr ""
 "тань баярлалаа."
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -130,14 +139,20 @@ msgstr ""
 "үйлчилгээний төлбөр автоматаар нэхэмжлэгдэнэ."
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Төлөх & Батлах"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:21
+#: code:addons/account_payment/models/payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
 msgstr "Одоо төлөх"

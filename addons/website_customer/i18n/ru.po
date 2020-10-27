@@ -3,19 +3,20 @@
 # 	* website_customer
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Collex100, 2019
-# Sergey Vilizhanin, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Максим Дронь <dronmax@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Collex100, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,8 @@ msgid ""
 "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
 "link\" title=\"External link\"/>"
 msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
@@ -49,23 +52,23 @@ msgstr "Все страны"
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
-msgstr "Все сферы деятельности"
+msgid "All Industries"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Archived"
-msgstr "Архивировано"
+msgstr "Заархивировано"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
-msgstr "Bootstrap класс для настройки цвета"
+msgstr "Bootstrap-класс для настройки цвета"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Может публиковать"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -90,12 +93,12 @@ msgstr "Контакт"
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
-msgstr ""
+msgstr "Создать новый тег для контактов"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
@@ -103,14 +106,18 @@ msgid "Created on"
 msgstr "Создан"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
+#: model:ir.model.fields,field_description:website_customer.field_website__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__id
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
+#: model:ir.model.fields,field_description:website_customer.field_website__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
@@ -120,10 +127,12 @@ msgstr "Реализовано"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Опубликовано"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner____last_update
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
+#: model:ir.model.fields,field_description:website_customer.field_website____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
@@ -143,6 +152,8 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
+"Управляйте тегами контактов, чтобы лучше классифицировать их для целей "
+"отслеживания и анализа."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -166,6 +177,8 @@ msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
 "sector, or ..."
 msgstr ""
+"Теги партнера - эти теги можно использовать на веб-сайте, чтобы найти "
+"клиентов по секторам или ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
@@ -173,8 +186,9 @@ msgid "Partners"
 msgstr "Партнёры"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
 msgstr "Ссылки"
 
@@ -185,8 +199,8 @@ msgstr "Ссылки по стране"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
-msgstr "Ссылки по сферам деятельности"
+msgid "References by Industries"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -216,7 +230,12 @@ msgstr "Доверяют миллионы людей по всему миру"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Видимый на текущем сайте"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Веб-сайт"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -224,7 +243,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_list
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr "Веб сайт теги"
+msgstr "Теги веб-сайта"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
@@ -235,7 +254,7 @@ msgstr "URL Веб-сайта"
 #: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
 #: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
-msgstr "Теги вебсайта"
+msgstr "Теги веб-сайта"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country

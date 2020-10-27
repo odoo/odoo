@@ -3,16 +3,19 @@
 # 	* auth_oauth
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Gennady Marchenko <gennadym@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +26,12 @@ msgstr ""
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.providers
 msgid "- or -"
-msgstr ""
+msgstr "- или -"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Консультация</i>"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0
@@ -44,7 +47,7 @@ msgstr "Разрешить вход при помощи учетной запи�
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr ""
+msgstr "Разрешить пользователям входить с помощью аккаунта Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -75,17 +78,17 @@ msgstr "ID клиента"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr ""
+msgstr "ID клиента:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
 msgid "Config Settings"
-msgstr "Настройки конфигурации"
+msgstr "Конфигурационные настройки"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_date
@@ -100,17 +103,22 @@ msgstr "URL данных"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Документация"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
-msgstr ""
+msgstr "Google аутентификация"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider____last_update
@@ -126,6 +134,26 @@ msgstr "Последний раз обновил"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_date
 msgid "Last Updated on"
 msgstr "Последнее обновление"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
+msgid "Link text in Login Dialog"
+msgstr "Текст ссылки в диалоге входа"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
+msgid "Log in with Facebook"
+msgstr "Зайти через Facebook"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_google
+msgid "Log in with Google"
+msgstr "Зайдите через Google"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
+msgid "Log in with Odoo.com"
+msgstr "Зайдите через Odoo.com"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -202,7 +230,7 @@ msgstr "Запрещен вход для этой базы данных."
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "параметр системы"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -223,7 +251,7 @@ msgid ""
 "invitation email."
 msgstr ""
 "У вас нет права доступа к этой базе данных или ваше приглашение истекло. "
-"Пожалуйста запросите новое приглашение и обязательно используйте ссылку из "
+"Пожалуйста, запросите новое приглашение и обязательно используйте ссылку из "
 "письма с приглашением."
 
 #. module: auth_oauth
@@ -235,4 +263,4 @@ msgstr "архитектура"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr "например 1234-xyz.apps.googleusercontent.com"
+msgstr "например, 1234-xyz.apps.googleusercontent.com"

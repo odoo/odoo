@@ -3,22 +3,23 @@
 # 	* hr_recruitment
 # 
 # Translators:
-# Jakub Lohnisky <jakub@lepremier.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Jakub Snášel <jakub@potisk-tricek.cz>, 2019
-# Martin Trigaux, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
-# Ladislav Tomm <tomm@helemik.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jakub Lohnisky <jakub@lepremier.cz>, 2020
+# Martin Trigaux, 2020
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# Ladislav Tomm <tomm@helemik.cz>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Jiří Podhorecký, 2020
+# Jakub Snášel <jakub@potisk-tricek.cz>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +28,47 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
+#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
+msgid "% endif"
+msgstr "% endif"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "<b>Click to view</b> the application."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "<b>Drag this card</b>, to qualify him for a first interview."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid ""
+"<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
+"emails sent or received are saved in the history here</i>"
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid ""
+"<div>Great job! You hired a new colleague!</div><div>Try the Website app to "
+"publish job offers online.</div>"
 msgstr ""
 
 #. module: hr_recruitment
@@ -54,19 +94,28 @@ msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid ""
+"<span class=\"badge badge-pill badge-danger pull-right mr-4\" "
+"attrs=\"{'invisible': [('active', '=', True)]}\">Refused</span>"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
-msgid "<span>Folded in Recruitment Pipe: </span>"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid ""
+"<span title=\"Link Trackers\"><i class=\"fa fa-lg fa-envelope\" role=\"img\""
+" aria-label=\"Link Trackers\"/></span>"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
-msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr "<strong style=\"font-size: 16px;\">Zkusit poštovní bránu</strong>"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
+msgid "<span>Folded in Recruitment Pipe: </span>"
+msgstr "<span>Složené na náborové nástěnce: </span>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
@@ -107,7 +156,7 @@ msgid ""
 "                % endif\n"
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
-"                We usually <strong>answer applications within 3 days.</strong><br/><br/>\n"
+"                We usually <strong>answer applications within a few days.</strong><br/><br/>\n"
 "                Feel free to <strong>contact us if you want a faster\n"
 "                feedback</strong> or if you don't get news from us\n"
 "                quickly enough (just reply to this email).\n"
@@ -143,11 +192,6 @@ msgid ""
 "                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
 "                % endif\n"
 "                <br/>\n"
-"                % if object.job_id.address_id:\n"
-"                    <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"                        <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
-"                    </a>\n"
-"                % endif\n"
 "            </div>\n"
 "        </td>\n"
 "    </tr>\n"
@@ -204,7 +248,7 @@ msgid ""
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
-"                We usually <strong>answer applications within 3 days</strong>.\n"
+"                We usually <strong>answer applications within a few days</strong>.\n"
 "                <br/><br/>\n"
 "                The next step is either a call or a meeting in our offices.\n"
 "                <br/>\n"
@@ -244,12 +288,6 @@ msgid ""
 "                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
 "                % endif\n"
 "                <br/>\n"
-"\n"
-"                % if object.job_id.address_id:\n"
-"                    <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"                        <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
-"                    </a>\n"
-"                % endif\n"
 "            </div>\n"
 "        </td>\n"
 "    </tr>\n"
@@ -304,12 +342,22 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Slovník Pythonu, který bude vyhodnocen tak, aby poskytoval výchozí hodnoty "
+"při vytváření nových záznamů pro tento alias."
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 msgid "Action Needed"
 msgstr "Vyžaduje akci"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__active
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__active
 msgid "Active"
 msgstr "Aktivní"
 
@@ -321,12 +369,17 @@ msgstr "Aktivity"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekorace výjimky aktivity"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
 msgid "Activity State"
 msgstr "Stav aktivity"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -361,9 +414,34 @@ msgid "Alias"
 msgstr "Zástupce"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_contact
+msgid "Alias Contact Security"
+msgstr "Zabezpečení aliasu kontaktu"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
 msgid "Alias ID"
 msgstr "Alias ID"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_name
+msgid "Alias Name"
+msgstr "Název aliasu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
+msgid "Alias domain"
+msgstr "Doména aliasu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
+msgid "Aliased Model"
+msgstr "Model aliasu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
+msgid "All Application Count"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -372,7 +450,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Applicant"
 msgstr "Žadatel"
@@ -392,11 +472,6 @@ msgstr "Uchazeč přijat"
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
 msgstr "Změna fáze uchazeče"
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
-msgid "Applicant created"
-msgstr "Uchazeč vytvořen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
@@ -498,13 +573,12 @@ msgstr "Ocenění"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Archived"
 msgstr "Archivováno"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Are you sure?"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Archived / Refused"
 msgstr ""
 
 #. module: hr_recruitment
@@ -522,6 +596,12 @@ msgstr "Počet příloh"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Attachments"
 msgstr "Přílohy"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "Attachments, like resumes, get indexed automatically."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
@@ -583,14 +663,27 @@ msgid "By Recruiter"
 msgstr "Dle náboráře"
 
 #. module: hr_recruitment
+#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
+msgid ""
+"By setting an alias to a job position, emails sent to this address create applications automatically. You can even use multiple trackers to get statistics according to the source of the application: LinkedIn, Monster, Indeed, etc.\n"
+"        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)\n"
+"        % if record and record.alias_domain"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Událost kalendáře"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
 msgid "Campaign"
 msgstr "Kampaň"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "Cancel"
+msgstr "Zrušit"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -606,8 +699,8 @@ msgstr "Kategorie uchazečů"
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
-msgid "Click here to create a new job position."
-msgstr "Klikněte zde pro vytvoření nové pracovní pozice"
+msgid "Choose an application email."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
@@ -671,6 +764,13 @@ msgid "Contract Signed"
 msgstr "Podepsaná smlouva"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Copy this email address, to paste it in your email composer, to apply."
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create"
 msgstr "Vytvořit"
@@ -687,13 +787,18 @@ msgid "Create a Job Position"
 msgstr "Vytvořit pracovní pozici"
 
 #. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
-msgid "Create some aliases to track where applicants come from"
-msgstr "Vytvořte si aliasy ke sledování, odkud žadatelé přicházejí"
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Create your first Job Position."
+msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_uid
@@ -701,7 +806,10 @@ msgid "Created by"
 msgstr "Vytvořeno od"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_date
@@ -716,14 +824,24 @@ msgid "Creation Date"
 msgstr "Datum vytvoření"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
 msgid "Days to Close"
-msgstr "Dnů k uzavření"
+msgstr "Dny do uzavření"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_open
 msgid "Days to Open"
 msgstr "Dnů do otevření"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
+msgid "Default Values"
+msgstr "Výchozí hodnoty"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -779,6 +897,7 @@ msgid "Delete"
 msgstr "Smazat"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__department_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Department"
@@ -797,6 +916,7 @@ msgstr "Oddělení"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__description
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
 msgid "Description"
 msgstr "Popis"
 
@@ -811,11 +931,19 @@ msgid "Discard"
 msgstr "Zrušit"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
@@ -833,7 +961,7 @@ msgstr "Doktorský titul"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__documents_count
 msgid "Document Count"
-msgstr ""
+msgstr "Počet dokumentů"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -843,11 +971,18 @@ msgid "Documents"
 msgstr "Dokumenty"
 
 #. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
+msgid "Doesn't fit the job requirements"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
+"Nezapomeňte uvést oddělení, pokud se váš náborový proces liší podle pracovní"
+" pozice."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -892,6 +1027,11 @@ msgid "Email cc"
 msgstr "Kopie e-mailu"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
+msgid "Email subject for applications sent via email"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
 msgid "Employee"
@@ -910,7 +1050,7 @@ msgstr "Zaměstnanec přiřazení k uchazeči."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee:"
-msgstr ""
+msgstr "Zaměstnanec:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues
@@ -921,11 +1061,6 @@ msgstr "Zaměstnanci"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
 msgid "Excellent"
 msgstr "Excelentní"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-msgid "Exception Activities"
-msgstr "Výjimečné činnosti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
@@ -970,7 +1105,7 @@ msgstr "První pohovor"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__fold
 msgid "Folded in Kanban"
-msgstr "Složený v Kanbanu"
+msgstr "Složený v kanbanu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -980,12 +1115,17 @@ msgstr "Sledující"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Sledující (Kanály)"
+msgstr "Sledující (kanály)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Sledující (Partneři)"
+msgstr "Sledující (partneři)"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -994,7 +1134,12 @@ msgstr "Budoucí činnosti"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
-msgid "Generate email alias"
+msgid "Generate Email"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
+msgid "Get Refuse Reason"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1005,7 +1150,7 @@ msgstr "Pořadí titulů při zobrazení v seznamu."
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Pořadí zobrazení úřovní."
+msgstr "Dává pořadí pořadí při zobrazení seznamu fází."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -1044,23 +1189,35 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
-msgid "HR Department"
-msgstr "Oddělení lidských zdrojů"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "odpovědný pracovník lidských zdrojů"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"ID rodičovského záznamu obsahující alias (například: Projekt obsahující "
+"alias pro vytváření úkolů)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
@@ -1092,6 +1249,13 @@ msgid ""
 msgstr ""
 "Je-li nastaveno, je přihlašovateli zaslána zpráva pomocí šablony, když je "
 "žadatel nastaven na fázi."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -1147,10 +1311,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
 msgid "Is Follower"
-msgstr "je Sledující"
+msgstr "Je sledující"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_job.py:0
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
@@ -1166,11 +1331,6 @@ msgstr "Žádosti o práci"
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
-msgid "Job ID"
-msgstr "Job ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__address_id
@@ -1202,7 +1362,7 @@ msgstr "Pracovní pozice"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Nabídka práce"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -1250,11 +1410,19 @@ msgid "Kpi Hr Recruitment New Colleagues Value"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage____last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -1270,8 +1438,11 @@ msgid "Last Stage Update"
 msgstr "Poslední změna fáze"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_uid
@@ -1279,8 +1450,11 @@ msgid "Last Updated by"
 msgstr "Naposledy upraveno od"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_date
@@ -1293,6 +1467,12 @@ msgid "Late Activities"
 msgstr "Zpožděné činnosti"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "Let people apply by email to save time."
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
@@ -1303,13 +1483,54 @@ msgstr "Vytvořme pracovní pozici."
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
-"Let's have a look at the <b>applications pipeline</b> for this job position."
+"Let's create the position. An email will be setup for applications, and a "
+"public job description, if you use the Website app."
 msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Let's have a look at the applications pipeline."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Let’s create this new employee now."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Let’s go back to the dashboard."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_ceo
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_consultant
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_cto
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_developer
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_hrm
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_marketing
+#: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_trainee
+msgid "LinkedIn"
+msgstr "LinkedIn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Seznam cc z příchozích e-mailů."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
@@ -1324,7 +1545,7 @@ msgstr "Inženýrský titul"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
 msgid "Medium"
-msgstr "Střední"
+msgstr "Střední hodnoty"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_count
@@ -1350,7 +1571,7 @@ msgstr "Zprávy"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile
 msgid "Mobile"
-msgstr "mobilní"
+msgstr "Mobilní"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1400,22 +1621,9 @@ msgid "New Applications <br/>"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#, python-format
-msgid "New Employee %s Hired"
-msgstr "Nových zaměstnaneců %s najatato"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
 msgid "New Hired Employee"
 msgstr "Nový přijatý zaměstnanec"
-
-#. module: hr_recruitment
-#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
-msgid ""
-"New applicants can be generated from incoming emails. You just need to set "
-"email aliases in configuration of job positions.<br>"
-msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
@@ -1459,9 +1667,22 @@ msgid "No Subject"
 msgstr "Bez předmětu"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "No application yet"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_department
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_job
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_analysis
+msgid "No data yet!"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1541,12 +1762,56 @@ msgstr "Pokračující"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
+msgstr "Online zveřejnené"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Volitelné ID vlákna (záznamu), ke kterému budou připojeny všechny příchozí "
+"zprávy, i když na něj neodpověděly. Je-li nastaveno, zakáže se úplné "
+"vytvoření nových záznamů."
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Or talk about this applicant privately with your colleagues."
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other Applications"
 msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
+msgid "Owner"
+msgstr "Majitel"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Nadřízený model"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "ID vlákna nadřízeného záznamu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Nadřazený model s aliasem. Model obsahující odkaz na alias nemusí být nutně "
+"modelem daným od alias_model_id (příklad: project (parent_model) a task "
+"(model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -1557,6 +1822,19 @@ msgstr "Osoba odpovědná za schvalování smluv zaměstnance."
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Zásady zveřejňování zpráv v dokumentu pomocí poštovní brány.\n"
+"- každý: každý může psát\n"
+"- partneři: pouze ověření partneři\n"
+"- sledující: pouze sledující související dokument nebo členové následujících kanálů\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -1614,6 +1892,17 @@ msgid "Ready to recruit more efficiently?"
 msgstr "Jste připraveni udělat nábor efektivněji?"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID vlákna záznamu"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
+msgid "Recruiter"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1623,7 +1912,7 @@ msgstr "Nábor"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr "Fáze Nábor / Uchazeči "
+msgstr "Fáze náboru / fáze uchazeči "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -1649,7 +1938,7 @@ msgstr "Náborový proces"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stages"
-msgstr ""
+msgstr "Fáze náboru"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -1672,6 +1961,31 @@ msgid "Refuse"
 msgstr "Odmítnout"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_reason_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#, python-format
+msgid "Refuse Reason"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
+msgid "Refuse Reason of Applicant"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
+msgid "Refuse Reasons"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Refused"
 msgstr "Odmítnuto"
@@ -1688,8 +2002,6 @@ msgid "Requirements"
 msgstr "Požadavky"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Responsible"
@@ -1731,6 +2043,13 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "Plat navrhovaný firmou, další výhody"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Save it !"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
 msgstr "Plánovaný pohovor"
@@ -1746,9 +2065,21 @@ msgid "Search Applicants"
 msgstr "Vyhledej uchazeče"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
+msgid "Search Source"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
 msgid "Second Interview"
 msgstr "Druhý pohovor"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "Send your email. Followers will get a copy of the communication."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -1757,20 +2088,10 @@ msgid "Sequence"
 msgstr "Číselná řada"
 
 #. module: hr_recruitment
-#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
-msgid "Set Email Aliases"
-msgstr "Nastavit aliasy e-mailu"
-
-#. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_global_settings
 msgid "Settings"
 msgstr "Nastavení"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "Share Trackers"
-msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1806,6 +2127,8 @@ msgstr "Zdroje uchazečů"
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Konkrétní úlohy, které využívají tuto fázi. Ostatní úlohy tuto fázi "
+"nevyužijí."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -1880,6 +2203,11 @@ msgid "Subject / Application Name"
 msgstr "Jméno Osoby / Uchazeče"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "Submit"
+msgstr "Odeslat"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
 msgid "Tag Name"
 msgstr "Název značky"
@@ -1896,7 +2224,17 @@ msgstr "Název značky již existuje!"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_tree
 msgid "Tags"
-msgstr "Štítky"
+msgstr "Tagy"
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
+msgid "The applicant gets a better offer"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
+msgid "The applicant is not interested anymore"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -1904,18 +2242,42 @@ msgid "The date at which the applicant will be available to start working"
 msgstr "Datum, kdy bude žadatel k dispozici, aby mohl začít pracovat"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Model (Odoo Document Kind), ke kterému odpovídá tento alias. Jakýkoli "
+"příchozí e-mail, který neodpovídá stávajícímu záznamu, způsobí vytvoření "
+"nového záznamu tohoto modelu (například projektové úlohy)"
+
+#. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
 msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "Název stupně náboru musí být jedinečný!"
 
 #. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_name
 msgid ""
-"These aliases can be emails or urls for every source. When the applicant "
-"arrives here through one of these you'll know where he came from."
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
 msgstr ""
-"Tyto aliasy mohou být e-maily nebo adresy URL pro každý zdroj. Až sem "
-"žadatel dorazí přes jednu z nich, budete vědět, odkud přišel."
+"Název aliasu e-mailu, např. 'jobs', pokud chcete zachytit e-maily pro "
+"<jobs@example.odoo.com>"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"Majitel záznamů vytvořených při příjmu e-mailů o tomto aliasu. Není-li toto "
+"pole nastaveno, systém se pokusí najít správného vlastníka na základě adresy"
+" odesílatele (Od) nebo použije účet správce, pokud pro danou adresu nebyl "
+"nalezen žádný uživatel systému."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -1923,6 +2285,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Toto je název, který vám pomůže sledovat různé kampaně, např. Fall_Drive, "
+"Christmas_Special"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
@@ -1949,9 +2313,15 @@ msgstr ""
 "záznamy k zobrazení."
 
 #. module: hr_recruitment
+#: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
+#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
+msgid "Tip: Let candidates apply by email"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "k Náboru"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1964,20 +2334,14 @@ msgid "Tooltips"
 msgstr ""
 
 #. module: hr_recruitment
-#. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-#, python-format
-msgid ""
-"Try to send an email to this address, it will create an application "
-"automatically."
+#: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
+msgid "Try sending an email"
 msgstr ""
-"Zkuste poslat e-mail na tuto adresu, automaticky vytvoří nabídku pracovního "
-"místa."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ zaznamenané výjimečné aktivity."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1988,7 +2352,6 @@ msgstr "Nepřiřazeno"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
 
@@ -1996,6 +2359,11 @@ msgstr "Nepřečtené zprávy"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Počítadlo nepřečtených zpráv"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid "Use emails and links trackers"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2007,18 +2375,8 @@ msgstr "Při přijímacím řízení používejte formuláře rozhovorů"
 msgid ""
 "Use interview forms tailored to each job position during the recruitment "
 "process. Select the form to use in the job position detail form. This relies"
-" on Survey app."
+" on the Survey app."
 msgstr ""
-"Během náborového procesu používejte formuláře pohovoru přizpůsobené každé "
-"pracovní pozici. Vyberte formulář, který chcete použít v podrobném formuláři"
-" pracovní pozice. To závisí na aplikaci Průzkum."
-
-#. module: hr_recruitment
-#. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-#, python-format
-msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr "Použít navigační drobečky pro <b>přechod na dashboard</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
@@ -2031,22 +2389,26 @@ msgid "Very Good"
 msgstr "Velmi dobrý"
 
 #. module: hr_recruitment
-#. openerp-web
-#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
-#, python-format
-msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid "Want to analyse where applications come from ?"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
 msgid "Website Messages"
-msgstr "Zprávy Webové stránky"
+msgstr "Zprávy webové stránky"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
 msgid "Website communication history"
-msgstr "Historie komunikace Webové stránky"
+msgstr "Historie komunikace webové stránky"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
+#, python-format
+msgid "What do you want to recruit today? Choose a job title..."
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2071,17 +2433,21 @@ msgid "Your Job Application: ${object.job_id.name | safe}"
 msgstr "Vaše žádost o zaměstnání: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
+msgid "e.g. LinkedIn"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
 msgstr "např. Manažer prodeje"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
-msgid "hr.applicant.resumes.server"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "e.g. sales-manager"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#, python-format
-msgid "job applicant"
-msgstr ""
+#: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
+msgid "hr.applicant.resumes.server"
+msgstr "hr.applicant.resumes.server"

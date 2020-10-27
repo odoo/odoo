@@ -13,9 +13,9 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Takuya Sawada <takuya@tuntunkun.com>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:25+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2020\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6988,6 +6988,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">会社アドレス</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">請求アドレス</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">配送アドレス</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'other')]}\">その他アドレス</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'private')]}\">個人アドレス</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', False)]}\">アドレス</b>\n"
+"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -11708,7 +11716,7 @@ msgstr "他のコンタクトとの重複排除"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr "デフォルト会社"
+msgstr "デフォルトの会社"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -16537,7 +16545,7 @@ msgstr "最新バージョン"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr "最終ログイン"
+msgstr "直近の認証"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato

@@ -3,24 +3,24 @@
 # 	* membership
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Marko Carević <marko.carevic@live.com>, 2019
-# Jasmina Otročak <jasmina@uvid.hr>, 2019
-# Tina Milas, 2019
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2020
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
+# Marko Carević <marko.carevic@live.com>, 2020
+# Jasmina Otročak <jasmina@uvid.hr>, 2020
+# Tina Milas, 2020
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,9 +226,13 @@ msgid "Date until which membership remains active."
 msgstr "Datum na koji je članstvo otkazano."
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__display_name
+#: model:ir.model.fields,field_description:membership.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_product_template__display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership__display_name
+#: model:ir.model.fields,field_description:membership.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Naziv"
 
@@ -294,9 +298,13 @@ msgid "Group by..."
 msgstr "Grupiraj po..."
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__id
+#: model:ir.model.fields,field_description:membership.field_account_move_line__id
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__id
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_product_template__id
 #: model:ir.model.fields,field_description:membership.field_report_membership__id
+#: model:ir.model.fields,field_description:membership.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -371,8 +379,8 @@ msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
-msgid "Journal Entries"
-msgstr "Temeljnice"
+msgid "Journal Entry"
+msgstr "Temeljnica"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move_line
@@ -380,9 +388,13 @@ msgid "Journal Item"
 msgstr "Stavka dnevnika"
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move____last_update
+#: model:ir.model.fields,field_description:membership.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_invoice____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:membership.field_product_template____last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership____last_update
+#: model:ir.model.fields,field_description:membership.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
@@ -492,6 +504,7 @@ msgstr "Članstvo proizvoda"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
 msgstr "Članstvo proizvoda"
@@ -536,6 +549,11 @@ msgstr "Članstva"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
 msgstr "Mjesec"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none

@@ -3,19 +3,20 @@
 # 	* website_form
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Otgonbayar.A <gobi.mn@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Martin Trigaux, 2020
+# Otgonbayar.A <gobi.mn@gmail.com>, 2020
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2020
+# Minj P <pminj322@gmail.com>, 2020
+# Батболд <batbold.ts@gmail.com>, 2020
+# baaska sh <sh.baaskash@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:21+0000\n"
+"Last-Translator: baaska sh <sh.baaskash@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,66 +25,74 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;цаг;"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:238
-#, python-format
-msgid "'%s' is not a correct date"
-msgstr "'%s' нь зөв биш огноо"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:233
-#, python-format
-msgid "'%s' is not a correct datetime"
-msgstr "'%s' нь зөв биш огноо, цаг"
-
-#. module: website_form
-#: code:addons/website_form/controllers/main.py:232
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Хавсаргасан файлууд : </p>"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
-msgid "Add a custom field"
-msgstr "Өөриймшүүлсэн талбар нэмэх"
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Email To</span>"
+msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
-msgid "Add an existing field"
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Subject</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Name</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Add a new field after this one"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Add a new field at the end"
 msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Маягтууд дээр ашиглах боломжтой"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:21
-#, python-format
-msgid "An error has occured, the form has not been sent."
-msgstr "Алдаа гарсан, маягтыг илгээгээгүй."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
@@ -96,54 +105,61 @@ msgid "Blacklisted in web forms"
 msgstr "Вэб маягтууд дээр хар жагсаалтад орсон"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
-msgid "Change Form Parameters"
-msgstr "Маягтын параметруудыг өөрчлөх"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Button Position"
+msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Center"
+msgstr "Төвд"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Checkbox"
 msgstr "Чекбокс"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
-#, python-format
-msgid "Close"
-msgstr "Хаах"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Custom field"
+msgstr ""
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_res_config_settings
-msgid "Config Settings"
-msgstr "Тохиргооны тохируулга"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Date"
 msgstr "Огноо"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Date &amp; Time"
 msgstr "Огноо &amp; Цаг"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Decimal Number"
 msgstr "Аравтын тоо"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:44
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#, python-format
-msgid "Email"
-msgstr "Имэйл"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Display"
+msgstr "Дэлгэц"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid "Email To"
+#: model:ir.model.fields,field_description:website_form.field_ir_model__display_name
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__display_name
+#: model:ir.model.fields,field_description:website_form.field_website__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Edit Message"
 msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Email"
+msgstr "Имэйл"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
@@ -152,8 +168,8 @@ msgstr "Энэ загвар дээр маягт бүтээгчийг зөвшө�
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Error"
 msgstr "Алдаа"
@@ -169,7 +185,7 @@ msgid "Fields"
 msgstr "Талбарууд"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "File Upload"
 msgstr "Файл ачааллах"
 
@@ -183,9 +199,63 @@ msgstr ""
 "'Асуудал үүсгэх' байж болно."
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Height"
+msgstr "Өндөр"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hidden"
 msgstr "Нуугдсан"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Hide"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Horizontal"
+msgstr "Хэвтээ"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__id
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__id
+#: model:ir.model.fields,field_description:website_form.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "In the meantime we invite you to visit our"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Input Aligned"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Input Placeholder"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Input Type"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Label Name"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Label Position"
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -193,12 +263,39 @@ msgid "Label for form action"
 msgstr "Маягтын үйлдлийн шошго"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Labels Width"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields____last_update
+#: model:ir.model.fields,field_description:website_form.field_website____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Left"
+msgstr "Зүүн"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Long Text"
 msgstr "Урт текст"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Mark Text"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Marked Fields"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Metadata"
 msgstr "Тэмдэг өгөгдөл"
@@ -209,77 +306,104 @@ msgid "Models"
 msgstr "Модел"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Multiple Checkboxes"
 msgstr "Олон чекбоксууд"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "No matching record !"
 msgstr "Таарах бичлэг алга !"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "None"
+msgstr "Байхгүй"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Nothing"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Number"
 msgstr "Дугаар"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:180
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "On Success"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Optional"
+msgstr "Заавал биш"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:36
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
-msgid "Phone Number"
-msgstr "Утасны дугаар"
+msgid "Our team will message you back as soon as possible."
+msgstr ""
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
-#, python-format
-msgid "Please fill in the form correctly."
-msgstr "Маягтыг зөв бөглөнө үү"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Radio Buttons"
 msgstr "Радио Товчнууд"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Redirect"
+msgstr "Шилжүүлэх"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Required"
 msgstr "Шаардлагатай"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
-#, python-format
-msgid "Save"
-msgstr "Хадгалах"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Right"
+msgstr "Баруун"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Selection"
 msgstr "Сонголт"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
-msgid "Send"
-msgstr "Илгээх"
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Separate email addresses with a comma."
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Show Message"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Show reCaptcha Policy"
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
@@ -290,59 +414,96 @@ msgstr ""
 "тодорхойлно уу."
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:60
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#, python-format
-msgid "Subject"
-msgstr "Гарчиг"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
+msgid "Submit"
+msgstr "Илгээх"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Success"
 msgstr "Амжилттай"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
-#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
-msgid "Technical data on contact form"
+#: code:addons/website_form/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Telephone"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Text"
 msgstr "Текст"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Thank You For Your Feedback"
+msgstr ""
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "Thanks!"
-msgstr "Баярлалаа!"
+msgid "Thank You!"
+msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
 msgstr "Маягт амжилттай илгээгдлээ."
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:182
+#: code:addons/website_form/controllers/main.py:0
+#, python-format
+msgid "The form's specified model does not exist"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "This message has been posted on your website!"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
-msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Top"
+msgstr "Дээд"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "URL"
+msgstr "URL"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Url"
+msgstr "Url"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
 msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Vertical"
+msgstr "Босоо"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -363,40 +524,16 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
 msgid "Website Forms"
+msgstr "Вэбсайт Форм"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "rows"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
-#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
-msgid "You can choose to log technical data like IP, User Agent ,..."
-msgstr ""
-
-#. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:52
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
-msgid "Your Company"
-msgstr "Таны Компани"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:28
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#, python-format
-msgid "Your Name"
-msgstr "Таны нэр"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:68
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#, python-format
-msgid "Your Question"
-msgstr "Таны асуулт"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "Таны зурвас амжилттай илгээгдсэн."
+msgid "website"
+msgstr "вэбсайт"

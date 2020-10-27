@@ -3,16 +3,18 @@
 # 	* base_vat
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Martin Trigaux, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
+# Ye Ye <vrio.ua@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Ye Ye <vrio.ua@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +29,8 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Налоги по умолчанию</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Налоги по умолчанию.\" aria-label=\"Налоги по умолчанию.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -41,12 +45,26 @@ msgstr "Компании"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Настройки конфигурации"
+msgstr "Конфигурационные настройки"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Контакт"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr "Идентификатор"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -58,29 +76,31 @@ msgstr ""
 " ИНН не может быть проверен с помощью Европейского сервиса VES."
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:188
-#, python-format
-msgid ""
-"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
-"Note: the expected format is %s"
-msgstr ""
-"ИНН [%s] для контрагента [%s], выглядит не корректным. \n"
-"Примечание: Ожидается формат %s"
+#: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_partner____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:187
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
-"check or did not respect the expected format %s."
+"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
+"Note: the expected format is %(format)s"
 msgstr ""
-"ИНН [%s] для партнера [%s] либо не прошло проверку валидации НДС VIES или не"
-" соответствует ожидаемому формату %s."
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
+"validation check or did not respect the expected format %(format)s."
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "НДС"
 

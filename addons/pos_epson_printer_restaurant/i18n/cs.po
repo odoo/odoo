@@ -3,15 +3,17 @@
 # 	* pos_epson_printer_restaurant
 # 
 # Translators:
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Jiří Podhorecký, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Jiří Podhorecký, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,19 +22,34 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: pos_epson_printer_restaurant
+#: model:ir.model.fields,field_description:pos_epson_printer_restaurant.field_restaurant_printer__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: pos_epson_printer_restaurant
 #: model:ir.model.fields,field_description:pos_epson_printer_restaurant.field_restaurant_printer__epson_printer_ip
 msgid "Epson Receipt Printer IP Address"
-msgstr ""
+msgstr "IP adresa tiskárny Epson na tisk stvrzenek"
+
+#. module: pos_epson_printer_restaurant
+#: model:ir.model.fields,field_description:pos_epson_printer_restaurant.field_restaurant_printer__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_epson_printer_restaurant
+#: model:ir.model.fields,field_description:pos_epson_printer_restaurant.field_restaurant_printer____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
 
 #. module: pos_epson_printer_restaurant
 #: model:ir.model.fields,help:pos_epson_printer_restaurant.field_restaurant_printer__epson_printer_ip
 msgid "Local IP address of an Epson receipt printer."
-msgstr ""
+msgstr "Místní IP adresa tiskárny Epson na tisk stvrzenek."
 
 #. module: pos_epson_printer_restaurant
 #: model:ir.model.fields,field_description:pos_epson_printer_restaurant.field_restaurant_printer__printer_type
 msgid "Printer Type"
-msgstr ""
+msgstr "Typ tiskárny"
 
 #. module: pos_epson_printer_restaurant
 #: model:ir.model,name:pos_epson_printer_restaurant.model_restaurant_printer
@@ -42,4 +59,4 @@ msgstr "Tiskárna restaurace"
 #. module: pos_epson_printer_restaurant
 #: model:ir.model.fields.selection,name:pos_epson_printer_restaurant.selection__restaurant_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
-msgstr ""
+msgstr "Použít Epson tiskárnu"

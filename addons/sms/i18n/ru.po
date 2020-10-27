@@ -3,16 +3,22 @@
 # 	* sms
 # 
 # Translators:
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Martin Trigaux, 2019
+# Martin Trigaux, 2020
+# Андрей Гусев <gaussgss@gmail.com>, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
+# Ekaterina <nawsikaya@bk.ru>, 2020
+# Сергей Шебанин <sergey@shebanin.ru>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +32,7 @@ msgid "# Invalid recipients"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_count
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
 msgstr ""
 
@@ -74,12 +80,19 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
-"<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
+msgid "Action Needed"
+msgstr "Требует внимания"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_base_automation__state
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
+#: model:ir.model.fields,field_description:sms.field_ir_cron__state
 msgid "Action To Do"
 msgstr "Действие для выполнения"
 
@@ -101,13 +114,6 @@ msgid ""
 msgstr ""
 
 #. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/js/mail_failure.js:0
-#, python-format
-msgid "An error occurred when sending an SMS"
-msgstr ""
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
@@ -122,15 +128,23 @@ msgid ""
 msgstr ""
 
 #. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/xml/thread.xml:0
-#, python-format
-msgid "Awaiting Dispatch"
-msgstr ""
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
+msgid "Attachment Count"
+msgstr "Количество вложений"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
 msgstr ""
 
 #. module: sms
@@ -143,7 +157,7 @@ msgstr "Содержимое"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Buy credits"
-msgstr ""
+msgstr "получить кредит"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -155,13 +169,10 @@ msgstr "Отменить"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 msgid "Cancel notification in failure"
-msgstr ""
+msgstr "Отменить сообщение об ошибке"
 
 #. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
-#, python-format
 msgid "Canceled"
 msgstr "Отменено"
 
@@ -192,13 +203,14 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Contact"
 msgstr "Контакт"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Content"
-msgstr "Содержание"
+msgstr "Содержимое"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__create_uid
@@ -209,7 +221,7 @@ msgstr "Содержание"
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__create_date
@@ -228,8 +240,17 @@ msgid "Customer"
 msgstr "Заказчик"
 
 #. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr ""
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear ${object.display_name} this is an automated SMS."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__null_value
 msgid "Default Value"
 msgstr "Значение по умолчанию "
 
@@ -246,14 +267,22 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 msgid "Discard delivery failures"
-msgstr ""
+msgstr "Отменить неудачные доставки"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_cancel
 msgid "Dismiss notification for resend by model"
-msgstr ""
+msgstr "Отклонить сообщение о повторную отправку по модели"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_model__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_message__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_thread_phone__display_name
+#: model:ir.model.fields,field_description:sms.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_api__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_composer__display_name
@@ -263,7 +292,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
@@ -283,7 +312,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "Модель документа"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_duplicate
@@ -298,7 +327,7 @@ msgstr "Динамический генератор заполнителя"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "редактировать партнеров"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -306,10 +335,7 @@ msgid "Email Thread"
 msgstr "Цепочка эл.почты"
 
 #. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
-#, python-format
 msgid "Error"
 msgstr "Ошибка"
 
@@ -322,28 +348,43 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Тип неудачи"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_object_field
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_object_field
 msgid "Field"
 msgstr "Поле"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
-msgid "Field holding number"
+#: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
-#: model:ir.model.fields,help:sms.field_sms_template_preview__copyvalue
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
-"Окончательное выражение подстановки, для копирования-вставки в желаемое поле"
-" шаблона."
+"Окончательное выражение подстановки для копирования-вставки в желаемое поле "
+"шаблона."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
+msgid "Followers"
+msgstr "Подписчики"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Подписчики (Каналы)"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Подписчики (Партнеры)"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -354,7 +395,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_cancel
 msgid "Has Cancel"
-msgstr ""
+msgstr "должен отменить"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
@@ -368,17 +409,30 @@ msgid "Has SMS error"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
+msgid "Has Unregistered Account"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_message__has_sms_error
 msgid "Has error"
-msgstr ""
+msgstr "имеет ошибку"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__help_message
 msgid "Help message"
-msgstr ""
+msgstr "вспомогательное сообщение"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__id
+#: model:ir.model.fields,field_description:sms.field_ir_model__id
+#: model:ir.model.fields,field_description:sms.field_mail_followers__id
+#: model:ir.model.fields,field_description:sms.field_mail_message__id
+#: model:ir.model.fields,field_description:sms.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_mail_thread_phone__id
+#: model:ir.model.fields,field_description:sms.field_res_partner__id
 #: model:ir.model.fields,field_description:sms.field_sms_api__id
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__id
 #: model:ir.model.fields,field_description:sms.field_sms_composer__id
@@ -388,7 +442,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction
+#: model:ir.model.fields,help:sms.field_res_partner__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Если отмечено, новые сообщения будут требовать вашего внимания."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -396,11 +456,15 @@ msgstr "Номер"
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle_log_contract__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_fleet_vehicle_log_services__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_badge__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_challenge__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_contract__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_hr_department__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_hr_employee__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_hr_job__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_leave_allocation__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_lunch_supplier__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_channel__message_has_sms_error
@@ -408,8 +472,6 @@ msgstr "Номер"
 #: model:ir.model.fields,help:sms.field_mail_thread_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_mailing_contact__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_mailing_mailing__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
@@ -417,9 +479,17 @@ msgstr "Номер"
 #: model:ir.model.fields,help:sms.field_phone_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_template__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr "Если отмечено - некоторые сообщения имеют ошибку доставки."
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
 msgstr ""
 
 #. module: sms
@@ -441,15 +511,46 @@ msgid "In Queue"
 msgstr "В очереди"
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
 msgstr ""
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Invalid phone number"
+msgstr ""
+
+#. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
-msgid "Invalid number"
+msgid "Invalid recipient number. Please update it."
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
+msgid "Is Follower"
+msgstr "Подписчик"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
+msgid "Is valid"
 msgstr ""
 
 #. module: sms
@@ -463,6 +564,14 @@ msgid "Language"
 msgstr "Язык"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server____last_update
+#: model:ir.model.fields,field_description:sms.field_ir_model____last_update
+#: model:ir.model.fields,field_description:sms.field_mail_followers____last_update
+#: model:ir.model.fields,field_description:sms.field_mail_message____last_update
+#: model:ir.model.fields,field_description:sms.field_mail_notification____last_update
+#: model:ir.model.fields,field_description:sms.field_mail_thread____last_update
+#: model:ir.model.fields,field_description:sms.field_mail_thread_phone____last_update
+#: model:ir.model.fields,field_description:sms.field_res_partner____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_api____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_cancel____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_composer____last_update
@@ -497,8 +606,10 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_base_automation__sms_mass_keep_log
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
-msgid "Log a note"
+#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_mass_keep_log
+msgid "Log as Note"
 msgstr ""
 
 #. module: sms
@@ -512,16 +623,27 @@ msgid "Mail Thread SMS"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Основное вложение"
+
+#. module: sms
 #: model:ir.model,name:sms.model_mail_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__body
 #: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Message"
 msgstr "Сообщение"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
+msgid "Message Delivery error"
+msgstr "Ошибка доставки сообщения"
+
+#. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notifications"
-msgstr "сообщение уведомлений"
+msgstr "Уведомления о сообщениях"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -531,19 +653,18 @@ msgid ""
 "comment for other messages such as user replies"
 msgstr ""
 "Тип сообщения: эл. почта - для эл. почты, уведомление - для системных "
-"сообщений, комментарий - для остальных сообщений таких как сообщения "
+"сообщений, комментарий - для остальных сообщений, таких как сообщения "
 "пользователя"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
+msgid "Messages"
+msgstr "Сообщения"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
 msgid "Missing Number"
-msgstr ""
-
-#. module: sms
-#: code:addons/sms/wizard/sms_composer.py:0
-#, python-format
-msgid "Missing number"
 msgstr ""
 
 #. module: sms
@@ -558,9 +679,13 @@ msgstr "Модели"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__name
 msgid "Name"
 msgstr "Название"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
+msgid "No Record"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -579,10 +704,53 @@ msgid "Number"
 msgstr "Номер"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
+msgid "Number Field"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Количество действий"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
+msgid "Number of errors"
+msgstr "Количество ошибок"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Количество сообщений, требующих действия"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Количество сообщений с ошибкой отправки"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Количество непрочитанных сообщений"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+"Дополнительный язык перевода (код ISO), который можно выбрать, отсылая "
+"письмо электронную почту. Если язык не выбран, будет использоваться "
+"английская версия. Обычно это должно быть замещающее выражение, которое "
+"обеспечивает использование соответствующего языка, например, "
+"${object.partner_id.lang}."
+
+#. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
-#: model:ir.model.fields,help:sms.field_sms_template_preview__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr "Необязательное значение используемое если целевое поле пусто"
+msgstr "Необязательное значение, используемое если целевое поле пусто"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -590,7 +758,6 @@ msgid "Outgoing SMS"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_composer__partner_ids
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
 msgid "Partner"
 msgstr "Партнёр"
@@ -601,8 +768,12 @@ msgid "Phone Blacklist Mixin"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__copyvalue
 msgid "Placeholder Expression"
 msgstr "Выражение подстановки"
 
@@ -634,12 +805,17 @@ msgstr "Причина"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Recipient"
 msgstr "Получатель"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
+msgid "Recipient Number"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
-#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Recipients"
 msgstr "Получатели"
 
@@ -649,14 +825,9 @@ msgid "Recipients (Numbers)"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_description
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
 msgid "Recipients (Partners)"
 msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__res_id
-msgid "Record ID"
-msgstr "ID записи"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
@@ -665,7 +836,6 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__model
 msgid "Related Document Model"
 msgstr "Модель связанного документа"
 
@@ -678,7 +848,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
-msgstr ""
+msgstr "переслать"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
@@ -686,22 +856,19 @@ msgid "Resend Notification"
 msgstr ""
 
 #. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/xml/thread.xml:0
 #: model:ir.actions.act_window,name:sms.sms_sms_action
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
-#, python-format
 msgid "SMS"
 msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "SMS API"
-msgstr ""
+msgstr "SMS API"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -709,11 +876,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_contract__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_services__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_badge__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_challenge__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_contract__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_hr_department__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_hr_employee__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_hr_job__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_leave_allocation__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_lunch_supplier__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_channel__message_has_sms_error
@@ -721,8 +892,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_mail_thread_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_mailing_contact__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_mailing_mailing__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error
@@ -733,13 +902,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
-
-#. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/js/systray_messaging_menu.js:0
-#, python-format
-msgid "SMS Failures"
 msgstr ""
 
 #. module: sms
@@ -758,7 +920,7 @@ msgstr ""
 #: code:addons/sms/static/src/js/fields_sms_widget.js:0
 #, python-format
 msgid "SMS Pricing"
-msgstr ""
+msgstr "Цена SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend
@@ -771,7 +933,9 @@ msgid "SMS Status"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_base_automation__sms_template_id
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
+#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
 msgstr ""
@@ -803,6 +967,7 @@ msgid "SMS: SMS Queue Manager"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
 msgstr ""
@@ -815,13 +980,12 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_object_field
-#: model:ir.model.fields,help:sms.field_sms_template_preview__model_object_field
 msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
 "Выбор целевого поля из связанной модели документа.\n"
-"Если это поле взаимоотношений, вы сможете выбрать целевое поле при месте назначения взаимоотношения."
+"Если это поле взаимоотношений, вы сможете выбрать целевое поле на месте назначения взаимоотношений."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -832,7 +996,7 @@ msgstr "Отправить сейчас"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
-msgstr ""
+msgstr "Отправить SMS"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -865,7 +1029,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "Отправить SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -889,10 +1053,7 @@ msgid "Sending SMS can only be done on a mail.thread model"
 msgstr ""
 
 #. module: sms
-#. openerp-web
-#: code:addons/sms/static/src/xml/thread.xml:0
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
-#, python-format
 msgid "Sent"
 msgstr "Отправлено"
 
@@ -908,20 +1069,28 @@ msgid "Server Error"
 msgstr "Ошибка сервера"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Set up an account"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sidebar_action_id
 msgid "Sidebar action"
 msgstr "Действие боковой панели"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
-#: model:ir.model.fields,help:sms.field_sms_template_preview__sidebar_action_id
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
-"Действие боковой панели для доступности этого шаблона по записям связанным с"
-" моделью документа"
+"Действие боковой панели для доступности этого шаблона по записям, связанным "
+"с моделью документа"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
+msgid "Single Mode"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -934,14 +1103,17 @@ msgid "Sms Template"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
+msgid "Stored Recipient Number"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sub_model_object_field
 msgid "Sub-field"
 msgstr "Субполе"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_object
-#: model:ir.model.fields,field_description:sms.field_sms_template_preview__sub_object
 msgid "Sub-model"
 msgstr "Субмодель"
 
@@ -967,13 +1139,21 @@ msgid "The type of document this template can be used with"
 msgstr "Тип документа, с которым этот шаблон может быть использован"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:sms.field_mail_message__message_type
 msgid "Type"
 msgstr "Тип"
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_base_automation__state
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
+#: model:ir.model.fields,help:sms.field_ir_cron__state
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
@@ -983,6 +1163,28 @@ msgid ""
 "- 'Send Email': automatically send an email (Discuss)\n"
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
+msgstr ""
+"Тип действия сервера. Доступны следующие значения: - `Выполнить код Python`:"
+" блок кода python, который будет выполнен - `Создать`: создать запись с "
+"новыми значениями - `Обновить запись`: обновить значение записи - `Выполнить"
+" несколько действий ': определить действие, которое запускает несколько "
+"других действий сервера - `Отправить Email`: автоматически отправить "
+"сообщение (обсуждение) - `Добавить подписчиков`: добавить подписчиков к "
+"записи (обсуждение) - `создать следующее действие ': создать действие "
+"(обсуждение)"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
+msgid ""
+"UX field allowing to edit the recipient number. If changed it will be stored"
+" onto the recipient."
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
+msgid ""
+"UX field allowing to know we are sending an SMS to a single specific "
+"recipient"
 msgstr ""
 
 #. module: sms
@@ -997,6 +1199,22 @@ msgstr ""
 msgid ""
 "UX field computing the number of recipients in mass mode without active "
 "domain"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
+msgid "Unread Messages"
+msgstr "Непрочитанные сообщения"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Счетчик непрочитанных сообщений"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_acc
+msgid "Unregistered Account"
 msgstr ""
 
 #. module: sms
@@ -1015,21 +1233,22 @@ msgid "Use blacklist"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,help:sms.field_sms_template__lang
-msgid ""
-"Use this field to either force a specific language (ISO code) or dynamically"
-" detect the language of your recipient by a placeholder expression (e.g. "
-"${object.partner_id.lang})"
-msgstr ""
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
+msgid "Website Messages"
+msgstr "Сообщения с сайта"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
+msgid "Website communication history"
+msgstr "История общения с сайтом"
+
+#. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_model_object_field
-#: model:ir.model.fields,help:sms.field_sms_template_preview__sub_model_object_field
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
@@ -1039,13 +1258,12 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_object
-#: model:ir.model.fields,help:sms.field_sms_template_preview__sub_object
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
 "Когда связывающее поле выбрано как первое поле, это поле показывает "
-"связанную модель документа ."
+"связанную модель документа."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms

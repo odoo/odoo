@@ -3,18 +3,19 @@
 # 	* membership
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Martin Trigaux, 2020
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2020
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
+# Cheemee Bumtsend <cheemeesun@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"Last-Translator: Cheemee Bumtsend <cheemeesun@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +147,7 @@ msgstr "Компани"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__company_id
 msgid "Company related to this journal"
-msgstr "Энэ журналын холбогдох компани"
+msgstr "Энэ журналын харъяалагдах компани"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -161,7 +162,7 @@ msgstr "Харилцах хаяг"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_tree
 msgid "Contacts"
-msgstr "Харилцагч"
+msgstr "Харилцах хаяг"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
@@ -220,9 +221,13 @@ msgid "Date until which membership remains active."
 msgstr "Гишүүнчлэл идэвхтэй байх эцсийн хугацаа."
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__display_name
+#: model:ir.model.fields,field_description:membership.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_product_template__display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership__display_name
+#: model:ir.model.fields,field_description:membership.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
 
@@ -288,9 +293,13 @@ msgid "Group by..."
 msgstr "Бүлэглэх..."
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__id
+#: model:ir.model.fields,field_description:membership.field_account_move_line__id
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__id
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_product_template__id
 #: model:ir.model.fields,field_description:membership.field_report_membership__id
+#: model:ir.model.fields,field_description:membership.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -372,7 +381,7 @@ msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
-msgid "Journal Entries"
+msgid "Journal Entry"
 msgstr "Ажил гүйлгээ"
 
 #. module: membership
@@ -381,9 +390,13 @@ msgid "Journal Item"
 msgstr "Журналын бичилт"
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move____last_update
+#: model:ir.model.fields,field_description:membership.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_invoice____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:membership.field_product_template____last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership____last_update
+#: model:ir.model.fields,field_description:membership.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Сүүлд зассан огноо"
 
@@ -477,7 +490,7 @@ msgstr "Гишүүнчлэлийн нэхэмжлэл"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Membership Line"
-msgstr ""
+msgstr "Гишүүнчлэлийн шугам"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -493,6 +506,7 @@ msgstr "Гишүүнчлэлийн бараа"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
 msgstr "Гишүүнчлэлийн бараанууд"
@@ -537,6 +551,11 @@ msgstr "Гишүүнчлэлүүд"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
 msgstr "Сар"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
@@ -641,7 +660,7 @@ msgstr "Татвар"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__account_invoice_id
 msgid "The move of this entry line."
-msgstr "Журналын бичилтийн харьяалагдах ажил гүйлгээ"
+msgstr "Журналын бичилтийн харъяалагдах ажил гүйлгээ"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_amount
@@ -667,7 +686,7 @@ msgstr "Энэ нь хүлээгдэж буй нэхэмжилсэн баган�
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
 msgid "To"
-msgstr "Хүртэл"
+msgstr "Дуусах"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter

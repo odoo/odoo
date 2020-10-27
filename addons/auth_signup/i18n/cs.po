@@ -3,18 +3,18 @@
 # 	* auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Jiří Podhorecký, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Jiří Podhorecký, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,8 +221,11 @@ msgid ""
 "                            </a>\n"
 "                        </div>\n"
 "                        If you do not expect this, you can safely ignore this email.<br/><br/>\n"
-"                        Thanks,<br/>\n"
-"                        ${user.signature | safe}<br/>\n"
+"                        Thanks,\n"
+"                        % if user.signature:\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -302,12 +305,15 @@ msgid ""
 "                        Your login is <strong>${object.email}</strong><br/>\n"
 "                        To gain access to your account, you can use the following link:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a href=\"/web/login?${ctx['auth_login']}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a href=\"/web/login?auth_login=${object.email}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        Thanks,<br/><br/>\n"
-"                        ${user.signature | safe}<br/>\n"
+"                        Thanks,<br/>\n"
+"                        % if user.signature:\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -438,6 +444,14 @@ msgid "Default Access Rights"
 msgstr "Výchozí přístupová práva"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
 msgstr "Nemáte účet?"
@@ -459,10 +473,26 @@ msgid "HTTP Routing"
 msgstr "HTTP Routing"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
 msgstr "Neplatný registrační token"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http____last_update
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner____last_update
+#: model:ir.model.fields,field_description:auth_signup.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -523,8 +553,9 @@ msgid "Reset password: invalid username or email"
 msgstr ""
 
 #. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid "Send Reset Password Instructions"
+msgid "Send Password Reset Instructions"
 msgstr ""
 
 #. module: auth_signup
@@ -651,6 +682,12 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "You cannot perform this action on an archived user."
 msgstr ""
 
 #. module: auth_signup

@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Romica Paun <roa@odoo.com>, 2020
+# Martin Trigaux, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
-# efaOdoo <efa@odoo.com>, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# efaOdoo <efa@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: efaOdoo <efa@odoo.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,6 +191,8 @@ msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> al </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -466,7 +468,7 @@ msgstr "Assegnata a"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignment Date"
-msgstr ""
+msgstr "Data assegnazione"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -513,10 +515,8 @@ msgstr "Non recapitate"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"By <b>updating lead probabilities</b>, you will regenerate the frequency table and recompute the probability of all the leads.\n"
-"                                        This can be useful after changing the start date (you need to save first !) or to ensure every lead probabilities are up to date.\n"
-"                                        <br/>\n"
-"                                        This can take up to several minutes depending on the number of leads you have !!!"
+"Use this button to update the probabilities of all leads. This can take up "
+"to several minutes depending on how many there are."
 msgstr ""
 
 #. module: crm
@@ -943,7 +943,7 @@ msgstr "Giorni da assegnare"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_close
 msgid "Days to Close"
-msgstr "Giorni per la chiusura"
+msgstr "Giorni per chiudere"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_alias_prefix
@@ -2060,7 +2060,7 @@ msgstr "Nessun oggetto"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "No data yet!"
-msgstr "Ancora nessun dato."
+msgstr "Ancora nessun dato"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2295,12 +2295,12 @@ msgstr ""
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
 msgid "Over 3 years"
-msgstr ""
+msgstr "triennali"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_5_years
 msgid "Over 5 years "
-msgstr ""
+msgstr "quinquennale"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2311,7 +2311,7 @@ msgstr "Opportunità in ritardo"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_amount
 msgid "Overdue Opportunities Revenues"
-msgstr "Ricavi legati a opportunità in ritardo"
+msgstr "Ricavi opportunità in ritardo"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -2777,8 +2777,8 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Start Date: Consider leads created as of the"
-msgstr ""
+msgid "Consider leads created as of the"
+msgstr "Considera i contatti creati a partire dal"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
@@ -3079,7 +3079,7 @@ msgstr "Monitoraggio"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr ""
+msgstr "A 12 mesi (TTM)"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -3144,8 +3144,8 @@ msgstr "Numero messaggi non letti"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Update"
-msgstr "Aggiorna"
+msgid "Update Probabilities"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads

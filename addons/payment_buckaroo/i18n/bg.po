@@ -1,13 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_buckaroo
+# 	* payment_buckaroo
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Albena Mincheva <albena_vicheva@abv.bg>, 2020
+# Maria Boyadjieva <marabo2000@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,58 +22,83 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:141
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; открити множество поръчки"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:139
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; не е открита поръчка"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:148
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Buckaroo: невалиден шасинг, получен %s, изчислен %s, за данни %s"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:137
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "Buckaroo: received data for reference %s"
-msgstr ""
+msgstr "Buckaroo: получени данни за референция %s"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:131
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid ""
 "Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
 "shasign (%s)"
 msgstr ""
+"Buckaroo: rполучени данни с липсваща референция (%s) или pay_id (%s) или "
+"shasign (%s)"
 
 #. module: payment_buckaroo
-#: model_terms:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Име за показване"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Последно променено на"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Обработчик на плащане"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платежна транзакция"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Доставчик"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
-msgstr ""
+msgstr "Ключ за тайна"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
-msgstr ""
+msgstr "Ключ за уебсайт"

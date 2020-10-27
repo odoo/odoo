@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Febrasari Almania <febrasari.almania@gmail.com>, 2017
-# Edy Kend <edy@azmall.co.id>, 2017
-# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
-# Deddy Ddr <deddy.ddr@gmail.com>, 2017
-# Ryanto The <ry.the77@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2020
+# Martin Trigaux, 2020
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
+# Bonny Useful <bonny.useful@gmail.com>, 2020
+# Edy Kend <edy@azmall.co.id>, 2020
+# Febrasari Almania <febrasari.almania@gmail.com>, 2020
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2020
+# Ryanto The <ry.the77@gmail.com>, 2020
+# Gusti Rini <gustirini@gmail.com>, 2020
+# PAS IRVANUS <ipankbiz@gmail.com>, 2020
+# Gradien Foundation <gradien.co@gmail.com>, 2020
+# whenweresober <gulmugurzu@yevme.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: whenweresober <gulmugurzu@yevme.com>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,10 +31,91 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_open
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction
+msgid "Action Needed"
+msgstr "Perlu Tindakan"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__open
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Aktif"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_ids
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity
+msgid "Activity"
+msgstr "Aktivitas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_state
+msgid "Activity State"
+msgstr "Status Aktivitas"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Jenis Aktivitas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid "Add a new personal note"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
+msgid "Add a new tag"
+msgstr "Add a new tag"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Add a note"
+msgstr "Tambahkan catatan"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Add new note"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -38,23 +123,25 @@ msgid "Archive"
 msgstr "Arsip"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr "Hitungan Lampiran"
+
+#. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Berdasarkan Kategori Pesan Tempel"
 
 #. module: note
-#: model_terms:ir.actions.act_window,help:note.note_tag_action
-msgid "Click to add a new tag."
-msgstr "Klik untuk menambahkan tag baru."
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Channel"
+msgstr "Saluran"
 
 #. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid "Click to add a personal note."
-msgstr "Klik untuk menambah catatan pribadi."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_color
-#: model:ir.model.fields,field_description:note.field_note_tag_color
+#: model:ir.model.fields,field_description:note.field_note_note__color
+#: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
 msgstr "Indeks Warna"
 
@@ -64,21 +151,21 @@ msgid "Configuration"
 msgstr "Konfigurasi"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_create_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_create_uid
+#: model:ir.model.fields,field_description:note.field_note_note__create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
 msgstr "Dibuat oleh"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_date
-#: model:ir.model.fields,field_description:note.field_note_stage_create_date
-#: model:ir.model.fields,field_description:note.field_note_tag_create_date
+#: model:ir.model.fields,field_description:note.field_note_note__create_date
+#: model:ir.model.fields,field_description:note.field_note_stage__create_date
+#: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_date_done
+#: model:ir.model.fields,field_description:note.field_note_note__date_done
 msgid "Date done"
 msgstr "Tanggal Selesai"
 
@@ -88,21 +175,54 @@ msgid "Delete"
 msgstr "Hapus"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_display_name
-#: model:ir.model.fields,field_description:note.field_note_stage_display_name
-#: model:ir.model.fields,field_description:note.field_note_tag_display_name
+#: model:ir.model.fields,field_description:note.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:note.field_note_note__display_name
+#: model:ir.model.fields,field_description:note.field_note_stage__display_name
+#: model:ir.model.fields,field_description:note.field_note_tag__display_name
+#: model:ir.model.fields,field_description:note.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_fold
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr "Menu dropdown"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Folded by Default"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
+msgid "Followers"
+msgstr "Pengikut"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pengikut (Saluran)"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pengikut (Rekanan)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikon font awesome, misalnya fa-tasks"
+
+#. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
-msgstr "Aktifitas Akan Datang"
+msgstr "Kegiatan - Kegiatan Mendatang"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -110,30 +230,62 @@ msgid "Group By"
 msgstr "Dikelompokkan berdasarkan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_id
-#: model:ir.model.fields,field_description:note.field_note_stage_id
-#: model:ir.model.fields,field_description:note.field_note_tag_id
+#: model:ir.model.fields,field_description:note.field_mail_activity__id
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:note.field_note_note__id
+#: model:ir.model.fields,field_description:note.field_note_stage__id
+#: model:ir.model.fields,field_description:note.field_note_tag__id
+#: model:ir.model.fields,field_description:note.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note___last_update
-#: model:ir.model.fields,field_description:note.field_note_stage___last_update
-#: model:ir.model.fields,field_description:note.field_note_tag___last_update
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction
+#: model:ir.model.fields,help:note.field_note_note__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
+msgid "Is Follower"
+msgstr "Pengikut"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity____last_update
+#: model:ir.model.fields,field_description:note.field_mail_activity_type____last_update
+#: model:ir.model.fields,field_description:note.field_note_note____last_update
+#: model:ir.model.fields,field_description:note.field_note_stage____last_update
+#: model:ir.model.fields,field_description:note.field_note_tag____last_update
+#: model:ir.model.fields,field_description:note.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Terakhir diubah pada"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_write_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_write_uid
+#: model:ir.model.fields,field_description:note.field_note_note__write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
 msgstr "Terakhir diperbarui oleh"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_date
-#: model:ir.model.fields,field_description:note.field_note_stage_write_date
-#: model:ir.model.fields,field_description:note.field_note_tag_write_date
+#: model:ir.model.fields,field_description:note.field_note_note__write_date
+#: model:ir.model.fields,field_description:note.field_note_stage__write_date
+#: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
 
@@ -143,20 +295,44 @@ msgid "Late Activities"
 msgstr "Aktifitas terakhir"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
-#: model:note.stage,name:note.note_stage_03
-msgid "Later"
-msgstr "Nanti"
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Lampiran Utama"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
-msgstr "Aktifitas Ku"
+#: model:note.stage,name:note.note_stage_01
+msgid "Meeting Minutes"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_ids
+msgid "Messages"
+msgstr "Pesan"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Baru"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Batas Waktu Aktivitas Berikutnya"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_summary
+msgid "Next Activity Summary"
+msgstr "Ringkasan Aktivitas Berikutnya"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipe Aktivitas Berikutnya"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -166,7 +342,7 @@ msgid "Note"
 msgstr "Catatan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_memo
+#: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
 msgstr "Catatan Konten"
 
@@ -176,7 +352,7 @@ msgid "Note Stage"
 msgstr "Catatan Tahap"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_name
+#: model:ir.model.fields,field_description:note.field_note_note__name
 msgid "Note Summary"
 msgstr "Catatan Ringkasan"
 
@@ -186,29 +362,101 @@ msgid "Note Tag"
 msgstr "Kata Kunci"
 
 #. module: note
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
+#: model:note.stage,name:note.note_stage_02
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:note.stage,name:note.note_stage_04
+#, python-format
 msgid "Notes"
 msgstr "Catatan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_user_id
-#: model:ir.model.fields,field_description:note.field_note_stage_user_id
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Tindakan"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Jumlah pesan yang butuh tindakan"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah dari pesan dengan kesalahan pengiriman"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Jumlah pesan yang belum dibaca"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__user_id
+#: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
 msgstr "Pemilik"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_user_id
+#: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
 msgstr "Pemilik tahapan catatan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_sequence
-#: model:ir.model.fields,field_description:note.field_note_stage_sequence
+#: model:ir.model.fields,field_description:note.field_mail_activity__note_id
+msgid "Related Note"
+msgstr ""
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Remember..."
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
+#: model:mail.activity.type,name:note.mail_activity_data_reminder
+msgid "Reminder"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
+msgid "Responsible User"
+msgstr "Tanggung-jawab"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "SAVE"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__sequence
+#: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
 msgstr "Urutan"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Set date and time"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -216,13 +464,13 @@ msgid "Show all records which has next action date is before today"
 msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_id
+#: model:ir.model.fields,field_description:note.field_note_note__stage_id
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr "Tahap"
+msgstr "Tahapan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_name
+#: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
 msgstr "Nama Tahap"
 
@@ -236,7 +484,7 @@ msgstr "Tahap Catatan"
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr "Tahapan"
+msgstr "Tahap"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
@@ -244,38 +492,47 @@ msgid "Stages of Notes"
 msgstr "Tahapan Catatan"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_ids
+#: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
 msgstr "Tahapan Pengguna"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_tag_name
+#: model:ir.model.fields,help:note.field_note_note__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status berdasarkan aktivitas\n"
+"Terlambat: Batas waktu telah terlewati\n"
+"Hari ini: Tanggal aktivitas adalah hari ini\n"
+"Direncanakan: Aktivitas yang akan datang."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
 msgstr "Nama Tag"
 
 #. module: note
-#: sql_constraint:note.tag:0
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Nama tag sudah ada!"
+msgstr "Nama tag sudah ada !"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
-#: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "Tag"
+msgstr "Label"
 
 #. module: note
-#: model:note.stage,name:note.note_stage_02
-msgid "This Week"
-msgstr "Pekan Ini"
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_01
-#: model:note.stage,name:note.note_stage_01
+#. openerp-web
+#: code:addons/note/static/src/js/systray_activity_menu.js:0
+#, python-format
 msgid "Today"
 msgstr "Hari Ini"
 
@@ -285,28 +542,27 @@ msgid "Today Activities"
 msgstr "Aktivitas Hari ini"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Besok"
+#: model:note.stage,name:note.note_stage_03
+msgid "Todo"
+msgstr "Todo"
 
 #. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
-msgstr ""
-"Gunakan catatan untuk mengorganisir tugas-tugas atau catatan-catatan pribadi"
-" lainnya. Semua catatan bersifat privat, tidak ada orang lain yang bisa "
-"melihatnya. Meskipun begitu, Anda bisa berbagi catatan dengan orang lain "
-"dengan cara mengundang mereka sebagai pengikut. (Bermanfaat sekali saat "
-"dipakai dalam rapat/pertemuan, terutama jika Anda mengaktifkan fitur Buku "
-"Catatan untuk membantu kegiatan kepenulisan kolaboratif)."
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_sequence
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread
+msgid "Unread Messages"
+msgstr "Pesan Belum Dibaca"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Penghitung Pesan yang Belum Dibaca"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Digunakan untuk memesan tahap catatan"
 
@@ -314,12 +570,3 @@ msgstr "Digunakan untuk memesan tahap catatan"
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Pengguna"
-
-#. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Tahapan pemrosesan catatan/tugas dapat disesuaikan dengan kebutuhan Anda "
-"dengan cara menambah, menghapus, atau memodifikasi kolom yang tersedia."

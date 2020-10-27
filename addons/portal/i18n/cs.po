@@ -3,20 +3,20 @@
 # 	* portal
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Chris <krystof.reklamy13@gmail.com>, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Chris <krystof.reklamy13@gmail.com>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Jiří Podhorecký, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,14 +38,9 @@ msgid "%s is not the reference of a report"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
-msgid "<b>Sign in</b>"
-msgstr "<b>Přihlásit se</b>"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Zpět do editačního módu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -60,6 +55,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Další\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -260,13 +260,18 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
-msgstr ""
+msgstr "Přijmout a podepsat"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
 msgstr "Upozornění na přístup"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "Account Security"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -294,17 +299,12 @@ msgstr "Přidat další obsah, který chcete zobrazit v e-mailu"
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Pro každou přílohu musí být poskytnut přístupový token."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Použít"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
-msgid "Archives"
-msgstr "Archivy"
 
 #. module: portal
 #. openerp-web
@@ -314,10 +314,18 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
 msgid "Cancel"
 msgstr "Zrušit"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Change Password"
+msgstr "Změnit heslo"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -334,6 +342,15 @@ msgstr ""
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
+msgstr ""
+"Po vydání dokumentu(ů) pro váš účet není změna názvu společnosti povolena. "
+"Kontaktujte nás přímo pro tuto operaci."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Check failed"
 msgstr ""
 
 #. module: portal
@@ -368,6 +385,13 @@ msgstr ""
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm Password"
+msgstr "Potvrzení hesla"
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
@@ -376,12 +400,19 @@ msgstr "Kontakt"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Contact Details"
-msgstr ""
+msgstr "Kontaktní údaje"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Kontakty"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid "Could not save file <strong>%s</strong>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -408,6 +439,24 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
 msgstr "URL zákaznického portálu"
@@ -431,10 +480,15 @@ msgid "Details"
 msgstr "Podrobnosti"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_ir_http__display_name
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:portal.field_mail_message__display_name
+#: model:ir.model.fields,field_description:portal.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
+#: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
@@ -469,6 +523,20 @@ msgid "Email Thread"
 msgstr "E-mailové vlákno"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Employees Only"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Forgot password?"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
@@ -477,7 +545,7 @@ msgstr "Udělit přístup k portálu"
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 msgid "Grant portal access"
-msgstr ""
+msgstr "Udělit přístup portálu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -490,10 +558,15 @@ msgid "Home"
 msgstr "Úvod"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_ir_http__id
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:portal.field_mail_message__id
+#: model:ir.model.fields,field_description:portal.field_mail_thread__id
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
 #: model:ir.model.fields,field_description:portal.field_portal_share__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
+#: model:ir.model.fields,field_description:portal.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -520,10 +593,15 @@ msgid "Invitation Message"
 msgstr "Pozvánka"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_ir_http____last_update
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view____last_update
+#: model:ir.model.fields,field_description:portal.field_mail_message____last_update
+#: model:ir.model.fields,field_description:portal.field_mail_thread____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_mixin____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
+#: model:ir.model.fields,field_description:portal.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -559,7 +637,7 @@ msgid "Login User"
 msgstr "Přihlášení Uživatele"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "Logout"
 msgstr "Odhlásit se"
 
@@ -572,7 +650,8 @@ msgstr "Zpráva"
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
 msgid ""
-"Model %s does not support token signature, as it does not have %s field."
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
 msgstr ""
 
 #. module: portal
@@ -586,7 +665,13 @@ msgid "Name"
 msgstr "Název"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "New Password:"
+msgstr ""
+
+#. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
@@ -611,9 +696,33 @@ msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "Jejda! Něco se pokazilo. Pokuste se stránku znovu načíst a přihlásit."
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Password"
+msgstr "Heslo"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password Updated!"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password:"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Please confirm your password to continue"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -648,6 +757,7 @@ msgstr "Předchozí"
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
 msgstr "Předchozí"
@@ -678,6 +788,18 @@ msgstr "Související model dokumentu"
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
 msgstr "Hledání"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Security"
+msgstr "Zabezpečení"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Security Control"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -716,6 +838,16 @@ msgid "Share Document"
 msgstr "Sdílet dokument"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
+msgid "Show As Optional Inherit"
+msgstr "Zobrazit jako volitelně zděděné"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_sign_in
+msgid "Sign in"
+msgstr "Přihlásit"
+
+#. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts don't have a valid email: "
@@ -734,13 +866,6 @@ msgid "Some required fields are empty."
 msgstr "Některá povinná pole jsou prázdná."
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal_composer.js:0
-#, python-format
-msgid "Something went wrong."
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
 msgstr "Stát / provincie"
@@ -748,20 +873,20 @@ msgstr "Stát / provincie"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr "ulice"
+msgstr "Ulice"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Děkujeme"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
+msgstr "Přílohu %s nelze odstranit, protože je spojena se zprávou."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -792,11 +917,18 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal_composer.js:0
+#: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The file <strong>%s</strong> could not be saved."
+msgid "The new password and its confirmation must be identical."
+msgstr "Nové heslo a jeho potvrzení musí být stejné."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
 msgstr ""
+"Staré heslo, které jste zadali, je neplatné. Vaše heslo nebylo změněno."
 
 #. module: portal
 #. openerp-web
@@ -815,6 +947,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
 msgstr "Toto je náhled zákaznického portálu."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"This is necessary for security-related changes. The authorization will last "
+"for a few minutes."
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -855,16 +996,37 @@ msgid "VAT Number"
 msgstr "DIČ"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Verify New Password:"
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_ui_view
+msgid "View"
+msgstr "Pohled"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Visible"
+msgstr "Viditelné"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
@@ -872,8 +1034,6 @@ msgstr "DIČ"
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mailing_contact__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mailing_mailing__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
@@ -884,7 +1044,7 @@ msgstr "DIČ"
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Zprávy Webové stránky"
+msgstr "Zprávy webové stránky"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
@@ -892,11 +1052,15 @@ msgstr "Zprávy Webové stránky"
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
 #: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
@@ -904,8 +1068,6 @@ msgstr "Zprávy Webové stránky"
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
-#: model:ir.model.fields,help:portal.field_mailing_contact__website_message_ids
-#: model:ir.model.fields,help:portal.field_mailing_mailing__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
@@ -916,7 +1078,7 @@ msgstr "Zprávy Webové stránky"
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Historie komunikace Webové stránky"
+msgstr "Historie komunikace webové stránky"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -936,6 +1098,12 @@ msgstr "Napište zprávu..."
 #, python-format
 msgid "You are invited to access %s"
 msgstr "Jste zván k přístupu %s"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "You cannot leave any password empty."
+msgstr "Všechna hesla musí být vyplněná."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1005,6 +1173,11 @@ msgstr "přihlášen"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
 msgstr "odoo"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "password"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

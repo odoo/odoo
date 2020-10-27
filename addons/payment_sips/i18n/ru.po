@@ -3,16 +3,19 @@
 # 	* payment_sips
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Oleg Kuryan <oleg@ventor.tech>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,20 +26,20 @@ msgstr ""
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; найден многократный заказ"
+msgid "Currency not supported by Wordline: %s"
+msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; заказ не найден"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:0
-#, python-format
-msgid "Currency not supported by Wordline"
-msgstr "Валюта, не поддерживаемая Wordline"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__id
+msgid "ID"
+msgstr "Идентификатор"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
@@ -47,12 +50,18 @@ msgstr "Неправильный платеж провайдера покупа�
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
-msgstr ""
+msgstr "версия интерфейса"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
-msgstr "Мерчант ID"
+msgstr "ID продавца"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
@@ -67,7 +76,7 @@ msgstr "Операция Оплаты"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
 msgid "Production url"
-msgstr ""
+msgstr "url производства"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
@@ -77,6 +86,11 @@ msgstr "Провайдер"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
+msgstr "Секретный ключ"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+msgid "Secret Key Version"
 msgstr ""
 
 #. module: payment_sips
@@ -87,15 +101,10 @@ msgstr "Sips"
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "Sips: received data for reference %s"
-msgstr "Sips: полученные данные для ссылки %s"
+msgid "Sips: received data for reference %s; no order found"
+msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test url"
-msgstr ""
-
-#. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
-msgid "Used for production only"
-msgstr ""
+msgstr "тест url"

@@ -11,6 +11,7 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +75,7 @@ msgstr "nægt-liste dato"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Blokeret Telefon er Mobiltelefon"
 
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
@@ -84,7 +85,7 @@ msgstr ""
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Blokeret Telefon er Telefon"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
@@ -187,6 +188,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"Hvis det rensede telefonnummer er blokeret, vil kontakten ikke modtag masse "
+"mailing sms mere, fra hvilken som helst liste"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -201,6 +204,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indikere om et blokeret renset telefonnummer er et mobil nummer. Hjælper med"
+" at kende forskel på hvilket nummer er blokeret      når der er både en "
+"mobil og telefon felt i en model. "
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -208,7 +214,7 @@ msgid ""
 "Indicates if a blacklisted sanitized phone number is a phone number. Helps "
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
-msgstr ""
+msgstr "Indikere om et blokeret renset telefonnummer er en telefon"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0

@@ -3,17 +3,19 @@
 # 	* website_twitter
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Collex100, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Collex100, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:23+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,33 +29,35 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                Show me how to obtain the Twitter API key and Twitter API secret"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>Покажите мне, как получить секретный ключ "
+"API для Twitter и API Twitter</i>"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Twitter Roller</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">прокрутки Twitter</span>"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr ""
+msgstr "<strong>URL-адрес обратной вызова Оставить</strong> пустым"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>Описание:</strong> Интеграция Odoo Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>Название:</strong> Интеграция Odoo Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Website: </strong>"
-msgstr "<strong>Вебсайт:</strong>"
+msgstr "<strong>Веб-сайт:</strong>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -65,7 +69,7 @@ msgstr "Ключ API"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "пароль API"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -73,9 +77,11 @@ msgid ""
 "Accept terms of use and click on the Create your Twitter application button "
 "at the bottom"
 msgstr ""
+"Примите условия использования и нажмите кнопку Создать свою заявку на "
+"Twitter внизу"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:16
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
@@ -87,7 +93,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "Config Settings"
-msgstr "Настройки конфигурации"
+msgstr "Конфигурационные настройки"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -95,6 +101,8 @@ msgid ""
 "Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
 "below."
 msgstr ""
+"Скопируйте и вставьте ниже приведен ключ (ключ API) и Секретный ключ "
+"пользователя (секретный API)."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -104,7 +112,7 @@ msgstr "Создать новое приложение Твиттера на"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_date
@@ -112,15 +120,17 @@ msgid "Created on"
 msgstr "Создан"
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_twitter.field_website__display_name
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
-msgstr ""
+msgstr "закладки с"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -128,7 +138,7 @@ msgid "Get favorites from this screen name"
 msgstr "Получать избранное с этого никнейма"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:48
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "Ошибка HTTP: Что-то неотконфигурировано"
@@ -139,17 +149,21 @@ msgid "How to configure the Twitter API access"
 msgstr "Как настроить доступ к API Твиттера"
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_twitter.field_website__id
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:59
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
-msgid "Internet connection refused"
-msgstr "Подключение к Интернету отклонено"
+msgid "Internet connection refused: We failed to reach a twitter server."
+msgstr ""
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_twitter.field_website____last_update
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
@@ -165,14 +179,7 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:61
-#: code:addons/website_twitter/models/res_config_settings.py:62
-#, python-format
-msgid "Please double-check your Twitter API Key and Secret!"
-msgstr "Пожалуйста, дважды проверьте Ваши Twitter API Key и Secret!"
-
-#. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:27
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
@@ -183,7 +190,7 @@ msgstr ""
 "ваш)"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:23
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
 msgstr ""
@@ -192,19 +199,19 @@ msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:21
+#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:0
 #, python-format
 msgid "Reload"
 msgstr "Перезагрузить"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:18
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
 msgstr ""
-"Запрос не может быть обслужен по причине исчерпания доступных ресурсов."
+"Запрос не может быть выполнен по причине исчерпания доступных ресурсов."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
@@ -217,7 +224,7 @@ msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
 msgstr ""
-"Никнейм аккаунта в Твиттере, с которого Вы хотите загружать избранное. Он не"
+"Никнейм аккаунта в Твиттере, с которого вы хотите загружать избранное. Он не"
 " обязательно должен совпадать с ключом API/секретным ключом."
 
 #. module: website_twitter
@@ -226,7 +233,7 @@ msgid "Switch to the API Keys tab: <br/>"
 msgstr "Перейдите на вкладку API Keys:<br>"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:21
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
@@ -234,37 +241,37 @@ msgstr ""
 "Twitter серверы работают, но перегружены запросами. Повторите попытку позже."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:22
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
-"Серверы Twitter работают, но запрос не может обслуживаться: сбой в рамках "
+"Серверы Twitter работают, но запрос не может быть выполнен: сбой в рамках "
 "стека. Повторите попытку позже."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:17
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
-"Запрос принят, но доступа не получил . Пожалуйста, проверьте Ваш Twitter API"
-" Key и Secret."
+"Запрос понят, но не принят или нет доступа.. Пожалуйста, проверьте ваш "
+"Twitter API Key и Secret."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:15
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
-"Запрос является недействительным или не может быть обслужен. Запросы без "
+"Запрос является недействительным или не может быть выполнен. Запросы без "
 "проверки подлинности считаются недействительными и остаются без ответа."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:14
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "There was no new data to return."
 msgstr "Не было новых данных для возврата."
@@ -282,7 +289,7 @@ msgstr "Твиты"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "Полномочия Twitter API"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -302,7 +309,7 @@ msgstr "Ключ к API Твиттера"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Ключ Twitter API можно получить с https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
@@ -312,50 +319,52 @@ msgstr "Секретный ключ к API Твиттера"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Секретный API твиттера можно получить с https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:40
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter Configuration"
 msgstr "Конфигурация Твиттера"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:62
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
-msgid "Twitter authorization error!"
-msgstr "Ошибка авторизации на Твиттере!"
+msgid ""
+"Twitter authorization error! Please double-check your Twitter API Key and "
+"Secret!"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:20
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr "Twitter  перегружен или обновляется."
+msgstr "Twitter перегружен или обновляется."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:19
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
-"Возможно на Twitter проблемы. Пожалуйста, повторите попытку позже. Также Вы "
-"можете отправить запрос на Twitter форум, чтобы выяснить причину и получить "
-"помощь."
+"Возможно, на Twitter проблемы. Пожалуйста, повторите попытку позже. Также вы"
+" можете отправить запрос на Twitter-форум, чтобы выяснить причину и получить"
+" помощь."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "Twitter server uri"
-msgstr ""
+msgstr "uri сервера Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter tutorial"
-msgstr ""
+msgstr "Инструкция Twitter"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:37
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
@@ -366,35 +375,28 @@ msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter's user"
-msgstr ""
+msgstr "пользователи Twitter"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:58
-#: code:addons/website_twitter/models/res_config_settings.py:59
-#, python-format
-msgid "We failed to reach a twitter server."
-msgstr "Мы не можем достичь twitter сервер."
+msgstr "Twitter Получите новые закладки"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "Веб-сайт"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Website Twitter"
-msgstr ""
+msgstr "Сайт Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

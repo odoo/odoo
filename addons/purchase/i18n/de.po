@@ -18,6 +18,7 @@
 # Chris Egal <sodaswed@web.de>, 2020
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
+# Tobias Arndt, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Florian Pose <fp@igh.de>, 2020\n"
+"Last-Translator: Tobias Arndt, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,7 +200,7 @@ msgstr "<i class=\"fa fa-print\"/> Drucken"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "<p> %s modified receipt dates for the following products:</p>"
-msgstr ""
+msgstr "<p> %s geänderte Lieferdaten für die folgenden Produkte\\:</p> "
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -281,7 +282,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">von\\:</strong> "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -340,7 +341,7 @@ msgstr "<strong>Menge</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "<strong>Receipt Date:</strong>"
-msgstr ""
+msgstr "<strong>Eingangsdatum\\:</strong> "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -357,7 +358,7 @@ msgstr "<strong>Zwischensumme</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "<strong>Taxes:</strong>"
-msgstr ""
+msgstr "<strong>Steuern\\:</strong> "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -372,7 +373,7 @@ msgstr "<strong>Die bestellte Menge wurde aktualisiert.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 msgid "<strong>The received quantity has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Die empfangene Menge wurde aktualisiert.</strong> "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -394,7 +395,7 @@ msgstr "<strong>Einzelpreis</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "<strong>Untaxed Amount:</strong>"
-msgstr ""
+msgstr "<strong>Nettobetrag\\:</strong> "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
@@ -410,7 +411,7 @@ msgstr "<strong>Ihre Bestellreferenz:</strong>"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
-msgstr ""
+msgstr "Eine Test-E-Mail wurde an %s gesendet. "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -1569,7 +1570,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "Es wurde kein Produkt gefunden. Bitte erstelle eins!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2934,6 +2935,14 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Achten Sie beim Anlegen einer Bestellung auf die <i>pünktliche "
+"Lieferungs-</i>Rate\\ des Lieferanten:den Prozentsatz der pünktlich "
+"versandten Produkte. Wenn dieser zu niedrig ist, aktivieren Sie die "
+"<i>automatische Mahnungen</i>. Einige Tage vor dem fälligen Versand sendet "
+"Odoo dem Verkäufer eine E-Mail, um ihn um eine Bestätigung der Versanddaten "
+"zu bitten und Sie im Falle von Verzögerungen auf dem Laufenden zu halten. Um"
+" die Leistungsstatistik des Verkäufers zu erhalten, klicken Sie auf die OTD-"
+"Rate. "
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -2943,6 +2952,11 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
+"Wenn Sie eine Bestellung per E-Mail senden, bittet Odoo den Verkäufer, den "
+"Empfang der Bestellung zu bestätigen. Wenn der Verkäufer die Bestellung "
+"durch Klicken auf eine Schaltfläche in der E-Mail bestätigt, werden die "
+"Informationen auf der Bestellung hinzugefügt. Verwenden Sie Filter, um "
+"Bestellungen zu verfolgen, die nicht bestätigt wurden. "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -2964,6 +2978,8 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Sie können den Typ einer Bestellzeile nicht ändern. Stattdessen sollten Sie "
+"die aktuelle Zeile löschen und eine neue Zeile des richtigen Typs anlegen. "
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action

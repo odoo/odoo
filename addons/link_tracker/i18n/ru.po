@@ -3,17 +3,20 @@
 # 	* link_tracker
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Collex100, 2019
+# Максим Дронь <dronmax@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Collex100, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:41+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Collex100, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,8 +25,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
-msgid "<small>Clicks:</small>"
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
+msgid "Absolute URL"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
+msgid "Button label"
 msgstr ""
 
 #. module: link_tracker
@@ -42,6 +50,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "Clicks"
 msgstr "Переходы"
 
@@ -72,7 +81,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__create_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__create_date
@@ -85,18 +94,10 @@ msgstr "Создан"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__favicon
-msgid "Favicon"
-msgstr "Значок"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__icon_src
-msgid "Favicon Source"
-msgstr "Фавикон источника"
+msgstr "Отображаемое имя"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
@@ -113,8 +114,10 @@ msgstr "Разместить короткий URL"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__id
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__id
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
@@ -125,6 +128,8 @@ msgstr "Интернет-протокол"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker____last_update
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click____last_update
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code____last_update
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin____last_update
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
@@ -169,12 +174,12 @@ msgstr "Трекер ссылок"
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr ""
+msgstr "Нажатие на ссылку отслеживания"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "Link Tracker Code"
-msgstr ""
+msgstr "Код ссылки отслеживания"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -189,10 +194,20 @@ msgid "Links Clicks"
 msgstr ""
 
 #. module: link_tracker
+#: model:ir.model,name:link_tracker.model_mail_render_mixin
+msgid "Mail Render Mixin"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Medium"
 msgstr "Средний"
+
+#. module: link_tracker
+#: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
+msgid "No data yet!"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
@@ -217,12 +232,12 @@ msgstr "Перенаправленный URL"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__code
 msgid "Short URL Code"
-msgstr "Короткий URL Код"
+msgstr "Короткий URL-код"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__code
 msgid "Short URL code"
-msgstr "Короткий URL код"
+msgstr "Короткий URL-код"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
@@ -252,11 +267,15 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Это имя, которое помогает вам следить за различными усилиями кампании, eg "
+"Fall_Drive, Christmas_Special"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Это способ доставки, например, открытка, электронная почта или баннерная "
+"реклама"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
@@ -264,6 +283,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Это источник ссылки, например, поисковая система, другой домен или название "
+"списка писем"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
@@ -314,4 +335,4 @@ msgstr "Посетить страницу"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
-msgstr "Ссылка на вебсайт"
+msgstr "Ссылка на веб-сайт"

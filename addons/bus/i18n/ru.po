@@ -3,15 +3,18 @@
 # 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,11 +26,6 @@ msgstr ""
 #: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "Пользователь может иметь только один IM статус."
-
-#. module: bus
-#: model:ir.model,name:bus.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr ""
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -42,7 +40,7 @@ msgstr "Канал"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "Communication Bus"
-msgstr ""
+msgstr "Bus коммуникация"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -52,7 +50,7 @@ msgstr "Контакт"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
@@ -62,14 +60,18 @@ msgstr "Создан"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__status
@@ -81,6 +83,8 @@ msgstr "IM статус"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
+#: model:ir.model.fields,field_description:bus.field_res_partner____last_update
+#: model:ir.model.fields,field_description:bus.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
@@ -120,6 +124,21 @@ msgid "Online"
 msgstr "Онлайн"
 
 #. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "Refresh"
+msgstr ""
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr ""
+
+#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
 msgstr "Присутствие пользователя"
@@ -134,4 +153,4 @@ msgstr "Пользователи"
 #: code:addons/bus/controllers/main.py:0
 #, python-format
 msgid "bus.Bus not available in test mode"
-msgstr ""
+msgstr "bus.Bus не доступен в тестовом режиме"

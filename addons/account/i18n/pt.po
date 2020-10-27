@@ -23,6 +23,7 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2020
 # Catarina Rocha <cr@opencloud.pro>, 2020
 # Pedro Filipe <pedro2.10@hotmail.com>, 2020
+# Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
+"Last-Translator: Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,17 +57,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr ""
+msgstr "Facturas de Fornecedor Reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "Facturas Reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr ""
+msgstr "Extratos Reconciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -82,7 +83,7 @@ msgstr "#Moedas/Notas"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
-msgstr ""
+msgstr "#Criado por: %s"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -92,7 +93,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Factura (Ref ${object.name or 'n/d'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -105,7 +106,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "%(action)s for journal %(journal)s"
-msgstr ""
+msgstr "%(action)s para diário %(journal)s"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -133,13 +134,13 @@ msgstr "%s (cópia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (arredondamento)"
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "%s não é um campo computado"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -155,7 +156,7 @@ msgstr "-> Ver lançamentos parcialmente reconciliados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". Pode colocar um número mais elevado aqui."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -185,7 +186,7 @@ msgstr "30% de Adiantamento; Final do Mês Seguinte"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr ""
+msgstr "30% Agora, Balanço 60 Dias"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -234,7 +235,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<b>Post Exchange difference entries in:</b>"
-msgstr ""
+msgstr "<b>Contabilize as entradas de Diferença cambial em:</b>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -525,6 +526,8 @@ msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
 "groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
+"groups=\"base.group_multi_currency\"> em </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -532,6 +535,8 @@ msgid ""
 "<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
 "groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
+"groups=\"base.group_multi_currency\"> em </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -572,7 +577,7 @@ msgstr "<span>Ver</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in General Ledger\">Balanço na C.Geral</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -614,7 +619,7 @@ msgstr "<span>Saldo </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Create</span>"
-msgstr ""
+msgstr "<span>Crear</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1070,7 +1075,7 @@ msgstr "Diário de Conta"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr ""
+msgstr "Grupo de Diários"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
@@ -1165,12 +1170,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report
 msgid "Account Tax Report"
-msgstr ""
+msgstr "Relatório de Impostos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr ""
+msgstr "Linha de Relatório de Impostos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1233,7 +1238,7 @@ msgstr "Contas não conciliadas"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr ""
+msgstr "Primeiros 2 dígitos do conta "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1568,7 +1573,7 @@ msgstr "Adicionar um Diário "
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Add a journal group"
-msgstr ""
+msgstr "Adicione um grupo de diários"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

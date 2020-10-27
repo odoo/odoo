@@ -3,19 +3,22 @@
 # 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Michal Zábrodský <zabry23@gmail.com>, 2019
-# Ladislav Tomm <tomm@helemik.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Michal Zábrodský <zabry23@gmail.com>, 2020
+# Ladislav Tomm <tomm@helemik.cz>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Jiří Podhorecký, 2020
+# Pauline Thiry <pth@odoo.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +41,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Zrušeno</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -56,7 +59,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Prodeje</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -66,7 +69,7 @@ msgstr "<span class=\"o_stat_text\">Prodáno</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>Produkt</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
@@ -76,7 +79,7 @@ msgstr "<span>Množství</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr ""
+msgstr "<span>SN/LN</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -91,9 +94,10 @@ msgstr "<strong>Doručení objednávek</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Incoterm: </strong>"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
 msgstr ""
@@ -131,7 +135,7 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
 msgstr ""
@@ -155,10 +159,17 @@ msgstr "Dostupnost"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available"
 msgstr "Dostupný"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Available in stock"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -173,7 +184,7 @@ msgstr "Společnosti"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Datum dokončení první objednávky dodávky."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -186,9 +197,19 @@ msgid "Date:"
 msgstr "Datum:"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
+msgid "Default Warehouse"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "Dodání"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
+msgid "Delivery Alert"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -203,26 +224,53 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Datum dodání, které můžete zákazníkovi slíbit, vypočteno z minimální dodací "
+"lhůty na objednávkových linkách v případě produktů služeb. V případě "
+"přepravy bude brána v úvahu přepravní politika objednávky, aby bylo možné "
+"použít buď minimální nebo maximální dodací lhůtu na objednávkových řádcích."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
+msgstr "Zobrazení produktových a sériových čísel na fakturách"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Zobrazit widget množství"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr ""
+msgstr "Zobrazit sériové číslo a produktové číslo na fakturách"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "Zobrazit Incoterms na prodejní objednávce a souvisejících fakturách"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -234,6 +282,16 @@ msgstr ""
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Documentation"
+msgstr "Dokumentace"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+msgid "Draft SO"
 msgstr ""
 
 #. module: sale_stock
@@ -264,14 +322,24 @@ msgstr "Očekávaný datum"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Expected Delivery"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Expected:"
+msgstr "Očekáváno:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
+msgid "Forecast Expected Date"
+msgstr ""
+
+#. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Forecasted Stock"
 msgstr ""
@@ -280,6 +348,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
 msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -318,6 +414,11 @@ msgstr ""
 "termínů používaných v mezinárodních transakcích."
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
+msgid "Inventory"
+msgstr "Inventář"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
 msgstr ""
@@ -333,9 +434,14 @@ msgid "Is Mto"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
+msgid "JSON data for the popover widget"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
-msgid "Journal Entries"
-msgstr "Položky deníku"
+msgid "Journal Entry"
+msgstr "Položka deníku"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
@@ -343,9 +449,32 @@ msgid "Journal Item"
 msgstr "Položka deníku"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_res_company____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_res_users____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Produktové / seriové číslo"
+msgstr "Šarže / seriové číslo"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -395,11 +524,25 @@ msgstr "Metoda aktualizace dodaného množství"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr "Přesunutí očekávaných termínů doručení na později o"
+msgstr "Přesunutí očekávaných termínů dodání na později o"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "No enough future availaibility"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "No future availaibility"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "On"
 msgstr "Na"
@@ -439,12 +582,26 @@ msgstr "Typ výrobku"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "Množství dostupné dnes"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
+msgstr "Množství k dodání"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Remaining demand available at"
 msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Reserved"
+msgstr "Rezervováno"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -496,6 +653,11 @@ msgid "Sales Order"
 msgstr "Prodejní objednávka"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Řádek zakázky"
@@ -528,7 +690,7 @@ msgstr "Plánované datum"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Bezpečnostní dodací lhůta "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -548,7 +710,7 @@ msgstr "Doručit všechny produkty najednou"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Odeslat produkty, jakmile jsou k dispozici, se zpětnými objednávkami"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -561,6 +723,13 @@ msgid "Sold in the last 365 days"
 msgstr "Prodáno za posledních 365 dní"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"Some products have already been delivered. Returns can be created from the "
+"Delivery Orders."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Pohyb zásob"
@@ -570,6 +739,11 @@ msgstr "Pohyb zásob"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "Pohyby zásob"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -587,6 +761,13 @@ msgid "Stock rule report"
 msgstr ""
 
 #. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "The delivery"
+msgstr ""
+
+#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -598,15 +779,17 @@ msgstr ""
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
 msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Tento produkt je doplňován na vyžádání."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -619,8 +802,13 @@ msgid "Transfers"
 msgstr "Přesuny"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "Users"
+msgstr "Uživatelé"
+
+#. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "View Forecast"
 msgstr ""
@@ -707,3 +895,10 @@ msgstr "objednané namísto"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
 msgstr "zpracováno namísto "
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "will be late."
+msgstr ""
