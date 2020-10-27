@@ -4023,7 +4023,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             flip: [],
         };
         const json = target.dataset.oeShapeData;
-        return json ? Object.assign(defaultData, JSON.parse(json)) : defaultData;
+        return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
     },
     /**
      * Returns the default colors for the currently selected shape.
