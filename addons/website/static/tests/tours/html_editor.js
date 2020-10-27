@@ -24,8 +24,11 @@ tour.register('html_editor_multiple_templates', {
             trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
             run: () => {
                 const wysiwyg = $('#wrapwrap').data('wysiwyg');
+                // Retrieve the editor node.
                 const node = wysiwyg.editorHelpers.getNodes(document.querySelector('#oe_structure_test_ui'))[0];
                 if (node.dirty) {
+                    // As the tour test selectors, add class for the next step
+                    // to test if the node is dirty
                     $('#oe_structure_test_ui').addClass('o_dirty');
                 }
             },
