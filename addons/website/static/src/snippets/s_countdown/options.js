@@ -27,11 +27,7 @@ snippetOptions.registry.countdown = snippetOptions.SnippetOptionWidget.extend({
                 if (!this.$target.find('.s_countdown_end_message').length) {
                     const message = this.endMessage || qweb.render('website.s_countdown.end_message');
                     await this.editorHelpers.insertHtml(context, message, this.$target.find('.container')[0], 'INSIDE');
-                    if (widgetValue === 'message_no_countdown') {
-                        await this.editorHelpers.addClass(this.wysiwyg.editor, this.$target, 'flex-row-reverse flex-row');
-                    } else {
-                        await this.editorHelpers.removeClass(this.wysiwyg.editor, this.$target, 'flex-row-reverse flex-row');
-                    }
+                    await this.editorHelpers.setClass(this.wysiwyg.editor, this.$target, 'flex-row-reverse flex-row', widgetValue === 'message_no_countdown');
                 }
             } else {
                 const $message = this.$target.find('.s_countdown_end_message');

@@ -794,11 +794,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         header_overlay: async function (value, wysiwyg) {
             const $wrapwrap = $('#wrapwrap');
             wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
-            if (value) {
-                await wysiwyg.editorHelpers.addClass(wysiwyg.editor, $wrapwrap[0], 'o_header_overlay');
-            } else {
-                await wysiwyg.editorHelpers.removeClass(wysiwyg.editor, $wrapwrap[0], 'o_header_overlay');
-            }
+            await wysiwyg.editorHelpers.setClass(wysiwyg.editor, $wrapwrap[0], 'o_header_overlay', !!value);
         },
         header_color: async function (value, wysiwyg) {
             const $wrapwrap = $('#wrapwrap');
