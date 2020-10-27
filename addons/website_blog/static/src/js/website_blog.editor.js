@@ -164,7 +164,6 @@ snippetOptions.registry.many2one.include({
                 $img.css({ width: css.width, height: css.height });
                 $img.attr('src', '/web/image/res.partner/'+self.ID+'/image_1024');
             });
-            setTimeout(function () { $nodes.removeClass('o_dirty'); },0);
         }
     }
 });
