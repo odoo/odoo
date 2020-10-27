@@ -186,6 +186,7 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onFocusoutTextarea() {
+        this.saveStateInStore();
         this.composer.update({ hasFocus: false });
     }
 
