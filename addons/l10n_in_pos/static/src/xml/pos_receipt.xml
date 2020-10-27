@@ -3,7 +3,7 @@
 <templates id="template" inherit_id="point_of_sale.template">
     <t t-extend="OrderReceipt">
         <t t-jquery="div.orderlines" t-operation="before">
-            <t t-if="receipt.client and pos.company.country.code == 'IN'">
+            <t t-if="receipt.client and pos.company.country and pos.company.country.code == 'IN'">
                 <div class="pos-receipt-center-align">
                     <div><t t-esc="receipt.client.name" /></div>
                     <t t-if="receipt.client.phone">
@@ -14,7 +14,7 @@
             </t>
         </t>
         <t t-jquery="t[t-call='OrderReceiptWrappedProductNameLines']" t-operation="after">
-            <t t-if="line.l10n_in_hsn_code and pos.company.country.code == 'IN'">
+            <t t-if="line.l10n_in_hsn_code and pos.company.country and pos.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">HSN Code: <t t-esc="line.l10n_in_hsn_code"/></div>
             </t>
         </t>
