@@ -1300,6 +1300,13 @@ var SnippetsMenu = Widget.extend({
             if ($target.closest(this._notActivableElementsSelector).length) {
                 return;
             }
+            const $oeStructure = $target.closest('.oe_structure');
+            if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
+                // If empty oe_structure, encourage using snippets in there by
+                // making them "wizz" in the panel.
+                this.$snippets.odooBounce();
+                return;
+            }
             this._activateSnippet($target);
         };
 
