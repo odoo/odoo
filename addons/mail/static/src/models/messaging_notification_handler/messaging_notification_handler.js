@@ -205,7 +205,7 @@ function factory(dependencies) {
                 ))[0];
             }
             if (!channel.isPinned) {
-                channel.update({ isPendingPinned: true });
+                channel.pin();
             }
 
             const message = this.env.models['mail.message'].insert(convertedData);
