@@ -515,6 +515,20 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.body.append(self.starttag(node, 'a', **attrs))
     def depart_reference(self, node):
         self.body.append(u'</a>')
+    def visit_download_reference(self, node):
+        # type: (nodes.Node) -> None
+        if node.hasattr('filename'):
+            self.body.append(
+                '<a class="reference download internal" href="%s" download="">' %
+                posixpath.join(self.builder.dlpath, node['filename']))
+            self.body.append(node.astext())
+            self.body.append('</a>')
+            raise nodes.SkipNode
+        else:
+            self.context.append('')
+    def depart_download_reference(self, node):
+        # type: (nodes.Node) -> None
+        self.body.append(self.context.pop())
     def visit_target(self, node): pass
     def depart_target(self, node): pass
     def visit_footnote(self, node):
