@@ -17682,7 +17682,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const inputType = (cutEvent && 'deleteByCut') ||
                 (dropEvent && 'insertFromDrop') ||
                 (pasteEvent && 'insertFromPaste') ||
-                (key === 'Enter' && (inputEvent === null || inputEvent === void 0 ? void 0 : inputEvent.inputType) === 'insertText' && 'insertLineBreak') ||
+                (key === 'Enter' &&
+                    keydownEvent.shiftKey &&
+                    (inputEvent === null || inputEvent === void 0 ? void 0 : inputEvent.inputType) === 'insertText' &&
+                    'insertLineBreak') ||
                 (inputEvent && inputEvent.inputType);
             // In case of accent inserted from a Mac, check that the char before was
             // one of the special accent temporarily inserted in the DOM (e.g. '^',
@@ -20951,6 +20954,37 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
             };
             return context.execCommand(domHelpersToggleClass);
+        }
+        /**
+         * Add (state: true) or remove (state: false) a class or a list of classes
+         * from a DOM node or a list of DOM nodes.
+         *
+         * @param context
+         * @param originalDomNode
+         * @param className
+         * @param state
+         */
+        async setClass(context, originalDomNode, className, state) {
+            const domHelpersSetClass = async () => {
+                var _a;
+                const classes = Array.isArray(className) ? className : [className];
+                const domNodes = Array.isArray(originalDomNode) ? originalDomNode : [originalDomNode];
+                for (const domNode of domNodes) {
+                    const Attributes = this._getAttributesConstructor(domNode);
+                    for (const node of this.getNodes(domNode)) {
+                        const classList = (_a = node.modifiers.find(Attributes)) === null || _a === void 0 ? void 0 : _a.classList;
+                        for (const oneClass of classes) {
+                            if (state && !(classList === null || classList === void 0 ? void 0 : classList.has(oneClass))) {
+                                node.modifiers.get(Attributes).classList.add(oneClass);
+                            }
+                            else if (!state && (classList === null || classList === void 0 ? void 0 : classList.has(oneClass))) {
+                                classList.remove(oneClass);
+                            }
+                        }
+                    }
+                }
+            };
+            return context.execCommand(domHelpersSetClass);
         }
         /**
          * Set an attribute on a DOM node or a list of DOM nodes.
