@@ -134,7 +134,7 @@ var MediaWidget = Widget.extend({
         if (!this.media) {
             return;
         }
-        this._clear();
+        this._clear.apply(this, arguments);
     },
     /**
      * @todo comment
@@ -190,9 +190,13 @@ var MediaWidget = Widget.extend({
      * @private
      */
     _replaceMedia: function ($media) {
+        var media = $media[0];
+        if (this.media && this.media.classList) {
+            media.className = _.union(_.toArray(media.classList), _.toArray(this.media.classList)).join(' ');
+        }
         this.$media.replaceWith($media);
         this.$media = $media;
-        this.media = $media[0];
+        this.media = media;
     },
 });
 
@@ -434,8 +438,14 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @override
      */
-    _clear: function () {
-        this.media.className = this.media.className.replace(/(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g, ' ');
+    _clear: function (type) {
+        if (type === 'imageDialog') {
+            // img-circle/rounded/circle are bs3 compat classes but can be applied to non-images: keep them
+            this.media.className = this.media.className.replace(/(^|\s+)(img|img-(?!circle|rounded|thumbnail)\S*|o_we_custom_image)(?=\s|$)/g, ' ');
+        } else {
+            // Clear document classes
+            this.media.className = this.media.className.replace(/(^|\s+)o_image($|\s+)/g, ' ');
+        }
     },
     /**
      * @private
@@ -686,10 +696,10 @@ var IconWidget = MediaWidget.extend({
             var cls = classes[i];
             if (_.contains(this.alias, cls)) {
                 this.selectedIcon = cls;
+                this.initialIcon = cls;
                 this._highlightSelectedIcon();
             }
         }
-        this.nonIconClasses = _.without(classes, this.selectedIcon);
 
         return this._super.apply(this, arguments);
     },
@@ -712,8 +722,9 @@ var IconWidget = MediaWidget.extend({
     save: function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
-        var finalClasses = _.uniq(this.nonIconClasses.concat([iconFont.base, iconFont.font]));
-        if (!this.$media.is('span')) {
+        var nonIconClasses = _.without(_.toArray(this.media.classList), this.initialIcon);
+        var finalClasses = _.union(nonIconClasses, [iconFont.base, iconFont.font]);
+        if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
             $span.data(this.$media.data());
             this._replaceMedia($span);
@@ -760,7 +771,7 @@ var IconWidget = MediaWidget.extend({
      * @override
      */
     _clear: function () {
-        this.media.className = this.media.className.replace(/(^|\s)(fa(\s|$)|fa-[^\s]*)/g, ' ');
+        this.media.className = this.media.className.replace(/(^|\s)(fa|fa-\S*)(?=\s|$)/g, ' ');
     },
     /**
      * @private
@@ -1241,9 +1252,8 @@ var MediaDialog = Dialog.extend({
         if (this.media) {
             this.$media.html('');
             _.each(['imageDialog', 'documentDialog', 'iconDialog', 'videoDialog'], function (v) {
-                // Note: hack since imageDialog is the same type as the documentDialog
-                if (self[v] && self.active._clear.toString() !== self[v]._clear.toString()) {
-                    self[v].clear();
+                if (self[v] && self[v] !== self.active) {
+                    self[v].clear(v);
                 }
             });
         }
