@@ -12,3 +12,4 @@ Web Services
     webservices/iap
     webservices/upgrade
     webservices/localization
+    webservices/extract_api
