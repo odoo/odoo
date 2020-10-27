@@ -230,10 +230,9 @@ class WebsiteSale(ProductConfiguratorController):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        Product = request.env['product.template'].with_context(bin_size=True)
+        search_categories = Product = request.env['product.template'].with_context(bin_size=True)
 
         Category = request.env['product.public.category']
-        search_categories = False
         search_product = Product.search(domain, order=self._get_search_order(post))
         if search:
             categories = search_product.mapped('public_categ_ids')
@@ -241,6 +240,14 @@ class WebsiteSale(ProductConfiguratorController):
             categs = search_categories.filtered(lambda c: not c.parent_id)
         else:
             categs = Category.search([('parent_id', '=', False)] + request.website.website_domain())
+
+        # Configure prefetching to optimize recursive category trees if needed
+        if request.website.viewref("website_sale.products_categories").active:
+            prefetched_categs = Category.search(request.website.website_domain())
+            categs = categs.with_prefetch(prefetched_categs._prefetch)
+            search_categories = search_categories.with_prefetch(prefetched_categs._prefetch)
+            if category:
+                category = category.with_prefetch(prefetched_categs._prefetch)
 
         parent_category_ids = []
         if category:
