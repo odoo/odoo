@@ -1663,11 +1663,14 @@ class MailThread(models.AbstractModel):
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
         :param list attachment_ids: list of existing attachments to link to this message;
-        :param message_values: dictionary of values that will be used to create the
+        :param dict message_values: values that will be used to create the
           message. It is used to find back record- or content- context;
 
         :return dict: new values for message: 'attachment_ids' and optionally 'body'
         """
+        if not attachments and not attachment_ids:
+            return dict(attachment_ids=[])
+
         return_values = {}
         body = message_values.get('body')
         model = message_values['model']
@@ -1802,14 +1805,17 @@ class MailThread(models.AbstractModel):
 
         :return record: newly create mail.message
         """
-        self.ensure_one()  # should always be posted on a record, use message_notify if no record
+        self = self.filtered('id')
+        if not self:
+            # should always be posted on a record, use message_notify if no record
+            raise ValueError(_("No record is specified to post the message."))
         # split message additional values from notify additional values
         msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
         notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
         # preliminary value safety check
         partner_ids = set(partner_ids or [])
-        if self._name == 'mail.thread' or not self.id or message_type == 'user_notification':
+        if self._name == 'mail.thread' or message_type == 'user_notification':
             raise ValueError(_('Posting a message should be done on a business document. Use message_notify to send a notification to an user.'))
         if 'channel_ids' in kwargs:
             raise ValueError(_("Posting a message with channels as listeners is not supported since Odoo 14.3+. Please update code accordingly."))
@@ -1843,46 +1849,55 @@ class MailThread(models.AbstractModel):
         if self._context.get('mail_post_autofollow') and partner_ids:
             self.message_subscribe(partner_ids=list(partner_ids))
 
-        parent_id = self._message_compute_parent_id(parent_id)
-
         msg_values = dict(msg_kwargs)
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
-        if not msg_values.get('record_name'):
-            msg_values['record_name'] = self.display_name
         msg_values.update({
+            'attachment_ids': [],
             'author_id': author_id,
             'author_guest_id': author_guest_id,
             'email_from': email_from,
             'model': self._name,
-            'res_id': self.id,
             # content
             'body': body,
             'subject': subject or False,
             'message_type': message_type,
-            'parent_id': parent_id,
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
         })
 
+        msg_vals_list = [
+            {
+                'record_name': thread.display_name,  # Only applied if not already provided
+                **msg_values,
+                'parent_id': thread._message_compute_parent_id(parent_id),
+                'res_id': thread.id,
+            } for thread in self
+        ]
+
         attachments = attachments or []
         attachment_ids = attachment_ids or []
-        attachement_values = self._message_post_process_attachments(attachments, attachment_ids, msg_values)
-        msg_values.update(attachement_values)  # attachement_ids, [body]
+        if attachments or attachment_ids:
+            for thread, msg_vals in zip(self, msg_vals_list):
+                attachement_values = thread._message_post_process_attachments(attachments, attachment_ids, msg_vals)
+                msg_vals.update(attachement_values)  # attachement_ids, [body]
 
-        new_message = self._message_create(msg_values)
+        new_messages = self._message_create(msg_vals_list)
 
         # Set main attachment field if necessary
-        self._message_set_main_attachment_id(msg_values['attachment_ids'])
+        if attachments or attachment_ids:
+            for thread, msg_vals in zip(self, msg_vals_list):
+                thread._message_set_main_attachment_id(msg_vals['attachment_ids'])
 
         if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
             if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
                 self._message_subscribe(partner_ids=[msg_values['author_id']])
 
-        self._message_post_after_hook(new_message, msg_values)
-        self._notify_thread(new_message, msg_values, **notif_kwargs)
-        return new_message
+        for thread, new_message, values in zip(self, new_messages, msg_vals_list):
+            thread._message_post_after_hook(new_message, values)
+            thread._notify_thread(new_message, values, **notif_kwargs)
+        return new_messages
 
     def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
         if not self._abstract and attachment_ids and not self.message_main_attachment_id:
