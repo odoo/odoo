@@ -205,6 +205,10 @@ class TestTermCount(common.TransactionCase):
         context = {'lang': "tlh"}
         self.assertEqual(str(TRANSLATED_TERM), "tlhIngan", "The lazy code translation was not applied")
 
+        self.assertEqual("Do you speak " + TRANSLATED_TERM, "Do you speak tlhIngan", "str + _lt concatenation failed")
+        self.assertEqual(TRANSLATED_TERM + ", I speak it", "tlhIngan, I speak it", "_lt + str concatenation failed")
+        self.assertEqual(TRANSLATED_TERM + TRANSLATED_TERM, "tlhIngantlhIngan", "_lt + _lt concatenation failed")
+
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
         with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
