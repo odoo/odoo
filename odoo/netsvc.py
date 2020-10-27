@@ -134,6 +134,7 @@ def init_logger():
         'zeep.loader',# zeep using defusedxml.lxml
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
         'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
+        'ofxparse',# ofxparse importing ABC from collections
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
