@@ -870,7 +870,7 @@ class AccountMoveLine(models.Model):
         caba_connected_amls = amls.filtered(lambda x: x.move_id.tax_cash_basis_rec_id) + caba_reconciled_amls
         matched_percentages = caba_connected_amls._get_matched_percentage()
         if (
-                (all(amls.mapped('tax_exigible')) or all(matched_percentages[aml.move_id.id] >= 1.0 for aml in caba_connected_amls))
+                all(aml.tax_exigible or matched_percentages[aml.move_id.id] >= 1.0 for aml in caba_connected_amls)
                 and
                 (
                     currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or
