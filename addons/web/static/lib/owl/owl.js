@@ -155,6 +155,439 @@
         }
     }
 
+    /**
+     * Owl QWeb Expression Parser
+     *
+     * Owl needs in various contexts to be able to understand the structure of a
+     * string representing a javascript expression.  The usual goal is to be able
+     * to rewrite some variables.  For example, if a template has
+     *
+     *  ```xml
+     *  <t t-if="computeSomething({val: state.val})">...</t>
+     * ```
+     *
+     * this needs to be translated in something like this:
+     *
+     * ```js
+     *   if (context["computeSomething"]({val: context["state"].val})) { ... }
+     * ```
+     *
+     * This file contains the implementation of an extremely naive tokenizer/parser
+     * and evaluator for javascript expressions.  The supported grammar is basically
+     * only expressive enough to understand the shape of objects, of arrays, and
+     * various operators.
+     */
+    //------------------------------------------------------------------------------
+    // Misc types, constants and helpers
+    //------------------------------------------------------------------------------
+    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
+    const WORD_REPLACEMENT = {
+        and: "&&",
+        or: "||",
+        gt: ">",
+        gte: ">=",
+        lt: "<",
+        lte: "<=",
+    };
+    const STATIC_TOKEN_MAP = {
+        "{": "LEFT_BRACE",
+        "}": "RIGHT_BRACE",
+        "[": "LEFT_BRACKET",
+        "]": "RIGHT_BRACKET",
+        ":": "COLON",
+        ",": "COMMA",
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    // note that the space after typeof is relevant. It makes sure that the formatted
+    // expression has a space after typeof
+    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
+    let tokenizeString = function (expr) {
+        let s = expr[0];
+        let start = s;
+        if (s !== "'" && s !== '"') {
+            return false;
+        }
+        let i = 1;
+        let cur;
+        while (expr[i] && expr[i] !== start) {
+            cur = expr[i];
+            s += cur;
+            if (cur === "\\") {
+                i++;
+                cur = expr[i];
+                if (!cur) {
+                    throw new Error("Invalid expression");
+                }
+                s += cur;
+            }
+            i++;
+        }
+        if (expr[i] !== start) {
+            throw new Error("Invalid expression");
+        }
+        s += start;
+        return { type: "VALUE", value: s };
+    };
+    let tokenizeNumber = function (expr) {
+        let s = expr[0];
+        if (s && s.match(/[0-9]/)) {
+            let i = 1;
+            while (expr[i] && expr[i].match(/[0-9]|\./)) {
+                s += expr[i];
+                i++;
+            }
+            return { type: "VALUE", value: s };
+        }
+        else {
+            return false;
+        }
+    };
+    let tokenizeSymbol = function (expr) {
+        let s = expr[0];
+        if (s && s.match(/[a-zA-Z_\$]/)) {
+            let i = 1;
+            while (expr[i] && expr[i].match(/\w/)) {
+                s += expr[i];
+                i++;
+            }
+            if (s in WORD_REPLACEMENT) {
+                return { type: "OPERATOR", value: WORD_REPLACEMENT[s], size: s.length };
+            }
+            return { type: "SYMBOL", value: s };
+        }
+        else {
+            return false;
+        }
+    };
+    const tokenizeStatic = function (expr) {
+        const char = expr[0];
+        if (char && char in STATIC_TOKEN_MAP) {
+            return { type: STATIC_TOKEN_MAP[char], value: char };
+        }
+        return false;
+    };
+    const tokenizeOperator = function (expr) {
+        for (let op of OPERATORS) {
+            if (expr.startsWith(op)) {
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return false;
+    };
+    const TOKENIZERS = [
+        tokenizeString,
+        tokenizeNumber,
+        tokenizeOperator,
+        tokenizeSymbol,
+        tokenizeStatic,
+    ];
+    /**
+     * Convert a javascript expression (as a string) into a list of tokens. For
+     * example: `tokenize("1 + b")` will return:
+     * ```js
+     *  [
+     *   {type: "VALUE", value: "1"},
+     *   {type: "OPERATOR", value: "+"},
+     *   {type: "SYMBOL", value: "b"}
+     * ]
+     * ```
+     */
+    function tokenize(expr) {
+        const result = [];
+        let token = true;
+        while (token) {
+            expr = expr.trim();
+            if (expr) {
+                for (let tokenizer of TOKENIZERS) {
+                    token = tokenizer(expr);
+                    if (token) {
+                        result.push(token);
+                        expr = expr.slice(token.size || token.value.length);
+                        break;
+                    }
+                }
+            }
+            else {
+                token = false;
+            }
+        }
+        if (expr.length) {
+            throw new Error(`Tokenizer error: could not tokenize "${expr}"`);
+        }
+        return result;
+    }
+    //------------------------------------------------------------------------------
+    // Expression "evaluator"
+    //------------------------------------------------------------------------------
+    /**
+     * This is the main function exported by this file. This is the code that will
+     * process an expression (given as a string) and returns another expression with
+     * proper lookups in the context.
+     *
+     * Usually, this kind of code would be very simple to do if we had an AST (so,
+     * if we had a javascript parser), since then, we would only need to find the
+     * variables and replace them.  However, a parser is more complicated, and there
+     * are no standard builtin parser API.
+     *
+     * Since this method is applied to simple javasript expressions, and the work to
+     * be done is actually quite simple, we actually can get away with not using a
+     * parser, which helps with the code size.
+     *
+     * Here is the heuristic used by this method to determine if a token is a
+     * variable:
+     * - by default, all symbols are considered a variable
+     * - unless the previous token is a dot (in that case, this is a property: `a.b`)
+     * - or if the previous token is a left brace or a comma, and the next token is
+     *   a colon (in that case, this is an object key: `{a: b}`)
+     *
+     * Some specific code is also required to support arrow functions. If we detect
+     * the arrow operator, then we add the current (or some previous tokens) token to
+     * the list of variables so it does not get replaced by a lookup in the context
+     */
+    function compileExprToArray(expr, scope) {
+        scope = Object.create(scope);
+        const tokens = tokenize(expr);
+        for (let i = 0; i < tokens.length; i++) {
+            let token = tokens[i];
+            let prevToken = tokens[i - 1];
+            let nextToken = tokens[i + 1];
+            let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
+            if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
+                if (prevToken) {
+                    if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
+                        isVar = false;
+                    }
+                    else if (prevToken.type === "LEFT_BRACE" || prevToken.type === "COMMA") {
+                        if (nextToken && nextToken.type === "COLON") {
+                            isVar = false;
+                        }
+                    }
+                }
+            }
+            if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
+                if (token.type === "RIGHT_PAREN") {
+                    let j = i - 1;
+                    while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
+                        if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
+                            tokens[j].value = tokens[j].originalValue;
+                            scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
+                        }
+                        j--;
+                    }
+                }
+                else {
+                    scope[token.value] = { id: token.value, expr: token.value };
+                }
+            }
+            if (isVar) {
+                token.varName = token.value;
+                if (token.value in scope && "id" in scope[token.value]) {
+                    token.value = scope[token.value].expr;
+                }
+                else {
+                    token.originalValue = token.value;
+                    token.value = `scope['${token.value}']`;
+                }
+            }
+        }
+        return tokens;
+    }
+    function compileExpr(expr, scope) {
+        return compileExprToArray(expr, scope)
+            .map((t) => t.value)
+            .join("");
+    }
+
+    const INTERP_REGEXP = /\{\{.*?\}\}/g;
+    //------------------------------------------------------------------------------
+    // Compilation Context
+    //------------------------------------------------------------------------------
+    class CompilationContext {
+        constructor(name) {
+            this.code = [];
+            this.variables = {};
+            this.escaping = false;
+            this.parentNode = null;
+            this.parentTextNode = null;
+            this.rootNode = null;
+            this.indentLevel = 0;
+            this.shouldDefineParent = false;
+            this.shouldDefineScope = false;
+            this.protectedScopeNumber = 0;
+            this.shouldDefineQWeb = false;
+            this.shouldDefineUtils = false;
+            this.shouldDefineRefs = false;
+            this.shouldDefineResult = true;
+            this.loopNumber = 0;
+            this.inPreTag = false;
+            this.allowMultipleRoots = false;
+            this.hasParentWidget = false;
+            this.hasKey0 = false;
+            this.keyStack = [];
+            this.rootContext = this;
+            this.templateName = name || "noname";
+            this.addLine("let h = this.h;");
+        }
+        generateID() {
+            return CompilationContext.nextID++;
+        }
+        /**
+         * This method generates a "template key", which is basically a unique key
+         * which depends on the currently set keys, and on the iteration numbers (if
+         * we are in a loop).
+         *
+         * Such a key is necessary when we need to associate an id to some element
+         * generated by a template (for example, a component)
+         */
+        generateTemplateKey(prefix = "") {
+            const id = this.generateID();
+            if (this.loopNumber === 0 && !this.hasKey0) {
+                return `'${prefix}__${id}__'`;
+            }
+            let key = `\`${prefix}__${id}__`;
+            let start = this.hasKey0 ? 0 : 1;
+            for (let i = start; i < this.loopNumber + 1; i++) {
+                key += `\${key${i}}__`;
+            }
+            this.addLine(`let k${id} = ${key}\`;`);
+            return `k${id}`;
+        }
+        generateCode() {
+            if (this.shouldDefineResult) {
+                this.code.unshift("    let result;");
+            }
+            if (this.shouldDefineScope) {
+                this.code.unshift("    let scope = Object.create(context);");
+            }
+            if (this.shouldDefineRefs) {
+                this.code.unshift("    context.__owl__.refs = context.__owl__.refs || {};");
+            }
+            if (this.shouldDefineParent) {
+                if (this.hasParentWidget) {
+                    this.code.unshift("    let parent = extra.parent;");
+                }
+                else {
+                    this.code.unshift("    let parent = context;");
+                }
+            }
+            if (this.shouldDefineQWeb) {
+                this.code.unshift("    let QWeb = this.constructor;");
+            }
+            if (this.shouldDefineUtils) {
+                this.code.unshift("    let utils = this.constructor.utils;");
+            }
+            return this.code;
+        }
+        withParent(node) {
+            if (!this.allowMultipleRoots &&
+                this === this.rootContext &&
+                (this.parentNode || this.parentTextNode)) {
+                throw new Error("A template should not have more than one root node");
+            }
+            if (!this.rootContext.rootNode) {
+                this.rootContext.rootNode = node;
+            }
+            if (!this.parentNode && this.rootContext.shouldDefineResult) {
+                this.addLine(`result = vn${node};`);
+            }
+            return this.subContext("parentNode", node);
+        }
+        subContext(key, value) {
+            const newContext = Object.create(this);
+            newContext[key] = value;
+            return newContext;
+        }
+        indent() {
+            this.rootContext.indentLevel++;
+        }
+        dedent() {
+            this.rootContext.indentLevel--;
+        }
+        addLine(line) {
+            const prefix = new Array(this.indentLevel + 2).join("    ");
+            this.code.push(prefix + line);
+            return this.code.length - 1;
+        }
+        addIf(condition) {
+            this.addLine(`if (${condition}) {`);
+            this.indent();
+        }
+        addElse() {
+            this.dedent();
+            this.addLine("} else {");
+            this.indent();
+        }
+        closeIf() {
+            this.dedent();
+            this.addLine("}");
+        }
+        getValue(val) {
+            return val in this.variables ? this.getValue(this.variables[val]) : val;
+        }
+        /**
+         * Prepare an expression for being consumed at render time.  Its main job
+         * is to
+         * - replace unknown variables by a lookup in the context
+         * - replace already defined variables by their internal name
+         */
+        formatExpression(expr) {
+            this.rootContext.shouldDefineScope = true;
+            return compileExpr(expr, this.variables);
+        }
+        captureExpression(expr) {
+            this.rootContext.shouldDefineScope = true;
+            const argId = this.generateID();
+            const tokens = compileExprToArray(expr, this.variables);
+            const done = new Set();
+            return tokens
+                .map((tok) => {
+                if (tok.varName) {
+                    if (!done.has(tok.varName)) {
+                        done.add(tok.varName);
+                        this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
+                    }
+                    tok.value = `${tok.varName}_${argId}`;
+                }
+                return tok.value;
+            })
+                .join("");
+        }
+        /**
+         * Perform string interpolation on the given string. Note that if the whole
+         * string is an expression, it simply returns it (formatted and enclosed in
+         * parentheses).
+         * For instance:
+         *   'Hello {{x}}!' -> `Hello ${x}`
+         *   '{{x ? 'a': 'b'}}' -> (x ? 'a' : 'b')
+         */
+        interpolate(s) {
+            let matches = s.match(INTERP_REGEXP);
+            if (matches && matches[0].length === s.length) {
+                return `(${this.formatExpression(s.slice(2, -2))})`;
+            }
+            let r = s.replace(/\{\{.*?\}\}/g, (s) => "${" + this.formatExpression(s.slice(2, -2)) + "}");
+            return "`" + r + "`";
+        }
+        startProtectScope(codeBlock) {
+            const protectID = this.generateID();
+            this.rootContext.protectedScopeNumber++;
+            this.rootContext.shouldDefineScope = true;
+            const scopeExpr = `Object.create(scope);`;
+            this.addLine(`let _origScope${protectID} = scope;`);
+            this.addLine(`scope = ${scopeExpr}`);
+            if (!codeBlock) {
+                this.addLine(`scope.__access_mode__ = 'ro';`);
+            }
+            return protectID;
+        }
+        stopProtectScope(protectID) {
+            this.rootContext.protectedScopeNumber--;
+            this.addLine(`scope = _origScope${protectID};`);
+        }
+    }
+    CompilationContext.nextID = 1;
+
     //------------------------------------------------------------------------------
     // module/props.ts
     //------------------------------------------------------------------------------
@@ -807,439 +1240,6 @@
 
     const patch = init([eventListenersModule, attrsModule, propsModule, classModule]);
 
-    /**
-     * Owl QWeb Expression Parser
-     *
-     * Owl needs in various contexts to be able to understand the structure of a
-     * string representing a javascript expression.  The usual goal is to be able
-     * to rewrite some variables.  For example, if a template has
-     *
-     *  ```xml
-     *  <t t-if="computeSomething({val: state.val})">...</t>
-     * ```
-     *
-     * this needs to be translated in something like this:
-     *
-     * ```js
-     *   if (context["computeSomething"]({val: context["state"].val})) { ... }
-     * ```
-     *
-     * This file contains the implementation of an extremely naive tokenizer/parser
-     * and evaluator for javascript expressions.  The supported grammar is basically
-     * only expressive enough to understand the shape of objects, of arrays, and
-     * various operators.
-     */
-    //------------------------------------------------------------------------------
-    // Misc types, constants and helpers
-    //------------------------------------------------------------------------------
-    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
-    const WORD_REPLACEMENT = {
-        and: "&&",
-        or: "||",
-        gt: ">",
-        gte: ">=",
-        lt: "<",
-        lte: "<=",
-    };
-    const STATIC_TOKEN_MAP = {
-        "{": "LEFT_BRACE",
-        "}": "RIGHT_BRACE",
-        "[": "LEFT_BRACKET",
-        "]": "RIGHT_BRACKET",
-        ":": "COLON",
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    // note that the space after typeof is relevant. It makes sure that the formatted
-    // expression has a space after typeof
-    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
-    let tokenizeString = function (expr) {
-        let s = expr[0];
-        let start = s;
-        if (s !== "'" && s !== '"') {
-            return false;
-        }
-        let i = 1;
-        let cur;
-        while (expr[i] && expr[i] !== start) {
-            cur = expr[i];
-            s += cur;
-            if (cur === "\\") {
-                i++;
-                cur = expr[i];
-                if (!cur) {
-                    throw new Error("Invalid expression");
-                }
-                s += cur;
-            }
-            i++;
-        }
-        if (expr[i] !== start) {
-            throw new Error("Invalid expression");
-        }
-        s += start;
-        return { type: "VALUE", value: s };
-    };
-    let tokenizeNumber = function (expr) {
-        let s = expr[0];
-        if (s && s.match(/[0-9]/)) {
-            let i = 1;
-            while (expr[i] && expr[i].match(/[0-9]|\./)) {
-                s += expr[i];
-                i++;
-            }
-            return { type: "VALUE", value: s };
-        }
-        else {
-            return false;
-        }
-    };
-    let tokenizeSymbol = function (expr) {
-        let s = expr[0];
-        if (s && s.match(/[a-zA-Z_\$]/)) {
-            let i = 1;
-            while (expr[i] && expr[i].match(/\w/)) {
-                s += expr[i];
-                i++;
-            }
-            if (s in WORD_REPLACEMENT) {
-                return { type: "OPERATOR", value: WORD_REPLACEMENT[s], size: s.length };
-            }
-            return { type: "SYMBOL", value: s };
-        }
-        else {
-            return false;
-        }
-    };
-    const tokenizeStatic = function (expr) {
-        const char = expr[0];
-        if (char && char in STATIC_TOKEN_MAP) {
-            return { type: STATIC_TOKEN_MAP[char], value: char };
-        }
-        return false;
-    };
-    const tokenizeOperator = function (expr) {
-        for (let op of OPERATORS) {
-            if (expr.startsWith(op)) {
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return false;
-    };
-    const TOKENIZERS = [
-        tokenizeString,
-        tokenizeNumber,
-        tokenizeOperator,
-        tokenizeSymbol,
-        tokenizeStatic,
-    ];
-    /**
-     * Convert a javascript expression (as a string) into a list of tokens. For
-     * example: `tokenize("1 + b")` will return:
-     * ```js
-     *  [
-     *   {type: "VALUE", value: "1"},
-     *   {type: "OPERATOR", value: "+"},
-     *   {type: "SYMBOL", value: "b"}
-     * ]
-     * ```
-     */
-    function tokenize(expr) {
-        const result = [];
-        let token = true;
-        while (token) {
-            expr = expr.trim();
-            if (expr) {
-                for (let tokenizer of TOKENIZERS) {
-                    token = tokenizer(expr);
-                    if (token) {
-                        result.push(token);
-                        expr = expr.slice(token.size || token.value.length);
-                        break;
-                    }
-                }
-            }
-            else {
-                token = false;
-            }
-        }
-        if (expr.length) {
-            throw new Error(`Tokenizer error: could not tokenize "${expr}"`);
-        }
-        return result;
-    }
-    //------------------------------------------------------------------------------
-    // Expression "evaluator"
-    //------------------------------------------------------------------------------
-    /**
-     * This is the main function exported by this file. This is the code that will
-     * process an expression (given as a string) and returns another expression with
-     * proper lookups in the context.
-     *
-     * Usually, this kind of code would be very simple to do if we had an AST (so,
-     * if we had a javascript parser), since then, we would only need to find the
-     * variables and replace them.  However, a parser is more complicated, and there
-     * are no standard builtin parser API.
-     *
-     * Since this method is applied to simple javasript expressions, and the work to
-     * be done is actually quite simple, we actually can get away with not using a
-     * parser, which helps with the code size.
-     *
-     * Here is the heuristic used by this method to determine if a token is a
-     * variable:
-     * - by default, all symbols are considered a variable
-     * - unless the previous token is a dot (in that case, this is a property: `a.b`)
-     * - or if the previous token is a left brace or a comma, and the next token is
-     *   a colon (in that case, this is an object key: `{a: b}`)
-     *
-     * Some specific code is also required to support arrow functions. If we detect
-     * the arrow operator, then we add the current (or some previous tokens) token to
-     * the list of variables so it does not get replaced by a lookup in the context
-     */
-    function compileExprToArray(expr, scope) {
-        scope = Object.create(scope);
-        const tokens = tokenize(expr);
-        for (let i = 0; i < tokens.length; i++) {
-            let token = tokens[i];
-            let prevToken = tokens[i - 1];
-            let nextToken = tokens[i + 1];
-            let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
-            if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
-                if (prevToken) {
-                    if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
-                        isVar = false;
-                    }
-                    else if (prevToken.type === "LEFT_BRACE" || prevToken.type === "COMMA") {
-                        if (nextToken && nextToken.type === "COLON") {
-                            isVar = false;
-                        }
-                    }
-                }
-            }
-            if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
-                if (token.type === "RIGHT_PAREN") {
-                    let j = i - 1;
-                    while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
-                        if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
-                            tokens[j].value = tokens[j].originalValue;
-                            scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
-                        }
-                        j--;
-                    }
-                }
-                else {
-                    scope[token.value] = { id: token.value, expr: token.value };
-                }
-            }
-            if (isVar) {
-                token.varName = token.value;
-                if (token.value in scope && "id" in scope[token.value]) {
-                    token.value = scope[token.value].expr;
-                }
-                else {
-                    token.originalValue = token.value;
-                    token.value = `scope['${token.value}']`;
-                }
-            }
-        }
-        return tokens;
-    }
-    function compileExpr(expr, scope) {
-        return compileExprToArray(expr, scope)
-            .map((t) => t.value)
-            .join("");
-    }
-
-    const INTERP_REGEXP = /\{\{.*?\}\}/g;
-    //------------------------------------------------------------------------------
-    // Compilation Context
-    //------------------------------------------------------------------------------
-    class CompilationContext {
-        constructor(name) {
-            this.code = [];
-            this.variables = {};
-            this.escaping = false;
-            this.parentNode = null;
-            this.parentTextNode = null;
-            this.rootNode = null;
-            this.indentLevel = 0;
-            this.shouldDefineParent = false;
-            this.shouldDefineScope = false;
-            this.protectedScopeNumber = 0;
-            this.shouldDefineQWeb = false;
-            this.shouldDefineUtils = false;
-            this.shouldDefineRefs = false;
-            this.shouldDefineResult = true;
-            this.loopNumber = 0;
-            this.inPreTag = false;
-            this.allowMultipleRoots = false;
-            this.hasParentWidget = false;
-            this.hasKey0 = false;
-            this.keyStack = [];
-            this.rootContext = this;
-            this.templateName = name || "noname";
-            this.addLine("let h = this.h;");
-        }
-        generateID() {
-            return CompilationContext.nextID++;
-        }
-        /**
-         * This method generates a "template key", which is basically a unique key
-         * which depends on the currently set keys, and on the iteration numbers (if
-         * we are in a loop).
-         *
-         * Such a key is necessary when we need to associate an id to some element
-         * generated by a template (for example, a component)
-         */
-        generateTemplateKey(prefix = "") {
-            const id = this.generateID();
-            if (this.loopNumber === 0 && !this.hasKey0) {
-                return `'${prefix}__${id}__'`;
-            }
-            let key = `\`${prefix}__${id}__`;
-            let start = this.hasKey0 ? 0 : 1;
-            for (let i = start; i < this.loopNumber + 1; i++) {
-                key += `\${key${i}}__`;
-            }
-            this.addLine(`let k${id} = ${key}\`;`);
-            return `k${id}`;
-        }
-        generateCode() {
-            if (this.shouldDefineResult) {
-                this.code.unshift("    let result;");
-            }
-            if (this.shouldDefineScope) {
-                this.code.unshift("    let scope = Object.create(context);");
-            }
-            if (this.shouldDefineRefs) {
-                this.code.unshift("    context.__owl__.refs = context.__owl__.refs || {};");
-            }
-            if (this.shouldDefineParent) {
-                if (this.hasParentWidget) {
-                    this.code.unshift("    let parent = extra.parent;");
-                }
-                else {
-                    this.code.unshift("    let parent = context;");
-                }
-            }
-            if (this.shouldDefineQWeb) {
-                this.code.unshift("    let QWeb = this.constructor;");
-            }
-            if (this.shouldDefineUtils) {
-                this.code.unshift("    let utils = this.constructor.utils;");
-            }
-            return this.code;
-        }
-        withParent(node) {
-            if (!this.allowMultipleRoots &&
-                this === this.rootContext &&
-                (this.parentNode || this.parentTextNode)) {
-                throw new Error("A template should not have more than one root node");
-            }
-            if (!this.rootContext.rootNode) {
-                this.rootContext.rootNode = node;
-            }
-            if (!this.parentNode && this.rootContext.shouldDefineResult) {
-                this.addLine(`result = vn${node};`);
-            }
-            return this.subContext("parentNode", node);
-        }
-        subContext(key, value) {
-            const newContext = Object.create(this);
-            newContext[key] = value;
-            return newContext;
-        }
-        indent() {
-            this.rootContext.indentLevel++;
-        }
-        dedent() {
-            this.rootContext.indentLevel--;
-        }
-        addLine(line) {
-            const prefix = new Array(this.indentLevel + 2).join("    ");
-            this.code.push(prefix + line);
-            return this.code.length - 1;
-        }
-        addIf(condition) {
-            this.addLine(`if (${condition}) {`);
-            this.indent();
-        }
-        addElse() {
-            this.dedent();
-            this.addLine("} else {");
-            this.indent();
-        }
-        closeIf() {
-            this.dedent();
-            this.addLine("}");
-        }
-        getValue(val) {
-            return val in this.variables ? this.getValue(this.variables[val]) : val;
-        }
-        /**
-         * Prepare an expression for being consumed at render time.  Its main job
-         * is to
-         * - replace unknown variables by a lookup in the context
-         * - replace already defined variables by their internal name
-         */
-        formatExpression(expr) {
-            this.rootContext.shouldDefineScope = true;
-            return compileExpr(expr, this.variables);
-        }
-        captureExpression(expr) {
-            this.rootContext.shouldDefineScope = true;
-            const argId = this.generateID();
-            const tokens = compileExprToArray(expr, this.variables);
-            const done = new Set();
-            return tokens
-                .map((tok) => {
-                if (tok.varName) {
-                    if (!done.has(tok.varName)) {
-                        done.add(tok.varName);
-                        this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
-                    }
-                    tok.value = `${tok.varName}_${argId}`;
-                }
-                return tok.value;
-            })
-                .join("");
-        }
-        /**
-         * Perform string interpolation on the given string. Note that if the whole
-         * string is an expression, it simply returns it (formatted and enclosed in
-         * parentheses).
-         * For instance:
-         *   'Hello {{x}}!' -> `Hello ${x}`
-         *   '{{x ? 'a': 'b'}}' -> (x ? 'a' : 'b')
-         */
-        interpolate(s) {
-            let matches = s.match(INTERP_REGEXP);
-            if (matches && matches[0].length === s.length) {
-                return `(${this.formatExpression(s.slice(2, -2))})`;
-            }
-            let r = s.replace(/\{\{.*?\}\}/g, (s) => "${" + this.formatExpression(s.slice(2, -2)) + "}");
-            return "`" + r + "`";
-        }
-        startProtectScope(codeBlock) {
-            const protectID = this.generateID();
-            this.rootContext.protectedScopeNumber++;
-            this.rootContext.shouldDefineScope = true;
-            const scopeExpr = `Object.create(scope);`;
-            this.addLine(`let _origScope${protectID} = scope;`);
-            this.addLine(`scope = ${scopeExpr}`);
-            if (!codeBlock) {
-                this.addLine(`scope.__access_mode__ = 'ro';`);
-            }
-            return protectID;
-        }
-        stopProtectScope(protectID) {
-            this.rootContext.protectedScopeNumber--;
-            this.addLine(`scope = _origScope${protectID};`);
-        }
-    }
-    CompilationContext.nextID = 1;
-
     const browser = {
         setTimeout: window.setTimeout.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -1555,7 +1555,7 @@
             const template = {
                 elem,
                 fn: function (context, extra) {
-                    const compiledFunction = this._compile(name, elem);
+                    const compiledFunction = this._compile(name);
                     template.fn = compiledFunction;
                     return compiledFunction.call(this, context, extra);
                 },
@@ -1649,26 +1649,27 @@
                 }
             });
         }
-        _compile(name, elem, parentContext, defineKey) {
+        _compile(name, options = {}) {
+            const elem = options.elem || this.templates[name].elem;
             const isDebug = elem.attributes.hasOwnProperty("t-debug");
             const ctx = new CompilationContext(name);
             if (elem.tagName !== "t") {
                 ctx.shouldDefineResult = false;
             }
-            if (parentContext) {
-                ctx.variables = Object.create(parentContext.variables);
-                ctx.parentNode = parentContext.parentNode || ctx.generateID();
+            if (options.hasParent) {
+                ctx.variables = Object.create(null);
+                ctx.parentNode = ctx.generateID();
                 ctx.allowMultipleRoots = true;
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
-                if (defineKey) {
+                if (options.defineKey) {
                     ctx.addLine(`let key0 = extra.key || "";`);
                     ctx.hasKey0 = true;
                 }
             }
             this._compileNode(elem, ctx);
-            if (!parentContext) {
+            if (!options.hasParent) {
                 if (ctx.shouldDefineResult) {
                     ctx.addLine(`return result;`);
                 }
@@ -2065,6 +2066,7 @@
     QWeb.nextId = 1;
     // dev mode enables better error messages or more costly validations
     QWeb.dev = false;
+    QWeb.enableTransitions = true;
     // slots contains sub templates defined with t-set inside t-component nodes, and
     // are meant to be used by the t-slot directive.
     QWeb.slots = {};
@@ -2082,6 +2084,9 @@
     }
     function htmlToVNode(node) {
         if (!(node instanceof Element)) {
+            if (node instanceof Comment) {
+                return h("!", node.textContent);
+            }
             return { text: node.textContent };
         }
         const attrs = {};
@@ -2302,18 +2307,34 @@
             ctx.rootContext.shouldDefineScope = true;
             ctx.rootContext.shouldDefineUtils = true;
             const subTemplate = node.getAttribute("t-call");
+            const isDynamic = INTERP_REGEXP.test(subTemplate);
             const nodeTemplate = qweb.templates[subTemplate];
-            if (!nodeTemplate) {
+            if (!isDynamic && !nodeTemplate) {
                 throw new Error(`Cannot find template "${subTemplate}" (t-call)`);
             }
             // Step 2: compile target template in sub templates
             // ------------------------------------------------
-            let subId = qweb.subTemplates[subTemplate];
-            if (!subId) {
-                subId = QWeb.nextId++;
-                qweb.subTemplates[subTemplate] = subId;
-                const subTemplateFn = qweb._compile(subTemplate, nodeTemplate.elem, ctx, true);
-                QWeb.subTemplates[subId] = subTemplateFn;
+            let subIdstr;
+            if (isDynamic) {
+                const _id = ctx.generateID();
+                ctx.addLine(`let tname${_id} = ${ctx.interpolate(subTemplate)};`);
+                ctx.addLine(`let tid${_id} = this.subTemplates[tname${_id}];`);
+                ctx.addIf(`!tid${_id}`);
+                ctx.addLine(`tid${_id} = this.constructor.nextId++;`);
+                ctx.addLine(`this.subTemplates[tname${_id}] = tid${_id};`);
+                ctx.addLine(`this.constructor.subTemplates[tid${_id}] = this._compile(tname${_id}, {hasParent: true, defineKey: true});`);
+                ctx.closeIf();
+                subIdstr = `tid${_id}`;
+            }
+            else {
+                let subId = qweb.subTemplates[subTemplate];
+                if (!subId) {
+                    subId = QWeb.nextId++;
+                    qweb.subTemplates[subTemplate] = subId;
+                    const subTemplateFn = qweb._compile(subTemplate, { hasParent: true, defineKey: true });
+                    QWeb.subTemplates[subId] = subTemplateFn;
+                }
+                subIdstr = `'${subId}'`;
             }
             // Step 3: compile t-call body if necessary
             // ------------------------------------------------
@@ -2327,16 +2348,13 @@
                 for (let attr of ["t-if", "t-else", "t-elif", "t-call"]) {
                     nodeCopy.removeAttribute(attr);
                 }
-                const parentNode = ctx.parentNode;
-                ctx.parentNode = "__0";
                 // this local scope is intended to trap c__0
                 ctx.addLine(`{`);
                 ctx.indent();
                 ctx.addLine("let c__0 = [];");
-                qweb._compileNode(nodeCopy, ctx);
+                qweb._compileNode(nodeCopy, ctx.subContext("parentNode", "__0"));
                 ctx.rootContext.shouldDefineUtils = true;
                 ctx.addLine("scope[utils.zero] = c__0;");
-                ctx.parentNode = parentNode;
                 ctx.dedent();
                 ctx.addLine(`}`);
             }
@@ -2347,13 +2365,13 @@
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
             if (ctx.parentNode) {
-                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, scope, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
             }
             else {
                 // this is a t-call with no parentnode, we need to extract the result
                 ctx.rootContext.shouldDefineResult = true;
                 ctx.addLine(`result = []`);
-                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, scope, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
                 ctx.addLine(`result = result[0]`);
             }
             // Step 5: restore previous scope
@@ -2620,6 +2638,9 @@
         name: "transition",
         priority: 96,
         atNodeCreation({ ctx, value, addNodeHook }) {
+            if (!QWeb.enableTransitions) {
+                return;
+            }
             ctx.rootContext.shouldDefineUtils = true;
             let name = value;
             const hooks = {
@@ -2783,6 +2804,14 @@
             else {
                 console.log(`Owl is now running in 'prod' mode.`);
             }
+        },
+    });
+    Object.defineProperty(config, "enableTransitions", {
+        get() {
+            return QWeb.enableTransitions;
+        },
+        set(value) {
+            QWeb.enableTransitions = value;
         },
     });
 
@@ -3020,7 +3049,9 @@
                     events.push([name, value]);
                 }
                 else if (name === "t-transition") {
-                    transition = value;
+                    if (QWeb.enableTransitions) {
+                        transition = value;
+                    }
                 }
                 else if (!name.startsWith("t-")) {
                     if (name !== "class" && name !== "style") {
@@ -3165,7 +3196,6 @@
             ctx.addLine(`parent.__owl__.cmap[${templateKey}] = w${componentID}.__owl__.id;`);
             if (hasSlots) {
                 const clone = node.cloneNode(true);
-                const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
                 // The next code is a fallback for compatibility reason. It accepts t-set
                 // elements that are direct children with a non empty body as nodes defining
                 // the content of a slot.
@@ -3174,26 +3204,42 @@
                 // code using slots. This will be removed in v2.0 someday. Meanwhile,
                 // please use t-set-slot everywhere you need to set the content of a
                 // slot.
-                for (let el of clone.children) {
-                    if (el.getAttribute("t-set") && el.hasChildNodes()) {
-                        slotNodes.push(el);
+                for (let node of clone.children) {
+                    if (node.hasAttribute("t-set") && node.hasChildNodes()) {
+                        node.setAttribute("t-set-slot", node.getAttribute("t-set"));
+                        node.removeAttribute("t-set");
                     }
                 }
+                const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
+                const slotNames = new Set();
                 const slotId = QWeb.nextSlotId++;
                 ctx.addLine(`w${componentID}.__owl__.slotId = ${slotId};`);
                 if (slotNodes.length) {
                     for (let i = 0, length = slotNodes.length; i < length; i++) {
                         const slotNode = slotNodes[i];
-                        slotNode.parentElement.removeChild(slotNode);
-                        let key = slotNode.getAttribute("t-set-slot");
-                        slotNode.removeAttribute("t-set-slot");
-                        // here again, this code should be removed when we stop supporting
-                        // using t-set to define the content of named slots.
-                        if (!key) {
-                            key = slotNode.getAttribute("t-set");
-                            slotNode.removeAttribute("t-set");
+                        // check if this is defined in a sub component (in which case it should
+                        // be ignored)
+                        let el = slotNode.parentElement;
+                        let isInSubComponent = false;
+                        while (el !== clone) {
+                            if (el.hasAttribute("t-component") ||
+                                el.tagName[0] === el.tagName[0].toUpperCase()) {
+                                isInSubComponent = true;
+                                break;
+                            }
+                            el = el.parentElement;
                         }
-                        const slotFn = qweb._compile(`slot_${key}_template`, slotNode, ctx);
+                        if (isInSubComponent) {
+                            continue;
+                        }
+                        let key = slotNode.getAttribute("t-set-slot");
+                        if (slotNames.has(key)) {
+                            continue;
+                        }
+                        slotNames.add(key);
+                        slotNode.removeAttribute("t-set-slot");
+                        slotNode.parentElement.removeChild(slotNode);
+                        const slotFn = qweb._compile(`slot_${key}_template`, { elem: slotNode, hasParent: true });
                         QWeb.slots[`${slotId}_${key}`] = slotFn;
                     }
                 }
@@ -3202,7 +3248,7 @@
                     for (let child of Object.values(clone.childNodes)) {
                         t.appendChild(child);
                     }
-                    const slotFn = qweb._compile(`slot_default_template`, t, ctx);
+                    const slotFn = qweb._compile(`slot_default_template`, { elem: t, hasParent: true });
                     QWeb.slots[`${slotId}_default`] = slotFn;
                 }
             }
@@ -5268,9 +5314,11 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.10';
-    exports.__info__.date = '2020-10-02T07:33:29.701Z';
-    exports.__info__.hash = 'e73fb46';
-    exports.__info__.url = 'https://github.com/odoo/owl';
+
+    __info__.version = '1.0.13';
+    __info__.date = '2020-10-26T07:38:42.693Z';
+    __info__.hash = 'd615ffd';
+    __info__.url = 'https://github.com/odoo/owl';
+
 
 }(this.owl = this.owl || {}));
