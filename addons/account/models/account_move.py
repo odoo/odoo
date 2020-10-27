@@ -3100,8 +3100,8 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
     def _compute_analytic_account(self):
         for record in self:
-            record.analytic_account_id = (record._origin or record).analytic_account_id
-            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
+            record.analytic_account_id = (record or record._origin).analytic_account_id
+            record.analytic_tag_ids = (record or record._origin).analytic_tag_ids
             if not record.exclude_from_invoice_tab:
                 rec = self.env['account.analytic.default'].account_get(
                     product_id=record.product_id.id,
