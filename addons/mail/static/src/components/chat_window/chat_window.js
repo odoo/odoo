@@ -275,12 +275,6 @@ class ChatWindow extends Component {
      * @private
      */
     _onFocusout() {
-        if (this._inputRef.comp) {
-            this._inputRef.comp.focusout();
-        }
-        if (this._threadRef.comp) {
-            this._threadRef.comp.focusout();
-        }
         if (!this.chatWindow) {
             // ignore focus out due to record being deleted
             return;
