@@ -52,7 +52,10 @@ class SaleOrder(models.Model):
     @api.onchange('partner_shipping_id')
     def onchange_partner_id_carrier_id(self):
         if self.partner_shipping_id:
-            self.carrier_id = self.partner_shipping_id.property_delivery_carrier_id.filtered('active')
+            self.carrier_id = (
+                self.partner_shipping_id.property_delivery_carrier_id or
+                self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
+            ).filtered('active')
 
     # TODO onchange sol, clean delivery price
 
