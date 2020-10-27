@@ -174,7 +174,7 @@ function factory(dependencies) {
          */
         _computeRecipients() {
             const recipients = [...this.mentionedPartners];
-            if (this.thread) {
+            if (this.thread && !this.isLog) {
                 for (const recipient of this.thread.suggestedRecipientInfoList) {
                     if (recipient.partner && recipient.isSelected) {
                         recipients.push(recipient.partner);
@@ -939,6 +939,7 @@ function factory(dependencies) {
         recipients: many2many('mail.partner', {
             compute: '_computeRecipients',
             dependencies: [
+                'isLog',
                 'mentionedPartners',
                 'threadSuggestedRecipientInfoListIsSelected',
                 // FIXME thread.suggestedRecipientInfoList.partner should be a
