@@ -93,7 +93,7 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
                 assert.deepEqual(args.args[0], [20],
                     "The right id is sent to the server to remove"
                 );
-                assert.strictEqual(args.args[1], 'leave',
+                assert.strictEqual(args.kwargs.command, 'leave',
                     "The right command is sent to the server"
                 );
             }

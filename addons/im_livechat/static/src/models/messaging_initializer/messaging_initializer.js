@@ -26,7 +26,7 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
             // flux specific: channels received at init have to be
             // considered pinned. task-2284357
             if (!channel.isPinned) {
-                channel.update({ isPendingPinned: true });
+                channel.pin();
             }
         }
     },
