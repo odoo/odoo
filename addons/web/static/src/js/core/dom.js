@@ -527,7 +527,7 @@ var dom = {
                 return sum + computeFloatOuterWidthWithMargins(el);
             }, 0);
 
-            if (maxWidth - menuItemsWidth >= -0.001) {
+            if (maxWidth - menuItemsWidth >= -0.001 || nbItems == 0) {
                 return;
             }
 
