@@ -543,6 +543,7 @@ body.editor_enable.editor_has_snippets {
                             content: "";
                             right: auto;
                             left: 22px;
+                            font-size: 12px;
                             position: absolute;
                             font-family: FontAwesome;
                         }
@@ -741,6 +742,7 @@ body.editor_enable.editor_has_snippets {
 
         // Checkboxes
         we-button.o_we_checkbox_wrapper.o_we_user_value_widget {
+            min-width: $o-we-sidebar-content-field-toggle-width;
             padding: 0;
             border: none;
             background: none;
@@ -849,7 +851,7 @@ body.editor_enable.editor_has_snippets {
                         flex-grow: 1;
                     }
 
-                    > div {
+                    > div, > we-title {
                         line-height: $o-we-sidebar-content-field-dropdown-item-height;
 
                         img, svg {
@@ -1784,6 +1786,12 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
+        }
+
+        &.o_top_cover > .o_handles > .o_overlay_options_wrap {
+            top: auto;
+            bottom: -$o-we-handles-offset-to-hide;
+            transform: translate(-50%, 110%);
         }
 
         &.o_we_overlay_preview {

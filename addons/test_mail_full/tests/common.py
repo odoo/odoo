@@ -2,7 +2,7 @@
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
-from odoo.addons.test_mail.tests.common import TestRecipients
+from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 
 
@@ -28,7 +28,7 @@ class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
         cls.partners = partners
 
 
-class TestRecipients(TestRecipients):
+class TestRecipients(common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):

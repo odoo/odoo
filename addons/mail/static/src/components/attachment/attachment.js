@@ -105,7 +105,7 @@ class Attachment extends Component {
      */
     _onClickDownload(ev) {
         ev.stopPropagation();
-        window.location = `/web/content/ir.attachment/${this.attachment.id}/datas?download=true`;
+        this.env.services.navigate(`/web/content/ir.attachment/${this.attachment.id}/datas`, { download: true });
     }
 
     /**

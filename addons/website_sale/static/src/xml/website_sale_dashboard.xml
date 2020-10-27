@@ -29,8 +29,14 @@
                 <div class="col-12 row o_box">
                     <t t-if="widget.dashboards_data.sales.summary.order_count">
                         <h2 class="col-lg-7 col-12">
-                            <t t-if="widget.date_range">
-                                Sales Since Last <t t-esc="widget.date_range"></t>
+                            <t t-if="widget.date_range=='week'">
+                                Sales Since Last Week
+                            </t>
+                            <t t-elif="widget.date_range=='month'">
+                                Sales Since Last Month
+                            </t>
+                            <t t-elif="widget.date_range=='year'">
+                                Sales Since Last Year
                             </t>
                             <t t-else="">Sales</t>
                         </h2>
@@ -43,8 +49,14 @@
                         </div>
                     </t>
                     <t t-if="! widget.dashboards_data.sales.summary.order_count">
-                        <t t-if="widget.date_range">
-                            <h2>Sales Since Last <t t-esc="widget.date_range"></t></h2>
+                        <t t-if="widget.date_range=='week'">
+                            <h2>Sales Since Last Week</h2>
+                        </t>
+                        <t t-elif="widget.date_range=='month'">
+                            <h2>Sales Since Last Month</h2>
+                        </t>
+                        <t t-elif="widget.date_range=='year'">
+                            <h2>Sales Since Last Year</h2>
                         </t>
                         <t t-else=""><h2>Sales</h2></t>
                         <div class="col-lg-12 col-12">

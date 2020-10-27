@@ -14,7 +14,7 @@
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website')}"/>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
 

@@ -936,7 +936,7 @@ class Task(models.Model):
     @api.depends('child_ids')
     def _compute_subtask_count(self):
         for task in self:
-            task.subtask_count = len(self._get_all_subtasks())
+            task.subtask_count = len(task._get_all_subtasks())
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
@@ -997,7 +997,7 @@ class Task(models.Model):
         if partner_ids:
             new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
             tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')
-            tasks.write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
+            tasks.sudo().write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
         return res
 
     # ----------------------------------------

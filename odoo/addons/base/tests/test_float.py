@@ -149,7 +149,7 @@ class TestFloatPrecision(TransactionCase):
         try_compare(-657.4444, -657.445, 1)
 
         # Rounding to unusual rounding units (e.g. coin values)
-        def try_round(amount, expected, precision_rounding=None, method='HALF-UP'):
+        def try_round(amount, expected, precision_rounding=None, method='HALF-UP'): # pylint: disable=function-redefined
             value = float_round(amount, precision_rounding=precision_rounding, rounding_method=method)
             result = float_repr(value, precision_digits=2)
             self.assertEqual(result, expected, 'Rounding error: got %s, expected %s' % (result, expected))

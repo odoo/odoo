@@ -32,9 +32,9 @@
                     try {
                         await $.ajax({url: '/hw_proxy/perform_flashing_create_partition/'}).promise();
                         $('.message-status').text('Prepare new boot partition.');
-                        await $.ajax({url: '/hw_proxy/perform_flashing_download_raspbian/'}).promise();
+                        await $.ajax({url: '/hw_proxy/perform_flashing_download_raspios/'}).promise();
                         $('.message-status').text('Download file for new boot partition.');
-                        await $.ajax({url: '/hw_proxy/perform_flashing_copy_raspbian/'}).promise();
+                        await $.ajax({url: '/hw_proxy/perform_flashing_copy_raspios/'}).promise();
                         $('.message-status').text('Prepare to restart and installation of the new version of the IoT Box.');
                         setTimeout(function() {
                         $('.message-status').text('The auto flash is almost finished - the page will be automatically reloaded');
@@ -73,7 +73,7 @@
         However the preferred method to upgrade the IoTBox is to flash the sd-card with
         the <a href='https://nightly.odoo.com/master/iotbox/iotbox-latest.zip'>latest image</a>. The upgrade
         procedure is explained into to the
-        <a href='https://www.odoo.com/documentation/user/13.0/iot.html'>IoTBox manual</a>
+        <a href='https://www.odoo.com/documentation/user/14.0/iot.html'>IoTBox manual</a>
     </p>
     <p>
         To upgrade the IoTBox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the IoTBox during the upgrade.

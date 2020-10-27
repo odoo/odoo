@@ -750,10 +750,15 @@ return AbstractRenderer.extend({
      * @param {moment} start
      * @param {moment} end
      * @param {boolean} showDayName
+     * @param {boolean} allDay
      */
-    _getFormattedDate: function (start, end, showDayName) {
+    _getFormattedDate: function (start, end, showDayName, allDay) {
         const isSameDayEvent = start.clone().add(1, 'minute')
             .isSame(end.clone().subtract(1, 'minute'), 'day');
+        if (allDay) {
+            // cancel correction done in _recordToCalendarEvent
+            end = end.clone().subtract(1, 'day');
+        }
         if (!isSameDayEvent && start.isSame(end, 'month')) {
             // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
             return start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
@@ -806,7 +811,6 @@ return AbstractRenderer.extend({
         }
 
         if (!this.hideDate) {
-            context.eventDate.date = this._getFormattedDate(start, end, true);
 
             if (eventData.extendedProps.record.allday && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
@@ -815,6 +819,8 @@ return AbstractRenderer.extend({
                 var days = moment.duration(end.diff(start)).days();
                 context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
             }
+
+            context.eventDate.date = this._getFormattedDate(start, end, true, eventData.extendedProps.record.allday);
         }
 
         return context;
@@ -874,7 +880,7 @@ return AbstractRenderer.extend({
         for (const event of events) {
             const start = moment(event.extendedProps.r_start);
             const end = moment(event.extendedProps.r_end);
-            const key = this._getFormattedDate(start, end, false);
+            const key = this._getFormattedDate(start, end, false, event.extendedProps.record.allday);
             if (!(key in groupedEvents)) {
                 groupedEvents[key] = [];
                 groupKeys.push({

@@ -24,9 +24,16 @@ class MassSMSTest(models.TransientModel):
         invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
         if invalid_numbers:
             raise exceptions.UserError(_('Following numbers are not correctly encoded: %s, example : "+32 495 85 85 77, +33 545 55 55 55"', repr(invalid_numbers)))
+        
+        record = self.env[self.mailing_id.mailing_model_real].search([], limit=1)
+        body = self.mailing_id.body_plaintext
+        if record:
+            # Returns a proper error if there is a syntax error with jinja
+            body = self.env['mail.render.mixin']._render_template(body, self.mailing_id.mailing_model_real, record.ids)[record.id]
+
         self.env['sms.api']._send_sms_batch([{
             'res_id': 0,
             'number': number,
-            'content': self.mailing_id.body_plaintext,
+            'content': body,
         } for number in sanitized_numbers])
         return True

@@ -673,9 +673,20 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 QUnit.test('display command suggestions on typing "/"', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -697,12 +708,23 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
     );
 });
 
-QUnit.test('use a command', async function (assert) {
+QUnit.test('use a command for a specific channel type', async function (assert) {
     assert.expect(4);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -739,13 +761,56 @@ QUnit.test('use a command', async function (assert) {
     );
 });
 
+QUnit.test("channel with no commands should not prompt any command suggestions on typing /", async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ channel_type: 'chat', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "bla bla bla",
+            name: "who",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerTextInput_textarea').focus();
+        document.execCommand('insertText', false, "/");
+    });
+    await afterNextRender(() => {
+        const composer_text_input = document.querySelector('.o_ComposerTextInput_textarea');
+        composer_text_input.dispatchEvent(new window.KeyboardEvent('keydown'));
+        composer_text_input.dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should not prompt (command) suggestion after typing / (reason: no channel commands in chat channels)"
+    );
+});
+
 QUnit.test('use a command after some text', async function (assert) {
     assert.expect(5);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
-
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
@@ -792,9 +857,20 @@ QUnit.test('use a command after some text', async function (assert) {
 QUnit.test('add an emoji after a command', async function (assert) {
     assert.expect(5);
 
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1880,7 +1956,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     });
 });
 
-QUnit.test("basic rendering when sending a message to the followers and thread doesn't have a name", async function (assert) {
+QUnit.test("Show a default status in the recipient status text when the thread doesn't have a name.", async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1894,6 +1970,24 @@ QUnit.test("basic rendering when sending a message to the followers and thread d
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersofthisdocument",
         "Composer should display \"To: Followers of this document\" if the thread as no name."
+    );
+});
+
+QUnit.test("Show a thread name in the recipient status text.", async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        name: "test name",
+        composer: [['create', { isLog: false }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer, { hasFollowers: true });
+    assert.strictEqual(
+        document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
+        "To:Followersof\"testname\"",
+        "basic rendering when sending a message to the followers and thread does have a name"
     );
 });
 

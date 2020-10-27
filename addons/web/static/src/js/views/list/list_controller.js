@@ -7,6 +7,7 @@ odoo.define('web.ListController', function (require) {
  * and bind all extra buttons/pager in the control panel.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
@@ -636,6 +637,7 @@ var ListController = BasicController.extend({
             const state = this.model.get(this.handle, {raw: true});
             this.$selectionBox = $(qweb.render('ListView.selection', {
                 isDomainSelected: this.isDomainSelected,
+                isMobile: config.device.isMobile,
                 isPageSelected: this.isPageSelected,
                 nbSelected: this.selectedRecords.length,
                 nbTotal: state.count,

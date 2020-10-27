@@ -5,6 +5,7 @@
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing')
@@ -147,3 +148,32 @@ class TestMassSMS(TestMailFullCommon):
             [{'partner': record.customer_id, 'number': self.records_numbers[i+5], 'content': 'Dear %s this is a mass SMS.' % record.display_name} for i, record in enumerate(self.records[5:])],
             self.mailing, self.records[5:], check_sms=True
         )
+
+    @mute_logger('odoo.addons.mail.models.mail_render_mixin')
+    def test_mass_sms_test_button(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestButton',
+            'subject': 'Subject ${object.name}',
+            'preview': 'Preview ${object.name}',
+            'state': 'draft',
+            'mailing_type': 'sms',
+            'body_plaintext': 'Hello ${object.name}',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
+            'numbers': '+32456001122',
+            'mailing_id': mailing.id,
+        })
+
+        with self.with_user('user_marketing'):
+            with self.mockSMSGateway():
+                mailing_test.action_send_sms()
+
+        # Test if bad jinja in the body raises an error
+        mailing.write({
+            'body_plaintext': 'Hello ${object.name_id.id}',
+        })
+
+        with self.with_user('user_marketing'):
+            with self.mock_mail_gateway(), self.assertRaises(Exception):
+                mailing_test.action_send_sms()

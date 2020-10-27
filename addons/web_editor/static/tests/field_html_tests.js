@@ -430,9 +430,8 @@ QUnit.module('web_editor', {}, function () {
 
         QUnit.module('cssReadonly');
 
-        // TODO : need to be checked and fixed to pass with new JW editor
-        QUnit.skip('rendering with iframe for readonly mode', async function (assert) {
-            assert.expect(3);
+        QUnit.test('rendering with iframe for readonly mode', async function (assert) {
+            assert.expect(2);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -444,18 +443,12 @@ QUnit.module('web_editor', {}, function () {
                 res_id: 1,
             });
             var $field = form.$('.oe_form_field[name="body"]');
-            var $iframe = $field.find('iframe.o_readonly');
-            await $iframe.data('loadDef');
-            var doc = $iframe.contents()[0];
-            assert.strictEqual($(doc).find('#iframe_target').html(),
-                '<p>toto toto toto</p><p>tata</p>',
-                "should have rendered a div with correct content in readonly");
-
-            assert.strictEqual(doc.defaultView.getComputedStyle(doc.body).backgroundColor,
-                'rgb(255, 0, 0)',
-                "should load the asset css");
+            assert.strictEqual($field[0].shadowRoot.innerHTML,
+                '<style type="text/css">body {background-color: red;}</style><p>toto toto toto</p><p>tata</p>',
+                "should have rendered a div with correct content in readonly and should load the asset css");
 
             await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
 
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.find('.note-editable').html(),

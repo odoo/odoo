@@ -4,10 +4,10 @@
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.portal.controllers import mail
 
 
-class PortalChatter(PortalChatter):
+class PortalChatter(mail.PortalChatter):
 
     def _portal_post_filter_params(self):
         fields = super(PortalChatter, self)._portal_post_filter_params()

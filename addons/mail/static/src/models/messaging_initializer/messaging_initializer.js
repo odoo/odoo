@@ -153,8 +153,18 @@ function factory(dependencies) {
                 // there might be a lot of channels, insert each of them one by
                 // one asynchronously to avoid blocking the UI
                 await this.async(() => new Promise(resolve => setTimeout(resolve)));
+                const convertedData = this.env.models['mail.thread'].convertData(channelData);
+                if (!convertedData.members) {
+                    // channel_info does not return all members of channel for
+                    // performance reasons, but code is expecting to know at
+                    // least if the current partner is member of it.
+                    // (e.g. to know when to display "invited" notification)
+                    // Current partner can always be assumed to be a member of
+                    // channels received at init.
+                    convertedData.members = [['link', this.env.messaging.currentPartner]];
+                }
                 const channel = this.env.models['mail.thread'].insert(
-                    this.env.models['mail.thread'].convertData(channelData)
+                    Object.assign({ model: 'mail.channel' }, convertedData)
                 );
                 // flux specific: channels received at init have to be
                 // considered pinned. task-2284357
@@ -237,74 +247,36 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} current_partner
-         * @param {boolean} current_partner.active
-         * @param {string} current_partner.display_name
-         * @param {integer} current_partner.id
-         * @param {string} current_partner.name
          * @param {integer} current_user_id
          * @param {integer[]} moderation_channel_ids
          * @param {Object} partner_root
-         * @param {boolean} partner_root.active
-         * @param {string} partner_root.display_name
-         * @param {integer} partner_root.id
-         * @param {string} partner_root.name
          * @param {Object} public_partner
-         * @param {boolean} public_partner.active
-         * @param {string} public_partner.display_name
-         * @param {integer} public_partner.id
-         * @param {string} public_partner.name
          */
         _initPartners({
-            current_partner: {
-                active: currentPartnerIsActive,
-                display_name: currentPartnerDisplayName,
-                id: currentPartnerId,
-                name: currentPartnerName,
-            },
+            current_partner,
             current_user_id: currentUserId,
             moderation_channel_ids = [],
-            partner_root: {
-                active: partnerRootIsActive,
-                display_name: partnerRootDisplayName,
-                id: partnerRootId,
-                name: partnerRootName,
-            },
-            public_partner: {
-                active: publicPartnerIsActive,
-                display_name: publicPartnerDisplayName,
-                id: publicPartnerId,
-                name: publicPartnerName,
-            },
+            partner_root,
+            public_partner,
         }) {
             this.messaging.update({
-                currentPartner: [['insert', {
-                    active: currentPartnerIsActive,
-                    display_name: currentPartnerDisplayName,
-                    id: currentPartnerId,
-                    moderatedChannels: [
-                        ['insert', moderation_channel_ids.map(id => {
-                            return {
-                                id,
-                                model: 'mail.channel',
-                            };
-                        })],
-                    ],
-                    name: currentPartnerName,
-                    user: [['insert', { id: currentUserId }]],
-                }]],
+                currentPartner: [['insert', Object.assign(
+                    this.env.models['mail.partner'].convertData(current_partner),
+                    {
+                        moderatedChannels: [
+                            ['insert', moderation_channel_ids.map(id => {
+                                return {
+                                    id,
+                                    model: 'mail.channel',
+                                };
+                            })],
+                        ],
+                        user: [['insert', { id: currentUserId }]],
+                    }
+                )]],
                 currentUser: [['insert', { id: currentUserId }]],
-                partnerRoot: [['insert', {
-                    active: partnerRootIsActive,
-                    display_name: partnerRootDisplayName,
-                    id: partnerRootId,
-                    name: partnerRootName,
-                }]],
-                publicPartner: [['insert', {
-                    active: publicPartnerIsActive,
-                    display_name: publicPartnerDisplayName,
-                    id: publicPartnerId,
-                    name: publicPartnerName,
-                }]],
+                partnerRoot: [['insert', this.env.models['mail.partner'].convertData(partner_root)]],
+                publicPartner: [['insert', this.env.models['mail.partner'].convertData(public_partner)]],
             });
         }
 

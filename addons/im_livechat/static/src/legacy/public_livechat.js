@@ -48,6 +48,7 @@ var LivechatButton = Widget.extend({
         'close_chat_window': '_onCloseChatWindow',
         'post_message_chat_window': '_onPostMessageChatWindow',
         'save_chat_window': '_onSaveChatWindow',
+        'updated_typing_partners': '_onUpdatedTypingPartners',
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
@@ -187,6 +188,17 @@ var LivechatButton = Widget.extend({
                     channel_uuid: this._livechat.getUUID(),
                     page_history: history,
                 });
+            } else if (notificationData.info === 'typing_status') {
+                const partnerID = notificationData.partner_id;
+                if (partnerID === this.options.current_partner_id) {
+                    // ignore typing display of current partner.
+                    return;
+                }
+                if (notificationData.is_typing) {
+                    this._livechat.registerTyping({ partnerID });
+                } else {
+                    this._livechat.unregisterTyping({ partnerID });
+                }
             } else if ('body' in notificationData) { // normal message
                 // If message from notif is already in chatter messages, stop handling
                 if (this._messages.some(message => message.getID() === notificationData.id)) {
@@ -429,6 +441,14 @@ var LivechatButton = Widget.extend({
     _onSaveChatWindow: function (ev) {
         ev.stopPropagation();
         utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData())), 60 * 60);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onUpdatedTypingPartners(ev) {
+        ev.stopPropagation();
+        this._chatWindow.renderHeader();
     },
     /**
      * @private

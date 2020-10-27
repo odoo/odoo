@@ -219,6 +219,20 @@ var Wysiwyg = Widget.extend({
                             },
                         },
                     },
+
+                    // s_process_step
+                    {
+                        selector: [node => {
+                            const attributes = node.modifiers.find(this.JWEditorLib.Attributes);
+                            return attributes && attributes.classList.has('s_process_step_icon');
+                        }],
+                        properties: {
+                            editable: {
+                                value: false,
+                                cascading: true,
+                            },
+                        },
+                    },
                 ],
             };
         }
@@ -263,11 +277,18 @@ var Wysiwyg = Widget.extend({
                 describeImage: { handler: this.describeImage.bind(this) },
             });
         }
+        const plugins = []
+        if (this.options.enableWebsite && !this.options.enableTranslation) {
+            plugins.push([JWEditorLib.OdooField]);
+        }
+        if (this.options.enableResizer) {
+            plugins.push([JWEditorLib.Resizer]);
+        }
         this.editor = new JWEditorLib.OdooWebsiteEditor(Object.assign({}, this.options, {
             snippetMenuElement: $mainSidebar[0],
             snippetManipulators: $snippetManipulators[0],
             customCommands: Object.assign(customCommands, this.options.customCommands),
-            plugins: this.options.enableWebsite && !this.options.enableTranslation ? [[this.JWEditorLib.OdooField]] : [],
+            plugins: plugins,
             source: this.value,
             location: this.options.location || [this.el, 'replace'],
             mode: this._modeConfig,
@@ -291,7 +312,7 @@ var Wysiwyg = Widget.extend({
         if (this.options.enableWebsite) {
             const $wrapwrap = $('#wrapwrap');
             $wrapwrap.removeClass('o_editable'); // clean the dom before edition
-            this._getEditable($wrapwrap).addClass('o_editable');
+            this._getEditable($wrapwrap).addClass('o_editable o_editable_no_shadow');
             $wrapwrap.data('wysiwyg', this);
 
             // add class when page content is empty to show the "DRAG BUILDING BLOCKS HERE" block
@@ -659,6 +680,8 @@ var Wysiwyg = Widget.extend({
                     initialClassNames: classes,
                     colorCombinationClass: colorCombinationClass,
                     target: target,
+
+                    __editorEditable: this.editorEditable,
                 },
             },
         );
@@ -681,7 +704,7 @@ var Wysiwyg = Widget.extend({
         });
     },
     openMediaDialog(params) {
-        const nodes = params.context.range.selectedNodes();
+        const nodes = params.media ? [params.media] : params.context.range.selectedNodes();
         const node = nodes[0];
         let $baseNode;
 
@@ -727,8 +750,8 @@ var Wysiwyg = Widget.extend({
         return this._saveWebsiteContent(context)
             .then(() => {
                 this.trigger_up('edition_was_stopped');
+                window.onbeforeunload = null;
                 if (reload) {
-                    window.onbeforeunload = null;
                     window.location.reload();
                 }
             }).catch(error => {
@@ -1254,7 +1277,8 @@ var Wysiwyg = Widget.extend({
             this.editor.execCommand(setCommandId, {color: color});
         }
         const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
-        $jwButton.css("background-color", color);
+        // Only adapt the color preview in the toolbar for the web_editor.
+        if(this.options.snippets) $jwButton.css("background-color", color);
         if(closeColorPicker) {
             $jwButton.dropdown("toggle");
             colorpicker.selectedColor = '';

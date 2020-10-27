@@ -356,8 +356,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_attrs(self, model, name):
         """ Initialize the field parameter attributes. """
-        # validate extra arguments
-        for key in self.args:
+        attrs = self._get_attrs(model, name)
+        # validate arguments
+        for key in attrs:
             # TODO: improve filter as there are attributes on the class which
             #       are not valid on the field, probably
             if not (hasattr(self, key) or model._valid_field_parameter(self, key)):
@@ -368,8 +369,6 @@ class Field(MetaField('DummyField', (object,), {})):
                     " allow it",
                     model._name, name, key
                 )
-
-        attrs = self._get_attrs(model, name)
         self.__dict__.update(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields

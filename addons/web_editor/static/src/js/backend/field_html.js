@@ -43,6 +43,13 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     /**
      * @override
      */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.enableResizer = true;
+    },
+    /**
+     * @override
+     */
     willStart: async function () {
         await this._super();
         if (this.nodeOptions.cssReadonly) {
@@ -191,6 +198,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 res_model: this.model,
                 res_id: this.res_id,
             },
+            enableResizer: this.enableResizer,
             noAttachment: this.nodeOptions['no-attachment'],
             snippets: this.nodeOptions.snippets,
             value: this.value || '',
@@ -215,7 +223,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     <div class="o_debug_zone">
                         <t t-zone="debug"/>
                     </div>
-                </div>`,
+                </div>` +
+                (this.enableResizer ? ` <t t-zone="resizer"/>` : ''),
         });
     },
     /**

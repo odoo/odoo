@@ -6,6 +6,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var Widget = require('web.Widget');
+var config = require('web.config');
 var snippetOptions = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
@@ -45,6 +46,7 @@ var SnippetEditor = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     events: {
         'click .oe_snippet_remove': '_onRemoveClick',
+        'wheel': '_onMouseWheel',
     },
     custom_events: {
         'option_update': '_onOptionUpdate',
@@ -256,11 +258,38 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (!this.isShown() || !this.$snippetBlock.length || !this.$snippetBlock.is(':visible')) {
+        if (!this.isShown() || !this.$snippetBlock.length) {
             return;
         }
+
         const $modal = this.$snippetBlock.find('.modal');
         const $target = $modal.length ? $modal : this.$snippetBlock;
+        const targetEl = $target[0];
+
+        // Check first if the target is still visible, otherwise we have to
+        // hide it. When covering all element after scroll for instance it may
+        // have been hidden (part of an affixed header for example) or it may
+        // be outside of the viewport (the whole header during an effect for
+        // example).
+        const rect = targetEl.getBoundingClientRect();
+        const vpWidth = window.innerWidth || document.documentElement.clientWidth;
+        const vpHeight = window.innerHeight || document.documentElement.clientHeight;
+        const isInViewport = (
+            rect.bottom > -0.1 &&
+            rect.right > -0.1 &&
+            (vpHeight - rect.top) > -0.1 &&
+            (vpWidth - rect.left) > -0.1
+        );
+        const hasSize = ( // :visible not enough for images
+            Math.abs(rect.bottom - rect.top) > 0.01 &&
+            Math.abs(rect.right - rect.left) > 0.01
+        );
+        if (!isInViewport || !hasSize || !this.$snippetBlock.is(`:visible`)) {
+            this.toggleOverlayVisibility(false);
+            return;
+        }
+
+        // Now cover the element
         const offset = $target.offset();
         var manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
@@ -271,7 +300,9 @@ var SnippetEditor = Widget.extend({
             top: offset.top,
         });
         this.$('.o_handles').css('height', $target.outerHeight());
-        this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
+
+        const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
+        this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 25);
     },
     /**
      * DOMElements have a default name which appears in the overlay when they
@@ -894,6 +925,21 @@ var SnippetEditor = Widget.extend({
             }
         }
     },
+    /**
+     * Called when the 'mouse wheel' is used when hovering over the overlay.
+     * Disable the pointer events to prevent page scrolling from stopping.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseWheel: function (ev) {
+        ev.stopPropagation();
+        this.$el.css('pointer-events', 'none');
+        clearTimeout(this.wheelTimeout);
+        this.wheelTimeout = setTimeout(() => {
+            this.$el.css('pointer-events', '');
+        }, 250);
+    },
 });
 
 /**
@@ -1086,13 +1132,19 @@ var SnippetsMenu = Widget.extend({
         // On keydown add a class on the active overlay to hide it and show it
         // again when the mouse moves
         this.$document.on('keydown.snippets_menu', () => {
+            this.__overlayKeyWasDown = true;
             this.snippetEditors.forEach(editor => {
                 editor.toggleOverlayVisibility(false);
             });
         });
         this.$document.on('mousemove.snippets_menu, mousedown.snippets_menu', _.throttle(() => {
+            if (!this.__overlayKeyWasDown) {
+                return;
+            }
+            this.__overlayKeyWasDown = false;
             this.snippetEditors.forEach(editor => {
                 editor.toggleOverlayVisibility(true);
+                editor.cover();
             });
             this.updateCurrentSnippetEditorOverlay();
         }, 250));
@@ -2067,18 +2119,17 @@ var SnippetsMenu = Widget.extend({
 
                         _.defer(async () => {
                             self.trigger_up('snippet_dropped', {$target: $snippetToInsert});
+
+                            await self._callForEachChildSnippet($snippetToInsert, function (editor) {
+                                return editor.buildSnippet();
+                            });
+
                             const jwEditor = self.wysiwyg.editor;
                             const vNodes = await self._insertSnippet($snippetToInsert);
-                            const layout = jwEditor.plugins.get(self.JWEditorLib.Layout);
-                            const domLayout = layout.engines.dom;
-                            const domNode = domLayout.getDomNodes(vNodes[0])[0];
+
                             self._disableUndroppableSnippets();
 
                             self.dragAndDropResolve();
-
-                            await self._callForEachChildSnippet($(domNode), function (editor) {
-                                return editor.buildSnippet();
-                            });
 
                             $snippetToInsert.trigger('content_changed');
                             await self._updateInvisibleDOM();
@@ -2848,8 +2899,17 @@ var SnippetsMenu = Widget.extend({
     /**
      * On click on discard button.
      */
-    _onMobilePreviewClick: function() {
-        this.wysiwyg.editor.execCommand('toggleDevicePreview', { device: 'mobile' });
+    _onMobilePreviewClick: async function() {
+        await this.wysiwyg.editor.execCommand('toggleDevicePreview', { device: 'mobile' });
+        await new Promise(r => setTimeout(r)); // Wait browser redrawing (because the commands use microtask and not setTimeout)
+        const $iframe = this.$el.closest('.wrap_editor').find('iframe[name="jw-iframe"]');
+        if ($iframe.length) {
+            config.device.isMobile = true;
+            config.device.bus.trigger('size_changed', 0);
+        } else {
+            config.device.isMobile = config.device.size_class <= config.device.SIZES.SM;
+            config.device.bus.trigger('size_changed', config.device.size_class);
+        }
     },
     /**
      * Set the last snippet activated.

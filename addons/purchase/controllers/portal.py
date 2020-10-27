@@ -10,11 +10,12 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, Response
 from odoo.tools import image_process
 from odoo.tools.translate import _
-from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
+from odoo.addons.portal.controllers import portal
+from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.web.controllers.main import Binary
 
 
-class CustomerPortal(CustomerPortal):
+class CustomerPortal(portal.CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)

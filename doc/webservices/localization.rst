@@ -138,7 +138,7 @@ Each ``account.account.template`` is able to create an ``account.account`` for e
 Some of the described fields above deserve a bit more explanation.
 
 The ``user_type_id`` field requires a value of type ``account.account.type``.
-Although some additional types could be created in a localization module, we encourage the usage of the existing types in the `account/data/data_account_type.xml <https://github.com/odoo/odoo/blob/13.0/addons/account/data/data_account_type.xml>`_ file.
+Although some additional types could be created in a localization module, we encourage the usage of the existing types in the `account/data/data_account_type.xml <https://github.com/odoo/odoo/blob/14.0/addons/account/data/data_account_type.xml>`_ file.
 The usage of these generic types ensures the generic reports working correctly in addition to those that you could create in your localization module.
 
 .. warning::

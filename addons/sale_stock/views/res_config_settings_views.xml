@@ -32,19 +32,6 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="production_lot_info" position="inside">
-                <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_invoice">
-                    <div class="o_setting_left_pane">
-                        <field name="group_lot_on_invoice"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="group_lot_on_invoice"/>
-                        <div class="text-muted">
-                            Lots &amp; Serial numbers will appear on the invoice
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div id="warning_info" position="after">
                 <div class="col-12 col-lg-6 o_setting_box">
                     <div class="o_setting_right_pane">
@@ -83,7 +70,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="use_security_lead"/>
-                        <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/planning/scheduled_date.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                        <a href="https://www.odoo.com/documentation/user/14.0/inventory/management/planning/scheduled_date.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
                         <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
                         <div class="text-muted">
                             Schedule deliveries earlier to avoid delays

@@ -1,56 +1,3 @@
-jw-editor {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-jw-editor {
-    display: flex;
-    flex-direction: column;
-}
-
-.jw-dropdown {
-    display: inline-block;
-}
-.jw-dropdown .dropdown-menu {
-    min-width: 250px;
-    border: 1px solid #000;
-    background-color: #141217;
-}
-
-jw-toolbar input {
-    color: #C6C6C6;
-}
-table.table-picker {
-    position: absolute;
-    background-color: white;
-    border: 1px solid black;
-    -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
-    -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
-    box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
-}
-table.table-picker tr {
-    height: 1em;
-    padding: 0;
-}
-table.table-picker td {
-    width: 1em;
-    border: 1px solid black;
-    padding: 0;
-}
-table.table-picker td.highlight {
-    background-color: #875A7B;
-}
-#jw-device-preview {
-    border-width: 80px 14px 40px;
-    border-radius: 16px;
-    border-style: solid;
-    border-color: #000;
-    background-color: white;
-    width: 400px;
-    height: 700px;
-    margin: auto;
-    display: block;
-}
 ul.checklist > li {
     list-style: none;
     position: relative;
@@ -79,6 +26,28 @@ ul.checklist > li.checked:after {
     transition: opacity .5s;
     opacity: 1;
 }
+
+table.table-picker {
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
+}
+table.table-picker tr {
+    height: 1em;
+    padding: 0;
+}
+table.table-picker td {
+    width: 1em;
+    border: 1px solid black;
+    padding: 0;
+}
+table.table-picker td.highlight {
+    background-color: #875A7B;
+}
+
 jw-dialog-container {
     position: fixed;
     top: 0;
@@ -123,9 +92,17 @@ jw-dialog-container jw-dialog table.form-table {
 jw-dialog-container jw-dialog table.form-table td {
     border: none;
 }
+
 jw-follow-range {
     position: absolute;
 }
+
+jw-editor {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
 .jw-fullscreen .jw-fullscreen {
     display: block;
     position: fixed;
@@ -142,6 +119,37 @@ jw-follow-range {
 .jw-fullscreen jw-follow-range {
     z-index: 1;
 }
+
+jw-editor {
+    display: flex;
+    flex-direction: column;
+}
+
+.jw-dropdown {
+    display: inline-block;
+}
+.jw-dropdown .dropdown-menu {
+    min-width: 250px;
+    border: 1px solid #000;
+    background-color: #141217;
+}
+
+jw-toolbar input {
+    color: #C6C6C6;
+}
+
+#jw-device-preview {
+    border-width: 80px 14px 40px;
+    border-radius: 16px;
+    border-style: solid;
+    border-color: #000;
+    background-color: white;
+    width: 400px;
+    height: 700px;
+    margin: auto;
+    display: block;
+}
+
 jw-group[name="templates"] .label {
     width: 90px;
 }
@@ -152,6 +160,7 @@ jw-templates {
     background-color: #ffffff;
     padding: 3px;
     display: block;
+    overflow: auto;
 }
 jw-templates ~ * {
     display: none !important;
@@ -196,4 +205,27 @@ jw-templates jw-template:hover jw-thumb {
 
 jw-templates jw-template img {
     width: 100%;
+}
+
+jw-resizer{
+    display: block;
+    height: 7px;
+    background-color: #eee;
+    border-top: 1px solid #999;
+    text-align: center;
+    width: 100%;
+    line-height: 6px;
+    position: absolute;
+    bottom: 0;
+    cursor: row-resize;
+}
+
+jw-resizer::before {
+    content: "☰";
+    font-size: 6px;
+    margin-top: 1px;
+    display: inline-block;
+    transform: scale(5,1);
+    color: black;
+    vertical-align: middle;
 }

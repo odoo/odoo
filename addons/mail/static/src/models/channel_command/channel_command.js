@@ -10,7 +10,10 @@ function factory(dependencies) {
 
     ChannelCommand.fields = {
         /**
-         * FIXME use this value task-2343850
+         * Determines on which channel types `this` is available.
+         * Type of the channel (e.g. 'chat', 'channel' or 'groups')
+         * This field should contain an array when filtering is desired.
+         * Otherwise, it should be undefined when all types are allowed.
          */
         channel_types: attr(),
         /**

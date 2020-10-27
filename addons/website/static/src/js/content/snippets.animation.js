@@ -981,6 +981,20 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         const $main = this.$('> main');
         const slideoutEffect = $main.outerHeight() >= $(window).outerHeight();
         this.el.classList.toggle('o_footer_effect_enable', slideoutEffect);
+
+        // Add a pixel div over the footer, after in the DOM, so that the
+        // height of the footer is understood by Firefox sticky implementation
+        // (which it seems to not understand because of the combination of 3
+        // items: the footer is the last :visible element in the #wrapwrap, the
+        // #wrapwrap uses flex layout and the #wrapwrap is the element with a
+        // scrollbar).
+        // TODO check if the hack is still needed by future browsers.
+        this.__pixelEl = document.createElement('div');
+        this.__pixelEl.style.width = `1px`;
+        this.__pixelEl.style.height = `1px`;
+        this.__pixelEl.style.marginTop = `-1px`;
+        this.el.appendChild(this.__pixelEl);
+
         return this._super(...arguments);
     },
     /**
@@ -989,6 +1003,7 @@ registry.FooterSlideout = publicWidget.Widget.extend({
     destroy() {
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
+        this.__pixelEl.remove();
     },
 });
 

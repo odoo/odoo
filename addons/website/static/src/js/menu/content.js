@@ -792,18 +792,22 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     }),
     pageOptionsSetValueCallbacks: {
         header_overlay: async function (value, wysiwyg) {
+            const $wrapwrap = $('#wrapwrap');
+            wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
             if (value) {
-                await this.editorHelpers.addClass(wysiwyg.editor, $('#wrapwrap')[0], 'o_header_overlay');
+                await wysiwyg.editorHelpers.addClass(wysiwyg.editor, $wrapwrap[0], 'o_header_overlay');
             } else {
-                await this.editorHelpers.removeClass(wysiwyg.editor, $('#wrapwrap')[0], 'o_header_overlay');
+                await wysiwyg.editorHelpers.removeClass(wysiwyg.editor, $wrapwrap[0], 'o_header_overlay');
             }
         },
         header_color: async function (value, wysiwyg) {
+            const $wrapwrap = $('#wrapwrap');
+            wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
             const ContentMenuHeaderColor = async (context) => {
-                await this.editorHelpers.removeClass(context, $('#wrapwrap > header')[0], this.value);
-                await this.editorHelpers.addClass(context, $('#wrapwrap > header')[0], value);
+                await wysiwyg.editorHelpers.removeClass(context, $wrapwrap.find('>header')[0], this.value);
+                await wysiwyg.editorHelpers.addClass(context, $wrapwrap.find('>header')[0], value);
             };
-            await this.wysiwyg.editor.execCommand(ContentMenuHeaderColor);
+            await wysiwyg.editor.execCommand(ContentMenuHeaderColor);
         },
         header_visible: function (value) {
             $('#wrapwrap > header').toggleClass('d-none o_snippet_invisible', !value);
@@ -922,7 +926,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 return self._togglePageOption({
                     name: optionName,
                     value: option.value,
-                    wysiwyg: options.wysiwyg,
+                    wysiwyg: option.wysiwyg,
                 }, true, true);
             }
         });

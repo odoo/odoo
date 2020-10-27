@@ -479,6 +479,12 @@ table.table_desc tr td {
         width: 8%;
         opacity: 1;
     }
+    @include media-breakpoint-down(sm) {
+        .carousel-control-prev,
+        .carousel-control-next {
+            display: none; // remove arrows on mobile
+        }
+    }
     .carousel-control-prev { justify-content: flex-start; }
     .carousel-control-next { justify-content: flex-end; }
     .carousel-control-prev-icon,
@@ -534,6 +540,9 @@ table.table_desc tr td {
     // Border
     &.s_carousel_bordered {
         border: 2rem solid rgba(0,0,0,0);
+        @include media-breakpoint-down(sm) {
+            border: 0.5rem solid rgba(0,0,0,0);
+        }
         // Controls - caret
         .carousel-control-prev-icon:before { content: "\f0d9"; }
         .carousel-control-next-icon:before { content: "\f0da"; }
@@ -1218,8 +1227,7 @@ header {
                 }
             }
             > footer {
-                @include o-position-absolute(0, 0, 0, 0);
-                position: sticky;
+                @include o-position-sticky(auto, 0, 0, 0);
                 z-index: -1;
             }
         }
@@ -1227,15 +1235,23 @@ header {
 }
 
 // Language selector
-.js_language_selector .dropdown-menu {
-    min-width: 0;
+.js_language_selector {
+    .dropdown-menu {
+        min-width: 0;
+    }
+    a.list-inline-item {
+        padding: 3px 0;
+
+        > * {
+            vertical-align: middle;
+        }
+    }
 }
 .o_lang_flag {
     width: 1.5em;
     height: 1.5em;
     margin-right: 0.2em;
     border-radius: $rounded-pill;
-    vertical-align: top;
 }
 
 // Footer scrolltop button

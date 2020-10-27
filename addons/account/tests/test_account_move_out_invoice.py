@@ -1919,6 +1919,28 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
         })
 
+    def test_out_invoice_create_child_partner(self):
+        # Test creating an account_move on a child partner.
+        # This needs to attach the lines to the parent partner id.
+        partner_a_child = self.env['res.partner'].create({
+            'name': 'partner_a_child',
+            'parent_id': self.partner_a.id
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_a_child.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+                (0, None, self.product_line_vals_2),
+            ]
+        })
+
+        self.assertEqual(partner_a_child.id, move.partner_id.id, 'Keep child partner on the account move record')
+        self.assertEqual(self.partner_a.id, move.line_ids[0].partner_id.id, 'Set parent partner on the account move line records')
+
     def test_out_invoice_write_1(self):
         # Test creating an account_move with the least information.
         move = self.env['account.move'].create({
@@ -2684,3 +2706,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice_onchange = move_form.save()
 
         _check_invoice_values(invoice_onchange)
+
+    def test_out_invoice_multiple_switch_payment_terms(self):
+        ''' When switching immediate payment term to 30% advance then back to immediate payment term, ensure the
+        receivable line is back to its previous value. If some business fields are not well updated, it could lead to a
+        recomputation of debit/credit when writing and then, an unbalanced journal entry.
+        '''
+        # assertNotUnbalancedEntryWhenSaving
+        with Form(self.invoice) as move_form:
+            move_form.invoice_payment_term_id = self.pay_terms_b    # Switch to 30% in advance payment terms
+            move_form.invoice_payment_term_id = self.pay_terms_b    # Back to immediate payment term

@@ -53,6 +53,7 @@ var LinkDialog = Dialog.extend({
         // data is used in the dialog template.
         this.props = options.props || {};
 
+        this.__editorEditable = this.props.__editorEditable;
         this.colorCombinationClass = this.props.colorCombinationClass;
 
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;

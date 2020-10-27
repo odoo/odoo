@@ -1824,13 +1824,15 @@ exports.Orderline = Backbone.Model.extend({
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with: function(orderline){
         var price = parseFloat(round_di(this.price || 0, this.pos.dp['Product Price']).toFixed(this.pos.dp['Product Price']));
+        var order_line_price = orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity());
+        order_line_price = orderline.compute_fixed_price(order_line_price);
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
         }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){
             return false;
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
-        }else if(!utils.float_is_zero(price - orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity()) - orderline.get_price_extra(),
+        }else if(!utils.float_is_zero(price - order_line_price - orderline.get_price_extra(),
                     this.pos.currency.decimals)){
             return false;
         }else if(this.product.tracking == 'lot') {
@@ -1922,7 +1924,9 @@ exports.Orderline = Backbone.Model.extend({
     // changes the base price of the product for this orderline
     set_unit_price: function(price){
         this.order.assert_editable();
-        var parsed_price = isNaN(parseFloat(price)) ? 0 : field_utils.parse.float('' + price)
+        var parsed_price = !isNaN(price) ?
+            price :
+            isNaN(parseFloat(price)) ? 0 : field_utils.parse.float('' + price)
         this.price = round_di(parsed_price || 0, this.pos.dp['Product Price']);
         this.trigger('change',this);
     },
@@ -2077,7 +2081,7 @@ exports.Orderline = Backbone.Model.extend({
      *
      * Read comments in the python side method for more details about each sub-methods.
      */
-    compute_all: function(taxes, price_unit, quantity, currency_rounding) {
+    compute_all: function(taxes, price_unit, quantity, currency_rounding, handle_price_include=true) {
         var self = this;
 
         // 1) Flatten the taxes.
@@ -2144,34 +2148,35 @@ exports.Orderline = Backbone.Model.extend({
         var incl_division_amount = 0.0;
 
         var cached_tax_amounts = {};
-
-        _(taxes.reverse()).each(function(tax){
-            if(tax.include_base_amount){
-                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
-                incl_fixed_amount = 0.0;
-                incl_percent_amount = 0.0;
-                incl_division_amount = 0.0;
-                store_included_tax_total = true;
-            }
-            if(tax.price_include){
-                if(tax.amount_type === 'percent')
-                    incl_percent_amount += tax.amount;
-                else if(tax.amount_type === 'division')
-                    incl_division_amount += tax.amount;
-                else if(tax.amount_type === 'fixed')
-                    incl_fixed_amount += quantity * tax.amount
-                else{
-                    var tax_amount = self._compute_all(tax, base, quantity);
-                    incl_fixed_amount += tax_amount;
-                    cached_tax_amounts[i] = tax_amount;
+        if (handle_price_include){
+            _(taxes.reverse()).each(function(tax){
+                if(tax.include_base_amount){
+                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
+                    incl_fixed_amount = 0.0;
+                    incl_percent_amount = 0.0;
+                    incl_division_amount = 0.0;
+                    store_included_tax_total = true;
                 }
-                if(store_included_tax_total){
-                    total_included_checkpoints[i] = base;
-                    store_included_tax_total = false;
+                if(tax.price_include){
+                    if(tax.amount_type === 'percent')
+                        incl_percent_amount += tax.amount;
+                    else if(tax.amount_type === 'division')
+                        incl_division_amount += tax.amount;
+                    else if(tax.amount_type === 'fixed')
+                        incl_fixed_amount += quantity * tax.amount
+                    else{
+                        var tax_amount = self._compute_all(tax, base, quantity);
+                        incl_fixed_amount += tax_amount;
+                        cached_tax_amounts[i] = tax_amount;
+                    }
+                    if(store_included_tax_total){
+                        total_included_checkpoints[i] = base;
+                        store_included_tax_total = false;
+                    }
                 }
-            }
-            i -= 1;
-        });
+                i -= 1;
+            });
+        }
 
         var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
         var total_included = total_excluded;
@@ -2259,16 +2264,24 @@ exports.Orderline = Backbone.Model.extend({
         if(order.fiscal_position) {
             var taxes = this.get_taxes();
             var mapped_included_taxes = [];
+            var new_included_taxes = [];
             var self = this;
             _(taxes).each(function(tax) {
                 var line_taxes = self._map_tax_fiscal_position(tax);
+                new_included_taxes = new_included_taxes.concat(line_taxes)
                 if(tax.price_include && !_.contains(line_taxes, tax)){
                     mapped_included_taxes.push(tax);
                 }
             });
 
             if (mapped_included_taxes.length > 0) {
-                return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
+                if (new_included_taxes.length > 0) {
+                    var price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
+                    return this.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
+                }
+                else{
+                    return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
+                }
             }
         }
         return price;
@@ -3249,7 +3262,10 @@ exports.Order = Backbone.Model.extend({
 
             var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
             // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-            if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
+            if (utils.float_is_zero(rounding_applied)){
+                // https://xkcd.com/217/
+                return 0;
+            } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
                 rounding_applied += this.pos.cash_rounding[0].rounding;
             }
             else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){

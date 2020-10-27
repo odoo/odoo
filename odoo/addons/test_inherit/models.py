@@ -30,7 +30,7 @@ class daughter(models.Model):
 
 # We add a new field in the parent model. Because of a recent refactoring, this
 # feature was broken. These models rely on that feature.
-class mother(models.Model):
+class mother2(models.Model):
     _inherit = 'test.inherit.mother'
 
     field_in_mother = fields.Char()
@@ -52,14 +52,14 @@ class mother(models.Model):
                 super(mother, rec)._compute_surname()
 
 
-class mother(models.Model):
+class mother3(models.Model):
     _inherit = 'test.inherit.mother'
 
     # extend again the selection of the state field: 'd' must precede 'b'
     state = fields.Selection(selection_add=[('d', 'D'), ('b',)])
 
 
-class daughter(models.Model):
+class daughter2(models.Model):
     _inherit = 'test.inherit.daughter'
 
     # simply redeclare the field without adding any option
@@ -87,7 +87,7 @@ class test_inherit_property(models.Model):
     property_bar = fields.Integer(string='Bar', company_dependent=True)
 
 
-class test_inherit_property(models.Model):
+class test_inherit_property2(models.Model):
     _inherit = 'test.inherit.property'
 
     # override property_foo with a plain normal field

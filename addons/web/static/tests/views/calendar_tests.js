@@ -334,7 +334,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create and change events', async function (assert) {
-        assert.expect(26);
+        assert.expect(28);
 
         var calendar = await createCalendarView({
             View: CalendarView,
@@ -461,6 +461,14 @@ QUnit.module('Views', {
         assert.ok($newevent2.length, "should display the 2 days new record");
         assert.hasAttrValue($newevent2.closest('.fc-event-container'),
             'colspan', "2","the new record should have 2 days");
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(new event in quick create 2) .fc-content'));
+        var $popover_description = calendar.$('.o_cw_popover .o_cw_body .list-group-item');
+        assert.strictEqual($popover_description.children()[1].textContent,'December 20-21, 2016',
+            "The popover description should indicate the correct range");
+        assert.strictEqual($popover_description.children()[2].textContent,'(2 days)',
+            "The popover description should indicate 2 days");
+        await testUtils.dom.click(calendar.$('.o_cw_popover .fa-close'));
 
         // delete the a record
 

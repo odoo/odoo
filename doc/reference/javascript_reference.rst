@@ -1705,8 +1705,9 @@ daterange (FieldDateRange)
 
 remaining_days (RemainingDays)
   This widget can be used on date and datetime fields. In readonly, it displays
-  the delta (in days) between the value of the field and today. It edit, it
-  behaves like a regular date(time) widget.
+  the delta (in days) between the value of the field and today. The widget is
+  intended to be used for informative purpose: therefore the value cannot be
+  modified in edit mode.
 
   - Supported field types: *date*, *datetime*
 

@@ -573,16 +573,6 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             foo.with_user(user).display_name = 'Forbidden'
 
-    def test_13_inverse_access(self):
-        """ test access rights on inverse fields """
-        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
-        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
-        self.assertFalse(user.has_group('base.group_system'))
-        # add group on non-stored inverse field
-        self.patch(type(foo).display_name, 'groups', 'base.group_system')
-        with self.assertRaises(AccessError):
-            foo.with_user(user).display_name = 'Forbidden'
-
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2904,6 +2894,28 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             self.registry.setup_models(self.env.cr)
+
+
+class TestFieldParametersValidation(common.TransactionCase):
+    def test_invalid_parameter(self):
+        self.addCleanup(self.registry.model_cache.clear)
+
+        class Foo(models.Model):
+            _module = None
+            _name = _description = 'test_new_api.field_parameter_validation'
+
+            name = fields.Char(invalid_parameter=42)
+
+        Foo._build_model(self.registry, self.env.cr)
+        self.addCleanup(self.registry.__delitem__, Foo._name)
+
+        with self.assertLogs('odoo.fields', level='WARNING') as cm:
+            self.registry.setup_models(self.env.cr)
+
+        self.assertTrue(cm.output[0].startswith(
+            "WARNING:odoo.fields:Field test_new_api.field_parameter_validation.name: "
+            "unknown parameter 'invalid_parameter'"
+        ))
 
 
 def insert(model, *fnames):
