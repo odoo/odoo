@@ -2652,6 +2652,13 @@ var SnippetsMenu = Widget.extend({
         if ($snippet.closest(this._notActivableElementsSelector).length) {
             return;
         }
+        const $oeStructure = $snippet.closest('.oe_structure');
+        if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
+            // If empty oe_structure, encourage using snippets in there by
+            // making them "wizz" in the panel.
+            this.$snippets.odooBounce();
+            return;
+        }
         this._setLastSnippet($snippet);
         this._activateSnippet($snippet);
     },
