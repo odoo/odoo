@@ -465,6 +465,37 @@ function factory(dependencies) {
                 this.originThread.isModeratedByCurrentPartner
             );
         }
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsSubjectSimilarToOriginThreadName() {
+            if (
+                !this.subject ||
+                !this.originThread ||
+                !this.originThread.name
+            ) {
+                return false;
+            }
+            const threadName = this.originThread.name.toLowerCase().trim();
+            const prefixList = ['re:', 'fw:', 'fwd:'];
+            let cleanedSubject = this.subject.toLowerCase();
+            let wasSubjectCleaned = true;
+            while (wasSubjectCleaned) {
+                wasSubjectCleaned = false;
+                if (threadName === cleanedSubject) {
+                    return true;
+                }
+                for (const prefix of prefixList) {
+                    if (cleanedSubject.startsWith(prefix)) {
+                        cleanedSubject = cleanedSubject.replace(prefix, '').trim();
+                        wasSubjectCleaned = true;
+                        break;
+                    }
+                }
+            }
+            return false;
+        }
 
         /**
          * @private
@@ -636,6 +667,22 @@ function factory(dependencies) {
                 'originThreadIsModeratedByCurrentPartner',
             ],
         }),
+        /**
+         * States whether `originThread.name` and `subject` contain similar
+         * values except it contains the extra prefix at the start
+         * of the subject.
+         *
+         * This is necessary to avoid displaying the subject, if
+         * the subject is same as threadname.
+         */
+        isSubjectSimilarToOriginThreadName: attr({
+            compute: '_computeIsSubjectSimilarToOriginThreadName',
+            dependencies: [
+                'originThread',
+                'originThreadName',
+                'subject',
+            ],
+        }),
         isTemporary: attr({
             default: false,
         }),
@@ -709,6 +756,12 @@ function factory(dependencies) {
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',
+        }),
+        /**
+         * Serves as compute dependency for isSubjectSimilarToOriginThreadName
+         */
+        originThreadName: attr({
+            related: 'originThread.name',
         }),
         /**
          * This value is meant to be based on field body which is
