@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/messaging_initializer/messaging_initializer.
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2one } = require('mail/static/src/model/model_field.js');
+const { executeGracefully } = require('mail/static/src/utils/utils.js');
 
 function factory(dependencies) {
 
@@ -118,7 +119,7 @@ function factory(dependencies) {
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
             this._initCommands(commands);
-            await this.async(() => this._initMentionPartnerSuggestions(mention_partner_suggestions));
+            this._initMentionPartnerSuggestions(mention_partner_suggestions);
             // channels when the rest of messaging is ready
             await this.async(() => this._initChannels(channel_slots));
             // failures after channels
@@ -149,10 +150,7 @@ function factory(dependencies) {
             channel_private_group = [],
         } = {}) {
             const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
-            for (const channelData of channelsData) {
-                // there might be a lot of channels, insert each of them one by
-                // one asynchronously to avoid blocking the UI
-                await this.async(() => new Promise(resolve => setTimeout(resolve)));
+            return executeGracefully(channelsData.map(channelData => () => {
                 const convertedData = this.env.models['mail.thread'].convertData(channelData);
                 if (!convertedData.members) {
                     // channel_info does not return all members of channel for
@@ -171,7 +169,7 @@ function factory(dependencies) {
                 if (!channel.isPinned) {
                     channel.update({ isPendingPinned: true });
                 }
-            }
+            }));
         }
 
         /**
@@ -233,15 +231,12 @@ function factory(dependencies) {
          * @param {Object[]} mentionPartnerSuggestionsData
          */
         async _initMentionPartnerSuggestions(mentionPartnerSuggestionsData) {
-            for (const suggestions of mentionPartnerSuggestionsData) {
-                for (const suggestion of suggestions) {
-                    // there might be a lot of partners, insert each of them one
-                    // by one asynchronously to avoid blocking the UI
-                    await this.async(() => new Promise(resolve => setTimeout(resolve)));
+            return executeGracefully(mentionPartnerSuggestionsData.map(suggestions => () => {
+                return executeGracefully(suggestions.map(suggestion => () => {
                     const { email, id, name } = suggestion;
                     this.env.models['mail.partner'].insert({ email, id, name });
-                }
-            }
+                }));
+            }));
         }
 
         /**
