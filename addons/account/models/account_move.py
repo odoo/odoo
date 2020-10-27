@@ -4671,7 +4671,7 @@ class AccountMoveLine(models.Model):
         return ids
 
     def open_reconcile_view(self):
-        [action] = self.env.ref('account.action_account_moves_all_a').read()
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_moves_all_a')
         ids = self._reconciled_lines()
         action['domain'] = [('id', 'in', ids)]
         return action
