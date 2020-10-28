@@ -173,7 +173,7 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                    attrs="{'readonly': [('state', 'in', ['close', 'cancel'])]}"
+                                    attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"
                                     decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
