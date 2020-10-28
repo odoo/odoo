@@ -303,32 +303,54 @@ class ComposerTextInput extends Component {
             case 'PageUp':
                 if (this.composer.hasSuggestions) {
                     this.composer.setPreviousSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'ArrowDown':
             case 'PageDown':
                 if (this.composer.hasSuggestions) {
                     this.composer.setNextSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'Home':
                 if (this.composer.hasSuggestions) {
                     this.composer.setFirstSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'End':
                 if (this.composer.hasSuggestions) {
                     this.composer.setLastSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'Tab':
                 if (this.composer.hasSuggestions) {
                     if (ev.shiftKey) {
                         this.composer.setPreviousSuggestionActive();
+                        this.composer.update({ hasToScrollToActiveSuggestion: true });
                     } else {
                         this.composer.setNextSuggestionActive();
+                        this.composer.update({ hasToScrollToActiveSuggestion: true });
                     }
                 }
+                break;
+            case 'Alt':
+            case 'AltGraph':
+            case 'CapsLock':
+            case 'Control':
+            case 'Fn':
+            case 'FnLock':
+            case 'Hyper':
+            case 'Meta':
+            case 'NumLock':
+            case 'ScrollLock':
+            case 'Shift':
+            case 'ShiftSuper':
+            case 'Symbol':
+            case 'SymbolLock':
+                // prevent modifier keys from resetting the suggestion state
                 break;
             // Otherwise, check if a mention is typed
             default:
