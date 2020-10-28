@@ -2,7 +2,6 @@ odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
-const Domain = require('web.Domain');
 var fieldRegistry = require('web.field_registry');
 const FormRenderer = require("web.FormRenderer");
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
@@ -6575,6 +6574,32 @@ QUnit.module('Views', {
         // since the field image is not set, kanban_image will generate an URL
         var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('test displaying image (__last_update field)', async function (assert) {
+        // the presence of __last_update field ensures that the image is reloaded when necessary
+        assert.expect(1);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="id"/>
+                    <templates><t t-name="kanban-box"><div>
+                        <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
+                    </div></t></templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.fields, ['id', '__last_update']);
+                }
+                return this._super(...arguments);
+            },
+        });
 
         kanban.destroy();
     });
