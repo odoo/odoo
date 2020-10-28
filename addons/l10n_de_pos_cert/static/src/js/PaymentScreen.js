@@ -3,7 +3,6 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
 
     const PaymentScreen = require('point_of_sale.PaymentScreen');
     const Registries = require('point_of_sale.Registries');
-    const Api = require('l10n_de_pos_cert.Api');
 
     const PosDePaymentScreen = PaymentScreen => class extends PaymentScreen {
         // Almost the same as in the basic module but we don't finalize if the api call has failed
@@ -14,7 +13,7 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                     if (!line.is_done()) this.currentOrder.remove_paymentline(line);
                 }
                 if (!this.currentOrder.isTransactionStarted()) {
-                    await Api.createTransaction(this.currentOrder).catch(async (error) => {
+                    await this.currentOrder.createTransaction().catch(async (error) => {
                         if (error.status === 0) {
                             const title = this.env._t('No internet');
                             const body = this.env._t(
@@ -40,7 +39,7 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                     });
                 }
                 if (this.currentOrder.isTransactionStarted()) {
-                    await Api.finishShortTransaction(this.currentOrder).then(async () => {
+                    await this.currentOrder.finishShortTransaction().then(async () => {
                         await this._finalizeValidation();
                     }).catch(async (error) => {
                         if (error.status === 0) {
@@ -67,13 +66,13 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
         async showForbiddenPopup() {
             const title = this.env._t('Forbidden access to Fiskaly');
             const body = this.env._t(
-                'It seems that your Fiskaly API key and/or secret are incorrect.'
+                'It seems that your Fiskaly API key and/or secret are incorrect. Update them in your company settings.'
             );
             await this.showPopup('ErrorPopup', { title, body });
         }
         async showBadRequestPopup(data) {
             const title = this.env._t('Bad request');
-            const body = this.env._t(`Your ${data} is incorrect.`);
+            const body = this.env._t(`Your ${data} is incorrect. Update it in your PoS settings`);
             await this.showPopup('ErrorPopup', { title, body });
         }
     };
