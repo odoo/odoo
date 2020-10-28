@@ -76,7 +76,7 @@
             <field name="suffix">orders</field>
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('payment_state','=','paid'),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
+            <field name="domain">[('payment_state','in',('paid', 'in_payment')),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
         </record>
         <record model="gamification.goal.definition" id="definition_crm_tot_paid_sale_order">
             <field name="name">Total Paid Sales Orders</field>
@@ -86,7 +86,7 @@
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_id" ref="account.field_account_invoice_report__price_subtotal"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('payment_state','=','paid'),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
+            <field name="domain">[('payment_state','in',('paid', 'in_payment')),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
         </record>
 
 
