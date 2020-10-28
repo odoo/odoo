@@ -151,9 +151,8 @@ class PortalChatter(http.Controller):
         if attachment_ids:
             # sudo write the attachment to bypass the read access
             # verification in mail message
-            record = request.env[res_model].browse(res_id)
             message_values = {'res_id': res_id, 'model': res_model}
-            attachments = record._message_post_process_attachments([], attachment_ids, message_values)
+            attachments = request.env[res_model]._message_post_process_attachments([], attachment_ids, message_values)
 
             if attachments.get('attachment_ids'):
                 message.sudo().write(attachments)

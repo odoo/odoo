@@ -1653,6 +1653,7 @@ class MailThread(models.AbstractModel):
     # MESSAGE POST MAIN
     # ------------------------------------------------------------
 
+    @api.model
     def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
         """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
         Purpose is to
@@ -1778,7 +1779,7 @@ class MailThread(models.AbstractModel):
                      subtype_xmlid=None, subtype_id=False, partner_ids=None,
                      attachments=None, attachment_ids=None,
                      **kwargs):
-        """ Post a new message in an existing thread, returning the new mail.message.
+        """ Post a new message into existing threads.
 
         :param str body: body of the message, usually raw HTML that will
             be sanitized
@@ -1807,7 +1808,7 @@ class MailThread(models.AbstractModel):
             mail.message fields;
           * propagated to notification methods;
 
-        :return record: newly create mail.message
+        :return: newly created mail.message records
         """
         self = self.filtered('id')
         if not self:
@@ -1914,7 +1915,12 @@ class MailThread(models.AbstractModel):
     def _message_post_after_hook(self, message, msg_vals):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
-        using already-computed values instead of having to rebrowse things. """
+        using already-computed values instead of having to rebrowse things.
+
+        :param message: mail.message record
+        :param dict msg_vals:
+        :returns: None
+        """
 
     # ------------------------------------------------------------
     # MESSAGE POST API / WRAPPERS
@@ -1953,8 +1959,9 @@ class MailThread(models.AbstractModel):
 
     def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template
-            :param template_id : the id of the template to render to create the body of the message
-            :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
+
+        :param int template_id : the id of the template to render to create the body of the message
+        :param **kwargs : parameter to create a mail.compose.message wizard (which inherit from mail.message)
         """
         # Get composition mode, or force it according to the number of record in self
         if not kwargs.get('composition_mode'):
@@ -2062,10 +2069,10 @@ class MailThread(models.AbstractModel):
         return self.sudo()._message_create(msg_values)
 
     def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):
-        """ Shortcut allowing to post notes on a batch of documents. It achieve the
+        """ Shortcut allowing to post notes on a batch of documents. It achieves the
         same purpose as _message_log, done in batch to speedup quick note log.
 
-          :param bodies: dict {record_id: body}
+        :param dict bodies: {record_id: body}
         """
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=False)
 
