@@ -25,7 +25,7 @@
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
                   <span class="badge badge-pill badge-warning"><span class="d-none d-md-inline"> Pending</span></span>
                 </t>
-                <t t-if="invoice.state == 'posted' and invoice.payment_state == 'paid' or last_tx.state == 'done'">
+                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed' or last_tx.state == 'done'">
@@ -79,10 +79,10 @@
                     class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
-                <div t-if="tx_ids and not pending_manual_txs and invoice.payment_state != 'paid'" class="alert alert-info py-1 mb-2" >
+                <div t-if="tx_ids and not pending_manual_txs and invoice.payment_state not in ('paid', 'in_payment')" class="alert alert-info py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Pending
                 </div>
-                <div t-if="invoice.payment_state == 'paid'" class="alert alert-success py-1 mb-2" >
+                <div t-if="invoice.payment_state in ('paid', 'in_payment')" class="alert alert-success py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Paid
                 </div>
             </div>
@@ -140,7 +140,7 @@
                     <b>Communication: </b><span t-esc='invoice.ref'/>
                 </div>
             </t>
-            <t t-if="success == 'pay_invoice' and invoice.payment_state == 'paid'">
+            <t t-if="success == 'pay_invoice' and invoice.payment_state in ('paid', 'in_payment')">
                 Done, your online payment has been successfully processed. Thank you for your order.
             </t>
         </xpath>
