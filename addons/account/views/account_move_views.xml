@@ -434,6 +434,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="journal_id"/>
+                    <field name="partner_id"/>
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -442,7 +443,12 @@
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row mb4">
                                     <div class="col-6 o_kanban_record_headings">
-                                        <strong><span><field name="journal_id"/></span></strong>
+                                        <strong>
+                                            <span>
+                                                <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}" />
+                                                <field name="journal_id" attrs="{'invisible': [('partner_id', '!=', False)]}" />
+                                            </span>
+                                        </strong>
                                     </div>
                                     <div class="col-6 text-right">
                                         <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
