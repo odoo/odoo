@@ -7,6 +7,7 @@
                     'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}</field>
         <field name="binding_model_id" ref="model_stock_location"/>
         <field name="binding_view_types">form</field>
+        <field name="search_view_id" ref="stock.stock_product_search_form_view"/>
     </record>
 
     <record id="view_location_form" model="ir.ui.view">
