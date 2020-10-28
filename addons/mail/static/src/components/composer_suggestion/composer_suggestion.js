@@ -17,11 +17,21 @@ class ComposerSuggestion extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
+            const composer = this.env.models['mail.composer'].get(this.props.composerLocalId);
             const record = this.env.models[props.modelName].get(props.recordLocalId);
             return {
-               record: record ? record.__state : undefined,
+                composer: composer && composer.__state,
+                record: record ? record.__state : undefined,
             };
         });
+    }
+
+    mounted() {
+        this._update();
+    }
+
+    patched() {
+        this._update();
     }
 
     //--------------------------------------------------------------------------
@@ -81,6 +91,26 @@ class ComposerSuggestion extends Component {
     }
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _update() {
+        if (
+            this.composer &&
+            this.composer.hasToScrollToActiveSuggestion &&
+            this.props.isActive
+        ) {
+            this.el.scrollIntoView({
+                block: 'center',
+            });
+            this.composer.update({ hasToScrollToActiveSuggestion: false });
+        }
+    }
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -90,19 +120,12 @@ class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composer.insertSuggestion(this.record);
-        this.composer.closeSuggestions();
-        this.trigger('o-composer-suggestion-clicked');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMouseOver(ev) {
         this.composer.update({
             [this.composer.activeSuggestedRecordName]: [['link', this.record]],
         });
+        this.composer.insertSuggestion();
+        this.composer.closeSuggestions();
+        this.trigger('o-composer-suggestion-clicked');
     }
 
 }
