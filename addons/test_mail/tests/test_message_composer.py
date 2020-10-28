@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
+from odoo.tests import Form
 from odoo.tools import mute_logger
 
 
@@ -227,8 +228,6 @@ class TestComposerWTpl(TestMailCommon, TestRecipients):
         """Tests that all attachments are added to the composer,
         static attachments are not duplicated and while reports are re-generated,
         and that intermediary attachments are dropped."""
-
-        composer = self.env['mail.compose.message'].with_context(default_attachment_ids=[]).create({})
         report_template = self.env.ref('web.action_report_externalpreview')
         template_1 = self.email_template.copy({
             'report_template': report_template.id,
@@ -238,28 +237,25 @@ class TestComposerWTpl(TestMailCommon, TestRecipients):
             'report_template': report_template.id,
         })
 
-        onchange_templates = [template_1, template_2, template_1, False]
-        attachments_onchange = [composer.attachment_ids]
-        # template_1 has two static attachments and one dynamically generated report,
-        # template_2 only has the report, so we should get 3, 1, 3 attachments
-        attachment_numbers = [0, 3, 1, 3, 0]
-
-        for template in onchange_templates:
-            onchange = composer.onchange_template_id(
-                template.id if template else False, 'comment', self.test_record._name, self.test_record.id
+        # onchange on template ids calls default_get, we want that to unset
+        # existing attachments at least, which requires default_attachment_ids,
+        # which seems... incorrect?
+        composer = self.env['mail.compose.message'].create({}).with_context(default_attachment_ids=[])
+        self.assertEqual(len(composer.attachment_ids), 0)
+        f = Form(composer)
+        for template, count in [
+            (template_1, 3), # two static attachments and one dynamically generated report
+            (template_2, 1), # only has the report
+            (template_1, 3),
+            (self.env['mail.template'], 0),  # no template -> no attachment
+        ]:
+            f.template_id = template
+            self.assertEqual(len(f.attachment_ids), count)
+            self.assertGreaterEqual(
+                f.attachment_ids[:],
+                template.attachment_ids,
+                "All the static attachments of the template should be on the composer"
             )
-            composer.update(onchange['value'])
-            attachments_onchange.append(composer.attachment_ids)
-
-        self.assertEqual(
-            [len(attachments) for attachments in attachments_onchange],
-            attachment_numbers,
-        )
-
-        self.assertTrue(
-            len(attachments_onchange[1] & attachments_onchange[3]) == 2,
-            "The two static attachments on the template should be common to the two onchanges"
-        )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template_mass_mailing(self):
