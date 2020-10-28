@@ -552,7 +552,7 @@
                                     <ul class="nav nav-pills flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <li class="nav-item">
-                                                <label style="margin: 0 20px;" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                <label style="padding: 0.25rem 0rem; margin: 0" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
                                                     <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
                                                     <span style="font-weight: normal" t-field="v.name" />
                                                 </label>
