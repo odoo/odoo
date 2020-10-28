@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="website_livechat_visitor_1" model="website.visitor">
+            <field name="lang_id">1</field>
+            <field name="create_date" eval="(DateTime.today() - relativedelta(days=2, minutes=51))"/>
+            <field name="last_connection_datetime" eval="(datetime.now() - timedelta(days=2, seconds=-53))"/>
+            <field name="livechat_operator_id" ref="base.partner_admin"/>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+
+        <record id="website_livechat_visitor_track_home_page" model="website.track">
+            <field name="visitor_id" ref="website_livechat_visitor_1"/>
+            <field name="visit_datetime" eval="(DateTime.today()- relativedelta(days=2,minutes=21))"/>
+            <field name="page_id" ref="website.homepage_page"/>
+            <field name="url">/</field>
+        </record>
+
+        <!-- channel chat demo data -->
+        <record id="website_livechat_visitor_mail_channel_1" model="mail.channel">
+            <field name="name">Visitor, Mitchell Admin</field>
+            <field name="livechat_operator_id" ref="base.partner_admin"/>
+            <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
+            <field name="livechat_visitor_id" ref="website_livechat_visitor_1"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
+            <field name="livechat_active">True</field>
+            <field name="channel_type">livechat</field>
+        </record>
+
+        <record id="website_livechat_visitor_mail_message_chat_1" model="mail.message">
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="date" eval="datetime.now()- timedelta(days=2)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
+            <field name="body">Hello, How may I help you?</field>
+            <field name="res_id" ref="website_livechat_visitor_mail_channel_1"/>
+            <field name="model">mail.channel</field>
+            <field name="channel_ids" eval="[(6, False, [website_livechat_visitor_mail_channel_1])]"/>
+        </record>
+
+        <record id="website_livechat_visitor_mail_message_chat_2" model="mail.message">
+            <field name="author_id" eval="False"/>
+            <field name="record_name">Visitor</field>
+            <field name="date" eval="datetime.now() - timedelta(days=2,seconds=-15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2,seconds=-15)"/>
+            <field name="body">I would like to know more about the Field service application.</field>
+            <field name="res_id" ref="website_livechat_visitor_mail_channel_1"/>
+            <field name="model">mail.channel</field>
+            <field name="channel_ids" eval="[(6, False, [website_livechat_visitor_mail_channel_1])]"/>
+        </record>
+
+        <record id="website_livechat_visitor_mail_message_chat_3" model="mail.message">
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="date" eval="datetime.now() - timedelta(days=2,seconds=-25)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2,seconds=-25)"/>
+            <field name="body"> The Field service application helps you to schedule and track onsite operations, time and material. You can try it for free on our website. :)</field>
+            <field name="res_id" ref="website_livechat_visitor_mail_channel_1"/>
+            <field name="model">mail.channel</field>
+            <field name="channel_ids" eval="[(6, False, [website_livechat_visitor_mail_channel_1])]"/>
+        </record>
+
+        <record id="website_livechat_visitor_mail_message_chat_4" model="mail.message">
+            <field name="author_id" eval="False"/>
+            <field name="record_name">Visitor</field>
+            <field name="date" eval="datetime.now() - timedelta(days=2,seconds=-42)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2,seconds=-42)"/>
+            <field name="body">Awesome, thanks!</field>
+            <field name="res_id" ref="website_livechat_visitor_mail_channel_1"/>
+            <field name="model">mail.channel</field>
+            <field name="channel_ids" eval="[(6, False, [website_livechat_visitor_mail_channel_1])]"/>
+        </record>
+
+        <record id="website_livechat_visitor_mail_message_chat_5" model="mail.message">
+            <field name="author_id" eval="False"/>
+            <field name="record_name">Visitor</field>
+            <field name="date" eval="datetime.now() - timedelta(days=2,seconds=-53)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2,seconds=-53)"/>
+            <field name="body">Rating: :-)</field>
+            <field name="res_id" ref="website_livechat_visitor_mail_channel_1"/>
+            <field name="model">mail.channel</field>
+            <field name="channel_ids" eval="[(6, False, [website_livechat_visitor_mail_channel_1])]"/>
+        </record>
+
+        <record id="website_livechat_visitor_rating_1" model="rating.rating">
+            <field name="res_model_id" ref="mail.model_mail_channel"/>
+            <field name="rated_partner_id" ref="base.partner_admin"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="create_date" eval="datetime.now() - timedelta(days=2, seconds=-53)"/>
+            <field name="res_id" ref="website_livechat_visitor_mail_channel_1"/>
+            <field name="rating">5</field>
+            <field name="feedback">Very Good!</field>
+            <field name="consumed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

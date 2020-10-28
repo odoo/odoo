@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- First time visit -->
+        <record id="website_crm_visitor_1" model="website.visitor">
+            <field name="lang_id">16</field>
+            <field name="create_date" eval="(DateTime.today() - relativedelta(days=4, minutes=62))"/>
+            <field name="last_connection_datetime" eval="(DateTime.today())"/>
+        </record>
+
+        <record id="website_crm_visitor_lead_1" model="crm.lead">
+            <field name="create_date" eval="(DateTime.today() - relativedelta(days=4))"/>
+            <field name="type">opportunity</field>
+            <field name="name">Need 25 Desks for office</field>
+            <field name="expected_revenue">60000</field>
+            <field name="probability">0.0</field>
+            <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
+            <field name="email_from">henry@elight.com</field>
+            <field name="phone">(870)-931-0505</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="city">Lima</field>
+            <field name="priority">0</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="visitor_ids" eval="[(4,ref('website_crm_visitor_1'))]"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="partner_name">E-light Industry</field>
+            <field name="street">Palermo, Capital Federal</field>
+            <field name="street2">C1414CMS Capital Federal</field>
+            <field name="city">Buenos Aires</field>
+            <field name="zip">B7313</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+            <field name="contact_name">Henry Jordan</field>
+        </record>
+
+        <record id="website_crm_visitor_track_home_page" model="website.track">
+            <field name="visitor_id" ref="website_crm_visitor_1"/>
+            <field name="visit_datetime" eval="(DateTime.today() - relativedelta(days=3, minutes=2))"/>
+            <field name="page_id" ref="website.homepage_page"/>
+            <field name="url">/</field>
+        </record>
+
+        <record id="website_crm_visitor_track_shop_page" model="website.track">
+            <field name="visit_datetime" eval="(DateTime.today() - relativedelta(days=3, minutes=62))"/>
+            <field name="visitor_id" ref="website_crm_visitor_1"/>
+            <field name="url">/shop</field>
+        </record>
+
+        <record id="website_crm_visitor_track_contact_page" model="website.track">
+            <field name="visitor_id" ref="website_crm_visitor_1"/>
+            <field name="visit_datetime" eval="(DateTime.today() - relativedelta(days=2, minutes=2))"/>
+            <field name="page_id" ref="website.contactus_page"/>
+            <field name="url">/contactus</field>
+        </record>
+
+        <record id="website_crm_visitor_lead_2" model="crm.lead">
+            <field name="create_date" eval="(DateTime.today() - relativedelta(days=3, minutes=21))"/>
+            <field name="type">opportunity</field>
+            <field name="name">Need 20 Chairs for office</field>
+            <field name="expected_revenue">5000</field>
+            <field name="probability">0.0</field>
+            <field name="email_from">henry@elight.com</field>
+            <field name="phone">(870)-931-0505</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="city">Lima</field>
+            <field name="priority">0</field>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="visitor_ids" eval="[(4,ref('website_crm_visitor_1'))]"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="partner_name">E-light Industry</field>
+            <field name="street">Palermo, Capital Federal</field>
+            <field name="street2">C1414CMS Capital Federal</field>
+            <field name="city">Buenos Aires</field>
+            <field name="zip">B7313</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+            <field name="contact_name">Henry Jordan</field>
+        </record>
+
+    </data>
+</odoo>

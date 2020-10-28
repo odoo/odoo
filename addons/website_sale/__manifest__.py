@@ -29,6 +29,7 @@
     ],
     'demo': [
         'data/demo.xml',
+        'data/website_sale_visitor_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="website_visitor_1" model="website.visitor">
+            <field name="lang_id">1</field>
+            <field name="create_date" eval="(DateTime.today() - relativedelta(days=1, minutes=62))"/>
+            <field name="last_connection_datetime" eval="(DateTime.today() - relativedelta(days=1))"/>
+            <field name="country_id" ref="base.uk"/>
+        </record>
+
+
+        <record id="website_visitor_track_home_page" model="website.track">
+            <field name="visitor_id" ref="website_visitor_1"/>
+            <field name="visit_datetime" eval="(DateTime.today() - relativedelta(days=1))"/>
+            <field name="page_id" ref="website.homepage_page"/>
+            <field name="url">/</field>
+        </record>
+
+    </data>
+</odoo>
