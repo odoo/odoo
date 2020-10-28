@@ -165,6 +165,8 @@ class IrModuleModule(models.Model):
                         # at update, ignore active field
                         if 'active' in rec_data:
                             rec_data.pop('active')
+                        if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
+                            rec_data.pop('arch')
                         find.update(rec_data)
                         self._post_copy(rec, find)
                 else:

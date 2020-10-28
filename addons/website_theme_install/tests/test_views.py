@@ -65,6 +65,16 @@ class TestViews(TransactionCase):
         specific_main_view_children.invalidate_cache()
         self.assertEqual(specific_main_view_children.arch, new_arch, "Second time: View arch should still receive theme updates.")
 
+        # 5. Keep User arch changes
+        new_arch = '<xpath expr="//body" position="replace"><span>Odoo</span></xpath>'
+        specific_main_view_children.arch = new_arch
+        theme_view.name = 'Test Child View modified'
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        specific_main_view_children.invalidate_cache()
+        self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
+        self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+
+
 class Crawler(HttpCase):
     def test_multi_website_views_retrieving(self):
         View = self.env['ir.ui.view']
