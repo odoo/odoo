@@ -1364,6 +1364,57 @@ function factory(dependencies) {
         }
 
         /**
+         * Current partner seen infos.
+         *
+         * @private
+         * @returns {mail.partner_seen_info}
+         */
+        _computeCurrentPartnerSeenInfo() {
+            if (!this.messaging) {
+                return [['unlink']];
+            }
+            if (!this.messaging.currentPartner) {
+                return [['unlink']];
+            }
+            const partnerInfo = this.partnerSeenInfos.find(
+                partnerSeenInfo => partnerSeenInfo.partner === this.messaging.currentPartner
+            );
+            if (!partnerInfo) {
+                return [['unlink']];
+            }
+            return [['replace', partnerInfo]]
+        }
+
+        /**
+         * Not a real field, used to trigger `markAsFetch` when new message(s) is(are) fetched
+         *
+         * @private
+         */
+        _computeShouldBeMarkedAsFetched() {
+            if (this.model !== 'mail.channel') {
+                return;
+            }
+            if (this.channel_type === 'channel') {
+                // disabled for performance reasons
+                return;
+            }
+            if (!this.mainCacheIsLoaded) {
+                return;
+            }
+            if (!this.lastMessage) {
+                return;
+            }
+            const lastFetchedMessage = (
+                this.currentPartnerSeenInfo &&
+                this.currentPartnerSeenInfo.lastFetchedMessage
+            );
+            if (lastFetchedMessage && this.lastMessage.id <= lastFetchedMessage.id) {
+                return;
+            }
+            this.markAsFetched();
+        }
+
+        /**
          * @private
          * @returns {mail.activity[]}
          */
@@ -1597,6 +1648,13 @@ function factory(dependencies) {
             default: 0,
         }),
         creator: many2one('mail.user'),
+        currentPartnerSeenInfo: one2one('mail.thread_partner_seen_info', {
+            compute: '_computeCurrentPartnerSeenInfo',
+            dependencies: [
+                'messagingCurrentPartner',
+                'partnerSeenInfos',
+            ],
+        }),
         custom_channel_name: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
@@ -1777,6 +1835,13 @@ function factory(dependencies) {
         }),
         mainCache: one2one('mail.thread_cache', {
             compute: '_computeMainCache',
+        }),
+        /**
+         * Serves as compute dependency.
+         * @see shouldBeMarkedAsFetched
+         */
+        mainCacheIsLoaded: attr({
+            related: 'mainCache.isLoaded',
         }),
         mass_mailing: attr({
             default: false,
@@ -1967,6 +2032,20 @@ function factory(dependencies) {
          */
         serverMessageUnreadCounter: attr({
             default: 0,
+        }),
+        /**
+         * Not a real field, used to trigger `thread.markAsFetched` when one of
+         * the dependencies changes.
+         */
+        shouldBeMarkedAsFetched: attr({
+            compute: '_computeShouldBeMarkedAsFetched',
+            dependencies: [
+                'channel_type',
+                'currentPartnerSeenInfo',
+                'lastMessage',
+                'mainCacheIsLoaded',
+                'model',
+            ],
         }),
         /**
          * Determines the `mail.suggested_recipient_info` concerning `this`.

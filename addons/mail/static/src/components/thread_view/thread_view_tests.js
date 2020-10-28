@@ -241,6 +241,57 @@ QUnit.test('message list asc order', async function (assert) {
     );
 });
 
+QUnit.test('mark channel as fetched when messages are loaded', async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({
+        email: "fred@example.com",
+        id: 10,
+        name: "Fred",
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 100,
+        is_pinned: true,
+        members: [this.data.currentPartnerId, 10],
+    });
+    this.data['mail.message'].records.push({
+        body: 'not empty',
+        channel_ids: [100],
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'channel_fetched') {
+                assert.deepEqual(
+                    args.args[0],
+                    [100],
+                    'channel_fetched is called on the right channel id'
+                );
+                assert.strictEqual(
+                    args.model,
+                    'mail.channel',
+                    'channel_fetched is called on the right channel model'
+                );
+                assert.step('rpc:channel_fetch');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+    assert.verifySteps(
+        ['rpc:channel_fetch'],
+        "Channel should have been marked as fetched when a thread view loaded its messages"
+    );
+});
+
 QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]', async function (assert) {
     assert.expect(8);
 
@@ -282,7 +333,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                 assert.strictEqual(
                     args.model,
                     'mail.channel',
-                    'channel_seeb is called on the right channel model'
+                    'channel_seen is called on the right channel model'
                 );
                 assert.step('rpc:channel_seen');
             }

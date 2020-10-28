@@ -259,11 +259,6 @@ function factory(dependencies) {
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel') {
-                    // disabled on non-channel threads and
-                    // on `channel` channels for performance reasons
-                    channel.markAsFetched();
-                }
                 // (re)open chat on receiving new message
                 if (channel.channel_type !== 'channel') {
                     this.env.messaging.chatWindowManager.openThread(channel);
