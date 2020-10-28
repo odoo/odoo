@@ -136,6 +136,8 @@ class PosConfig(models.Model):
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
+    child_available_pricelist_ids = fields.Many2many(
+        'product.pricelist', compute='_compute_child_available_pricelist_ids', store=False, readonly=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.')
@@ -163,6 +165,15 @@ class PosConfig(models.Model):
     module_pos_reprint = fields.Boolean(string="Reprint Receipt")
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
+
+    def _compute_child_available_pricelist_ids(self):
+        for config in self:
+            available_pricelists = pricelists = config.available_pricelist_ids
+            while pricelists:
+                pricelists = pricelists.mapped('item_ids').filtered(
+                    lambda x: x.base == 'pricelist').mapped('base_pricelist_id')
+                available_pricelists |= pricelists
+            config.child_available_pricelist_ids = available_pricelists
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
