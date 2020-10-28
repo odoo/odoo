@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo import fields, models, api
+from odoo.http import request
 
 class WebsiteTrack(models.Model):
     _inherit = 'website.track'
@@ -35,6 +36,14 @@ class WebsiteVisitor(models.Model):
             visitor.product_ids = [(6, 0, visitor_info['product_ids'])]
             visitor.visitor_product_count = visitor_info['product_count']
             visitor.product_count = len(visitor_info['product_ids'])
+
+    def _handle_website_page_visit(self, website_page, visitor_sudo):
+        # avoid duplicate entry in page views, when he/she visit the product details
+        if not self._context.get('product_view'):
+            super(WebsiteVisitor, self)._handle_website_page_visit(website_page, visitor_sudo)
+        else:
+            if visitor_sudo.lang_id.id != request.lang.id:
+                visitor_sudo.write({'lang_id': request.lang.id})
 
     def _add_viewed_product(self, product_id):
         """ add a website_track with a page marked as viewed"""

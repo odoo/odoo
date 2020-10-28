@@ -18,7 +18,7 @@
         <field name="name">website.track.view.graph</field>
         <field name="model">website.track</field>
         <field name="arch" type="xml">
-            <graph string="Visitor Page Views" sample="1">
+            <graph string="Visitor Page Views" sample="1" disable_linking="1">
                 <field name="url"/>
             </graph>
         </field>
@@ -33,12 +33,13 @@
                 <field name="page_id"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
-                <filter string="Pages" name="type_page" domain="[('page_id', '!=', False)]"/>
-                <filter string="Urls &amp; Pages" name="type_url" domain="[('url', '!=', False)]"/>
+                <filter name="filter_visit_datetime" date="visit_datetime" default_period="this_month"/>
+                <separator/>
+                <filter name="filter_visit_datetime_last_week" string="Last 7 days" domain="[
+                    ('visit_datetime', '>=', (datetime.datetime.combine(context_today() - relativedelta(days=7), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <group string="Group By">
                     <filter string="Visitor" name="group_by_visitor" domain="[]" context="{'group_by': 'visitor_id'}"/>
-                    <filter string="Page" name="group_by_page" domain="[]" context="{'group_by': 'page_id'}"/>
-                    <filter string="Url" name="group_by_url" domain="[]" context="{'group_by': 'url'}"/>
+                    <filter string="Page" name="group_by_url" domain="[]" context="{'group_by': 'url'}"/>
                     <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'visit_datetime'}"/>
                 </group>
             </search>
@@ -46,12 +47,14 @@
     </record>
 
     <record id="website_visitor_page_action" model="ir.actions.act_window">
-        <field name="name">Page Views History</field>
+        <field name="name">Page Views</field>
         <field name="res_model">website.track</field>
         <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="website_visitor_page_view_search"/>
+        <field name="context">{'search_default_filter_visit_datetime_last_week': 1}</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_page_view_tree')}),
             (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_page_view_graph')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_page_view_tree')}),
         ]"/>
         <field name="domain">[('visitor_id', '=', active_id), ('url', '!=', False)]</field>
         <field name="help" type="html">
@@ -311,21 +314,23 @@
         <field name="name">website.track.view.graph</field>
         <field name="model">website.track</field>
         <field name="arch" type="xml">
-            <graph string="Visitor Views" sample="1">
+            <graph string="Visitor Views" sample="1" disable_linking="1">
                 <field name="url"/>
             </graph>
         </field>
     </record>
 
     <record id="website_visitor_view_action" model="ir.actions.act_window">
-        <field name="name">Views</field>
+        <field name="name">Page Views</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">website.track</field>
-        <field name="view_mode">tree</field>
-        <field name="context">{'search_default_type_url':1}</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('url', '!=', False)]</field>
+        <field name="search_view_id" ref="website_visitor_page_view_search"/>
+        <field name="context">{'search_default_filter_visit_datetime_last_week': 1}</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_track_view_tree')}),
             (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_track_view_graph')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_track_view_tree')}),
         ]"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -343,7 +348,7 @@
         sequence="1"
         parent="website_visitor_menu"
         action="website.website_visitors_action"/>
-    <menuitem id="menu_visitor_view_menu" name="Views"
+    <menuitem id="menu_visitor_view_menu" name="Page Views"
         sequence="2"
         parent="website_visitor_menu"
         action="website.website_visitor_view_action"/>

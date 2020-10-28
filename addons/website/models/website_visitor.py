@@ -201,7 +201,9 @@ class WebsiteVisitor(models.Model):
         if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
             expiration_date = datetime.now() + timedelta(days=365)
             response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
-        self._handle_website_page_visit(website_page, visitor_sudo)
+        product_view = response.qcontext.get('product_view') if hasattr(response, 'qcontext') else False
+        self.with_context(product_view=product_view)._handle_website_page_visit(
+            website_page, visitor_sudo)
 
     def _handle_website_page_visit(self, website_page, visitor_sudo):
         """ Called on dispatch. This will create a website.visitor if the http request object

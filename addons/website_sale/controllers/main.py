@@ -355,6 +355,7 @@ class WebsiteSale(http.Controller):
             'product': product,
             'add_qty': add_qty,
             'view_track': view_track,
+            'product_view': True,
         }
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
