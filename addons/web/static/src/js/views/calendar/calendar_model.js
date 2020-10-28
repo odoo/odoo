@@ -45,6 +45,23 @@ return AbstractModel.extend({
         var start = event.start.clone();
         var end = event.end && event.end.clone();
 
+        // This event has been modified to be able to resize it in month mode. It's not actually allday.
+        if (event.reset_allday === false) {
+            event.allDay = false;
+            start.hours(event.r_start.hours())
+                .minutes(event.r_start.minutes())
+                .seconds(event.r_start.seconds())
+                .milliseconds(event.r_start.milliseconds());
+            if (end) {
+                // A day was added to fix the rendering of the month view.
+                end.subtract(1, 'days');
+                end.hours(event.r_end.hours())
+                    .minutes(event.r_end.minutes())
+                    .seconds(event.r_end.seconds())
+                    .milliseconds(event.r_end.milliseconds());
+            }
+        }
+
         // Detects allDay events (86400000 = 1 day in ms)
         if (event.allDay || (end && end.diff(start) % 86400000 === 0)) {
             event.allDay = true;
@@ -727,13 +744,13 @@ return AbstractModel.extend({
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
             // In month, FullCalendar gives the end day as the
             // next day at midnight (instead of 23h59).
-            date_stop.add(1, 'days');
+            var month_date_stop = date_stop.clone().add(1, 'days').startOf('day');
 
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;
             r.start = date_start.format('YYYY-MM-DD');
-            r.end = date_stop.startOf('day').format('YYYY-MM-DD');
+            r.end = month_date_stop.format('YYYY-MM-DD');
         }
 
         return r;
