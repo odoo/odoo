@@ -1695,7 +1695,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
         res = self._search(args, offset=offset, limit=limit, order=order, count=count)
-        return res if count else self.browse(res)
+        if count:
+            return res
+
+        return self.browse(res).with_context(clean_context(
+            self.env.context,
+            exclude=lambda s: s == 'active_test'
+        ))
 
     #
     # display_name, name_get, name_create, name_search
@@ -1787,7 +1793,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
         ids = self._name_search(name, args, operator, limit=limit)
-        return self.browse(ids).sudo().name_get()
+        return self.browse(ids).sudo()\
+            .with_context(clean_context(
+                self.env.context,
+                exclude=lambda s: s == 'active_test'))\
+            .name_get()
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -4788,15 +4798,6 @@ Fields:
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return [{'id': record.id} for record in records]
-
-        # read() ignores active_test, but it would forward it to any downstream search call
-        # (e.g. for x2m or function fields), and this is not the desired behavior, the flag
-        # was presumably only meant for the main search().
-        # TODO: Move this to read() directly?
-        if 'active_test' in self._context:
-            context = dict(self._context)
-            del context['active_test']
-            records = records.with_context(context)
 
         result = records.read(fields, **read_kwargs)
         if len(result) <= 1:

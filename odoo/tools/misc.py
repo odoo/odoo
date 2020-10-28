@@ -977,9 +977,11 @@ def freehash(arg):
         else:
             return id(arg)
 
-def clean_context(context):
-    """ This function take a dictionary and remove each entry with its key starting with 'default_' """
-    return {k: v for k, v in context.items() if not k.startswith('default_')}
+def clean_context(context, *, exclude=re.compile(r'default_').match):
+    """ This function take a dictionary and remove each entry whose key matches
+    the ``exclude`` predicate (all keys starting with `default_` by default)
+    """
+    return {k: v for k, v in context.items() if not exclude(k)}
 
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """

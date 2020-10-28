@@ -684,17 +684,15 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_20_monetary(self):
         """ test monetary fields """
         model = self.env['test_new_api.mixed']
-        currency = self.env['res.currency'].with_context(active_test=False)
         amount = 14.70126
 
         for rounding in [0.01, 0.0001, 1.0, 0]:
-            # first retrieve a currency corresponding to rounding
+            # rounding=0 corresponds to currency=False
+            currency = self.env['res.currency']
+            # if there is a rounding use that instead
             if rounding:
-                currency = currency.search([('rounding', '=', rounding)], limit=1)
+                currency = currency.with_context(active_test=False).search([('rounding', '=', rounding)], limit=1)
                 self.assertTrue(currency, "No currency found for rounding %s" % rounding)
-            else:
-                # rounding=0 corresponds to currency=False
-                currency = currency.browse()
 
             # case 1: create with amount and currency
             record = model.create({'amount': amount, 'currency_id': currency.id})
