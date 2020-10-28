@@ -532,6 +532,9 @@ class Picking(models.Model):
                 self.location_id = location_id
                 self.location_dest_id = location_dest_id
 
+            for move in self.move_line_ids:
+                move.picking_type_id = self.picking_type_id
+
         # TDE CLEANME move into onchange_partner_id
         if self.partner_id and self.partner_id.picking_warn:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
