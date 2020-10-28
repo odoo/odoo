@@ -195,11 +195,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
+    start() {
+        const def = this._super(...arguments);
 
-        this._applyHash();
+        this._applyHashFromSearch();
 
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
@@ -218,9 +217,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
         this._startZoom();
 
-        window.addEventListener('hashchange', function (e) {
-            self._applyHash();
-            self.triggerVariantChange($(self.el));
+        window.addEventListener('hashchange', () => {
+            this._applyHash();
+            this.triggerVariantChange(this.$el);
         });
 
         return def;
@@ -717,6 +716,27 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-xl-block');
+    },
+    /**
+     * @private
+     */
+    _applyHashFromSearch() {
+        const params = $.deparam(window.location.search.slice(1));
+        if (params.attrib) {
+            const dataValueIds = [];
+            for (const attrib of [].concat(params.attrib)) {
+                const attribSplit = attrib.split('-');
+                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
+                const attribValue = this.el.querySelector(attribValueSelector);
+                if (attribValue !== null) {
+                    dataValueIds.push(attribValue.dataset.value_id);
+                }
+            }
+            if (dataValueIds.length) {
+                history.replaceState(undefined, undefined, `#attr=${dataValueIds.join(',')}`);
+            }
+        }
+        this._applyHash();
     },
 });
 
