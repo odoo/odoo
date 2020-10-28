@@ -3,16 +3,19 @@
 # 	* payment_adyen
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Oleg Kuryan <oleg@ventor.tech>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,19 +44,19 @@ msgstr "Adyen"
 #: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: feedback error"
-msgstr "Adyen: Ошибка Обратная связь"
+msgstr "Adyen: ошибка обратной связи"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr "Adyen: недопустимый merchantSig, получил %s, вычисленный %s"
+msgstr "Adyen: недопустимый merchantSig, получил %s, вычислено %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr "Adyen: получил данные для ссылки %s"
+msgstr "Adyen: получил данные для ссылки %s "
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
@@ -62,8 +65,14 @@ msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
 msgstr ""
-"Adyen: полученные данные с отсутствующей ссылкой (%s) или отсутствует "
+"Adyen: получены данные с отсутствующей ссылкой (%s) или отсутствует "
 "pspReference (%s)"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
@@ -71,9 +80,21 @@ msgid "How to configure your Adyen account?"
 msgstr "Как настроить учетную запись Adyen?"
 
 #. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
-msgstr "Мерчант аккаунт"
+msgstr "Аккаунт продавца"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer

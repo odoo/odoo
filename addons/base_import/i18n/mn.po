@@ -3,26 +3,31 @@
 # 	* base_import
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Otgonbayar.A <gobi.mn@gmail.com>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
-# Tsog Tsog <ts.tsogoo@gmail.com>, 2019
-# Minj P <pminj322@gmail.com>, 2019
-# Martin Trigaux, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Otgonbayar.A <gobi.mn@gmail.com>, 2020
+# Minj P <pminj322@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Minj P <pminj322@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records successfully imported"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -37,13 +42,6 @@ msgstr ""
 #, python-format
 msgid "%d records tested..."
 msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records were successfully imported"
-msgstr "%d мөрийг амжилттай импортлосон"
 
 #. module: base_import
 #. openerp-web
@@ -90,7 +88,7 @@ msgstr "Үндсэн импорт"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Үндсэн импортын харгалзуулалт"
 
 #. module: base_import
 #. openerp-web
@@ -152,6 +150,8 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"URL-ыг сэргээж боломжгүй: %(url)s[%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
@@ -211,6 +211,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Бичлэг олдохгүй бол шинээр үүсгэнэ (Импортын үед алдаа заахгүйгээр). Баганын"
+" утгууд нь шинэ бичлэгийн \"нэр\" болох ба эдгээр баганууд шинэ бичлэг "
+"үүсгэхэд хангалттай байна ёстойг анхаарна уу."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -264,6 +267,7 @@ msgstr "Аравны тусгаарлагч:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
 
@@ -283,6 +287,7 @@ msgstr "Цэг"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Download"
@@ -379,7 +384,7 @@ msgstr "Та CSV файл ашигласан бол зөв тусгаарлаг�
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Хэлбэржүүлэх сонголтууд ..."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -414,6 +419,7 @@ msgstr "Энд бидний импорт хийж чадаагүй файлын 
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -444,7 +450,6 @@ msgstr ""
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import"
 msgstr "Импортлох"
@@ -465,17 +470,17 @@ msgstr "Файл импортлох"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Import completed"
-msgstr "Импортлолт дууссан"
+msgid "Import preview failed due to:"
+msgstr "Импортыг урьдчилан харуулах явдал дараах шалтгаанаар бүтсэнгүй:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Import preview failed due to:"
-msgstr "Импортыг урьдчилан харуулах явдал дараах шалтгаанаар бүтсэнгүй:"
+msgid "Import records"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -515,6 +520,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
+#: model:ir.model.fields,field_description:base_import.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Сүүлд зассан огноо"
 
@@ -631,13 +637,6 @@ msgid "Relation Fields"
 msgstr "Харицааны талбарууд"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Reload File"
-msgstr "Файл дахин ачааллах"
-
-#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
 msgstr "Нөөцийн Модель"
@@ -670,6 +669,14 @@ msgstr ""
 #, python-format
 msgid "Select a CSV or Excel file to import."
 msgstr "Импортлох CSV эсвэл Excel файл сонгоно уу."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -743,62 +750,62 @@ msgstr "Тест: Суурь импортын загвар, засагдах т�
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr "Тест: Суурь импортын загвар, зөвхөн унших тэмдэгт"
+msgstr "Тест: Суурь импортын загвар, засах боломжгүй тэмдэгт"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, тэмдэгт байх шаардлагатай"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, тэмдэгтийн төлөв"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, тэмдэгт засах боломжгүй хэвээр байна"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, many to one"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, many to one хамааралтай"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, many to one шаардлагатай"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, many to one шаардлагатай хамаарал"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, One to many "
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Тест: Суурь импортын загвар, One to many дэд хамаарал"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Тест: Үндсэн импортын модель, комплекс тоо"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Тест: Үндсэн импортын модель, хөвөх таслалтай тоо"
 
 #. module: base_import
 #. openerp-web
@@ -821,6 +828,13 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "This is a preview of the first 10 rows of your file"
 msgstr ""
 
 #. module: base_import
@@ -896,6 +910,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Та URL ашиглан зураг импортлох боломжгүй, шалтгааныг нь админтай холбогдон "
+"лавлана уу."
 
 #. module: base_import
 #. openerp-web

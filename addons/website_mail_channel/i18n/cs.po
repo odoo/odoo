@@ -3,16 +3,18 @@
 # 	* website_mail_channel
 # 
 # Translators:
-# Martin Trigaux, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Jiří Podhorecký, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,13 +86,13 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-envelope-o\"/> send mail"
 msgstr "<i class=\"fa fa-envelope-o\"/> poslat mail"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-file-o\"/> archives"
 msgstr "<i class=\"fa fa-file-o\"/> archivy"
 
@@ -103,14 +105,9 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-times\"/> unsubscribe"
 msgstr "<i class=\"fa fa-times\"/> odhlásit odběr"
-
-#. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Diskusní skupina</span>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
@@ -147,8 +144,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -230,8 +227,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature:\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -279,13 +276,6 @@ msgid ""
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:15
-#, python-format
-msgid "Add a Subscribe Button"
-msgstr "Přidat tlačítko Odebírat"
-
-#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
 msgstr "Sami toho můžeme udělat málo, společně můžeme udělat tolik"
@@ -319,11 +309,6 @@ msgid "By thread"
 msgstr "Podle vlákna"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "Change Discussion List"
-msgstr "Změnit seznam diskuzí"
-
-#. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Confirm subscription to ${object.name}"
 msgstr "Potvrdit předplatné ${object.name}"
@@ -334,16 +319,21 @@ msgid "Confirm unsubscription to ${object.name}"
 msgstr "Potvrďte odhlášení u ${object.name}"
 
 #. module: website_mail_channel
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel_options
+msgid "Create a public discussion group in your backend"
+msgstr ""
+
+#. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
 msgid "Discussion Channel"
 msgstr "Diskusní kanál"
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:16
-#, python-format
-msgid "Discussion List"
-msgstr "Seznam diskusí"
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -356,19 +346,34 @@ msgid "Group"
 msgstr "Skupina"
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
 msgstr "Neplatný odkaz nebo vypršení potvrzovacího odkazu."
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_website____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
-#: model:website.menu,name:website_mail_channel.menu_mailing_list
+#, python-format
 msgid "Mailing Lists"
 msgstr "Seznam e-mailových adres"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:20
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Mailing-List"
 msgstr "Poštovní seznam"
@@ -388,7 +393,7 @@ msgid "Outgoing Mails"
 msgstr "Odchozí e-maily"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:21
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Post to"
 msgstr "Přidat do"
@@ -405,7 +410,7 @@ msgstr "Buďte v kontaktu s naší komunitou"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "Subscribe"
 msgstr "Odebírat"
 
@@ -415,7 +420,7 @@ msgid "The address"
 msgstr "Adresa"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:245
+#: code:addons/website_mail_channel/controllers/main.py:0
 #, python-format
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
@@ -425,11 +430,16 @@ msgstr ""
 "poštovního seznamu"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Odhlásit odběr"
+
+#. module: website_mail_channel
+#: model:ir.model,name:website_mail_channel.model_website
+msgid "Website"
+msgstr "Webstránka"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -437,7 +447,7 @@ msgid "You have been correctly"
 msgstr "Byl jste správně"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "a confirmation email has been sent."
 msgstr "byl odeslán potvrzovací e-mail."
 
@@ -515,6 +525,6 @@ msgstr "odhlášen"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "your email..."
 msgstr "váš e-mail..."

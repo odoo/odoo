@@ -989,7 +989,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"En journalbevægelse består af flere journalposter, som hver\n"
+"En journalpostering består af flere journal bilag, som hver\n"
 "især er enten debet eller kredit transaktion."
 
 #. module: account
@@ -3287,7 +3287,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Afkryds dette felt, hvis denne konto tillader fakturaer og betalinger, der "
-"matcher journalposter."
+"matcher journal bilag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3777,7 +3777,7 @@ msgstr "Opret Automatiske Posteringer"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
-msgstr "Opret Automatiske Posteringer for valgte Journalartikler"
+msgstr "Opret Automatiske Posteringer for valgte Journal bilag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -4115,7 +4115,7 @@ msgstr "Kreditkonto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Kredit journaler, der matches med denne journal."
+msgstr "Krediter journal bilag, der matches med denne journal."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4477,7 +4477,7 @@ msgstr "Debit konto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Debet journalposter, der matches med denne journal."
+msgstr "Debiter journal bilag, der matches med denne journal."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -6757,7 +6757,8 @@ msgstr "Fakturaer til godkendelse"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
 msgstr ""
-"Faktura hvis journal posteringer der er blevet afstemt med disse betalinger."
+"Faktura hvis journal journal bilag der er blevet afstemt med disse "
+"betalinger."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -7016,7 +7017,7 @@ msgstr "Tekst på journalpost"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Journal Items"
-msgstr "Journalposter"
+msgstr "Journal bilag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -7038,7 +7039,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr "Journal Genstande"
+msgstr "Journal bilag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7748,7 +7749,7 @@ msgstr "Matchet debit"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Matchede journalposter"
+msgstr "Matchede journal bilag"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -9351,7 +9352,7 @@ msgstr "Bogførte posteringer"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Registrerede posteringer"
+msgstr "Registrerede journal bilag"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10391,7 +10392,7 @@ msgstr "Søg faktura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Søg i journal posteringer"
+msgstr "Søg i journal journal bilag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10949,8 +10950,8 @@ msgid ""
 "Some journal items already exist in this journal but with accounts from "
 "different types than the allowed ones."
 msgstr ""
-"Visse journalartikler eksisterer allerede i denne journal, men med konti fra"
-" andre typer end de tilladte."
+"Visse journal bilag eksisterer allerede i denne journal, men med konti fra "
+"andre typer end de tilladte."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -10959,8 +10960,8 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
-"Visse journalartikler eksisterer allerede i denne journal, men med andre "
-"konti en de tilladte."
+"Visse journal bilag eksisterer allerede i denne journal, men med andre konti"
+" en de tilladte."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -10969,7 +10970,7 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
-"Visse journalartikler eksisterer allerede med denne konto, men i andre "
+"Visse journal bilag eksisterer allerede med denne konto, men i andre "
 "journaler end de tilladte."
 
 #. module: account
@@ -12468,7 +12469,7 @@ msgid ""
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
 "Journalposteringen %s nåede en ugyldig tilstand relativ til dens betaling.\n"
-"For at være konsistent, skal alle afskrevne journalartikler have den samme konto. "
+"For at være konsistent, skal alle afskrevne journal bilag have den samme konto. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12485,7 +12486,7 @@ msgstr ""
 "For at være konsistent, skal journalposteringen altid indeholde:\n"
 "- en journalartikel der involverer udestående betalings/kvitterings kontoen.\n"
 "- en journalartikel der involverer en tilgodehavende/betalbar konto.\n"
-"- valgfri journalartikler, som alle har samme konto.\n"
+"- valgfri journal bilag, som alle har samme konto.\n"
 "\n"
 
 #. module: account
@@ -12682,7 +12683,7 @@ msgstr "Betalingsbeløbet kan ikke være negativt."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr "Betalings referencens der skal angives på journalposter."
+msgstr "Betalings referencens der skal angives på journal bilag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
@@ -14179,7 +14180,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr "Du kan kun ændre perioden/kontoen for posteret journalartikler."
+msgstr "Du kan kun ændre perioden/kontoen for posteret journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14346,7 +14347,7 @@ msgid ""
 "selected journal items."
 msgstr ""
 "Du kan ikke registrere en betaling, fordi der er intet tilbage at betale, i "
-"de valgte journalartikler."
+"de valgte journal bilag."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14355,7 +14356,7 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
-"Du kan ikke registrere betalinger for journalartikler der enten alle er "
+"Du kan ikke registrere betalinger for journal bilag der enten alle er "
 "indgående eller udgående."
 
 #. module: account
@@ -14413,7 +14414,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Du kan ikke ændre ejerselskabet til en konto, der allerede indeholder "
-"journalartikler."
+"journal bilag."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

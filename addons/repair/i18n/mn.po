@@ -3,20 +3,26 @@
 # 	* repair
 # 
 # Translators:
-# nasaaskii <nasaaskii@gmail.com>, 2019
-# Onii Onii <onii0223@yahoo.com>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
-# Martin Trigaux, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Martin Trigaux, 2020
+# nasaaskii <nasaaskii@gmail.com>, 2020
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2020
+# Onii Onii <onii0223@yahoo.com>, 2020
+# Minj P <pminj322@gmail.com>, 2020
+# Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2020
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
+# Батболд <batbold.ts@gmail.com>, 2020
+# Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,18 +33,20 @@ msgstr ""
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} Засварын захиалга (Ref ${object.name or 'n/a' })"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid ""
-"(                 object.state == 'draft' and 'Repair Quotation - %s' % "
-"(object.name) or                 'Repair Order - %s' % (object.name))"
+"(\n"
+"                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
+"                'Repair Order - %s' % (object.name))"
 msgstr ""
 
 #. module: repair
@@ -69,6 +77,12 @@ msgstr ""
 "* 'Цуцлагдсан' засварыг цуцласан тохиолдолд энэ төлөв олгогдоно."
 
 #. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ": Insufficient Quantity To Repair"
+msgstr ""
+
+#. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
 msgid ""
 "<?xml version=\"1.0\"?>\n"
@@ -87,6 +101,10 @@ msgid ""
 "        You can reply to this email if you have any questions.\n"
 "        <br/><br/>\n"
 "        Thank you,\n"
+"        % if user.signature\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -95,13 +113,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
 msgstr "<i>(Нэмэх)</i>"
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
-msgid ""
-"<span class=\"o_form_label\">This operation will cancel the Repair process, "
-"but will not cancel it's Invoice. Do you want to continue?</span>"
-msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -113,17 +124,17 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong>Цуврал/Серийн дугаар:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "<strong>Үйл ажиллагаа</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong>Бүрэлдэхүүн</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -153,6 +164,11 @@ msgstr "<strong>Нийт</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
+msgstr "<strong>Баталгаа:</strong>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "? This may lead to inconsistencies in your inventory."
 msgstr ""
 
 #. module: repair
@@ -168,12 +184,17 @@ msgstr "Ажилбар"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Ажилбарын тайлбар"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
 msgstr "Ажилбарын төлөв"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__type__add
@@ -182,13 +203,13 @@ msgstr "Нэмэх"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-msgid "Add internal notes..."
-msgstr "Дотоод тэмдэглэл нэмэх..."
+msgid "Add internal notes."
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-msgid "Add quotation notes..."
-msgstr "Үнийн саналын тэмдэглэлүүд нэмэх..."
+msgid "Add quotation notes."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -206,34 +227,20 @@ msgid "Before Repair"
 msgstr "Засварын өмнө"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: repair
-#: model:ir.model,name:repair.model_repair_cancel
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel Repair"
 msgstr "Засвар Цуцлах"
-
-#. module: repair
-#: model:ir.actions.act_window,name:repair.action_cancel_repair
-#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
-msgid "Cancel Repair Order"
-msgstr "Засварын захиалгыг цуцлах"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__cancel
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 msgid "Cancelled"
 msgstr "Цуцлагдсан"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:0
-#, python-format
-msgid "Cannot cancel completed repairs."
-msgstr "Дууссан засварыг цуцлах боломжгүй."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
@@ -248,6 +255,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Захиалгыг нэхэмжлэх мөн хүргэх харилцагчийг сонгоно уу, Та харилцагчийг нэр,"
+" TIN, имэйл мөн дотоод сурвалжаар хайх боломжтой."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -255,6 +264,8 @@ msgid "Color Index"
 msgstr "Өнгөний индекс"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__company_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__company_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
@@ -275,7 +286,7 @@ msgstr "Засварыг Батлах"
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Confirmed"
-msgstr "Батлагдсан"
+msgstr "Илгээсэн"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
@@ -307,12 +318,7 @@ msgstr "Нэхэмжлэл үүсгэх"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
-
-#. module: repair
-#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
-msgid "Create a new reparation order"
-msgstr ""
+msgstr "Масс нэхэмжлэх үүсгэх(засвар)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -326,7 +332,6 @@ msgid "Create invoices"
 msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_fee__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_line__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_uid
@@ -337,7 +342,6 @@ msgid "Created by"
 msgstr "Үүсгэсэн этгээд"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_fee__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_line__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_date
@@ -348,15 +352,22 @@ msgid "Created on"
 msgstr "Үүсгэсэн огноо"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__currency_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__currency_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Customer"
-msgstr "Захиалагч"
+msgstr "Үйлчлүүлэгч"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Үндсэн хаяг"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
@@ -376,15 +387,23 @@ msgid "Dest. Location"
 msgstr "Хүрэх байршил"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel__display_name
+#: model:ir.model.fields,field_description:repair.field_account_move__display_name
+#: model:ir.model.fields,field_description:repair.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_fee__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_line__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_move__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "Do you confirm you want to repair"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -403,6 +422,12 @@ msgstr "Ноорог"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid ""
+"Draft invoices for this order will be cancelled. Do you confirm the action?"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
 msgstr "Засварыг Төгсгөх"
 
@@ -410,11 +435,6 @@ msgstr "Засварыг Төгсгөх"
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "Агуулахын нөөцөнд байгаа барааг мөшгин шалгах боломж"
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Exception Activities"
-msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -442,9 +462,14 @@ msgid "Followers (Partners)"
 msgstr "Дагагчид (Харилцагчид)"
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
-msgstr "Ирээдүйн ажилбар"
+msgstr "Ирээдүйн үйл ажиллагаанууд"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -462,12 +487,15 @@ msgid "History"
 msgstr "Түүх"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel__id
+#: model:ir.model.fields,field_description:repair.field_account_move__id
+#: model:ir.model.fields,field_description:repair.field_account_move_line__id
 #: model:ir.model.fields,field_description:repair.field_repair_fee__id
 #: model:ir.model.fields,field_description:repair.field_repair_line__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__id
 #: model:ir.model.fields,field_description:repair.field_repair_tags__id
+#: model:ir.model.fields,field_description:repair.field_stock_move__id
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
 msgid "ID"
 msgstr "ID"
@@ -480,7 +508,7 @@ msgstr "Дүрс"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ажилбар дээр сануулга гарсныг илэрхийлэх зураг."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
@@ -503,12 +531,6 @@ msgid ""
 msgstr ""
 "Засварын захиалгад хасах, нэмэх, солих бүрдэл хэсгүүдийг бүртгэнэ,\n"
 "                төрөл бүрийн ажилбар дээр зарцуулсан хугацааг мөн хөтлөнө."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:0
-#, python-format
-msgid "Insufficient Quantity"
-msgstr "Тоо хэмжээ хүрэлцэхгүй"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -540,6 +562,11 @@ msgstr "Нэхэмжлэлийн мөр"
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
 msgstr "Нэхэмжлэх арга"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
+msgid "Invoice State"
+msgstr "Нэхэмжлэлийн төлөв"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -577,7 +604,7 @@ msgstr "Дагагч эсэх"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
-msgid "Journal Entries"
+msgid "Journal Entry"
 msgstr "Ажил гүйлгээ"
 
 #. module: repair
@@ -586,18 +613,20 @@ msgid "Journal Item"
 msgstr "Журналын бичилт"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
+#: model:ir.model.fields,field_description:repair.field_account_move____last_update
+#: model:ir.model.fields,field_description:repair.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_line____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
+#: model:ir.model.fields,field_description:repair.field_stock_move____last_update
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report____last_update
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
 msgid "Last Modified on"
 msgstr "Сүүлд зассан огноо"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_fee__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_line__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
@@ -608,7 +637,6 @@ msgid "Last Updated by"
 msgstr "Сүүлд зассан этгээд"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_cancel__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_fee__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_line__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_date
@@ -627,13 +655,13 @@ msgstr "Хоцорсон ажилбар"
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
-msgstr "Байршил"
+msgstr "Байрлал"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr "Цуврал"
+msgstr "Серийн дугаар"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
@@ -678,7 +706,7 @@ msgstr "Дараагийн ажилбарын төрөл"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
-msgstr "Нэхэмлэл үгүй"
+msgstr "Нэхэмжлэхгүй"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -690,24 +718,29 @@ msgstr "\"%s\" бараанд данс тодорхойлогдоогүй бай
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "Үнийн хүснэгт олдсонгүй."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
+msgstr "Шимтгэл дээр ямар нэг бүтээгдэхүүн тодорхойлоогүй байна."
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
+msgid "No repair order found. Let's create one!"
 msgstr ""
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "Идэвхитэй үнийн хүснэгтийн мөр олдсонгүй."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Notes"
-msgstr "Тэмдэглэл"
+msgstr "Тэмдэглэлүүд"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -717,7 +750,7 @@ msgstr "Үйлдлийн тоо"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Алдааны тоо"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
@@ -738,19 +771,19 @@ msgstr "Уншаагүй зурвасын тоо"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "Зөвхөн ноорог төлөвтэй засварыг баталж болно."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
-msgstr "Гүйлгээнүүд"
+msgstr "Үйл ажиллагаа"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "Бүрэлдэхүүн"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -776,7 +809,7 @@ msgstr "Сонгосон харилцагчийн үнийн хүснэгт"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "Үнийн санал хэвлэх"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -790,6 +823,11 @@ msgstr "Бараа"
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
 msgstr "Барааны тоо хэмжээ"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__tracking
+msgid "Product Tracking"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
@@ -816,6 +854,7 @@ msgstr "Нөөц"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_qty
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quantity
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
@@ -858,7 +897,9 @@ msgid "Remove"
 msgstr "Хасах"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_bank_statement_line__repair_ids
 #: model:ir.model.fields,field_description:repair.field_account_move__repair_ids
+#: model:ir.model.fields,field_description:repair.field_account_payment__repair_ids
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
@@ -872,7 +913,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "Засварын шимтгэл"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
@@ -882,7 +923,7 @@ msgstr "Засварын мөр"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "Засварын мөр(бүрэлдэхүүн)"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -926,6 +967,12 @@ msgid "Repair Reference"
 msgstr "Засварын Код"
 
 #. module: repair
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
@@ -954,12 +1001,6 @@ msgstr "Засвар нь барааны хөдөлгөөнийг үүсгэхи
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Засварыг дуусгахын тулд засвар засагдаж буй байх ёстой."
-
-#. module: repair
-#: code:addons/repair/wizard/repair_cancel.py:0
-#, python-format
-msgid "Repair order is not invoiced."
-msgstr "Засварын захиалга нэхэмлэгдээгүй."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -997,7 +1038,7 @@ msgstr "Хариуцсан хэрэглэгч"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS илгээлтийн алдаа"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1018,7 +1059,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "Үнийн санал илгээх"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1041,7 +1082,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr "Эх байрлал"
+msgstr "Гарах байрлал"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1087,7 +1128,7 @@ msgstr "Пайзын нэр"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Пайзын нэр аль хэдийн үүссэн байна !"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tag
@@ -1122,22 +1163,8 @@ msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
 msgstr ""
-
-#. module: repair
-#: code:addons/repair/models/repair.py:0
-#, python-format
-msgid "The repair order is already invoiced."
-msgstr ""
-
-#. module: repair
-#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
-msgid ""
-"The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
-"                customer or not."
-msgstr ""
-"Засварын захиалга нь Цувралын дугаар дээрх баталгааны өгдөөг хэрэглэж\n"
-"                засварыг захиалагчаас нэхэмжлэх эсэхийг шийдвэрлэдэг."
+"Таны сонгосон бүтээгдэхүүний хэмжих нэгж, бүтээгдэхүүний хэмжих нэгжээс өөр "
+"ангилалтай байна."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1151,7 +1178,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "Энэ байрлал нь бүтээгдэхүүнийг засах байршил юм."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
@@ -1166,7 +1193,7 @@ msgstr "Өнөөдрийн ажилбар"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_total
 msgid "Total"
-msgstr "Нийт"
+msgstr "Нийт дүн"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1179,11 +1206,6 @@ msgid "Traceability Report"
 msgstr "Мөшгөлтийн Тайлан"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__tracking
-msgid "Tracking"
-msgstr "Хөтлөлт"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
 msgid "Type"
 msgstr "Төрөл"
@@ -1191,7 +1213,7 @@ msgstr "Төрөл"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Бичлэг дээрх асуудал бүхий ажилбарын төрөл"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1206,10 +1228,17 @@ msgid "Unit Price"
 msgstr "Нэгж үнэ"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Хэмжих нэгж"
+
+#. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Units"
+msgstr "Нэгж"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
@@ -1239,7 +1268,7 @@ msgstr "Хэмжих нэгж"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "Засварын тоо хэмжээ хүрэлцэхгүй байна."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1264,9 +1293,20 @@ msgid "Website communication history"
 msgstr "Вебсайтын харилцааны түүх"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
-msgid "Yes"
-msgstr "Тийм"
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ""
+"You can not delete a repair order once it has been confirmed. You must first"
+" cancel it."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ""
+"You can not delete a repair order which is linked to an invoice which has "
+"been posted once."
+msgstr ""
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1288,4 +1328,9 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
+msgstr "Та засварын формд нэхэмжлэхийн хаягийг сонгох хэрэгтэй."
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "from location"
 msgstr ""

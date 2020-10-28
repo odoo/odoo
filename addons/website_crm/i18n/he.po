@@ -3,20 +3,19 @@
 # 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Fishfur A Banter <fishfurbanter@gmail.com>, 2019
-# ExcaliberX <excaliberx@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# Martin Trigaux, 2020
+# ExcaliberX <excaliberx@gmail.com>, 2020
+# Yihya Hugirat <hugirat@gmail.com>, 2020
+# דודי מלכה <Dudimalka6@gmail.com>, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +26,52 @@ msgstr ""
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr ""
+msgstr "מס' לידים"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
+msgstr "מס' צפיות בדף"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Contact Form</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Subject</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Name</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Question</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 
 #. module: website_crm
@@ -43,7 +83,7 @@ msgstr "הוסף טופס יצירת קשר ב"
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
-msgid "Assign leads/opportunities to a sales channel."
+msgid "Assign leads/opportunities to a sales team."
 msgstr ""
 
 #. module: website_crm
@@ -51,32 +91,27 @@ msgstr ""
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Assign leads/opportunities to a salesperson."
-msgstr ""
+msgstr "שייך לידים / הזדמנויות לאיש מכירות."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
-msgstr "תקשורת"
+msgstr "אסמכתה"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
-msgstr "הגדרות תצורה"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Contact Form"
-msgstr "טופס איש קשר"
+msgstr "הגדר הגדרות"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Us"
-msgstr "צרו קשר"
+msgstr "צור קשר"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Team"
-msgstr "ברירת מחדל צוות מכירות "
+msgstr "צוות מכירות ברירת מחדל"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
@@ -88,27 +123,43 @@ msgstr ""
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr "ברירת מחדל צוותי מכירות "
+msgstr "צוותי מכירות ברירת מחדל"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
-msgstr "ברירת מחדל איש מכירות"
+msgstr "איש מכירות ברירת מחדל"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr ""
+msgstr "איש מכירות ברירת מחדל עבור לידים חדשים שנוצרו באמצעות טופס צור קשר."
 
 #. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Email"
-msgstr "דוא\"ל"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "הצג שם"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_crm.field_website__id
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__id
+msgid "ID"
+msgstr "תעודה מזהה"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead____last_update
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_crm.field_website____last_update
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor____last_update
+msgid "Last Modified on"
+msgstr "שינוי אחרון ב"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
@@ -121,52 +172,42 @@ msgstr "ליד/הזדמנות"
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Leads"
-msgstr "לידים "
+msgstr "לידים"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
 msgid "Leads/Opportunities"
-msgstr ""
+msgstr "לידים/ הזדמנויות"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr "הודעות חדשות מנוהלות כהפניות או הזדמנויות ביישומון ה CRM שלך."
+msgstr ""
+"הודעות חדשות מנוהלות כלידים או הזדמנויות ביישום ניהול קשרי לקוחות שלך."
 
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
 msgid "No lead linked for this visitor"
-msgstr ""
+msgstr "אין ליד מקושר למבקר זה"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
 msgid "Page views"
-msgstr ""
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Phone Number"
-msgstr "מספר טלפון"
+msgstr "צפיות בדף"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
-msgstr "הגדר צוות מכירות עבור האתר. אחרת לא תוכל לעקוב אחר אירועים קשורים."
+msgstr ""
+"אנא הגדר צוות מכירות לאתר האינטרנט. אחרת לא תוכל לעקוב אחר אירועים קשורים.."
 
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
-#, python-format
-msgid "Sales Channel"
-msgstr "ערוץ מכירות"
-
-#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Sales Team"
 msgstr "צוות מכירות"
 
@@ -180,67 +221,35 @@ msgstr "איש מכירות"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Send"
+msgid "Submit"
 msgstr "שלח"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Subject"
-msgstr "נושא"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Visitors"
-msgstr ""
+msgstr "מבקרים"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
-msgstr ""
+msgstr "מבקרים באתר האינטרנט"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
 msgid "Website"
-msgstr "אתר"
+msgstr "אתר אינטרנט"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
 msgid "Website Contact Form"
-msgstr "טופס יצירת קשר באתר"
+msgstr "טופס יצירת קשר באתר האינטרנט"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Company"
-msgstr "חברה שלך"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Name"
-msgstr "שם מלא"
-
-#. module: website_crm
-#. openerp-web
-#: code:addons/website_crm/static/src/xml/website_crm.xml:0
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-#, python-format
-msgid "Your Question"
-msgstr "השאלה שלך"
+msgstr "מבקר באתר האינטרנט"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
-msgstr "עמוד"
+msgstr "דף"

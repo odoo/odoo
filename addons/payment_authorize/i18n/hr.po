@@ -3,18 +3,19 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2019
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Tina Milas, 2019
+# Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2020
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
+# Tina Milas, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Tina Milas, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +79,13 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Naziv"
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
 msgstr ""
@@ -88,12 +96,26 @@ msgid "How to get paid with Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Zadnja promjena"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer

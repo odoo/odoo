@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_sips
+# 	* payment_sips
 # 
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Martin Trigaux, 2020
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Bonny Useful <bonny.useful@gmail.com>, 2017\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,71 +22,87 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:153
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; beberapa pesanan ditemukan"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:151
-#, python-format
-msgid "; no order found"
+msgid "Currency not supported by Wordline: %s"
 msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:74
-#, python-format
-msgid "Currency not supported by Wordline"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:55
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_version
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr ""
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Acquirer pembayaran"
+msgstr "Pemilik Tagihan"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transaksi pembayaran"
+msgstr "Transaksi Tagihan"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_prod_url
-msgid "Prod's url"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production url"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Pemberi"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
 msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:149
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+msgid "Secret Key Version"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "Sips: received data for reference %s"
+msgid "Sips: received data for reference %s; no order found"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_test_url
-msgid "Test's url"
-msgstr ""
-
-#. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer_sips_merchant_id
-msgid "Used for production only"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test url"
 msgstr ""

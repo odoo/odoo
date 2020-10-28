@@ -3,23 +3,33 @@
 # 	* base_import
 # 
 # Translators:
-# Collex100, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Martin Trigaux, 2019
+# Martin Trigaux, 2020
+# Collex100, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "%d records successfully imported"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -33,13 +43,6 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records were successfully imported"
 msgstr ""
 
 #. module: base_import
@@ -70,6 +73,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"При импорте произошла неизвестная проблема (возможно, потеряно подключение, "
+"превышен лимит данных или превышении ограничения памяти). Повторите попытку,"
+" если проблема не стала. Если проблема все еще возникает, попробуйте "
+"разделить файл, а не импортировать его сразу."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -79,12 +86,12 @@ msgstr "Базовый"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "импорт базы"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Базовое сопоставление импорта"
 
 #. module: base_import
 #. openerp-web
@@ -124,12 +131,12 @@ msgstr "Колонка %s содержит неверные значения (з
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "Столбец %s содержит неверные значения. Ошибка в строке %d: %s"
+msgstr "Столбец %s содержит неверные значения. Ошибка в строке %d: %s "
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Название колонки"
 
 #. module: base_import
 #. openerp-web
@@ -146,13 +153,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Не удалось получить URL:%(url)s  [%(field_name)s : L%(line_number) "
+"d]:%(error)s "
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Создайте, если не существует"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -173,7 +182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -205,6 +214,10 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Создает новые записи, если они не могут быть найдены (вместо неудачного "
+"импорта). Заметьте, что значение в столбце будет использоваться как "
+"`название` новой записи и предполагает, что этого достаточно для создания "
+"записи."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -258,8 +271,9 @@ msgstr "Десятичный разделитель:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: base_import
 #. openerp-web
@@ -278,6 +292,7 @@ msgstr "Точка"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "Скачать"
@@ -285,7 +300,7 @@ msgstr "Скачать"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -305,7 +320,7 @@ msgstr "Кодировка:"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "Ошибка парсинга данных [%s: L %d]: %s"
+msgstr "Ошибка парсинга данных [ %s: L %d]: %s "
 
 #. module: base_import
 #. openerp-web
@@ -319,7 +334,7 @@ msgstr "Все кажется корректным."
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
+msgstr "Файлы Excel рекомендуются как автоматическое форматирование полей."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -353,7 +368,7 @@ msgstr "Тип файла"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Размер файла превышает настроен максимум (%s  байтов)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -365,14 +380,14 @@ msgstr "Файл для проверки и/или импорта, двоичн�
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "Для файлов CSV вам нужно будет выбрать правильный разделитель."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Функции форматирования ..."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -407,8 +422,9 @@ msgstr "Вот начало файла, который мы не могли им
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
-msgstr "Номер"
+msgstr "Идентификатор"
 
 #. module: base_import
 #. openerp-web
@@ -420,7 +436,7 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"Если файл содержит имена столбцов, Odoo можете попробовать автоопределение "
+"Если файл содержит имена столбцов, Odoo может попробовать автоопределение "
 "для поля, соответствующего столбцу. Это делает импорт проще, особенно, когда"
 " файл имеет множество столбцов."
 
@@ -436,7 +452,6 @@ msgstr ""
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import"
 msgstr "Импорт"
@@ -446,7 +461,7 @@ msgstr "Импорт"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "импортировать FAQ"
 
 #. module: base_import
 #. openerp-web
@@ -457,17 +472,17 @@ msgstr "Импортировать файл"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Import completed"
-msgstr ""
+msgid "Import preview failed due to:"
+msgstr "Импорт предварительного просмотра не удался по причине:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Import preview failed due to:"
-msgstr "Импорт предварительного просмотра не удался по причине:"
+msgid "Import records"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -478,6 +493,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Импорт завершен. Повторите попытку. Если вы все еще сталкиваетесь с этой "
+"проблемой, файл может быть слишком большим для настройки системы, попробуйте"
+" разделить его (импортировать меньше записей на файл)."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -503,6 +521,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
+#: model:ir.model.fields,field_description:base_import.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
@@ -560,7 +579,7 @@ msgstr "Загрузить файл"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "Скачать новый файл"
 
 #. module: base_import
 #. openerp-web
@@ -585,14 +604,14 @@ msgstr "Название"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "Нужна помощь?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Есть разделителя"
 
 #. module: base_import
 #. openerp-web
@@ -617,13 +636,6 @@ msgstr "Родитель"
 #, python-format
 msgid "Relation Fields"
 msgstr "Поля отношений"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Reload File"
-msgstr "Перезагрузить файл"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -658,6 +670,14 @@ msgstr ""
 #, python-format
 msgid "Select a CSV or Excel file to import."
 msgstr "Выбрать файл CSV или Excel для импорта."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -716,77 +736,77 @@ msgstr "Тест"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Тесты: Предварительный просмотр модели импорта базы"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Символ"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Символ Нет только для чтения"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Символ только для чтения"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, необходимый символ"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Станы символов"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Символ до сих пор только для чтения"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Many to One"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Many to One связано"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Many to One необходимо"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, Many to One связано необходим"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Тесты: Модель импорта базы, дочерней One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Тесты: Комплекс модели импорта базы"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Тесты: Гибкая модель импорта базы"
 
 #. module: base_import
 #. openerp-web
@@ -809,6 +829,13 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "This is a preview of the first 10 rows of your file"
 msgstr ""
 
 #. module: base_import
@@ -866,7 +893,7 @@ msgstr "Объём"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "значение2"
 
 #. module: base_import
 #. openerp-web
@@ -884,6 +911,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Нельзя импортировать изображения с помощью URL-адреса, обратитесь к "
+"администратору или службы поддержки по этой причине."
 
 #. module: base_import
 #. openerp-web

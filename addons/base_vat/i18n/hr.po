@@ -3,17 +3,16 @@
 # 	* base_vat
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +53,20 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Naziv"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
@@ -63,29 +76,31 @@ msgstr ""
 "njegov porezni broj nije potvrđen od strane EU-VIES servisa."
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:188
-#, python-format
-msgid ""
-"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
-"Note: the expected format is %s"
-msgstr ""
-"PDV ID [%s] za partnera [%s] ne čini se ispravnim. \n"
-"Napomena: Očekivani format je %s"
+#: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_partner____last_update
+msgid "Last Modified on"
+msgstr "Zadnja promjena"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:187
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
-"check or did not respect the expected format %s."
+"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
+"Note: the expected format is %(format)s"
 msgstr ""
-"VAT broj [%s] za partnera [%s] ili nije prošao VIES kontrolu, ili nije u "
-"očekivanom formatu %s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
+"validation check or did not respect the expected format %(format)s."
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "PDV"
 

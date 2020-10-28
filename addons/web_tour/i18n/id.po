@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_tour
+# 	* web_tour
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Martin Trigaux, 2020
+# William Surya Permana <zarambie_game@yahoo.com>, 2020
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
+# Bonny Useful <bonny.useful@gmail.com>, 2020
+# Gusti Rini <gustirini@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,40 +25,51 @@ msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:485
+#: code:addons/web_tour/static/src/js/tour_manager.js:0
 #, python-format
-msgid "Click the <i>Home icon</i> to navigate across apps."
-msgstr "Klik <i>Ikon Home</i> untuk beralih antar apps."
+msgid ""
+"<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr ""
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_user_id
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
+#, python-format
+msgid "Click on the <i>Home icon</i> to navigate across apps."
+msgstr ""
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
 msgid "Consumed by"
 msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Disable Tours"
 msgstr ""
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_display_name
+#: model:ir.model.fields,field_description:web_tour.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP routing"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_id
+#: model:ir.model.fields,field_description:web_tour.field_ir_http__id
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
 msgid "ID"
 msgstr "ID"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour___last_update
+#: model:ir.model.fields,field_description:web_tour.field_ir_http____last_update
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour____last_update
 msgid "Last Modified on"
 msgstr "Terakhir diubah pada"
 
@@ -66,30 +80,81 @@ msgstr "Menu"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:21
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Name"
 msgstr "Nama"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:22
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
+#, python-format
+msgid "Open bugger menu."
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Path"
 msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:198
+#: code:addons/web_tour/static/src/js/tip.js:0
+#, python-format
+msgid "Scroll to reach the next step."
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#, python-format
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_manager.js:0
 #, python-format
 msgid "Skip tour"
 msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:11
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#, python-format
+msgid "Start"
+msgstr "Mulai"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Start Tour"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#, python-format
+msgid "Start tour"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#, python-format
+msgid "Test"
+msgstr "Tes"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#, python-format
+msgid "Test tour"
 msgstr ""
 
 #. module: web_tour
@@ -98,7 +163,7 @@ msgid "Tip"
 msgstr "Tip"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_name
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
 msgid "Tour name"
 msgstr ""
 

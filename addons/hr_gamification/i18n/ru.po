@@ -3,16 +3,19 @@
 # 	* hr_gamification
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +74,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr "Значки непосредственно связанные с работником"
+msgstr "Значки, непосредственно связанные с работником"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee_base
@@ -93,12 +96,12 @@ msgstr "Соревнования"
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Create a new challenge"
-msgstr ""
+msgstr "Создать новое испытание"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
-msgstr ""
+msgstr "Создать новую цель"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -112,6 +115,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
 msgstr "Прямой значок"
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
@@ -136,17 +148,17 @@ msgstr "HR-цели сотрудника"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Гемификация значка"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Гемификация пользовательского значка"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "Помощник гемификации пользовательского значка"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
@@ -169,12 +181,12 @@ msgstr "Наградить значком"
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "Наградите этого сотрудника его первым значком"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr "Награжденые"
+msgstr "Награжденные"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
@@ -189,6 +201,24 @@ msgid "Has Badges"
 msgstr "Есть значки"
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
@@ -197,21 +227,21 @@ msgstr "Полученные награды"
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Пользователь управляющий доступом к ресурсу."
+msgstr "Пользователь, управляющий доступом к ресурсу."
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr "Вознаградить сотрудника"
+msgstr "Наградить сотрудника"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr "Вознаградить сотрудника"
+msgstr "Наградить сотрудника"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/models/gamification.py:18
+#: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
 msgstr "Выбранный сотрудник не соответствует выбранному пользователю."
@@ -232,13 +262,13 @@ msgid "What are you thankful for?"
 msgstr "За что вас поблагодарили?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
-msgstr ""
+msgstr "Вы не можете отправить самому себе значок."
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "Вы можете выдавать значки только сотрудникам, имеющим учётные записи."

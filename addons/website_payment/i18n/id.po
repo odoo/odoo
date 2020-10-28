@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_payment
+# 	* website_payment
 # 
 # Translators:
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Martin Trigaux, 2020
+# William Surya Permana <zarambie_game@yahoo.com>, 2020
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: William Surya Permana <zarambie_game@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,21 +22,26 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.website_settings_payment
-msgid "Configure payment acquirers"
-msgstr "Konfigurasi pembayaran pengakuisisi"
+#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.website_settings_payment
-msgid "E-Commerce"
-msgstr "E-Commerce"
+#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
-msgid "Payment Icons"
-msgstr ""
+#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer____last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
 
 #. module: website_payment
-#: model:ir.model,name:website_payment.model_website
+#: model:ir.model,name:website_payment.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Pemilik Tagihan"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__website_id
 msgid "Website"
 msgstr "Situs Web"

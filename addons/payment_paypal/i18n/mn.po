@@ -3,16 +3,17 @@
 # 	* payment_paypal
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Martin Trigaux, 2020
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,12 @@ msgstr ""
 #, python-format
 msgid "Add your Paypal account to Odoo"
 msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
@@ -65,6 +72,18 @@ msgid "How to configure your paypal account?"
 msgstr "Өөрийн paypal бүртгэлийг хэрхэн тохируулах вэ?"
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid "Merchant Account ID"
 msgstr ""
@@ -85,6 +104,8 @@ msgid ""
 "Payment Data Transfer allows you to receive notification of successful "
 "payments as they are made."
 msgstr ""
+"Төлбөрийн өгөгдөл шилжүүлэх нь төлбөрийг амжилттай хийсний дараа мэдэгдэл "
+"хүлээн авах боломжийг олгоно."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction

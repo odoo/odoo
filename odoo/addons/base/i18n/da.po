@@ -1618,6 +1618,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Administrer rabatter med leveringer i TaxClouds udregninger.\n"
+"    Dette modul følger samme logik som \"Account Taxcloud - Sale (coupon)\".\n"
+"    Mere information om hvordan rabat udregninger udføres for TaxCloud kan findes her.\n"
+"\n"
+"    Der er en ekstra mulighed for rabat (gratis fragt) på leveringer.\n"
+"    Med Salgskupon levering, anvendes rabat udregningen ikke på leverings linjer.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -2199,6 +2207,16 @@ msgid ""
 "For Vendor Bill support, Default Vendor Specific OCR and validation for OCR are added.\n"
 "    "
 msgstr ""
+"\n"
+"Tilføj struktureret kommunikation til kunde- og leverandørfaktura.\n"
+"------------------------------------------------------------------\n"
+"\n"
+"Ved brug af OCR struktureret kommunikation simplificeret afstemningen mellem faktura og betalinger.\n"
+"\n"
+"For kunde fakturering understøtter OCR niveau 1 til 4. OCR nummeret kan være baseret på partner eller på fakturaen.\n"
+"\n"
+"For sælgerregning understøttelse for standard sælgerspecifik OCR er tilføjet, og valideret for OCR.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -3416,6 +3434,12 @@ msgid ""
 "Better plan your future schedules by considering time effectively spent on old plannings\n"
 "\n"
 msgstr ""
+"\n"
+"Sammenlign timesedler og planlægninger\n"
+"===================================\n"
+"\n"
+"Planlæg dine fremtidige skemaer bedre, ved at overveje effektiv tid brugt på gamle planer.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -3803,6 +3827,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI Chilensk Lokalisering\n"
+"=========================\n"
+"Denne køode gør det muligt at genere DTE dokumentet for Chilensk fakturering.\n"
+"- DTE (Elektronisk Skattepligtig Dokument) format i XML\n"
+"- Direkte Kommunikation med SII (Servicio de Impuestos Internos) for at sende faktura og andre dokumenter relateret til salg.\n"
+"- Kommunikation med Kunder til at sende salgs DTE'er.\n"
+"- Kommunikation med Leverandører (sælgere) for at acceptere DTE'er fra dem.\n"
+"- Direkte Kommunikation med SII til informering omkring accept eller afvisning af leverandørregninger eller andre DTE'er.\n"
+"\n"
+"For at se stregkoden på fakturaen, skal du have pdf417gen biblioteket."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5624,6 +5659,21 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Modul til at automatisere breve for ubetalte faktura, med flerniveaus tilbagekaldelse.\n"
+"=========================================================================\n"
+"\n"
+"Du kan definere dine flere niveau af tilbagekaldelse gennem menuen:\n"
+"---------------------------------------------------------------\n"
+"    Konfiguration / Opfølgning / Opfølgningsniveau\n"
+"\n"
+"Når det er defineret, kan du automatisk printe tilbagekaldelser hver dag ved blot at klike på menuen:\n"
+"------------------------------------------------------------------------------------------------------\n"
+"    Betalings opfølgning / Send Email og breve\n"
+"\n"
+"Det vil generere en PDF / sende emails / sæt en manuel handling ud fra de forskellige niveauer\n"
+"af tilbagekaldelse som er defineret. Du kan definere forskellige policer for forskellige virksomheder.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -6714,6 +6764,13 @@ msgid ""
 "on the bank statements, the old IBAN code is still used.  \n"
 "    "
 msgstr ""
+"\n"
+"Schweizisk lokalisering\n"
+"=====================\n"
+"Tilføjet et QR-IBAN felt på bank konto.\n"
+"Hvis dette felt er tomt, men bank konto nummeret selv er et gyldigt QR-IBAN nummer, vil det i stedet blive brugt som et QR-IBAN som før.\n"
+"Men hvis du udfylder det nye QR-IBAN felt, vil det blive brugt som QR-IBAN. Dette bør hjælpe afstemninger eftersom\n"
+"på bankudtog, anvendes det gamle IBAN stadigt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -9123,7 +9180,7 @@ msgstr "%s (kopi)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Day of the week number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - Dag på ugenummeret [0(Søndag),6].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9449,6 +9506,8 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>\n"
 "                                    <span>Documentation</span>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>\n"
+"                                    <span>Dokumentation</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -9688,7 +9747,7 @@ msgstr "<strong>Telefon</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "<strong>Please confirm your password to continue</strong>"
-msgstr ""
+msgstr "<strong>Bekræft venligst dit kodeord for at fortsætte</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -10687,7 +10746,7 @@ msgstr "Tilføj visninger og tweaks på begivenhed"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr ""
+msgstr "Addison Olson er en mægtig salgsrepræsentant ved Deco Addict."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -10696,6 +10755,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Addison Olson har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"   for at sælge musefælder. Med det trick skar han\n"
+"   næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10958,7 +11020,7 @@ msgstr "Adyen betalingsmodtager"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_adyen_platforms
 msgid "Adyen for Platforms"
-msgstr ""
+msgstr "Adyen for Platforme"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -11744,6 +11806,8 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping"
 " customers deal with trees, flowers and fungi."
 msgstr ""
+"Azure Interior bringer oprigtighed og seriøsitet til træ industrien, imens "
+"den hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -11965,12 +12029,12 @@ msgstr "Grund sproget 'en_US' kan ikke slettes."
 #. module: base
 #: model:ir.module.module,summary:base.module_adyen_platforms
 msgid "Base Module for Adyen for Platforms"
-msgstr ""
+msgstr "Grundmodul for Adyen for Platforme"
 
 #. module: base
 #: model:ir.module.module,description:base.module_adyen_platforms
 msgid "Base Module for Adyen for Platforms, used in eCommerce and PoS"
-msgstr ""
+msgstr "Grundmodul for Adyen for Platforme, anvendes i eHandel og PoS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -12261,6 +12325,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Åge har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"               for at sælge musefælder. Med det trick skar han\n"
+"               næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -12835,7 +12902,7 @@ msgstr "Chile - Regnskabsrapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi
 msgid "Chile - E-invoicing"
-msgstr ""
+msgstr "Chile - E-fakturering"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -12974,6 +13041,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Svend har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"                 for at sælge musefælder. Med det trick skar han\n"
+"                 næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -14433,6 +14503,8 @@ msgid ""
 "Deco Addict brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Deco Addict bringer oprigtighed og seriøsitet til træ industrien, imens den "
+"hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -15153,7 +15225,7 @@ msgstr "Færdig!"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
 msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr ""
+msgstr "Dennis er en mægtig funktionel rådgiver hos Deco Addict"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -15162,6 +15234,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Dennis har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"         for at sælge musefælder. Med det trick skar han\n"
+"         næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -16605,7 +16680,7 @@ msgstr "Kommatal"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
 msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr ""
+msgstr "Flemming er en mægtig analytiker hos Deco Addict."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -16614,6 +16689,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Flemming har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"       for at sælge musefælder. Med det trick skar han\n"
+"       næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -16925,6 +17003,8 @@ msgid ""
 "Gemini Furniture brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Gemini Furniture bringer oprigtighed og seriøsitet til træ industrien, imens"
+" den hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -17162,6 +17242,9 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"Georg har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"              for at sælge musefælder. Med det trick skar han\n"
+"              næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -19806,7 +19889,7 @@ msgstr "Lokalisering"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "Lokaliseringer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -21362,6 +21445,8 @@ msgid ""
 "Nicole is <b>author of several books</b>, including Amazon best seller\n"
 "                \"How Azure and Odoo will change the business world!\"."
 msgstr ""
+"Nikoline er <b>forfatter til flere bøger</b>, inklusiv Amazon best-seller\n"
+"               \"Hvordan Azure og Odoo vil ændre forretningsverdenen!\"."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -21372,6 +21457,10 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"Nikoline har arbejdet i IT sektoren <b>de sidste 20 år</b>. Hun\n"
+"              udvikler software til at hjælpe med at udvikle hjemmesider. Hun solgte hendes\n"
+"             første virksomhed som 30-årig, og præsterede at vokse Azure Interior\n"
+"            fra 1 til 55 ansatte, mest ved at videresælge tjenester på Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -22715,12 +22804,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo Betalinger af Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen Payment Acquirer"
-msgstr ""
+msgstr "Odoo Betalinger af Adyen Betalingsmodtager"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -23176,6 +23265,102 @@ msgid ""
 "\n"
 "Schedule, organize, promote or sell events online; conferences, trainings, webinars, etc.\n"
 msgstr ""
+"Odoo hjemmeside bygger\n"
+"--------------------\n"
+"\n"
+"Få en fantastisk og <a href=\"https://www.odoo.com/page/website-builder\">gratis hjemmeside</a>,\n"
+"tilpasses nemt med Odoo <a href=\"https://www.odoo.com/page/website-builder\">hjemmeside bygger</a>.\n"
+"\n"
+"Opret hjemmesider af firmakvalitet med vores super nemme bygger. Brug omhyggeligt\n"
+"designet byggeklodser og rediger alt inline.\n"
+"\n"
+"Drag fordel af forretnings funktioner fra start; e-Handel, begivenheder, blogs, jobs, Benefit from out-of-the-box business features; e-Commerce, events, blogs, job annonceringer, kundehenvisninger, call-to-actions, osv.\n"
+"\n"
+"Rediger alt inline\n"
+"--------------------\n"
+"\n"
+"Opret smukke hjemmesider uden nogen teknisk viden. Odoos unikke *'rediger inline'* tilgang gør hjemmeside oprettelse overraskende nemt. Ikke flere komplekse\n"
+"back-ends; bare klik hvor som helst for at ændre ethvert indhold.\n"
+"\n"
+"\"Vil du ændre prisen på et produkt? eller fremhæve den? Vil du ændre en blog titel?\" Klik blot og ændre det. Hvad det ser er hvad du får. Virkelig.\n"
+"\n"
+"Fantastisk. Forbavsende smukt.\n"
+"---------------------------------\n"
+"\n"
+"Odoos byggeklodser gør det muligt at designe hjemmesider som ikke er mulige gennem traditionel WYSIWYG side redigeringsværktøjer.\n"
+"\n"
+"Om det er produkt beskrivelser, blogs, eller faste sider, behøver du ikke være en professionel designer for at kreere smukt indhold. Blot træk og slip og tilpas prædefinerede byggeklodser.\n"
+"\n"
+"Forretnings klar, fra start\n"
+"--------------------------------\n"
+"\n"
+"Aktivér klar-til-brug forretnings funktioner med et enkelt klik; e-handel, call-to-actions-, jobannoncer, begivenheder, kundehenvisninger, blogs, osv.\n"
+"\n"
+"Traditionel eHandel og CMS har ringe designet back-ends eftersom det ikke er deres primære fokus. Med Odoo integration drager du fordel af det bedste administrations software til at følge op på dine ordre, dine jobansøgere, dine potentielle kunder, osv.\n"
+"\n"
+"En fantastisk mobil oplevelse\n"
+"-------------------------\n"
+"\n"
+"Få en mobil-venlig hjemmeside takket være vores lydhøre design, baseret på bootstrap.\n"
+"Alle dine sider tilpasser sig automatisk til skærmstørrelsen. (mobil, \n"
+"telefon, tablets, stationære). Du behøver ikke bekymre dig om mobilt indhold, det virker per standard.\n"
+"\n"
+"SEO værktøjer ved dine fingerspidser\n"
+"-----------------------------\n"
+"\n"
+"*Promovér* knappen foreslår nøgleord ud fra Googles mest søgte termer. Søgemaskine optimerings værktøjer er klar til brug; ingen konfiguration påkrævet.\n"
+"\n"
+"Google Analytics sporer dine indkøbskurve begivenheder per standard. Sitemap og struktureret indhold oprettes til Google indeksering automatisk.\n"
+"\n"
+"Flersproglig gjort nemt\n"
+"-------------------------\n"
+"\n"
+"Få din hjemmeside oversat til flere sprog uden besvær. Odoo foreslår og udbreder oversættelser automatisk på tværs af sider, ud fra hvad du redigerer på hovedsiden.\n"
+"\n"
+"Gør brug af professionelle oversættere til at oversætte alt dit indhold\n"
+"automatisk med [Gengo](http://gengo.com) integrationen. Opdater enhver del \n"
+"af din hjemmeside, og de oversatte udgaver udgives automatisk efter et par timer.\n"
+"\n"
+"Designer-venlige skabeloner\n"
+"---------------------------\n"
+"\n"
+"Skabeloner er fantastiske og nemme at designe. Du behøver ikke at udvikle for at oprette nye sider, temaer, eller byggeklodser. Vi bruger en ren HTML struktur; en\n"
+"[bootstrap](http://getbootstrap.com/) CSS.\n"
+"\n"
+"Tilpas alle sider løbende med det integrerede skabelon-redigeringsværktøj. Customize every page on the fly with the integrated template editor. Distribuer\n"
+"nemt dit arbejde som et Odoo modul.\n"
+"\n"
+"Flydende gitter layouting\n"
+"--------------------\n"
+"\n"
+"Design perfekte sider gennem træk-og-slip byggeklodser. Flyt og skalér dem så de passer det layout du kigger efter.\n"
+"\n"
+"Byggeklodser er baseret på et lydhør, mobilvenligt flydende gitter system\n"
+"der passende skalerer op til 12 kolonner i takt med enhed eller visningsstørrelsen bliver større.\n"
+"\n"
+"Professionelle temaer\n"
+"-------------------\n"
+"\n"
+"Design et tilpasset tema, eller genbrug prædefinerede temaer til at tilpasse din hjemmesides udseende og udtryk.\n"
+"\n"
+"Afprøv nemt nye farve skemaer; du kan ændre dit tema til enhver tid med bare et par klik.\n"
+"\n"
+"Integreret med Odoo applikationer\n"
+"-------------------------\n"
+"\n"
+"### e-Handel\n"
+"\n"
+"Promover produkter, sælg online, optimer besøgendes handelsoplevelse.\n"
+"\n"
+"\n"
+"### Blogs\n"
+"\n"
+"Skriv nyheder, tiltræk nye besøgende, opbyg kundeloyalitet.\n"
+"\n"
+"\n"
+"### Online begivenheder\n"
+"\n"
+"Planlæg, organiser, promover, eller sælg begivenheder online; konferencer, træning, webinarer, osv.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -23335,6 +23520,139 @@ msgid ""
 "Schedule, organize, promote or sell events online; conferences, webinars, trainings, etc.\n"
 "\n"
 msgstr ""
+"Odoo e-Handel\n"
+"---------------\n"
+"\n"
+"### Optimer salg med en fantastisk online butik.\n"
+"\n"
+"Odoo er <a href=\"https://www.odoo.com/page/e-commerce\">Open Source eHandle</a>\n"
+"ulig noget som helst du har set før. Få et fantastisk produkt katalog og formidable produkt beskrivelses sider.\n"
+"\n"
+"Den er fuld af funktioner, integreret med dit administrations software, kan tilpasses fuldt ud, og super nemt.\n"
+"\n"
+"Opret fantastiske produktsider\n"
+"----------------------------\n"
+"\n"
+"Odoos unikke *'rediger inline'* og byggeklods tilgang gør oprettelse af produktsider til en leg. \"Vil du ændre prisen på et produkt? eller fremhæve den? Vil du tilføje et banner til et specifikt produkt?\" blot klik og ændre.\n"
+"Hvad du ser er hvad du får. Virkelig.\n"
+"\n"
+"Træk-og-slip professionelt designet *'byggeklodser'* for at oprette smukke produktsider\n"
+"som dine kunder vil elske.\n"
+"\n"
+"Forøg din indtægt per ordre\n"
+"-------------------------------\n"
+"\n"
+"Den indbyggede kryds-salgs funktion hjælper dig med at tilbyde ekstra produkter relateret til\n"
+"hvad kunden har i deres indkøbskurv. (f.eks. tilbehør)\n"
+"\n"
+"Odoos mersalgs algoritme gør det muligt for dig at vise dine besøgende lignende men dyrere produkter end den i visningen, med incitamenter.\n"
+"\n"
+"Inline redigerings funktionen gør det muligt for dig nemt at ændre en pris,\n"
+"starte en promovering, eller finjustere beskrivelsen på et produkt, med blot ét klik.\n"
+"\n"
+"En ren Google Analytics integration\n"
+"------------------------------------\n"
+"\n"
+"Få en klar synliggørelse af din salgstragt. Odoos Google Analytics sporer \n"
+"er konfigureret per standard til at spore alle slags begivenheder relateret til indkøbskurve\n"
+"call-to-actions, osv.\n"
+"\n"
+"Eftersom Odoo marketing værktøjer (masse emails, kampagner, osv.) også er forbundet med Google Analytics, får du et komplet overblik over din forretning.\n"
+"\n"
+"Sigt efter nye markeder\n"
+"------------------\n"
+"\n"
+"Få din hjemmeside oversat til flere sprog uden besvær. Odoo foreslår\n"
+"og udbreder oversættelse automatisk på tværs af sider.\n"
+"\n"
+"Vores \"on demand\" oversættelses funktion gør det muligt for dig at drage nytte af professionelle\n"
+"oversættere, til at oversætte alle dine ændringer automatisk. Ændre blot enhver del \n"
+"af din hjemmeside (et nyt blog indlæg, en side modificering, produktbeskrivelser, ...) og den oversatte udgave bliver opdateret automatisk inden omkring 32 timer.\n"
+"\n"
+"Finjuster dit katalog\n"
+"----------------------\n"
+"\n"
+"Få fuld kontrol over hvordan du fremviser dine produkter på katalog siden:\n"
+"Salgsfremmende bånd, relateret størrelse af produkter, rabatter, varianter, gitter/liste visning, osv.\n"
+"\n"
+"Rediger ethvert produkt inline for at udvikle din hjemmeside i takt med kundebehov.\n"
+"\n"
+"Få nye kunder\n"
+"---------------------\n"
+"\n"
+"SEO-værktøjer er klar til brug, uden behov for konfiguration. Odoo foreslår nøgleord ud fra Googles mest søgte terme, google Analytics sporer dine \n"
+"indkøbskurvs begivenheder, sitemap oprettes automatisk for Google indeksering, osv.\n"
+"\n"
+"Vi laver endda automatisk struktureret indhold for at promovere dine produkter og begivenheder effektivt i Google.\n"
+"\n"
+"Drag fordel af sociale medier\n"
+"---------------------\n"
+"\n"
+"Opret nemt nye landingssider med Odoo inline redigerings funktionen. Send besøgende fra dine forskellige marketing kampagner til specifikkke landingssider, for at optimerer dine konverteringer.\n"
+"\n"
+"Administrer et forhandlernetværk\n"
+"-------------------------\n"
+"\n"
+"Administrer et forhandlernetværk rettet mod et nyt marked, få en lokal tilstedeværelse, eller udvid din distribution. Giv dem adgang til din forhandler portal for et effektivt samarbejde.\n"
+"\n"
+"Promover dine forhandlere online, videresend potentielle kunder til forhandlere (med indbygget geolokaliserings funktion), definer specifikke prislister, start et loyalitets program (tilbyd specifikke rabatter til dine kunder eller forhandlere), osv.\n"
+"\n"
+"Nyd godt af Odoos formåen i din online butik: En kraftfuld moms udregner, fleksible prisgivningsstrukturer, en virkelig inventar administrations løsning, et forhandler interface, support for produkter med forskellige opførsler; fysiske varer, begivenheder, tjenester, varianter, og muligheder, osv.\n"
+"\n"
+"Du behøver ikke at interface med dit lager, salg eller regnskabs software.\n"
+"Alt er integreret med Odoo. Smertefrit, løbende.\n"
+"\n"
+"En ren kasseproces\n"
+"------------------------\n"
+"\n"
+"Omdan besøgendes interesse til faktiske ordre med en ren kasseproces\n"
+"med et minimalt antal trin og fantastisk brugbarhed på alle sider.\n"
+"\n"
+"Tilpas din kasseproces til at passe til dine forretnings behov: betalings metoder, leverings metoder, kryds-salg, særlige omstændigheder, osv.\n"
+"\n"
+"Og meget mere...\n"
+"----------------\n"
+"\n"
+"### Online salg\n"
+"\n"
+"-   Mobil Interface\n"
+"-   Sælg produkter, begivenheder, eller tjenester\n"
+"-   Fleksible prislister\n"
+"-   Produkt multi-varianter\n"
+"-   Flere butikker\n"
+"-   Fantastisk kasseproces\n"
+"\n"
+"### Kundeservice\n"
+"\n"
+"-   Kundeportal til at spore ordre\n"
+"-   Assisteret indkøb med live chat på hjemmesiden\n"
+"-   Administration af reklamationer\n"
+"-   Avancerede leveringsregler\n"
+"-   Kuponer eller gavekort\n"
+"\n"
+"### Ordreadministration\n"
+"\n"
+"-   Avancerede lageradministrations funktioner\n"
+"-   Faktura og regnskabs integration\n"
+"-   Masse emails og kunde segmentering\n"
+"-   Automatiseret potentielle kunder og marketing kampagner\n"
+"-   Vedholdende indkøbskurv\n"
+"\n"
+"Fuldt ud integreret med andre applikationer\n"
+"--------------------------------\n"
+"\n"
+"### CMS\n"
+"\n"
+"Opret nemt fantastiske hjemmesider uden at have den tekniske viden bag.\n"
+"\n"
+"### Blogs\n"
+"\n"
+"Skriv nyheder, tiltræk nye besøgende, opbyg kundeloyalitet.\n"
+"\n"
+"### Online begivenheder\n"
+"\n"
+"Planlæg, organiser, promover, eller sælg begivenheder online; konferencer, webinars, træning, osv.\n"
+"\n"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
@@ -24444,7 +24762,7 @@ msgstr "Betalingsmodtager: Ingenico implementering"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_odoo_by_adyen
 msgid "Payment Acquirer: Odoo Payments by Adyen"
-msgstr ""
+msgstr "Betalingsmodtager: Odoo Betalinger af Adyen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
@@ -24981,6 +25299,63 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
+"Projektstyring\n"
+"------------------\n"
+"\n"
+"### Uendeligt fleksible, utroligt nemt at bruge.\n"
+"\n"
+"\n"
+"Odoos samarbejdende og realtid <a href=\"https://www.odoo.com/page/project-management\">open source projektstyring</a>\n"
+"hjælper dit hold med at få gjort arbejdet. Hold øje med alt, fra det store billede til de mindste detaljer, fra kundekontrakten til fakturering.\n"
+"\n"
+"Designet til at passe ind i din egen proces\n"
+"--------------------------------\n"
+"\n"
+"Organiser projekter omkring dine egne processer. Arbejd på opgaver og problemer ved hjælp af kanban visningen, planlæg opgaver ved brug af gantt oversigten, og kontroller deadlines i\n"
+"kalender visningen. Alle projekter kan have dets eget stadie, hvorved hold kan optimere deres arbejde.\n"
+"\n"
+"Nemt at bruge\n"
+"-----------\n"
+"\n"
+"Bliv organiseret så hurtigt som du kan tænke. Det nemt-at-bruge interface tager ingen tid \n"
+"at lære, og alle handlinger er øjeblikkelige, så der står intet mellem dig og dit dejlige produktive flow.\n"
+"\n"
+"Arbejd sammen\n"
+"-------------\n"
+"\n"
+"### Chat i realtid, dokumentdeling, email integrering\n"
+"\n"
+"Brug chatter til at kommunikere med dit hold eller dine kunder, og del kommentarer, dokumenter om opgaver eller problemer. Integrer diskussioner hurtigt med email integrationen.\n"
+"\n"
+"Snak med andre brugere og kunder med website live chat funktionen.\n"
+"\n"
+"Samarbejdsskrivning\n"
+"---------------------\n"
+"\n"
+"### Kraften fra etherpad, inde i dine opgaver\n"
+"\n"
+"Arbejd sammen om at redigere de samme specifikationer eller mødereferater direkte inde i applikationen. Den indbyggede etherpad funktion gør det muligt for flere mennesker at arbejde på den samme opgave, på samme tid.\n"
+"\n"
+"Dette er yderst effektivt til scrum-møder, mødereferater, eller komplekse specifikationer. Alle brugere har deres egen farve, og du kan genafspille hele oprettelsen af indholdet.\n"
+"\n"
+"Få arbejdet udført\n"
+"-------------\n"
+"\n"
+"Få advarsler på fulgte begivenheder for at holde dig opdateret med det der interesserer dig. Brug\n"
+"øjeblikkelige grønne/røde visuelle indikatorer til at scanne igennem hvad der er blevet udført, og hvad der kræver din opmærksomhed.\n"
+"\n"
+"Timesedler, kontrakter, & fakturering\n"
+"---------------------------------\n"
+"\n"
+"Projekter er automatisk integreret med kundekontrakter, for at gøre det muligt for dig, \n"
+"at fakturere baseret på tid & materiale, samt nemt at registrere timesedler. \n"
+"\n"
+"Spor problemer\n"
+"------------\n"
+"\n"
+"Find frem til de problemer der opstår i et projekt, for at få et bedre fokus\n"
+"på at løse dem. Integrer kundeinteraktioner på samtlige problemer, og få nøjagtige rapporteringer om dit holds præstationer.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
@@ -25454,6 +25829,8 @@ msgid ""
 "Ready Mat brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Ready Mat bringer oprigtighed og seriøsitet til træindustrien, samtidig med "
+"den hjælper kunder med at håndterer træer, blomster, og svampe."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -27486,7 +27863,7 @@ msgstr "Abonnement SEPA direkte debit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Subscription and Timesheet"
-msgstr ""
+msgstr "Abonnement og Timeseddel"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscriptions
@@ -27604,7 +27981,7 @@ msgstr "Schweiz - Regnskabsrapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_qriban
 msgid "Switzerland - QR-IBAN"
-msgstr ""
+msgstr "Schweiz - QR-IBAN"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__symbol
@@ -27624,7 +28001,7 @@ msgstr "Synkronisering med den eksterne timeseddel applikation"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Synchronize data between timesheet and subscriptions"
-msgstr ""
+msgstr "Synkroniser data mellem timeseddel og abonnementer"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -27970,6 +28347,8 @@ msgid ""
 "The Jackson Group brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"The Jackson Group bringer oprigtighed og seriøsitet til træindustrien, imens"
+" de hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -28680,6 +29059,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
+"Dette modul indeholder tests relateret til basis automatisering. Disse \n"
+"findes i et separat modul eftersom det indeholder modeller kun brugt til at udføre\n"
+"tests uafhængigt af funktionelle aspekter af andre modeller."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -28688,6 +29070,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dette modul indeholder tests relateret til email. Disse \n"
+"findes i et separat modul eftersom det indeholder modeller kun brugt til at udføre\n"
+"tests uafhængigt af funktionelle aspekter af andre modeller."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
@@ -28698,6 +29083,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Dette modul indeholder tests relateret til email. Disse\n"
+"findes i et separat modul eftersom det indeholder modeller kun brugt til at udføre\n"
+"tests uafhængigt af funktionelle aspekter af andre modeller. Derudover bygger de fleste\n"
+"moduler på email (sms, snailmail, mail_enterprise) sat som afhængigheder\n"
+"for at teste hele email kodebasen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -28706,6 +29096,9 @@ msgid ""
 "are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"Dette modul indeholder tests relateret til masse emailing. Disse\n"
+"findes i et separat modul for at bruge specifikke test modeller defineret i\n"
+"test_mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
@@ -28714,6 +29107,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dette modul indeholder tests relateret til hjemmeside gitter visning. Disse \n"
+"findes i et separat modul eftersom det indeholder modeller der kun bruges til at udføre\n"
+"tests uafhængigt af funktionelle aspekter af andre modeller."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -28722,6 +29118,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dette modul indeholder tests relateret til timer. Disse \n"
+"findes i et separat modul eftersom det indeholder modeller kun brugt til at udføre\n"
+"tests uafhængigt af funktionelle aspekter af andre modeller."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -28731,6 +29130,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"Dette modul indeholder tests relateret til diverse email funktioner\n"
+"samt mail-relaterede undermoduler. Disse tests findes i et separat modul eftersom det\n"
+"indeholder modeller kun brugt til at udføre tests uafhængigt af funktionelle aspekter af\n"
+"rigtige applikationer. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -28739,6 +29142,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dette modul indeholder tests relateret til hjemmeside kohort. Disse \n"
+"findes i et separat modul eftersom det indeholder modeller der kun bruges til at udføre\n"
+"tests uafhængigt af funktionelle aspekter af andre modeller."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -28749,6 +29155,10 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Dette model indeholder tests relateret til hjemmeside. Disse \n"
+"findes i et separat modul eftersom vi tester modul installering/afinstallering/opgradering\n"
+"og vi vil ikke genindlæse hjemmeside modulet hver gang, inklusiv dets mulige\n"
+"afhængigheder. Ej heller ønsker vi at tilføje dirigeringer, visninger og modeller hvis eneste formål er at udføre tests, til hjemmeside modulet."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
@@ -28756,6 +29166,9 @@ msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
 msgstr ""
+"Dette modul sørger for at data (så som analytiske konti) defineret på "
+"salgsordren via timeseddel applikationen, er korrekt angivet, også for "
+"abonnementer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -28782,6 +29195,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
+"Dette module hjælper med at analysere og organisere begivenhedsspor.\n"
+"Til det formål, tilføjer det en gantt visning på begivenhedsspor."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -29025,6 +29440,9 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
+"Troels har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
+"              for at sælge musefælder. Med det trick skar han\n"
+"              næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -30716,6 +31134,8 @@ msgid ""
 "Wood Corner brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Wood Corner bringer oprigtighed og seriøsitet til træindustrien, imens den "
+"hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
@@ -31524,7 +31944,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "test"
-msgstr ""
+msgstr "test"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes

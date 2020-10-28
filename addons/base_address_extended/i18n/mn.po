@@ -3,17 +3,17 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Martin Trigaux, 2020
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2020
+# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Систем өөр гудамжны дэд талбаруудаас үндэслэн гудамжны бүтэн талбарыг "
+"тооцоолох зарчмыг өөрчлөх"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -44,17 +46,22 @@ msgid "Country"
 msgstr "Улс"
 
 #. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
-msgstr ""
+msgstr "Хаалга"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "Хаалганы дугаар"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
@@ -66,6 +73,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Энэ улсад харьяалагдах хаягийн түгээмэл форматыг энд томьёолж болно.\n"
+"\n"
+"Та python загварыг хаягийн бүх талбаруудад ашиглах боломжтой. (жишээлбэл, гудамжны нэр харахыг хүсэж байгаа бол %(street_name)s%(street_number)s-ыг таслал болон байшингийн дугаарын хамт ашиглана)\n"
+"%(street_name)s: Гудамжны нэр\n"
+"%(street_number)s:  Байшингийн дугаар\n"
+"%(street_number2)s: Хаалганы дугаар"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -75,15 +88,27 @@ msgstr "Байшин"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
-msgstr ""
+msgstr "Байшингийн дугаар"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country____last_update
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд зассан огноо"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Гудамжны формат"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
@@ -97,16 +122,16 @@ msgstr "Гудамжны нэр"
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "Гудамжны нэр"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Гудамжны формат..."
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
+#: code:addons/base_address_extended/models/res_partner.py:0
+#: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Гудамжны форматын танигдаагүй талбар %s"

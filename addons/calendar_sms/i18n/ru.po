@@ -3,15 +3,18 @@
 # 	* calendar_sms
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,37 +33,56 @@ msgid "Calendar Event: Reminder"
 msgstr ""
 
 #. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
-msgstr ""
+msgstr "Уведомление о событии"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Менеджер оповещения о событии"
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid ""
-"Event reminder: ${object.name} on ${object.start_datetime or "
-"object.start_date}"
+msgid "Event reminder: ${object.name}, ${object.display_time}"
 msgstr ""
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
-msgid "Event reminder: %s on %s."
+msgid "Event reminder: %(name)s, %(time)s."
 msgstr ""
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
 msgid "SMS Text Message"
-msgstr ""
+msgstr "Текст SMS-сообщения"
 
 #. module: calendar_sms
 #: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
 msgid "Send SMS to attendees"
-msgstr ""
+msgstr "Отправьте SMS участникам"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

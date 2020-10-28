@@ -3,51 +3,24 @@
 # 	* crm_iap_lead_enrich
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Jiří Podhorecký, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-09-09 12:33+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "(Time Now)"
-msgstr "(Čas teď)"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "<b>Phone :</b>"
-msgstr "<b>Telefon :</b>"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "<b>Timezone : </b>"
-msgstr "<b>Časové pásmo : </b>"
-
-#. module: crm_iap_lead_enrich
-#: model:mail.template,body_html:crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Dear ${object.create_uid.name or 'Madam/Sir'},</p><br/>\n"
-"    <p>Unfortunately, there are no more credits on your IAP Lead Enrichment account.<br/>\n"
-"    You can charge it back from the Settings of the CRM app or from your IAP portal.<br/></p><br/>\n"
-"    <p>Best regards,</p><br/>\n"
-"    <p>Odoo S.A.</p>\n"
-"</div>\n"
-"        "
-msgstr ""
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
@@ -63,8 +36,8 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "<span>Lead enriched based on email address</span>"
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
 msgstr ""
 
 #. module: crm_iap_lead_enrich
@@ -75,32 +48,59 @@ msgid "CRM: enrich leads (IAP)"
 msgstr ""
 
 #. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: crm_iap_lead_enrich
+#: model:ir.actions.server,name:crm_iap_lead_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr ""
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this lead with company data based on the email address"
+msgstr ""
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this opportunity with company data based on the email address"
+msgstr ""
+
+#. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
 msgid "Enrichment done"
-msgstr ""
+msgstr "Obohacování proběhlo"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
+msgstr "IAP Obohacení potenciálni zákazník API"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+msgid "IAP account"
 msgstr ""
 
 #. module: crm_iap_lead_enrich
-#: model:mail.template,subject:crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit
-msgid "IAP Lead Enrichment Notification"
-msgstr ""
-
-#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__id
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__id
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -111,24 +111,16 @@ msgid "Lead Enrichment based on email address"
 msgstr ""
 
 #. module: crm_iap_lead_enrich
+#: code:addons/crm_iap_lead_enrich/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+#, python-format
 msgid "Lead enriched based on email address"
 msgstr ""
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "zájem / příležitost"
-
-#. module: crm_iap_lead_enrich
-#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__reveal_id
-msgid "Reveal ID"
-msgstr "Reveal ID"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "Technology Used :"
-msgstr "Použitá technologie:"
+msgstr "Potenciální zákazník / příležitost"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,help:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
@@ -144,10 +136,5 @@ msgstr ""
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
-msgid "iap account"
-msgstr ""
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "to buy credits."
-msgstr ""
+msgstr "koupit kredity."

@@ -3,17 +3,20 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Oleg Kuryan <oleg@ventor.tech>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +31,8 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
+"Если у вас нет ни одного аккаунта, попросите у поставщика добавить доступ к "
+"порталу."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -42,7 +47,7 @@ msgstr "API логина Id"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "Ключ подписи API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -79,6 +84,13 @@ msgstr ""
 "(%s) или отпечатком пальца (%s)"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
 msgstr ""
@@ -86,7 +98,14 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Как получить оплату с помощью Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr "Идентификатор"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -95,6 +114,15 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Найденный неприемлем токен: отсутствует профиль авторизации. Пожалуйста, "
+"убедитесь, что токен имеет действительный справочный номер покупателя."
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -115,13 +143,13 @@ msgstr "Операция Оплаты"
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Пожалуйста, заполните ваш профиль."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Войдите, чтобы завершить платеж."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -132,7 +160,7 @@ msgstr "Провайдер"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "сохранить карточки"
 
 #. module: payment_authorize
 #. openerp-web
@@ -155,6 +183,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Транзакцию невозможно обработать, поскольку некоторые контактные данные "
+"отсутствуют или недействительны:"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -162,7 +192,7 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
-"Это содержит уникальную ссылку для партнера/оплата комбинации токена  в "
+"Это содержит уникальную ссылку для партнера/комбинацию токена платежа в "
 "бэкэнде Authorize.net"
 
 #. module: payment_authorize
@@ -173,6 +203,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Эта опция позволяет клиентам сохранять свою кредитную карточку как токен "
+"платежа и повторно использовать ее для дальнейшей покупки. Если вы "
+"управляете подписками (повторяющиеся счета-фактуры), вам нужно автоматически"
+" взимать плату за клиента, когда вы выдаете счет-фактуру."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -193,4 +227,4 @@ msgstr "Предупреждение"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Пока мы не можем добавить свой способ оплаты."
