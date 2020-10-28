@@ -1953,7 +1953,8 @@ class Task(models.Model):
         return res
 
     def _creation_subtype(self):
-        return self.env.ref('project.mt_task_new')
+        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id('project.mt_task_new')
+        return self.env[res_model].browse(res_id)
 
     def _track_subtype(self, init_values):
         self.ensure_one()
