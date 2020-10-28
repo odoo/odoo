@@ -281,24 +281,30 @@ class ProductProduct(models.Model):
                 list_price = product.list_price
             product.lst_price = list_price + product.price_extra
 
+    def _seller_for_code(self):
+        self.ensure_one()
+
+        all_sellers = self.seller_ids.filtered(lambda si:(si.name.id == self._context.get('partner_id')))
+        sellers = all_sellers.filtered(lambda si: si.product_id == self)
+        if not sellers:
+            sellers = all_sellers.filtered(lambda si: not si.product_id)
+        if sellers:
+            sellers = sellers[0]
+        return sellers
+
     @api.depends_context('partner_id')
     def _compute_product_code(self):
         for product in self:
-            for supplier_info in product.seller_ids:
-                if supplier_info.name.id == product._context.get('partner_id'):
-                    product.code = supplier_info.product_code or product.default_code
-                    break
-            else:
-                product.code = product.default_code
+            supplier_info = product._seller_for_code()
+            product.code = supplier_info.product_code or product.default_code
 
     @api.depends_context('partner_id')
     def _compute_partner_ref(self):
         for product in self:
-            for supplier_info in product.seller_ids:
-                if supplier_info.name.id == product._context.get('partner_id'):
-                    product_name = supplier_info.product_name or product.default_code or product.name
-                    product.partner_ref = '%s%s' % (product.code and '[%s] ' % product.code or '', product_name)
-                    break
+            supplier_info = product._seller_for_code()
+            if supplier_info:
+                product_name = supplier_info.product_name or product.default_code or product.name
+                product.partner_ref = '%s%s' % (product.code and '[%s] ' % product.code or '', product_name)
             else:
                 product.partner_ref = product.display_name
 
