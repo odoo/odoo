@@ -229,10 +229,6 @@ class Cursor(BaseCursor):
         self.sql_from_log = {}
         self.sql_into_log = {}
 
-        # default log level determined at cursor creation, could be
-        # overridden later for debugging purposes
-        self.sql_log = _logger.isEnabledFor(logging.DEBUG)
-
         self.sql_log_count = 0
 
         # avoid the call of close() (by __del__) if an exception
@@ -257,6 +253,18 @@ class Cursor(BaseCursor):
         self._default_log_exceptions = True
 
         self.cache = {}
+
+    @property
+    def sql_log(self):
+        return _logger.isEnabledFor(logging.DEBUG)
+    @sql_log.setter
+    def sql_log(self, _):
+        # compat with older debugging
+        warnings.warn(
+            "Setting Cursor.sql_log is deprecated, configuring the logger is now sufficient.",
+            DeprecationWarning,
+            stacklevel=2
+        )
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}

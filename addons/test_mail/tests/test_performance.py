@@ -952,7 +952,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
         with self.assertQueryCount(emp=81):
-            self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
                 subject='Test Subject',
@@ -967,7 +966,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 model_description=False,
                 mail_auto_delete=True
             )
-            self.cr.sql_log = False
         self.assertTrue(record.message_ids[0].body.startswith('<p>Test body <img src="/web/image/'))
         self.assertEqual(self.attachements.mapped('res_model'), [record._name for i in range(3)])
         self.assertEqual(self.attachements.mapped('res_id'), [record.id for i in range(3)])
