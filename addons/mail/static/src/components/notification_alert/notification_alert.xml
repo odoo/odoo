@@ -4,9 +4,18 @@
     <t t-name="mail.NotificationAlert" owl="1">
         <div class="o_NotificationAlert">
             <t t-if="env.isMessagingInitialized()">
-                <center t-if="isNotificationBlocked" class="o_notification_alert alert alert-primary">
-                    Odoo Push notifications have been blocked. Go to your browser settings to allow them.
-                </center>
+                <div t-if="isNotificationBlocked" class="o_notification_alert alert alert-primary text-center">
+                    Odoo Push notifications have been blocked. Go to your browser settings.
+                    <div t-if="settingUrl" class="o_NotificationAlert_url">
+                        <span class="border border-primary rounded-left o_Url_text">
+                            <t t-esc="settingUrl"/>
+                        </span>
+                        <button class="btn btn-sm btn-primary o_NotificationAlert_urlClipboardButton">
+                            <i class="fa fa-clipboard"> Copy Link </i>
+                        </button>
+                    </div>
+                    <span t-if="settingPath" t-esc="settingPath"/>
+                </div>
             </t>
         </div>
     </t>
