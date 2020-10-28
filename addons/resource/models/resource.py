@@ -4,7 +4,7 @@
 import math
 from datetime import datetime, time, timedelta
 from dateutil.rrule import rrule, DAILY
-from functools import partial
+from functools import partial, lru_cache
 from itertools import chain
 from pytz import timezone, utc
 
@@ -53,6 +53,16 @@ def _boundaries(intervals, opening, closing):
         if start < stop:
             yield (start, opening, recs)
             yield (stop, closing, recs)
+
+
+@lru_cache(maxsize=512)
+def memo_tz_localize(tz, day, hour):
+    return tz.localize(datetime.combine(day, float_to_time(hour)))
+
+
+@lru_cache(maxsize=16)
+def memo_rrule(freq, start, until, weekday):
+    return rrule(freq, start, until=until, byweekday=weekday, cache=True)
 
 
 class Intervals(object):
@@ -203,7 +213,6 @@ class ResourceCalendar(models.Model):
             The returned intervals are expressed in the resource's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
-        combine = datetime.combine
 
         # express all dates and times in the resource's timezone
         tz = timezone((resource or self).tz)
@@ -221,10 +230,10 @@ class ResourceCalendar(models.Model):
                 until = min(until, attendance.date_to)
             weekday = int(attendance.dayofweek)
 
-            for day in rrule(DAILY, start, until=until, byweekday=weekday):
+            for day in memo_rrule(DAILY, start, until, weekday):
                 # attendance hours are interpreted in the resource's timezone
-                dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
-                dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
+                dt0 = memo_tz_localize(tz, day, attendance.hour_from)
+                dt1 = memo_tz_localize(tz, day, attendance.hour_to)
                 result.append((max(start_dt, dt0), min(end_dt, dt1), attendance))
 
         return Intervals(result)
