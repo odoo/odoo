@@ -311,7 +311,7 @@ class Slide(models.Model):
                 record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
             else:
                 record.image_medium = False
-                record.iamge_thumb = False
+                record.image_thumb = False
 
     # content
     slide_type = fields.Selection([
