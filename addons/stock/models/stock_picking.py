@@ -574,7 +574,7 @@ class Picking(models.Model):
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
-        if self.picking_type_id:
+        if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
             if self.picking_type_id.default_location_src_id:
                 location_id = self.picking_type_id.default_location_src_id.id
@@ -590,11 +590,13 @@ class Picking(models.Model):
             else:
                 location_dest_id, supplierloc = self.env['stock.warehouse']._get_partner_locations()
 
-            if self.state == 'draft':
-                self.location_id = location_id
-                self.location_dest_id = location_dest_id
+            self.location_id = location_id
+            self.location_dest_id = location_dest_id
+            (self.move_lines | self.move_ids_without_package).update({
+                "picking_type_id": self.picking_type_id,
+                "company_id": self.company_id,
+            })
 
-        # TDE CLEANME move into onchange_partner_id
         if self.partner_id and self.partner_id.picking_warn:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
                 partner = self.partner_id.parent_id
