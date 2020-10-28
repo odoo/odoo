@@ -109,6 +109,7 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
+<<<<<<< HEAD:addons/website_slides/models/slide_slide.py
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
@@ -126,6 +127,25 @@ class Slide(models.Model):
     quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
     quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
     quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
+=======
+    download_security = fields.Selection(
+        [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
+        string='Download Security',
+        required=True, default='user')
+    image = fields.Binary('Image', attachment=True)
+    image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
+    image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
+
+    @api.depends('image')
+    def _get_image(self):
+        for record in self:
+            if record.image:
+                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
+                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
+            else:
+                record.image_medium = False
+                record.image_thumb = False
+>>>>>>> 02667697197... temp:addons/website_slides/models/slides.py
 
     # content
     slide_type = fields.Selection([
