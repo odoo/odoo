@@ -55,6 +55,31 @@ class ComposerSuggestion extends Component {
         return this.env.models[this.props.modelName].get(this.props.recordLocalId);
     }
 
+    /**
+     * Returns a descriptive title for this suggestion. Useful to be able to
+     * read both parts when they are overflowing the UI.
+     *
+     * @returns {string}
+     */
+    title() {
+        if (this.isCannedResponse) {
+            return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
+        }
+        if (this.isChannel) {
+            return this.record.name;
+        }
+        if (this.isCommand) {
+            return _.str.sprintf("%s: %s", this.record.name, this.record.help);
+        }
+        if (this.isPartner) {
+            if (this.record.email) {
+                return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
+            }
+            return this.record.nameOrDisplayName;
+        }
+        return "";
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
