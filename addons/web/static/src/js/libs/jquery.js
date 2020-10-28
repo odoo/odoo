@@ -167,19 +167,29 @@ $.fn.extend({
             return $baseScrollingElement;
         }
         const bodyHeight = $(document.body).height();
-        for (const el of document.body.children) {
-            // Search for a body child which is at least as tall as the body
-            // and which has the ability to scroll if enough content in it. If
-            // found, suppose this is the top scrolling element.
-            if (el.scrollHeight < bodyHeight) {
-                continue;
+        const checkScrollingElement = function(elements) {
+            for (const el of elements) {
+                // Search for a body child which is taller than the body
+                // and which has the ability to scroll if enough content in it.
+                // If found, suppose this is the top scrolling element.
+                if (el.scrollHeight > bodyHeight) {
+                    const $el = $(el);
+                    if ($el.isScrollable()) {
+                        return $el;
+                    }
+                }
             }
-            const $el = $(el);
-            if ($el.isScrollable()) {
-                return $el;
+            // If we din't found a suitable scrolling element
+            // we need to check recursively inside the elements children
+            for (const el of elements) {
+                if (el.scrollHeight >= bodyHeight) {
+                    const result = checkScrollingElement(el.children);
+                    if (result) return result;
+                }
             }
-        }
-        return $baseScrollingElement;
+            return false
+        };
+        return checkScrollingElement(document.body.children) || $baseScrollingElement;
     },
     /**
      * @return {boolean}
