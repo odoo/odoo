@@ -670,6 +670,8 @@ actual arch.
                     for loc in spec.xpath(".//*[text()='$0']"):
                         loc.text = ''
                         loc.append(copy.deepcopy(node))
+                        if self._context.get('inherit_branding'):
+                            loc.set('meta-oe-xpath-wrapping', 'True')
                     if node.getparent() is None:
                         source = copy.deepcopy(spec[0])
                     else:
@@ -1277,7 +1279,8 @@ actual arch.
         if not e.get('data-oe-model'):
             return
 
-        if {'t-esc', 't-raw'}.intersection(e.attrib):
+        is_replace_wrapping_el = e.attrib.pop('meta-oe-xpath-wrapping', None)
+        if is_replace_wrapping_el or {'t-esc', 't-raw'}.intersection(e.attrib):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)

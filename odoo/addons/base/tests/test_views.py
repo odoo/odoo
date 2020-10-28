@@ -674,6 +674,86 @@ class TestTemplating(ViewCase):
             second.get('data-oe-id'),
             "second should come from the extension view")
 
+    def test_branding_inherit_wrapping(self):
+        """ Checks that the content wrapped using position="replace" with $0
+            does not receive branding (and so cannot be edited in website).
+        """
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            # Normally all 'branded' nodes in the following arch should be
+            # branded because of inner t-esc's
+            'arch': """
+                <hello>
+                    <world id="1">
+                        <branded/>
+                        <span t-esc="a"/>
+                    </world>
+                    <world id="2">
+                        <branded/>
+                        <span t-esc="a"/>
+                    </world>
+                    <branded/>
+                </hello>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        branded_nodes = arch.xpath('//branded')
+        self.assertEqual(
+            branded_nodes[0].get('data-oe-xpath'),
+            '/hello[1]/world[1]/branded[1]',
+            'Inherited nodes have correct xpath')
+        self.assertEqual(
+            branded_nodes[1].get('data-oe-xpath'),
+            '/hello[1]/world[2]/branded[1]',
+            'Inherited nodes have correct xpath')
+        self.assertEqual(
+            branded_nodes[2].get('data-oe-xpath'),
+            '/hello[1]/branded[1]',
+            'Inherited nodes have correct xpath')
+
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <xpath expr="/hello/world[@id='1']" position="replace">
+                        <wrap>$0</wrap>
+                    </xpath>
+                    <xpath expr="/hello/world[@id='2']" position="replace">
+                        <wrap>
+                            <span>Test</span>
+                            <t>$0</t>
+                        </wrap>
+                    </xpath>
+                    <xpath expr="/hello/branded" position="replace">
+                        <wrap>$0</wrap>
+                    </xpath>
+                </data>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        branded_nodes = arch.xpath('//branded')
+        for i in range(3):
+            self.assertIsNone(
+                branded_nodes[i].get('data-oe-xpath', None),
+                'Wrapped nodes should not get branding anymore')
+
+        wrapping_nodes = arch.xpath('//wrap')
+        for i in range(3):
+            self.assertIsNone(
+                wrapping_nodes[i].get('data-oe-xpath', None),
+                'Wrapping node should not get branding either')
+
     def test_branding_inherit_replace_node(self):
         view1 = self.View.create({
             'name': "Base view",
