@@ -180,8 +180,8 @@ class AccountPayment(models.Model):
 
         if not self.journal_id.payment_debit_account_id or not self.journal_id.payment_credit_account_id:
             raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts accounts set on the %s journal."
-            ) % self.journal_id.display_name)
+                "You can't create a new payment without an outstanding payments/receipts account set on the %s journal.",
+                self.journal_id.display_name))
 
         # Compute amounts.
         write_off_amount = write_off_line_vals.get('amount', 0.0)
