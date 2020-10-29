@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="uom_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/uom/static/src/js/uom_field_widget.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="measure field tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/uom/static/tests/measure_field_tests.js"></script>
+        </xpath>
+    </template>
+</odoo>

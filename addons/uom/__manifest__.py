@@ -5,7 +5,7 @@
     'name': 'Units of measure',
     'version': '1.0',
     'category': 'Sales/Sales',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'description': """
 This is the base module for managing Units of measure.
 ========================================================================
@@ -15,6 +15,7 @@ This is the base module for managing Units of measure.
         'security/uom_security.xml',
         'security/ir.model.access.csv',
         'views/uom_uom_views.xml',
+        'views/assets.xml',
     ],
     'installable': True,
     'auto_install': False,
