@@ -636,7 +636,8 @@ class AccountTaxRepartitionLine(models.Model):
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')
     tax_fiscal_country_id = fields.Many2one(string="Fiscal Country", comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict tags domain in form view.")
     company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this distribution line belongs to.")
-    sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match distribution lines. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
+    sequence = fields.Integer(string="Sequence", default=1,
+        help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
     @api.onchange('account_id')

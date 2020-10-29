@@ -286,7 +286,7 @@ class Picking(models.Model):
         help="Date Promise to the customer on the top level document (SO/PO)")
     has_deadline_issue = fields.Boolean(
         "Is late", compute='_compute_has_deadline_issue', store=True, default=False,
-        help="Is late or will be late depending of the deadline and scheduled date")
+        help="Is late or will be late depending on the deadline and scheduled date")
     date = fields.Datetime(
         'Creation Date',
         default=fields.Datetime.now, index=True, tracking=True,

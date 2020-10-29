@@ -528,14 +528,14 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': '%s: substask1' % (task.name,)
         })
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line than its mother")
-        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line than its project")
-        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line than its project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line as its mother")
+        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line as its project")
+        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line as its project")
 
         # moving subtask in another project
         subtask.write({'project_id': self.project_global.id})
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line than its mother, even when changing project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line as its mother, even when changing project")
         self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project)
 
         # changing the SO line of the mother task

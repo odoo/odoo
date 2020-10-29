@@ -31,21 +31,21 @@ class TestCertificationBadge(common.TestSurveyCommon):
 
         self.certification_badge = self.env['gamification.badge'].with_user(self.survey_manager).create({
             'name': self.certification_survey.title,
-            'description': 'Congratulation, you succeeded this certification',
+            'description': 'Congratulations, you have succeeded this certification',
             'rule_auth': 'nobody',
             'level': None,
         })
 
         self.certification_badge_2 = self.env['gamification.badge'].with_user(self.survey_manager).create({
             'name': self.certification_survey.title + ' 2',
-            'description': 'Congratulation, you succeeded this certification',
+            'description': 'Congratulations, you have succeeded this certification',
             'rule_auth': 'nobody',
             'level': None,
         })
 
         self.certification_badge_3 = self.env['gamification.badge'].with_user(self.survey_manager).create({
             'name': self.certification_survey.title + ' 3',
-            'description': 'Congratulation, you succeeded this certification',
+            'description': 'Congratulations, you have succeeded this certification',
             'rule_auth': 'nobody',
             'level': None,
         })

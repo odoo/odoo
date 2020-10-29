@@ -151,11 +151,11 @@ class TestProjectFlow(TestProjectCommon):
 
         self.assertEqual(
             child_task_1.partner_id, child_task_1.parent_id.partner_id,
-            "When no project partner_id has been set, a subtask should have the same partner than its parent")
+            "When no project partner_id has been set, a subtask should have the same partner as its parent")
 
         self.assertEqual(
             child_task_2.partner_id, child_task_2.project_id.partner_id,
-            "When a project partner_id has been set, a subtask should have the same partner than its project")
+            "When a project partner_id has been set, a subtask should have the same partner as its project")
 
         self.assertEqual(
             parent_task.subtask_count, 2,
@@ -190,7 +190,7 @@ class TestProjectFlow(TestProjectCommon):
 
         self.assertEqual(
             child_task_1.partner_id, self.project_pigs.partner_id, 
-            "When the project changes, the subtask should have the same partner id than the new project.")
+            "When the project changes, the subtask should have the same partner id as the new project.")
 
         # restore the partner_id of the 'goats' project
         self.project_goats.write({
@@ -204,7 +204,7 @@ class TestProjectFlow(TestProjectCommon):
 
         self.assertEqual(
             child_task_2.partner_id, self.project_goats.partner_id,
-            "When the project changes, the subtask should have the same partner id than the new project.")
+            "When the project changes, the subtask should have the same partner id as the new project.")
 
     def test_rating(self):
         """Check if rating works correctly even when task is changed from project A to project B"""

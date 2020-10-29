@@ -33,7 +33,7 @@ QUnit.test('add_link utility function', function (assert) {
     });
 });
 
-QUnit.test('addLink: linkify inside text node (1 occurence)', function (assert) {
+QUnit.test('addLink: linkify inside text node (1 occurrence)', function (assert) {
     assert.expect(5);
 
     const content = '<p>some text https://somelink.com</p>';
@@ -71,7 +71,7 @@ QUnit.test('addLink: linkify inside text node (1 occurence)', function (assert) 
     );
 });
 
-QUnit.test('addLink: linkify inside text node (2 occurences)', function (assert) {
+QUnit.test('addLink: linkify inside text node (2 occurrences)', function (assert) {
     assert.expect(4);
 
     // linkify may add some attributes. Since we do not care of their exact

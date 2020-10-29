@@ -22,7 +22,7 @@ class TestRepair(AccountTestInvoicingCommon):
         cls.product_product_5 = cls.env['product.product'].create({'name': 'Product 5'})
         cls.product_product_6 = cls.env['product.product'].create({'name': 'Large Cabinet'})
         cls.product_product_12 = cls.env['product.product'].create({'name': 'Office Chair Black'})
-        cls.product_product_13 = cls.env['product.product'].create({'name': 'Corner Desk Black'})
+        cls.product_product_13 = cls.env['product.product'].create({'name': 'Corner Desk Left Sit'})
         cls.product_product_2 = cls.env['product.product'].create({'name': 'Virtual Home Staging'})
         cls.product_service_order_repair = cls.env['product.product'].create({
             'name': 'Repair Services',

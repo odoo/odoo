@@ -67,7 +67,7 @@ class AccountMove(models.Model):
 
         # Check a journal is set on acquirer.
         if not acquirer.journal_id:
-            raise ValidationError(_('A journal must be specified of the acquirer %s.', acquirer.name))
+            raise ValidationError(_('A journal must be specified for the acquirer %s.', acquirer.name))
 
         if not acquirer_id and acquirer:
             vals['acquirer_id'] = acquirer.id

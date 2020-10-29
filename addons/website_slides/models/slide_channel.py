@@ -171,10 +171,10 @@ class Channel(models.Model):
         string="Promoted Content", default='latest', required=False,
         help='Depending the promote strategy, a slide will appear on the top of the course\'s page :\n'
              ' * Latest Published : the slide created last.\n'
-             ' * Most Voted : the slide which have to most vote.\n'
-             ' * Most Viewed ; the slide which have been viewed the most.\n'
+             ' * Most Voted : the slide which has to most votes.\n'
+             ' * Most Viewed ; the slide which has been viewed the most.\n'
              ' * Specific : You choose the slide to appear.\n'
-             ' * None : There won\'t be any slide showing.\n')
+             ' * None : No slides will be shown.\n')
     promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)

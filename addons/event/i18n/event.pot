@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"PO-Revision-Date: 2020-10-29 15:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -773,7 +773,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid ""
-"And this time, we go fully ONLINE! Meet us in our live streams from the confort of your house.<br>\n"
+"And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
 
@@ -1468,13 +1468,6 @@ msgid "Event Type"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
-msgid ""
-"Event is sold out if no more seats are available on event. If ticketing is "
-"used and all tickets are sold out event is sold out."
-msgstr ""
-
-#. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
 msgstr ""
@@ -1538,8 +1531,8 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
 msgid ""
-"Events will be automatically be moved into this stage their are passed and "
-"event moved in the stage will be automatically greened"
+"Events will automatically be moved into this stage when they are finished. "
+"The event moved into this stage will automatically be set as green."
 msgstr ""
 
 #. module: event
@@ -1788,7 +1781,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__start_sale_date
 msgid ""
-"If ticketing is used, this is the lowest starting sale date of tickets."
+"If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
 
 #. module: event
@@ -2504,8 +2497,10 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_open
 msgid ""
-"Registrations are open if event is not ended, seats are available on event "
-"and if tickets are sellable if ticketing is used."
+"Registrations are open if:\n"
+"- the event is not ended\n"
+"- there are seats available on event\n"
+"- the tickets are sellable (if ticketing is used)"
 msgstr ""
 
 #. module: event
@@ -2573,11 +2568,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
-msgstr ""
-
-#. module: event
-#: model:event.type,name:event.event_type_data_ticket
-msgid "Sell Online"
 msgstr ""
 
 #. module: event
@@ -2788,6 +2778,13 @@ msgid "The event has been publicly announced"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
+msgid ""
+"The event is sold out if no more seats are available on event. If ticketing "
+"is used and all tickets are sold out, the event will be sold out."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_7
 msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
@@ -2893,6 +2890,7 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:event.type,name:event.event_type_data_ticket
 #: model:ir.model.fields,field_description:event.field_event_type__use_ticket
 msgid "Ticketing"
 msgstr ""

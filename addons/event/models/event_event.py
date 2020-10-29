@@ -170,13 +170,16 @@ class EventEvent(models.Model):
         compute='_compute_event_ticket_ids', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
-        help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
+        help="Registrations are open if:\n"
+        "- the event is not ended\n"
+        "- there are seats available on event\n"
+        "- the tickets are sellable (if ticketing is used)")
     event_registrations_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
-        help='Event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out event is sold out.')
+        help='The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.')
     start_sale_date = fields.Date(
         'Start sale date', compute='_compute_start_sale_date',
-        help='If ticketing is used, this is the lowest starting sale date of tickets.')
+        help='If ticketing is used, contains the earliest starting sale date of tickets.')
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,

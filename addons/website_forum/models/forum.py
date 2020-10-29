@@ -34,7 +34,7 @@ class Forum(models.Model):
         ('public', 'Public'),
         ('connected', 'Signed In'),
         ('private', 'Some users')],
-        help="Public: Forum is pubic\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
+        help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
         default='public')
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
