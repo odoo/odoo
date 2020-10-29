@@ -936,3 +936,53 @@ class TestInventory(TransactionCase):
         Inventory._run_conflict_inventory_tasks()
         neg_qty_inventories = Inventory.search([('is_conflict_inventory', '=', True)])
         self.assertEqual(len(neg_qty_inventories), 0)
+
+    def test_inventory_sn_warning(self):
+        """ Check that warnings pop up when duplicate SNs added.
+        Two cases covered:
+        - Check for dupes within the inventory (i.e. inventory adjustment lines)
+        - Check for dupes not in inventory (i.e. existing quants w/ same SN name)
+        """
+        # check duplicated SN within inventory adjustment
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'sn1',
+            'product_id': self.product2.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product2, self.pack_location, 1, lot_id=lot1)
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Serial Onchange Check',
+            'location_ids': [self.stock_location.id, self.pack_location.id],
+            'product_ids': [(4, self.product2.id)],
+        })
+
+        inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 1)
+
+        inventory_line = self.env['stock.inventory.line'].create({
+            'inventory_id': inventory.id,
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'prod_lot_id': lot1.id,
+            'product_qty': 1
+        })
+        warning = False
+        warning = inventory_line._onchange_serial_number()
+        self.assertTrue(warning, 'Multiple lines with same serial number not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+
+        # check duplicate SN outside of inventory adjustment
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'sn2',
+            'product_id': self.product2.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product2, self.customer_location, 1, lot_id=lot2)
+        inventory_line.write({
+            'prod_lot_id': lot2.id,
+        })
+        warning = False
+        warning = inventory_line._onchange_serial_number()
+        self.assertTrue(warning, 'Reuse of existing serial number not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')

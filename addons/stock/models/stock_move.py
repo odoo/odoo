@@ -896,16 +896,19 @@ class StockMove(models.Model):
         quantity_done = sum(ml.product_uom_id._compute_quantity(ml.qty_done, self.product_uom) for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
         quantity_done += self.product_id.uom_id._compute_quantity(len(self.lot_ids), self.product_uom)
         self.update({'quantity_done': quantity_done})
-        used_lots = self.env['stock.move.line'].search([
-            ('company_id', '=', self.company_id.id),
-            ('product_id', '=', self.product_id.id),
-            ('lot_id', 'in', self.lot_ids.ids),
-            ('move_id', '!=', self._origin.id),
-            ('state', '!=', 'cancel')
-        ])
-        if used_lots:
+
+        quants = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
+                                                 ('lot_id', 'in', self.lot_ids.ids),
+                                                 ('quantity', '!=', 0),
+                                                 '|', ('location_id.usage', '=', 'customer'),
+                                                      '&', ('company_id', '=', self.company_id.id),
+                                                           ('location_id.usage', 'in', ('internal', 'transit'))])
+        if quants:
+            sn_to_location = ""
+            for quant in quants:
+                sn_to_location += _("\n(%s) exists in location %s", quant.lot_id.display_name, quant.location_id.display_name)
             return {
-                'warning': {'title': _('Warning'), 'message': _('Existing Serial numbers (%s). Please correct the serial numbers encoded.') % ','.join(used_lots.lot_id.mapped('display_name'))}
+                'warning': {'title': _('Warning'), 'message': _('Existing Serial numbers. Please correct the serial numbers encoded:') + sn_to_location}
             }
 
     @api.onchange('move_line_ids', 'move_line_nosuggest_ids', 'picking_type_id')
