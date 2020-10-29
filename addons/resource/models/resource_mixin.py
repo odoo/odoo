@@ -89,6 +89,10 @@ class ResourceMixin(models.AbstractModel):
             mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
+            if not calendar:
+                for calendar_resource in calendar_resources:
+                    result[calendar_resource.id] = {'days': 0, 'hours': 0}
+                continue
             day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
 
             # actual hours per day
