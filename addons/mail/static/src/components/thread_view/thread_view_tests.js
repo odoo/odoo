@@ -1150,7 +1150,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
-        model: 'mail.channel'
+        model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
@@ -1168,9 +1168,9 @@ QUnit.test('Post a message containing an email address followed by a mention on 
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         })
     });
-    await afterNextRender(() => {
+    await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
-    });
+    );
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
@@ -1178,6 +1178,191 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "Conversation should have a message that has been posted, which contains partner mention"
+    );
+});
+
+QUnit.test('mention a channel with space in the name', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General good boy",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector('.o_Message_content'),
+        '.o_channel_redirect',
+        "message must contain a link the the mentionned channel"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_channel_redirect').textContent,
+        '#General good boy',
+        "link to the channel must containt # + the channel name"
+    );
+});
+
+QUnit.test('mention a channel with "&" in the name', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General & good",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector('.o_Message_content'),
+        '.o_channel_redirect',
+        "message should contain a link the the mentionned channel"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_channel_redirect').textContent,
+        '#General & good',
+        "link to the channel must containt # + the channel name"
+    );
+});
+
+QUnit.test('start to mention a channel and add a new line after the #', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General good",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#\n #");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerSuggestion').click();
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector('.o_Message_content'),
+        '.o_channel_redirect',
+        "message should contain a link the the mentionned channel"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_channel_redirect').textContent,
+        '#General good',
+        "link to the channel must containt # + the channel name"
+    );
+});
+
+QUnit.test('mention a channel and add a new line and text after the mention', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General good",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerSuggestion').click();
+    });
+    await afterNextRender(() => {
+        const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
+        document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
+        document.execCommand('insertText', false, "\ntest");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector('.o_Message_content'),
+        '.o_channel_redirect',
+        "message should contain a link the the mentionned channel"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_channel_redirect').textContent,
+        '#General good',
+        "link to the channel must containt # + the channel name"
     );
 });
 
