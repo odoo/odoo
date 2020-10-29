@@ -112,6 +112,12 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _adyen_pay: function () {
         var self = this;
+
+        if (this.pos.get_order().selected_paymentline.amount < 0) {
+            this._show_error(_('Cannot process transactions with negative amount.'));
+            return Promise.resolve();
+        }
+
         var data = this._adyen_pay_data();
 
         return this._call_adyen(data).then(function (data) {
