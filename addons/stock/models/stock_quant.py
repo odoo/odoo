@@ -369,6 +369,15 @@ class StockQuant(models.Model):
             }
             return {'warning': warning}
 
+    @api.onchange('lot_id')
+    def _onchange_serial_number(self):
+        if self.lot_id and self.product_id.tracking == 'serial':
+            message, dummy = self.env['stock.quant']._check_serial_number(self.product_id,
+                                                                      self.lot_id,
+                                                                      self.company_id)
+            if message:
+                return {'warning': {'title': _('Warning'), 'message': message}}
+
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
         """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
@@ -642,6 +651,68 @@ class StockQuant(models.Model):
                 ],
             })
         return action
+
+    @api.model
+    def _check_serial_number(self, product_id, lot_id, company_id, source_location_id=None, ref_doc_location_id=None):
+        """ Checks for duplicate serial numbers (SN) when assigning a SN (i.e. no source_location_id)
+        and checks for potential incorrect location selection of a SN when using a SN (i.e.
+        source_location_id). Returns warning message of all locations the SN is located at and
+        (optionally) a recommended source location of the SN (when using SN from incorrect location).
+        This function is designed to be used by onchange functions across differing situations including,
+        but not limited to scrap, incoming picking SN encoding, and outgoing picking SN selection.
+
+        :param product_id: `product.product` product to check SN for
+        :param lot_id: `stock.production.lot` SN to check
+        :param company_id: `res.company` company to check against (i.e. we ignore duplicate SNs across
+            different companies)
+        :param source_location_id: `stock.location` optional source location if using the SN rather
+            than assigning it
+        :param ref_doc_location_id: `stock.location` optional reference document location for
+            determining recommended location. This is param expected to only be used when a
+            `source_location_id` is provided.
+        :return: tuple(message, recommended_location) If not None, message is a string expected to be
+            used in warning message dict and recommended_location is a `location_id`
+        """
+        message = None
+        recommended_location = None
+        if product_id.tracking == 'serial':
+            quants = self.env['stock.quant'].search([('product_id', '=', product_id.id),
+                                                         ('lot_id', '=', lot_id.id),
+                                                         ('quantity', '!=', 0),
+                                                         '|', ('location_id.usage', '=', 'customer'),
+                                                              '&', ('company_id', '=', company_id.id),
+                                                                   ('location_id.usage', 'in', ('internal', 'transit'))])
+            sn_locations = quants.mapped('location_id')
+            if quants:
+                if not source_location_id:
+                    # trying to assign an already existing SN
+                    message =  _('The Serial Number (%s) is already used in these location(s): %s.\n\n'
+                                 'Is this expected? For example this can occur if a delivery operation is validated '
+                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
+                                 'automatically once all steps are completed. Otherwise, the serial numbershould be corrected to '
+                                 'prevent inconsistent data.',
+                                 lot_id.name, ', '.join(sn_locations.mapped('display_name')))
+
+                elif source_location_id and source_location_id not in sn_locations:
+                    # using an existing SN in the wrong location
+                    recommended_location = self.env['stock.location']
+                    if ref_doc_location_id:
+                        for location in sn_locations:
+                            if ref_doc_location_id.parent_path in location.parent_path:
+                                recommended_location = location
+                                break
+                    else:
+                        for location in sn_locations:
+                            if location.usage != 'customer':
+                                recommended_location = location
+                                break
+                    if recommended_location:
+                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s. Source location for this move will be changed to %s',
+                        lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')), recommended_location.display_name)
+                    else:
+                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s. Please correct this to prevent inconsistent data.',
+                        lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
+        return message, recommended_location
 
 
 class QuantPackage(models.Model):

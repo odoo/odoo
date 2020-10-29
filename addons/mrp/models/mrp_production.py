@@ -671,19 +671,12 @@ class MrpProduction(models.Model):
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
-        if self.product_id.tracking == 'serial':
-            if self.env['stock.move.line'].search_count([
-                ('company_id', '=', self.company_id.id),
-                ('product_id', '=', self.product_id.id),
-                ('lot_id', '=', self.lot_producing_id.id),
-                ('state', '!=', 'cancel')
-            ]):
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _('Existing Serial number (%s). Please correct the serial numbers encoded.') % self.lot_producing_id.name
-                    }
-                }
+        if self.product_id.tracking == 'serial' and self.lot_producing_id:
+            message, dummy = self.env['stock.quant']._check_serial_number(self.product_id,
+                                                                      self.lot_producing_id,
+                                                                      self.company_id)
+            if message:
+                return {'warning': {'title': _('Warning'), 'message': message}}
 
     @api.onchange('bom_id')
     def _onchange_workorder_ids(self):

@@ -590,6 +590,37 @@ class InventoryLine(models.Model):
             self.product_qty = theoretical_qty
         self.theoretical_qty = theoretical_qty
 
+    @api.onchange('product_qty', 'prod_lot_id')
+    def _onchange_serial_number(self):
+        if self.prod_lot_id and self.product_id.tracking == 'serial' and not float_is_zero(self.product_qty, self.product_id.uom_id.rounding):
+            dupe_sn_lines = self.env['stock.inventory.line']
+            message = _('Is this expected? For example this can happen if pick-pack-ship was not completed in the right order. In this case the issue will be solved '
+                        'automatically once all steps are completed. Otherwise, you can adjust quantities in these locations.')
+            # first check current inventory for non-zero dupe SNs
+            if self.inventory_id:
+                dupe_sn_lines |= self.inventory_id.line_ids.filtered(
+                    lambda l: l.product_id == self.product_id
+                    and l.prod_lot_id == self.prod_lot_id
+                    and l.location_id.id is not self.location_id.id
+                    and not float_is_zero(l.product_qty, l.product_id.uom_id.rounding))
+            if len(dupe_sn_lines) > 0:
+                message = _('There is already one or more inventory adjustment line(s) counting the Serial Number (%s) at the location(s): %s.\n\n',
+                            self.prod_lot_id.name, ', '.join(dupe_sn_lines.location_id.mapped('display_name'))) + message
+                return {'warning': {'title': _('Warning'), 'message': message}}
+            # then check locations not in inventory for dupe SNs
+            if self.inventory_id and self.inventory_id.location_ids:
+                quants = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
+                                                         ('lot_id', '=', self.prod_lot_id.id),
+                                                         ('quantity', '!=', 0),
+                                                         ('location_id', 'not in', self.inventory_id.location_ids.ids),
+                                                         '|', ('location_id.usage', '=', 'customer'),
+                                                              '&', ('company_id', '=', self.company_id.id),
+                                                                   ('location_id.usage', 'in', ('internal', 'transit'))])
+                if quants:
+                    message = _('The Serial Number (%s) is already used in these location(s): %s.\n\n',
+                                self.prod_lot_id.name, ', '.join(quants.location_id.mapped('display_name'))) + message
+                    return {'warning': {'title': _('Warning'), 'message': message}}
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to handle the case we create inventory line without
