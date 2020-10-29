@@ -3,7 +3,9 @@
 
 import logging
 import pytz
+import re
 
+from base64 import b64encode
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
@@ -11,7 +13,9 @@ from werkzeug.urls import url_join
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import AccessError
+from odoo.modules.module import get_module_resource
 from odoo.tools.float_utils import float_round
+from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
 
@@ -234,7 +238,7 @@ class Digest(models.Model):
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
         ], limit=tips_count)
         tip_descriptions = [
-            self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
+            self.env['mail.render.mixin']._render_template(self._replace_digest_img_src_with_base64(tools.html_sanitize(tip.tip_description)), 'digest.tip', tip.ids, post_process=True)[tip.id]
             for tip in tips
         ]
         if consumed:
@@ -335,3 +339,36 @@ class Digest(models.Model):
         pre = currency_id.position == 'before'
         symbol = u'{symbol}'.format(symbol=currency_id.symbol or '')
         return u'{pre}{0}{post}'.format(amount, pre=symbol if pre else '', post=symbol if not pre else '')
+
+    def _replace_digest_img_src_with_base64(self, html):
+        """ Replace <img> tag's src with its respective base64 data.
+        The only supported src format are the one for local images, for ex
+        '/digest/static/src/img/some_img.gif'. No other format for the img
+        src is replaced. The main objective is to keep the images alive in
+        the digest mails even if the db expires(happens a lot with trials
+        databases),and so, mostly the images in the digest mails are locally
+        available resources.
+
+        :param html: html content where we want to replace img src
+        :return: html with inline img data src
+        """
+        if not html:
+            return html
+
+        html = tools.ustr(html)
+
+        def _sub_src_to_base64(match):
+            src = match.group(2).strip()
+            if src.startswith('/') and not src.startswith('/web/'):
+                # Get module name in the first match, and the rest of the path in second match
+                file_path_match = re.match(r'''^/(\w+)/(.*)''', src)
+                image_path = get_module_resource(file_path_match.group(1), file_path_match.group(2))
+                if image_path:
+                    with open(image_path, 'rb') as f:
+                        image_data = f.read()
+                        mimetype = guess_mimetype(image_data)
+                        return match.group(1) + f'data:{mimetype};base64,{b64encode(image_data).decode("ascii")}'
+                return match.group(1) + src
+            return match.group(1) + src
+
+        return re.sub(r'''(<img(?=\s)[^>]*\ssrc=["'])([^"']+)''', _sub_src_to_base64, html)

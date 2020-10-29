@@ -709,7 +709,7 @@ class MassMailing(models.Model):
             [('group_id.category_id', '=', self.env.ref('base.module_category_marketing_email_marketing').id)]
         )
         if random_tip:
-            random_tip = random.choice(random_tip).tip_description
+            random_tip = self.env['digest.digest']._replace_digest_img_src_with_base64(random.choice(random_tip).tip_description)
 
         formatted_date = tools.format_datetime(
             self.env, self.sent_date, self.user_id.tz, 'MMM dd, YYYY',  self.user_id.lang
