@@ -11,10 +11,19 @@ $-editor-messages-margin-x: 2%;
         content: attr(data-editor-message);
         display: block;
         font-size: 20px;
+        line-height: 50px; // Useful for the "wizz" animation on snippet click to be more visible
     }
     &:after {
         content: attr(data-editor-sub-message);
         display: block;
+    }
+}
+.o_we_snippet_area_animation {
+    animation-delay: 999ms; // Disable it but allow to inherit the animation
+
+    &::before {
+        animation: inherit;
+        animation-delay: 0ms;
     }
 }
 
