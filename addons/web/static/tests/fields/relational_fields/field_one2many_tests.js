@@ -4370,7 +4370,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal .o_data_row').length, 2,
-                "sould have 2 records in the select view (the last one is not displayed because it is already selected)");
+                "should have 2 records in the select view (the last one is not displayed because it is already selected)");
 
             await testUtils.dom.click($('.modal .o_data_row:first .o_list_record_selector input'));
             await testUtils.dom.click($('.modal .o_select_button'));
@@ -4379,7 +4379,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal .o_data_row').length, 1,
-                "sould have 1 record in the select view");
+                "should have 1 record in the select view");
 
             await testUtils.dom.click($('.modal-footer button:eq(1)'));
             await testUtils.fields.editInput($('.modal input.o_field_widget[name="turtle_foo"]'), 'tototo');
@@ -4389,10 +4389,10 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.dom.click($('.modal-footer button:contains(&):first'));
 
-            assert.strictEqual($('.modal').length, 0, "sould close the modals");
+            assert.strictEqual($('.modal').length, 0, "should close the modals");
 
             assert.containsN(form, '.o_data_row', 3,
-                "sould have 3 records in one2many list");
+                "should have 3 records in one2many list");
             assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.50tototo1.550xphone",
                 "should display the record values in one2many list");
 
