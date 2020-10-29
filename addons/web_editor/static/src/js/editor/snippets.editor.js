@@ -870,6 +870,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
+        'click .oe_snippet': '_onSnippetClick',
         'click .o_install_btn': '_onInstallBtnClick',
         'click .o_we_add_snippet_btn': '_onBlocksTabClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
@@ -1930,7 +1931,6 @@ var SnippetsMenu = Widget.extend({
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
-                distance: 0,
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
@@ -2487,6 +2487,17 @@ var SnippetsMenu = Widget.extend({
             }
             this.trigger_up('request_save', data);
         }, true);
+    },
+    /**
+     * @private
+     */
+    _onSnippetClick() {
+        const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
+        for (const el of $els) {
+            if (!el.children.length) {
+                $(el).odooBounce('o_we_snippet_area_animation');
+            }
+        }
     },
     /**
      * @private
