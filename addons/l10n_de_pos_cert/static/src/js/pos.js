@@ -15,7 +15,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
 
     models.load_fields('res.company', ['fiskaly_key', 'fiskaly_secret']);
 
-    var _super_posmodel = models.PosModel.prototype;
+    let _super_posmodel = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
         // @Override
         initialize(attributes) {
@@ -106,16 +106,20 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             if (!this.pos.getApiToken()) {
                 await this._authenticate(); //  If there's an error, a promise is created with a rejected value
             }
+
+            const data = {
+                'state': 'ACTIVE',
+                'client_id': this.pos.getClientId()
+            };
+
             return $.ajax({
                 url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.uuid}`,
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${this.pos.getApiToken()}`
                 },
-                data: {
-                    'state': 'ACTIVE',
-                    'client_id': this.pos.getClientId()
-                },
+                data: JSON.stringify(data),
+                contentType: 'application/json'
             }).then((data) => {
                 this.txLastRevision = data.latest_revision;
                 this.transactionStarted = true;
@@ -124,7 +128,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                     await this._authenticate();
                     return this.createTransaction();
                 }
-                // Return a Promise with rejected value for error that are not handled here
+                // Return a Promise with rejected value for errors that are not handled here
                 return Promise.reject(error);
             });
         },
@@ -176,25 +180,27 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
 
             const amountPerVatRateArray = this._createAmountPerVatRateArray();
             const amountPerPaymentTypeArray = this._createAmountPerPaymentTypeArray();
+            const data = {
+                'state': 'FINISHED',
+                'client_id': this.pos.getClientId(),
+                'schema': {
+                    'standard_v1': {
+                        'receipt': {
+                            'receipt_type': 'RECEIPT',
+                            'amounts_per_vat_rate': amountPerVatRateArray,
+                            'amounts_per_payment_type': amountPerPaymentTypeArray
+                        }
+                    }
+                }
+            };
             return $.ajax({
                 headers: {
                     'Authorization': `Bearer ${this.pos.getApiToken()}`
                 },
                 url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.uuid}?last_revision=${this.txLastRevision}`,
                 method: 'PUT',
-                data: {
-                    'state': 'FINISHED',
-                    'client_id': this.pos.getClientId(),
-                    'schema': {
-                        'standard_v1': {
-                            'receipt': {
-                                'receipt_type': 'RECEIPT',
-                                'amounts_per_vat_rate': amountPerVatRateArray,
-                                'amounts_per_payment_type': amountPerPaymentTypeArray
-                            }
-                        }
-                    }
-                },
+                data: JSON.stringify(data),
+                contentType: 'application/json'
             }).then((data) => {
                 this.tseInformation.number.value = data.number;
                 this.tseInformation.timeStart.value = convertFromEpoch(data.time_start);
@@ -210,7 +216,42 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                     await this._authenticate();
                     return this.finishShortTransaction();
                 }
-                // Return a Promise with rejected value for error that are not handled here
+                // Return a Promise with rejected value for errors that are not handled here
+                return Promise.reject(error);
+            });;
+        },
+        async cancelTransaction() {
+            if (!this.pos.getApiToken()) {
+                await this._authenticate();
+            }
+
+            const data = {
+                'state': 'CANCELLED',
+                'client_id': this.pos.getClientId(),
+                'schema': {
+                    'standard_v1': {
+                        'receipt': {
+                            'receipt_type': 'CANCELLATION',
+                            'amounts_per_vat_rate': []
+                       }
+                    }
+                }
+            };
+
+            return $.ajax({
+                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.uuid}?last_revision=${this.txLastRevision}`,
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${this.pos.getApiToken()}`
+                },
+                data: JSON.stringify(data),
+                contentType: 'application/json'
+            }).catch(async (error) => {
+                if (error.status === 401) {  // Need to update the token
+                    await this._authenticate();
+                    return this.cancelTransaction();
+                }
+                // Return a Promise with rejected value for errors that are not handled here
                 return Promise.reject(error);
             });;
         }
