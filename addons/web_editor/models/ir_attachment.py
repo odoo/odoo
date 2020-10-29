@@ -5,6 +5,7 @@ from werkzeug.urls import url_quote
 
 from odoo import api, models, fields, tools
 
+SUPPORTED_IMAGE_MIMETYPES = ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml']
 
 class IrAttachment(models.Model):
 
@@ -27,7 +28,7 @@ class IrAttachment(models.Model):
     def _compute_image_src(self):
         for attachment in self:
             # Only add a src for supported images
-            if attachment.mimetype not in ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml']:
+            if attachment.mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                 attachment.image_src = False
                 continue
 
