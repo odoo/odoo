@@ -275,23 +275,10 @@ class account_journal(models.Model):
             self.env.cr.execute(query, query_args)
             query_results_drafts = self.env.cr.dictfetchall()
 
-            today = fields.Date.context_today(self)
-            query = '''
-                SELECT
-                    (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
-                    currency_id AS currency,
-                    move_type,
-                    invoice_date,
-                    company_id
-                FROM account_move move
-                WHERE journal_id = %s
-                AND date <= %s
-                AND state = 'posted'
-                AND payment_state in ('not_paid', 'partial')
-                AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-            '''
-            self.env.cr.execute(query, (self.id, today))
+            (query, query_args) = self._get_late_bills_query()
+            self.env.cr.execute(query, query_args)
             late_query_results = self.env.cr.dictfetchall()
+
             curr_cache = {}
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
@@ -370,6 +357,22 @@ class account_journal(models.Model):
             AND move.payment_state in ('not_paid', 'partial')
             AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
         ''', {'journal_id': self.id})
+
+    def _get_late_bills_query(self):
+        return """
+            SELECT
+                (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
+                currency_id AS currency,
+                move_type,
+                invoice_date,
+                company_id
+            FROM account_move move
+            WHERE journal_id = %(journal_id)s
+            AND invoice_date_due <= %(today)s
+            AND state = 'posted'
+            AND payment_state in ('not_paid', 'partial')
+            AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
+        """, {'journal_id': self.id, 'today': fields.Date.context_today(self)}
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
