@@ -1201,13 +1201,20 @@ MockServer.include({
             notifications = this._mockMailNotification_NotificationFormat(
                 notifications.map(notification => notification.id)
             );
-            return Object.assign({}, message, {
+            const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
             });
+            if (message.subtype_id) {
+                const subtype = this._getRecords('mail.message.subtype', [
+                    ['id', '=', message.subtype_id],
+                ])[0];
+                response.subtype_description = subtype.description;
+            }
+            return response;
         });
     },
     /**

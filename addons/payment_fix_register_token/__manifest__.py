@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': "Odoo referral program",
-    'summary': """Allow you to refer your friends to Odoo and get rewards""",
+    'name': "Fix register payment wizard with 'payment' module",
     'category': 'Hidden',
     'version': '1.0',
-    'depends': ['base', 'web'],
+    'description': """""",
+    'depends': ['payment'],
     'data': [
-        'views/templates.xml',
+        'views/account_payment_register_views.xml',
     ],
+    'installable': True,
     'auto_install': True,
 }
