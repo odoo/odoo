@@ -457,7 +457,7 @@ class MailThread(models.AbstractModel):
     # WRAPPERS AND TOOLS
     # ------------------------------------------------------
 
-    def message_change_thread(self, new_thread):
+    def message_change_thread(self, new_thread, new_parent_message=False):
         """
         Transfer the list of the mail thread messages from an model to another
 
@@ -487,8 +487,14 @@ class MailThread(models.AbstractModel):
             ('subtype_id', '!=', subtype_comment)])
 
         # update the messages
-        msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
-        msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
+        msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
+        if new_parent_message:
+            msg_vals["parent_id"] = new_parent_message.id
+        msg_comment.write(msg_vals)
+
+        # other than comment: reset subtype
+        msg_vals["subtype_id"] = None
+        msg_not_comment.write(msg_vals)
         return True
 
     # ------------------------------------------------------
