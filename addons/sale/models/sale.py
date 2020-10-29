@@ -622,9 +622,9 @@ class SaleOrder(models.Model):
                 if line.display_type == 'line_section':
                     pending_section = line
                     continue
-                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
-                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
+                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final) or line.display_type == 'line_note':
                     if pending_section:
                         invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
                         pending_section = None
