@@ -71,7 +71,11 @@ FormRenderer.include({
         // while attempting to extend them.
         this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
         if (this.chatterFields.hasRecordReloadOnMessagePosted) {
-            this.on('o_message_posted', this, ev => this.trigger_up('reload'));
+            this.on('o_message_posted', this, ev => {
+                if(!this.state.isDirty()) {
+                    this.trigger_up('reload')
+                }
+            });
         }
         if (this.chatterFields.hasRecordReloadOnAttachmentsChanged) {
             this.on('o_attachments_changed', this, ev => this.trigger_up('reload'));
