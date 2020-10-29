@@ -836,7 +836,11 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
+<<<<<<< HEAD
             if 'alias_name' in vals:
+=======
+            if vals.get('type') == 'purchase' or (journal.type == 'purchase' and 'alias_name' in vals):
+>>>>>>> b92d6e74ee9... temp
                 journal._update_mail_alias(vals)
         result = super(AccountJournal, self).write(vals)
 
