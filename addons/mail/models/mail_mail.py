@@ -52,7 +52,7 @@ class MailMail(models.Model):
     ], 'Status', readonly=True, copy=False, default='outgoing')
     auto_delete = fields.Boolean(
         'Auto Delete',
-        help="This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     failure_reason = fields.Text(
         'Failure Reason', readonly=1,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")

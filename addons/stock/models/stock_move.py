@@ -176,8 +176,8 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
-    forecast_availability = fields.Float('Forcast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure')
-    forecast_expected_date = fields.Datetime('Forcasted Expected date', compute='_compute_forecast_information')
+    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure')
+    forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information')
     lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
 
     @api.onchange('product_id', 'picking_type_id')
