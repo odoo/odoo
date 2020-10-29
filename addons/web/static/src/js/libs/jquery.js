@@ -92,15 +92,15 @@ $.fn.extend({
     },
     /**
      * Makes DOM elements bounce the way Odoo decided it.
+     *
+     * @param {string} [extraClass]
      */
-    odooBounce: function () {
-        return this.each(function () {
-            var $el = $(this);
-            $el.addClass('o_catch_attention');
-            setTimeout(function () {
-                $el.removeClass('o_catch_attention');
-            }, 400);
-        });
+    odooBounce: function (extraClass) {
+        for (const el of this) {
+            el.classList.add('o_catch_attention', extraClass);
+            setTimeout(() => el.classList.remove('o_catch_attention', extraClass), 400);
+        }
+        return this;
     },
     /**
      * Allows to bind events to a handler just as the standard `$.on` function

@@ -960,6 +960,7 @@ var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     cacheSnippetTemplate: {},
     events: {
+        'click .oe_snippet': '_onSnippetClick',
         'click .o_install_btn': '_onInstallBtnClick',
         'click .o_we_add_snippet_btn': '_onBlocksTabClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
@@ -1130,8 +1131,8 @@ var SnippetsMenu = Widget.extend({
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
-        this.$window.on('mousedown.snippets_menu', this._onSnippetMouseDown.bind(this));
-        this.$window.on('mousedown-iframe.snippets_menu', this._onSnippetMouseDown.bind(this));
+        this.$window.on('mousedown.snippets_menu', this._onContentMouseDown.bind(this));
+        this.$window.on('mousedown-iframe.snippets_menu', this._onContentMouseDown.bind(this));
 
         // Adapt overlay covering when the window is resized / content changes
         var throttledCoverUpdate = _.throttle(() => {
@@ -2034,7 +2035,6 @@ var SnippetsMenu = Widget.extend({
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
                 iframeFix: true,
-                distance: 0,
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
@@ -2634,7 +2634,11 @@ var SnippetsMenu = Widget.extend({
             reenable();
         });
     },
-    _onSnippetMouseDown: function (ev) {
+    /**
+     * @private
+     * @param {Event}
+     */
+    _onContentMouseDown: function (ev) {
         const el = this.editorHelpers.elementFromPoint(ev.clientX, ev.clientY);
 
         const editable = el && el.closest('.note-editable');
@@ -2731,6 +2735,17 @@ var SnippetsMenu = Widget.extend({
             }
             this.trigger_up('request_save', data);
         }, true);
+    },
+    /**
+     * @private
+     */
+    _onSnippetClick() {
+        const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
+        for (const el of $els) {
+            if (!el.children.length) {
+                $(el).odooBounce('o_we_snippet_area_animation');
+            }
+        }
     },
     /**
      * @private
