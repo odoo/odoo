@@ -17,6 +17,8 @@ from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
 
+from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
@@ -224,7 +226,10 @@ class Web_Editor(http.Controller):
         else:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([('url', '=like', src)], limit=1)
+            attachment = request.env['ir.attachment'].search([
+                ('url', '=like', src),
+                ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
+            ], limit=1)
         if not attachment:
             return {
                 'attachment': False,
