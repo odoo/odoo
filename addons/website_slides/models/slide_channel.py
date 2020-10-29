@@ -105,7 +105,7 @@ class ChannelUsersRelation(models.Model):
                 continue
 
             email_values.update(
-                author_id=self.channel_id.user_id.partner_id.id or self.env.company.partner_id.id,
+                author_id=record.channel_id.user_id.partner_id.id or self.env.company.partner_id.id,
                 auto_delete=True,
                 recipient_ids=[(4, pid) for pid in email_values['partner_ids']],
             )
