@@ -277,6 +277,12 @@ const UserValueWidget = Widget.extend({
         this._userValueWidgets.forEach(widget => widget.close());
     },
     /**
+     * Simulates the correct event on the element to make it active.
+     */
+    enable() {
+        this.$el.click();
+    },
+    /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
@@ -712,6 +718,17 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
         this.containerEl.appendChild(checkboxEl);
 
         return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    enable() {
+        this.$('we-checkbox').click();
     },
 
     //--------------------------------------------------------------------------
@@ -3619,7 +3636,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
             // image: remove the background filter option.
             // TODO there probably is a better system to implement to do that
             const widget = this._requestUserValueWidgets('bg_filter_toggle_opt')[0];
-            widget.$el.click();
+            widget.enable();
         }
     },
 });
