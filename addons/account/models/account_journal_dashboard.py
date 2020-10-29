@@ -297,7 +297,11 @@ class account_journal(models.Model):
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
-            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)])
+            lock_date = self.company_id._get_user_fiscal_lock_date() # defaults to date.min
+            bank_stmt = self.env['account.bank.statement.line'].search([
+                ('statement_id.journal_id', 'in', self.ids),
+                ('date', '>', lock_date),
+            ])
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',
