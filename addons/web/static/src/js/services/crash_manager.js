@@ -89,6 +89,7 @@ var CrashManager = AbstractService.extend({
         active = true;
         this.isConnected = true;
         this.odooExceptionTitleMap = {
+            'odoo.addons.base.models.ir_mail_server.MailDeliveryException': _lt("MailDeliveryException"),
             'odoo.exceptions.AccessDenied': _lt("Access Denied"),
             'odoo.exceptions.AccessError': _lt("Access Error"),
             'odoo.exceptions.MissingError': _lt("Missing Record"),
