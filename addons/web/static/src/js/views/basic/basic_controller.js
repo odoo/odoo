@@ -87,11 +87,19 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             return this.discardingDef;
         }
         if (!this.isDirty(recordID)) {
-            return Promise.resolve(false);
+            return Promise.resolve({ needDiscard: false });
         }
 
         var message = _t("Would you like to save your changes?");
         this.discardingDef = new Promise(function (resolve, reject) {
+            const confirmCallback = () => {
+                resolve({ needDiscard: true});
+                self.discardingDef = null;
+            };
+            const cancelCallback = () => {
+                reject();
+                self.discardingDef = null;
+            };
             var dialog = Dialog.confirm(self, message, {
                 title: _t("Unsaved changes"),
                 buttons: [
@@ -101,30 +109,35 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                         close: true,
                         click: () => {
                             self._disableButtons();
-                            self.saveRecord().then(() => {
-                                resolve(true);
+                            const canBeAbandoned = self.model.canBeAbandoned(recordID);
+                            return self.saveRecord().then(() => {
                                 self._enableButtons();
+                                resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
                                 self.discardingDef = null;
                             });
+                            // resolve({
+                            //     needDiscard: true,
+                            //     saveCallback: () => {
+                            //         return self.saveRecord().then(() => {
+                            //             self._enableButtons();
+                            //         });
+                            //     },
+                            // });
                         },
                     },
                     {
                         text: _t("Discard"),
                         close: true,
-                        click: () => {
-                            resolve(true);
-                            self.discardingDef = null;
-                        },
+                        click: confirmCallback,
                     },
                     {
                         text: _t("Stay Here"),
                         close: true,
-                        click: () => {
-                            reject();
-                            self.discardingDef = null;
-                        },
+                        click: cancelCallback,
                     }
                 ],
+                confirm_callback: confirmCallback,
+                cancel_callback: cancelCallback,
             });
             dialog.on('closed', self.discardingDef, reject);
         });
@@ -406,19 +419,32 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         recordID = recordID || this.handle;
         options = options || {};
         return this.canBeDiscarded(recordID)
-            .then(function (needDiscard) {
-                if (options.readonlyIfRealDiscard && !needDiscard) {
+            .then(function (result) {
+                debugger;
+                if (options.readonlyIfRealDiscard && !result.needDiscard) {
                     return;
                 }
+                const canBeAbandoned = self.model.canBeAbandoned(recordID);
+                // if (result.saveCallback) {
+                //     result.saveCallback().then(() => {
+                //         if (!options.noAbandon && canBeAbandoned) {
+                //             self._abandonRecord(recordID);
+                //         }
+                //     });
+                //     return;
+                // }
                 self.model.discardChanges(recordID);
                 if (options.noAbandon) {
                     return;
                 }
-                if (self.model.canBeAbandoned(recordID)) {
+                if (canBeAbandoned || result.forceAbandon) {
                     self._abandonRecord(recordID);
                     return;
                 }
                 return self._confirmSave(recordID);
+            }, function (result) {
+                debugger;
+                console.log("Inside fail............... ");
             });
     },
     /**

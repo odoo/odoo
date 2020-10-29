@@ -83,6 +83,7 @@ odoo.define('web.Pager', function (require) {
          */
         async _changeSelection(direction) {
             try {
+                debugger;
                 await this.props.validate();
             } catch (err) {
                 return;
