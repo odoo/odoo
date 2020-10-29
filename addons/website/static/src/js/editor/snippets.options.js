@@ -797,7 +797,7 @@ snippetOptions.registry.OptionsTab = snippetOptions.SnippetOptionWidget.extend({
         // TODO improve: hack to click on external image picker
         this.bodyImageType = widgetValue;
         const widget = this._requestUserValueWidgets(params.imagepicker)[0];
-        widget.$el.click();
+        widget.enable();
     },
     /**
      * @override
@@ -1696,7 +1696,7 @@ snippetOptions.registry.Parallax = snippetOptions.SnippetOptionWidget.extend({
             // The parallax option was enabled but the background image was
             // removed: disable the parallax option.
             const widget = this._requestUserValueWidgets('parallax_none_opt')[0];
-            widget.$el.click();
+            widget.enable();
             widget.getParent().close(); // FIXME remove this ugly hack asap
         }
     },
@@ -1842,7 +1842,7 @@ const VisibilityPageOptionUpdate = snippetOptions.SnippetOptionWidget.extend({
         // toggled (otherwise it would be about editing an element which
         // is actually never displayed on the page).
         const widget = this._requestUserValueWidgets(this.showOptionWidgetName)[0];
-        widget.$el.click();
+        widget.enable();
     },
 
     //--------------------------------------------------------------------------
