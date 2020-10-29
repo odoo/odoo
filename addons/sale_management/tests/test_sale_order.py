@@ -129,13 +129,13 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(
             len(self.sale_order_no_price_list.order_line),
             1,
-            "The sale order shall contains the same number of products than"
+            "The sale order shall contains the same number of products as"
             "the quotation template.")
 
         self.assertEqual(
             self.sale_order_no_price_list.order_line[0].product_id.id,
             self.product_1.id,
-            "The sale order shall contains the same products than the"
+            "The sale order shall contains the same products as the"
             "quotation template.")
 
         self.assertEqual(
@@ -147,13 +147,13 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(
             len(self.sale_order_no_price_list.sale_order_option_ids),
             1,
-            "The sale order shall contains the same number of optional products than"
+            "The sale order shall contains the same number of optional products as"
             "the quotation template.")
 
         self.assertEqual(
             self.sale_order_no_price_list.sale_order_option_ids[0].product_id.id,
             self.optional_product.id,
-            "The sale order shall contains the same optional products than the"
+            "The sale order shall contains the same optional products as the"
             "quotation template.")
 
         self.assertEqual(
@@ -173,7 +173,7 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(
             self.sale_order_no_price_list.order_line[1].product_id.id,
             self.optional_product.id,
-            "The sale order shall contains the same products than the"
+            "The sale order shall contains the same products as the"
             "quotation template.")
 
         self.assertEqual(
