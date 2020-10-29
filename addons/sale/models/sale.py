@@ -1038,7 +1038,7 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            price = line.price_unit * (1 - (line.discount_not_rounded or 0.0) / 100.0)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
@@ -1217,6 +1217,7 @@ class SaleOrderLine(models.Model):
     price_reduce_taxexcl = fields.Monetary(compute='_get_price_reduce_notax', string='Price Reduce Tax excl', readonly=True, store=True)
 
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
+    discount_not_rounded = fields.Float(compute='_compute_discount_not_rounded', string='Discount Not Rounded (%)', default=0.0)
 
     product_id = fields.Many2one(
         'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -1655,15 +1656,13 @@ class SaleOrderLine(models.Model):
     def _onchange_product_id_set_customer_lead(self):
         pass
 
-    @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
-    def _onchange_discount(self):
+    def _get_discount(self):
         if not (self.product_id and self.product_uom and
                 self.order_id.partner_id and self.order_id.pricelist_id and
                 self.order_id.pricelist_id.discount_policy == 'without_discount' and
                 self.env.user.has_group('product.group_discount_per_so_line')):
             return
-
-        self.discount = 0.0
+        discount = 0.0
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
             partner=self.order_id.partner_id,
@@ -1687,7 +1686,22 @@ class SaleOrderLine(models.Model):
                     self.order_id.company_id or self.env.company, self.order_id.date_order or fields.Date.today())
             discount = (new_list_price - price) / new_list_price * 100
             if (discount > 0 and new_list_price > 0) or (discount < 0 and new_list_price < 0):
-                self.discount = discount
+                discount = discount
+        return discount
+
+    @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
+    def _onchange_discount(self):
+        self.discount = self._get_discount()
+
+    @api.depends('discount', 'product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
+    def _compute_discount_not_rounded(self):
+        precision = self.env['decimal.precision'].precision_get('Discount')
+        for order in self:
+            discount = order._get_discount()
+            if float_compare(order.discount, discount or 0, precision_rounding=precision) != 0:
+                # discount was manually overriden in form view
+                discount = order.discount
+            order.discount_not_rounded = discount
 
     def _is_delivery(self):
         self.ensure_one()
