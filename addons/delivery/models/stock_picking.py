@@ -3,9 +3,9 @@
 
 import json
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, tools, _
 from odoo.exceptions import UserError
-
+import base64
 
 
 class StockQuantPackage(models.Model):
@@ -89,6 +89,7 @@ class StockPicking(models.Model):
         help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
+    is_shipping_label_printed = fields.Boolean(string="Shipping Label Printed", default=False)
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -255,3 +256,46 @@ class StockReturnPicking(models.TransientModel):
         picking.write({'carrier_id': False,
                        'carrier_price': 0.0})
         return new_picking, pick_type_id
+
+
+class MergeShippingLabel(models.TransientModel):
+    _name = "merge_shipping_label"
+    _description = "Merge Shipping Labels"
+
+    all_labels = fields.Binary('Merged PDF', readonly=True)
+    all_labels_fname = fields.Char()
+    nb_labels = fields.Char()
+
+    @api.model
+    def default_get(self, fields):
+        res = {}
+        if 'all_labels' in fields and self.env.context.get('active_model') == 'stock.picking':
+            pickings = self.env['stock.picking'].browse(self.env.context.get('active_ids', []))
+            pdf_data = []
+            nb_labels = 0
+            for picking in pickings:
+                pdf = self.env['ir.attachment'].search(
+                    [('res_id', '=', picking.id), ('res_model', '=', 'stock.picking'),
+                     ('name', '=ilike', 'Label%')], limit=1)
+                if pdf:
+                    pdf_data.append(base64.decodebytes(pdf.datas))
+                    nb_labels += 1
+            result = tools.pdf.merge_pdf(pdf_data)
+            res['all_labels'] = base64.encodebytes(result)
+            res['all_labels_fname'] = 'merged.pdf'
+            res['nb_labels'] = _("Number of labels merged: %s") % nb_labels
+        return res
+
+    @api.model
+    def get_pdf(self, vals):
+        if self.env.context.get('active_model') == 'stock.picking':
+            pickings = self.env['stock.picking'].browse(self.env.context.get('active_ids', []))
+            for picking in pickings:
+                pdf = self.env['ir.attachment'].search(
+                    [('res_id', '=', picking.id), ('res_model', '=', 'stock.picking'),
+                     ('name', '=ilike', 'Label%')], limit=1)
+                if pdf and not picking.is_shipping_label_printed:
+                    picking.is_shipping_label_printed = True
+        return {
+            'type': 'ir.actions.do_nothing',
+        }

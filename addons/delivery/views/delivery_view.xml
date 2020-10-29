@@ -390,4 +390,42 @@
                 </xpath>
             </field>
         </record>
+
+        <data>
+            <record id="merge_shipping_label" model="ir.ui.view">
+                <field name="model">merge_shipping_label</field>
+                <field name="arch" type="xml">
+                    <form create="false" edit="false">
+                        <group>
+                            <field name="nb_labels" nolabel="1" readonly="1"/><br/>
+                            <field name="all_labels" filename="all_labels_fname" attrs="{'invisible': [('nb_labels', '=', 0)]}" nolabel="1"/>
+                            <field name="all_labels_fname" invisible="1"/>
+                        </group>
+                        <footer>
+                            <button name="get_pdf" type="object" string="Create PDF" class="btn-primary"/>
+                            <button special="cancel" string="Cancel"/>
+                        </footer>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="merge_shipping_label_act">
+                <field name="name">Print Shipping Labels</field>
+                <field name="res_model">merge_shipping_label</field>
+                <field name="binding_model_id" ref="stock.model_stock_picking"/>
+                <field name="view_mode">form</field>
+                <field name="target">new</field>
+            </record>
+
+            <record id="view_stock_filter_shipping_label" model="ir.ui.view">
+                <field name="name">stock.search.expand.filter</field>
+                <field name="model">stock.picking</field>
+                <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//search" position="inside">
+                        <filter string="Shipping Label not Printed" name="is_shipping_label_printed" domain="[('is_shipping_label_printed', '=', False), ('carrier_id', '!=', False)]"/>
+                    </xpath>
+                </field>
+            </record>
+        </data>
 </odoo>
