@@ -133,6 +133,10 @@ odoo.define('web.DropdownMenu', function (require) {
                         return;
                     }
                 }
+                // check for an active open bootstrap calendar like the filter dropdown inside the search panel)
+                if (document.querySelector('body > .bootstrap-datetimepicker-widget')) {
+                    return;
+                }
                 this.state.open = false;
             }
         }
