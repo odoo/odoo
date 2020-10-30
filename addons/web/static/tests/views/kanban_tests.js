@@ -13,6 +13,7 @@ var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
+var createActionManager = testUtils.createActionManager;
 
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
@@ -5757,9 +5758,11 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
-        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
-        assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "1");
+        // we are re-rendering the column on progress bar click, so it will not add animated class,
+        // if the column does not have any records in it.
+        assert.doesNotHaveClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.doesNotHaveClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "0");
 
         kanban.destroy();
     });
@@ -5792,8 +5795,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
-        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "15");
+        assert.doesNotHaveClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "0");
 
         kanban.destroy();
     });
@@ -6149,7 +6152,10 @@ QUnit.module('Views', {
         assert.strictEqual(initialCount, 3,
             "Initial count should be Three");
         await testUtils.dom.click($secondGroup.find('.bg-success-full'));
-        var lastCount = parseInt($secondGroup.find('.o_kanban_counter_side').text());
+
+        // we are updating column with new column on progress bar click, so need to find counter from kanban
+        // group instead of already stored variable
+        var lastCount = parseInt(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text());
         assert.strictEqual(lastCount, 1,
             "kanban counters should vary according to what subgroup is selected");
 
@@ -6193,6 +6199,110 @@ QUnit.module('Views', {
             "kanban counters should have been updated on quick create");
 
         kanban.destroy();
+    });
+
+    QUnit.test("progressbar should load tasks as kanban limit", async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = this.data.partner.records.concat([
+            {id: 6, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+            {id: 7, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+        ]);
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                `<kanban limit="2">
+                    <progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="id"/>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 2, "There should be 2 Kanban");
+        assert.strictEqual(kanban.$('.o_kanban_record span:contains("yop")').length, 1, "There should be 1 Kanban for Yop");
+
+        await testUtils.dom.click(kanban.$('.bg-success-full'));
+
+        assert.strictEqual(kanban.$('.oe_kanban_card_success').length, 2, "There should be 2 kanban for success");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_load_more'));
+
+        assert.strictEqual(kanban.$('.oe_kanban_card_success').length, 3, "After load more there should be 3 kanban for success");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('load more count should work properly when switching the view',  async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records = this.data.partner.records.concat([
+            {id: 6, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+            {id: 7, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+        ]);
+
+        const archs = {
+            // kanban views
+            'partner,false,kanban': `<kanban limit="2">
+                    <progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>
+                    <templates><t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="id"/>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+
+            // form views
+            'partner,false,form': '<form>' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                    '</group>' +
+                '</form>',
+            'partner,false,search': `<search><filter name="bar" help="Bar" domain="[('bar', '=', true)]" context="{\'group_by\': \'bar\'}"/></search>`,
+        };
+        const actionManager = await createActionManager({
+            data: this.data,
+            archs: archs,
+        });
+
+        await actionManager.doAction({
+            id: 1,
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'kanban'], [false, 'form'], [false, 'search']],
+        });
+
+        await testUtils.dom.click($('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
+        await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
+
+        assert.strictEqual(actionManager.$('.o_kanban_has_progressbar:eq(1) .o_kanban_record').length, 2, "There should be 2 Kanban");
+        assert.strictEqual(actionManager.$('.o_kanban_record span:contains("yop")').length, 1, "There should be 1 Kanban for Yop");
+
+        await testUtils.dom.click(actionManager.$('.bg-success-full:eq(1)'));
+
+        assert.strictEqual(actionManager.$('.oe_kanban_card_success').length, 2, "There should be 2 kanban for success");
+
+        await testUtils.dom.click(actionManager.$('.o_kanban_load_more'));
+
+        assert.strictEqual(actionManager.$('.oe_kanban_card_success').length, 3, "After load more there should be 3 kanban for success");
+
+        await testUtils.dom.click(actionManager.$('.o_kanban_group_show_success .o_kanban_record:eq(0)'));
+
+        assert.containsOnce(actionManager, '.o_form_view', 'It should open form view');
+
+        await testUtils.dom.click(actionManager.$('.o_back_button'));
+
+        assert.strictEqual(actionManager.$('.oe_kanban_card_success').length, 3, "There should be 3 record after comming back from breadcrumb");
+
+        actionManager.destroy();
     });
 
     QUnit.test('keep adding quickcreate in first column after a record from this column was moved', async function (assert) {

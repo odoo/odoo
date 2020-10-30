@@ -34,6 +34,7 @@ var KanbanController = BasicController.extend({
         kanban_load_more: '_onLoadMore',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
+        load_active_filter: '_onLoadActiveFilter'
     }),
     /**
      * @override
@@ -385,6 +386,17 @@ var KanbanController = BasicController.extend({
         this.model
             .deleteRecords([column.db_id], relatedModelName)
             .then(this.update.bind(this, {}, {}));
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    async _onLoadActiveFilter(ev) {
+        const columnID = ev.data.columnID;
+        const filter = ev.data.activeFilter;
+        const dbID = await this.model.loadActiveFilter(columnID, filter);
+        const data = this.model.get(dbID);
+        this.renderer.updateColumn(dbID, data);
     },
     /**
      * @private

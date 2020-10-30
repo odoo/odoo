@@ -269,7 +269,10 @@ var KanbanColumnProgressBar = Widget.extend({
         var filter = this.$clickedBar.data('filter');
         this.activeFilter = (this.activeFilter === filter ? false : filter);
         this._notifyState();
-        this._render();
+        this.trigger_up('load_active_filter', {
+            columnID: this.columnID,
+            activeFilter: this.activeFilter,
+        });
     },
     /**
      * @private
