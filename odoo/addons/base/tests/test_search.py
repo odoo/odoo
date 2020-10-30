@@ -6,6 +6,9 @@ from odoo.tests.common import TransactionCase
 
 class test_search(TransactionCase):
 
+    def patch_order(self, model, order):
+        self.patch(self.registry[model], '_order', order)
+
     def test_00_search_order(self):
         # Create 6 partners with a given name, and a given creation order to
         # ensure the order of their ID. Some are set as inactive to verify they
