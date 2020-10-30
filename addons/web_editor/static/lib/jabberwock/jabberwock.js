@@ -5516,7 +5516,17 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
             }
             else {
+                const shouldDeleteLine = !range.start.previousSibling() &&
+                    !range.end.previousSibling() &&
+                    range.startContainer !== range.endContainer;
+                const oldEndContainer = range.endContainer;
                 range.empty();
+                // This handles the special case of a triple click followed by a
+                // backspace: the line should be deleted with its container (no
+                // merging).
+                if (shouldDeleteLine) {
+                    range.startContainer.replaceWith(oldEndContainer);
+                }
             }
         }
         /**
@@ -5568,7 +5578,17 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
             }
             else {
+                const shouldDeleteLine = !range.start.previousSibling() &&
+                    !range.end.previousSibling() &&
+                    range.startContainer !== range.endContainer;
+                const oldEndContainer = range.endContainer;
                 range.empty();
+                // This handles the special case of a triple click followed by a
+                // delete: the line should be deleted with its container (no
+                // merging).
+                if (shouldDeleteLine) {
+                    range.startContainer.replaceWith(oldEndContainer);
+                }
             }
         }
         async deleteWord(params) {
@@ -8191,6 +8211,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
         'TABLE',
         'UL',
         // The following elements are not in the W3C list, for some reason.
+        'SELECT',
         'TR',
         'TD',
         'TBODY',
@@ -8334,43 +8355,54 @@ odoo.define('web_editor.jabberwock', (function(require) {
      * @returns {boolean}
      */
     function _isAtSegmentBreak(node, side) {
-        const siblingSide = side === 'start' ? 'previousSibling' : 'nextSibling';
-        const sibling = node && node[siblingSide];
-        const isAgainstAnotherSegment = _isAgainstAnotherSegment(node, side);
+        const direction = side === 'start' ? 'previous' : 'next';
+        const sibling = _significantSibling(node, direction);
+        const isAgainstAnotherSegment = sibling && _isSegment(sibling);
         const isAtEdgeOfOwnSegment = _isBlockEdge(node, side);
         // In the DOM, a space before a BR is rendered but a space after a BR isn't.
         const isBeforeBR = side === 'end' && sibling && nodeName(sibling) === 'BR';
         return (isAgainstAnotherSegment && !isBeforeBR) || isAtEdgeOfOwnSegment;
     }
     /**
-     * Return true if the given node is just before or just after another segment.
-     * Eg: <div>abc<div>def</div></div> -> abc is before another segment (div).
-     * Eg: <div><a>abc</a>     <div>def</div></div> -> abc is before another segment
-     * (div).
+     * Return the next|previous "significant" node. Nodes to skip are empty text
+     * nodes (text nodes with no text content or only whitespace), and hidden
+     * inputs.
+     * If `searchUp` is true (which is the default), the next|previous "significant"
+     * node may be a cousin.
      *
      * @param {Node} node
-     * @param {'start'|'end'} side
-     * @returns {boolean}
+     * @param {'previous'|'next'} direction
+     * @param {boolean} [searchUp] (default: true)
+     * @returns {Node}
      */
-    function _isAgainstAnotherSegment(node, side) {
-        const siblingSide = side === 'start' ? 'previousSibling' : 'nextSibling';
-        const sibling = node && node[siblingSide];
-        if (sibling) {
-            return sibling && _isSegment(sibling);
+    function _significantSibling(node, direction, searchUp = true) {
+        const siblingSide = direction === 'previous' ? 'previousSibling' : 'nextSibling';
+        let sibling = node && node[siblingSide];
+        let lastExisting = sibling || node;
+        if (sibling &&
+            // Sibling is an empty text node.
+            ((sibling.nodeType === Node.TEXT_NODE &&
+                onlyTabsSpacesAndNewLines.test(sibling.textContent)) ||
+                // Sibling is a hidden input.
+                (nodeName(sibling) === 'INPUT' &&
+                    sibling.getAttribute('type') === 'hidden'))) {
+            lastExisting = sibling;
+            sibling = sibling[siblingSide];
         }
-        else {
+        if (!sibling && searchUp) {
             // Look further (eg.: `<div><a>abc</a>     <div>def</div></div>`: the
             // space should be removed).
-            let ancestor = node;
-            while (ancestor && !ancestor[siblingSide]) {
+            let ancestor = lastExisting;
+            while (ancestor && !_significantSibling(ancestor, direction, false)) {
                 ancestor = ancestor.parentNode;
             }
-            let cousin = ancestor && !_isSegment(ancestor) && ancestor.nextSibling;
-            while (cousin && isInstanceOf(cousin, Text)) {
-                cousin = cousin.nextSibling;
+            sibling =
+                ancestor && !_isSegment(ancestor) && _significantSibling(ancestor, direction, false);
+            while (sibling && isInstanceOf(sibling, Text)) {
+                sibling = _significantSibling(sibling, direction, false);
             }
-            return cousin && _isSegment(cousin);
         }
+        return sibling;
     }
     /**
      * Return true if the node is a segment according to W3 formatting model.
@@ -8408,13 +8440,13 @@ odoo.define('web_editor.jabberwock', (function(require) {
         }
         // Return true if no ancestor up to the first block ancestor has a
         // sibling on the specified side
-        const siblingSide = side === 'start' ? 'previousSibling' : 'nextSibling';
+        const direction = side === 'start' ? 'previous' : 'next';
         return ancestorsUpToBlock.every(ancestor => {
-            let sibling = ancestor[siblingSide];
+            let sibling = _significantSibling(ancestor, direction);
             while (sibling &&
                 isInstanceOf(sibling, Text) &&
                 sibling.textContent.match(onlyTabsSpacesAndNewLines)) {
-                sibling = sibling[siblingSide];
+                sibling = _significantSibling(sibling, direction);
             }
             return !sibling;
         });
@@ -9170,6 +9202,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param context
          */
         async parse(item) {
+            var _a;
             const children = Array.from(item.childNodes);
             const nodes = [];
             let inlinesContainer;
@@ -9235,6 +9268,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 return [container];
             }
             else if ((nodes.length === 1 &&
+                // We can't remove container that contain Attributes
+                ((_a = nodes[0].modifiers.find(Attributes)) === null || _a === void 0 ? void 0 : _a.keys()) === undefined &&
                 // TODO: we need some sort of PhrasingContainer class for this.
                 (nodes[0] instanceof ParagraphNode ||
                     nodes[0] instanceof HeadingNode ||
@@ -16349,7 +16384,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
             domLayoutEngine.location = this.configuration.location;
             await domLayoutEngine.start();
             window.addEventListener('keydown', this.processKeydown, true);
+            window.addEventListener('keypress', this.processKeydown, true);
             window.addEventListener('keydown-iframe', this.processKeydown, true);
+            window.addEventListener('keypress-iframe', this.processKeydown, true);
         }
         async stop() {
             clearTimeout(this._debounce);
@@ -16358,7 +16395,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 window.removeEventListener(eventName + '-iframe', this._checkFocusChanged, true);
             });
             window.removeEventListener('keydown', this.processKeydown, true);
+            window.removeEventListener('keypress', this.processKeydown, true);
             window.removeEventListener('keydown-iframe', this.processKeydown, true);
+            window.removeEventListener('keypress-iframe', this.processKeydown, true);
             const layout = this.dependencies.get(Layout);
             const domLayoutEngine = layout.engines.dom;
             await domLayoutEngine.stop();
@@ -16370,6 +16409,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
         /**
          * KeyboardEvent listener to be added to the DOM that calls `execCommand` if
          * the keys pressed match one of the shortcut registered in the keymap.
+         * If a shortcut is detected, then a preventDefault is performed an key
+         * event.
          *
          * @param event
          */
@@ -16396,10 +16437,13 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 event.preventDefault();
                 event.stopPropagation();
                 event.stopImmediatePropagation();
-                await Promise.all([
-                    this.editor.dispatcher.dispatch('@preKeydownCommand', {}),
-                    processingContext.execCommand(command.commandId, params),
-                ]);
+                // Prevent default the keypress but don't trigger the command for this.
+                if (event.type.includes('keydown')) {
+                    await Promise.all([
+                        this.editor.dispatcher.dispatch('@preKeydownCommand', {}),
+                        processingContext.execCommand(command.commandId, params),
+                    ]);
+                }
                 return command.commandId;
             }
         }
@@ -17326,6 +17370,17 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this._isInEditor = _isInEditor;
             this._triggerEventBatchOutside = _triggerEventBatchOutside;
             /**
+             * The normalizer detects if there is a auto-completion feature and that it
+             * must therefore be taken into account so as not to cancel modifications
+             * which would alter its correct functioning.
+             * By default, mobile browsers are considered to have an auto-completion.
+             * The detection is then done on the use of the composition events.
+             * A device can have a spell checker without auto-completion, the chrome
+             * spell checker trigger a replacement inputEvent without using composition
+             * events.
+             */
+            this.hasSpellchecker = /Android|Mobile|Phone|webOS|iPad|iPod|BlackBerry|Opera Mini/i.test(navigator.userAgent);
+            /**
              * Event listeners that are bound in the DOM by the normalizer on creation
              * and unbound on destroy.
              */
@@ -17437,7 +17492,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this._bindEvent(root, 'onkeyup', this._updateModifiersKeys);
             this._bindEventInEditable(root, 'keydown', this._onKeyDownOrKeyPress);
             this._bindEventInEditable(root, 'keypress', this._onKeyDownOrKeyPress);
-            this._bindEventInEditable(root, 'compositionstart', this._registerEvent);
+            this._bindEventInEditable(root, 'compositionstart', this._onCompositionStart);
             this._bindEventInEditable(root, 'compositionupdate', this._registerEvent);
             this._bindEventInEditable(root, 'compositionend', this._registerEvent);
             this._bindEventInEditable(root, 'beforeinput', this._registerEvent);
@@ -17636,7 +17691,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // events occuring during one tick is not enough so we need to delay the
             // analysis after we observe events during two ticks instead.
             const needSecondTickObservation = currentStackObservation._events.every(ev => {
-                return !MultiStackEventTypes.includes(ev.type);
+                return (!MultiStackEventTypes.includes(ev.type) &&
+                    !currentStackObservation.flickeringRemoved.has(ev));
             });
             if (needSecondTickObservation && !secondTickObservation) {
                 return await new Promise((resolve) => {
@@ -17661,6 +17717,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 keydownEvent.key === 'Unidentified';
             const inferredKeydownEvent = keydownEvent &&
                 keydownEvent.key === 'Unidentified' &&
+                inputEvent &&
                 this._inferKeydownEvent(inputEvent);
             //
             // First pass to get the informations
@@ -17682,7 +17739,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const inputType = (cutEvent && 'deleteByCut') ||
                 (dropEvent && 'insertFromDrop') ||
                 (pasteEvent && 'insertFromPaste') ||
-                (key === 'Enter' && (inputEvent === null || inputEvent === void 0 ? void 0 : inputEvent.inputType) === 'insertText' && 'insertLineBreak') ||
+                (key === 'Enter' &&
+                    keydownEvent.shiftKey &&
+                    (inputEvent === null || inputEvent === void 0 ? void 0 : inputEvent.inputType) === 'insertText' &&
+                    'insertLineBreak') ||
                 (inputEvent && inputEvent.inputType);
             // In case of accent inserted from a Mac, check that the char before was
             // one of the special accent temporarily inserted in the DOM (e.g. '^',
@@ -17708,9 +17768,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // multiples keys pushed.
             if (currentStackObservation._multiKeyStack.length > 1 && possibleMultiKeydown) {
                 currentStackObservation._multiKeyStack.map(keydownMap => {
-                    const keyboardAction = this._getKeyboardAction(currentStackObservation.mutations, keydownMap.keydown.key, (keydownMap.input && keydownMap.input.inputType) || '', !!mutatedElements.size);
-                    if (keyboardAction) {
-                        normalizedActions.push(keyboardAction);
+                    if (mutatedElements.size ||
+                        currentStackObservation.flickeringRemoved.has(keydownMap.keydown)) {
+                        const keyboardAction = this._getKeyboardAction(currentStackObservation.mutations, keydownMap.keydown.key, (keydownMap.input && keydownMap.input.inputType) || '');
+                        if (keyboardAction) {
+                            normalizedActions.push(keyboardAction);
+                        }
                     }
                 });
             }
@@ -17736,9 +17799,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             else if (normalizedActions.length === 0 &&
                 ((!compositionEvent && key) || isCompositionKeyboard || isVirtualKeyboard)) {
-                const keyboardAction = this._getKeyboardAction(currentStackObservation.mutations, key, inputType, !!mutatedElements.size, keydownEvent);
-                if (keyboardAction) {
-                    normalizedActions.push(keyboardAction);
+                if (mutatedElements.size ||
+                    currentStackObservation.flickeringRemoved.has(keydownEvent)) {
+                    const keyboardAction = this._getKeyboardAction(currentStackObservation.mutations, key, inputType, keydownEvent);
+                    if (keyboardAction) {
+                        normalizedActions.push(keyboardAction);
+                    }
                 }
                 if (compositionReplaceOneChar) {
                     normalizedActions = compositionData.actions;
@@ -17797,6 +17863,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 _multiKeyStack: [],
                 _eventsMap: {},
                 mutations: undefined,
+                flickeringRemoved: new Set(),
             };
         }
         _getCompositionData(mutations, compositionEvent, inputEvent) {
@@ -17847,9 +17914,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param hasMutataedElements
          * @param isMultiKey
          */
-        _getKeyboardAction(mutations, key, inputType, hasMutatedElements, keydownEvent) {
-            const isInsertOrRemoveAction = hasMutatedElements && !inputTypeCommands.has(inputType);
-            if (isInsertOrRemoveAction) {
+        _getKeyboardAction(mutations, key, inputType, keydownEvent) {
+            if (!inputTypeCommands.has(inputType)) {
                 if (key === 'Backspace' || key === 'Delete') {
                     return this._getRemoveAction(mutations, key, inputType, keydownEvent);
                 }
@@ -18456,6 +18522,15 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this._mousedownInEditable = false;
         }
         /**
+         * Catch start composition event
+         *
+         * @param {CompositionEvent} ev
+         */
+        _onCompositionStart(ev) {
+            this.hasSpellchecker = true;
+            this._registerEvent(ev);
+        }
+        /**
          * Catch Enter, Backspace, Delete and insert actions
          *
          * @param {KeyboardEvent} ev
@@ -18470,6 +18545,96 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             const [offsetNode, offset] = targetDeepest(selection.anchorNode, selection.anchorOffset);
             this._initialCaretPosition = { offsetNode, offset };
+            Promise.resolve().then(() => {
+                // Wait the next micro task to allow the external features to
+                // prevent the default and cancel the normalized keypress.
+                if (!ev.defaultPrevented && this._isSafeToPreventKeyboardEvent(ev, selection)) {
+                    ev.preventDefault();
+                    this.currentStackObservation.flickeringRemoved.add(ev);
+                }
+            });
+        }
+        /**
+         * Check the selection to preventDefault events (Enter, Backspace, Delete)
+         * and remove flickering without break the browser auto completion and
+         * spellcheckers.
+         *
+         * @param {KeyboardEvent} ev
+         */
+        _isSafeToPreventKeyboardEvent(ev, selection) {
+            const code = ev.code || ev.key;
+            if (this._modifierKeys.ctrlKey ||
+                this._modifierKeys.altKey ||
+                this._modifierKeys.metaKey ||
+                this._modifierKeys.shiftKey ||
+                (code !== 'Backspace' && code !== 'Delete' && code !== 'Enter')) {
+                // If a control key is applied, you must let the browser apply its
+                // own behavior because you do not know the command in advance.
+                return false;
+            }
+            if (!this.hasSpellchecker) {
+                // there is no risk of breaking the spellcheckers if there is none.
+                return true;
+            }
+            if (isBlock(selection.anchorNode) ||
+                (selection.anchorNode !== selection.focusNode && isBlock(selection.focusNode))) {
+                // If the range is on a block, there is no risk of altering the
+                // behavior of the spellcheckers.
+                return true;
+            }
+            const previous = this._geSiblingInlineText(selection.anchorNode, selection.anchorOffset, true);
+            const next = this._geSiblingInlineText(selection.focusNode, selection.focusOffset, false);
+            const regExpChar = /[^\s\t\r\n\u00A0\u200b]/;
+            if (code === 'Backspace' &&
+                !regExpChar.test(previous.slice(-2)) &&
+                !regExpChar.test(next[0] || '')) {
+                return true;
+            }
+            if (code === 'Delete' &&
+                !regExpChar.test(previous[previous.length - 1] || '') &&
+                !regExpChar.test(next.slice(0, 2))) {
+                return true;
+            }
+            if (code === 'Enter' && !regExpChar.test(previous.slice(-2))) {
+                return true;
+            }
+        }
+        /**
+         * Return the sibling text passing through inlines formatting.
+         *
+         * @param {KeyboardEvent} ev
+         */
+        _geSiblingInlineText(node, offset, before = true) {
+            let text = '';
+            while (node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (before) {
+                        text += node.textContent.slice(0, offset);
+                    }
+                    else {
+                        text += node.textContent.slice(offset);
+                    }
+                }
+                else if (isBlock(node)) {
+                    return text;
+                }
+                else {
+                    text += node.textContent;
+                }
+                let sibling = node[before ? 'previousSibling' : 'nextSibling'];
+                while (node && !sibling && node.parentNode) {
+                    if (isBlock(node.parentNode)) {
+                        return text;
+                    }
+                    else {
+                        node = node.parentNode;
+                        sibling = node[before ? 'previousSibling' : 'nextSibling'];
+                    }
+                }
+                node = sibling;
+                offset = before ? nodeLength(sibling) : 0;
+            }
+            return text;
         }
         /**
          * Set internal properties of the pointer down event to retrieve them later
@@ -20951,6 +21116,37 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
             };
             return context.execCommand(domHelpersToggleClass);
+        }
+        /**
+         * Add (state: true) or remove (state: false) a class or a list of classes
+         * from a DOM node or a list of DOM nodes.
+         *
+         * @param context
+         * @param originalDomNode
+         * @param className
+         * @param state
+         */
+        async setClass(context, originalDomNode, className, state) {
+            const domHelpersSetClass = async () => {
+                var _a;
+                const classes = Array.isArray(className) ? className : [className];
+                const domNodes = Array.isArray(originalDomNode) ? originalDomNode : [originalDomNode];
+                for (const domNode of domNodes) {
+                    const Attributes = this._getAttributesConstructor(domNode);
+                    for (const node of this.getNodes(domNode)) {
+                        const classList = (_a = node.modifiers.find(Attributes)) === null || _a === void 0 ? void 0 : _a.classList;
+                        for (const oneClass of classes) {
+                            if (state && !(classList === null || classList === void 0 ? void 0 : classList.has(oneClass))) {
+                                node.modifiers.get(Attributes).classList.add(oneClass);
+                            }
+                            else if (!state && (classList === null || classList === void 0 ? void 0 : classList.has(oneClass))) {
+                                classList.remove(oneClass);
+                            }
+                        }
+                    }
+                }
+            };
+            return context.execCommand(domHelpersSetClass);
         }
         /**
          * Set an attribute on a DOM node or a list of DOM nodes.
