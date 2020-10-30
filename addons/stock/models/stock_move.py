@@ -183,7 +183,7 @@ class StockMove(models.Model):
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
         if self.product_id:
-            product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
+            product = self.product_id.with_context(lang=self._get_lang())
             self.description_picking = product._get_description(self.picking_type_id)
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
@@ -858,7 +858,7 @@ class StockMove(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
+        product = self.product_id.with_context(lang=self._get_lang())
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
 
@@ -1135,8 +1135,9 @@ class StockMove(models.Model):
                 group_id = self.rule_id.group_id
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
+        product_id = self.product_id.with_context(lang=self._get_lang())
         return {
-            'product_description_variants': self.description_picking and self.description_picking.replace(self.product_id._get_description(self.picking_type_id), ''),
+            'product_description_variants': self.description_picking and self.description_picking.replace(product_id._get_description(self.picking_type_id), ''),
             'date_planned': self.date,
             'date_deadline': self.date_deadline,
             'move_dest_ids': self,
@@ -1603,6 +1604,10 @@ class StockMove(models.Model):
     @api.model
     def _consuming_picking_types(self):
         return ['outgoing']
+
+    def _get_lang(self):
+        """Determine language to use for translated description"""
+        return self.picking_id.partner_id.lang or self.partner_id.lang or self.env.user.lang
 
     def _get_source_document(self):
         """ Return the move's document, used by `report.stock.report_product_product_replenishment`
