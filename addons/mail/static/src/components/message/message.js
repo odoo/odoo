@@ -11,7 +11,6 @@ const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const { markEventHandled } = require('mail/static/src/utils/utils.js');
 const { timeFromNow } = require('mail.utils');
 
 const { _lt } = require('web.core');
@@ -460,7 +459,6 @@ class Message extends Component {
         if (!this.hasAuthorOpenChat) {
             return;
         }
-        markEventHandled(ev, 'Message.authorOpenChat');
         this.message.author.openChat();
     }
 
@@ -472,7 +470,6 @@ class Message extends Component {
         if (!this.message.author) {
             return;
         }
-        markEventHandled(ev, 'Message.authorOpenProfile');
         this.message.author.openProfile();
     }
 
