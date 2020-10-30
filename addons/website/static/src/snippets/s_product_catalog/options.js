@@ -18,7 +18,7 @@ snippetOptions.registry.ProductCatalog = snippetOptions.SnippetOptionWidget.exte
      *
      * @see this.selectClass for parameters
      */
-    toggleDescription: function (previewMode, widgetValue, params) {
+    toggleDescription: async function (previewMode, widgetValue, params) {
         const $dishes = this.$('.s_product_catalog_dish');
         const $name = $dishes.find('.s_product_catalog_dish_name');
         $name.toggleClass('s_product_catalog_dish_dot_leaders', !widgetValue);
@@ -46,6 +46,7 @@ snippetOptions.registry.ProductCatalog = snippetOptions.SnippetOptionWidget.exte
                 }
             });
         }
+        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
