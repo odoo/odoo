@@ -788,8 +788,8 @@ class TestExpression2(TransactionCase):
 
     def test_long_table_alias(self):
         # To test the 64 characters limit for table aliases in PostgreSQL
-        self.patch_order('res.users', 'partner_id')
-        self.patch_order('res.partner', 'commercial_partner_id,company_id,name')
+        self.patch(self.registry['res.users'], '_order', 'partner_id')
+        self.patch(self.registry['res.partner'], '_order', 'commercial_partner_id,company_id,name')
         self.env['res.users'].search([('name', '=', 'test')])
 
 
