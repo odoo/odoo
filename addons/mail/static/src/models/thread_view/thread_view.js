@@ -136,6 +136,7 @@ function factory(dependencies) {
             if (this.threadCache) {
                 this.threadCache.update({ isCacheRefreshRequested: true });
             }
+            this.update({ lastVisibleMessage: [['unlink']] });
         }
 
         /**
@@ -225,12 +226,15 @@ function factory(dependencies) {
          * hint `message-received`.
          */
         hasAutoScrollOnMessageReceived: attr(),
+        /**
+         * Last message in the context of the currently displayed thread cache.
+         */
         lastMessage: many2one('mail.message', {
             related: 'thread.lastMessage',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
-         * current partner.
+         * current partner in the currently displayed thread cache.
          */
         lastVisibleMessage: many2one('mail.message'),
         messages: many2many('mail.message', {

@@ -26,7 +26,7 @@ class SlideQuestion(models.Model):
             if len(question.answer_ids.filtered(lambda answer: answer.is_correct)) != 1:
                 raise ValidationError(_('Question "%s" must have 1 correct answer', question.question))
             if len(question.answer_ids) < 2:
-                raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 invalid answer', question.question))
+                raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 incorrect answer', question.question))
 
     @api.depends('slide_id')
     def _compute_statistics(self):

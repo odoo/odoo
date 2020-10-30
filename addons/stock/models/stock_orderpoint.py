@@ -171,7 +171,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _check_product_uom(self):
         ''' Check if the UoM has the same category as the product standard UoM '''
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
-            raise ValidationError(_('You have to select a product unit of measure that is in the same category than the default unit of measure of the product'))
+            raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
 
     @api.onchange('location_id')
     def _onchange_location_id(self):
@@ -409,6 +409,9 @@ class StockWarehouseOrderpoint(models.Model):
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
+            # ensure that qty_* which depends on datetime.now() are correctly
+            # recomputed
+            orderpoints_batch._compute_qty_to_order()
             orderpoints_exceptions = []
             while orderpoints_batch:
                 procurements = []
