@@ -44,7 +44,6 @@ class MrpAbstractWorkorder(models.AbstractModel):
         )
 
     def _workorder_line_ids(self):
-        self.ensure_one()
         return self.raw_workorder_line_ids | self.finished_workorder_line_ids
 
     @api.onchange('qty_producing')
@@ -246,40 +245,43 @@ class MrpAbstractWorkorder(models.AbstractModel):
         """ Update the finished move & move lines in order to set the finished
         product lot on it as well as the produced quantity. This method get the
         information either from the last workorder or from the Produce wizard."""
-        production_move = self.production_id.move_finished_ids.filtered(
-            lambda move: move.product_id == self.product_id and
-            move.state not in ('done', 'cancel')
-        )
-        if not production_move:
-            return
-        if production_move.product_id.tracking != 'none':
-            if not self.finished_lot_id:
-                raise UserError(_('You need to provide a lot for the finished product.'))
-            move_line = production_move.move_line_ids.filtered(
-                lambda line: line.lot_id.id == self.finished_lot_id.id
+        move_line_vals = []
+        for abstract_wo in self:
+            production_move = abstract_wo.production_id.move_finished_ids.filtered(
+                lambda move: move.product_id == abstract_wo.product_id and
+                move.state not in ('done', 'cancel')
             )
-            if move_line:
-                if self.product_id.tracking == 'serial':
-                    raise UserError(_('You cannot produce the same serial number twice.'))
-                move_line.product_uom_qty += self.qty_producing
-                move_line.qty_done += self.qty_producing
+            if not production_move:
+                continue
+            if production_move.product_id.tracking != 'none':
+                if not abstract_wo.finished_lot_id:
+                    raise UserError(_('You need to provide a lot for the finished product.'))
+                move_line = production_move.move_line_ids.filtered(
+                    lambda line: line.lot_id.id == abstract_wo.finished_lot_id.id
+                )
+                if move_line:
+                    if abstract_wo.product_id.tracking == 'serial':
+                        raise UserError(_('You cannot produce the same serial number twice.'))
+                    move_line.product_uom_qty += abstract_wo.qty_producing
+                    move_line.qty_done += abstract_wo.qty_producing
+                else:
+                    location_dest_id = production_move.location_dest_id._get_putaway_strategy(abstract_wo.product_id).id or production_move.location_dest_id.id
+                    move_line_vals.append({
+                        'move_id': production_move.id,
+                        'product_id': production_move.product_id.id,
+                        'lot_id': abstract_wo.finished_lot_id.id,
+                        'product_uom_qty': abstract_wo.qty_producing,
+                        'product_uom_id': abstract_wo.product_uom_id.id,
+                        'qty_done': abstract_wo.qty_producing,
+                        'location_id': production_move.location_id.id,
+                        'location_dest_id': location_dest_id,
+                    })
             else:
-                location_dest_id = production_move.location_dest_id._get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
-                move_line.create({
-                    'move_id': production_move.id,
-                    'product_id': production_move.product_id.id,
-                    'lot_id': self.finished_lot_id.id,
-                    'product_uom_qty': self.qty_producing,
-                    'product_uom_id': self.product_uom_id.id,
-                    'qty_done': self.qty_producing,
-                    'location_id': production_move.location_id.id,
-                    'location_dest_id': location_dest_id,
-                })
-        else:
-            rounding = production_move.product_uom.rounding
-            production_move._set_quantity_done(
-                float_round(self.qty_producing, precision_rounding=rounding)
-            )
+                rounding = production_move.product_uom.rounding
+                production_move._set_quantity_done(
+                    float_round(abstract_wo.qty_producing, precision_rounding=rounding)
+                )
+        self.env['stock.move.line'].create(move_line_vals)
 
     def _update_moves(self):
         """ Once the production is done. Modify the workorder lines into
@@ -290,29 +292,33 @@ class MrpAbstractWorkorder(models.AbstractModel):
             if not line.move_id:
                 line._set_move_id()
         # Before writting produce quantities, we ensure they respect the bom strictness
-        self._strict_consumption_check()
         vals_list = []
-        workorder_lines_to_process = self._workorder_line_ids().filtered(lambda line: line.product_id != self.product_id and line.qty_done > 0)
-        for line in workorder_lines_to_process:
-            line._update_move_lines()
-            if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
-                vals_list += line._create_extra_move_lines()
+        line_to_unlink = self._workorder_line_ids().browse()
+        self._strict_consumption_check()
+        for abstract_wo in self:
+            workorder_lines_to_process = abstract_wo._workorder_line_ids().filtered(lambda line: line.product_id != abstract_wo.product_id and line.qty_done > 0)
+            for line in workorder_lines_to_process:
+                line._update_move_lines()
+                if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
+                    vals_list += line._create_extra_move_lines()
 
-        self._workorder_line_ids().filtered(lambda line: line.product_id != self.product_id).unlink()
+            line_to_unlink |= abstract_wo._workorder_line_ids().filtered(lambda line: line.product_id != abstract_wo.product_id)
+        line_to_unlink.unlink()
         self.env['stock.move.line'].create(vals_list)
 
     def _strict_consumption_check(self):
-        if self.consumption == 'strict':
-            for move in self.move_raw_ids:
-                lines = self._workorder_line_ids().filtered(lambda l: l.move_id == move)
-                qty_done = 0.0
-                qty_to_consume = 0.0
-                for line in lines:
-                    qty_done += line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
-                    qty_to_consume += line.product_uom_id._compute_quantity(line.qty_to_consume, line.product_id.uom_id)
-                rounding = self.product_uom_id.rounding
-                if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
+        for abstract_wo in self:
+            if abstract_wo.consumption == 'strict':
+                for move in abstract_wo.move_raw_ids:
+                    lines = abstract_wo._workorder_line_ids().filtered(lambda l: l.move_id == move)
+                    qty_done = 0.0
+                    qty_to_consume = 0.0
+                    for line in lines:
+                        qty_done += line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
+                        qty_to_consume += line.product_uom_id._compute_quantity(line.qty_to_consume, line.product_id.uom_id)
+                    rounding = abstract_wo.product_uom_id.rounding
+                    if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
+                        raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been produced """

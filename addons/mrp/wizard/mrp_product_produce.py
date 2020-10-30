@@ -116,17 +116,16 @@ class MrpProductProduce(models.TransientModel):
         self.invalidate_cache(['move_raw_ids', 'move_finished_ids'])
 
         # Save product produce lines data into stock moves/move lines
-        quantity = self.qty_producing
-        if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
-            raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
-
-        self._check_sn_uniqueness()
+        for wizard in self:
+            quantity = wizard.qty_producing
+            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+                raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
+            wizard._check_sn_uniqueness()
         self._update_finished_move()
         self._update_moves()
-        if self.production_id.state == 'confirmed':
-            self.production_id.write({
-                'date_start': datetime.now(),
-            })
+        self.production_id.filtered(lambda mo: mo.state == 'confirmed').write({
+            'date_start': datetime.now(),
+        })
 
 
 class MrpProductProduceLine(models.TransientModel):
