@@ -220,6 +220,10 @@ Relational Fields
 
 .. autoclass:: Many2many()
 
+.. autoclass:: Command()
+    :members:
+    :undoc-members:
+
 Pseudo-relational fields
 ''''''''''''''''''''''''
 

@@ -1300,10 +1300,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # convert default values to the right format
         #
         # we explicitly avoid using _convert_to_write() for x2many fields,
-        # because the latter leaves values like [(4, 2), (4, 3)], which are not
-        # supported by the web client as default values; stepping through the
-        # cache allows to normalize such a list to [(6, 0, [2, 3])], which is
-        # properly supported by the web client
+        # because the latter leaves values like [(Command.LINK, 2), 
+        # (Command.LINK, 3)], which are not supported by the web client as
+        # default values; stepping through the cache allows to normalize
+        # such a list to [(Command.SET, 0, [2, 3])], which is properly
+        # supported by the web client
         for fname, value in defaults.items():
             if fname in self._fields:
                 field = self._fields[fname]
@@ -1844,10 +1845,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for name, value in defaults.items():
             if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
                 # convert a list of ids into a list of commands
-                defaults[name] = [(6, 0, value)]
+                defaults[name] = [Command.set(value)]
             elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
                 # convert a list of dicts into a list of commands
-                defaults[name] = [(0, 0, x) for x in value]
+                defaults[name] = [Command.create(x) for x in value]
         defaults.update(values)
         return defaults
 
@@ -3529,37 +3530,18 @@ Fields:
               :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
         * .. _openerp/models/relationals/format:
 
-          :class:`~odoo.fields.One2many` and
-          :class:`~odoo.fields.Many2many` use a special "commands" format to
-          manipulate the set of records stored in/associated with the field.
-
-          This format is a list of triplets executed sequentially, where each
-          triplet is a command to execute on the set of records. Not all
-          commands apply in all situations. Possible commands are:
-
-          ``(0, 0, values)``
-              adds a new record created from the provided ``value`` dict.
-          ``(1, id, values)``
-              updates an existing record of id ``id`` with the values in
-              ``values``. Can not be used in :meth:`~.create`.
-          ``(2, id, 0)``
-              removes the record of id ``id`` from the set, then deletes it
-              (from the database). Can not be used in :meth:`~.create`.
-          ``(3, id, 0)``
-              removes the record of id ``id`` from the set, but does not
-              delete it. Can not be used in
-              :meth:`~.create`.
-          ``(4, id, 0)``
-              adds an existing record of id ``id`` to the set.
-          ``(5, 0, 0)``
-              removes all records from the set, equivalent to using the
-              command ``3`` on every record explicitly. Can not be used in
-              :meth:`~.create`.
-          ``(6, 0, ids)``
-              replaces all existing records in the set by the ``ids`` list,
-              equivalent to using the command ``5`` followed by a command
-              ``4`` for each ``id`` in ``ids``.
-        """
+          The expected value of a :class:`~odoo.fields.One2many` or
+          :class:`~odoo.fields.Many2many` relational field is a list of
+          :class:`~odoo.fields.Command` that manipulate the relation the
+          implement. There are a total of 7 commands:
+          :meth:`~odoo.fields.Command.create`,
+          :meth:`~odoo.fields.Command.update`,
+          :meth:`~odoo.fields.Command.delete`,
+          :meth:`~odoo.fields.Command.unlink`,
+          :meth:`~odoo.fields.Command.link`,
+          :meth:`~odoo.fields.Command.clear`, and
+          :meth:`~odoo.fields.Command.set`.
+          """
         if not self:
             return True
 
@@ -4534,11 +4516,11 @@ Fields:
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
                 lines = [rec.copy_data()[0] for rec in self[name].sorted(key='id')]
-                # the lines are duplicated using the wrong (old) parent, but then
-                # are reassigned to the correct one thanks to the (0, 0, ...)
-                default[name] = [(0, 0, line) for line in lines if line]
+                # the lines are duplicated using the wrong (old) parent, but then are
+                # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
+                default[name] = [Command.create(line) for line in lines if line]
             elif field.type == 'many2many':
-                default[name] = [(6, 0, self[name].ids)]
+                default[name] = [Command.set(self[name].ids)]
             else:
                 default[name] = field.convert_to_write(self[name], self)
 
@@ -6047,7 +6029,7 @@ Fields:
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
-                        result[name] = commands = [(5,)]
+                        result[name] = commands = [Command.clear()]
                         # The purpose of the following line is to enable the prefetching.
                         # In the loop below, line._prefetch_ids actually depends on the
                         # value of record[name] in cache (see prefetch_ids on x2many
@@ -6062,7 +6044,7 @@ Fields:
                             if not line.id:
                                 # new line: send diff from scratch
                                 line_diff = line_snapshot.diff({})
-                                commands.append((0, line.id.ref or 0, line_diff))
+                                commands.append((Command.CREATE, line.id.ref or 0, line_diff))
                             else:
                                 # existing line: check diff from database
                                 # (requires a clean record cache!)
@@ -6071,9 +6053,9 @@ Fields:
                                     # send all fields because the web client
                                     # might need them to evaluate modifiers
                                     line_diff = line_snapshot.diff({})
-                                    commands.append((1, line.id, line_diff))
+                                    commands.append(Command.update(line.id, line_diff))
                                 else:
-                                    commands.append((4, line.id))
+                                    commands.append(Command.link(line.id))
                 return result
 
         nametree = PrefixTree(self.browse(), field_onchange)
@@ -6093,9 +6075,9 @@ Fields:
                 # retrieve all line ids in commands
                 line_ids = set()
                 for cmd in values[name]:
-                    if cmd[0] in (1, 4):
+                    if cmd[0] in (Command.UPDATE, Command.LINK):
                         line_ids.add(cmd[1])
-                    elif cmd[0] == 6:
+                    elif cmd[0] == Command.SET:
                         line_ids.update(cmd[2])
                 # prefetch stored fields on lines
                 lines = self[name].browse(line_ids)
@@ -6507,4 +6489,4 @@ def lazy_name_get(self):
 
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
-from .fields import Field, Datetime
+from .fields import Field, Datetime, Command
