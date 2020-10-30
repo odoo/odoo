@@ -5,8 +5,17 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     const PosDePaymentScreen = PaymentScreen => class extends PaymentScreen {
+        //@Override
+        constructor() {
+            super(...arguments);
+            this.validateOrderFree = true;
+        }
         // Almost the same as in the basic module but we don't finalize if the api call has failed
         async validateOrder(isForceValidate) {
+            if (!this.validateOrderFree) {
+                return;
+            }
+            this.validateOrderFree = false;
             if (await this._isOrderValid(isForceValidate)) {
                 // remove pending payments before finalizing the validation
                 for (let line of this.paymentLines) {
@@ -37,6 +46,7 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                     });
                 }
             }
+            this.validateOrderFree = true;
         }
     };
 

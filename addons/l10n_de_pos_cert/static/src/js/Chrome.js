@@ -5,7 +5,6 @@ odoo.define('l10n_de_pos_cert.Chrome', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
 
-    let _super_chrome = Chrome.prototype;
     const PoSDeChrome = Chrome => class extends Chrome {
         // @Override
         constructor() {
@@ -45,7 +44,6 @@ odoo.define('l10n_de_pos_cert.Chrome', function(require) {
             const body = this.env._t(`Your ${data} is incorrect. Update it in your PoS settings`);
             await this.showPopup('ErrorPopup', { title, body });
         }
-
     };
 
     Registries.Component.extend(Chrome, PoSDeChrome);
