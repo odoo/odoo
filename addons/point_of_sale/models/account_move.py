@@ -17,11 +17,6 @@ class AccountMove(models.Model):
             stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return stock_moves
 
-    def _compute_amount(self):
-        super(AccountMove, self)._compute_amount()
-        pos_invoices = self.filtered(lambda i: i.move_type in ['out_invoice', 'out_refund'] and i.pos_order_ids)
-        for invoice in pos_invoices:
-            invoice.payment_state = 'paid'
 
     def _get_invoiced_lot_values(self):
         self.ensure_one()
