@@ -51,9 +51,9 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         // @Override
         initialize() {
             _super_order.initialize.apply(this,arguments);
-            this.uuid = uuidv4();
-            this.txLastRevision = null;
-            this.transactionStarted = false;    // Used to know when we need to create the fiskaly transaction
+            this.fiskalyUuid = this.fiskalyUuid || uuidv4();
+            this.txLastRevision = this.txLastRevision || null;
+            this.transactionStarted = this.transactionStarted || false; // Used to know when we need to create the fiskaly transaction
             this.tseInformation = {
                 'number': { 'name': 'TSE-Transaktion', 'value': null },
                 'timeStart': { 'name': 'TSE-Start', 'value': null },
@@ -64,12 +64,9 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 'signatureAlgorithm': { 'name': 'TSE-Hashalgorithmus', 'value': null },
                 'signaturePublickKey': { 'name': 'TSE-PublicKey', 'value': null },
                 'clientSerialnumber': { 'name': 'ClientID / KassenID', 'value': null },
-                'erstBestellung': { 'name': 'TSE-Erstbestellung', 'value': null } // ???? Todo TBD
+                'erstBestellung': { 'name': 'TSE-Erstbestellung', 'value': null } // ???? Todo TBD => first article
             };
             this.save_to_db();
-        },
-        getUuid() {
-            return this.uuid;
         },
         isTransactionStarted() {
             return this.transactionStarted;
@@ -82,10 +79,29 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         },
         // @Override
         export_for_printing() {
-            const receipt = _super_order.export_for_printing.apply(this,arguments);
+            const receipt = _super_order.export_for_printing.apply(this, arguments);
             receipt['tse'] = {};
             $.extend(true, receipt['tse'], this.tseInformation);
             return receipt;
+        },
+        //@Override
+        export_as_JSON() {
+            const json = _super_order.export_as_JSON.apply(this, arguments);
+            json['fiskaly_uuid'] = this.fiskalyUuid;
+            if (this.transactionStarted) {
+                json['transaction_started'] = this.transactionStarted;
+                json['last_revision'] = this.txLastRevision;
+            }
+            return json;
+        },
+        //@Override
+        init_from_JSON(json) {
+            _super_order.init_from_JSON.apply(this, arguments);
+            this.fiskalyUuid = json.fiskaly_uuid;
+            if (json.transaction_started) {
+                this.transactionStarted = true;
+                this.txLastRevision = json.last_revision;
+            }
         },
         _authenticate() {
             return $.ajax({
@@ -113,7 +129,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             };
 
             return $.ajax({
-                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.uuid}`,
+                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}`,
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${this.pos.getApiToken()}`
@@ -123,6 +139,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             }).then((data) => {
                 this.txLastRevision = data.latest_revision;
                 this.transactionStarted = true;
+                this.trigger('change');
             }).catch(async (error) => {
                 if (error.status === 401) {  // Need to update the token
                     await this._authenticate();
@@ -197,7 +214,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 headers: {
                     'Authorization': `Bearer ${this.pos.getApiToken()}`
                 },
-                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.uuid}?last_revision=${this.txLastRevision}`,
+                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}?last_revision=${this.txLastRevision}`,
                 method: 'PUT',
                 data: JSON.stringify(data),
                 contentType: 'application/json'
@@ -239,7 +256,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             };
 
             return $.ajax({
-                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.uuid}?last_revision=${this.txLastRevision}`,
+                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}?last_revision=${this.txLastRevision}`,
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${this.pos.getApiToken()}`
