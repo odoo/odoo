@@ -20,24 +20,29 @@ class MrpProductProduce(models.TransientModel):
         _record_production to appropriately set the lot_produced_id and
         appropriately create raw stock move lines.
         """
-        self.ensure_one()
-        moves = (self.move_raw_ids | self.move_finished_ids).filtered(
-            lambda move: move.state not in ('done', 'cancel')
-        )
-        for move in moves:
-            qty_to_consume = self._prepare_component_quantity(move, self.qty_producing)
-            line_values = self._generate_lines_values(move, qty_to_consume)
-            self.env['mrp.product.produce.line'].create(line_values)
+        line_values = []
+        for wizard in self:
+            moves = (wizard.move_raw_ids | wizard.move_finished_ids).filtered(
+                lambda move: move.state not in ('done', 'cancel')
+            )
+            for move in moves:
+                qty_to_consume = wizard._prepare_component_quantity(move, wizard.qty_producing)
+                vals = wizard._generate_lines_values(move, qty_to_consume)
+                line_values += vals
+        self.env['mrp.product.produce.line'].create(line_values)
 
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
         res = super(MrpProductProduce, self)._update_finished_move()
-        if self.subcontract_move_id:
-            quantity = self.qty_producing
-            if self.finished_lot_id:
-                move_lines = self.subcontract_move_id.move_line_ids.filtered(lambda ml: ml.lot_id == self.finished_lot_id or not ml.lot_id)
+        move_line_vals = []
+        for wizard in self:
+            if not wizard.subcontract_move_id:
+                continue
+            quantity = wizard.qty_producing
+            if wizard.finished_lot_id:
+                move_lines = wizard.subcontract_move_id.move_line_ids.filtered(lambda ml: ml.lot_id == wizard.finished_lot_id or not ml.lot_id)
             else:
-                move_lines = self.subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.lot_id)
+                move_lines = wizard.subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.lot_id)
             # Update reservation and quantity done
             for ml in move_lines:
                 rounding = ml.product_uom_id.rounding
@@ -52,16 +57,16 @@ class MrpProductProduce(models.TransientModel):
                 if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
                     ml.write({
                         'qty_done': new_quantity_done,
-                        'lot_id': self.finished_lot_id and self.finished_lot_id.id,
-                        'lot_name': self.finished_lot_id and self.finished_lot_id.name,
+                        'lot_id': wizard.finished_lot_id and wizard.finished_lot_id.id,
+                        'lot_name': wizard.finished_lot_id and wizard.finished_lot_id.name,
                     })
                 else:
                     new_qty_reserved = ml.product_uom_qty - new_quantity_done
                     default = {
                         'product_uom_qty': new_quantity_done,
                         'qty_done': new_quantity_done,
-                        'lot_id': self.finished_lot_id and self.finished_lot_id.id,
-                        'lot_name': self.finished_lot_id and self.finished_lot_id.name,
+                        'lot_id': wizard.finished_lot_id and wizard.finished_lot_id.id,
+                        'lot_name': wizard.finished_lot_id and wizard.finished_lot_id.name,
                     }
                     ml.copy(default=default)
                     ml.with_context(bypass_reservation_update=True).write({
@@ -69,8 +74,8 @@ class MrpProductProduce(models.TransientModel):
                         'qty_done': 0
                     })
 
-            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
-                self.env['stock.move.line'].create({
+            if float_compare(quantity, 0, precision_rounding=wizard.product_uom_id.rounding) > 0:
+                move_line_vals.append({
                     'move_id': self.subcontract_move_id.id,
                     'picking_id': self.subcontract_move_id.picking_id.id,
                     'product_id': self.product_id.id,
@@ -83,12 +88,13 @@ class MrpProductProduce(models.TransientModel):
                     'lot_name': self.finished_lot_id and self.finished_lot_id.name,
                 })
 
-            if not self._get_todo(self.production_id):
-                ml_reserved = self.subcontract_move_id.move_line_ids.filtered(lambda ml:
+            if not wizard._get_todo(wizard.production_id):
+                ml_reserved = wizard.subcontract_move_id.move_line_ids.filtered(lambda ml:
                     float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) and
                     not float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding))
                 ml_reserved.unlink()
-                for ml in self.subcontract_move_id.move_line_ids:
+                for ml in wizard.subcontract_move_id.move_line_ids:
                     ml.product_uom_qty = ml.qty_done
-                self.subcontract_move_id._recompute_state()
+                wizard.subcontract_move_id._recompute_state()
+        self.env['stock.move.line'].create(move_line_vals)
         return res

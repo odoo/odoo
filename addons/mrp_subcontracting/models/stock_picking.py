@@ -58,16 +58,18 @@ class StockPicking(models.Model):
                             'location_dest_id': move_finished_ids.location_dest_id.id,
                         })
                 else:
+                    wizards_vals = []
                     for move_line in move.move_line_ids:
-                        produce = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create({
+                        wizards_vals.append({
                             'production_id': production.id,
                             'qty_producing': move_line.qty_done,
                             'product_uom_id': move_line.product_uom_id.id,
                             'finished_lot_id': move_line.lot_id.id,
                             'consumption': 'strict',
                         })
-                        produce._generate_produce_lines()
-                        produce._record_production()
+                    wizards = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create(wizards_vals)
+                    wizards._generate_produce_lines()
+                    wizards._record_production()
                 productions |= production
             for subcontracted_production in productions:
                 if subcontracted_production.state == 'progress':
