@@ -217,7 +217,9 @@ class Composer extends Component {
      */
     _onClickAddAttachment() {
         this._fileUploaderRef.comp.openBrowserFileUploader();
-        this.focus();
+        if (!this.env.device.isMobile) {
+            this.focus();
+        }
     }
 
     /**
@@ -302,7 +304,9 @@ class Composer extends Component {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
         this.composer.insertIntoTextInput(ev.detail.unicode);
-        this.focus();
+        if (!this.env.device.isMobile) {
+            this.focus();
+        }
     }
 
     /**
