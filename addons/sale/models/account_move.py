@@ -129,6 +129,16 @@ class AccountMoveLine(models.Model):
                         # store it in the map_move_sale_line map
                         map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
 
+            elif move_line.product_id.expense_policy == 'cost':
+                # If expense_policy is at cost then apply the pricelist incase of re-invoicing.
+                values = sale_order.pricelist_id.get_product_price_rule(move_line.product_id, move_line.quantity or 1.0, move_line.partner_id)
+                rule = self.env['product.pricelist.item'].browse(values[1])
+                # Apply the rule and recompute the price if standard discount or rule based on cost price
+                if rule and (rule.compute_price != 'formula' or (rule.compute_price == 'formula' and rule.base == 'standard_price')):
+                    price = rule._compute_price(price, move_line.product_uom_id, move_line.product_id)  # compute the price of the sale line if pricelist applied on it
+                sale_line_values_to_create.append(move_line._sale_prepare_sale_line_values(sale_order, price))
+                map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
+
             else:  # save its value to create it anyway
                 sale_line_values_to_create.append(move_line._sale_prepare_sale_line_values(sale_order, price))
                 map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line

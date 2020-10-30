@@ -39,6 +39,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'analytic_account_id': cls.analytic_account.id,
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
+        cls.partner_a.property_product_pricelist = cls.company_data['default_pricelist'].id
 
         cls.Invoice = cls.env['account.move'].with_context(mail_notrack=True, mail_create_nolog=True)
 

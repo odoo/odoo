@@ -26,6 +26,8 @@ class TestReInvoice(TestSaleCommon):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
+        cls.partner_a.property_product_pricelist = cls.company_data['default_pricelist'].id
+
         cls.AccountMove = cls.env['account.move'].with_context(default_move_type='in_invoice', mail_notrack=True, mail_create_nolog=True)
 
     def test_at_cost(self):
@@ -218,3 +220,42 @@ class TestReInvoice(TestSaleCommon):
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+
+    def test_at_cost_with_pricelist_applied(self):
+        # create pricelist item
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'applied_on': '1_product',
+            'product_tmpl_id': self.company_data['product_delivery_cost'].product_tmpl_id.id,
+            'compute_price': 'percentage',
+            'percent_price': 20,
+        })
+
+        # create SO line and confirm SO (with only one line)
+        sale_order_line1 = self.env['sale.order.line'].create({
+            'name': self.company_data['product_delivery_cost'].name,
+            'product_id': self.company_data['product_delivery_cost'].id,
+            'product_uom_qty': 4,
+            'qty_delivered': 1,
+            'product_uom': self.company_data['product_delivery_cost'].uom_id.id,
+            'price_unit': self.company_data['product_delivery_cost'].list_price,
+            'order_id': self.sale_order.id,
+        })
+        self.sale_order._compute_tax_id()
+        self.sale_order.action_confirm()
+
+        # create invoice lines and validate it
+        move_form = Form(self.AccountMove)
+        move_form.partner_id = self.partner_a
+        with move_form.line_ids.new() as line_form:
+            line_form.product_id = self.company_data['product_delivery_cost']
+            line_form.quantity = 3.0
+            line_form.analytic_account_id = self.analytic_account
+        invoice_a = move_form.save()
+        invoice_a.action_post()
+
+        self.assertEqual(len(self.sale_order.order_line.filtered(lambda sol: sol.is_expense)), 1, "There should be 1 expenses line on the SO")
+
+        sale_order_line2 = self.sale_order.order_line.filtered(lambda sol: sol != sale_order_line1 and sol.product_id == self.company_data['product_delivery_cost'])
+        standard_price = self.company_data['product_delivery_cost'].standard_price
+        self.assertEqual(sale_order_line2.price_unit, standard_price - (standard_price * 0.2), "Pricelist should be applied on the account when re-invoice policy set on a cost")
