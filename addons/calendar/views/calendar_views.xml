@@ -168,9 +168,12 @@
                                     <div attrs="{'invisible': [('recurrency', '=', False)]}">
                                         <group>
                                             <label for="interval"/>
-                                            <div class="o_row">
-                                                <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                            <div class="o_col">
+                                                <div class="o_row">
+                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                </div>
+                                                <widget name="week_days" attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}"/>
                                             </div>
                                             <label string="Until" for="end_type"/>
                                             <div class="o_row">
@@ -179,15 +182,13 @@
                                                 <field name="until" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
                                             </div>
                                         </group>
-                                        <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
-                                            <field name="mon"/>
-                                            <field name="tue"/>
-                                            <field name="wed"/>
-                                            <field name="thu"/>
-                                            <field name="fri"/>
-                                            <field name="sat"/>
-                                            <field name="sun"/>
-                                        </group>
+                                        <field name="mon" invisible="1"/>
+                                        <field name="tue" invisible="1"/>
+                                        <field name="wed" invisible="1"/>
+                                        <field name="thu" invisible="1"/>
+                                        <field name="fri" invisible="1"/>
+                                        <field name="sat" invisible="1"/>
+                                        <field name="sun" invisible="1"/>
                                         <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
                                             <label string="Day of Month" for="month_by"/>
                                             <div class="o_row">

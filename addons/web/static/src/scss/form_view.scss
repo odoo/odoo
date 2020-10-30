@@ -825,6 +825,27 @@ $o-form-label-margin-right: 0px;
         margin-top: 5px;
     }
 
+    // for weekly recurrent
+    .o_recurrent_weekdays {
+        > table {
+            width: 100%;
+            table-layout: fixed;
+            display: table;
+            td {
+                border: 1px solid #dee2e6;
+            }
+            th, td {
+                padding: 0.75rem 0 0.75rem 0;
+            }
+            .o_recurrent_weekday_label {
+                @include o-text-overflow;
+            }
+            .custom-control-label {
+                left: 25%;
+            }
+        }
+    }
+
     // One2Many Kanban views
     .o_field_widget .o_kanban_view.o_kanban_ungrouped {
         padding: 0;
@@ -1051,3 +1072,4 @@ $o-form-label-margin-right: 0px;
         }
     }
 }
+
