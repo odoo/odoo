@@ -1308,7 +1308,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel when not dirty', async function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         var kanban = await createView({
             View: KanbanView,
@@ -1366,6 +1366,17 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_record',
             "first column should still contain one record");
+
+        // click to reopen the quick create
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "should have open the quick create widget");
+
+        // clicking on the quick create itself should keep it open
+        await testUtils.dom.click(kanban.$('.o_kanban_quick_create'));
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "the quick create should not have been destroyed when clicked on itself");
+
 
         kanban.destroy();
     });
