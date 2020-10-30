@@ -269,7 +269,6 @@
                                     'invisible': [('leave_type_request_unit', '=', 'day')]
                                 }"/>
                                 <label for="request_unit_half" attrs="{
-                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                     'invisible': [('leave_type_request_unit', '=', 'day')]
                                 }"/>
                                 <field name="request_unit_hours" attrs="{
@@ -277,15 +276,12 @@
                                     'invisible': [('leave_type_request_unit', '!=', 'hour')]
                                 }" class="ml-5"/>
                                 <label for="request_unit_hours" attrs="{
-                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                     'invisible': [('leave_type_request_unit', '!=', 'hour')]
                                 }"/>
                                 <field name="request_unit_custom" invisible="1" attrs="{
                                     'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                 }"/>
-                                <label for="request_unit_custom" invisible="1" attrs="{
-                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                }"/>
+                                <label for="request_unit_custom" invisible="1"/>
                             </div>
                             <div class="o_row o_row_readonly">
                                 <label for="request_hour_from" string="From"
