@@ -28,7 +28,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id']",
     content: _t('<b>Write a few letters</b> to look for a company, or create a new one.'),
-    position: "bottom",
+    position: "top",
     run: function (actions) {
         actions.text("Brandon Freeman", this.$anchor.find("input"));
     },
