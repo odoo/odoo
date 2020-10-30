@@ -3,19 +3,24 @@
 
 from email.message import EmailMessage
 from email.utils import make_msgid
+import base64
 import datetime
 import email
 import email.policy
+import html2text
+import idna
 import logging
 import re
 import smtplib
-from socket import gaierror, timeout
-from ssl import SSLError
+import ssl
 import sys
 import threading
 
-import html2text
-import idna
+from socket import gaierror, timeout
+from OpenSSL import crypto as SSLCrypto
+from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
+from OpenSSL.SSL import Error as SSLError
+from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -86,6 +91,7 @@ class IrMailServer(models.Model):
     name = fields.Char(string='Description', required=True, index=True)
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
+    smtp_authentication = fields.Selection([('login', 'Username'), ('certificate', 'SSL Certificate')], string='Authenticate with', required=True, default='login')
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
     smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
     smtp_encryption = fields.Selection([('none', 'None'),
@@ -96,12 +102,27 @@ class IrMailServer(models.Model):
                                             "- None: SMTP sessions are done in cleartext.\n"
                                             "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
                                             "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)")
+    smtp_ssl_certificate = fields.Binary(
+        'SSL Certificate', groups='base.group_system', attachment=False,
+        help='SSL certificate used for authentication')
+    smtp_ssl_private_key = fields.Binary(
+        'SSL Private Key', groups='base.group_system', attachment=False,
+        help='SSL private key used for authentication')
     smtp_debug = fields.Boolean(string='Debugging', help="If enabled, the full output of SMTP sessions will "
                                                          "be written to the server log at DEBUG level "
                                                          "(this is very verbose and may include confidential info!)")
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
+
+    @api.constrains('smtp_ssl_certificate', 'smtp_ssl_private_key')
+    def _check_smtp_ssl_files(self):
+        """We must provided both files or none."""
+        for mail_server in self:
+            if mail_server.smtp_ssl_certificate and not mail_server.smtp_ssl_private_key:
+                raise UserError(_('SSL private key is missing for %s.', mail_server.name))
+            elif mail_server.smtp_ssl_private_key and not mail_server.smtp_ssl_certificate:
+                raise UserError(_('SSL certificate is missing for %s.', mail_server.name))
 
     def _get_test_email_addresses(self):
         self.ensure_one()
@@ -146,6 +167,8 @@ class IrMailServer(models.Model):
                 raise UserError(_("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", ustr(e.strerror)))
             except smtplib.SMTPResponseException as e:
                 raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
+            except smtplib.SMTPNotSupportedError as e:
+                raise UserError(_("An option is not supported by the server:\n %s", e.strerror))
             except smtplib.SMTPException as e:
                 raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e)))
             except SSLError as e:
@@ -172,7 +195,7 @@ class IrMailServer(models.Model):
         }
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
-                smtp_debug=False, mail_server_id=None):
+                ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None):
         """Returns a new SMTP connection to the given SMTP server.
            When running in test mode, this method does nothing and returns `None`.
 
@@ -181,6 +204,10 @@ class IrMailServer(models.Model):
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
            :param string encryption: optional, ``'ssl'`` | ``'starttls'``
+           :param ssl_certificate: filename of the SSL certificate used for authentication
+               Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_certificate"
+           :param ssl_private_key: filename of the SSL private key used for authentication
+               Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_private_key"
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
@@ -195,13 +222,36 @@ class IrMailServer(models.Model):
         elif not host:
             mail_server = self.sudo().search([], order='sequence', limit=1)
 
+        ssl_context = None
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
-            smtp_user = mail_server.smtp_user
-            smtp_password = mail_server.smtp_pass
+            if mail_server.smtp_authentication == "login":
+                smtp_user = mail_server.smtp_user
+                smtp_password = mail_server.smtp_pass
+            else:
+                smtp_user = None
+                smtp_password = None
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
+            if (mail_server.smtp_authentication == "certificate"
+               and mail_server.smtp_ssl_certificate
+               and mail_server.smtp_ssl_private_key):
+                try:
+                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
+                    certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
+                    smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
+                    private_key = SSLCrypto.load_privatekey(FILETYPE_PEM, smtp_ssl_private_key)
+                    ssl_context._ctx.use_certificate(certificate)
+                    ssl_context._ctx.use_privatekey(private_key)
+                    # Check that the private key match the certificate
+                    ssl_context._ctx.check_privatekey()
+                except SSLCryptoError as e:
+                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                except SSLError as e:
+                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
+
         else:
             # we were passed individual smtp parameters or nothing and there is no default server
             smtp_server = host or tools.config.get('smtp_server')
@@ -211,6 +261,20 @@ class IrMailServer(models.Model):
             smtp_encryption = encryption
             if smtp_encryption is None and tools.config.get('smtp_ssl'):
                 smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
+
+            smtp_ssl_certificate_filename = ssl_certificate or tools.config.get('smtp_ssl_certificate_filename')
+            smtp_ssl_private_key_filename = ssl_private_key or tools.config.get('smtp_ssl_private_key_filename')
+
+            if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
+                try:
+                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
+                    # Check that the private key match the certificate
+                    ssl_context._ctx.check_privatekey()
+                except SSLCryptoError as e:
+                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                except SSLError as e:
+                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
 
         if not smtp_server:
             raise UserError(
@@ -236,7 +300,7 @@ class IrMailServer(models.Model):
             # (as per RFC 3207) so for example any AUTH
             # capability that appears only on encrypted channels
             # will be correctly detected for next step
-            connection.starttls()
+            connection.starttls(context=ssl_context)
 
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
@@ -375,8 +439,9 @@ class IrMailServer(models.Model):
 
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
-                   smtp_session=None):
+                   smtp_user=None, smtp_password=None, smtp_encryption=None,
+                   smtp_ssl_certificate=None, smtp_ssl_private_key=None,
+                   smtp_debug=False, smtp_session=None):
         """Sends an email directly (no queuing).
 
         No retries are done, the caller should handle MailDeliveryException in order to ensure that
@@ -402,6 +467,8 @@ class IrMailServer(models.Model):
         :param smtp_port: optional SMTP port, if mail_server_id is not passed
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
+        :param smtp_ssl_certificate: filename of the SSL certificate used for authentication
+        :param smtp_ssl_private_key: filename of the SSL private key used for authentication
         :param smtp_debug: optional SMTP debug flag, if mail_server_id is not passed
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
@@ -448,7 +515,8 @@ class IrMailServer(models.Model):
             smtp = smtp_session
             smtp = smtp or self.connect(
                 smtp_server, smtp_port, smtp_user, smtp_password,
-                smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
+                smtp_encryption, smtp_debug, mail_server_id=mail_server_id,
+                ssl_certificate=smtp_ssl_certificate, ssl_private_key=smtp_ssl_private_key)
 
             if sys.version_info < (3, 7, 4):
                 # header folding code is buggy and adds redundant carriage

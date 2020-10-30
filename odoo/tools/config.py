@@ -226,6 +226,10 @@ class configmanager(object):
                          help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', my_default=False,
                          help='specify the SMTP password for sending email')
+        group.add_option('--smtp-ssl-certificate-filename', dest='smtp_ssl_certificate_filename', my_default=False,
+                         help='specify the SSL certificate used for authentication')
+        group.add_option('--smtp-ssl-private-key-filename', dest='smtp_ssl_private_key_filename', my_default=False,
+                         help='specify the SSL private key used for authentication')
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
@@ -438,6 +442,7 @@ class configmanager(object):
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
+                'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',

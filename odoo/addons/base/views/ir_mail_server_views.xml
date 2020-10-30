@@ -16,13 +16,18 @@
                         <field name="smtp_port" options="{'format': false}"/>
                         <field name="smtp_debug" groups="base.group_no_one"/>
                      </group>
-                     <group string="Security and Authentication" colspan="4">
-                        <field name="smtp_encryption"/>
-                        <field name="smtp_user"/>
-                        <field name="smtp_pass" password="True"/>
-                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="fa-television"/>
+                     <group>
+                        <group string="Security and Authentication">
+                            <field name="smtp_authentication"/>
+                            <field name="smtp_encryption"/>
+                            <field name="smtp_user" attrs="{'invisible': [('smtp_authentication', '!=', 'login')]}" force_save="1"/>
+                            <field name="smtp_pass" attrs="{'invisible': [('smtp_authentication', '!=', 'login')]}" password="True" force_save="1"/>
+                            <field name="smtp_ssl_certificate" attrs="{'invisible': [('smtp_authentication', '!=', 'certificate')]}" force_save="1"/>
+                            <field name="smtp_ssl_private_key" attrs="{'invisible': [('smtp_authentication', '!=', 'certificate')]}" force_save="1"/>
+                            <button name="test_smtp_connection" type="object" string="Test Connection" icon="fa-television"/>
+                        </group>
                     </group>
-                  </sheet>  
+                  </sheet>
                 </form>
             </field>
         </record>
