@@ -7,7 +7,7 @@ odoo.define('l10n_de_pos_cert.TicketScreen', function(require) {
     const PosDeTicketScreen = TicketScreen => class extends TicketScreen {
         // @Override
         async _canDeleteOrder(order) {
-            if (order.isTransactionStarted) {
+            if (order.isTransactionStarted()) {
                 return order.cancelTransaction().catch(async (error) => {
                     const message = {
                         'noInternet': this.env._t(
