@@ -11,7 +11,7 @@ odoo.define('web.menu_tests', function (require) {
         QUnit.module('Menu');
 
         QUnit.test('Systray on_attach_callback is called', async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
             const parent = await testUtils.createParent({});
 
@@ -24,22 +24,15 @@ odoo.define('web.menu_tests', function (require) {
             });
             SystrayMenu.Items = [Widget1, Widget2];
 
-            testUtils.mock.patch(SystrayMenu, {
-                on_attach_callback: function () {
-                    assert.step('on_attach_callback systray');
-                    this._super(...arguments);
-                }
-            });
-
             const menu = new Menu(parent, {children: []});
             await menu.appendTo($('#qunit-fixture'));
 
+            // on_attach_callback is called on reverse order(due to mounted call)
             assert.verifySteps([
-                'on_attach_callback systray',
-                'on_attach_callback widget1',
                 'on_attach_callback widget2',
+                'on_attach_callback widget1',
             ]);
-            testUtils.mock.unpatch(SystrayMenu);
+
             parent.destroy();
         });
     });

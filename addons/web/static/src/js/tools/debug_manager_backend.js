@@ -728,7 +728,8 @@ if (config.isDebug()) {
          */
         current_action_updated: function (action, controller) {
             this._super.apply(this, arguments);
-            var debugManager = _.find(this.menu.systray_menu.widgets, function(item) {
+            const widgets = this.menu.systray_menu.componentRef.comp.widgets;
+            const debugManager = _.find(widgets, function (item) {
                 return item instanceof DebugManager;
             });
             debugManager.update('action', action, controller && controller.widget);
