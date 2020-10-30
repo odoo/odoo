@@ -535,74 +535,78 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND
-                (
+                -- using nested "case when end" to enforce filter order (perf optimization)
+                AND (CASE WHEN
+                    -- first condition of the "case when end" 
                     (
-                        line_partner.partner_id != 0
-                        AND
-                        aml.partner_id = line_partner.partner_id
-                    )
-                    OR
-                    (
-                        line_partner.partner_id = 0
-                        AND
-                        substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                        AND
                         (
-                            (
-                                aml.name IS NOT NULL
-                                AND
-                                substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                                AND
-                                    regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                            )
+                        -- blue lines appearance conditions
+                        aml.account_id IN (journal.default_credit_account_id, journal.default_debit_account_id)
+                        AND aml.statement_id IS NULL
+                        AND (
+                            company.account_bank_reconciliation_start IS NULL
                             OR
-                                regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                            OR
-                            (
-                                move.ref IS NOT NULL
-                                AND
-                                substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                                AND
-                                    regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                            )
-                            OR
-                            (
-                                move.invoice_payment_ref IS NOT NULL
-                                AND
-                                regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
+                            aml.date > company.account_bank_reconciliation_start
                             )
                         )
-                    )
-                )
-                AND
-                (
-                    (
-                    -- blue lines appearance conditions
-                    aml.account_id IN (journal.default_credit_account_id, journal.default_debit_account_id)
-                    AND aml.statement_id IS NULL
-                    AND (
-                        company.account_bank_reconciliation_start IS NULL
-                        OR
-                        aml.date > company.account_bank_reconciliation_start
+                        AND (
+                            move.state = 'posted'
+                            OR
+                            ((move.state = 'draft' OR move.state IS NULL) AND journal.post_at = 'bank_rec')
                         )
-                    )
-                    AND (
-                        move.state = 'posted'
                         OR
-                        ((move.state = 'draft' OR move.state IS NULL) AND journal.post_at = 'bank_rec')
-                    )
-                    OR
+                        (
+                        -- black lines appearance conditions
+                        account.reconcile IS TRUE
+                        AND aml.reconciled IS NOT TRUE
+                        AND move.state = 'posted'
+                        )
+                    ) 
+                THEN (CASE WHEN
+                    -- second condition of the "case when end"
                     (
-                    -- black lines appearance conditions
-                    account.reconcile IS TRUE
-                    AND aml.reconciled IS NOT TRUE
-                    AND move.state = 'posted'
-                    )
-                )
+                        (
+                            line_partner.partner_id != 0
+                            AND
+                            aml.partner_id = line_partner.partner_id
+                        )
+                        OR
+                        (
+                            line_partner.partner_id = 0
+                            AND
+                            substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                            AND
+                            (
+                                (
+                                    aml.name IS NOT NULL
+                                    AND
+                                    substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                                    AND
+                                        regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                                )
+                                OR
+                                    regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                                OR
+                                (
+                                    move.ref IS NOT NULL
+                                    AND
+                                    substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                                    AND
+                                        regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                                )
+                                OR
+                                (
+                                    move.invoice_payment_ref IS NOT NULL
+                                    AND
+                                    regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
+                                )
+                            )
+                        )
+                    ) THEN 1 END)
+                END) = 1
             '''
             # Filter on the same currency.
             if rule.match_same_currency:
