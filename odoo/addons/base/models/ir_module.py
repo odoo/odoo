@@ -25,7 +25,6 @@ import psycopg2
 
 import odoo
 from odoo import api, fields, models, modules, tools, _
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
@@ -487,7 +486,8 @@ class Module(models.Model):
         tables, columns, constraints, etc.
         """
         modules_to_remove = self.mapped('name')
-        self.env['ir.model.data']._module_data_uninstall(modules_to_remove)
+        with self.pool.uninstall_mode():
+            self.env['ir.model.data']._module_data_uninstall(modules_to_remove)
         # we deactivate prefetching to not try to read a column that has been deleted
         self.with_context(prefetch_fields=False).write({'state': 'uninstalled', 'latest_version': False})
         return True
@@ -502,8 +502,8 @@ class Module(models.Model):
         they rely on data that don't exist anymore if the module is removed.
         """
         domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
-        orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
-        orphans.unlink()
+        with self.pool.uninstall_mode():
+            self.env['ir.ui.view'].with_context(**{'active_test': False}).search(domain).unlink()
 
     @api.returns('self')
     def downstream_dependencies(self, known_deps=None,

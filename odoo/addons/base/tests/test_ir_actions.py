@@ -419,7 +419,8 @@ class TestCustomFields(common.TransactionCase):
             m2o_field.unlink()
 
         # uninstall mode: unlink dependant fields
-        m2o_field.with_context(_force_unlink=True).unlink()
+        with self.registry.uninstall_mode():
+            m2o_field.unlink()
         self.assertFalse(o2m_field.exists())
 
     def test_unlink_with_dependant(self):
@@ -442,7 +443,8 @@ class TestCustomFields(common.TransactionCase):
             field.unlink()
 
         # uninstall mode: unlink dependant fields
-        field.with_context(_force_unlink=True).unlink()
+        with self.registry.uninstall_mode():
+            field.unlink()
         self.assertFalse(dependant.exists())
 
     def test_create_binary(self):

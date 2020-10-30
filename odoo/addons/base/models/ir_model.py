@@ -18,7 +18,6 @@ from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
 
-MODULE_UNINSTALL_FLAG = '_force_unlink'
 RE_ORDER_FIELDS = re.compile(r'"?(\w+)"?\s*(?:asc|desc)?', flags=re.I)
 
 # base environment for doing a safe_eval
@@ -277,7 +276,7 @@ class IrModel(models.Model):
 
     def unlink(self):
         # Prevent manual deletion of module tables
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.pool.module_uninstall:
             for model in self:
                 if model.state != 'manual':
                     raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
@@ -292,7 +291,7 @@ class IrModel(models.Model):
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.pool.module_uninstall:
             # setup models; this automatically removes model from registry
             self.flush()
             self.pool.setup_models(self._cr)
@@ -754,7 +753,7 @@ class IrModelFields(models.Model):
                     if inverse.manual and inverse.type == 'one2many':
                         failed_dependencies.append((field, inverse))
 
-        if not self._context.get(MODULE_UNINSTALL_FLAG) and failed_dependencies:
+        if not self.pool.module_uninstall and failed_dependencies:
             msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
             raise UserError(msg % failed_dependencies[0])
         elif failed_dependencies:
@@ -780,7 +779,7 @@ class IrModelFields(models.Model):
             for view in views:
                 view._check_xml()
         except Exception:
-            if not self._context.get(MODULE_UNINSTALL_FLAG):
+            if not self.pool.module_uninstall:
                 raise UserError("\n".join([
                     _("Cannot rename/delete fields that are still present in views:"),
                     _("Fields: %s") % ", ".join(str(f) for f in fields),
@@ -800,7 +799,7 @@ class IrModelFields(models.Model):
             return True
 
         # Prevent manual deletion of module columns
-        if not self._context.get(MODULE_UNINSTALL_FLAG) and \
+        if not self.pool.module_uninstall and \
                 any(field.state != 'manual' for field in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
 
@@ -836,7 +835,7 @@ class IrModelFields(models.Model):
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.pool.module_uninstall:
             # setup models; this re-initializes models in registry
             self.flush()
             self.pool.setup_models(self._cr)
@@ -1352,7 +1351,7 @@ class IrModelSelection(models.Model):
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.pool.module_uninstall:
             # setup models; this re-initializes model in registry
             self.flush()
             self.pool.setup_models(self._cr)
@@ -2033,7 +2032,7 @@ class IrModelData(models.Model):
 
         # enable model/field deletion
         # we deactivate prefetching to not try to read a column that has been deleted
-        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
+        self = self.with_context(**{'prefetch_fields': False})
 
         # determine records to unlink
         records_items = []              # [(model, id)]
@@ -2150,7 +2149,6 @@ class IrModelData(models.Model):
             return True
 
         bad_imd_ids = []
-        self = self.with_context({MODULE_UNINSTALL_FLAG: True})
         loaded_xmlids = self.pool.loaded_xmlids
 
         query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data

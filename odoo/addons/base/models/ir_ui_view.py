@@ -514,7 +514,7 @@ actual arch.
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+        if self.pool.module_uninstall and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
         return super(View, self).unlink()
 

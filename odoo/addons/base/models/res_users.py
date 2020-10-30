@@ -23,7 +23,6 @@ from lxml import etree
 from lxml.builder import E
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_module_resource
@@ -1163,7 +1162,7 @@ class GroupsView(models.Model):
         if not (view and view.exists() and view._name == 'ir.ui.view'):
             return
 
-        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
+        if self._context.get('install_filename') or self.pool.module_uninstall:
             # use a dummy view during install/upgrade/uninstall
             xml = E.field(name="groups_id", position="after")
 

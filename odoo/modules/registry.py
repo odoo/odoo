@@ -144,8 +144,21 @@ class Registry(Mapping):
         self.registry_invalidated = False
         self.cache_invalidated = False
 
+        # Whether the registry is currently undergoing module uninstall operations
+        self.module_uninstall = False
+
         with closing(self.cursor()) as cr:
             self.has_unaccent = odoo.modules.db.has_unaccent(cr)
+
+    @contextmanager
+    def uninstall_mode(self):
+        previous_state = self.module_uninstall
+        try:
+            self.module_uninstall = True
+            yield
+        finally:
+            # in case the caller is already in a module_uninstall=True context
+            self.module_uninstall = previous_state
 
     @classmethod
     def delete(cls, db_name):

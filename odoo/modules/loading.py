@@ -505,7 +505,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     _logger.runbot("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
-            env['ir.model.data']._process_end(processed_modules)
+            with registry.uninstall_mode():
+                env['ir.model.data']._process_end(processed_modules)
             env['base'].flush()
 
         for kind in ('init', 'demo', 'update'):
@@ -513,6 +514,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 5: Uninstall modules to remove
         if update_module:
+            registry.module_uninstall = True
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
