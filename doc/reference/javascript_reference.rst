@@ -2533,6 +2533,15 @@ reference (FieldReference)
     - model_field: name of a FieldMany2One('ir.model') containing the model of the records that can be selected.
        When this option is set, the select part of the FieldReference isn't displayed.
 
+Widgets
+-------
+week_days (WeekDays)
+  This field displays a list of checkboxes for week days, 1 checkbox for each day
+  and allow the user to select a subset of the choices.
+
+  .. code-block:: xml
+
+      <widget name="week_days">
 
 Client actions
 ==============

@@ -309,23 +309,23 @@ class TestProjectrecurrence(TransactionCase):
         self.assertFalse(form.repeat_show_month)
 
     def test_recurrence_week_day(self):
-        form = Form(self.env['project.task'])
-
-        form.name = 'test recurring task'
-        form.project_id = self.project_recurring
-        form.recurring_task = True
-        form.repeat_unit = 'week'
-
-        form.mon = False
-        form.tue = False
-        form.wed = False
-        form.thu = False
-        form.fri = False
-        form.sat = False
-        form.sun = False
-
         with self.assertRaises(ValidationError), self.cr.savepoint():
-            form.save()
+            self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'repeat_interval': 1,
+                'repeat_unit': 'week',
+                'repeat_type': 'after',
+                'repeat_number': 2,
+                'mon': False,
+                'tue': False,
+                'wed': False,
+                'thu': False,
+                'fri': False,
+                'sat': False,
+                'sun': False,
+            })
 
     def test_recurrence_next_dates_week(self):
         dates = self.env['project.task.recurrence']._get_next_recurring_dates(

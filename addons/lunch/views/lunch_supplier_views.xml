@@ -46,14 +46,13 @@
                     </group>
                     <group>
                         <group string="Availability">
-                            <field name="tz" groups="base.group_no_one"/>
-                            <field name="mon"/>
-                            <field name="tue"/>
-                            <field name="wed"/>
-                            <field name="thu"/>
-                            <field name="fri"/>
-                            <field name="sat"/>
-                            <field name="sun"/>
+                            <label for="tz" groups="base.group_no_one"/>
+                            <div class="o_col">
+                                <div class="o_row">
+                                    <field name="tz" groups="base.group_no_one"/>
+                                </div>
+                                <widget name="week_days"/>
+                            </div>
                             <field name="recurrency_end_date" groups="base.group_no_one"/>
                         </group>
                         <group string="Orders">
