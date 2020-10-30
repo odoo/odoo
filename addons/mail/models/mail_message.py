@@ -9,7 +9,7 @@ from collections import defaultdict
 from operator import itemgetter
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 
@@ -203,7 +203,7 @@ class Message(models.Model):
                     ('res_id', 'in', self.env.user.moderation_channel_ids.ids)]
 
         # no support for other operators
-        return ValueError(_('Unsupported search filter on moderation status'))
+        raise UserError(_('Unsupported search filter on moderation status'))
 
     # ------------------------------------------------------
     # CRUD / ORM
