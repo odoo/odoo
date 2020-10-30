@@ -18,7 +18,7 @@ class TestCalendarController(HttpCase):
                 {
                     "name": "Doom's day",
                     "start": datetime(2019, 10, 25, 8, 0),
-                    "stop": datetime(2019, 10, 27, 18, 0),
+                    "stop": datetime(2019, 10, 25, 18, 0),
                     "partner_ids": [(4, self.partner.id)],
                 }
             )

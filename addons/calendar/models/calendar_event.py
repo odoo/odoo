@@ -44,7 +44,7 @@ class Meeting(models.Model):
     _name = 'calendar.event'
     _description = "Calendar Event"
     _order = "start desc"
-    _inherit = ["mail.thread", 'mail.activity.mixin']
+    _inherit = ["mail.thread"]
 
     @api.model
     def default_get(self, fields):

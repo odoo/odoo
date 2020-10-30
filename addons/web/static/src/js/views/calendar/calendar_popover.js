@@ -77,8 +77,8 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
      * @return {boolean}
      */
     isButtonVisible() {
-        var isUserEventResponsible = this.event.extendedProps.record.user_id[0] === session.user_id[0];
-        return (this.displayFields.privacy === "Public" || isUserEventResponsible);
+        var isUserEventResponsible = this.event.extendedProps.record.user_id && this.event.extendedProps.record.user_id[0] === session.user_id[0];
+        return (this.event.extendedProps.record.privacy !== "private" || isUserEventResponsible);
     },
 
     /**
