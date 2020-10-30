@@ -54,6 +54,7 @@ odoo.define('web.sample_server_tests', function (require) {
                     salary: { string: "Salary", type: 'monetary' },
                     currency: { string: "Currency", type: 'many2one', relation: 'res.currency' },
                     manager_id: { string: "Manager", type: 'many2one', relation: 'res.users' },
+                    cover_image_id: { string: "Cover Image", type: 'many2one', relation: 'ir.attachment' },
                     managed_ids: { string: "Managing", type: 'one2many', relation: 'res.users' },
                     tag_ids: { string: "Tags", type: 'many2many', relation: 'tag' },
                     type: { string: "Type", type: 'selection', selection: [
@@ -70,6 +71,9 @@ odoo.define('web.sample_server_tests', function (require) {
                     ] },
                     age: { string: "Age", type: 'integer' },
                 },
+                'ir.attachment': {
+                    display_name: { string: "Name", type: 'char' },
+                }
             };
         },
     }, function () {
@@ -151,6 +155,8 @@ odoo.define('web.sample_server_tests', function (require) {
 
             assert.strictEqual(typeof rec.manager_id[0], 'number');
             assert.ok(SAMPLE_PEOPLE.includes(rec.manager_id[1]));
+
+            assert.strictEqual(rec.cover_image_id, false);
 
             assert.strictEqual(rec.managed_ids.length, 2);
             assert.ok(rec.managed_ids.every(
