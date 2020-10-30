@@ -49,17 +49,13 @@
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group>
-                            <field name="mon"/>
-                            <field name="tue"/>
-                            <field name="wed"/>
-                            <field name="thu"/>
-                            <field name="fri"/>
-                            <field name="sat"/>
-                            <field name="sun"/>
                             <label for="notification_time" attrs="{'invisible': [['mode', '!=', 'chat']]}"/>
-                            <div class="o_row" attrs="{'invisible': [['mode', '!=', 'chat']]}">
-                                <field name="notification_time" attrs="{'required': [('mode', '=', 'chat')]}" widget="float_time"/>
-                                <field name="notification_moment"/>
+                            <div class="o_col">
+                                <widget name="week_days"/>
+                                <div class="o_row" attrs="{'invisible': [['mode', '!=', 'chat']]}">
+                                    <field name="notification_time" attrs="{'required': [('mode', '=', 'chat')]}" widget="float_time"/>
+                                    <field name="notification_moment"/>
+                                </div>
                             </div>
                             <field name="tz" groups="base.group_no_one"/>
                         </group>

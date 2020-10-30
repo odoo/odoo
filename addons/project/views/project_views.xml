@@ -731,9 +731,12 @@
                             <group>
                                 <group>
                                     <label for="repeat_interval" />
-                                    <div class="o_row">
-                                        <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
-                                        <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                    <div class="o_col">
+                                        <div class="o_row">
+                                            <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                            <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                        </div>
+                                        <widget name="week_days" attrs="{'invisible': [('repeat_show_dow', '=', False)]}"/>
                                     </div>
 
                                     <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
@@ -747,15 +750,13 @@
                                         <span attrs="{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}">of</span>
                                         <field name="repeat_month" attrs="{'invisible': [('repeat_show_month', '=', False)], 'required': [('repeat_show_month', '=', True)]}" />
                                     </div>
-
-
-                                    <field name="mon" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
-                                    <field name="tue" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
-                                    <field name="wed" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
-                                    <field name="thu" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
-                                    <field name="fri" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
-                                    <field name="sat" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
-                                    <field name="sun" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="mon" invisible="1"/>
+                                    <field name="tue" invisible="1"/>
+                                    <field name="wed" invisible="1"/>
+                                    <field name="thu" invisible="1"/>
+                                    <field name="fri" invisible="1"/>
+                                    <field name="sat" invisible="1"/>
+                                    <field name="sun" invisible="1"/>
 
                                     <label for="repeat_type" />
                                     <div class="o_row">
