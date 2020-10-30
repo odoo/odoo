@@ -825,7 +825,9 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onOptionsSectionMouseLeave: function (ev) {
-        // TODO: this.trigger_up('deactivate_snippet');
+        this.trigger_up('deactivate_snippet', {
+            previewMode: true,
+        });
     },
     /**
      * @private
@@ -1560,13 +1562,16 @@ var SnippetsMenu = Widget.extend({
      * Disable all snippet editors, then enable the last snippet editor.
      *
      * @private
+     * @param {boolean} [previewMode=false]
      */
-    _enableLastEditor: function() {
+    _enableLastEditor: function(previewMode) {
         this._mutex.exec(async () => {
             // First disable all snippet editors...
             for (const currentSnippetEditor of this.snippetEditors) {
-                currentSnippetEditor.toggleOverlay(false, false);
-                await currentSnippetEditor.toggleOptions(false);
+                currentSnippetEditor.toggleOverlay(false, previewMode);
+                if (!previewMode) {
+                    await currentSnippetEditor.toggleOptions(false);
+                }
             }
 
             // ... then enable the last snippet editor
@@ -2446,8 +2451,8 @@ var SnippetsMenu = Widget.extend({
      *
      * @private
      */
-    _onDeactivateSnippet: function () {
-        this._enableLastEditor();
+    _onDeactivateSnippet: function (ev) {
+        this._enableLastEditor(ev.data.previewMode);
     },
 
     /**
