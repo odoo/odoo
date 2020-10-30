@@ -11,6 +11,7 @@ import itertools
 import logging
 import base64
 import binascii
+import enum
 import pytz
 import psycopg2
 
@@ -1011,10 +1012,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 defaults = record.default_get([self.name])
                 if self.name in defaults:
                     # The null value above is necessary to convert x2many field
-                    # values. For instance, converting [(4, id)] accesses the
-                    # field's current value, then adds the given id. Without an
-                    # initial value, the conversion ends up here to determine
-                    # the field's value, and generates an infinite recursion.
+                    # values. For instance, converting [(Command.LINK, id)]
+                    # accesses the field's current value, then adds the given
+                    # id. Without an initial value, the conversion ends up here
+                    # to determine the field's value, and generates an infinite
+                    # recursion.
                     value = self.convert_to_cache(defaults[self.name], record)
                     env.cache.set(record, self, value)
 
@@ -2800,6 +2802,123 @@ class Many2oneReference(Integer):
         return model_ids
 
 
+class Command(enum.IntEnum):
+    """
+    :class:`~odoo.fields.One2many` and :class:`~odoo.fields.Many2many` fields
+    expect a special command to manipulate the relation they implement.
+
+    Internally, each command is a 3-elements tuple where the first element is a
+    mandatory integer that identifies the command, the second element is either
+    the related record id to apply the command on (commands update, delete,
+    unlink and link) either 0 (commands create, clear and set), the third
+    element is either the ``values`` to write on the record (commands create
+    and update) either the new ``ids`` list of related records (command set),
+    either 0 (commands delete, unlink, link, and clear).
+
+    Via Python, we encourage developers craft new commands via the various
+    functions of this namespace. We also encourage developers to use the
+    command identifier constant names when comparing the 1st element of
+    existing commands.
+
+    Via RPC, it is impossible nor to use the functions nor the command constant
+    names. It is required to instead write the literal 3-elements tuple where
+    the first element is the integer identifier of the command.
+    """
+
+    CREATE = 0
+    UPDATE = 1
+    DELETE = 2
+    UNLINK = 3
+    LINK = 4
+    CLEAR = 5
+    SET = 6
+
+    @classmethod
+    def create(cls, values: dict):
+        """
+        Create new records in the comodel using ``values``, link the created
+        records to ``self``.
+
+        In case of a :class:`~odoo.fields.Many2many` relation, one unique
+        new record is created in the comodel such that all records in `self`
+        are linked to the new record.
+
+        In case of a :class:`~odoo.fields.One2many` relation, one new record
+        is created in the comodel for every record in ``self`` such that every
+        record in ``self`` is linked to exactly one of the new records.
+
+        Return the command triple :samp:`(CREATE, 0, {values})`
+        """
+        return (cls.CREATE, 0, values)
+
+    @classmethod
+    def update(cls, id: int, values: dict):
+        """
+        Write ``values`` on the related record.
+
+        Return the command triple :samp:`(UPDATE, {id}, {values})`
+        """
+        return (cls.UPDATE, id, values)
+
+    @classmethod
+    def delete(cls, id: int):
+        """
+        Remove the related record from the database and remove its relation
+        with ``self``.
+
+        In case of a :class:`~odoo.fields.Many2many` relation, removing the
+        record from the database may be prevented if it is still linked to
+        other records.
+
+        Return the command triple :samp:`(DELETE, {id}, 0)`
+        """
+        return (cls.DELETE, id, 0)
+
+    @classmethod
+    def unlink(cls, id: int):
+        """
+        Remove the relation between ``self`` and the related record.
+
+        In case of a :class:`~odoo.fields.One2many` relation, the given record
+        is deleted from the database if the inverse field is set as
+        ``ondelete='cascade'``. Otherwise, the value of the inverse field is
+        set to False and the record is kept.
+
+        Return the command triple :samp:`(UNLINK, {id}, 0)`
+        """
+        return (cls.UNLINK, id, 0)
+
+    @classmethod
+    def link(cls, id: int):
+        """
+        Add a relation between ``self`` and the related record.
+
+        Return the command triple :samp:`(LINK, {id}, 0)`
+        """
+        return (cls.LINK, id, 0)
+
+    @classmethod
+    def clear(cls):
+        """
+        Remove all records from the relation with ``self``. It behaves like
+        executing the `unlink` command on every record.
+
+        Return the command triple :samp:`(CLEAR, 0, 0)`
+        """
+        return (cls.CLEAR, 0, 0)
+
+    @classmethod
+    def set(cls, ids: list):
+        """
+        Replace the current relations of ``self`` by the given ones. It behaves
+        like executing the ``unlink`` command on every removed relation then
+        executing the ``link`` command on every new relation.
+
+        Return the command triple :samp:`(SET, 0, {ids})`
+        """
+        return (cls.SET, 0, ids)
+
+
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
@@ -2858,22 +2977,22 @@ class _RelationalMulti(_Relational):
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         ids.add(comodel.new(command[2], ref=command[1]).id)
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         line = browse(command[1])
                         if validate:
                             line.update(command[2])
                         else:
                             line._update_cache(command[2], validate=False)
                         ids.add(line.id)
-                    elif command[0] in (2, 3):
+                    elif command[0] in (Command.DELETE, Command.UNLINK):
                         ids.discard(browse(command[1]).id)
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         ids.add(browse(command[1]).id)
-                    elif command[0] == 5:
+                    elif command[0] == Command.CLEAR:
                         ids.clear()
-                    elif command[0] == 6:
+                    elif command[0] == Command.SET:
                         ids = OrderedSet(browse(it).id for it in command[2])
                 elif isinstance(command, dict):
                     ids.add(comodel.new(command).id)
@@ -2923,7 +3042,7 @@ class _RelationalMulti(_Relational):
         if isinstance(value, BaseModel) and value._name == self.comodel_name:
             # make result with new and existing records
             inv_names = {field.name for field in record._field_inverses[self]}
-            result = [(6, 0, [])]
+            result = [Command.set([])]
             for record in value:
                 origin = record._origin
                 if not origin:
@@ -2932,7 +3051,7 @@ class _RelationalMulti(_Relational):
                         for name in record._cache
                         if name not in inv_names
                     })
-                    result.append((0, 0, values))
+                    result.append(Command.create(values))
                 else:
                     result[0][2].append(origin.id)
                     if record != origin:
@@ -2942,11 +3061,11 @@ class _RelationalMulti(_Relational):
                             if name not in inv_names and record[name] != origin[name]
                         })
                         if values:
-                            result.append((1, origin.id, values))
+                            result.append(Command.update(origin.id, values))
             return result
 
         if value is False or value is None:
-            return [(5,)]
+            return [Command.clear()]
 
         if isinstance(value, list):
             return value
@@ -2988,13 +3107,13 @@ class _RelationalMulti(_Relational):
 
         for idx, (recs, value) in enumerate(records_commands_list):
             if isinstance(value, tuple):
-                value = [(6, 0, value)]
+                value = [Command.set(value)]
             elif isinstance(value, BaseModel) and value._name == self.comodel_name:
-                value = [(6, 0, value._ids)]
+                value = [Command.set(value._ids)]
             elif value is False or value is None:
-                value = [(5,)]
+                value = [Command.clear()]
             elif isinstance(value, list) and value and not isinstance(value[0], (tuple, list)):
-                value = [(6, 0, tuple(value))]
+                value = [Command.set(tuple(value))]
             if not isinstance(value, list):
                 raise ValueError("Wrong value for %s: %s" % (self, value))
             records_commands_list[idx] = (recs, value)
@@ -3147,22 +3266,22 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             to_create.append(dict(command[2], **{inverse: record.id}))
                         allow_full_delete = False
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         comodel.browse(command[1]).write(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         to_delete.append(command[1])
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         unlink(comodel.browse(command[1]))
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         to_inverse.setdefault(recs[-1], set()).add(command[1])
                         allow_full_delete = False
-                    elif command[0] in (5, 6) :
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # do not try to delete anything in creation mode if nothing has been created before
-                        line_ids = command[2] if command[0] == 6 else []
+                        line_ids = command[2] if command[0] == Command.SET else []
                         if not allow_full_delete and not line_ids:
                             continue
                         flush()
@@ -3188,21 +3307,21 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             link(record, comodel.new(command[2], ref=command[1]))
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         comodel.browse(command[1]).write(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         unlink(comodel.browse(command[1]))
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         unlink(comodel.browse(command[1]))
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         link(recs[-1], comodel.browse(command[1]))
-                    elif command[0] in (5, 6):
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
+                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
         return records
@@ -3234,22 +3353,22 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in commands:
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             line = comodel.new(command[2], ref=command[1])
                             line[inverse] = record
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         browse([command[1]]).update(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         browse([command[1]])[inverse] = False
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         browse([command[1]])[inverse] = False
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         browse([command[1]])[inverse] = recs[-1]
-                    elif command[0] in (5, 6):
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
+                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
         else:
@@ -3263,21 +3382,21 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in commands:
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             link(record, comodel.new(command[2], ref=command[1]))
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         browse([command[1]]).update(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         unlink(browse([command[1]]))
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         unlink(browse([command[1]]))
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         link(recs[-1], browse([command[1]]))
-                    elif command[0] in (5, 6):
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
+                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
         return records
@@ -3527,20 +3646,20 @@ class Many2many(_RelationalMulti):
             for command in (commands or ()):
                 if not isinstance(command, (list, tuple)) or not command:
                     continue
-                if command[0] == 0:
+                if command[0] == Command.CREATE:
                     to_create.append((recs._ids, command[2]))
-                elif command[0] == 1:
+                elif command[0] == Command.UPDATE:
                     comodel.browse(command[1]).write(command[2])
-                elif command[0] == 2:
+                elif command[0] == Command.DELETE:
                     to_delete.append(command[1])
-                elif command[0] == 3:
+                elif command[0] == Command.UNLINK:
                     relation_remove(recs._ids, command[1])
-                elif command[0] == 4:
+                elif command[0] == Command.LINK:
                     relation_add(recs._ids, command[1])
-                elif command[0] in (5, 6):
+                elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
                     to_create = [(set(ids) - set(recs._ids), vals) for (ids, vals) in to_create]
-                    relation_set(recs._ids, command[2] if command[0] == 6 else ())
+                    relation_set(recs._ids, command[2] if command[0] == Command.SET else ())
 
             if to_create:
                 # create lines in batch, and link them
@@ -3644,28 +3763,28 @@ class Many2many(_RelationalMulti):
             for command in commands:
                 if not isinstance(command, (list, tuple)) or not command:
                     continue
-                if command[0] == 0:
+                if command[0] == Command.CREATE:
                     line_id = comodel.new(command[2], ref=command[1]).id
                     for line_ids in new_relation.values():
                         line_ids.add(line_id)
-                elif command[0] == 1:
+                elif command[0] == Command.UPDATE:
                     line_id = new(command[1])
                     comodel.browse([line_id]).update(command[2])
-                elif command[0] == 2:
+                elif command[0] == Command.DELETE:
                     line_id = new(command[1])
                     for line_ids in new_relation.values():
                         line_ids.discard(line_id)
-                elif command[0] == 3:
+                elif command[0] == Command.UNLINK:
                     line_id = new(command[1])
                     for line_ids in new_relation.values():
                         line_ids.discard(line_id)
-                elif command[0] == 4:
+                elif command[0] == Command.LINK:
                     line_id = new(command[1])
                     for line_ids in new_relation.values():
                         line_ids.add(line_id)
-                elif command[0] in (5, 6):
+                elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
-                    line_ids = command[2] if command[0] == 6 else ()
+                    line_ids = command[2] if command[0] == Command.SET else ()
                     line_ids = set(new(line_id) for line_id in line_ids)
                     for id_ in recs._ids:
                         new_relation[id_] = set(line_ids)
