@@ -42,6 +42,7 @@ class StockPicking(models.Model):
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
         for picking in self:
+<<<<<<< HEAD
             # Auto set qty_producing if not tracked component
             for move in picking.move_lines.filtered(lambda move: move.is_subcontract):
                 if not move._has_tracked_subcontract_components():
@@ -64,6 +65,40 @@ class StockPicking(models.Model):
             # TODO : to change in master with field on mrp
             productions_to_done = productions_to_done.filtered(lambda pro: all(line.lot_id for line in pro.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids))
             for subcontracted_production in productions_to_done:
+=======
+            for move in picking.move_lines:
+                if not move.is_subcontract:
+                    continue
+                production = move.move_orig_ids.production_id
+                if move._has_tracked_subcontract_components():
+                    move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
+                    move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                    for ml in move.move_line_ids:
+                        ml.copy({
+                            'picking_id': False,
+                            'production_id': move_finished_ids.production_id.id,
+                            'move_id': move_finished_ids.id,
+                            'qty_done': ml.qty_done,
+                            'result_package_id': False,
+                            'location_id': move_finished_ids.location_id.id,
+                            'location_dest_id': move_finished_ids.location_dest_id.id,
+                        })
+                else:
+                    wizards_vals = []
+                    for move_line in move.move_line_ids:
+                        wizards_vals.append({
+                            'production_id': production.id,
+                            'qty_producing': move_line.qty_done,
+                            'product_uom_id': move_line.product_uom_id.id,
+                            'finished_lot_id': move_line.lot_id.id,
+                            'consumption': 'strict',
+                        })
+                    wizards = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create(wizards_vals)
+                    wizards._generate_produce_lines()
+                    wizards._record_production()
+                productions |= production
+            for subcontracted_production in productions:
+>>>>>>> 7c8403b8573... temp
                 if subcontracted_production.state == 'progress':
                     subcontracted_production._post_inventory()
                 else:
