@@ -283,7 +283,7 @@ var RecordQuickCreate = Widget.extend({
         }
 
         // ignore clicks if target is inside the quick create
-        if (this.el.contains(ev.target) && this.el !== ev.target) {
+        if (this.el.contains(ev.target) || this.el === ev.target) {
             return;
         }
 
