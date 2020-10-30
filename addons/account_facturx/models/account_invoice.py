@@ -208,7 +208,7 @@ class AccountInvoice(models.Model):
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
                         if line_elements:
-                            invoice_line_form.quantity = float(line_elements[0].text) * refund_sign
+                            invoice_line_form.quantity = float(line_elements[0].text)
 
                         # Price Unit.
                         line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
