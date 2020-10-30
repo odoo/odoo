@@ -305,7 +305,7 @@ class SaleOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state == 'sale'):
             if not line.display_qty_widget:
                 continue
-            moves = line.move_ids
+            moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
             line.forecast_expected_date = max(moves.filtered("forecast_expected_date").mapped("forecast_expected_date"), default=False)
             line.qty_available_today = 0
             line.free_qty_today = 0
