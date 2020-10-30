@@ -180,7 +180,7 @@ class SurveyUserInput(models.Model):
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.access_token)
+            'url': '/survey/%s/%s/print' % (self.survey_id.access_token, self.access_token)
         }
 
     @api.model

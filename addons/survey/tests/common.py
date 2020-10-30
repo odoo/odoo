@@ -151,19 +151,19 @@ class SurveyCase(common.SavepointCase):
     # ------------------------------------------------------------
 
     def _access_start(self, survey):
-        return self.url_open('/survey/start/%s' % survey.access_token)
+        return self.url_open('/survey/%s/start' % survey.access_token)
 
     def _access_page(self, survey, token):
         return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
     def _access_begin(self, survey, token):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = base_url + '/survey/begin/%s/%s' % (survey.access_token, token)
+        url = base_url + '/survey/begin?survey_token=%s&amp;answer_token=%s' % (survey.access_token, token)
         return self.opener.post(url=url, json={})
 
     def _access_submit(self, survey, token, post_data):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)
+        url = base_url + '/survey/submit?survey_token=%s&amp;answer_token=%s' % (survey.access_token, token)
         return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
