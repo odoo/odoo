@@ -97,12 +97,20 @@ function factory(dependencies) {
          * Remove this attachment globally.
          */
         async remove() {
+            if (this.isUnlinkPending) {
+                return;
+            }
             if (!this.isTemporary) {
-                await this.async(() => this.env.services.rpc({
-                    model: 'ir.attachment',
-                    method: 'unlink',
-                    args: [this.id],
-                }, { shadow: true }));
+                this.update({ isUnlinkPending: true });
+                try {
+                    await this.async(() => this.env.services.rpc({
+                        model: 'ir.attachment',
+                        method: 'unlink',
+                        args: [this.id],
+                    }, { shadow: true }));
+                } finally {
+                    this.update({ isUnlinkPending: false });
+                }
             } else if (this.uploadingAbortController) {
                 this.uploadingAbortController.abort();
             }
@@ -332,6 +340,12 @@ function factory(dependencies) {
         isTextFile: attr({
             compute: '_computeIsTextFile',
             dependencies: ['fileType'],
+        }),
+        /**
+         * True if an unlink RPC is pending, used to prevent multiple unlink attempts.
+         */
+        isUnlinkPending: attr({
+            default: false,
         }),
         isViewable: attr({
             compute: '_computeIsViewable',
