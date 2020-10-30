@@ -643,7 +643,7 @@ class Picking(models.Model):
         if vals.get('picking_type_id'):
             for move in res.move_lines:
                 if not move.description_picking:
-                    move.description_picking = move.product_id._get_description(move.picking_id.picking_type_id)
+                    move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
 
         return res
 
