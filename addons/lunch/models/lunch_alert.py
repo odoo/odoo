@@ -12,7 +12,7 @@ from textwrap import dedent
 from odoo.addons.base.models.res_partner import _tz_get
 
 _logger = logging.getLogger(__name__)
-WEEKDAY_TO_NAME = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 CRON_DEPENDS = {'name', 'active', 'mode', 'until', 'notification_time', 'notification_moment', 'tz'}
 
 
@@ -42,13 +42,13 @@ class LunchAlert(models.Model):
     cron_id = fields.Many2one('ir.cron', ondelete='cascade', required=True, readonly=True)
 
     until = fields.Date('Show Until')
-    recurrency_monday = fields.Boolean('Monday', default=True)
-    recurrency_tuesday = fields.Boolean('Tuesday', default=True)
-    recurrency_wednesday = fields.Boolean('Wednesday', default=True)
-    recurrency_thursday = fields.Boolean('Thursday', default=True)
-    recurrency_friday = fields.Boolean('Friday', default=True)
-    recurrency_saturday = fields.Boolean('Saturday', default=True)
-    recurrency_sunday = fields.Boolean('Sunday', default=True)
+    mon = fields.Boolean(default=True)
+    tue = fields.Boolean(default=True)
+    wed = fields.Boolean(default=True)
+    thu = fields.Boolean(default=True)
+    fri = fields.Boolean(default=True)
+    sat = fields.Boolean(default=True)
+    sun = fields.Boolean(default=True)
 
     available_today = fields.Boolean('Is Displayed Today',
                                      compute='_compute_available_today', search='_search_available_today')
@@ -63,12 +63,10 @@ class LunchAlert(models.Model):
             'Notification time must be between 0 and 12')
     ]
 
-    @api.depends('recurrency_monday', 'recurrency_tuesday', 'recurrency_wednesday',
-                 'recurrency_thursday', 'recurrency_friday', 'recurrency_saturday',
-                 'recurrency_sunday')
+    @api.depends('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
     def _compute_available_today(self):
         today = fields.Date.context_today(self)
-        fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[today.weekday()])
+        fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
         for alert in self:
             alert.available_today = alert.until > today if alert.until else True and alert[fieldname]
@@ -79,7 +77,7 @@ class LunchAlert(models.Model):
 
         searching_for_true = (operator == '=' and value) or (operator == '!=' and not value)
         today = fields.Date.context_today(self)
-        fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[today.weekday()])
+        fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
         return expression.AND([
             [(fieldname, operator, value)],

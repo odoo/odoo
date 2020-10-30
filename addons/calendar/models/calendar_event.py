@@ -196,13 +196,13 @@ class Meeting(models.Model):
         help="Repeat every (Days/Week/Month/Year)")
     count = fields.Integer(
         string='Repeat', help="Repeat x times", compute='_compute_recurrence', readonly=False)
-    mo = fields.Boolean('Mon', compute='_compute_recurrence', readonly=False)
-    tu = fields.Boolean('Tue', compute='_compute_recurrence', readonly=False)
-    we = fields.Boolean('Wed', compute='_compute_recurrence', readonly=False)
-    th = fields.Boolean('Thu', compute='_compute_recurrence', readonly=False)
-    fr = fields.Boolean('Fri', compute='_compute_recurrence', readonly=False)
-    sa = fields.Boolean('Sat', compute='_compute_recurrence', readonly=False)
-    su = fields.Boolean('Sun', compute='_compute_recurrence', readonly=False)
+    mon = fields.Boolean(compute='_compute_recurrence', readonly=False)
+    tue = fields.Boolean(compute='_compute_recurrence', readonly=False)
+    wed = fields.Boolean(compute='_compute_recurrence', readonly=False)
+    thu = fields.Boolean(compute='_compute_recurrence', readonly=False)
+    fri = fields.Boolean(compute='_compute_recurrence', readonly=False)
+    sat = fields.Boolean(compute='_compute_recurrence', readonly=False)
+    sun = fields.Boolean(compute='_compute_recurrence', readonly=False)
     month_by = fields.Selection(
         MONTH_BY_SELECTION, string='Option', compute='_compute_recurrence', readonly=False)
     day = fields.Integer('Date of month', compute='_compute_recurrence', readonly=False)
@@ -908,8 +908,8 @@ class Meeting(models.Model):
     @api.model
     def _get_recurrent_fields(self):
         return {'byday', 'until', 'rrule_type', 'month_by', 'event_tz', 'rrule',
-                'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa',
-                'su', 'day', 'weekday'}
+                'interval', 'count', 'end_type', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat',
+                'sun', 'day', 'weekday'}
 
     @api.model
     def _get_time_fields(self):
