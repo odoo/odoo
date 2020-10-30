@@ -71,6 +71,28 @@ class TestSaleOrder(TestSaleCommon):
             'percent_price': 20,
         })
 
+        # Create a pricelist with min/max margin
+        cls.pricelist_margin_incl = Pricelist.create({
+            'name': 'Pricelist C',
+        })
+        PricelistItem.create({
+            'pricelist_id': cls.pricelist_margin_incl.id,
+            'applied_on': '1_product',
+            'product_tmpl_id': cls.service_deliver.product_tmpl_id.id,
+            'compute_price': 'formula',
+            'base': 'list_price',
+            'price_min_margin': 20,
+            'price_max_margin': 80
+        })
+        PricelistItem.create({
+            'pricelist_id': cls.pricelist_margin_incl.id,
+            'applied_on': '1_product',
+            'product_tmpl_id': cls.service_order.product_tmpl_id.id,
+            'compute_price': 'formula',
+            'base': 'standard_price',
+            'price_max_margin': 20
+        })
+
         # create a generic Sale Order with all classical products and empty pricelist
         cls.sale_order = SaleOrder.create({
             'partner_id': cls.partner_a.id,
@@ -161,3 +183,16 @@ class TestSaleOrder(TestSaleCommon):
                 else:  # no discount for the rest
                     self.assertEqual(line.discount, 0.0, 'Pricelist of SO should not be applied on an order line')
                     self.assertEqual(line.price_unit, line.product_id.list_price, 'Unit price of order line should be a sale price as the pricelist not applied on the other category\'s product')
+
+    def test_sale_with_pricelist_margin_included(self):
+        self.sale_order.write({'pricelist_id': self.pricelist_margin_incl.id})
+
+        for line in self.sale_order.order_line:
+            line.product_id_change()
+
+        for line in self.sale_order.order_line:
+            for item in self.sale_order.pricelist_id.item_ids.filtered(lambda l: l.product_tmpl_id == line.product_id.product_tmpl_id):
+                if line.product_id == self.service_deliver:
+                    self.assertEqual(line.price_unit, line.product_id.standard_price + (line.product_id.standard_price * item.price_min_margin), "Unit Price for %s should be min of margin of pricelist" % (line.name))
+                else:
+                    self.assertEqual(line.price_unit, min(line.price_unit, line.product_id.standard_price + (line.product_id.standard_price * item.price_min_margin)), "Unit Price for %s should be max margin of pricelist" % (line.name))

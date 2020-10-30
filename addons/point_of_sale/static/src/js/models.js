@@ -1551,7 +1551,6 @@ exports.Product = Backbone.Model.extend({
                 price = price - (price * (rule.percent_price / 100));
                 return true;
             } else {
-                var price_limit = price;
                 price = price - (price * (rule.price_discount / 100));
                 if (rule.price_round) {
                     price = round_pr(price, rule.price_round);
@@ -1560,10 +1559,10 @@ exports.Product = Backbone.Model.extend({
                     price += rule.price_surcharge;
                 }
                 if (rule.price_min_margin) {
-                    price = Math.max(price, price_limit + rule.price_min_margin);
+                    price = Math.max(price, self.standard_price + (self.standard_price * rule.price_min_margin));
                 }
                 if (rule.price_max_margin) {
-                    price = Math.min(price, price_limit + rule.price_max_margin);
+                    price = Math.min(price, self.standard_price + (self.standard_price * rule.price_max_margin));
                 }
                 return true;
             }
