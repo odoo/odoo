@@ -653,47 +653,44 @@ class PosConfig(models.Model):
         self.setup_invoice_journal(company)
 
     def assign_payment_journals(self, company):
-        for pos_config in self:
-            if pos_config.payment_method_ids:
-                continue
-            cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-            pos_receivable_account = company.account_default_pos_receivable_account_id
-            payment_methods = self.env['pos.payment.method']
-            if cash_journal:
-                payment_methods |= payment_methods.create({
-                    'name': _('Cash'),
-                    'receivable_account_id': pos_receivable_account.id,
-                    'is_cash_count': True,
-                    'cash_journal_id': cash_journal.id,
-                    'company_id': company.id,
-                })
+        cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
+        pos_receivable_account = company.account_default_pos_receivable_account_id
+        payment_methods = self.env['pos.payment.method']
+        if cash_journal:
             payment_methods |= payment_methods.create({
-                'name': _('Bank'),
+                'name': _('Cash'),
                 'receivable_account_id': pos_receivable_account.id,
-                'is_cash_count': False,
+                'is_cash_count': True,
+                'cash_journal_id': cash_journal.id,
                 'company_id': company.id,
             })
+        payment_methods |= payment_methods.create({
+            'name': _('Bank'),
+            'receivable_account_id': pos_receivable_account.id,
+            'is_cash_count': False,
+            'company_id': company.id,
+        })
+        for pos_config in self.filtered(lambda config: not config.payment_method_ids):
             pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
 
     def generate_pos_journal(self, company):
+        existing_pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
+        default_pos_journal = existing_pos_journal or self.env['account.journal'].create({
+            'type': 'sale',
+            'name': 'Point of Sale',
+            'code': 'POSS',
+            'company_id': company.id,
+            'sequence': 20
+        })
         for pos_config in self:
             if pos_config.journal_id:
                 continue
-            pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
-            if not pos_journal:
-                pos_journal = self.env['account.journal'].create({
-                    'type': 'sale',
-                    'name': 'Point of Sale',
-                    'code': 'POSS',
-                    'company_id': company.id,
-                    'sequence': 20
-                })
-            pos_config.write({'journal_id': pos_journal.id})
+            pos_config.write({'journal_id': default_pos_journal.id})
 
     def setup_invoice_journal(self, company):
-        for pos_config in self:
-            invoice_journal_id = pos_config.invoice_journal_id or self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company.id)], limit=1)
-            if invoice_journal_id:
-                pos_config.write({'invoice_journal_id': invoice_journal_id.id})
+        default_invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company.id)], limit=1)
+        for pos_config in self.filtered(lambda config: not config.invoice_journal_id):
+            if default_invoice_journal:
+                pos_config.write({'invoice_journal_id': default_invoice_journal.id})
             else:
                 pos_config.write({'module_account': False})
