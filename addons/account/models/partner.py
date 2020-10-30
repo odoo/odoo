@@ -322,11 +322,6 @@ class ResPartner(models.Model):
         for partner, child_ids in all_partners_and_children.items():
             partner.total_invoiced = sum(price['price_subtotal'] for price in price_totals if price['partner_id'][0] in child_ids)
 
-    def _compute_journal_item_count(self):
-        AccountMoveLine = self.env['account.move.line']
-        for partner in self:
-            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
-
     def _compute_has_unreconciled_entries(self):
         for partner in self:
             # Avoid useless work if has_unreconciled_entries is not relevant for this partner
@@ -384,7 +379,6 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",

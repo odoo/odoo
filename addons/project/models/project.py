@@ -615,7 +615,6 @@ class Task(models.Model):
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
         required=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
-    user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
         help="Attachment that don't come from message.")
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
