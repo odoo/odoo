@@ -32,6 +32,7 @@ var KanbanController = BasicController.extend({
         kanban_column_add_record: '_onAddRecordToColumn',
         kanban_column_resequence: '_onColumnResequence',
         kanban_load_more: '_onLoadMore',
+        kanban_load_more_filter: '_onLoadMoreFilter',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
     }),
@@ -393,8 +394,24 @@ var KanbanController = BasicController.extend({
     _onLoadMore: function (ev) {
         var self = this;
         var column = ev.target;
-        this.model.loadMore(column.db_id).then(function (db_id) {
-            var data = self.model.get(db_id);
+        let data = this.model.get(column.db_id);
+        let def;
+        if (data.progressBarValues && data.progressBarValues.active_filter) {
+            def = this.model.loadMoreFilter(column.db_id, data.progressBarValues.active_filter)
+        } else {
+            def = this.model.loadMore(column.db_id, data.domain.concat([['id', 'not in', data.res_ids]]));
+        }
+        def.then(function (db_id) {
+            data = self.model.get(db_id);
+            self.renderer.updateColumn(db_id, data);
+        });
+    },
+    _onLoadMoreFilter: function (ev) {
+        const self = this;
+        const column = ev.target;
+        let data = this.model.localData[column.db_id];
+        this.model.loadMoreFilter(column.db_id, ev.data.activeFilter, ev.data.recordCounts).then(function (db_id) {
+            data = self.model.get(db_id);
             self.renderer.updateColumn(db_id, data);
         });
     },

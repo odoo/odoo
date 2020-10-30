@@ -5315,7 +5315,7 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    assert.step(args.limit + ' - ' +  args.offset);
+                    assert.step(JSON.stringify(args.limit));
                 }
                 return this._super.apply(this, arguments);
             },
@@ -5331,7 +5331,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
             "there should now be 3 records in the column");
-        assert.verifySteps(['2 - undefined', '2 - undefined', '2 - 2'],
+        assert.verifySteps(['2', '2', '2'],
             "the records should be correctly fetched");
         assert.deepEqual(kanban.exportState().resIds, envIDs);
 
@@ -5340,13 +5340,13 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
             "there should still be 3 records in the column after reload");
         assert.deepEqual(kanban.exportState().resIds, envIDs);
-        assert.verifySteps(['4 - undefined', '2 - undefined']);
+        assert.verifySteps(['3', '2']);
 
         kanban.destroy();
     });
 
     QUnit.test('load more records in column with x2many', async function (assert) {
-        assert.expect(10);
+        assert.expect(9);
 
         this.data.partner.records[0].category_ids = [7];
         this.data.partner.records[1].category_ids = [];
@@ -5379,10 +5379,6 @@ QUnit.module('Views', {
                     if (args.limit) {
                         assert.strictEqual(args.limit, 2,
                             "the limit should be correctly set");
-                    }
-                    if (args.offset) {
-                        assert.strictEqual(args.offset, 2,
-                            "the offset should be correctly set at load more");
                     }
                 }
                 return this._super.apply(this, arguments);
@@ -6149,7 +6145,7 @@ QUnit.module('Views', {
         assert.strictEqual(initialCount, 3,
             "Initial count should be Three");
         await testUtils.dom.click($secondGroup.find('.bg-success-full'));
-        var lastCount = parseInt($secondGroup.find('.o_kanban_counter_side').text());
+        var lastCount = parseInt(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text());
         assert.strictEqual(lastCount, 1,
             "kanban counters should vary according to what subgroup is selected");
 

@@ -93,7 +93,7 @@ var KanbanColumnProgressBar = Widget.extend({
         let allSubgroupCount = 0;
         for (const key of Object.keys(this.colors)) {
             const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
-            if (this.activeFilter === key && subgroupCount === 0) {
+            if (this.activeFilter === key && subgroupCount === 0 && key != '__false') {
                 this.activeFilter = false;
             }
             subgroupCounts[key] = subgroupCount;
@@ -255,6 +255,13 @@ var KanbanColumnProgressBar = Widget.extend({
             },
         });
     },
+    _loadMoreFilter: function () {
+        this.trigger_up('load_more_filter', {
+            columnID: this.columnID,
+            activeFilter: this.activeFilter,
+            colors: this.colors
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -269,7 +276,7 @@ var KanbanColumnProgressBar = Widget.extend({
         var filter = this.$clickedBar.data('filter');
         this.activeFilter = (this.activeFilter === filter ? false : filter);
         this._notifyState();
-        this._render();
+        this._loadMoreFilter();
     },
     /**
      * @private
@@ -281,7 +288,7 @@ var KanbanColumnProgressBar = Widget.extend({
         }
         this.activeFilter = false;
         this._notifyState();
-        this._render();
+        this._loadMoreFilter();
     },
 });
 return KanbanColumnProgressBar;

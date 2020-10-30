@@ -30,7 +30,7 @@ var KanbanView = BasicView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        this.loadParams.limit = this.loadParams.limit || 40;
+        this.loadParams.limit = 5 || this.loadParams.limit || 40;
         this.loadParams.openGroupByDefault = true;
         this.loadParams.type = 'list';
         this.noDefaultGroupby = params.noDefaultGroupby;

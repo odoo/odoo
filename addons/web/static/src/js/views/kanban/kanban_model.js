@@ -196,11 +196,82 @@ var KanbanModel = BasicModel.extend({
      * @param {string} groupID localID of the group
      * @returns {Promise<string>} resolves to the localID of the group
      */
-    loadMore: function (groupID) {
+    loadMore: function (groupID, domain) {
         var group = this.localData[groupID];
-        var offset = group.loadMoreOffset + group.limit;
-        return this.reload(group.id, {
-            loadMoreOffset: offset,
+        // var offset = group.loadMoreOffset + group.limit;
+        // return this.reload(group.id, {
+        //     loadMoreOffset: offset,
+        // });
+        return this.reload(group.id, { isLoadMore: true, domain: domain});
+    },
+    loadMoreFilter: function (groupID, filter, recordCounts) {
+        const self = this;
+        const list = this.localData[groupID];
+        const fieldNames = list.getFieldNames();
+        let limit;
+
+        if (!filter) {
+            list.count = list.totalRecordCount;
+            list.progressBarValues.active_filter = false;
+            return Promise.resolve(groupID);
+        }
+
+        list.progressBarValues.active_filter = filter;
+        list.totalRecordCount = list.progressBarValues.counts[filter] != list.count && list.count || list.totalRecordCount;
+        list.count = list.progressBarValues.counts[filter] || list.count;
+        if (list.progressBarValues.counts[filter] === undefined ) {
+            list.progressBarValues.counts[filter] = 0;
+        }
+        if (recordCounts) {
+            if (recordCounts < list.limit && recordCounts != list.progressBarValues.counts[filter]) {
+                limit = list.limit - recordCounts;
+            } else {
+                return Promise.resolve(groupID);
+            }
+        }
+
+        return this._rpc({
+            route: '/web/dataset/search_read',
+            model: list.model,
+            fields: fieldNames,
+            context: Object.assign({}, list.getContext(), {bin_size: true}),
+            domain: list.domain.concat([[list.progressBarValues.field, '=', filter]], [['id', 'not in', list.res_ids]]),
+            limit: limit || list.limit,
+            offset: 0,
+            orderBy: list.orderedBy,
+        }).then(function (result) {
+            delete list.__data;
+
+            const ids = result.records.map(record => record.id);
+            const data = result.records.map(function (record) {
+                const dataPoint = self._makeDataPoint({
+                    context: list.context,
+                    data: record,
+                    fields: list.fields,
+                    fieldsInfo: list.fieldsInfo,
+                    modelName: list.model,
+                    parentID: list.id,
+                    viewType: list.viewType,
+                });
+
+                // add many2one records
+                self._parseServerData(fieldNames, dataPoint, dataPoint.data);
+                return dataPoint.id;
+            });
+
+            list.data = list.data.concat(data);
+            list.res_ids = list.res_ids.concat(ids);
+
+            self._updateParentResIDs(list);
+
+            self.localData[groupID] = _.clone(list);
+
+            return Promise.all([
+                self._fetchX2ManysBatched(list),
+                self._fetchReferencesBatched(list)
+            ]).then(function () {
+                return groupID;
+            })
         });
     },
     /**
@@ -276,7 +347,8 @@ var KanbanModel = BasicModel.extend({
      */
     __reload: function (id, options) {
         var def = this._super(id, options);
-        if (options && options.loadMoreOffset) {
+        if (options && options.isLoadMore) {
+        // if (options && options.loadMoreOffset) {
             return def;
         }
         return this._reloadProgressBarGroupFromRecord(id, def);
@@ -353,6 +425,7 @@ var KanbanModel = BasicModel.extend({
                 var group = self.localData[groupID];
                 group.progressBarValues = _.extend({
                     counts: data[group.value] || {},
+                    active_filter: group.progressBarValues && group.progressBarValues.active_filter
                 }, list.progressBar);
             });
             return list;

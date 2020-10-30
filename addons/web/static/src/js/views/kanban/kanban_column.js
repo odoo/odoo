@@ -22,6 +22,7 @@ var KanbanColumn = Widget.extend({
         quick_create_add_record: '_onQuickCreateAddRecord',
         tweak_column: '_onTweakColumn',
         tweak_column_records: '_onTweakColumnRecords',
+        load_more_filter: '_onLoadMoreFilter'
     },
     events: {
         'click .o_column_edit': '_onEditColumn',
@@ -64,7 +65,11 @@ var KanbanColumn = Widget.extend({
         this.recordsDraggable = options.recordsDraggable;
         this.relation = options.relation;
         this.offset = 0;
-        this.remaining = data.count - this.data_records.length;
+        if (this.data.progressBarValues && this.data.progressBarValues.active_filter) {
+            this.remaining = data.count - _.countBy(this.data_records, (record) => record.data[this.data.progressBarValues.field] == this.data.progressBarValues.active_filter).true || 0;
+        } else {
+            this.remaining = data.count - this.data_records.length;
+        }
         this.canBeFolded = this.folded;
 
         if (options.hasProgressBar) {
@@ -350,6 +355,10 @@ var KanbanColumn = Widget.extend({
     _onLoadMore: function (event) {
         event.preventDefault();
         this.trigger_up('kanban_load_more');
+    },
+    _onLoadMoreFilter: function (event) {
+        const recordCounts = this.$el.find('.oe_kanban_card_' + event.data.colors[event.data.activeFilter]).length;
+        this.trigger_up('kanban_load_more_filter', Object.assign({}, event.data, {recordCounts: recordCounts}));
     },
     /**
      * @private
