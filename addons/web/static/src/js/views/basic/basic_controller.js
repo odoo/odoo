@@ -115,14 +115,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                                 resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
                                 self.discardingDef = null;
                             });
-                            // resolve({
-                            //     needDiscard: true,
-                            //     saveCallback: () => {
-                            //         return self.saveRecord().then(() => {
-                            //             self._enableButtons();
-                            //         });
-                            //     },
-                            // });
                         },
                     },
                     {
@@ -136,8 +128,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                         click: cancelCallback,
                     }
                 ],
-                confirm_callback: confirmCallback,
-                cancel_callback: cancelCallback,
+                onForceClose: cancelCallback,
             });
             dialog.on('closed', self.discardingDef, reject);
         });
@@ -420,19 +411,10 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         options = options || {};
         return this.canBeDiscarded(recordID)
             .then(function (result) {
-                debugger;
                 if (options.readonlyIfRealDiscard && !result.needDiscard) {
                     return;
                 }
                 const canBeAbandoned = self.model.canBeAbandoned(recordID);
-                // if (result.saveCallback) {
-                //     result.saveCallback().then(() => {
-                //         if (!options.noAbandon && canBeAbandoned) {
-                //             self._abandonRecord(recordID);
-                //         }
-                //     });
-                //     return;
-                // }
                 self.model.discardChanges(recordID);
                 if (options.noAbandon) {
                     return;
@@ -442,9 +424,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                     return;
                 }
                 return self._confirmSave(recordID);
-            }, function (result) {
-                debugger;
-                console.log("Inside fail............... ");
             });
     },
     /**
