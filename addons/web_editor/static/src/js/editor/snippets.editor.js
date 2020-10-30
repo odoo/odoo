@@ -1489,7 +1489,7 @@ var SnippetsMenu = Widget.extend({
      *         first parent which is one is used instead.
      *
      * @private
-     * @param {jQuery|false} $snippetBlock
+     * @param {jQuery} $snippetBlock
      *        The DOM element whose editor (and its parent ones) need to be
      *        enabled. Only disable the current one if false is given.
      * @param {boolean} [previewMode=false]
@@ -1539,6 +1539,13 @@ var SnippetsMenu = Widget.extend({
                 }
             }
 
+            // ... if no editors are to be enabled, look if any have been
+            // enabled previously by a click
+            if (!snippetEditor) {
+                snippetEditor = this.snippetEditors.find(editor => editor.isSticky());
+                previewMode = false;
+            }
+
             // ... then enable the right snippet editor
             if (snippetEditor) {
                 snippetEditor.toggleOverlay(true, previewMode);
@@ -1550,21 +1557,23 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
-     * Disable all snippet editors.
+     * Disable all snippet editors, then enable the last snippet editor.
      *
      * @private
      */
-    _enableLastEditor() {
-        this._mutex.exec(() => {
+    _enableLastEditor: function() {
+        this._mutex.exec(async () => {
             // First disable all snippet editors...
             for (const currentSnippetEditor of this.snippetEditors) {
                 currentSnippetEditor.toggleOverlay(false, false);
+                await currentSnippetEditor.toggleOptions(false);
             }
+
             // ... then enable the last snippet editor
             const editorToEnable = this.snippetEditors.find(editor => editor.isSticky());
             if (editorToEnable) {
-                editorToEnable.toggleOverlay(true, true);
-                editorToEnable.toggleOptions(true);
+                editorToEnable.toggleOverlay(true, false);
+                await editorToEnable.toggleOptions(true);
             }
         });
     },
