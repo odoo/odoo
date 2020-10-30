@@ -312,13 +312,13 @@ class Meeting(models.Model):
             if recurrence.month_by == 'day' or recurrence.rrule_type == 'weekly':
                 pattern['daysOfWeek'] = [
                     weekday_name for weekday_name, weekday in {
-                        'monday': recurrence.mo,
-                        'tuesday': recurrence.tu,
-                        'wednesday': recurrence.we,
-                        'thursday': recurrence.th,
-                        'friday': recurrence.fr,
-                        'saturday': recurrence.sa,
-                        'sunday': recurrence.su,
+                        'monday': recurrence.mon,
+                        'tuesday': recurrence.tue,
+                        'wednesday': recurrence.wed,
+                        'thursday': recurrence.thu,
+                        'friday': recurrence.fri,
+                        'saturday': recurrence.sat,
+                        'sunday': recurrence.sun,
                     }.items() if weekday]
                 pattern['firstDayOfWeek'] = 'sunday'
 

@@ -56,10 +56,10 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
         self.env.user.tz = 'Europe/Brussels'
         Supplier = self.env['lunch.supplier']
 
-        tests = [(self.monday_1am, 1.0, 'monday'), (self.monday_10am, 10.0, 'monday'),
-                 (self.monday_1pm, 13.0, 'monday'), (self.monday_8pm, 20.0, 'monday'),
-                 (self.saturday_3am, 3.0, 'saturday'), (self.saturday_10am, 10.0, 'saturday'),
-                 (self.saturday_1pm, 13.0, 'saturday'), (self.saturday_8pm, 20.0, 'saturday')]
+        tests = [(self.monday_1am, 1.0, 'mon'), (self.monday_10am, 10.0, 'mon'),
+                 (self.monday_1pm, 13.0, 'mon'), (self.monday_8pm, 20.0, 'mon'),
+                 (self.saturday_3am, 3.0, 'sat'), (self.saturday_10am, 10.0, 'sat'),
+                 (self.saturday_1pm, 13.0, 'sat'), (self.saturday_8pm, 20.0, 'sat')]
 
         # It should return an empty domain if we compare to values other than datetime
         assert Supplier._search_available_today('>', 7) == []
@@ -69,7 +69,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
             with patch.object(fields.Datetime, 'now', return_value=value) as _:
                 assert Supplier._search_available_today('=', True) == ['&', '|', ('recurrency_end_date', '=', False),
                         ('recurrency_end_date', '>', value.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz))),
-                        ('recurrency_%s' % (dayname), '=', True)],\
+                        (dayname, '=', True)],\
                         'Wrong domain generated for values (%s, %s)' % (value, rvalue)
 
         with patch.object(fields.Datetime, 'now', return_value=self.monday_10am) as _:

@@ -30,14 +30,16 @@ RRULE_FREQ_TO_SELECT = {
 }
 
 RRULE_WEEKDAY_TO_FIELD = {
-    rrule.MO.weekday: 'mo',
-    rrule.TU.weekday: 'tu',
-    rrule.WE.weekday: 'we',
-    rrule.TH.weekday: 'th',
-    rrule.FR.weekday: 'fr',
-    rrule.SA.weekday: 'sa',
-    rrule.SU.weekday: 'su',
+    rrule.MO.weekday: 'mon',
+    rrule.TU.weekday: 'tue',
+    rrule.WE.weekday: 'wed',
+    rrule.TH.weekday: 'thu',
+    rrule.FR.weekday: 'fri',
+    rrule.SA.weekday: 'sat',
+    rrule.SU.weekday: 'sun',
 }
+
+RRULE_WEEKDAYS = {'SUN': 'SU', 'MON': 'MO', 'TUE': 'TU', 'WED': 'WE', 'THU': 'TH', 'FRI': 'FR', 'SAT': 'SA'}
 
 RRULE_TYPE_SELECTION = [
     ('daily', 'Days'),
@@ -58,13 +60,13 @@ MONTH_BY_SELECTION = [
 ]
 
 WEEKDAY_SELECTION = [
-    ('MO', 'Monday'),
-    ('TU', 'Tuesday'),
-    ('WE', 'Wednesday'),
-    ('TH', 'Thursday'),
-    ('FR', 'Friday'),
-    ('SA', 'Saturday'),
-    ('SU', 'Sunday'),
+    ('MON', 'Monday'),
+    ('TUE', 'Tuesday'),
+    ('WED', 'Wednesday'),
+    ('THU', 'Thursday'),
+    ('FRI', 'Friday'),
+    ('SAT', 'Saturday'),
+    ('SUN', 'Sunday'),
 ]
 
 BYDAY_SELECTION = [
@@ -104,13 +106,13 @@ class RecurrenceRule(models.Model):
     end_type = fields.Selection(END_TYPE_SELECTION, default='count')
     interval = fields.Integer(default=1)
     count = fields.Integer(default=1)
-    mo = fields.Boolean()
-    tu = fields.Boolean()
-    we = fields.Boolean()
-    th = fields.Boolean()
-    fr = fields.Boolean()
-    sa = fields.Boolean()
-    su = fields.Boolean()
+    mon = fields.Boolean()
+    tue = fields.Boolean()
+    wed = fields.Boolean()
+    thu = fields.Boolean()
+    fri = fields.Boolean()
+    sat = fields.Boolean()
+    sun = fields.Boolean()
     month_by = fields.Selection(MONTH_BY_SELECTION, default='date')
     day = fields.Integer(default=1)
     weekday = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
@@ -160,7 +162,7 @@ class RecurrenceRule(models.Model):
 
     @api.depends(
         'byday', 'until', 'rrule_type', 'month_by', 'interval', 'count', 'end_type',
-        'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'weekday')
+        'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'day', 'weekday')
     def _compute_rrule(self):
         for recurrence in self:
             recurrence.rrule = recurrence._rrule_serialize()
@@ -302,7 +304,7 @@ class RecurrenceRule(models.Model):
     def _rrule_parse(self, rule_str, date_start):
         # LUL TODO clean this mess
         data = {}
-        day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
         if 'Z' in rule_str and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
@@ -432,13 +434,13 @@ class RecurrenceRule(models.Model):
         return tuple(
             rrule.weekday(weekday_index)
             for weekday_index, weekday in {
-                rrule.MO.weekday: self.mo,
-                rrule.TU.weekday: self.tu,
-                rrule.WE.weekday: self.we,
-                rrule.TH.weekday: self.th,
-                rrule.FR.weekday: self.fr,
-                rrule.SA.weekday: self.sa,
-                rrule.SU.weekday: self.su,
+                rrule.MO.weekday: self.mon,
+                rrule.TU.weekday: self.tue,
+                rrule.WE.weekday: self.wed,
+                rrule.TH.weekday: self.thu,
+                rrule.FR.weekday: self.fri,
+                rrule.SA.weekday: self.sat,
+                rrule.SU.weekday: self.sun,
             }.items() if weekday
         )
 
@@ -458,7 +460,7 @@ class RecurrenceRule(models.Model):
         if freq == 'monthly' and self.month_by == 'date':  # e.g. every 15th of the month
             rrule_params['bymonthday'] = self.day
         elif freq == 'monthly' and self.month_by == 'day':  # e.g. every 2nd Monday in the month
-            rrule_params['byweekday'] = getattr(rrule, self.weekday)(int(self.byday))  # e.g. MO(+2) for the second Monday of the month
+            rrule_params['byweekday'] = getattr(rrule, RRULE_WEEKDAYS[self.weekday])(int(self.byday))  # e.g. MO(+2) for the second Monday of the month
         elif freq == 'weekly':
             weekdays = self._get_week_days()
             if not weekdays:

@@ -192,7 +192,7 @@ class MicrosoftEvent(abc.Set):
             result['month_by'] = month_by
 
         week_days = [x[:2] for x in pattern.get('daysOfWeek', [])]
-        for week_day in ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']:
+        for week_day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']:
             result[week_day] = week_day in week_days
         if week_days:
             result['weekday'] = week_days[0].upper()
