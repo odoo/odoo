@@ -1,9 +1,12 @@
+import json
 import time
+
+from uuid import uuid4
 from xmlrpc.client import Fault
 
 from passlib.totp import TOTP
 
-from odoo import http
+from odoo import http, _
 from odoo.exceptions import AccessDenied
 from odoo.service import common as auth, model
 from odoo.tests import tagged, HttpCase, get_db_name
@@ -15,21 +18,20 @@ class TestTOTP(HttpCase):
     def setUp(self):
         super().setUp()
 
-        totp = None
+        self.totp = None
         # might be possible to do client-side using `crypto.subtle` instead of
         # this horror show, but requires working on 64b integers, & BigInt is
         # significantly less well supported than crypto
-        def totp_hook(self, secret=None):
-            nonlocal totp
-            if totp is None:
-                totp = TOTP(secret)
+        def totp_hook(self_hook, secret=None):
+            if self.totp is None:
+                self.totp = TOTP(secret)
             if secret:
-                return totp.generate().token
+                return self.totp.generate().token
             else:
                 # on check, take advantage of window because previous token has been
                 # "burned" so we can't generate the same, but tour is so fast
                 # we're pretty certainly within the same 30s
-                return totp.generate(time.time() + 30).token
+                return self.totp.generate(time.time() + 30).token
         # because not preprocessed by ControllerType metaclass
         totp_hook.routing_type = 'json'
         self.env['ir.http']._clear_routing_map()
@@ -81,3 +83,61 @@ class TestTOTP(HttpCase):
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         self.start_tour('/web', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
+
+    def _build_payload(self, params={}):
+        """
+        Helper to properly build jsonrpc payload
+        """
+        return {
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'id': str(uuid4()),
+            'params': params,
+        }
+
+    def test_totp_mobile_login(self):
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        # 1. Enable 2FA
+        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.url_open('/web/session/logout')
+
+        # 2. query login
+        payload = self._build_payload({
+            'db': get_db_name(),
+            'login': 'demo',
+            'password': 'demo',
+            'context': {},
+        })
+        response = self.url_open('/web/session/authenticate', data=json.dumps(payload), headers=headers)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['result']['uid'], None)
+
+        # 3. query totp_token empty
+        payload = self._build_payload({
+            'totp_token': ''
+        })
+        response = self.url_open('/web/session/authenticate/totp', data=json.dumps(payload), headers=headers)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['result']['error'], _("Invalid authentication code format."))
+
+        # 4. query totp_token wrong digits
+        payload = self._build_payload({
+            'totp_token': '123'
+        })
+        response = self.url_open('/web/session/authenticate/totp', data=json.dumps(payload), headers=headers)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['result']['error'], _("Verification failed, please double-check the 6-digit code"))
+
+        # 5. query totp_token right digits
+        payload = self._build_payload({
+            'totp_token': self.totp.generate().token
+        })
+        response = self.url_open('/web/session/authenticate/totp', data=json.dumps(payload), headers=headers)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['result']['uid'], self.env.ref('base.user_demo').id)
