@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Low'),
@@ -43,6 +44,21 @@ class Stage(models.Model):
 
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
+
+    def unlink(self):
+        leads_by_stage = self.env['crm.lead'].with_context(active_test=False).read_group(
+            [('stage_id', 'in', self.ids)],
+            ['stage_id'],
+            ['stage_id'],
+            lazy=False
+        )
+        for leads in leads_by_stage:
+            if leads.get('__count', 0) > 0:
+                raise UserError(_('The stage "%s" still contains Leads/Opportunities.\n'
+                                  'You have to move everything out of the stage before deleting it.\n'
+                                  'Make sure to check for "Lost" Leads/Opportunities in this stage as well.', leads.get('stage_id')[1]))
+
+        return super(Stage, self).unlink()
 
     def _compute_team_count(self):
         for stage in self:
