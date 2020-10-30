@@ -3310,6 +3310,47 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('ask for confirmation when leaving a "dirty" view and save changes', async function (assert) {
+        assert.expect(5);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.ok("create should called");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.doAction(4);
+
+        // open new record in form view
+        await testUtils.dom.click(actionManager.$('.o-kanban-button-new'));
+
+        await testUtils.fields.editInput(actionManager.$('input[name="foo"]'), 'pinkypie');
+
+        // Click on Discard button
+        await testUtils.dom.click($('.o_control_panel .o_form_button_cancel'));
+
+        assert.strictEqual($('.modal .modal-body').text(),
+            "Would you like to save your changes?",
+            "should display a modal dialog to confirm discard action");
+        assert.containsN($('.modal'), '.modal-footer button', 3,
+            "should have 3 buttons");
+
+        // Click Save in confirm dialog
+        await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+        await testUtils.nextTick();
+        assert.containsNone(actionManager, '.o_form_view',
+            "should no longer be in form view");
+        assert.containsOnce(actionManager, '.o_kanban_view',
+            "should be in kanban view");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('limit set in action is passed to each created controller', async function (assert) {
         assert.expect(2);
 
