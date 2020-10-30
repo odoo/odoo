@@ -250,6 +250,9 @@
                     if (field.relation === 'res.currency') {
                         return session.company_currency_id;
                     }
+                    if (field.relation === 'ir.attachment') {
+                        return false;
+                    }
                     return this._getRandomSubRecordId();
                 case "one2many":
                 case "many2many": {
