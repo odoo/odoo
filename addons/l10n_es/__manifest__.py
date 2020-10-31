@@ -48,6 +48,7 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'data/account.account.template-common-canary.csv',
         'data/account.account.template-pymes-canary.csv',
         'data/account.account.template-assoc-canary.csv',
         'data/account.account.template-full-canary.csv',

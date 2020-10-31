@@ -11,7 +11,7 @@
         </record>
 
         <record id="account_chart_template_pymes" model="account.chart.template">
-            <field name="name">PGCE PYMEs 2008!</field>
+            <field name="name">PGCE PYMEs 2008</field>
             <field name="complete_tax_set" eval="True"/>
             <field name="currency_id" ref="base.EUR"/>
             <field name="cash_account_code_prefix">570</field>
@@ -40,6 +40,15 @@
             <field name="parent_id" ref="account_chart_template_common"/>
         </record>
 
+        <record id="account_chart_template_common_canary" model="account.chart.template">
+            <field name="name">PGCE común - Islas Canarias</field>
+            <field name="visible" eval="0"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="cash_account_code_prefix">570</field>
+            <field name="bank_account_code_prefix">572</field>
+            <field name="transfer_account_code_prefix">572999</field>
+        </record>
+
         <record id="account_chart_template_pymes_canary" model="account.chart.template">
             <field name="name">PGCE PYMEs 2008 - Islas Canarias</field>
             <field name="complete_tax_set" eval="True"/>
@@ -47,7 +56,7 @@
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_code_prefix">572999</field>
-            <field name="parent_id" ref="account_chart_template_pymes"/>
+            <field name="parent_id" ref="account_chart_template_common_canary"/>
         </record>
 
         <record id="account_chart_template_assoc_canary" model="account.chart.template">
@@ -57,7 +66,7 @@
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_code_prefix">572999</field>
-            <field name="parent_id" ref="account_chart_template_assoc"/>
+            <field name="parent_id" ref="account_chart_template_common_canary"/>
         </record>
 
         <record id="account_chart_template_full_canary" model="account.chart.template">
@@ -67,7 +76,7 @@
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_code_prefix">572999</field>
-            <field name="parent_id" ref="account_chart_template_full"/>
+            <field name="parent_id" ref="account_chart_template_common_canary"/>
         </record>
     </data>
 </odoo>
