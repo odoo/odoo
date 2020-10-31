@@ -14,7 +14,7 @@
 
 {
     "name" : "Spain - Accounting (PGCE 2008)",
-    "version" : "4.0",
+    "version" : "5.0",
     "author" : "Spanish Localization Team",
     'category': 'Accounting/Localizations/Account Charts',
     "description": """
@@ -25,6 +25,7 @@ Spanish charts of accounts (PGCE 2008).
         * Spanish general chart of accounts 2008
         * Spanish general chart of accounts 2008 for small and medium companies
         * Spanish general chart of accounts 2008 for associations
+        * Canary Islands specifications as option
     * Defines templates for sale and purchase VAT
     * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
@@ -47,6 +48,9 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'data/account.account.template-pymes-canary.csv',
+        'data/account.account.template-assoc-canary.csv',
+        'data/account.account.template-full-canary.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
