@@ -30,3 +30,7 @@ For a standard installation please follow the <a href="https://www.odoo.com/docu
 from the documentation.
 
 To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/14.0/tutorials.html">the developer tutorials</a>
+
+Odoo-Bangla ( Need Help)
+------------
+Need more hands for translating odoo into Bangla. Would like to contribute? Contact [Odoo-Bangla](https://github.com/MjAbuz/Odoo-Bangla/)
