@@ -14,8 +14,10 @@
                         <group groups="base.group_no_one">
                             <field name="complete_name"/>
                             <field name="action"/>
-                            <field name="web_icon"/>
-                            <field name="web_icon_data"/>
+                            <field name="web_icon"
+                                   attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                            <field name="web_color" widget="color"
+                                   attrs="{'invisible': [('parent_id', '!=', False)]}"/>
                         </group>
                     </group>
                     <notebook>

@@ -23,6 +23,8 @@ var AppsMenu = Widget.extend({
                 menuID: appMenuData.id,
                 name: appMenuData.name,
                 xmlID: appMenuData.xmlid,
+                menuIcon: appMenuData.web_icon,
+                menuColor: appMenuData.web_color,
             };
         });
     },

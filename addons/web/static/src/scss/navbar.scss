@@ -49,6 +49,28 @@ body.o_is_superuser .o_menu_systray {
 
     .o_app {
         cursor: pointer;
+
+        .o_app_icon {
+            float: left;
+            background-color: #333333;
+            border-radius: 3px;
+            color: white;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            box-shadow: inset 0px -1px 1px rgba(0, 0, 0, 0.4),
+                        inset 0px 1px 1px rgba(255, 255, 255, 0.4);
+
+            .fa {
+                line-height: 30px;
+            }
+        }
+
+        .o_caption {
+            padding-left: 40px;
+            padding-right: 20px;
+            line-height: 30px;
+        }
     }
 
     > .o_menu_brand {

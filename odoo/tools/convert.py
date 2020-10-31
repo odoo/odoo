@@ -441,9 +441,9 @@ form: module.record_id""" % (xml_id,)
             values['parent_id'] = parent
         elif rec.get('parent'):
             values['parent_id'] = self.id_get(rec.attrib['parent'])
-        elif rec.get('web_icon'):
-            values['web_icon'] = rec.attrib['web_icon']
-
+        elif rec.get('web_icon') or rec.get('web_color'):
+            values['web_icon'] = rec.attrib.get('web_icon', 'fa-cube')
+            values['web_color'] = rec.attrib.get('web_color', '#333333')
 
         if rec.get('name'):
             values['name'] = rec.attrib['name']

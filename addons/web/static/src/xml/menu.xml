@@ -20,13 +20,18 @@
         </a>
         <div class="dropdown-menu" role="menu">
             <t t-foreach="widget.getApps()" t-as="app">
-            <a role="menuitem" t-attf-href="#menu_id=#{app.menuID}"
-                class="dropdown-item o_app"
-                t-att-data-menu-id="app.menuID"
-                t-att-data-menu-xmlid="app.xmlID"
-                t-att-data-action-id="app.actionID">
-                    <t t-esc="app.name"/>
-                </a>
+                <a role="menuitem" t-attf-href="#menu_id=#{app.menuID}"
+                    class="dropdown-item o_app"
+                    t-att-data-menu-id="app.menuID"
+                    t-att-data-menu-xmlid="app.xmlID"
+                    t-att-data-action-id="app.actionID">
+                        <div class="o_app_icon" t-attf-style="background-color: {{app.menuColor or '#333333'}};">
+                            <i t-attf-class="fa {{app.menuIcon or 'fa-cube'}}"/>
+                        </div>
+                        <div class="o_caption">
+                            <t t-esc="app.name"/>
+                        </div>
+                    </a>
             </t>
         </div>
     </li>

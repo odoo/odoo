@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
       <!-- Top menu item -->
-          <menuitem id="menu_board_root" name="Dashboards" sequence="305" web_icon="base,static/description/board.png" groups="base.group_user"/>
+          <menuitem id="menu_board_root" name="Dashboards" sequence="305" web_icon="fa-dashboard" web_color="#cd748f" groups="base.group_user"/>
           <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_board_root" sequence="0"/>
           <menuitem id="menu_reporting_config" name="Configuration" parent="menu_board_root" sequence="100" groups="base.group_system"/>
 
       <!-- Top menu item -->
       <menuitem name="Settings"
           id="menu_administration"
-          web_icon="base,static/description/settings.png"
+          web_icon="fa-cog"
+          web_color="#ccc382"
           sequence="500"
           groups="base.group_erp_manager"/>
-          <menuitem id="menu_management" name="Apps" sequence="310" web_icon="base,static/description/modules.png" groups="base.group_system"/>
+          <menuitem id="menu_management" name="Apps" sequence="310" web_icon="fa-cubes" web_color="#ad5c5c" groups="base.group_system"/>
           <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
           <!-- FYI The group no_one on 'User & Companies' and 'Translations' is a FP/APR request -->
           <menuitem id="menu_users" name="Users &amp; Companies" parent="menu_administration" sequence="1"/>
@@ -28,7 +29,7 @@
               <menuitem id="menu_security" name="Security" parent="menu_custom" sequence="25"/>
               <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" sequence="24"/>
 
-          <menuitem id="base.menu_tests" name="Tests" sequence="1000000" web_icon="test_exceptions,static/description/icon.png"/>
+          <menuitem id="base.menu_tests" name="Tests" sequence="1000000" web_icon="fa-check-square" web_color="#777a77"/>
 
       <record model="ir.ui.menu" id="base.menu_administration">
           <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>

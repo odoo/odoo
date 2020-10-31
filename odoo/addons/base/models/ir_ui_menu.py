@@ -35,14 +35,14 @@ class IrUiMenu(models.Model):
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
     complete_name = fields.Char(compute='_compute_complete_name', string='Full Path')
-    web_icon = fields.Char(string='Web Icon File')
     action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
                                          ('ir.actions.act_window', 'ir.actions.act_window'),
                                          ('ir.actions.act_url', 'ir.actions.act_url'),
                                          ('ir.actions.server', 'ir.actions.server'),
                                          ('ir.actions.client', 'ir.actions.client')])
 
-    web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
+    web_icon = fields.Char(string='Icon', help="FontAwesome icon string (example: fa-calendar)")
+    web_color = fields.Char(string='Color', help="Hex color value for background (example: #ccc382)")
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
@@ -140,30 +140,6 @@ class IrUiMenu(models.Model):
     def name_get(self):
         return [(menu.id, menu._get_full_name()) for menu in self]
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.clear_caches()
-        for values in vals_list:
-            if 'web_icon' in values:
-                values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).create(vals_list)
-
-    def write(self, values):
-        self.clear_caches()
-        if 'web_icon' in values:
-            values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).write(values)
-
-    def _compute_web_icon_data(self, web_icon):
-        """ Returns the image associated to `web_icon`.
-            `web_icon` can either be:
-              - an image icon [module, path]
-              - a built icon [icon_class, icon_color, background_color]
-            and it only has to call `read_image` if it's an image.
-        """
-        if web_icon and len(web_icon.split(',')) == 2:
-            return self.read_image(web_icon)
-
     def unlink(self):
         # Detach children and promote them to top-level, because it would be unwise to
         # cascade-delete submenus blindly. We also can't use ondelete=set null because
@@ -200,7 +176,7 @@ class IrUiMenu(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', keys=('lang',))
     def load_menus_root(self):
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_color']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
 
@@ -224,7 +200,7 @@ class IrUiMenu(models.Model):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_icon_data']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_color']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
