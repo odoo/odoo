@@ -660,6 +660,7 @@ function factory(dependencies) {
             if (this.suggestedCannedResponses[0]) {
                 this.update({
                     activeSuggestedCannedResponse: [['link', this.suggestedCannedResponses[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -698,6 +699,7 @@ function factory(dependencies) {
             if (this.suggestedChannels[0]) {
                 this.update({
                     activeSuggestedChannel: [['link', this.suggestedChannels[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -723,6 +725,7 @@ function factory(dependencies) {
             if (this.suggestedChannelCommands[0]) {
                 this.update({
                     activeSuggestedChannelCommand: [['link', this.suggestedChannelCommands[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -767,10 +770,12 @@ function factory(dependencies) {
             if (this.mainSuggestedPartners[0]) {
                 this.update({
                     activeSuggestedPartner: [['link', this.mainSuggestedPartners[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else if (this.extraSuggestedPartners[0]) {
                 this.update({
                     activeSuggestedPartner: [['link', this.extraSuggestedPartners[0]]],
+                    hasToScrollToActiveSuggestion: true,
                 });
             } else {
                 this.update({
@@ -912,6 +917,13 @@ function factory(dependencies) {
                 'suggestedChannelCommands',
                 'suggestedChannels',
             ],
+            default: false,
+        }),
+        /**
+         * Determines whether the currently active suggestion should be scrolled
+         * into view.
+         */
+        hasToScrollToActiveSuggestion: attr({
             default: false,
         }),
         /**
