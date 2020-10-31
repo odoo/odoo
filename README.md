@@ -33,4 +33,6 @@ To learn the software, we recommend the <a href="https://www.odoo.com/slides">Od
 
 Odoo-Bangla ( Need Help)
 ------------
+Odoo Now In Bangla Odoo-Bangla (formerly OpenERP). Open Source Apps To Grow Your Business. 
+
 Need more hands for translating odoo into Bangla. Would like to contribute? Contact [Odoo-Bangla](https://github.com/MjAbuz/Odoo-Bangla/)
