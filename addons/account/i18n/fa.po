@@ -469,8 +469,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">همه ورودی های روزنامه انتخاب شده اعتبار سنجی و "
-"ارسال خواهند شد. شما پس از آن قادر به تغییر آنها نخواهید بود.</span>"
+"<span class=\"o_form_label\">همه ثبت سند های روزنامه انتخاب شده اعتبار سنجی "
+"و ارسال خواهند شد. شما پس از آن قادر به تغییر آنها نخواهید بود.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -624,7 +624,7 @@ msgstr "<span>صورتحساب جدید</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Entry</span>"
-msgstr "<span>ورودی جدید</span>"
+msgstr "<span>ثبت سند جدید</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -752,7 +752,7 @@ msgstr "<strong>تراز انتهای دوره</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>ورودی ها مرتب شده بر اساس:</strong>"
+msgstr "<strong>ثبت سند ها مرتب شده بر اساس:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -787,7 +787,7 @@ msgstr "<strong>روش پرداخت: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr "<strong>مرجع:</strong>"
+msgstr "<strong>شماره پیگیری:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -869,7 +869,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"یک ورودی روزنامه از چند آیتم روزنامه تشکیل شده، که هر\n"
+"یک ثبت سند روزنامه از چند آیتم روزنامه تشکیل شده، که هر\n"
 "                کدام یک تراکنش بستانکار یا بدهکار است."
 
 #. module: account
@@ -879,7 +879,7 @@ msgid ""
 "                related to the day-to-day business."
 msgstr ""
 "یک روزنامه برای ثبت تراکنش های همه داده حسابداری استفاده می‌شود\n"
-"                که مربوط به به کارهای زورمره است."
+"                که مربوط به به کارهای روزمره است."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -890,10 +890,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"یک ورودی روزنامه پرداخت تولید شده در یک روزنامه که تنظیم شده تا ورودی ها را "
-"تنها وقتی که پرداخت ها با یک حساب بانکی تهاتر می شوند، ارسال شود، نمی توانند"
-" دستی ارسال شوند. اینها هنگام انجام تهاتر بانکی به صورت خودکار ارسال می "
-"شوند."
+"یک ثبت سند روزنامه پرداخت تولید شده در یک روزنامه که تنظیم شده تا ثبت سند ها"
+" را تنها وقتی که پرداخت ها با یک حساب بانکی تهاتر می شوند، ارسال شود، نمی "
+"توانند دستی ارسال شوند. اینها هنگام انجام تهاتر بانکی به صورت خودکار ارسال "
+"می شوند."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:0
@@ -1336,7 +1336,7 @@ msgstr "اسناد حسابداری"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting Entries"
-msgstr "ورودی های حسابداری"
+msgstr "ثبت سند های حسابداری"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -1690,6 +1690,7 @@ msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
 msgstr ""
+"تمام فاکتورها و پرداخت ها تطابق داده شده اند، تراز حساب های شما تمیز است."
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -1704,7 +1705,7 @@ msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
 msgstr ""
-"تمام سطر های ورودی های حساب باید پردازش شوند تا این صورتحساب بسته شود."
+"تمام سطر های ثبت سند های حساب باید پردازش شوند تا این صورتحساب بسته شود."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
@@ -2050,12 +2051,14 @@ msgstr "اعمال خودکار در این موقعیت مالیاتی."
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
 msgstr ""
+"اعمال کن فقط در صورتی که کشور صدور فاکتور یا محل تحویل با این گروه تطابق "
+"دارد."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_id
 msgid "Apply only if delivery or invoicing country match."
-msgstr ""
+msgstr "اعمال کن فقط در صورتی که کشور صدور فاکتور یا تحویل تطابق دارد."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
@@ -2393,7 +2396,7 @@ msgstr "پیکربندی دستی حساب بانکی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr ""
+msgstr "سطر صورتحساب بانک با این ثبت سند تهاتر شد"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -2417,13 +2420,13 @@ msgstr "مقدار پایه"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr ""
+msgstr "حساب دریافتنی مالیات پایه"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__repartition_type
 msgid "Base on which the factor will be applied."
-msgstr ""
+msgstr "بر مبنای چیزی که نرخ اعمال خواهد شد."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__repartition_type
@@ -2652,7 +2655,7 @@ msgstr "لغو"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "لغو ورودی"
+msgstr "لغو ثبت سند"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -2679,7 +2682,7 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
-"نمی توان ورودی روزنامه تراز نشده ایجاد کرد. شناسه ها: %s\n"
+"نمی توان ثبت سند روزنامه تراز نشده ایجاد کرد. شناسه ها: %s\n"
 "اختلاف دارد به بدهکار - بستانکار: %s"
 
 #. module: account
@@ -2689,7 +2692,7 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"جدول حساب رای این شرکت یافت نشد، شما باید آن را پیکربندی کنید. \n"
+"درخت حساب برای این شرکت یافت نشد، شما باید آن را پیکربندی کنید. \n"
 "لطفا بروید به پیکربندی حساب."
 
 #. module: account
@@ -2765,7 +2768,7 @@ msgstr "حساب هزینه اختلاف نقد"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 msgid "Cash Registers"
-msgstr ""
+msgstr "رجیسترهای نقد"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -3187,7 +3190,7 @@ msgstr "طرح بندی سند شرکت"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
 msgid "Company has a chart of accounts"
-msgstr "شرکت جدول حسابها دارد"
+msgstr "شرکت درخت حساب دارد"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
@@ -3208,7 +3211,7 @@ msgstr "ست کامل مالیاتها"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__name
 msgid "Complete name for this report line, to be used in report."
-msgstr ""
+msgstr "نام این سطر گزارش را کامل کن، تا برای گزارش استفاده شود."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
@@ -3223,7 +3226,7 @@ msgstr "حالت نوشتار"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr ""
+msgstr "نرخ های مالیات را بر اساس کد پستی آمریکا محاسبه کن"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end
@@ -3343,6 +3346,7 @@ msgid ""
 "Could not install new chart of account as there are already accounting "
 "entries existing."
 msgstr ""
+"نمی توان درخت حساب جدیدی نصب کرد زیرا از قبل ثبت سند های حسابداری موجود است."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_id
@@ -3403,12 +3407,12 @@ msgstr "ایجاد ورودی تعهدی"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_accrual_accounting_wizard_action
 msgid "Create Accrual Entry for the expense/revenue recognition"
-msgstr ""
+msgstr "ثبت سند تعهدی ایجاد کن برای شناسایی هزینه درآمد"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Create Journal Entry"
-msgstr "ایجاد ورودی روزنامه"
+msgstr "ایجاد ثبت سند روزنامه"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
@@ -3517,7 +3521,7 @@ msgstr "ایجاد یک سند بستانکار فروشنده"
 #. module: account
 #: model:ir.model,name:account.model_account_accrual_accounting_wizard
 msgid "Create accrual entry."
-msgstr "ایجاد یک ورودی تعهدی."
+msgstr "ایجاد یک ثبت سند تعهدی."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3717,7 +3721,7 @@ msgstr "سند بستانکار ایجاد شد"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "دنباله ورودی سند بستانکار"
+msgstr "دنباله ثبت سند بستانکار"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -3725,7 +3729,7 @@ msgstr "دنباله ورودی سند بستانکار"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "یادداشتهای اعتباری"
+msgstr "سند بستانکار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_number_next
@@ -3735,12 +3739,12 @@ msgstr "شماره بعدی سند بستانکار"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
 msgid "Credit account"
-msgstr "حساب اعتباری"
+msgstr "حساب بستانکار"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr ""
+msgstr "آیتم های روزنامه بستانکار که با این آیتم روزنامه تطابق دارند."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -3782,12 +3786,12 @@ msgstr "اختلاف نرخ تبدیل ارز"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
 msgid "Current Assets"
-msgstr "دارایی فعلی"
+msgstr "دارایی های جاری"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
 msgid "Current Liabilities"
-msgstr "تعهدات کنونی"
+msgstr "بدهی های جاری"
 
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
@@ -3808,7 +3812,7 @@ msgstr "مشتری"
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__out_refund
 #, python-format
 msgid "Customer Credit Note"
-msgstr "یادداشت اعتباری مشتری"
+msgstr "سند بستانکار مشتری"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__type__out_invoice
@@ -3968,7 +3972,7 @@ msgstr "تاریخ"
 msgid ""
 "Date at which the opening entry of this company's accounting has been "
 "posted."
-msgstr ""
+msgstr "تاریخی که ثبت سند ابتدای دوره حسابداری این شرکت ارسال شده است."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -3976,6 +3980,8 @@ msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
 msgstr ""
+"تاریخی که حسابداری در اودو مدیریت شده است. این تاریخ ثبت سند ابتدای دوره "
+"است."
 
 #. module: account
 #. openerp-web
@@ -4023,7 +4029,7 @@ msgstr "حساب بدهی"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr ""
+msgstr "آیتم های بدهکار روزنامه که با این آیتم روزنامه تطابق دارند."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -4039,7 +4045,7 @@ msgstr "جداساز شمارگانی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "دنباله سند بستانکار اختصاصی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_credit_account_id
@@ -4059,7 +4065,7 @@ msgstr "اینکوترم پیشفرض برای شرکت شما"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
 msgid "Default PoS Receivable Account"
-msgstr ""
+msgstr "حساب پیشفرض پایانه فروش"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -4100,7 +4106,7 @@ msgstr "اینکوترم پیشفرض"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied to local transactions"
-msgstr ""
+msgstr "مالیات های پیشفرض اعمال شده به تراکنش های محلی"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
@@ -4244,7 +4250,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "خلاصه کردن"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4345,7 +4351,7 @@ msgstr "نمایش در فاکتورها"
 #: code:addons/account/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "دسنرسی ندارد، از این داده برای ایمیل خلاصه کاربر پرش کن"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -4594,12 +4600,12 @@ msgstr "تاریخ پایان، شامل شده در سال مالی."
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
 msgid "Entries"
-msgstr "داده ها"
+msgstr "ثبت سنده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal__sort_selection
 msgid "Entries Sorted by"
-msgstr "ورودی‌ها مرتب شده بر اساس"
+msgstr "ثبت سند ها مرتب شده بر اساس"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -4611,28 +4617,28 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries are not from the same account."
-msgstr "ورودی ها از حساب یکسان نیستند."
+msgstr "ثبت سند ها از حساب یکسان نیستند."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Entries to Review"
-msgstr "ورودی‌های برای بازبینی"
+msgstr "ثبت سند ها برای بازبینی"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "Entries: "
-msgstr "داده ها: "
+msgstr "ثبت سند ها: "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_id
 msgid "Entry Sequence"
-msgstr "دنباله‌ی ورودی"
+msgstr "دنباله‌ی ثبت سند ها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__move_line_ids
 msgid "Entry lines"
-msgstr "سطرهای داده"
+msgstr "سطرهای ثبت سند"
 
 #. module: account
 #. openerp-web
@@ -4642,7 +4648,7 @@ msgstr "سطرهای داده"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Equity"
-msgstr "تقسیم سهم"
+msgstr "سهام"
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -4667,7 +4673,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Exchange Difference"
-msgstr ""
+msgstr "تفاوت نرخ صرف ارز"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__currency_exchange_journal_id
@@ -4693,7 +4699,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "یک درخا حساب مورد انتظار است"
 
 #. module: account
 #. openerp-web
@@ -4715,13 +4721,13 @@ msgstr "حساب هزینه"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_id
 msgid "Expense Account on Product Template"
-msgstr ""
+msgstr "حساب هزینه بر قالب محصول"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr ""
+msgstr "حساب هزینه تعهدی"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
@@ -4760,7 +4766,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
 msgid "Factor Ratio"
-msgstr ""
+msgstr "نسبت ضریب"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
@@ -4798,7 +4804,7 @@ msgstr "ایالتهای فدرال"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Filter on account, label, partner, amount,..."
-msgstr ""
+msgstr "فیلتر بر روی حساب، برچسب، همکار،‌مقدار،..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -4834,7 +4840,7 @@ msgstr "محلی سازی سال مالی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__position_id
 msgid "Fiscal Mapping"
-msgstr ""
+msgstr "نگاشت سال مالی"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4865,7 +4871,7 @@ msgstr "موقعیت مالی"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "قالب موقعیت های سال مالی"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
@@ -4961,7 +4967,7 @@ msgstr "دنبال‌کنندگان"
 #: model:ir.model.fields,field_description:account.field_account_move__message_channel_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "پیروان (کانال ها)"
+msgstr "دنبال کنندگان (کانال ها)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_partner_ids
@@ -4969,7 +4975,7 @@ msgstr "پیروان (کانال ها)"
 #: model:ir.model.fields,field_description:account.field_account_move__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "پیروان (شرکاء)"
+msgstr "دنبال کنندگان (همکاران)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
@@ -5251,7 +5257,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
-msgstr "دارای ورودی‌های حسابداری است"
+msgstr "دارای ثبت سند حسابداری است"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__has_invoices
@@ -5302,7 +5308,7 @@ msgstr "تاریخچه"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr ""
+msgstr "چگونگی محاسبه مقدار مالیات در سفارش ها و فاکتورها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -5370,7 +5376,7 @@ msgstr "شناسه"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
-msgstr ""
+msgstr "فاکتور"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_exception_icon
@@ -5608,6 +5614,7 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
+"برای حذف یک صورتحساب بانکی، ابتدا باید آیتم های روزنامه مربوطه را لغو کنید."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -5992,6 +5999,8 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
+"فاکتور_${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6036,7 +6045,7 @@ msgstr "تحلیل فاکتورها"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices Matching Rule"
-msgstr ""
+msgstr "قاعده تطابق فاکتورها"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
@@ -6047,7 +6056,7 @@ msgstr "آمار فاکتورها"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
-msgstr "فاکتورهای شما"
+msgstr "فاکتورها بدهکار به شما"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6057,7 +6066,7 @@ msgstr "فاکتور ها برای تایید"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr ""
+msgstr "فاکتورها که آیتم های روزنامه با این پرداخت ها تهاتر شده اند."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -6203,12 +6212,12 @@ msgstr "روزنامه"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "داده های روزنامه"
+msgstr "ثبت سند های روزنامه"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "ورودی های روزنامه بر اساس تاریخ"
+msgstr "ثبت سند های روزنامه بر اساس تاریخ"
 
 #. module: account
 #. openerp-web
@@ -6221,19 +6230,19 @@ msgstr "ورودی های روزنامه بر اساس تاریخ"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Journal Entry"
-msgstr "داده روزنامه"
+msgstr "ثبت سند روزنامه"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_name
 #: model:ir.model.fields,field_description:account.field_account_payment__move_name
 msgid "Journal Entry Name"
-msgstr "نام ورودی روزنامه"
+msgstr "نام ثبت سند روزنامه"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr "شماره داده روزنامه"
+msgstr "شماره ثبت سند روزنامه"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
@@ -6293,7 +6302,7 @@ msgstr "آیتم های روزنامه"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 msgid "Journal Items for Tax Audit"
-msgstr ""
+msgstr "آیتم های روزنامه برای حسابرسی مالیاتی"
 
 #. module: account
 #. openerp-web
@@ -6312,24 +6321,25 @@ msgstr "نام روزنامه"
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Journal group are used in reporting to display relevant data together."
 msgstr ""
+"گروه روزنامه در گزارش گیری برای نمایش داده های مربوطه با هم استفاده می شود."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr ""
+msgstr "آیتم های روزنامه که شماره تطابق تعیین نشده است"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,help:account.field_res_company__accrual_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr ""
+msgstr "روزنامه به صورت پیشفرض استفاده شده برای انتقال دوره یک ثبت سند"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
-msgstr ""
+msgstr "روزنامه ای که ثبت سند ابتدای دوره حسابداری این شرکت ارسال شده است."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_currency_id
@@ -6351,12 +6361,12 @@ msgstr "روزنامه ها"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_journal
 msgid "Journals Audit"
-msgstr ""
+msgstr "حسابرسی روزنامه ها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
 msgid "Json Activity Data"
-msgstr ""
+msgstr "داده فعالیت Json"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__7
@@ -6445,7 +6455,7 @@ msgstr "برچسب"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_label_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_label_param
 msgid "Label Parameter"
-msgstr ""
+msgstr "پارامتر برچسب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__description
@@ -6660,7 +6670,7 @@ msgstr "فعالیتهای اخیر"
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users__last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "آخرین تاریخ تطابق فاکتورها و پرداخت ها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__layout
@@ -6736,18 +6746,18 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__liquidity
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Liquidity"
-msgstr "شناوری"
+msgstr "نقدینگی"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Liquidity Transfer"
-msgstr "انتقال شناور"
+msgstr "انتقال نقدینگی"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__tax_template_ids
 msgid "List of all the taxes that have to be installed by the wizard"
-msgstr ""
+msgstr "لیست همه مالیات هایی که باید توسط ویزارد نصب شوند"
 
 #. module: account
 #. openerp-web
@@ -6896,7 +6906,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
 msgid "March"
-msgstr "مارچ"
+msgstr "مارس"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6937,30 +6947,30 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Match existing invoices/bills."
-msgstr ""
+msgstr "تطابق با فاکتورها/صورتحساب های موجود"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Match with entries that are not from receivable/payable accounts"
-msgstr ""
+msgstr "تطبیق با ثبت سند هایی که از حساب های دریافتنی/پرداختنی نیستند"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
 msgid "Matched Credits"
-msgstr ""
+msgstr "بستانکار تطبیق شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_debit_ids
 msgid "Matched Debits"
-msgstr ""
+msgstr "بدهکار تطبیق شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr ""
+msgstr "آیتم هام روزنامه تطبیق شده"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
@@ -6972,12 +6982,12 @@ msgstr "تطابق"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
 msgid "Matching #"
-msgstr ""
+msgstr "مطابقت می کند #"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
 msgid "Max Date of Matched Lines"
-msgstr ""
+msgstr "تاریخ حداکثر سطر های تطبیق شده"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -7007,7 +7017,7 @@ msgstr "خطای تحویل پیام"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "نام رکورد پیام"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -7033,7 +7043,7 @@ msgstr "پیام‌ها"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_line_ids
 msgid "Minus Report Lines"
-msgstr ""
+msgstr "منهای سطر های گزارش"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -7051,7 +7061,7 @@ msgstr "متفرقه"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Miscellaneous Matching"
-msgstr ""
+msgstr "مطابقت های متفرقه"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7079,7 +7089,7 @@ msgstr "تغییر میزان مالیات"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr ""
+msgstr "حاشیه های محصول خود را از فاکتورها زیر نظر بگیرید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -7100,7 +7110,7 @@ msgstr "تعداد سطر انتقال"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__move_reconciled
 msgid "Move Reconciled"
-msgstr ""
+msgstr "انتقال تهاتر شد"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
@@ -7242,7 +7252,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
 msgid "No threading for answers"
-msgstr ""
+msgstr "هیچ سر رشته ای برای پاسخ نیست"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -11599,7 +11609,7 @@ msgstr "نام نوع"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "نوع فعالیت استثنایی برای رکورد."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -11739,7 +11749,7 @@ msgstr "آپلود"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
-msgstr ""
+msgstr "از حسابداری آنگلوساکسون استفاده کن"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -12154,7 +12164,7 @@ msgstr ""
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "You can only change the period for posted journal items."
-msgstr ""
+msgstr "شما فقط می توانید دوره آیتم های روزنامه ارسال شده را تغییر دهید."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12232,6 +12242,8 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
+"شما نمی توانید شرکت مالیات خود را تغییر بدهید زیرا بعضی آیتم های روزنامه "
+"وجود دارند که به آن لینک دارند"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12240,6 +12252,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some journal items linked to it."
 msgstr ""
+"شما نمی توانید یک شرکت متفاوت بر روی حساب تحلیلی خود تعیین کنید زیرا بعضی "
+"آیتم های روزنامه وجود دارند که دارای لینک به آن هستند."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12271,6 +12285,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"شما نمی توانید ارز شرکت را تغییر دهید زیرا بعضی آیتم های روزنامه از قبل وجود"
+" دارند"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12279,6 +12295,8 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
+"شما نمی توانید صاحب حساب یک شرکت که هم اکنون آیتم های روزنامه دارد را تغییر "
+"دهید."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12298,7 +12316,7 @@ msgstr "شما نمی توانید پرداختی که الان راسال شد�
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
-msgstr ""
+msgstr "شما نمی توانید یک ثبت سند وقتی یک بار ارسال شده را حذف کنید."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12353,6 +12371,8 @@ msgstr ""
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
 msgstr ""
+"شما نمی توانید یک ثبت سند روزنامه لینک شده  به یک پرداخت ارسال شده را تغییر "
+"دهید."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12461,7 +12481,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr ""
+msgstr "شما نمی توانید از یک حساب منسوخ شده استفاده کنید."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12490,7 +12510,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "شما حق دسترسی برای ارسال فاکتور را ندارید."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
