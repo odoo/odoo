@@ -12,7 +12,7 @@
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
 # lasch a <bmail440@gmail.com>, 2016
 # Johan Bergquist <johan.bergquist@netip.se>, 2016
-# Kristoffer Grundström <hamnisdude@gmail.com>, 2016
+# Kristoffer Grundström <lovaren@gmail.com>, 2016
 # Frida E, 2017
 # Patrik Lermon <patrik.lermon@gmail.com>, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
@@ -22,8 +22,9 @@
 # Martin Trigaux, 2017
 # Haojun Zou <apollo_zhj@msn.com>, 2018
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
 # Daniel Osser <danielosser@gmail.com>, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2020
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2016-09-07 09:15+0000\n"
-"Last-Translator: Daniel Osser <danielosser@gmail.com>, 2019\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2020\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -713,7 +714,7 @@ msgstr "<strong>Kostnader</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Skatteregion-notering:</strong> "
+msgstr "<strong>Skatteområde-notering:</strong> "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -938,7 +939,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:1402
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
-msgstr "Ett betalvillkor ska bara ha en linje av typen Balans."
+msgstr "Ett betalvillkor ska bara ha en rad av typen Balans."
 
 #. module: account
 #: code:addons/account/models/account.py:535
@@ -1022,7 +1023,7 @@ msgstr "Ett kontoutdrag kan inte avbrytas när raderna är avstämda."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "En skatteregion kan endast definieras en gång på en viss skatt."
+msgstr "En skatteområde kan endast definieras en gång på en viss skatt."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:380
@@ -1435,7 +1436,7 @@ msgstr "Tillåtna konton"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "Kontots skatteregion"
+msgstr "Kontots skatteområde"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -1800,7 +1801,7 @@ msgstr "Belopp:"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
-"Ett kontos skatteregion kan endast definieras en gång för varje konto."
+"Ett kontos skatteområde kan endast definieras en gång för varje konto."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2362,7 +2363,7 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"Genom att kryssa bort det aktiva fältet, kan du gömma skatteregion utan att "
+"Genom att kryssa bort det aktiva fältet, kan du gömma skatteområde utan att "
 "radera det."
 
 #. module: account
@@ -4311,20 +4312,20 @@ msgstr "Fiskal mappning"
 #: model:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "Skatteregion"
+msgstr "Skatteområde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_name
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 #: model:ir.ui.view,arch_db:account.view_account_position_template_search
 msgid "Fiscal Position Template"
-msgstr "Skatteregionsmall"
+msgstr "Skatteområdesmall"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Skatteregion"
+msgstr "Skatteområde"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -5181,7 +5182,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
 msgid "Invoice id"
-msgstr ""
+msgstr "Fakturanummer"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:555
@@ -5320,7 +5321,7 @@ msgstr "Fakturering & Betalningar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Är noll"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5953,7 +5954,7 @@ msgstr "Lås-datum för andra än ekonomi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Lock Entries"
-msgstr ""
+msgstr "Lås inlägg"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5975,7 +5976,7 @@ msgstr "Förlustkonto"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_expense_currency_exchange_account_id
 msgid "Loss Exchange Rate Account"
-msgstr ""
+msgstr "Förlustkonto,  växelkurs"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:184
@@ -6002,7 +6003,7 @@ msgstr "Bolagets huvudsakliga valuta."
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Make Manual Tax Adjustments"
-msgstr ""
+msgstr " Gör manuella skattejusteringar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7010,7 +7011,7 @@ msgstr "Betalningsmetod"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 msgid "Payment Method Type"
-msgstr ""
+msgstr "Typ av betalningsmetod"
 
 #. module: account
 #. openerp-web
@@ -8636,7 +8637,7 @@ msgstr "Skatter"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "Skatteregion"
+msgstr "Skatteområde"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -8740,12 +8741,12 @@ msgstr "Mallkonto räkenskapsmappning"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "Mall för skatteregion"
+msgstr "Mall för skatteområde"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Mall för skatteregion"
+msgstr "Mall för skatteområde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_template_transfer_account_id
@@ -8939,7 +8940,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Skatteregionen avgör skatte/bokförings-konton för företaget."
+msgstr "Skatteområde avgör skatte/bokförings-konton för företaget."
 
 #. module: account
 #: code:addons/account/models/account.py:314
@@ -9489,7 +9490,7 @@ msgid ""
 "account according to the customer country and state."
 msgstr ""
 "För administrationen av tillämpad skatt vid fakturering, använder Odoo "
-"konceptet skatteregion: dessa sätter korrekta skatte-/bokförings-konton med "
+"konceptet skatteområde: dessa sätter korrekta skatte-/bokförings-konton med "
 "avseende på kundens land och stat."
 
 #. module: account

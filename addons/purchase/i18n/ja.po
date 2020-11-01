@@ -12,7 +12,10 @@
 # Manami Hashi <manami@roomsfor.hk>, 2017
 # Takuya Sawada <takuya@tuntunkun.com>, 2018
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Tim Siu Lai <tl@roomsfor.hk>, 2019
+# Konno Takatsugu <konno@token-express.com>, 2020
+# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:27+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -302,7 +305,7 @@ msgstr "承認日"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "オーダー承認"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_procurement_ids
@@ -340,7 +343,7 @@ msgstr "請求済数量"
 #: code:addons/purchase/models/purchase.py:581
 #, python-format
 msgid "Billed Quantity"
-msgstr ""
+msgstr "請求済数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -425,7 +428,7 @@ msgstr "取消済"
 #: code:addons/purchase/models/purchase.py:662
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "%s ステータスの購買オーダ明細は削除できません。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -707,7 +710,7 @@ msgstr "ID"
 #: code:addons/purchase/models/purchase.py:197
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "購買オーダを削除するには、まず取消してください。"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -1626,7 +1629,7 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:184
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "この仕入請求書は右の注文書から作成されています："
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:198
@@ -1682,7 +1685,7 @@ msgstr "移動"
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
-msgstr ""
+msgstr "処理された入荷があるため購買オーダ %s は取消できません。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:348

@@ -3,24 +3,25 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Hamid Darabi, 2016
-# Zahed Alfak <tamass4116@gmail.com>, 2016
 # elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2016
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2016
+# Zahed Alfak <tamass4116@gmail.com>, 2016
 # Morovat Guivi <tarjomac@gmail.com>, 2016
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2016
-# arya sadeghy <aryasadeghy@gmail.com>, 2016
-# Hamed Mohammadi <hamed@dehongi.com>, 2017
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2017
+# arya sadeghi <aryasadeghy@gmail.com>, 2016
+# Hamid Darabi, 2016
+# Martin Trigaux, 2016
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2017
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2017
 # Arash Sardari <arashss77@gmail.com>, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:22+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -175,7 +176,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:195
 #, python-format
 msgid "-------- Show older messages --------"
-msgstr ""
+msgstr "-------- نمایش پیام های قدیمی تر --------"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:643
@@ -196,6 +197,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s دعوت کرده %(new_partner)s به "
+"<a href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -561,6 +565,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"جواب ها به سر رشته اولیه بحث نمی روند. این تاثیری بر شناسه پیام تولید شده "
+"دارد."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
@@ -656,12 +662,12 @@ msgstr "حذف خودکار"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_ids
 msgid "Auto Subscription"
-msgstr ""
+msgstr "اشتراک خودکار"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "اشتراک خودکار"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
@@ -708,7 +714,7 @@ msgstr "لغو"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr ""
+msgstr "لغو ایمیل"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -751,7 +757,7 @@ msgstr "تغییر"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr ""
+msgstr "فیلد تغییر یافته"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -792,7 +798,7 @@ msgstr "کانال‌ها"
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr ""
+msgstr "کانال ها/همکاران"
 
 #. module: mail
 #. openerp-web
@@ -828,7 +834,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Choose an example"
-msgstr ""
+msgstr "انتخاب یک نمونه"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:340
@@ -900,14 +906,14 @@ msgstr "نگارش ایمیل"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_composition_mode
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_composition_mode
 msgid "Composition mode"
-msgstr ""
+msgstr "حالت نوشتار"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:24
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr ""
+msgstr "تبریکات، صندوق ورودی شما خالی است"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -938,7 +944,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "گفتگوها"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
@@ -1087,7 +1093,7 @@ msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr ""
+msgstr "گرامی"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
@@ -1111,7 +1117,7 @@ msgstr "مقادیر پیش فرض"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_use_default_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_use_default_to
 msgid "Default recipients"
-msgstr ""
+msgstr "دریافت کنندگان پیشفرض"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_use_default_to
@@ -1126,19 +1132,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "حذف ایمیل ها"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "حذف کپی پیام"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "حذف کردن ایمیل های فرستاده (تنها ایمیل های انبوه)"
 
 #. module: mail
 #. openerp-web
@@ -1150,7 +1156,7 @@ msgstr "حذف این پیوست"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Delivery Failed"
-msgstr ""
+msgstr "تحویل شکست خورد"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_description
@@ -1229,7 +1235,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr ""
+msgstr "دنبال کنندگان سند"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1293,7 +1299,7 @@ msgstr "جستجوی ایمیل"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_email_status
 msgid "Email Status"
-msgstr ""
+msgstr "وضعیت ایمیل"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
@@ -1308,7 +1314,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template
 msgid "Email Templates"
-msgstr ""
+msgstr "قالب های ایمیل"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -1420,7 +1426,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_failure_reason
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "دلیل شکست"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_failure_reason
@@ -1680,19 +1686,19 @@ msgstr "پیروان (شرکاء)"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr ""
+msgstr "فرم دنبال کنندگان"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr ""
+msgstr "فقط دنبال کنندگان"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/followers.xml:25
 #, python-format
 msgid "Following"
-msgstr ""
+msgstr "دنبال می کند"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -1994,7 +2000,7 @@ msgstr "صندوق پستی"
 #: model:ir.model.fields,help:mail.field_mail_message_parent_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "پیام سر رشته ابتدایی."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
@@ -2378,7 +2384,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_is_log
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "ثبت یک یادداشت داخلی"
 
 #. module: mail
 #. openerp-web
@@ -2501,7 +2507,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_record_name
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "نام رکورد پیام"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_name
@@ -2826,7 +2832,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_no_auto_thread
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_no_auto_thread
 msgid "No threading for answers"
-msgstr ""
+msgstr "هیچ سر رشته ای برای پاسخ نیست"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
@@ -2857,13 +2863,13 @@ msgstr "اعلان‌ها"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers"
-msgstr ""
+msgstr "اعلام به دنبال کنندگان"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_notify
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "به دنبال کنندگان سند اطلاع بده (پست انبوه فقط)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_needaction_counter
@@ -3507,7 +3513,7 @@ msgstr "مراجع"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "شناسه سند مربوطه"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model
@@ -3519,7 +3525,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_model
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_model
 msgid "Related Document Model"
-msgstr ""
+msgstr "مدل سند مربوطه"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -3617,12 +3623,12 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as a new template"
-msgstr ""
+msgstr "ذخیره به عنوان قالب جدید"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr ""
+msgstr "ذخیره به عنوان قالب جدید"
 
 #. module: mail
 #. openerp-web
@@ -4332,7 +4338,7 @@ msgstr "خطا در آپلود"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_use_active_domain
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "استفاده از دامنه فعال"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_template_id
@@ -4400,7 +4406,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_is_log
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "آیا این پایم یک یادداشت داخلی است (فقط حالت توضیح)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form

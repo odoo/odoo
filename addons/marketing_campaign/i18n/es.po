@@ -4,28 +4,30 @@
 # 
 # Translators:
 # Jose Manuel <admin@jaboweb.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# David Perez <david@closemarketing.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Antonio Trueba, 2016
+# José Vicente <txusev@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Martin Trigaux, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# Susanna Pujol, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:22+0000\n"
+"Last-Translator: Susanna Pujol, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +43,10 @@ msgid ""
 "<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>¡Hola!</p>\n"
+"<p>¡Estamos encantados de comunicarte que ahora formas parte del selecto club de los Socios de oro!</p>\n"
+"<p>Muchas gracias,</p>\n"
 
 #. module: marketing_campaign
 #: model:mail.template,body_html:marketing_campaign.email_template_2
@@ -50,6 +56,10 @@ msgid ""
 "<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>¡Hola!</p>\n"
+"<p>¡Estamos encantados de darte la bienvenida al club de los Socios de oro!</p>\n"
+"<p>Muchas gracias,</p>\n"
 
 #. module: marketing_campaign
 #: model:mail.template,body_html:marketing_campaign.email_template_1
@@ -59,6 +69,10 @@ msgid ""
 "<p>You will receive your welcome pack via email shortly.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>¡Hola!</p>\n"
+"<p>Recibirás tu pack de bienvenida por correo en breve.</p>\n"
+"<p>Muchas gracias,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -733,6 +747,8 @@ msgstr "Modo"
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
 msgstr ""
+"El modelo del filtro debe ser el mismo que el modelo del recurso de la "
+"campaña "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -813,6 +829,9 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"La campaña de márqueting de Odoo te permite automatizar la comunicación\n"
+"dependiendo de tus usuarios. Puedes definir un segmento (un conjunto de condiciones) según\n"
+"tus líderes y socios para cumplir con la campaña."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -1059,6 +1078,10 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Test - Crea y procesa todas las actividades directamente (sin esperar por el retardo de las transiciones) pero no se envían correos ni se crean informes.\n"
+"Test en tiempo real - Crea y procesa todas las actividades directamente pero no envían correos ni se crean informes.\n"
+"Confirmación manual - La campaña se ejecuta normalidad, pero el usuario tiene que validar todos los elementos de trabajo manualmente.\n"
+"Normal - La campaña se ejecuta con normalidad y automáticamente envía todos los correos correos e informes (tenga cuidado con este modo, ¡trabaja \"en vivo\"!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1080,6 +1103,7 @@ msgstr "Test en tiempo real"
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
+"La actividad hacia / desde de la transición debe de ser de la misma campaña "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1155,6 +1179,11 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"El tipo de acción a ejecutar cuando se introduce un registro en esta actividad, como:\n"
+"   - Correo: envía un correo usando una plantilla predeterminada de correo\n"
+"   - Informe: imprime un informe existente definido en el recurso y lo guarda en el directorio especificado\n"
+"   - Acción personalizada: ejecuta una acción predeterminada, por ejemplo para modificar los campos del recurso\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start

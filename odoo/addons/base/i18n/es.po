@@ -16,7 +16,7 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2016
+# b3f3300d6588d364d534a46dbff68ebb_f82c93d <25ccc199032c6e11a5e1ece329556b43_531019>, 2016
 # Kiko <kiko@comunitea.com>, 2016
 # Soluntec <abraham@soluntec.es>, 2017
 # Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
@@ -42,7 +42,7 @@
 # e2f <projects@e2f.com>, 2018
 # ced903afe967c2a46d1036224972db9d, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Carolina Gonzalez <cgo@odoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
@@ -51,6 +51,9 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
+# gpi odoo <gpi@odoo.com>, 2020
+# Susanna Pujol, 2020
 # 
 msgid ""
 msgstr ""
@@ -58,7 +61,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"Last-Translator: Susanna Pujol, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3255,6 +3258,13 @@ msgid ""
 "It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in the list of applications. It's also integrated with the document management system to store and search in the CV base and find the candidate that you are looking for. Similarly, it may integrated with the survey module to allow you to define interviews for different jobs.\t\t\n"
 "You can define the different phases of interviews and easily rate the applicant from the kanban view.\n"
 msgstr ""
+"\n"
+"Gestiona puestos de trabajo y el proceso de reclutamiento\n"
+"================================================\n"
+"\n"
+"Esta aplicación permite gestionar los puestos de trabajo, vacantes, solicitantes, entrevistas...\n"
+"\n"
+"Está integrado con la pasarela de correo electrónico para coger automáticamente el correo enviado a <jobs@tucompañia.com> en la lista de solicitudes. También está integrado con el sistema de gestión documental para almacenar y buscar en la base de CV y encontrar el candidato que está buscando. Similarmente, está integrado con el módulo de encuestas para permitir definir entrevistas para diferentes puestos. Puede definir diversas fases de entrevistas y puntuar fácilmente al solicitante desde la vista kanban.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
@@ -3321,6 +3331,31 @@ msgid ""
 "* Moves Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Gestionar almacenes múltiples, ubicaciones de existencias múltiples y estructuradas\n"
+"==============================================================\n"
+"\n"
+"La gestión de almacenes e inventarios se basa en una estructura de ubicación jerárquica, desde los almacenes hasta los depósitos de almacenamiento.\n"
+"El sistema de inventario de doble entrada permite gestionar los clientes, los proveedores, así como los inventarios de fabricación.\n"
+"\n"
+"Odoo tiene la capacidad de gestionar lotes y números de serie, lo que garantiza el cumplimiento de los requisitos de trazabilidad impuestos por la mayoría de las industrias.\n"
+"\n"
+"Características principales\n"
+"------------\n"
+"* Mueve la historia y la planificación,\n"
+"* Reglas de existencias mínimas\n"
+"* Soporte para códigos de barras\n"
+"* Detección rápida de errores a través del sistema de doble entrada\n"
+"* Rastreabilidad (Números de serie, paquetes, ...)\n"
+"\n"
+"Tablero de mandos/Informes para la gestión del inventario incluirá:\n"
+"----------------------------------------------------------\n"
+"* Productos entrantes (Gráfico)\n"
+"* Productos salientes (Gráfico)\n"
+"* Adquisición en la excepción\n"
+"* Análisis de inventario\n"
+"* Últimos inventarios de productos\n"
+"* Análisis de los movimientos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -3359,6 +3394,38 @@ msgid ""
 "* Monthly Turnover (Graph)\n"
 "    "
 msgstr ""
+"\n"
+"Gestionar presupuestos y pedidos\n"
+"==================================\n"
+"\n"
+"Esta aplicación permite gestionar los objetivos de venta de una manera eficaz, haciendo un seguimiento de todos los pedidos y su historial. \n"
+"\n"
+"Gestiona el proceso de ventas completo:\n"
+"\n"
+"* **Presupuesto** -> **Pedido de ventas** -> **Factura**\n"
+"\n"
+"Preferencias (solo con la opción Gestión de almacenes instalada)\n"
+"------------------------------------------------------\n"
+"\n"
+"Si también tiene instalada la opción Gestión de almacenes, puede disfrutar de las siguientes preferencias:\n"
+"\n"
+"* Envío: selección de una entrega total o parcial\n"
+"* Facturación: escoja cómo se pagarán las facturas\n"
+"* Incoterms: términos de comercio internacional\n"
+"\n"
+"Puede elegir entre varios métodos de facturación flexibles:\n"
+"\n"
+"* *Bajo demanda*: las facturas se crean manualmente desde los pedidos cuando sea necesario.\n"
+"* *En la orden de entrega*: las facturas se generan desde el albarán (entrega).\n"
+"* *Antes de la entrega*: se crea el borrador de la factura y esta se debe pagar antes de la entrega.\n"
+"\n"
+"Con este módulo puede personalizar el informe del pedido y de la factura con\n"
+"categorías, subtotales o saltos de página.\n"
+"\n"
+"El tablero del responsable de ventas incluirá\n"
+"------------------------------------------------\n"
+"* Mis presupuestos\n"
+"* Facturación mensual (gráfico)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -3426,6 +3493,28 @@ msgid ""
 "* Work Order Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Gestionar el proceso de fabricación en Odoo\n"
+"===========================================\n"
+"\n"
+"El módulo de fabricación permite cubrir la planificación, los pedidos, las existencias y la fabricación o el ensamblaje de productos a partir de materias primas y componentes. Maneja el consumo y la producción de productos de acuerdo con una lista de materiales y las operaciones necesarias en maquinaria, herramientas o recursos humanos de acuerdo con las rutas.\n"
+"\n"
+"Apoya la integración y planificación completa de los bienes almacenables, consumibles o servicios. Los servicios están completamente integrados con el resto del software. Por ejemplo, puede configurar un servicio de subcontratación en una lista de materiales para comprar automáticamente por encargo el montaje de su producción.\n"
+"\n"
+"Características principales\n"
+"------------\n"
+"* Hecho para stock/hecho bajo comanda\n"
+"* Lista de materiales de varios niveles, sin límite\n"
+"* Enrutamiento de varios niveles, sin límite\n"
+"* Rutas y centro de trabajo integrados con la contabilidad analítica\n"
+"* El cómputo periódico del planificador\n"
+"* Permite navegar por las listas de materiales en una estructura completa que incluye listas de materiales de niños y fantasmas.\n"
+"\n"
+"Tablero de mando / los informes para el MRP incluirán:\n"
+"-----------------------------------------\n"
+"* Adquisiciones en la excepción (Gráfico)\n"
+"* Variación del valor de las acciones (Gráfico)\n"
+"* Análisis de la orden de trabajo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_mps
@@ -3826,6 +3915,24 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Nueva importación flexible de archivos para Odoo\n"
+"======================================\n"
+"Ejecute de nuevo el sistema de importación de archivos de Odoo:\n"
+"\n"
+"* Por la parte del servidor, el anterior sistema obliga a poner la mayoría de la lógica en el\n"
+"cliente, lo que duplica el esfuerzo (entre los clientes), hace que el sistema de importación\n"
+"sea mucho más difícil de usar sin un cliente (RPC directo u otras formas de automatización)\n"
+"y hace que el conocimiento sobre el sistema de importación/exportación sea mucho más\n"
+"difícil de aunar, puesto que se expande en 3+ proyectos diferentes.\n"
+"\n"
+"* De forma más flexible, de manera que los usuarios y contactos puedan construir su\n"
+"propia interfaz para importar desde otros formatos de archivo (p. ej., archivos\n"
+"OpenDocument), que podrán ser más fáciles de manejar en su flujo de trabajo o desde\n"
+"sus fuentes de producción de datos.\n"
+"\n"
+"* En un módulo, de manera que los administradores y usuarios de Odoo que no\n"
+"necesiten o no quieran realizar una importación en línea puedan evitar que esta esté disponible para los usuarios.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -4044,6 +4151,11 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"El CMS de la página web de Odoo\n"
+"===================\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -4564,6 +4676,23 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Registra y valida partes de horas y asistencia fácilmente\n"
+"=====================================================\n"
+"\n"
+"Esta aplicación proporciona una nueva pantalla habilitándole gestionar tanto asistencias (entradas / salidas) y la codificación del trabajo (partes de horas) por periodo. Las entradas del parte de horas se realizan por el empleado cada día. Al final de periodo definido, los empleados validan sus hojas y el responsable debe aprobar entonces las entradas de su equipo. Los periodos se definen en los formularios de la compañía y pueden establecerse para ejecutarse mensualmente o semanalmente.\n"
+"\n"
+"El proceso de validación completo del parte de horas es:\n"
+"---------------------------------------------\n"
+"* Parte en borrador\n"
+"* Confirmación al final del periodo por el empleado\n"
+"* Validación del responsable de proyecto\n"
+"\n"
+"La validación puede ser configurada en la compañía:\n"
+"------------------------------------------------\n"
+"* Tamaño del periodo (día, semana, mes)\n"
+"* Máxima diferencia entre los partes de horas y las asistencias\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report
@@ -9862,6 +9991,7 @@ msgstr "Calcular"
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
 msgid "Compute taxes with TaxCloud after online delivery computation."
 msgstr ""
+"Calcule impuestos con TaxCloud después del cálculo de la entrega en línea."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -16749,7 +16879,7 @@ msgstr "Dirección Privada"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "Formulario de domicilio privado"
 
 #. module: base
 #: code:addons/models.py:107
@@ -19568,6 +19698,8 @@ msgstr ""
 msgid ""
 "This module adds support for barcodes scanning to the manufacturing system."
 msgstr ""
+"Este módulo añade soporte para el escaneo de códigos de barras al sistema de"
+" fabricación."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
@@ -19622,7 +19754,7 @@ msgstr "Formato de hora"
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid
 msgid "Timesheet grid view definition"
-msgstr ""
+msgstr "Definición de vista por horas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_timesheet
@@ -21202,6 +21334,9 @@ msgid ""
 "Write a python expression, beginning with record, that gives the record to "
 "update. An expression builder is available in the help tab. Examples:"
 msgstr ""
+"Escriba una expresión Python, comenzando con object, que indique el registro"
+" a actualizar. Tiene disponible un constructor de expresiones en la pestaña "
+"de ayuda. Ejemplos:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_xml
@@ -21546,7 +21681,7 @@ msgstr "condición: Verdadero"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "condition: record.list_price &gt; 5000"
-msgstr ""
+msgstr "condition: record.list_price &gt; 5000"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:314
@@ -21670,7 +21805,7 @@ msgstr "aquí"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet_timesheet_grid
 msgid "hr_timesheet_sheet_timesheet_grid"
-msgstr ""
+msgstr "hr_timesheet_sheet_timesheet_grid"
 
 #. module: base
 #: selection:base.language.install,state:0
