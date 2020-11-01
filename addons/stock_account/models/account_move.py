@@ -170,6 +170,17 @@ class AccountMove(models.Model):
         """
         return self.env['stock.move']
 
+    # to be overridden in sale_mrp
+    def get_product_and_components(self, products):
+        """Get recordset of products and their components if any.
+
+        :param products: products that may have BoM of type kit.
+        :type product: :class:`~odoo.addons.product.models.product.ProductProduct`
+        :return: products with kit's components if products has a kit BoM.
+        :rtype: :class:`~odoo.addons.product.models.product.ProductProduct`
+        """
+        return products
+
     def _stock_account_anglo_saxon_reconcile_valuation(self, product=False):
         """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
         reconciling stock valuation move lines with the invoice's.
@@ -186,10 +197,12 @@ class AccountMove(models.Model):
                 continue
 
             products = product or move.mapped('invoice_line_ids.product_id')
+            products_and_components = move.get_products_and_components(products)
             for product in products:
                 if product.valuation != 'real_time':
                     continue
 
+                matched_products = product if product not in products_and_components else products_and_components
                 # We first get the invoices move lines (taking the invoice and the previous ones into account)...
                 product_accounts = product.product_tmpl_id._get_product_accounts()
                 if move.is_sale_document():
@@ -200,10 +213,10 @@ class AccountMove(models.Model):
                 if product_interim_account.reconcile:
                     # Search for anglo-saxon lines linked to the product in the journal entry.
                     product_account_moves = move.line_ids.filtered(
-                        lambda line: line.product_id == product and line.account_id == product_interim_account and not line.reconciled)
+                        lambda line: line.product_id in matched_products and line.account_id == product_interim_account and not line.reconciled)
 
                     # Search for anglo-saxon lines linked to the product in the stock moves.
-                    product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == product)
+                    product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id in matched_products)
                     product_account_moves += product_stock_moves.mapped('account_move_ids.line_ids')\
                         .filtered(lambda line: line.account_id == product_interim_account and not line.reconciled)
 

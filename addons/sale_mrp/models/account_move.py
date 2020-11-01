@@ -3,6 +3,21 @@
 from odoo import models
 
 
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    def get_products_and_components(self, products):
+        products_and_components = self.env['product.product']
+        for product in products:
+            bom = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            if bom:
+                products_and_components |= product
+                dummy_, lines = bom.explode(product, 1)
+                for line, dummy_ in lines:
+                    products_and_components |= line.product_id
+        return products_and_components
+
+
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
@@ -28,4 +43,3 @@ class AccountMoveLine(models.Model):
                 price_unit = average_price_unit or price_unit
                 price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
         return price_unit
-
