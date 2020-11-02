@@ -140,7 +140,7 @@ class AccountInvoice(models.Model):
             # To handle both, we consider the 'a' mode and switch to 'b' if a negative amount is encountered.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:TypeCode', namespaces=tree.nsmap)
             type_code = elements[0].text
-            refund_sign = 1
+            refund_sign = type_code == '380' and 1 or -1
 
             # Total amount.
             elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
@@ -208,7 +208,7 @@ class AccountInvoice(models.Model):
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
                         if line_elements:
-                            invoice_line_form.quantity = float(line_elements[0].text) * refund_sign
+                            invoice_line_form.quantity = float(line_elements[0].text)
 
                         # Price Unit.
                         line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)

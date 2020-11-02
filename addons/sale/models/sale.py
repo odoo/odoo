@@ -1001,12 +1001,8 @@ class SaleOrderLine(models.Model):
             else:
                 line.product_updatable = True
 
-    @api.depends(
-        'qty_invoiced',
-        'qty_delivered',
-        'product_uom_qty',
-        'order_id.state',
-        'product_id.invoice_policy')
+    # no trigger product_id.invoice_policy to avoid retroactively changing SO
+    @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is

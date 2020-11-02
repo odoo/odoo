@@ -11,6 +11,7 @@ class Unit(models.Model):
     name = fields.Char('Name', required=True)
     state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
     surname = fields.Char(compute='_compute_surname')
+    size = fields.Integer()
 
     @api.one
     @api.depends('name')
@@ -28,6 +29,7 @@ class Box(models.Model):
     unit_id = fields.Many2one('test.unit', 'Unit', required=True,
                               ondelete='cascade')
     field_in_box = fields.Char('Field1')
+    size = fields.Integer()
 
 
 # We add a third level of _inherits
