@@ -49,7 +49,6 @@ Other optional directories compose the module.
 - *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
 - *tests/* : contains the Python tests
 
-
 File naming
 -----------
 
@@ -88,8 +87,8 @@ defined in ``<model>_security.xml``.
 
 Concerning *views*, backend views should be split like models and suffixed
 by ``_views.xml``. Backend views are list, form, kanban, activity, graph, pivot, ..
-views. To ease split by model in views main menus not linked to specific actions
-may be extracted into an optional ``<module>_menus.xml`` file. Templates (QWeb
+views. In case of large modules specifying a lot of menus, the menus should
+be extracted into a separate ``<module>_menus.xml`` file. Templates (QWeb
 pages used notably for portal / website display) and bundles (import of JS and
 CSS assets) are put in separate files. Those are respectively
 ``<model>_templates.xml`` and ``assets.xml`` files.
@@ -212,15 +211,25 @@ The complete tree of our Odoo module therefore looks like
     |   |-- lib/
     |   |   |-- external_lib/
     |   |-- src/
+    |   |   |-- css/
     |   |   |-- js/
     |   |   |   |-- widget_a.js
     |   |   |   |-- widget_b.js
+    |   |   |   |-- nursery_tour.js (onboarding tour)
+    |   |   |-- less/
     |   |   |-- scss/
     |   |   |   |-- widget_a.scss
     |   |   |   |-- widget_b.scss
     |   |   |-- xml/
     |   |   |   |-- widget_a.xml
-    |   |   |   |-- widget_a.xml
+    |   |   |   |-- widget_b.xml
+    |   |-- tests/
+    |   |   |-- nursery_tests.js
+    |   |   |-- tours/
+    |   |   |   |-- plant_nursery.js (test tour)
+    |-- tests/
+    |   |-- __init__.py
+    |   |-- test_nursery.py
     |-- views/
     |   |-- assets.xml
     |   |-- plant_nursery_menus.xml
@@ -243,123 +252,168 @@ The complete tree of our Odoo module therefore looks like
 XML files
 =========
 
+Modules (/Applications) data can be imported in Odoo through XML or CSV :ref:`files <reference/data>`.
+
+.. note::
+
+  Data import is faster through CSV files (because records are created in batch).
+
+  If you're creating a lot of records of a given model and the XML features aren't needed,
+  CSV import should be priveleged.
+
 Format
 ------
+
 To declare a record in XML, the **record** notation (using *<record>*) is recommended:
 
 - Place ``id`` attribute before ``model``
-- For field declaration, ``name`` attribute is first. Then place the
-  *value* either in the ``field`` tag, either in the ``eval``
-  attribute, and finally other attributes (widget, options, ...)
-  ordered by importance.
-
-- Try to group the record by model. In case of dependencies between
+- For field declaration, ``name`` attribute is first.
+  Then place the *value* either in the ``field`` tag,
+  either in the ``ref`` attr for :class:`~odoo.fields.Many2one` fields,
+  either in the ``eval`` attribute, and finally place the other attributes
+  (widget, options, ...) ordered by importance.
+- Try to group the ``record`` declarations by model. In case of dependencies between
   action/menu/views, this convention may not be applicable.
-- Use naming convention defined at the next point
+- Use naming conventions defined at the next point.
 - The tag *<data>* is only used to set not-updatable data with ``noupdate=1``.
   If there is only not-updatable data in the file, the ``noupdate=1`` can be
-  set on the ``<odoo>`` tag and do not set a ``<data>`` tag.
+  set on the ``<odoo>`` tag, the ``<data>`` tag is unnecessary.
 
 .. code-block:: xml
 
-    <record id="view_id" model="ir.ui.view">
+    <record id="view_xml_id" model="ir.ui.view">
         <field name="name">view.name</field>
         <field name="model">object_name</field>
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <tree>
                 <field name="my_field_1"/>
-                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" />
+                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done"/>
             </tree>
         </field>
     </record>
 
-Odoo supports custom tags acting as syntactic sugar:
+Odoo supports :ref:`custom tags <reference/data/shortcuts>` acting as syntactic sugar:
 
-- menuitem: use it as a shortcut to declare a ``ir.ui.menu``
-- template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
-- report: use to declare a :ref:`report action <reference/actions/report>`
-- act_window: use it if the record notation can't do what you want
+- ``menuitem``: use it as a shortcut to declare a ``ir.ui.menu``
+- ``template``: use it to declare a QWeb View requiring only the ``arch`` section of the view.
+- ``report``: use to declare a :ref:`report action <reference/actions/report>`
+- ``act_window``: use it if the ``record`` notation can't do what you want (:ref:`window action <reference/actions/window>`)
 
-The 4 first tags are preferred over the *record* notation.
+The 2 first tags are preferred over the *record* notation.
 
+IDs and naming
+--------------
 
-XML IDs and naming
-------------------
+.. todo:: actions report naming guidelines ?
 
-Security, View and Action
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Use the following patterns:
 
-Use the following pattern :
+* Menus ``<menuitem>|ir.ui.menu``:
 
-* For a menu: :samp:`{<model_name>}_menu`, or :samp:`{<model_name>}_menu_{do_stuff}` for submenus.
-* For a view: :samp:`{<model_name>}_view_{<view_type>}`, where *view_type* is
+  * :samp:`{<module>}_menu_root` for main application menu (in case of application modules).
+  * :samp:`{<model_name>}_menu`, or :samp:`{<model_name>}_menu_{do_stuff}` for submenus with/without actions.
+* Views ``ir.ui.view``:
+
+  :samp:`{<model_name>}_view_{<view_type>}`, where *view_type* is
   ``kanban``, ``form``, ``tree``, ``search``, ...
-* For an action: the main action respects :samp:`{<model_name>}_action`.
-  Others are suffixed with :samp:`_{<detail>}`, where *detail* is a
-  lowercase string briefly explaining the action. This is used only if
-  multiple actions are declared for the model.
-* For window actions: suffix the action name by the specific view information
+* Actions ``ir.actions.*``:
+
+  * the main action respects :samp:`{<model_name>}_action`.
+  * Secondary actions are suffixed with :samp:`_{<detail>}`, where *detail* is a
+    lowercase string briefly explaining the action. This is used only if
+    multiple actions are declared for the model.
+* Window Actions ``<act_window>|ir.actions.act_window``:
+
+  Suffix the action name by the specific view information
   like :samp:`{<model_name>}_action_view_{<view_type>}`.
-* For a group: :samp:`{<module_name>}_group_{<group_name>}` where *group_name*
+* Groups ``res.groups``:
+
+  :samp:`{<module_name>}_group_{<group_name>}` where *group_name*
   is the name of the group, generally 'user', 'manager', ...
-* For a rule: :samp:`{<model_name>}_rule_{<concerned_group>}` where
+* Rules ``ir.rule``:
+
+  :samp:`{<model_name>}_rule_{<concerned_group>}` where
   *concerned_group* is the short name of the concerned group ('user'
   for the 'model_name_group_user', 'public' for public user, 'company'
   for multi-company rules, ...).
 
-Name should be identical to xml id with dots replacing underscores. Actions
-should have a real naming as it is used as display name.
+For views, the `name` should be identical to xml id with dots replacing underscores.
+For the other technical models, the name of the record should be detailed
+to explain their role/use/target ...
+
+.. note::
+
+    If an action or a view is targeting specific user groups (e.g. showing some feature only to managers),
+    an additionnal suffix can be useful to clearly highlight this information.
+
+    E.g. ``product_template_view_form_sale_manager``
 
 .. code-block:: xml
 
-    <!-- views  -->
-    <record id="model_name_view_form" model="ir.ui.view">
-        <field name="name">model.name.view.form</field>
-        ...
-    </record>
+    <!-- views/<model_name>_views.xml -->
+    <odoo>
+        <record id="model_name_view_form" model="ir.ui.view">
+            <field name="name">model.name.view.form</field>
+            ...
+        </record>
 
-    <record id="model_name_view_kanban" model="ir.ui.view">
-        <field name="name">model.name.view.kanban</field>
-        ...
-    </record>
+        <record id="model_name_view_kanban" model="ir.ui.view">
+            <field name="name">model.name.view.kanban</field>
+            ...
+        </record>
 
-    <!-- actions -->
-    <record id="model_name_action" model="ir.act.window">
-        <field name="name">Model Main Action</field>
-        ...
-    </record>
+        <!-- actions -->
+        <record id="model_name_action" model="ir.act.window">
+            <field name="name">Model Main Action</field>
+            ...
+        </record>
 
-    <record id="model_name_action_child_list" model="ir.actions.act_window">
-        <field name="name">Model Access Childs</field>
-    </record>
+        <record id="model_name_action_child_list" model="ir.actions.act_window">
+            <field name="name">Model Access Childs</field>
+        </record>
+    </odoo>
 
-    <!-- menus and sub-menus -->
-    <menuitem
-        id="model_name_menu_root"
-        name="Main Menu"
-        sequence="5"
-    />
-    <menuitem
-        id="model_name_menu_action"
-        name="Sub Menu 1"
-        parent="module_name.module_name_menu_root"
-        action="model_name_action"
-        sequence="10"
-    />
+.. code-block:: XML
 
-    <!-- security -->
-    <record id="module_name_group_user" model="res.groups">
-        ...
-    </record>
+    <!-- views/<module>_menus.xml -->
+    <odoo>
+        <menuitem id="module_name_menu_root"
+            name="Application Name"
+            web_icon="application,static/description/icon.png"
+            sequence="5"/>
 
-    <record id="model_name_rule_public" model="ir.rule">
-        ...
-    </record>
+        <menuitem id="model_name_menu"
+            name="Model Sub Menu"
+            sequence="1"/>
 
-    <record id="model_name_rule_company" model="ir.rule">
-        ...
-    </record>
+        <menuitem id="model_name_menu_action"
+            name="Model Sub Menu Action"
+            parent="module_name.model_name_menu"
+            action="model_name_action"
+            sequence="10"/>
+    </odoo>
+
+.. code-block:: XML
+
+    <!-- security/<module>_security.xml -->
+    <odoo>
+        <record id="module_name_group_user" model="res.groups">
+            ...
+        </record>
+
+        <data noupdate="1">
+            <!-- security rules should be specified as noupdate
+              to avoid breaking customizations on module update -->
+            <record id="model_name_rule_public" model="ir.rule">
+                ...
+            </record>
+
+            <record id="model_name_rule_company" model="ir.rule">
+                ...
+            </record>
+        </data>
+    </odoo>
 
 Inheriting XML
 ~~~~~~~~~~~~~~
@@ -391,257 +445,183 @@ based upon the first one.
         ...
     </record>
 
+File ordering
+-------------
+
+.. todo:: in manifest: data (security, other data, assets, views, menus.xml)
+
+.. todo:: guidelines for ir_model_access.csv ? security.xml? assets.xml ?
+
+Views
+~~~~~
+
+Ideally, one views file by model: project_views.xml, task_views.xml, product_views, ...
+
+#. Views
+
+   #. search
+   #. form
+   #. kanban
+   #. tree
+   #. pivot
+   #. graph
+   #. gantt
+   #. cohort
+   #. activity
+   #. map
+   #. QWeb
+
+#. Actions
+#. Link actions (``ir.actions.act_url``)
+#. Report actions (``ir.actions.report``)
+
+Menus
+~~~~~
+
+.. todo:: in master update menuitems example to show recursive menuitems.
+
+For application modules, menuitems should be defined in a separate file (and ordered hierarchically) to have a clear app organisation.
+In this case, the ``<module>_menus.xml`` file should be the last specified in the ``__manifest__.py`` ``data`` imports
+For generic modules (e.g. bridges), menuitems, if not many in number, can be defined after their respective actions/views.
+
 .. _reference/guidelines/python:
 
 Python
 ======
 
-.. warning::
+Linting
+-------
 
-    Do not forget to read the :ref:`Security Pitfalls <reference/security/pitfalls>`
-    section as well to write secure code.
-
-PEP8 options
-------------
-
-Using a linter can help show syntax and semantic warnings or errors. Odoo
-source code tries to respect Python standard, but some of them can be ignored.
+Using a linter (e.g. Flake8) can help show syntax and semantic warnings or errors. Odoo
+source code tries to respect Python PEP8 standard, but some of them can be ignored.
 
 - E501: line too long
+
+.. note:: A good max line length standard would be **99** characters for us,
+          but not mandatory.
+
 - E301: expected 1 blank line, found 0
 - E302: expected 2 blank lines, found 1
-
-Imports
--------
-The imports are ordered as
-
-#. External libraries (one per line sorted and split in python stdlib)
-#. Imports of ``odoo``
-#. Imports from Odoo modules (rarely, and only if necessary)
-
-Inside these 3 groups, the imported lines are alphabetically sorted.
-
-.. code-block:: python
-
-    # 1 : imports of python lib
-    import base64
-    import re
-    import time
-    from datetime import datetime
-    # 2 : imports of odoo
-    import odoo
-    from odoo import api, fields, models, _ # alphabetically ordered
-    from odoo.tools.safe_eval import safe_eval as eval
-    # 3 : imports from odoo addons
-    from odoo.addons.website.models.website import slug
-    from odoo.addons.web.controllers.main import login_redirect
 
 Idiomatics of Programming (Python)
 ----------------------------------
 
-- Each python file should have ``# -*- coding: utf-8 -*-`` as first line.
 - Always favor *readability* over *conciseness* or using the language features or idioms.
-- Don't use ``.clone()``
-
-.. code-block:: python
-
-    # bad
-    new_dict = my_dict.clone()
-    new_list = old_list.clone()
-    # good
-    new_dict = dict(my_dict)
-    new_list = list(old_list)
-
-- Python dictionary : creation and update
-
-.. code-block:: python
-
-    # -- creation empty dict
-    my_dict = {}
-    my_dict2 = dict()
-
-    # -- creation with values
-    # bad
-    my_dict = {}
-    my_dict['foo'] = 3
-    my_dict['bar'] = 4
-    # good
-    my_dict = {'foo': 3, 'bar': 4}
-
-    # -- update dict
-    # bad
-    my_dict['foo'] = 3
-    my_dict['bar'] = 4
-    my_dict['baz'] = 5
-    # good
-    my_dict.update(foo=3, bar=4, baz=5)
-    my_dict = dict(my_dict, **my_dict2)
-
 - Use meaningful variable/class/method names
-- Useless variable : Temporary variables can make the code clearer by giving
-  names to objects, but that doesn't mean you should create temporary variables
-  all the time:
-
-.. code-block:: python
-
-    # pointless
-    schema = kw['schema']
-    params = {'schema': schema}
-    # simpler
-    params = {'schema': kw['schema']}
-
-- Multiple return points are OK, when they're simpler
-
-.. code-block:: python
-
-    # a bit complex and with a redundant temp variable
-    def axes(self, axis):
-            axes = []
-            if type(axis) == type([]):
-                    axes.extend(axis)
-            else:
-                    axes.append(axis)
-            return axes
-
-     # clearer
-    def axes(self, axis):
-            if type(axis) == type([]):
-                    return list(axis) # clone the axis
-            else:
-                    return [axis] # single-element list
-
-- Know your builtins : You should at least have a basic understanding of all
-  the Python builtins (http://docs.python.org/library/functions.html)
-
-.. code-block:: python
-
-    value = my_dict.get('key', None) # very very redundant
-    value = my_dict.get('key') # good
-
-Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
-meaning, be sure that you're using the right one.
-
-- Learn list comprehensions : Use list comprehension, dict comprehension, and
+- Think about :ref:`*performance* <reference/guidelines/perf>`
+  and :ref:`*security* <reference/security/pitfalls>` all along the development process.
+- As a good developer, document your code (docstring on key methods, simple
+  comments for tricky part of code)
+- Know your builtins : You should at least have a basic understanding of
+  the `Python builtins <https://docs.python.org/library/functions.html>`_.
+- Learn list/dict comprehensions : Use list comprehension, dict comprehension, and
   basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code
   easier to read.
-
-.. code-block:: python
-
-    # not very good
-    cube = []
-    for i in res:
-            cube.append((i['id'],i['name']))
-    # better
-    cube = [(i['id'], i['name']) for i in res]
-
-- Collections are booleans too : In python, many objects have "boolean-ish" value
-  when evaluated in a boolean context (such as an if). Among these are collections
-  (lists, dicts, sets, ...) which are "falsy" when empty and "truthy" when containing
-  items:
-
-.. code-block:: python
-
-    bool([]) is False
-    bool([1]) is True
-    bool([False]) is True
-
-So, you can write ``if some_collection:`` instead of ``if len(some_collection):``.
-
-
-- Iterate on iterables
-
-.. code-block:: python
-
-    # creates a temporary list and looks bar
-    for key in my_dict.keys():
-            "do something..."
-    # better
-    for key in my_dict:
-            "do something..."
-    # accessing the key,value pair
-    for key, value in my_dict.items():
-            "do something..."
-
-- Use dict.setdefault
-
-.. code-block:: python
-
-    # longer.. harder to read
-    values = {}
-    for element in iterable:
-        if element not in values:
-            values[element] = []
-        values[element].append(other_value)
-
-    # better.. use dict.setdefault method
-    values = {}
-    for element in iterable:
-        values.setdefault(element, []).append(other_value)
-
-- As a good developer, document your code (docstring on methods, simple
-  comments for tricky part of code)
-- In additions to these guidelines, you may also find the following link
-  interesting: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
-  (a little bit outdated, but quite relevant)
+- Don't hesitate to refresh your `knowledge <https://learnxinyminutes.com/docs/python3/>`_ or
+  to get more familiar with `Python <https://docs.python.org/3/tutorial/>`_
 
 Programming in Odoo
 -------------------
 
 - Avoid to create generators and decorators: only use the ones provided by
   the Odoo API.
-- As in python, use ``filtered``, ``mapped``, ``sorted``, ... methods to
+- As in python, use ``filtered``, ``mapped``, ``sorted``, ... :ref:`ORM <reference/orm>` methods to
   ease code reading and performance.
+- Don't reinvent the wheel: use or extend existing functionalities when you need them.
+  Use :ref:`Odoo Mixins <reference/mixins>` to integrate interesting functionalities easily.
+- Note that empty recordset are falsy
 
+.. code-block:: python
+
+    def do_something(self):
+        if not self:
+          return
+        ...
+
+.. warning::
+
+    Do not forget to read the :ref:`Security Pitfalls <reference/security/pitfalls>`
+    section as well to write secure code.
 
 Make your method work in batch
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When adding a function, make sure it can process multiple records by iterating
-on self to treat each record.
+
+When adding a function, make sure it can process multiple records:
+
+* by iterating on self to treat each record.
+* by using adapted methods to treat all records together.
+
+This is the basis for a lot of performance improvements, as it allows batching low level operations
+of the ORM, speeding up values/records processing (e.g. CRUD calls triggering database queries).
 
 .. code-block:: python
 
-    def my_method(self)
+    def my_method(self):
         for record in self:
             record.do_cool_stuff()
 
-For performance issue, when developing a 'stat button' (for instance), do not
-perform a ``search`` or a ``search_count`` in a loop. It
-is recommended to use ``read_group`` method, to compute all value in only one request.
+    def _get_total(self):
+        return sum(self.mapped('total'))
 
-.. code-block:: python
+    def _confirm(self):
+        return self.write({'state': 'confirmed'})
 
-    def _compute_equipment_count(self):
-    """ Count the number of equipment per category """
-        equipment_data = self.env['hr.equipment'].read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
-        mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in equipment_data])
-        for category in self:
-            category.equipment_count = mapped_data.get(category.id, 0)
+.. note::
 
+    The previous examples also work fine when self is an empty recordset.
+    Depending on the objective of a method, it's always better to consider self as a potentially empty record,
+    to ensure the stability of your code.
+
+    The majority of the ORM methods works with 0, 1 or more records::
+
+        # won't crash even if filtered returns an empty recordset
+        self.filtered('wrong_state').unlink()
+
+.. note::
+
+    If a method can only be called with a unique record, it can be easily enforced
+    with :meth:`~odoo.models.Model.ensure_one`.
+
+    .. code-block:: python
+
+        def action_open_form(self):
+            self.ensure_one() # === assert(len(self) == 1)
+            ...
 
 Propagate the context
 ~~~~~~~~~~~~~~~~~~~~~
+
+Odoo operations are done in a given environment, holding the database cursor, the user id
+and the context.  The context may contain "global" variables, such as the language, the timezone,
+the company(ies) in which the user is logged, and any other information specified.
+
 The context is a ``frozendict`` that cannot be modified. To call a method with
-a different context, the ``with_context`` method should be used :
+a different context, the :meth:`~odoo.models.Model.with_context` method should be used:
 
 .. code-block:: python
 
+    # Replace the current context --> Potential loss of information
+    # Do not use unless that's really what you want !
     records.with_context(new_context).do_stuff() # all the context is replaced
-    records.with_context(**additionnal_context).do_other_stuff() # additionnal_context values override native context ones
+
+    # Update the context content --> Safe
+    # additionnal_context values override native context ones
+    records.with_context(**additionnal_context).do_other_stuff()
 
 .. warning::
-      Passing parameter in context can have dangerous side-effects.
 
-      Since the values are propagated automatically, some unexpected behavior may appear.
-      Calling ``create()`` method of a model with *default_my_field* key in context
-      will set the default value of *my_field* for the concerned model.
-      But if during this creation, other objects (such as sale.order.line, on sale.order creation)
-      having a field name *my_field* are created, their default value will be set too.
+    Passing parameters in context can have dangerous side-effects.
+
+    Since the values are propagated automatically, some unexpected behavior may appear.
+    Calling :meth:`~odoo.models.Model.create` method of a model with *default_my_field* key in context
+    will set the default value of *my_field* for the concerned model if not already specified.
+    But if during this creation, other objects (such as sale.order.line, on sale.order creation)
+    having a field name *my_field* are created, their default value will be set too.
 
 If you need to create a key context influencing the behavior of some object,
-choice a good name, and eventually prefix it by the name of the module to
+choose a good name, and eventually prefix it by the name of the module to
 isolate its impact. A good example are the keys of ``mail`` module :
 *mail_create_nosubscribe*, *mail_notrack*, *mail_notify_user_signature*, ...
-
 
 Think extendable
 ~~~~~~~~~~~~~~~~
@@ -649,10 +629,11 @@ Think extendable
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
 A good rule of thumb is to split a method as soon as it has more than one
-responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
+responsibility.
 
-Hardcoding a business logic in a method should be avoided as it prevents to be
-easily extended by a submodule.
+.. seealso:: https://en.wikipedia.org/wiki/Single_responsibility_principle
+
+Hardcoding a business logic in a method should be avoided as it prevents an easy extension by a submodule.
 
 .. code-block:: python
 
@@ -684,11 +665,12 @@ Also, name your functions accordingly: small and properly named functions are
 the starting point of readable/maintainable code and tighter documentation.
 
 This recommendation is also relevant for classes, files, modules and packages.
-(See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
 
+.. seealso:: https://en.wikipedia.org/wiki/Cyclomatic_complexity
 
 Never commit the transaction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The Odoo framework is in charge of providing the transactional context for
 all RPC calls. The principle is that a new database cursor is opened at the
 beginning of each RPC call, and committed when the call has returned, just
@@ -725,7 +707,7 @@ among others:
 #. inconsistent business data, usually data loss
 #. workflow desynchronization, documents stuck permanently
 #. tests that can't be rolled back cleanly, and will start polluting the
-   database, and triggering error (this is true even if no error occurs
+   database, and triggering errors (this is true even if no error occurs
    during the transaction)
 
 Here is the very simple rule:
@@ -739,24 +721,331 @@ Here is the very simple rule:
 
 And contrary to popular belief, you do not even need to call ``cr.commit()``
 in the following situations:
-- in the ``_auto_init()`` method of an *models.Model* object: this is taken
-care of by the addons initialization method, or by the ORM transaction when
-creating custom models
+
+- in the :meth:`~odoo.models.model._auto_init` method of an *models.Model* object:
+  this is taken care of by the addons initialization method,
+  or by the ORM transaction when creating custom models
 - in reports: the ``commit()`` is handled by the framework too, so you can
-update the database even from within a report
+  update the database even from within a report.
 - within *models.Transient* methods: these methods are called exactly like
-regular *models.Model* ones, within a transaction and with the corresponding
-``cr.commit()/rollback()`` at the end
+  regular *models.Model* ones, within a transaction and with the corresponding
+  ``cr.commit()/rollback()`` at the end.
 - etc. (see general rule above if you have in doubt!)
 
-All ``cr.commit()`` calls outside of the server framework from now on must
-have an **explicit comment** explaining why they are absolutely necessary, why
-they are indeed correct, and why they do not break the transactions. Otherwise
-they can and will be removed !
+.. warning::
 
+    All ``cr.commit()`` calls outside of the server framework from now on must
+    have an **explicit comment** explaining why they are absolutely necessary, why
+    they are indeed correct, and why they do not break the transactions. Otherwise
+    they can and will be removed !
 
-Use translation method correctly
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _reference/guidelines/perf:
+
+Performance
+-----------
+
+#. Avoid unnecessary operations
+#. Batch & factorize operations
+#. Use the right tool for the right operation.
+   Know Python & the ORM behavior/abilities
+
+Avoid unnecessary operations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Globally, even outside Odoo, the easiest performance improvement is to avoid operations when possible.
+We should always consider duplicated checks, operations in loop that can be moved outside, ...
+
+For Odoo code, the best way to avoid useless operations is to know the behavior of the main ORM methods !
+
+* :meth:`~odoo.models.Model.filtered` returns a new recordset, subset or equal to the current one.
+
+Note that it goes through the recordset to return a new filtered recordset.
+Unless you will do batch operations on the new recordset, in which case the filtered may be useful,
+it is unnecessary to use :meth:`~odoo.models.Model.filtered` (and browse the recordset twice).
+
+.. code-block:: python3
+
+   # ~2 walkthrough of self
+   for rec in self.filtered(lambda r: r.state == 'open'):
+      rec.do_something()
+
+   # one walkthrough:
+   for rec in self:
+     if rec.state == 'open':
+       rec.do_something()
+
+   # If do_something is optimized for batch recordset operations,
+   # Then the filtered can be useful.
+   self.filtered(lambda r: r.state == 'open').do_something()
+
+* :meth:`~odoo.api.Environment.ref()` returns the reference record after verifying it still exists!
+
+For that verification, ref always calls :meth:`~odoo.models.Model.exists()` which makes one SQL query
+(``SELECT id FROM 'model' WHERE id IN ('id')``).
+
+.. code-block:: python3
+
+    # len(self) ref queries
+    for rec in self:
+      if rec.uom_id == rec.env.ref('uom.uom_day'):
+        rec.in_day_uom = True
+
+    # one ref query
+    day_uom = self.env.ref('uom.uom_day')
+    for rec in self:
+      if rec.uom_id == day_uom:
+        rec.in_day_uom = True
+
+* :meth:`~odoo.models.Model.create()` supports batch records creation.
+
+Depending on the model specification, creating records in batch can be up to 10 times faster !
+When you need to create multiple records of the same model, please call :meth:`~odoo.models.Model.create()`
+with a the list of record values (dictionaries).
+
+...
+
+.. warning:: When you override existing ORM methods, know and follow their original API.
+
+    * :meth:`~odoo.models.Model.create()` is by default implemented to support batch creation of records.
+      If your overriden method doesn't support batch records creation (:meth:`~odoo.api.model_create_multi()`),
+      your model creation may be consequently slower when creating multiple records together.
+
+      Furthermore, note that the values may be empty and the method shouldn't crash (same for :meth:`~odoo.models.Model.write()`)!
+
+    * :meth:`~odoo.models.Model.default_get()` receives a list of requested fields.
+      There is no need to specify any value if not requested, operations can sometimes be avoided.
+
+    ...
+
+Database interactions
+~~~~~~~~~~~~~~~~~~~~~
+
+One of the main performance bottlenecks lies in the database interactions.  Fetching
+data in database can be quite slow, depending on the queries complexity.
+
+Database query counts are not strictly a good performance indicator, as using more queries
+can be sometimes more efficient, but it's still a good starting point to investigate performance issues.
+
+SQL analysis can highlight:
+
+* overly wide search domains (fetching too much data)
+* duplicated queries (same searches, :meth:`~odoo.api.Environment.ref()` calls, ...)
+* unexpected operations (while investigating the source of unexpected queries)
+
+Investigating queries will improve your knowledge of Odoo's ORM in a different way.
+
+.. note::
+
+    The :option:`--log-sql <odoo-bin --log-sql>` option can be used to display the SQL queries
+    executed.
+
+Furthermore, the SQL level has the advantage of being more consistent.
+Time based tests have proven multiple times to be quite indeterministic, depending on configuration,
+other operations, ...
+Query count based tests are way more deterministic, and therefore a good testing point to reduce
+and/or catch performance reductions due to new SQL queries, highlighting low level changes sometimes
+forgotten during the development process.
+
+.. note::
+
+    The :meth:`~odoo.tests.common.BaseCase.assertQueryCount()` method can be used to enforce
+    a maximum number of SQL queries done in a given context::
+
+        with self.assertQueryCount(4):
+          self.env[model].do_something()
+
+Reduce/Simplify queries as much as possible:
+
+* Batch database requests (:meth:`~odoo.models.Model.search`, ...):
+
+  * Use the right domain
+  * Use the right ORM methods (:meth:`~odoo.models.Model.search_count`, :meth:`~odoo.models.Model.read_group`, ...)
+
+.. code-block:: python3
+
+    # very bad: up to len(self) queries
+    for record in self:
+      if record.env['model'].search([('id', '=', record.id)]):
+        return True
+    return False
+
+    # better: one query
+    if self.env['model'].search([('id', 'in', self.ids)]):
+      return True
+    return False
+
+    # even better: read and browse only one id
+    # NOTE: returning first id found is faster than using a search_count
+    if self.env['model'].search([('id', 'in', self.ids)], limit=1):
+      return True
+    return False
+
+* Only load what you really need:
+
+  * a `limit` can be given for :meth:`~odoo.models.Model.search` calls
+  * Read specific fields when you don't need all fields values (:meth:`~odoo.models.Model.read`, :meth:`~odoo.models.Model.read_group`)
+  * Disable fields prefetching for targeted operations :ref:`reference/guidelines/perf/prefetch`.
+
+* Use ORM-cached methods to avoid "useless" SQL queries.
+
+  .. code-block:: python3
+
+      # One query by ref call !
+      # Do not use, unless you want to manage
+      # the case where the record doesn't exist anymore.
+      record = self.env.ref(xml_id)
+      record_id = record.id
+
+      # Better, use the cache
+      model, id = self.env['ir.model.data'].xmlid_to_res_model_res_id(xml_id)
+      record = self.env[model].browse(id)
+      record_id = record.id
+
+      # if you only need the id:
+      record_id = self.env['ir.model.data'].xmlid_to_res_id(xml_id)
+
+  .. code-block:: python3
+
+      model = self.env['ir.model'].search([('name', '=', name)], limit=1)
+      model_id = model.id
+
+      # better
+      model = self.env['ir.model']._get(name)
+
+      # better (id)
+      model_id = self.env['ir.model']._get_id(name)
+
+SQL processing
+''''''''''''''
+
+The ORM provides multiple tools to batch/execute operations at a lower level.
+Use those tools to delegate processing to the SQL level as much as possible.
+
+.. code-block:: python3
+
+    # bad: loading & browsing all found ids for nothing
+    for record in self:
+      record.model_count = len(self.env['model'].search([('rec_id', '=', record.id)]))
+
+    # better, but still wrong : len(self) queries
+    for record in self:
+      record.model_count = self.env['model'].search_count([('rec_id', '=', record.id)])
+
+    # best
+    data = self.env['model'].read_group([('rec_id', 'in', self.ids)], ['rec_id'], ['rec_id'])
+    mapped_data = dict([(d['rec_id'][0], d['rec_id_count']) for d in data])
+    for record in self:
+       record.model_count = mapped_data.get(record.id, 0)
+
+Prefer SQL constraints to Python constraints:
+
+#. SQL constraints are strictly enforced, whereas python constraints can be bypassed
+   by SQL queries and old module data (in case of updates) could be wrong.
+#. When creating records, SQL constraints are evaluated earlier, at INSERT, whereas
+   the verification of Python constraints is done later, after the SQL INSERT's.
+
+SQL constraints are more efficient, and will raise & rollback earlier in the creation process.
+Python constraints should be used for more detailed/targeted explanation, and/or when the
+constraint cannot be applied at the SQL level.
+
+.. code-block:: python3
+
+    # less efficient
+    @api.constrains('begin_date', 'end_date')
+    def _check_period(self):
+      for record in self:
+         if record.begin_date > end_date:
+            raise UserError(_("Beginning date must be earlier than ending date."))
+
+    # good: earlier and stricter check:
+    _sql_constraints = [
+        ('valid_period',
+        "CHECK(begin_date < end_date)",
+        "Beginning date must be earlier than ending date"),
+    ]
+
+Use the content in cache
+''''''''''''''''''''''''
+
+When the information is already available, do not request it again from database
+
+.. code-block:: python3
+
+    # probably bad, you have the records already in cache, no need to go through the database
+    def action_validate(self):
+      self.env.search([('validated', '=', False), ('id', 'in', self.ids)]).validated = True
+
+    # probably better: use the cached values to filter the current recordset
+    def action_validate(self):
+      self.filtered_domain([('validated', '=', False)]).validated = True
+
+.. _reference/guidelines/perf/prefetch:
+
+Prefetch
+~~~~~~~~
+
+By default, the ORM prefetches all the records fields when reading any field on a recordset.
+It considers that when we're working on a record, the value of multiple fields will probably be needed.
+
+If you're developing a costly operation of some sort (e.g. working on big recordsets), or even targeted operations
+(for which you do not need the values of all the fields, especially on big models), you may want to disable/avoid the prefetch.
+
+Let's consider a basic case where you only need one or more fields on a recordset.
+
+.. code-block:: python3
+
+  for record in self:
+    if record.fieldA:
+      record.do_something()
+    else:
+      record.do_something_else()
+
+In the previous code, when accessing ``fieldA`` on the first operation, the ORM will prefetch all stored model fields
+for the records in self.  If ``self`` is huge and/or the model has a lot of fields, the database query can be quite slow.
+There are 2 main ways to avoid prefetching all the fields in this case:
+
+* Disabling the prefetch on the recordset
+
+  The context key `prefetch_fields`, if set to ``False``, can disable the *fields* prefetch on the ORM level.
+
+.. code-block:: python3
+
+  self = self.with_context(prefetch_fields=False)
+  for record in self:
+    if record.fieldA:
+      record.do_something()
+    else:
+      record.do_something_else()
+
+Only ``fieldA`` will be prefetched on ``self``.
+
+.. warning:: The context is propagated to subsequent calls !
+
+    The execution context in *do_something*/*do_something_else* will also have the disabled prefetch.
+    Do not use the ``prefetch_fields`` context key without clearly knowing the subsequent scopes.
+    Disabling the prefetch can greatly hinder performance if not done wisely...
+
+    If possible, prefer the use of :meth:`~odoo.models.Model.read()` to "disable" prefetch cleanly.
+
+* Manually prefetching the needed field(s)
+
+  To manually prefetch some field(s), the :meth:`~odoo.models.Model.read()` method has an useful side-effect.
+  It returns the requested data, but it also fills the cache with the requested values.
+  If the data for the requested field is already in cache, the ORM won't prefetch the remaining fields.
+
+.. code-block:: python3
+
+  self.read(['fieldA'])
+  for record in self:
+    if record.fieldA:
+      record.do_something()
+    else:
+      record.do_something_else()
+
+As ``fieldA`` is already in cache, the ORM won't prefetch the remaining fields.
+
+Translations
+------------
 
 Odoo uses a GetText-like method named "underscore" ``_( )`` to indicate that
 a static string used in the code needs to be translated at runtime using the
@@ -840,61 +1129,135 @@ of position (when multiple variables have to be replaced). This makes the
 translation easier for the community translators.
 
 
-Symbols and Conventions
+Conventions and Symbols
 -----------------------
 
-- Model name (using the dot notation, prefix by the module name) :
-    - When defining an Odoo Model : use singular form of the name (*res.partner*
-      and *sale.order* instead of *res.partnerS* and *saleS.orderS*)
-    - When defining an Odoo Transient (wizard) : use ``<related_base_model>.<action>``
-      where *related_base_model* is the base model (defined in *models/*) related
-      to the transient, and *action* is the short name of what the transient do. Avoid the *wizard* word.
-      For instance : ``account.invoice.make``, ``project.task.delegate.batch``, ...
-    - When defining *report* model (SQL views e.i.) : use
-      ``<related_base_model>.report.<action>``, based on the Transient convention.
+Naming
+~~~~~~
+
+Model & Class
+'''''''''''''
+
+- Model name (using the dot notation, prefixed by the module name):
+
+  - When defining an Odoo :class:`~odoo.models.Model`: use singular form of the name (*res.partner*
+    and *sale.order* instead of *res.partnerS* and *saleS.orderS*)
+  - When defining an Odoo :class:`~odoo.models.TransientModel` (wizard): use ``<related_base_model>.<action>``
+    where *related_base_model* is the base model (defined in *models/*) related
+    to the transient, and *action* is the short name of what the transient do. Avoid the *wizard* word.
+    For instance : ``account.invoice.make``, ``project.task.delegate.batch``, ...
+  - When defining *report* model (SQL views e.i.): use
+    ``<related_base_model>.report.<action>``, based on the Transient convention.
 
 - Odoo Python Class : use camelcase (Object-oriented style).
-
 
 .. code-block:: python
 
     class AccountInvoice(models.Model):
+        _name = "account.invoice"
+
         ...
 
+Fields
+''''''
+
+- :class:`~odoo.fields.One2many` and :class:`~odoo.fields.Many2many` fields should always have *_ids* as suffix (example: sale_order_line_ids)
+- :class:`~odoo.fields.Many2one` fields should have *_id* as suffix (example: partner_id, user_id, ...)
+
+.. note::
+
+    Some field names have specific meaning in Odoo, know their meaning/use before using/overriding those.
+
+    * The :ref:`automatic fields (id, create_date, write_date, ...)<reference/fields/automatic>` are automatically created
+      on a given model unless it is specified as `_auto = False`.
+    * Some :ref:`reserved field names (state, parent_id, ...)<reference/fields/reserved>` provides specific abilities/behavior.
+
+Methods
+'''''''
+
+- Method conventions & patterns:
+
+  - Compute method: ``_compute_<field_name>``
+  - Search method: ``_search_<field_name>``
+  - Default method: ``_default_<field_name>``
+  - Selection method: ``_selection_<field_name>``
+  - Onchange method: ``_onchange_<field_name>``
+  - Constraint method: ``_check_<constraint_name>``
+  - Action method: an object action method is prefixed with ``action_``.
+    If it can only be called on one record, add ``self.ensure_one()``
+    at the beginning of the method.
+
+Variables
+'''''''''
+
 - Variable name :
-    - use camelcase for model variable
-    - use underscore lowercase notation for common variable.
-    - suffix your variable name with *_id* or *_ids* if it contains a record id or list of id. Don't use ``partner_id`` to contain a record of res.partner
+
+  - Use camelcase for model variable (empty model recordsets).
+  - Use underscore lowercase notation for common variable.
+  - Suffix your variable name with *_id* (*_ids*) if it contains a record id (list of ids).
+    Don't use ``partner_id``(``partner_ids``) for a res.partner recordset.
 
 .. code-block:: python
 
     Partner = self.env['res.partner']
+    partner = partner.browse(id)
     partners = Partner.browse(ids)
     partner_id = partners[0].id
+    partner_ids = partners.ids
 
-- ``One2Many`` and ``Many2Many`` fields should always have *_ids* as suffix (example: sale_order_line_ids)
-- ``Many2One`` fields should have *_id* as suffix (example : partner_id, user_id, ...)
-- Method conventions
-    - Compute Field : the compute method pattern is *_compute_<field_name>*
-    - Search method : the search method pattern is *_search_<field_name>*
-    - Default method : the default method pattern is *_default_<field_name>*
-    - Selection method: the selection method pattern is *_selection_<field_name>*
-    - Onchange method : the onchange method pattern is *_onchange_<field_name>*
-    - Constraint method : the constraint method pattern is *_check_<constraint_name>*
-    - Action method : an object action method is prefix with *action_*.
-      Since it uses only one record, add ``self.ensure_one()``
-      at the beginning of the method.
+File organization
+~~~~~~~~~~~~~~~~~
 
-- In a Model attribute order should be
-    #. Private attributes (``_name``, ``_description``, ``_inherit``, ...)
-    #. Default method and ``_default_get``
-    #. Field declarations
-    #. Compute, inverse and search methods in the same order as field declaration
-    #. Selection method (methods used to return computed values for selection fields)
-    #. Constrains methods (``@api.constrains``) and onchange methods (``@api.onchange``)
-    #. CRUD methods (ORM overrides)
-    #. Action methods
-    #. And finally, other business methods.
+Imports
+'''''''
+
+The imports are ordered as:
+
+#. External libraries (one per line sorted and split in python stdlib)
+#. Imports of ``odoo``
+#. Imports from Odoo modules (rarely, and only if necessary)
+
+Inside these 3 groups, the imported lines are alphabetically sorted.
+
+.. code-block:: python
+
+    # 1: imports of python lib
+    import base64
+    import re
+    import time
+    from datetime import datetime
+
+    # 2: imports of odoo
+    from odoo import api, fields, models, _, _lt # alphabetically ordered
+    from odoo.tools.safe_eval import safe_eval as eval
+
+    # 3: imports from odoo addons
+    from odoo.addons.website.models.website import slug
+    from odoo.addons.web.controllers.main import login_redirect
+
+Model attributes
+''''''''''''''''
+
+In a :class:`~odoo.models.Model`, the attribute order should be:
+
+#. Private attributes (``_name``, ``_description``, ``_inherit``, ...)
+#. Default methods and :meth:`~odoo.models.Model.default_get`
+#. :class:`Fields <~odoo.fields.Field>` declarations:
+
+   * Main fields first (e.g. required fields)
+   * Computed/Related fields should be defined after their dependencies.
+#. SQL constraints, defined through the ``_sql_constraints`` attribute.
+#. :ref:`Compute<reference/fields/compute>`, inverse and search methods in the same order as field declaration
+#. Selection method (methods used to return computed values for selection fields)
+#. Constrains methods (:meth:`@api.constrains<odoo.api.constrains>`) and onchange methods (:meth:`@api.onchange<odoo.api.onchange>`)
+#. CRUD methods (ORM overrides: :meth:`~odoo.models.Model.create`, :meth:`~odoo.models.Model.unlink`, :meth:`~odoo.models.Model.write`, ...)
+#. Action methods
+#. And finally, other business methods.
+
+.. todo:: field attributes order ???
+
+Generic structure
+~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -907,20 +1270,40 @@ Symbols and Conventions
         def _default_name(self):
             ...
 
+        @api.model
+        def default_get(self, fields_list):
+            ...
+
         # Fields declaration
         name = fields.Char(string='Name', default=_default_name)
-        seats_reserved = fields.Integer(oldname='register_current', string='Reserved Seats',
-            store=True, readonly=True, compute='_compute_seats')
-        seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
-            store=True, readonly=True, compute='_compute_seats')
         price = fields.Integer(string='Price')
         event_type = fields.Selection(string="Type", selection='_selection_type')
+        seats_max = fields.Integer(string='Maximum Attendees Number')
+        registration_ids = fields.One2many(
+            'event.registration', 'event_id', string='Attendees')
+        date_begin = fields.Datetime(required=True)
+        date_end = fields.Datetime()
+
+        seats_reserved = fields.Integer(
+            string='Reserved Seats',
+            store=True, compute='_compute_seats')
+        seats_available = fields.Integer(
+            string='Available Seats',
+            store=True, compute='_compute_seats')
+
+        # SQL constraints
+        _sql_constraints = [
+            ('valid_period',
+            "CHECK(date_begin IS NULL OR date_end IS NULL OR date_begin < date_end)",
+            "Beginning date must be before ending date")
+        ]
 
         # compute and search fields, in the same order of fields declaration
         @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
         def _compute_seats(self):
             ...
 
+        # Selection methods
         @api.model
         def _selection_type(self):
             return []
@@ -935,7 +1318,8 @@ Symbols and Conventions
             ...
 
         # CRUD methods (and name_get, name_search, ...) overrides
-        def create(self, values):
+        @api.model_create_multi
+        def create(self, vals_list):
             ...
 
         # Action methods
@@ -977,7 +1361,7 @@ The convention is to organize the code according to the following structure:
     - *static/src/js*
 
       - *static/src/js/tours*: end user tour files (tutorials, not tests)
-      
+
     - *static/src/scss*: scss files
     - *static/src/xml*: all qweb templates that will be rendered in JS
 
