@@ -501,7 +501,7 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeMentionedPartners() {
-            const inputMentions = this.textInputContent.replace(/\n/g, "\n ").match(
+            const inputMentions = this.textInputContent.replace(/\n/g, " \n ").match(
                 new RegExp("@[^ ]+(?= |&nbsp;|$)", 'g')
             ) || [];
             const unmentionedPartners = [];
@@ -524,7 +524,7 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeMentionedChannels() {
-            const inputMentions = this.textInputContent.replace('\n', "\n ").match(
+            const inputMentions = this.textInputContent.replace(/\n/g, " \n ").match(
                 new RegExp("#[^ ]+(?= |&nbsp;|$)", 'g')
             ) || [];
             const unmentionedChannels = [];
@@ -571,7 +571,7 @@ function factory(dependencies) {
             if (this.mentionedPartners.length === 0 && this.mentionedChannels.length === 0) {
                 return body;
             }
-            const inputMentions = body.replace(new RegExp('<br/>', 'g'), "<br/> ")
+            const inputMentions = body.replace(new RegExp('<br/>', 'g'), " <br/> ")
                 .match(new RegExp("(@|#)" + '[^ ]+(?= |&nbsp;|$)', 'g'))
                 .filter(match => !match.endsWith("<br/>"));
             const substrings = [];
