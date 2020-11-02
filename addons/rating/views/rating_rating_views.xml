@@ -6,12 +6,12 @@
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
                 <tree string="Rating" create="false" edit="false" sample="1">
-                    <field name="res_name"/>
-                    <field name="parent_res_name"/>
+                    <field name="rating_text" decoration-danger="rating_text == 'highly_dissatisfied'" decoration-warning="rating_text == 'not_satisfied'" decoration-success="rating_text == 'satisfied'" class="font-weight-bold"/>
+                    <field name="feedback"/>
                     <field name="rated_partner_id"/>
                     <field name="partner_id"/>
-                    <field name="rating_text" decoration-danger="rating_text == 'highly_dissatisfied'" decoration-warning="rating_text == 'not_satisfied'" decoration-success="rating_text == 'satisfied'"/>
-                    <field name="feedback"/>
+                    <field name="res_name"/>
+                    <field name="parent_res_name"/>
                     <field name="create_date"/>
                 </tree>
             </field>
@@ -62,35 +62,39 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <div class="o_kanban_image">
-                                    <field name="rating_image" widget="image"/>
-                                </div>
-                                <div class="oe_kanban_details">
-                                    <strong>
-                                        <field name="rated_partner_id" />
-                                    </strong>
-                                    <ul>
-                                        <li t-if="record.partner_id.value">
-                                            <span class="o_text_overflow">
-                                                by
-                                                <span t-att-title="record.partner_id.value">
-                                                    <field name="partner_id" />
+                                <div class="row oe_kanban_details">
+                                    <div class="col-4 o_kanban_image my-auto">
+                                        <field name="rating_image" widget="image"/>
+                                    </div>
+                                    <div class="col-8 pl-1">
+                                        <strong>
+                                            <field name="rated_partner_id" />
+                                        </strong>
+                                        <ul>
+                                            <li t-if="record.partner_id.value">
+                                                <span class="o_text_overflow">
+                                                    by
+                                                    <span t-att-title="record.partner_id.value">
+                                                        <field name="partner_id" />
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="o_text_overflow">
-                                                for
-                                                <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
-                                                    <field name="res_name" />
-                                                </a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            on <field name="create_date" />
-                                        </li>
-                                    </ul>
-                                    <i t-if="record.feedback.raw_value" class="fa fa-comment float-right mt4" t-att-title="record.feedback.raw_value"  t-att-aria-label="record.feedback.raw_value" role="img"/>
+                                            </li>
+                                            <li>
+                                                <span class="o_text_overflow">
+                                                    for
+                                                    <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                                        <field name="res_name" />
+                                                    </a>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                on <field name="create_date" />
+                                            </li>
+                                            <li t-if="record.feedback.raw_value" class="o_text_overflow" t-att-title="record.feedback.raw_value">
+                                                <field name="feedback"/>
+                                            </li>
+                                        </ul>
+                                </div>
                                 </div>
                             </div>
                         </t>
