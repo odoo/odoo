@@ -518,6 +518,7 @@ class account_journal(models.Model):
         ctx = dict(self.env.context, default_journal_id=self.id)
         if ctx.get('search_default_journal', False):
             ctx.update(search_default_journal_id=self.id)
+            del ctx['search_default_journal']  # otherwise it will do a useless groupby in bank statements
         ctx.pop('group_by', None)
         ir_model_obj = self.env['ir.model.data']
         model, action_id = ir_model_obj.get_object_reference('account', action_name)
