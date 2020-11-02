@@ -1685,7 +1685,7 @@ class Binary(http.Controller):
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
-            font_filenames = sorted(os.listdir(fonts_directory))
+            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(('.ttf', '.otf', '.woff', '.woff2'))])
 
             for filename in font_filenames:
                 font_file = open(os.path.join(fonts_directory, filename), 'rb')
