@@ -12,9 +12,6 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
     const PosDeProductScreen = ProductScreen => class extends ProductScreen {
         async _clickProduct(event) {
             _super_productscreen._clickProduct.apply(this,arguments);
-            if (!this.currentOrder.isTransactionStarted()) {
-//                this.currentOrder.startTransaction();
-            }
         }
     }
 

@@ -53,8 +53,8 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             _super_order.initialize.apply(this,arguments);
             this.fiskalyUuid = this.fiskalyUuid || uuidv4();
             this.txLastRevision = this.txLastRevision || null;
-            this.transactionStarted = this.transactionStarted || false; // Used to know when we need to create the fiskaly transaction
-            this.tseInformation = {
+            this.transactionState = this.transactionState || 'inactive'; // Used to know when we need to create the fiskaly transaction
+            this.tssInformation = this.tssInformation || {
                 'number': { 'name': 'TSE-Transaktion', 'value': null },
                 'timeStart': { 'name': 'TSE-Start', 'value': null },
                 'timeEnd': { 'name': 'TSE-Stop', 'value': null },
@@ -62,14 +62,26 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 'timestampFormat': { 'name': 'TSE-Zeitformat', 'value': null },
                 'signatureValue': { 'name': 'TSE-Signatur', 'value': null },
                 'signatureAlgorithm': { 'name': 'TSE-Hashalgorithmus', 'value': null },
-                'signaturePublickKey': { 'name': 'TSE-PublicKey', 'value': null },
+                'signaturePublicKey': { 'name': 'TSE-PublicKey', 'value': null },
                 'clientSerialnumber': { 'name': 'ClientID / KassenID', 'value': null },
                 'erstBestellung': { 'name': 'TSE-Erstbestellung', 'value': null } // ???? Todo TBD => first article
             };
             this.save_to_db();
         },
+        isTransactionInactive() {
+            return this.transactionState == 'inactive';
+        },
+        transactionStarted() {
+            this.transactionState = 'started';
+        },
         isTransactionStarted() {
-            return this.transactionStarted;
+            return this.transactionState == 'started';
+        },
+        transactionFinished() {
+            this.transactionState = 'finished';
+        },
+        isTransactionFinished() {
+            return this.transactionState == 'finished';
         },
         setLastRevision(revision) {
             this.txLastRevision = revision;
@@ -80,17 +92,26 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         // @Override
         export_for_printing() {
             const receipt = _super_order.export_for_printing.apply(this, arguments);
-            receipt['tse'] = {};
-            $.extend(true, receipt['tse'], this.tseInformation);
+            receipt['tss'] = {};
+            $.extend(true, receipt['tss'], this.tssInformation);
             return receipt;
         },
         //@Override
         export_as_JSON() {
             const json = _super_order.export_as_JSON.apply(this, arguments);
             json['fiskaly_uuid'] = this.fiskalyUuid;
-            if (this.transactionStarted) {
-                json['transaction_started'] = this.transactionStarted;
+            json['transaction_state'] = this.transactionState;
+            if (this.txLastRevision) {
                 json['last_revision'] = this.txLastRevision;
+            }
+            if (this.isTransactionFinished()) {
+                json['tss_info'] = {};
+                for (var key in this.tssInformation) {
+                    if (key !== 'erstBestellung') {
+                        json['tss_info'][key] = this.tssInformation[key].value;
+                    }
+                }
+
             }
             return json;
         },
@@ -98,9 +119,15 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         init_from_JSON(json) {
             _super_order.init_from_JSON.apply(this, arguments);
             this.fiskalyUuid = json.fiskaly_uuid;
-            if (json.transaction_started) {
-                this.transactionStarted = true;
+            this.transactionState = json.transaction_state;
+            if (json.last_revision) {
                 this.txLastRevision = json.last_revision;
+            }
+            if (this.isTransactionFinished()) {
+                for (var key in json.tss_info) {
+                    this.tssInformation[key].value = json.tss_info[key];
+                }
+                this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
             }
         },
         _authenticate() {
@@ -138,7 +165,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 contentType: 'application/json'
             }).then((data) => {
                 this.txLastRevision = data.latest_revision;
-                this.transactionStarted = true;
+                this.transactionStarted();
                 this.trigger('change');
             }).catch(async (error) => {
                 if (error.status === 401) {  // Need to update the token
@@ -219,15 +246,17 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 data: JSON.stringify(data),
                 contentType: 'application/json'
             }).then((data) => {
-                this.tseInformation.number.value = data.number;
-                this.tseInformation.timeStart.value = convertFromEpoch(data.time_start);
-                this.tseInformation.timeEnd.value = convertFromEpoch(data.time_end);
-                this.tseInformation.certificateSerial.value = data.certificate_serial;
-                this.tseInformation.timestampFormat.value = data.log.timestamp_format;
-                this.tseInformation.signatureValue.value = data.signature.value;
-                this.tseInformation.signatureAlgorithm.value = data.signature.algorithm;
-                this.tseInformation.signaturePublickKey.value = data.signature.public_key;
-                this.tseInformation.clientSerialnumber.value = data.client_serial_number;
+                this.tssInformation.number.value = data.number;
+                this.tssInformation.timeStart.value = convertFromEpoch(data.time_start);
+                this.tssInformation.timeEnd.value = convertFromEpoch(data.time_end);
+                this.tssInformation.certificateSerial.value = data.certificate_serial;
+                this.tssInformation.timestampFormat.value = data.log.timestamp_format;
+                this.tssInformation.signatureValue.value = data.signature.value;
+                this.tssInformation.signatureAlgorithm.value = data.signature.algorithm;
+                this.tssInformation.signaturePublicKey.value = data.signature.public_key;
+                this.tssInformation.clientSerialnumber.value = data.client_serial_number;
+                this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+                this.transactionFinished();
             }).catch(async (error) => {
                 if (error.status === 401) {  // Need to update the token
                     await this._authenticate();

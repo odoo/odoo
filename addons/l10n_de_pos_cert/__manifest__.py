@@ -30,6 +30,7 @@
         # 'security/ir.model.access.csv',
         'views/l10n_de_pos_cert_templates.xml',
         'views/pos_config_views.xml',
+        'views/pos_order_views.xml',
         'views/res_company_views.xml',
     ],
     'qweb': ['static/src/xml/OrderReceipt.xml'],

@@ -21,7 +21,7 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                 for (let line of this.paymentLines) {
                     if (!line.is_done()) this.currentOrder.remove_paymentline(line);
                 }
-                if (!this.currentOrder.isTransactionStarted()) {
+                if (this.currentOrder.isTransactionInactive()) {
                     await this.currentOrder.createTransaction().catch(async (error) => {
                         const message = {
                             'noInternet': this.env._t('Check the internet connection then try to validate the order again'),
