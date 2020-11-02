@@ -543,10 +543,6 @@ class AccountJournal(models.Model):
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
-        # === Fill missing alias name ===
-        if journal_type in ('sale', 'purchase') and 'alias_name' not in vals:
-            vals['alias_name'] = '%s-%s' % (company.name, vals.get('code'))
-
     @api.model
     def create(self, vals):
         # OVERRIDE
