@@ -26,6 +26,11 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_generate_url(self):
+<<<<<<< HEAD
+=======
+        company = self.env.company.sudo()
+
+>>>>>>> 1b2f1a28ff5... temp
         pad = {
             "server": self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'),
             "key": self.env['ir.config_parameter'].sudo().get_param('pad.pad_key'),
@@ -73,11 +78,16 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_get_content(self, url):
+<<<<<<< HEAD
         pad = {
             "server": self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'),
             "key": self.env['ir.config_parameter'].sudo().get_param('pad.pad_key'),
         }
         myPad = EtherpadLiteClient(pad['key'], (pad['server'] or '') + '/api')
+=======
+        company = self.env.company.sudo()
+        myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
+>>>>>>> 1b2f1a28ff5... temp
         content = ''
         if url:
             split_url = url.split('/p/')
