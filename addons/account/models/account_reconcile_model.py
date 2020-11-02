@@ -317,7 +317,7 @@ class AccountReconcileModel(models.Model):
         lines_vals_list = []
 
         for line in self.line_ids:
-            currency_id = st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id 
+            currency_id = st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id
             if not line.account_id or currency_id.is_zero(residual_balance):
                 return []
 
@@ -795,8 +795,10 @@ class AccountReconcileModel(models.Model):
             lines_vals_list = self._prepare_reconciliation(st_line, aml_ids=rslt['aml_ids'], partner=partner)
 
             # A write-off must be applied if there are some 'new' lines to propose.
-            if not lines_vals_list or any(not line_vals.get('id') for line_vals in lines_vals_list):
+            write_off_lines_vals = list(filter(lambda x: 'id' not in x, lines_vals_list))
+            if not lines_vals_list or write_off_lines_vals:
                 rslt['status'] = 'write_off'
+                rslt['write_off_vals'] = write_off_lines_vals
 
             # Process auto-reconciliation. We only do that for the first two priorities, if they are not matched elsewhere.
             if lines_vals_list and priorities & {1, 3} and self.auto_reconcile:
