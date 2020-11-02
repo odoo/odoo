@@ -110,7 +110,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                         click: () => {
                             self._disableButtons();
                             const canBeAbandoned = self.model.canBeAbandoned(recordID);
-                            return self.saveRecord().then(() => {
+                            return self.saveRecord(recordID).then(() => {
                                 self._enableButtons();
                                 resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
                                 self.discardingDef = null;
