@@ -3,12 +3,11 @@ odoo.define("website.tour.homepage", function (require) {
 
 var core = require("web.core");
 var tour = require("web_tour.tour");
+const wTourUtils = require("website.tour_utils");
 
 var _t = core._t;
 
-tour.register("homepage", {
-    url: "/",
-}, [{
+wTourUtils.registerThemeHomepageTour('homepage', [{
     trigger: "a[data-action=edit]",
     content: _t("<b>Click Edit</b> to start designing your homepage."),
     extra_trigger: ".homepage",
