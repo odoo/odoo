@@ -117,12 +117,10 @@ PortalChatter.include({
                 'percent': [],
             };
             _.each(_.keys(result['rating_stats']['percent']).reverse(), function (rating) {
-                if (rating % 2 === 0) {
-                    ratingData['percent'].push({
-                        'num': rating,
-                        'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
-                    });
-                }
+                ratingData['percent'].push({
+                    'num': rating,
+                    'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
+                });
             });
             self.set('rating_card_values', ratingData);
         });
