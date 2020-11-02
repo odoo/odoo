@@ -81,7 +81,7 @@ class ResCompany(models.Model):
             dropship_picking_type = self.env['stock.picking.type'].search([
                 ('name', '=', 'Dropship'),
                 ('company_id', '=', company.id),
-            ])
+            ], limit=1, order="sequence")
             dropship_vals.append({
                 'name': '%s → %s' % (supplier_location.name, customer_location.name),
                 'action': 'buy',
