@@ -4,6 +4,8 @@ odoo.define("website.tour_utils", function (require) {
 const core = require("web.core");
 const _t = core._t;
 
+var tour = require("web_tour.tour");
+
 /**
 
 const snippets = [
@@ -216,7 +218,28 @@ function selectSnippetColumn(snippet, index = 0, position = "bottom") {
          position: position,
         run: "click",
      };
- }
+}
+
+function prepend_trigger(steps, prepend_text='') {
+    for (const step of steps) {
+        if (!step.noPrepend && prepend_text) {
+            step.trigger = prepend_text + step.trigger;
+        }
+    }
+    return steps;
+}
+
+function registerThemeHomepageTour(name, steps) {
+    tour.register(name, {
+        url: "/",
+        sequence: 1010,
+        saveAs: "homepage",
+    }, prepend_trigger(
+        steps,
+        "html[data-view-xmlid='website.homepage'] "
+    ));
+}
+
 
 return {
     addMedia,
@@ -236,5 +259,7 @@ return {
     goToOptions,
     selectHeader,
     selectSnippetColumn,
+
+    registerThemeHomepageTour,
 };
 });

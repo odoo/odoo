@@ -10,8 +10,9 @@ odoo.define("website_blog.tour", function (require) {
         url: "/",
     }, [{
         trigger: '#new-content-menu > a',
-        auto: true,
+        content: _t("Click here to add new content on your website."),
         position: 'bottom',
+
     }, {
         trigger: "a[data-action=new_blog_post]",
         content: _t("Select this menu item to create a new blog post."),
