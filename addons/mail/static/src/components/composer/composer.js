@@ -261,6 +261,7 @@ class Composer extends Component {
      */
     _onClickSend() {
         this._postMessage();
+        this.focus();
     }
 
     /**
