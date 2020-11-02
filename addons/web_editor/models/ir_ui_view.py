@@ -212,7 +212,9 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_get_inherited_children(self, view):
-        return view.inherit_children_ids
+        return view.with_context(
+            active_test=self.env.context.get('active_test', True)
+        ).inherit_children_ids
 
     @api.model
     def _view_obj(self, view_id):
