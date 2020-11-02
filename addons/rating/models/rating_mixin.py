@@ -266,7 +266,7 @@ class RatingMixin(models.AbstractModel):
         result = {
             'avg': data['avg'],
             'total': data['total'],
-            'percent': dict.fromkeys(range(1, 11), 0),
+            'percent': dict.fromkeys(range(1, 6), 0),
         }
         for rate in data['repartition']:
             result['percent'][rate] = (data['repartition'][rate] * 100) / data['total'] if data['total'] > 0 else 0
