@@ -14,6 +14,12 @@ const {
 const Bus = require('web.Bus');
 const { makeTestPromise, file: { createFile, inputFiles } } = require('web.test_utils');
 
+const {
+    applyFilter,
+    toggleAddCustomFilter,
+    toggleFilterMenu,
+} = require('web.test_utils_control_panel');
+
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
@@ -4260,6 +4266,31 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
         'o-unread',
         "sidebar item of channel ID 10 should no longer be unread"
     );
+});
+
+QUnit.test('add custom filter should filter messages accordingly to selected filter', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        name: "General"
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                const domainsAsStr = args.kwargs.domain.map(domain => domain.join(''));
+                assert.step(`message_fetch:${domainsAsStr.join(',')}`);
+            }
+            return this._super(...arguments);
+        },
+    });
+    assert.verifySteps(['message_fetch:needaction=true'], "A message_fetch request should have been done for needaction messages as inbox is selected by default");
+
+    // Open filter menu of control panel and select a custom filter (id = 0, the only one available)
+    await toggleFilterMenu(document.body);
+    await toggleAddCustomFilter(document.body);
+    await applyFilter(document.body);
+    assert.verifySteps(['message_fetch:id=0,needaction=true'], "A message_fetch request should have been done for selected filter & domain of current thread (inbox)");
 });
 
 });
