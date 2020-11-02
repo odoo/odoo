@@ -1930,7 +1930,6 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
             is_minimized: true,
             is_pinned: false,
             members: [this.data.currentPartnerId, 10],
-            message_unread_counter: 0,
             uuid: 'channel-10-uuid',
         },
     ];

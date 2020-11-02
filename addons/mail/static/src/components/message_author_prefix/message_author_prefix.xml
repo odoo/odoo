@@ -7,7 +7,7 @@
                 <t t-if="message.author and message.author === env.messaging.currentPartner">
                     <i class="o_MessageAuthorPrefixIcon fa fa-mail-reply"/>You:
                 </t>
-                <t t-elif="thread and thread.channel_type === 'channel'">
+                <t t-elif="thread and message.author !== thread.correspondent">
                     <t t-esc="message.author.nameOrDisplayName"/>:
                 </t>
             </t>
