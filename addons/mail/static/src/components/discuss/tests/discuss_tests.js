@@ -1890,7 +1890,16 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
 QUnit.test('restore thread scroll position', async function (assert) {
     assert.expect(6);
     // channels expected to be rendered, with random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 11 }, { id: 12 });
+    this.data['mail.channel'].records.push(
+        {
+            id: 11,
+            seen_message_id: 50, // prevent race condition with mark as seen (task-2372339)
+        },
+        {
+            id: 12,
+            seen_message_id: 50, // prevent race condition with mark as seen (task-2372339)
+        },
+    );
     for (let i = 1; i <= 25; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",

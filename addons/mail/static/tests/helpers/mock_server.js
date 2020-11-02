@@ -851,7 +851,8 @@ MockServer.include({
      * @private
      */
     _mockMailChannelExecuteCommand(args) {
-        const [ids, commandName] = args.args;
+        const ids = args.args[0];
+        const commandName = args.kwargs.command || args.args[1];
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         if (commandName === 'leave') {
             for (const channel of channels) {
@@ -864,6 +865,24 @@ MockServer.include({
                     Object.assign({}, channel, { info: 'unsubscribe' })
                 ];
                 this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmUnpin]);
+            }
+            return;
+        } else if (commandName === 'who') {
+            for (const channel of channels) {
+                const members = channel.members.map(memberId => this._getRecords('res.partner', [['id', '=', memberId]])[0].name);
+                let message = "You are alone in this channel.";
+                if (members.length > 0) {
+                    message = `Users in this channel: ${members.join(', ')} and you`
+                }
+                const notification = [
+                    ["dbName", 'res.partner', this.currentPartnerId],
+                    {
+                        'body': `<span class="o_mail_notification">${message}</span>`,
+                        'channel_ids': [channel.id],
+                        'info': 'transient_message',
+                    }
+                ];
+                this._widget.call('bus_service', 'trigger', 'notification', [notification]);
             }
             return;
         }
