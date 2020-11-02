@@ -320,14 +320,16 @@ class PosOrder(models.Model):
                 if tax['tax_repartition_line_id']:
                     rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
                     base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                    account_id = rep_ln.account_id.id
                 else:
                     base_amount = None
+                    account_id = tax['account_id']
 
                 data = {
                     'name': _('Tax') + ' ' + tax['name'],
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
-                    'account_id': tax['account_id'] or income_account.id,
+                    'account_id': account_id or income_account.id,
                     'credit': ((amount_tax > 0) and amount_tax) or 0.0,
                     'debit': ((amount_tax < 0) and -amount_tax) or 0.0,
                     'tax_line_id': tax['id'],
