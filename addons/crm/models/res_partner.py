@@ -37,25 +37,22 @@ class Partner(models.Model):
         return rec
 
     def _compute_opportunity_count(self):
-        if self.ids:
-            lead_group_data = self.env['crm.lead'].read_group(
-                [('partner_id.commercial_partner_id', 'in', self.ids)],
-                ['partner_id'], ['partner_id']
-            )
-        else:
-            lead_group_data = []
-        partners = dict(
-            (m['partner_id'][0], m['partner_id_count'])
-            for m in lead_group_data)
-        commercial_partners = {}
-        for partner in self.browse(partners.keys()):
-            commercial_partners.setdefault(partner.commercial_partner_id.id, 0)
-            commercial_partners[partner.commercial_partner_id.id] += partners[partner.id]
-        for partner in self:
-            if partner.is_company:
-                partner.opportunity_count = commercial_partners.get(partner.id, 0)
-            else:
-                partner.opportunity_count = partners.get(partner.id, 0)
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
+
+        opportunity_data = self.env['crm.lead'].read_group(
+            domain=[('partner_id', 'in', all_partners.ids)],
+            fields=['partner_id'], groupby=['partner_id']
+        )
+
+        self.opportunity_count = 0
+        for group in opportunity_data:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.opportunity_count += group['partner_id_count']
+                partner = partner.parent_id
 
     def _compute_meeting_count(self):
         result = self._compute_meeting()
