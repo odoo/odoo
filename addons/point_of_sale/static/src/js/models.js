@@ -1630,6 +1630,7 @@ exports.Orderline = Backbone.Model.extend({
         this.selected = false;
         this.description = '';
         this.price_extra = 0;
+        this.full_product_name = '';
         this.id = orderline_id++;
         this.price_manually_set = false;
 
@@ -1647,6 +1648,7 @@ exports.Orderline = Backbone.Model.extend({
         this.set_quantity(json.qty, 'do not recompute unit price');
         this.set_description(json.description);
         this.set_price_extra(json.price_extra);
+        this.set_full_product_name(json.full_product_name);
         this.id = json.id ? json.id : orderline_id++;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
@@ -1748,6 +1750,9 @@ exports.Orderline = Backbone.Model.extend({
     set_price_extra: function(price_extra){
         this.price_extra = parseFloat(price_extra) || 0.0;
     },
+    set_full_product_name: function(full_product_name){
+        this.full_product_name = full_product_name || '';
+    },
     get_price_extra: function () {
         return this.price_extra;
     },
@@ -1828,6 +1833,9 @@ exports.Orderline = Backbone.Model.extend({
         return this.product;
     },
     get_full_product_name: function () {
+        if (this.full_product_name) {
+            return this.full_product_name
+        }
         var full_name = this.product.display_name;
         if (this.description) {
             full_name += ` (${this.description})`;
