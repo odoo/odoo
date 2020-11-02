@@ -625,12 +625,20 @@ var SnippetEditor = Widget.extend({
 
         return Promise.all(defs).then(() => {
             const options = _.sortBy(this.snippetOptionInstances, '__order');
+            const firstOptions = []
             options.forEach(option => {
                 if (option.isTopOption) {
-                    $optionsSectionBtnGroup.prepend(option.$el);
+                    if (option.isTopFirstOption) {
+                        firstOptions.push(option);
+                    } else {
+                        $optionsSectionBtnGroup.prepend(option.$el);
+                    }
                 } else {
                     $optionsSection.append(option.$el);
                 }
+            });
+            firstOptions.forEach(option => {
+                $optionsSectionBtnGroup.prepend(option.$el);
             });
             $optionsSection.toggleClass('d-none', options.length === 0);
         });
