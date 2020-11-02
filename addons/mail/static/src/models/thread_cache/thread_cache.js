@@ -267,6 +267,9 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         async _loadMessages({ extraDomain, limit = 30 } = {}) {
+            if (this.isLoading) {
+                return;
+            }
             this.update({ isLoading: true });
             const searchDomain = JSON.parse(this.stringifiedDomain);
             let domain = searchDomain.length ? searchDomain : [];
