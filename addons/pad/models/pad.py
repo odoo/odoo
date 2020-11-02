@@ -26,7 +26,7 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_generate_url(self):
-        company = self.env.user.sudo().company_id
+        company = self.env.company.sudo()
 
         pad = {
             "server": company.pad_server,
@@ -75,7 +75,7 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_get_content(self, url):
-        company = self.env.user.sudo().company_id
+        company = self.env.company.sudo()
         myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
         content = ''
         if url:
