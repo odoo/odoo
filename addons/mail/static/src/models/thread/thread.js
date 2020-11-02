@@ -197,7 +197,7 @@ function factory(dependencies) {
                 data2.public = data.public;
             }
             if ('seen_message_id' in data) {
-                data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id;
+                data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id || 0;
             }
             if ('uuid' in data) {
                 data2.uuid = data.uuid;
@@ -475,17 +475,35 @@ function factory(dependencies) {
          *
          * @static
          * @param {Object} param0
-         * @param {string} param0.command the command to execute
-         * @param {integer[]} param0.ids list of id of channels
+         * @param {integer} param0.channelId
+         * @param {string} param0.command
+         * @param {Object} [param0.postData={}]
          */
-        static async performRpcExecuteCommand({ command, ids }) {
+        static async performRpcExecuteCommand({ channelId, command, postData = {} }) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'execute_command',
-                args: [ids],
-                kwargs: {
-                    command,
-                }
+                args: [[channelId]],
+                kwargs: Object.assign({ command }, postData),
+            });
+        }
+
+        /**
+         * Performs the `message_post` RPC on given threadModel.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {Object} param0.postData
+         * @param {integer} param0.threadId
+         * @param {string} param0.threadModel
+         * @return {integer} the posted message id
+         */
+        static async performRpcMessagePost({ postData, threadId, threadModel }) {
+            return this.env.services.rpc({
+                model: threadModel,
+                method: 'message_post',
+                args: [threadId],
+                kwargs: postData,
             });
         }
 
@@ -614,26 +632,25 @@ function factory(dependencies) {
         /**
          * Mark the specified conversation as read/seen.
          *
-         * @param {integer} messageId the message to be considered as last seen
+         * @param {mail.message} message the message to be considered as last seen.
          */
-        async markAsSeen(messageId) {
+        async markAsSeen(message) {
             if (this.model !== 'mail.channel') {
                 return;
             }
-            if (this.pendingSeenMessageId && messageId <= this.pendingSeenMessageId) {
+            if (this.pendingSeenMessageId && message.id <= this.pendingSeenMessageId) {
                 return;
             }
             if (
                 this.lastSeenByCurrentPartnerMessageId &&
-                messageId <= this.lastSeenByCurrentPartnerMessageId
+                message.id <= this.lastSeenByCurrentPartnerMessageId
             ) {
                 return;
             }
-            this.update({ pendingSeenMessageId: messageId });
+            this.update({ pendingSeenMessageId: message.id });
             return this.env.models['mail.thread'].performRpcChannelSeen({
                 ids: [this.id],
-                // commands have fake message id that is not integer
-                lastMessageId: Math.floor(messageId),
+                lastMessageId: message.id,
             });
         }
 
@@ -676,9 +693,9 @@ function factory(dependencies) {
                     uuid: this.uuid,
                 });
             } else {
-                await this.env.models['mail.thread'].performRpcExecuteCommand({
+                this.env.models['mail.thread'].performRpcExecuteCommand({
+                    channelId: this.id,
                     command: 'leave',
-                    ids: [this.id],
                 });
             }
         }
@@ -1105,9 +1122,6 @@ function factory(dependencies) {
          * @returns {mail.message}
          */
         _computeLastCurrentPartnerMessageSeenByEveryone() {
-            if (!this.partnerSeenInfos || !this.orderedMessages) {
-                return [['unlink-all']];
-            }
             const otherPartnerSeenInfos =
                 this.partnerSeenInfos.filter(partnerSeenInfo =>
                     partnerSeenInfo.partner !== this.messagingCurrentPartner);
@@ -1126,7 +1140,7 @@ function factory(dependencies) {
                 ...otherPartnersLastSeenMessageIds
             );
             const currentPartnerOrderedSeenMessages =
-                this.orderedMessages.filter(message =>
+                this.orderedNonTransientMessages.filter(message =>
                     message.author === this.messagingCurrentPartner &&
                     message.id <= lastMessageSeenByAllId);
 
@@ -1152,6 +1166,56 @@ function factory(dependencies) {
                 return [['link', lastMessage]];
             }
             return [['unlink']];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastNonTransientMessage() {
+            const {
+                length: l,
+                [l - 1]: lastMessage,
+            } = this.orderedNonTransientMessages;
+            if (lastMessage) {
+                return [['link', lastMessage]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * Adjusts the last seen message received from the server to consider
+         * the following messages also as read if they are either transient
+         * messages or messages from the current partner.
+         *
+         * @private
+         * @returns {integer}
+         */
+        _computeLastSeenByCurrentPartnerMessageId() {
+            const firstMessage = this.orderedMessages[0];
+            if (
+                firstMessage &&
+                this.lastSeenByCurrentPartnerMessageId &&
+                this.lastSeenByCurrentPartnerMessageId < firstMessage.id
+            ) {
+                // no deduction can be made if there is a gap
+                return this.lastSeenByCurrentPartnerMessageId;
+            }
+            let lastSeenByCurrentPartnerMessageId = this.lastSeenByCurrentPartnerMessageId;
+            for (const message of this.orderedMessages) {
+                if (message.id <= this.lastSeenByCurrentPartnerMessageId) {
+                    continue;
+                }
+                if (
+                    message.author === this.env.messaging.currentPartner ||
+                    message.isTransient
+                ) {
+                    lastSeenByCurrentPartnerMessageId = message.id;
+                    continue;
+                }
+                return lastSeenByCurrentPartnerMessageId;
+            }
+            return lastSeenByCurrentPartnerMessageId;
         }
 
         /**
@@ -1185,41 +1249,31 @@ function factory(dependencies) {
          * @returns {integer}
          */
         _computeLocalMessageUnreadCounter() {
-            // the only situations where serverMessageUnreadCounter can/have to be
-            // trusted are:
-            // - we have no last message (and then no messages at all)
-            // - the message it used to compute is the last message we know
-            if (this.orderedMessages.length === 0) {
-                return this.serverMessageUnreadCounter;
-            }
-            // from here serverLastMessageId is not undefined because
-            // orderedMessages contain at least one message.
-            if (!this.lastSeenByCurrentPartnerMessageId) {
-                return this.serverMessageUnreadCounter;
-            }
-            // if server knows more messages than the client knows then we just
-            // need to trust him
-            if (this.serverLastMessageId > this.lastSeenByCurrentPartnerMessageId) {
-                return this.serverMessageUnreadCounter;
-            }
+            // By default trust the server up to the last message it used
+            // because it's not possible to do better.
+            let baseCounter = this.serverMessageUnreadCounter;
+            let countFromId = this.serverLastMessageId;
+            // But if the client knows the last seen message that the server
+            // returned (and by assumption all the messages that come after),
+            // the counter can be computed fully locally, ignoring potentially
+            // obsolete values from the server.
             const firstMessage = this.orderedMessages[0];
-            // if the lastSeenByCurrentPartnerMessageId is not known (not fetched), then we
-            // need to rely on server value to determine the amount of unread
-            // messages until the last message it knew when computing the
-            // serverMessageUnreadCounter
-            if (this.lastSeenByCurrentPartnerMessageId < firstMessage.id) {
-                const fetchedNotSeenMessages = this.orderedMessages.filter(message =>
-                    message.id > this.serverLastMessageId && message.author !== this.env.messaging.currentPartner
-                );
-                return this.serverMessageUnreadCounter + fetchedNotSeenMessages.length;
+            if (
+                firstMessage &&
+                this.lastSeenByCurrentPartnerMessageId &&
+                this.lastSeenByCurrentPartnerMessageId >= firstMessage.id
+            ) {
+                baseCounter = 0;
+                countFromId = this.lastSeenByCurrentPartnerMessageId;
             }
-            // lastSeenByCurrentPartnerMessageId is a known message,
-            // then we can forget serverMessageUnreadCounter
-            const maxId = this.lastSeenByCurrentPartnerMessageId;
-            return this.orderedMessages.reduce(
-                (acc, message) => acc + ((message.id > maxId && message.author !== this.env.messaging.currentPartner) ? 1 : 0),
-                0
-            );
+            // Include all the messages that are known locally but the server
+            // didn't take into account.
+            return this.orderedMessages.reduce((total, message) => {
+                if (message.id <= countFromId) {
+                    return total;
+                }
+                return total + 1;
+            }, baseCounter);
         }
 
         /**
@@ -1240,10 +1294,39 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeMessageAfterNewMessageSeparator() {
+            if (this.model !== 'mail.channel') {
+                return [['unlink']];
+            }
+            if (this.localMessageUnreadCounter === 0) {
+                return [['unlink']];
+            }
+            const index = this.orderedMessages.findIndex(message =>
+                message.id === this.lastSeenByCurrentPartnerMessageId
+            );
+            const message = this.orderedMessages[index + 1];
+            if (!message) {
+                return [['unlink']];
+            }
+            return [['link', message]];
+        }
+
+        /**
+         * @private
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
             return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedNonTransientMessages() {
+            return [['replace', this.orderedMessages.filter(m => !m.isTransient)]];
         }
 
         /**
@@ -1638,11 +1721,14 @@ function factory(dependencies) {
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
             dependencies: [
-                'partnerSeenInfos',
-                'orderedMessages',
                 'messagingCurrentPartner',
+                'orderedNonTransientMessages',
+                'partnerSeenInfos',
             ],
         }),
+        /**
+         * Last message of the thread, could be a transient one.
+         */
         lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
             dependencies: ['orderedMessages'],
@@ -1652,17 +1738,30 @@ function factory(dependencies) {
             dependencies: ['needactionMessages'],
         }),
         /**
+         * Last non-transient message.
+         */
+        lastNonTransientMessage: many2one('mail.message', {
+            compute: '_computeLastNonTransientMessage',
+            dependencies: ['orderedNonTransientMessages'],
+        }),
+        /**
          * Last seen message id of the channel by current partner.
-         *
-         * If there is a pending seen message id change, it is immediately applied
-         * on the interface to avoid a feeling of unresponsiveness. Otherwise the
-         * last known message id of the server is used.
          *
          * Also, it needs to be kept as an id because it's considered like a "date" and could stay
          * even if corresponding message is deleted. It is basically used to know which
          * messages are before or after it.
          */
-        lastSeenByCurrentPartnerMessageId: attr(),
+        lastSeenByCurrentPartnerMessageId: attr({
+            compute: '_computeLastSeenByCurrentPartnerMessageId',
+            default: 0,
+            dependencies: [
+                'lastSeenByCurrentPartnerMessageId',
+                'messagingCurrentPartner',
+                'orderedMessages',
+                'orderedMessagesIsTransient',
+                // FIXME missing dependency 'orderedMessages.author', (task-2261221)
+            ],
+        }),
         /**
          * Local value of message unread counter, that means it is based on initial server value and
          * updated with interface updates.
@@ -1670,7 +1769,6 @@ function factory(dependencies) {
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
             dependencies: [
-                'lastMessage',
                 'lastSeenByCurrentPartnerMessageId',
                 'messagingCurrentPartner',
                 'orderedMessages',
@@ -1686,6 +1784,19 @@ function factory(dependencies) {
         }),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
+        }),
+        /**
+         * Determines the message before which the "new message" separator must
+         * be positioned, if any.
+         */
+        messageAfterNewMessageSeparator: many2one('mail.message', {
+            compute: '_computeMessageAfterNewMessageSeparator',
+            dependencies: [
+                'lastSeenByCurrentPartnerMessageId',
+                'localMessageUnreadCounter',
+                'model',
+                'orderedMessages',
+            ],
         }),
         message_needaction_counter: attr({
             default: 0,
@@ -1752,9 +1863,29 @@ function factory(dependencies) {
                 'serverFoldState',
             ],
         }),
+        /**
+         * All messages ordered like they are displayed.
+         */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
+        }),
+        /**
+         * Serves as compute dependency. (task-2261221)
+         */
+        orderedMessagesIsTransient: attr({
+            related: 'orderedMessages.isTransient',
+        }),
+        /**
+         * All messages ordered like they are displayed. This field does not
+         * contain transient messages which are not "real" records.
+         */
+        orderedNonTransientMessages: many2many('mail.message', {
+            compute: '_computeOrderedNonTransientMessages',
+            dependencies: [
+                'orderedMessages',
+                'orderedMessagesIsTransient',
+            ],
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.
