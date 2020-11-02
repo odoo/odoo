@@ -853,7 +853,7 @@ class WebsiteSale(portal.CustomerPortal):
 
     @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     # TODO ANV don't show tokenization option if Subs product in cart
-    def payment(self, **post):
+    def shop_payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
 
@@ -878,7 +878,7 @@ class WebsiteSale(portal.CustomerPortal):
         return request.render("website_sale.payment", render_values)
 
     @http.route('/shop/payment/transaction/<int:order_id>', type='json', auth='public', csrf=True)
-    def payment_transaction(  # TODO ANV merge with /website_payment/transaction
+    def shop_payment_transaction(  # TODO ANV merge with /website_payment/transaction
         self, order_id, payment_option_id, amount, currency_id, partner_id, flow,
         tokenization_requested, landing_route, access_token, **kwargs
     ):

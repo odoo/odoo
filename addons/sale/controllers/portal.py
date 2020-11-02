@@ -203,7 +203,7 @@ class CustomerPortal(portal.CustomerPortal):
                 'currency': order_sudo.pricelist_id.currency_id,
                 'partner_id': order_sudo.partner_id.id,
                 'access_token': order_sudo.access_token,
-                'init_tx_route': order_sudo.get_portal_url(suffix='/transaction/'),
+                'init_tx_route': order_sudo.get_portal_url(suffix='/transaction'),
                 'landing_route': order_sudo.get_portal_url(),
             })
 
@@ -276,8 +276,8 @@ class CustomerPortal(portal.CustomerPortal):
 
         return request.redirect(order_sudo.get_portal_url(query_string=query_string))
 
-    @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth='public', csrf=True)
-    def payment_transaction(  # TODO ANV merge with /website_payment/transaction
+    @http.route('/my/orders/<int:order_id>/transaction', type='json', auth='public', csrf=True)
+    def portal_order_transaction(  # TODO ANV merge with /website_payment/transaction
         self, order_id, payment_option_id, amount, currency_id, partner_id, flow,
         tokenization_requested, landing_route, access_token, **kwargs
     ):

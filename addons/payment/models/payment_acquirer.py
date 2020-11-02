@@ -104,7 +104,7 @@ class PaymentAcquirer(models.Model):
         default=lambda self: _("Your payment has been successfully processed. Thank you!"),
         translate=True)
     cancel_msg = fields.Html(
-        sring="Canceled Message",
+        string="Canceled Message",
         help="The message displayed if the order is canceled during the payment process",
         default=lambda self: _("Your payment has been cancelled."), translate=True)
 

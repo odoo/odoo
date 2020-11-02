@@ -10,7 +10,7 @@ from odoo.exceptions import UserError
 class WebsiteSaleDelivery(WebsiteSale):
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
-    def payment(self, **post):
+    def shop_payment(self, **post):
         order = request.website.sale_get_order()
         carrier_id = post.get('carrier_id')
         if carrier_id:
@@ -20,7 +20,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             if carrier_id:
                 return request.redirect("/shop/payment")
 
-        return super(WebsiteSaleDelivery, self).payment(**post)
+        return super(WebsiteSaleDelivery, self).shop_payment(**post)
 
     @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
     def update_eshop_carrier(self, **post):
