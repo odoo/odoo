@@ -114,18 +114,29 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeThreadShouldBeSetAsSeen() {
-            // FIXME condition should not be on "composer is focused" but "threadView is active"
-            // See task-2277543
-            const lastMessageIsVisible = this.lastVisibleMessage &&
-                this.lastVisibleMessage === this.lastMessage;
-            if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
-                this.thread.markAsSeen(this.lastMessage.id).catch(e => {
-                    // prevent crash when executing compute during destroy
-                    if (!(e instanceof RecordDeletedError)) {
-                        throw e;
-                    }
-                });
+            if (!this.thread) {
+                return;
             }
+            if (!this.thread.lastNonTransientMessage) {
+                return;
+            }
+            if (!this.lastVisibleMessage) {
+                return;
+            }
+            if (this.lastVisibleMessage !== this.lastMessage) {
+                return;
+            }
+            if (!this.hasComposerFocus) {
+                // FIXME condition should not be on "composer is focused" but "threadView is active"
+                // See task-2277543
+                return;
+            }
+            this.thread.markAsSeen(this.thread.lastNonTransientMessage).catch(e => {
+                // prevent crash when executing compute during destroy
+                if (!(e instanceof RecordDeletedError)) {
+                    throw e;
+                }
+            });
         }
 
         /**
@@ -233,6 +244,12 @@ function factory(dependencies) {
             related: 'thread.lastMessage',
         }),
         /**
+         * Serves as compute dependency.
+         */
+        lastNonTransientMessage: many2one('mail.message', {
+            related: 'thread.lastNonTransientMessage',
+        }),
+        /**
          * Most recent message in this ThreadView that has been shown to the
          * current partner in the currently displayed thread cache.
          */
@@ -329,6 +346,7 @@ function factory(dependencies) {
             dependencies: [
                 'hasComposerFocus',
                 'lastMessage',
+                'lastNonTransientMessage',
                 'lastVisibleMessage',
                 'threadCache',
             ],
