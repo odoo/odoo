@@ -360,7 +360,11 @@ class IrModuleModule(models.Model):
         # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
 
-        return website.button_go_website(mode_edit=True)
+        active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
+        if active_todo:
+            return active_todo.action_launch()
+        else:
+            return website.button_go_website(mode_edit=True)
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""

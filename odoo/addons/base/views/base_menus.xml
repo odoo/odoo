@@ -40,6 +40,7 @@
           <field name="params" eval="{'menu_id': ref('base.menu_administration')}"/>
       </record>
       <record id="open_menu" model="ir.actions.todo">
+          <field name="name">Open Menu</field>
           <field name="action_id" ref="action_client_base_menu"/>
           <field name="sequence">100</field>
           <field name="state">done</field>
