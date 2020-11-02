@@ -13,6 +13,7 @@ class ProfitabilityAnalysis(models.Model):
 
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
+    task_id = fields.Many2one('project.task', string='Task', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Project Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Project Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Project Manager', readonly=True)
@@ -28,10 +29,10 @@ class ProfitabilityAnalysis(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
 
-    amount_untaxed_to_invoice = fields.Float("Untaxed Amount to Invoice", digits=(16, 2), readonly=True, group_operator="sum")
-    amount_untaxed_invoiced = fields.Float("Untaxed Amount Invoiced", digits=(16, 2), readonly=True, group_operator="sum")
-    expense_amount_untaxed_to_invoice = fields.Float("Untaxed Amount to Re-invoice", digits=(16, 2), readonly=True, group_operator="sum")
-    expense_amount_untaxed_invoiced = fields.Float("Untaxed Amount Re-invoiced", digits=(16, 2), readonly=True, group_operator="sum")
+    amount_untaxed_to_invoice = fields.Float("Amount to Invoice", digits=(16, 2), readonly=True, group_operator="sum")
+    amount_untaxed_invoiced = fields.Float("Amount Invoiced", digits=(16, 2), readonly=True, group_operator="sum")
+    expense_amount_untaxed_to_invoice = fields.Float("Amount to Re-invoice", digits=(16, 2), readonly=True, group_operator="sum")
+    expense_amount_untaxed_invoiced = fields.Float("Amount Re-invoiced", digits=(16, 2), readonly=True, group_operator="sum")
     other_revenues = fields.Float("Other Revenues", digits=(16, 2), readonly=True, group_operator="sum",
                                   help="All revenues that are not from timesheets and that are linked to the analytic account of the project.")
     margin = fields.Float("Margin", digits=(16, 2), readonly=True, group_operator="sum")
@@ -43,6 +44,7 @@ class ProfitabilityAnalysis(models.Model):
                 SELECT
                     sub.id as id,
                     sub.project_id as project_id,
+                    sub.task_id as task_id,
                     sub.user_id as user_id,
                     sub.sale_line_id as sale_line_id,
                     sub.analytic_account_id as analytic_account_id,
@@ -71,6 +73,7 @@ class ProfitabilityAnalysis(models.Model):
                         P.id AS project_id,
                         P.user_id AS user_id,
                         SOL.id AS sale_line_id,
+                        SOL.task_id AS task_id,
                         P.analytic_account_id AS analytic_account_id,
                         P.partner_id AS partner_id,
                         C.id AS company_id,
