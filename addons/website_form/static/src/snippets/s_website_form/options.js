@@ -1270,6 +1270,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
 
 snippetOptions.registry.AddFieldForm = FormEditor.extend({
     isTopOption: true,
+    isTopFirstOption: true,
 
     //--------------------------------------------------------------------------
     // Options
@@ -1294,6 +1295,7 @@ snippetOptions.registry.AddFieldForm = FormEditor.extend({
 
 snippetOptions.registry.AddField = FieldEditor.extend({
     isTopOption: true,
+    isTopFirstOption: true,
 
     //--------------------------------------------------------------------------
     // Options

@@ -1831,6 +1831,13 @@ const SnippetOptionWidget = Widget.extend({
      */
     isTopOption: false,
     /**
+     * Indicates if the option should be the first one displayed in the button
+     * group at the top of the options panel, next to the clone/remove button.
+     *
+     * @type {boolean}
+     */
+    isTopFirstOption: false,
+    /**
      * Forces the target to not be possible to remove.
      *
      * @type {boolean}
