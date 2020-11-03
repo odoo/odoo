@@ -84,7 +84,7 @@ class AcquirerOdooByAdyen(models.Model):
     def odoo_adyen_get_form_action_url(self):
         self.ensure_one()
         proxy_url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.proxy_url')
-        return urls.url_join(proxy_url, 'pay_by_link')
+        return urls.url_join(proxy_url, 'v1/pay_by_link')
 
     def odoo_adyen_create_account(self):
         return self.env['adyen.account'].action_create_redirect()
@@ -114,7 +114,7 @@ class TxOdooByAdyen(models.Model):
             },
             'returnUrl': urls.url_join(self.get_base_url(), '/payment/process'),
         }
-        self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payments', data)
+        self.acquirer_id.odoo_adyen_account_id._adyen_rpc('v1/payments', data)
 
     @api.model
     def _odoo_adyen_form_get_tx_from_data(self, data):
@@ -153,7 +153,7 @@ class TxOdooByAdyen(models.Model):
         if self.partner_id and not self.payment_token_id and \
                (self.type == 'form_save' or self.acquirer_id.save_token == 'always') \
                and 'recurring.shopperReference' in data['additionalData']:
-            res = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payment_methods', {
+            res = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('v1/payment_methods', {
                 'shopperReference': data['additionalData']['recurring.shopperReference']
             })
             stored_payment_methods = res['storedPaymentMethods']
