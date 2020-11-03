@@ -40,6 +40,8 @@ class AccountTourUploadBill(models.TransientModel):
         return
 
     def _action_list_view_bill(self, bill_ids=[]):
+        context = dict(self._context)
+        context['default_move_type'] = 'in_invoice'
         return {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', bill_ids)],
@@ -47,7 +49,7 @@ class AccountTourUploadBill(models.TransientModel):
             'res_model': 'account.move',
             'views': [[False, "tree"], [False, "form"]],
             'type': 'ir.actions.act_window',
-            'context': self._context
+            'context': context
         }
 
     def apply(self):
