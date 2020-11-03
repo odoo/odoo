@@ -49,11 +49,6 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
                     });
                 }
             });
-
-            if (!this.$('> div:first-child img').length) {
-                // reset the images to show the "Add images" button.
-                this.removeAllImages()
-            }
         };
         await this.wysiwyg.editor.execCommand(galleryStart);
 
