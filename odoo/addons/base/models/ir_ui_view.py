@@ -631,14 +631,14 @@ actual arch.
     def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
-            if node.get('t-field'):
+            if node.tag == 'data' or node.tag == 'xpath' or node.get('position'):
+                self.inherit_branding(node, view_id, root_id)
+            elif node.get('t-field'):
                 # Note: 'data-oe-field-xpath' and not 'data-oe-xpath' as this
                 # was introduced as a fix. To avoid breaking customizations and
                 # to make a minimal diff fix, a separated attribute was used.
                 # TODO Try to use a common attribute in master (14.1).
                 node.set('data-oe-field-xpath', xpath)
-                self.inherit_branding(node, view_id, root_id)
-            elif node.tag == 'data' or node.tag == 'xpath' or node.get('position'):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
