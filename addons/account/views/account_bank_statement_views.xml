@@ -100,8 +100,9 @@
                 <search string="Search Bank Statements">
                     <field name="name" string="Bank Statement"/>
                     <field name="date"/>
-                    <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
-                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirm')]"/>
+                    <filter string="New" name="draft" domain="[('state','=','open')]"/>
+                    <filter string="Processing" name="processing" domain="[('state','=','posted')]"/>
+                    <filter string="Validated" name="confirmed" domain="[('state','=','confirm')]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
