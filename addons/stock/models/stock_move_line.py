@@ -553,6 +553,7 @@ class StockMoveLine(models.Model):
             data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
         record.message_post_with_view(template, values={'move': move, 'vals': dict(vals, **data)}, subtype_id=self.env.ref('mail.mt_note').id)
 
+    @api.model
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
         possible to impact quants that were not reserved. It is therefore necessary to edit or
@@ -560,7 +561,6 @@ class StockMoveLine(models.Model):
 
         :param ml_to_ignore: recordset of `stock.move.line` that should NOT be unreserved
         """
-        self.ensure_one()
 
         if ml_to_ignore is None:
             ml_to_ignore = self.env['stock.move.line']
@@ -578,7 +578,7 @@ class StockMoveLine(models.Model):
                 ('state', 'not in', ['done', 'cancel']),
                 ('product_id', '=', product_id.id),
                 ('lot_id', '=', lot_id.id if lot_id else False),
-                ('location_id', '=', location_id.id),
+                ('location_id.parent_path', '=like', location_id.parent_path + '%'),
                 ('owner_id', '=', owner_id.id if owner_id else False),
                 ('package_id', '=', package_id.id if package_id else False),
                 ('product_qty', '>', 0.0),
@@ -597,27 +597,27 @@ class StockMoveLine(models.Model):
             # recompute the moves which we adapted their lines.
             move_to_recompute_state = self.env['stock.move']
 
-            rounding = self.product_uom_id.rounding
             for candidate in outdated_candidates:
-                if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
+                if float_compare(candidate.product_qty, quantity, precision_rounding=product_id.uom_id.rounding) <= 0:
                     quantity -= candidate.product_qty
                     move_to_recompute_state |= candidate.move_id
                     if candidate.qty_done:
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
-                    if float_is_zero(quantity, precision_rounding=rounding):
+                    if float_is_zero(quantity, precision_rounding=product_id.uom_id.rounding):
                         break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
                         candidate.product_qty - quantity,
-                        precision_rounding=self.product_uom_id.rounding,
+                        precision_rounding=product_id.uom_id.rounding,
                         rounding_method='UP')
-                    candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
+                    candidate.product_uom_qty = product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
                     move_to_recompute_state |= candidate.move_id
                     break
             move_to_recompute_state._recompute_state()
+            return move_to_recompute_state
 
     def _should_bypass_reservation(self, location):
         self.ensure_one()
