@@ -85,7 +85,7 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('generate_lead_from_alias')
     def _compute_crm_alias_prefix(self):
         for setting in self:
-            setting.crm_alias_prefix = (setting.crm_alias_prefix or 'info') if setting.generate_lead_from_alias else False
+            setting.crm_alias_prefix = (setting.crm_alias_prefix or 'contact') if setting.generate_lead_from_alias else False
 
     @api.model
     def get_values(self):
