@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="adyen_transaction_view_list" model="ir.ui.view">
+        <field name="model">adyen.transaction</field>
+        <field name="inherit_id" ref="adyen_platforms.adyen_transaction_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="payment_transaction_id" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="adyen_transaction_view_form" model="ir.ui.view">
+        <field name="model">adyen.transaction</field>
+        <field name="inherit_id" ref="adyen_platforms.adyen_transaction_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="payment_transaction_id" attrs="{'invisible': [('payment_transaction_id', '=', False)]}" />
+            </xpath>
+            <xpath expr="//group[@name='additional_info']" position="inside">
+                <field name="partner_id" widget="res_partner_many2one" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                <label for="partner_address" string="Address" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                <div class="o_address_format" attrs="{'invisible': [('partner_id', '=', False)]}">
+                    <field name="partner_address" placeholder="Address" class="o_address_street"/>
+                    <field name="partner_city" placeholder="City" class="o_address_city"/>
+                    <field name="partner_state_id" placeholder="State" class="o_address_state" options="{'no_open': True}"/>
+                    <field name="partner_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="partner_country_id" placeholder="Country" class="o_address_country" options="{'no_open': True}"/>
+                </div>
+                <field name="partner_email" widget="email" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                <field name="partner_phone" widget="phone" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                <field name="partner_lang" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_invoices" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        attrs="{'invisible': [('invoices_count', '=', 0)]}">
+                    <field name="invoices_count" widget="statinfo" string="Invoice(s)"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
