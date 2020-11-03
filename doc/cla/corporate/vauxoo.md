@@ -49,3 +49,4 @@ Arturo Flores arturo@vauxoo.com https://github.com/umiphos
 Deivis Laya deivis@vauxoo.com https://github.com/deivislaya
 Yennifer Santiago yennifer@vauxoo.com https://github.com/ysantiago
 Randall Castro randall@vauxoo.com https://github.com/randall-vx
+Alejandro Santillan asantillan@vauxoo.com https://github.com/R4Alex
