@@ -356,9 +356,13 @@ class Applicant(models.Model):
         return action
 
     def action_applications_email(self):
+        old = _('Applications')
+        new = _('Job Applications')
+        new_is_translated = new != 'Job Applications'
+        term = new if new_is_translated else old
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Applications'),
+            'name': term,
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
