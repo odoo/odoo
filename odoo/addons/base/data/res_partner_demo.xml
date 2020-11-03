@@ -44,7 +44,7 @@
         </record>
         <record id="res_partner_1" model="res.partner">
             <field name="name">Wood Corner</field>
-            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="street">1839 Arbor Way</field>
             <field name="city">Turlock</field>
@@ -58,7 +58,7 @@
         </record>
         <record id="res_partner_2" model="res.partner">
             <field name="name">Deco Addict</field>
-            <field eval="[(6, 0, [ref('base.res_partner_category_14')])]" name="category_id"/>
+            <field eval="[Command.set([ref('base.res_partner_category_14')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="street">77 Santa Barbara Rd</field>
             <field name="city">Pleasant Hill</field>
@@ -72,7 +72,7 @@
         </record>
         <record id="res_partner_3" model="res.partner">
             <field name="name">Gemini Furniture</field>
-            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
+            <field eval="[Command.set([ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="street">317 Fairchild Dr</field>
             <field name="city">Fairfield</field>
@@ -87,7 +87,7 @@
 
         <record id="res_partner_4" model="res.partner">
             <field name="name">Ready Mat</field>
-            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="street">7500 W Linne Road</field>
             <field name="city">Tracy</field>
@@ -115,7 +115,7 @@
 
         <record id="res_partner_12" model="res.partner">
             <field name="name">Azure Interior</field>
-            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
+            <field eval="[Command.set([ref('res_partner_category_11')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>
