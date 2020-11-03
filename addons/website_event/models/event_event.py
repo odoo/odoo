@@ -158,11 +158,11 @@ class Event(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        res = super(Event, self).create(vals)
-        res._update_website_menus()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        events = super().create(vals_list)
+        events._update_website_menus()
+        return events
 
     def write(self, vals):
         menus_state_by_field = self._split_menus_state_by_field()
