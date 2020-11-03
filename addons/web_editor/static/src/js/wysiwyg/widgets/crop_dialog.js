@@ -26,8 +26,14 @@ var CropImageDialog = Dialog.extend({
         this.media = media;
         this.$media = $(this.media);
         var src = this.$media.attr('src').split('?')[0];
+
+        var old_term = _t('Free');
+        var new_term = _t('Flexible');
+        var new_is_translated = new_term != 'Flexible';
+        var term = new_is_translated? new_term : old_term;
+
         this.aspectRatioList = [
-            [_t("Free"), '0/0', 0],
+            [term, '0/0', 0],
             ["16:9", '16/9', 16 / 9],
             ["4:3", '4/3', 4 / 3],
             ["1:1", '1/1', 1],
