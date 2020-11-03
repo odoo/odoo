@@ -678,7 +678,8 @@ form: module.record_id""" % (xml_id,)
             except ParseError:
                 raise
             except Exception as e:
-                raise ParseError('while parsing %s:%s, near\n%s' % (
+                raise ParseError('%s while parsing %s:%s, near\n%s' % (
+                    ustr(e),
                     rec.getroottree().docinfo.URL,
                     rec.sourceline,
                     etree.tostring(rec, encoding='unicode').rstrip()
