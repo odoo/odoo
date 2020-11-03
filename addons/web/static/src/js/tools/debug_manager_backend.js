@@ -728,11 +728,14 @@ if (config.isDebug()) {
          */
         current_action_updated: function (action, controller) {
             this._super.apply(this, arguments);
+            this.update_debug_manager(action, controller);
+        },
+        update_debug_manager: function(action, controller) {
             var debugManager = _.find(this.menu.systray_menu.widgets, function(item) {
                 return item instanceof DebugManager;
             });
             debugManager.update('action', action, controller && controller.widget);
-        },
+        }
     });
 
     ActionManager.include({
