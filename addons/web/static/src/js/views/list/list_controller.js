@@ -354,7 +354,7 @@ var ListController = BasicController.extend({
      * @param {string} [recordID] - default to main recordID
      * @returns {Promise}
      */
-    _discardChanges: function (recordID) {
+    _discardChanges: function (recordID, options) {
         if ((recordID || this.handle) === this.handle) {
             recordID = this.renderer.getEditableRecordID();
             if (recordID === null) {
@@ -362,7 +362,7 @@ var ListController = BasicController.extend({
             }
         }
         var self = this;
-        return this._super(recordID).then(function () {
+        return this._super(recordID, options).then(function () {
             self.updateButtons('readonly');
         });
     },
@@ -730,7 +730,21 @@ var ListController = BasicController.extend({
      */
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
-        this._discardChanges();
+        this.fieldChangedPrevented;
+        const saveMulti = () => {
+            // if fieldChangedPrevented.data.__originalComponent is set, it is the field Component
+            // that triggered the event, otherwise fieldChangedPrevented.target is the legacy field
+            // Widget that triggered the event
+            const target = this.fieldChangedPrevented.data.__originalComponent || this.fieldChangedPrevented.target;
+            this.multipleRecordsSavingPromise =
+                this._saveMultipleRecords(this.fieldChangedPrevented.data.dataPointID, target.__node, this.fieldChangedPrevented.data.changes);
+            return this.multipleRecordsSavingPromise;
+        };
+        this._discardChanges(false, { saveFunction: saveMulti }).then(() => {
+            this.fieldChangedPrevented = false;
+        }, () => {
+            this.fieldChangedPrevented = false;
+        });
     },
     /**
      * Used to detect if the discard button is about to be clicked.
@@ -745,11 +759,11 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = true;
         window.addEventListener('mouseup', function (mouseupEvent) {
             var preventedEvent = self.fieldChangedPrevented;
-            self.fieldChangedPrevented = false;
             // If the user starts clicking (mousedown) on the button and stops clicking
             // (mouseup) outside of the button, we want to trigger the original onFieldChanged
             // Event that was prevented in the meantime.
             if (ev.target !== mouseupEvent.target && preventedEvent.constructor.name === 'OdooEvent') {
+                self.fieldChangedPrevented = false;
                 self._onFieldChanged(preventedEvent);
             }
         }, { capture: true, once: true });

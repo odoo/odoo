@@ -7649,6 +7649,62 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: clicking on Discard button in multi edition and Save', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            arch: `
+            <tree editable="top" multi_edit="1">
+                <field name="foo"/>
+            </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    assert.ok("write should called");
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        const $discardButton = list.$buttons.find('.o_list_button_discard');
+
+        // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+        await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($discardButton, ['focus']);
+        $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.dom.click($discardButton);
+
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        // Note: there will be two modal, first for confirmation dialog for discard change second
+        // for confimation dialog about number of records get changed, here checking second dialog
+        const modalText = $('.modal-body:eq(1)').text()
+            .split(" ").filter(w => w.trim() !== '').join(" ")
+            .split("\n").join('');
+        assert.strictEqual(modalText,
+            "Are you sure you want to perform the following update on those 2 records ? " +
+            "Field: Foo Update to: oof");
+
+        // click primary button of second confirmation dialog which checks number of record going to write
+        await testUtils.dom.click($('.modal:eq(1) .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "oof");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oof");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view (multi edition): mousedown on "Discard", but mouseup somewhere else', async function (assert) {
         assert.expect(1);
 

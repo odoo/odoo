@@ -80,7 +80,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *          if there is something to discard or not
      *          rejected otherwise
      */
-    canBeDiscarded: function (recordID) {
+    canBeDiscarded: function (recordID, options) {
         var self = this;
         if (this.discardingDef) {
             // discard dialog is already open
@@ -110,7 +110,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                         click: () => {
                             self._disableButtons();
                             const canBeAbandoned = self.model.canBeAbandoned(recordID);
-                            return self.saveRecord(recordID).then(() => {
+                            const prom = options.saveFunction ? options.saveFunction() : self.saveRecord(recordID);
+                            return prom.then(() => {
                                 self._enableButtons();
                                 resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
                                 self.discardingDef = null;
@@ -409,7 +410,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         recordID = recordID || this.handle;
         options = options || {};
-        return this.canBeDiscarded(recordID)
+        return this.canBeDiscarded(recordID, options)
             .then(function (result) {
                 if (options.readonlyIfRealDiscard && !result.needDiscard) {
                     return;
