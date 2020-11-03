@@ -5,14 +5,14 @@ from odoo import _
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.http import request, route
 
-from odoo.addons.payment.controllers.portal import PaymentPostProcessing
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 
 
-class PaymentPortal(CustomerPortal):
+class PaymentPortal(payment_portal.PaymentPortal):
 
     @route('/invoice/transaction/<int:invoice_id>', type='json', auth='public', csrf=True)
-    def invoice_transaction(  # TODO ANV merge with /website_payment/transaction
+    def invoice_transaction(  # TODO ANV merge with /payment/transaction
         self, invoice_id, payment_option_id, amount, currency_id, partner_id, flow,
         tokenization_requested, landing_route, access_token, **kwargs
     ):

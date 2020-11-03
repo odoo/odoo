@@ -8,11 +8,11 @@ from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.http import request
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.payment.controllers.portal import PaymentPostProcessing
+from odoo.addons.payment.controllers.portal import PaymentPortal
+from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import AccessError, MissingError, ValidationError
-from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
@@ -135,7 +135,7 @@ class Website(main.Website):
             request.session.pop('website_sale_shop_layout_mode', None)
 
 
-class WebsiteSale(portal.CustomerPortal):
+class WebsiteSale(PaymentPortal):
 
     def _get_pricelist_context(self):
         pricelist_context = dict(request.env.context)
@@ -878,7 +878,7 @@ class WebsiteSale(portal.CustomerPortal):
         return request.render("website_sale.payment", render_values)
 
     @http.route('/shop/payment/transaction/<int:order_id>', type='json', auth='public', csrf=True)
-    def shop_payment_transaction(  # TODO ANV merge with /website_payment/transaction
+    def shop_payment_transaction(  # TODO ANV merge with /payment/transaction
         self, order_id, payment_option_id, amount, currency_id, partner_id, flow,
         tokenization_requested, landing_route, access_token, **kwargs
     ):
@@ -950,6 +950,9 @@ class WebsiteSale(portal.CustomerPortal):
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
 
+        # Monitor the transaction to make it available in the portal
+        PaymentPostProcessing.monitor_transactions(tx_sudo)
+
         # Store the new transaction into the transaction list and if there's an old one, we remove
         # it until the day the ecommerce supports multiple orders at the same time.
         last_tx_id = request.session.get('__website_sale_last_tx_id')
@@ -957,9 +960,6 @@ class WebsiteSale(portal.CustomerPortal):
         if last_tx:
             PaymentPostProcessing.remove_transactions(last_tx)
         request.session['__website_sale_last_tx_id'] = tx_sudo.id
-
-        # Monitor the transaction to make it available in the portal
-        PaymentPostProcessing.monitor_transactions(tx_sudo)
 
         # TODO ANV there used to be a call to tx._log_sent_message(). See if still necessary
         return processing_values

@@ -6,13 +6,13 @@ import binascii
 from odoo import fields, http, _
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
-from odoo.addons.payment.controllers.portal import PaymentPostProcessing
-from odoo.addons.portal.controllers import portal
+from odoo.addons.payment.controllers.portal import PaymentPortal
+from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
 
 
-class CustomerPortal(portal.CustomerPortal):
+class CustomerPortal(PaymentPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
@@ -277,7 +277,7 @@ class CustomerPortal(portal.CustomerPortal):
         return request.redirect(order_sudo.get_portal_url(query_string=query_string))
 
     @http.route('/my/orders/<int:order_id>/transaction', type='json', auth='public', csrf=True)
-    def portal_order_transaction(  # TODO ANV merge with /website_payment/transaction
+    def portal_order_transaction(  # TODO ANV merge with /payment/transaction
         self, order_id, payment_option_id, amount, currency_id, partner_id, flow,
         tokenization_requested, landing_route, access_token, **kwargs
     ):

@@ -1,43 +1,43 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import urllib.parse
-from datetime import timedelta
-
-import psycopg2
 import werkzeug
 
-from odoo import _, fields, http
+from odoo import _, http
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools.float_utils import float_repr
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
+from odoo.addons.portal.controllers import portal
 
-_logger = logging.getLogger(__name__)
 
-
-class WebsitePayment(http.Controller):
+class PaymentPortal(portal.CustomerPortal):
 
     """
-    This controller is independent from other modules implementing payments and allows the user
-    going through all standard payment flows.
+    This controller contains the foundations for online payments through the portal. It allows to
+    complete a full payment flow without the need of going though a document-based flow made
+    available by another module's controller.
 
-    It exposes several routes:
-    - `/website_payment/pay` allows for arbitrary payments through a payment link.
-    - `/website_payment/transaction` is the `init_tx_route` for the standard payment flow.
+    Such controllers should extend this one to gain access to the _create_transaction static method
+    that implements the creation of a transaction before its processing, or to override specific
+    routes and change their behavior globally (e.g. make the /pay route handle sale orders).
+
+    The following routes are exposed:
+    - `/payment/pay` allows for arbitrary payments.
+    - `/my/payment_method` allows the user to create and delete tokens.
+    - `/payment/transaction` is the `init_tx_route` for the standard payment flow.
       It creates a draft transaction, and return the processing values necessary for the completion
       of the transaction.
-    - `/website_payment/confirm` is the `landing_route` for the standard payment flow.
+    - `/payment/confirm` is the `landing_route` for the standard payment flow.
       It displays the payment confirmation page to the user when the transaction is validated.
-    - `/my/payment_method` allows the user to create and manage tokens.
-    - `/website_payment/validate` is the `landing_route` for the standard payment method validation
-      flow. It redirects the user to `/my/payment_method` to display the result and start the flow
-      over.
+    - `/payment/validate` is the `landing_route` for the standard payment method validation flow.
+      It redirects the user to `/my/payment_method` to display the result and start the flow over.
     """
 
-    @http.route('/website_payment/pay', type='http', auth='public', website=True, sitemap=False)
-    def pay(
+    @http.route('/payment/pay', type='http', auth='public', website=True, sitemap=False)
+    def payment_pay(
         self, reference=None, amount=None, currency_id=None, partner_id=None, order_id=None,
         company_id=None, acquirer_id=None, access_token=None, **kwargs
     ):
@@ -179,14 +179,42 @@ class WebsitePayment(http.Controller):
             'partner_id': partner_id,
             'order_id': order_id,
             'access_token': access_token,
-            'init_tx_route': '/website_payment/transaction',
-            'landing_route': '/website_payment/confirm',
+            'init_tx_route': '/payment/transaction',
+            'landing_route': '/payment/confirm',
             'partner_is_different': partner_is_different,
         }
         return request.render('payment.pay', tx_context)
 
-    @http.route('/website_payment/transaction', type='json', auth='public', csrf=True)
-    def transaction(
+    @http.route('/my/payment_method', type='http', auth='user', website=True)
+    def payment_method(self, **kwargs):
+        """ Display the form to manage payment methods.
+
+        :param dict kwargs: Optional data. This parameter is not used here.
+        :return: The rendered manage form
+        :rtype: str
+        """
+        partner = request.env.user.partner_id
+        acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
+            request.env.company.id, partner.id, allow_tokenization=True
+        )
+        tokens = set(partner.payment_token_ids).union(
+            partner.commercial_partner_id.sudo().payment_token_ids
+        )  # Show all partner's tokens, regardless of which acquirer is available
+        db_secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+        access_token = payment_utils.generate_access_token(db_secret, partner.id, None, None)
+        tx_context = {
+            'acquirers': acquirers_sudo,
+            'tokens': tokens,
+            'reference_prefix': payment_utils.singularize_reference_prefix(prefix='validation'),
+            'partner_id': partner.id,
+            'access_token': access_token,
+            'init_tx_route': '/payment/transaction',
+            'landing_route': '/payment/validate',
+        }
+        return request.render('payment.payment_methods', tx_context)
+
+    @http.route('/payment/transaction', type='json', auth='public', csrf=True)
+    def payment_transaction(
         self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
         tokenization_requested, is_validation, landing_route, access_token, **kwargs
     ):
@@ -291,8 +319,8 @@ class WebsitePayment(http.Controller):
 
         return processing_values
 
-    @http.route('/website_payment/confirm', type='http', auth='public', website=True, sitemap=False)
-    def confirm(self, tx_id, access_token, **kwargs):
+    @http.route('/payment/confirm', type='http', auth='public', website=True, sitemap=False)
+    def payment_confirm(self, tx_id, access_token, **kwargs):
         """ Display the payment confirmation page with the appropriate status message to the user.
 
         :param str tx_id: The transaction to confirm, as a `payment.transaction` id
@@ -338,36 +366,8 @@ class WebsitePayment(http.Controller):
             # Display the portal homepage to the user
             return request.redirect('/my/home')
 
-    @http.route('/my/payment_method', type='http', auth='user', website=True)
-    def payment_method(self, **kwargs):
-        """ Display the form to manage payment methods.
-
-        :param dict kwargs: Optional data. This parameter is not used here.
-        :return: The rendered manage form
-        :rtype: str
-        """
-        partner = request.env.user.partner_id
-        acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            request.env.company.id, partner.id, allow_tokenization=True
-        )
-        tokens = set(partner.payment_token_ids).union(
-            partner.commercial_partner_id.sudo().payment_token_ids
-        )  # Show all partner's tokens, regardless of which acquirer is available
-        db_secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-        access_token = payment_utils.generate_access_token(db_secret, partner.id, None, None)
-        tx_context = {
-            'acquirers': acquirers_sudo,
-            'tokens': tokens,
-            'reference_prefix': payment_utils.singularize_reference_prefix(prefix='validation'),
-            'partner_id': partner.id,
-            'access_token': access_token,
-            'init_tx_route': '/website_payment/transaction',
-            'landing_route': '/website_payment/validate',
-        }
-        return request.render('payment.payment_methods', tx_context)
-
-    @http.route('/website_payment/validate', type='http', auth='user', website=True, sitemap=False)
-    def validate(self, tx_id, **kwargs):
+    @http.route('/payment/validate', type='http', auth='user', website=True, sitemap=False)
+    def payment_validate(self, tx_id, **kwargs):
         """ Refund a payment method validation transaction and redirect the user.
 
         :param str tx_id: The token registration transaction to confirm, as a
@@ -405,130 +405,7 @@ class WebsitePayment(http.Controller):
             numeric_values.append(numeric_value)
         return tuple(numeric_values)
 
-
-class PaymentPostProcessing(http.Controller):
-
-    """
-    This controller is responsible for the monitoring and finalization of the post-processing of
-    transactions.
-
-    It exposes the route `/payment/status`: All payment flows must go through this route at some
-    point to allow the user checking on the transactions' status, and to trigger the finalization of
-    their post-processing.
-    """
-
-    MONITORED_TX_IDS_KEY = '__payment_monitored_tx_ids__'
-
-    @http.route('/payment/status', type='http', auth='public', website=True, sitemap=False)
-    def status(self, **kwargs):
-        """ Display the payment status page.
-
-        :param dict kwargs: Optional data. This parameter is not used here.
-        :return: The rendered status page
-        :rtype: str
-        """
-        return request.render('payment.payment_status')
-
-    @http.route('/payment/status/poll', type='json', auth='public', csrf=True)
-    def poll_status(self):
-        """ Fetch the transactions to display on the status page and finalize their post-processing.
-
-        :return: The post-processing values of the transactions
-        :rtype: dict
-        """
-        # Retrieve recent user's transactions from the session
-        limit_date = fields.Datetime.now() - timedelta(days=1)
-        monitored_txs = request.env['payment.transaction'].sudo().search([
-            ('id', 'in', self.get_monitored_transaction_ids()),
-            ('last_state_change', '>=', limit_date)
-        ])
-        if not monitored_txs:  # The transaction was not correctly created
-            return {
-                'success': False,
-                'error': 'no_tx_found',
-            }
-
-        # Build the dict of display values with the display message and post-processing values
-        display_values_list = []
-        for tx in monitored_txs:
-            display_message = None
-            if tx.state == 'pending':
-                display_message = tx.acquirer_id.pending_msg
-            elif tx.state == 'done':
-                display_message = tx.acquirer_id.done_msg
-            elif tx.state == 'cancel':
-                display_message = tx.acquirer_id.cancel_msg
-            display_values_list.append({
-                'display_message': display_message,
-                **tx._get_post_processing_values(),
-            })
-
-        # Stop monitoring already processed transactions
-        processed_txs = monitored_txs.filtered('is_post_processed')
-        self.remove_transactions(processed_txs)
-
-        # Finalize post-processing of transactions before displaying them to the user
-        txs_to_post_process = (monitored_txs - processed_txs).filtered(lambda t: t.state == 'done')
-        success, error = True, None
-        try:
-            txs_to_post_process._finalize_post_processing()
-        except psycopg2.OperationalError:  # A collision of accounting sequences occurred
-            # Rollback and try later
-            request.env.cr.rollback()
-            success = False
-            error = 'tx_process_retry'
-        except Exception as e:
-            request.env.cr.rollback()
-            success = False
-            error = str(e)
-            _logger.exception(
-                f"encountered an error while post-processing transactions with ids "
-                f"{', '.join([str(tx_id) for tx_id in txs_to_post_process.ids])}. "
-                f"exception: \"{e}\""
-            )
-
-        return {
-            'success': success,
-            'error': error,
-            'display_values_list': display_values_list,
-        }
-
     @staticmethod
-    def monitor_transactions(transactions):
-        """ Add the ids of the provided transactions to the list of monitored transaction ids.
-
-        :param recordset transactions: The transactions to monitor, as a `payment.transaction`
-                                       recordset
-        :return: None
-        """
-        if transactions:
-            monitored_tx_ids = request.session.get(PaymentPostProcessing.MONITORED_TX_IDS_KEY, [])
-            request.session[PaymentPostProcessing.MONITORED_TX_IDS_KEY] = list(
-                set(monitored_tx_ids).union(transactions.ids)
-            )
-
-    @staticmethod
-    def get_monitored_transaction_ids():
-        """ Return the ids of transactions being monitored.
-
-        Only the ids and not the recordset itself is returned to allow the caller browsing the
-        recordset with sudo privileges, and using the ids in a custom query.
-
-        :return: The ids of transactions being monitored
-        :rtype: list
-        """
-        return request.session.get(PaymentPostProcessing.MONITORED_TX_IDS_KEY, [])
-
-    @staticmethod
-    def remove_transactions(transactions):
-        """ Remove the ids of the provided transactions from the list of monitored transaction ids.
-
-        :param recordset transactions: The transactions to remove, as a `payment.transaction`
-                                       recordset
-        :return: None
-        """
-        if transactions:
-            monitored_tx_ids = request.session.get(PaymentPostProcessing.MONITORED_TX_IDS_KEY, [])
-            request.session[PaymentPostProcessing.MONITORED_TX_IDS_KEY] = [
-                tx_id for tx_id in monitored_tx_ids if tx_id not in transactions.ids
-            ]
+    def _create_transaction():
+        """ TODO. """
+        pass

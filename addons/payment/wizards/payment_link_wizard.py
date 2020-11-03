@@ -70,7 +70,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _generate_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for payment_link in self:
-            link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
+            link = ('%s/payment/pay?reference=%s&amount=%s&currency_id=%s'
                     '&partner_id=%s&access_token=%s') % (
                         base_url,
                         urls.url_quote(payment_link.description),

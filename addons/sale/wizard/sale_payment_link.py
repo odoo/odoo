@@ -34,7 +34,7 @@ class SalePaymentLink(models.TransientModel):
             # however, should parsing of the id fail in the controller, let's include
             # it anyway
             if payment_link.res_model == 'sale.order':
-                payment_link.link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
+                payment_link.link = ('%s/payment/pay?reference=%s&amount=%s&currency_id=%s'
                                     '&partner_id=%s&order_id=%s&company_id=%s&access_token=%s') % (
                                         base_url,
                                         urls.url_quote(payment_link.description),
