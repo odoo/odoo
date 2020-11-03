@@ -34,7 +34,7 @@ class Attendee(models.Model):
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
     availability = fields.Selection(
-        [('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
+        [('free', 'Available'), ('busy', 'Busy')], 'Available/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
 
