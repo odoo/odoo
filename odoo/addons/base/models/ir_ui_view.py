@@ -692,10 +692,10 @@ actual arch.
     def inherit_branding(self, specs_tree):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
-            if node.get('t-field'):
-                node.set('data-oe-xpath', xpath)
+            if node.tag == 'data' or node.tag == 'xpath' or node.get('position'):
                 self.inherit_branding(node)
-            elif node.tag == 'data' or node.tag == 'xpath' or node.get('position'):
+            elif node.get('t-field'):
+                node.set('data-oe-xpath', xpath)
                 self.inherit_branding(node)
             else:
                 node.set('data-oe-id', str(self.id))
