@@ -47,7 +47,7 @@ class AdyenStore(models.Model):
     @api.model
     def create(self, values):
         adyen_store_id = super(AdyenStore, self).create(values)
-        response = adyen_store_id.adyen_account_id._adyen_rpc('create_store', adyen_store_id._format_data())
+        response = adyen_store_id.adyen_account_id._adyen_rpc('v1/create_store', adyen_store_id._format_data())
         stores = response['accountHolderDetails']['storeDetails']
         created_store = next(store for store in stores if store['storeReference'] == adyen_store_id.store_reference)
         adyen_store_id.with_context(update_from_adyen=True).sudo().write({
@@ -57,7 +57,7 @@ class AdyenStore(models.Model):
 
     def unlink(self):
         for store_id in self:
-            store_id.adyen_account_id._adyen_rpc('close_stores', {
+            store_id.adyen_account_id._adyen_rpc('v1/close_stores', {
                 'accountHolderCode': store_id.adyen_account_id.account_holder_code,
                 'stores': [store_id.store_uuid],
             })
@@ -97,7 +97,7 @@ class AdyenTerminal(models.Model):
     @api.model
     def _sync_adyen_terminals(self):
         for adyen_store_id in self.env['adyen.store'].search([]):
-            response = adyen_store_id.adyen_account_id._adyen_rpc('connected_terminals', {
+            response = adyen_store_id.adyen_account_id._adyen_rpc('v1/connected_terminals', {
                 'store': adyen_store_id.store_uuid,
             })
             terminals_in_db = set(self.search([('store_id', '=', adyen_store_id.id)]).mapped('terminal_uuid'))

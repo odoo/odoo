@@ -135,7 +135,7 @@ class PosPaymentMethod(models.Model):
 
     def _proxy_adyen_request_odoo_proxy(self, data, operation):
         try:
-            return self.env.company.sudo().adyen_account_id._adyen_rpc(operation, {
+            return self.env.company.sudo().adyen_account_id._adyen_rpc('v1/%s' % operation, {
                 'request_data': data,
                 'account_code': self.sudo().adyen_payout_id.code,
                 'notification_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
