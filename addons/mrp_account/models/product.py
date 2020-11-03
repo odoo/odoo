@@ -27,7 +27,15 @@ class ProductProduct(models.Model):
 
     def button_bom_cost(self):
         self.ensure_one()
+<<<<<<< HEAD
         self._set_price_from_bom()
+=======
+        price = self._get_price_from_bom()
+        action_rec = self.env.ref('stock_account.action_view_change_standard_price')
+        action = action_rec.read([])[0]
+        action['context'] = {'default_new_price': price}
+        return action
+>>>>>>> 9a65259bdfb... temp
 
     def action_bom_cost(self):
         boms_to_recompute = self.env['mrp.bom'].search(['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids)])
