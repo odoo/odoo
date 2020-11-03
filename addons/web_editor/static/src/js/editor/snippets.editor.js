@@ -2399,6 +2399,12 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * UNUSED: used to be called when saving a custom snippet. We now save and
+     * reload the page when saving a custom snippet so that all the DOM cleanup
+     * mechanisms are run before saving. Kept for compatibility.
+     *
+     * TODO: remove in master / find a way to clean the DOM without save+reload
+     *
      * @private
      */
     _onReloadSnippetTemplate: async function (ev) {

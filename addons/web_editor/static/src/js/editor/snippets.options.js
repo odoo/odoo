@@ -4,6 +4,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
+const rpc = require('web.rpc');
 const time = require('web.time');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
@@ -264,6 +265,13 @@ const UserValueWidget = Widget.extend({
      * Closes the widget (only meaningful for widgets that can be closed).
      */
     close: function () {
+        if (!this.el) {
+            // In case the method is called while the widget is not fully
+            // initialized yet. No need to prevent that case: asking a non
+            // initialized widget to close itself should just not be a problem
+            // and just be ignored.
+            return;
+        }
         this.trigger_up('user_value_widget_closing');
         this.el.classList.remove('o_we_widget_opened');
         this._userValueWidgets.forEach(widget => widget.close());
@@ -4594,27 +4602,54 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     classes: 'btn-primary',
                     close: true,
                     click: async () => {
-                        const snippetName = dialog.el.querySelector('.o_we_snippet_name_input').value;
-                        const targetCopyEl = this.$target[0].cloneNode(true);
-                        delete targetCopyEl.dataset.name;
+                        const save = await new Promise(resolve => {
+                            Dialog.confirm(this, _t("To save a snippet, we need to save all your previous modifications and reload the page."), {
+                                buttons: [
+                                    {
+                                        text: _t("Save and Reload"),
+                                        classes: 'btn-primary',
+                                        close: true,
+                                        click: () => resolve(true),
+                                    }, {
+                                        text: _t("Cancel"),
+                                        close: true,
+                                        click: () => resolve(false),
+                                    }
+                                ]
+                            });
+                        });
+                        if (!save) {
+                            return;
+                        }
                         const snippetKey = this.$target[0].dataset.snippet;
                         let thumbnailURL;
                         this.trigger_up('snippet_thumbnail_url_request', {
                             key: snippetKey,
                             onSuccess: url => thumbnailURL = url,
                         });
-                        await this._rpc({
-                            model: 'ir.ui.view',
-                            method: 'save_snippet',
-                            kwargs: {
-                                'name': snippetName,
-                                'arch': targetCopyEl.outerHTML,
-                                'template_key': this.options.snippets,
-                                'snippet_key': snippetKey,
-                                'thumbnail_url': thumbnailURL,
+                        this.trigger_up('request_save', {
+                            reloadEditor: true,
+                            onSuccess: async () => {
+                                const snippetName = dialog.el.querySelector('.o_we_snippet_name_input').value;
+                                const targetCopyEl = this.$target[0].cloneNode(true);
+                                delete targetCopyEl.dataset.name;
+                                // By the time onSuccess is called after request_save, the
+                                // current widget has been destroyed and is orphaned, so this._rpc
+                                // will not work as it can't trigger_up. For this reason, we need
+                                // to bypass the service provider and use the global RPC directly
+                                await rpc.query({
+                                    model: 'ir.ui.view',
+                                    method: 'save_snippet',
+                                    kwargs: {
+                                        'name': snippetName,
+                                        'arch': targetCopyEl.outerHTML,
+                                        'template_key': this.options.snippets,
+                                        'snippet_key': snippetKey,
+                                        'thumbnail_url': thumbnailURL,
+                                    },
+                                });
                             },
                         });
-                        this.trigger_up('reload_snippet_template');
                     },
                 }, {
                     text: _t("Discard"),

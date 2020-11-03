@@ -1367,6 +1367,80 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     );
 });
 
+QUnit.test('first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]', async function (assert) {
+    // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+    // Indeed that would trigger channel_seen no matter what, which is already covered by other tests.
+    // The goal of this test is to cover the conditions specific to transient messages,
+    // and the conditions from focus would otherwise shadow them.
+    assert.expect(3);
+
+    this.data['mail.channel_command'].records.push({ name: 'who' });
+    // Needed partner & user to allow simulation of message reception
+    this.data['res.partner'].records.push({
+        id: 11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+        uuid: 'channel20uuid',
+    }];
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    // send a command that leads to receiving a transient message
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').focus();
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+
+    // simulate receiving a message
+    await afterNextRender(() => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: 'channel20uuid',
+            message_content: "test",
+        },
+    }));
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        2,
+        "should display 2 messages (the transient & the received message), after posting a command"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "separator should be shown as a message has been received"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_Message[data-message-local-id="${
+            this.env.models['mail.message'].find(m => m.isTransient).localId
+        }"] + .o_MessageList_separatorNewMessages`,
+        "separator should be shown just after transient message"
+    );
+});
+
 });
 });
 });
