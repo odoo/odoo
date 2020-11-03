@@ -43,7 +43,7 @@ class ResCompany(models.Model):
             sequence = self.env['ir.sequence'].search([
                 ('code', '=', 'stock.dropshipping'),
                 ('company_id', '=', company.id),
-            ])
+            ], limit=1, order="sequence")
             dropship_vals.append({
                 'name': 'Dropship',
                 'company_id': company.id,
