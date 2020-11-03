@@ -38,7 +38,7 @@
                                     <div class="mt16">
                                         <field name="crm_alias_prefix" class="oe_inline"
                                             attrs="{'required': [('generate_lead_from_alias', '=', True)]}"/>
-                                        <label for="alias_domain" string="@"/>
+                                        <label class="mr-0" for="alias_domain" string="@"/>
                                         <field name="alias_domain" readonly="1" force_save="1" class="oe_inline"/>
                                     </div>
                                     <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
