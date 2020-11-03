@@ -1172,6 +1172,8 @@ class AccountMove(models.Model):
                 move.invoice_filter_type_domain = 'sale'
             elif move.is_purchase_document(include_receipts=True):
                 move.invoice_filter_type_domain = 'purchase'
+            elif move.move_type == 'entry':
+                move.invoice_filter_type_domain = 'general'
             else:
                 move.invoice_filter_type_domain = False
 
