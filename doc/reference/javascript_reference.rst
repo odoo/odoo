@@ -197,7 +197,7 @@ are a few things you can try to solve the issue:
   there are no obvious errors
 - try to add a console.log at the beginning of your file (before any module
   definition), so you can see if a file has been loaded or not
-- in the user interface, in debug mode (INSERT LINK HERE TO DEBUG MODE), there
+- in the user interface, in `debug mode <https://www.odoo.com/documentation/user/13.0/general/developer_mode/activate.html>`_, there
   is an option to force the server to update its assets files.
 - use the *debug=assets* mode.  This will actually bypass the asset bundles (note
   that it does not actually solve the issue. The server still uses outdated bundles)
