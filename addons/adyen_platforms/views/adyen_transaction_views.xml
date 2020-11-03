@@ -5,14 +5,43 @@
         <field name="model">adyen.transaction</field>
         <field name="arch" type="xml">
             <form>
+                <field name="fees_currency_id" invisible="1" />
+                <field name="currency_id" invisible="1"/>
+                <field name="signature" invisible="1"/>
+                <header>
+                    <button string="Refund" type="object" name="action_refund" attrs="{'invisible': ['|', ('total_amount', '&lt;=', 0), ('signature', '=', False)]}" />
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box" />
                     <group>
-                        <field name="reference"/>
-                        <field name="amount" widget='monetary'/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="date"/>
-                        <field name="description"/>
-                        <field name="status"/>
+                        <group>
+                            <field name="date"/>
+                            <field name="description"/>
+                            <field name="shopper_country_id"/>
+                            <field name="commercial_card"/>
+                        </group>
+                        <group>
+                            <field name="reference"/>
+                            <field name="status"/>
+                            <field name="total_amount" widget='monetary'/>
+                            <field name="merchant_amount" widget='monetary'/>
+                            <field name="fixed_fees" widget="monetary" options="{'currency_field': 'fees_currency_id'}" groups="base.group_no_one" />
+                            <field name="variable_fees" widget="monetary" options="{'currency_field': 'fees_currency_id'}" groups="base.group_no_one" />
+                            <field name="fees" widget="monetary" options="{'currency_field': 'fees_currency_id'}" />
+                            <field name="reason" attrs="{'invisible': [('reason', '=', False)]}" />
+                        </group>
+                    </group>
+                    <group>
+                        <group name="additional_info">
+                        </group>
+                        <group>
+                            <field name="status_ids" nolabel="1">
+                                <tree>
+                                    <field name="status" />
+                                    <field name="date" />
+                                </tree>
+                            </field>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -23,14 +52,99 @@
         <field name="name">adyen.transaction.view.list</field>
         <field name="model">adyen.transaction</field>
         <field name="arch" type="xml">
-            <tree js_class="adyen_transactions_tree">
-                <field name="reference"/>
-                <field name="amount" widget='monetary'/>
-                <field name="currency_id" invisible="1"/>
-                <field name="date"/>
+            <tree decoration-danger="reason != False">
+                <field name="adyen_account_id" invisible="1" />
+                <field name="reason" invisible="1" />
+                <field name="currency_id" invisible="1" />
+                <field name="fees_currency_id" invisible="1" />
                 <field name="description"/>
+                <field name="reference" optional="show" />
+                <field name="payment_method" optional="show" />
+                <field name="shopper_country_id" optional="show" />
+                <field name="card_country_id" optional="show" />
+                <field name="commercial_card" optional="hide" />
+                <field name="total_amount" widget="monetary" />
+                <field name="merchant_amount" widget="monetary" />
+                <field name="fixed_fees" widget="monetary" options="{'currency_field': 'fees_currency_id'}" groups="base.group_no_one" optional="hide" />
+                <field name="variable_fees" widget="monetary" options="{'currency_field': 'fees_currency_id'}" groups="base.group_no_one" optional="hide" />
+                <field name="fees" widget="monetary" options="{'currency_field': 'fees_currency_id'}" optional="show" />
+                <field name="date"/>
                 <field name="status"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="adyen_transaction_view_search" model="ir.ui.view">
+        <field name="model">adyen.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Transactions">
+                <field name="description" />
+                <field name="reference" />
+                <field name="status" />
+                <filter name="filter_date" date="date" string="Transaction Date" />
+                <filter name="filter_last_status_update" date="date" string="Last Status Update" />
+                <group>
+                    <filter string="Currency" name="groupby_currency_id" context="{'group_by': 'currency_id'}"/>
+                    <filter string="Date" name="groupby_date" context="{'group_by': 'date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="adyen_transaction_payout_view_list" model="ir.ui.view">
+        <field name="name">adyen.transaction.payout.view.list</field>
+        <field name="model">adyen.transaction.payout</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree js_class="adyen_transactions_list" expand="1">
+                <field name="currency_id" invisible="1" />
+                <field name="reference" optional="show" />
+                <field name="bank_account_id" />
+                <field name="amount" string="Amount" widget="monetary" />
+                <field name="date"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="adyen_transaction_payout_view_search" model="ir.ui.view">
+        <field name="model">adyen.transaction.payout</field>
+        <field name="arch" type="xml">
+            <search string="Payouts">
+                <field name="reference" />
+                <field name="status" />
+                <filter name="filter_date" date="date" string="Transaction Date" />
+                <group>
+                    <filter string="Currency" name="groupby_currency_id" context="{'group_by': 'currency_id'}"/>
+                    <filter string="Date" name="groupby_date" context="{'group_by': 'date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="adyen_transaction_action" model="ir.actions.act_window">
+        <field name="name">Payment Transactions</field>
+        <field name="res_model">adyen.transaction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                There are no transactions yet.
+            </p>
+        </field>
+    </record>
+
+    <record id="adyen_balance_action" model="ir.actions.act_window">
+        <field name="name">Balance</field>
+        <field name="res_model">adyen.transaction.payout</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No payouts yet.
+            </p>
         </field>
     </record>
 </odoo>

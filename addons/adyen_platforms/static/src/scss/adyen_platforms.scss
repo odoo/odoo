@@ -1,0 +1,35 @@
+.o_adyen_transactions_dashboard {
+    .o_adyen_account_balance_card {
+        margin: 4px;
+        flex: 1;
+        text-align: center;
+        padding: 4px;
+
+        h4 {
+            color: $o-enterprise-color;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 2px solid $o-enterprise-color;
+        }
+
+        @include media-breakpoint-up(sm) {
+            &:not(:last-child) {
+                border-right: 2px solid $o-enterprise-color;
+                border-bottom: 0 !important;
+            }
+        }
+
+        .o_primary_amount {
+            color: $o-enterprise-primary-color;
+            font-size: 2rem;
+        }
+    }
+}

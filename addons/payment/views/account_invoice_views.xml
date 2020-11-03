@@ -22,6 +22,13 @@
                         confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('state', '!=', 'posted'), ('authorized_transaction_ids', '=', [])]}"/>
             </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="transaction_ids" invisible="1" />
+                <button name="action_view_payment_transactions" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        string="Payment Transaction"
+                        attrs="{'invisible': [('transaction_ids', '=', [])]}" />
+            </xpath>
         </field>
     </record>
 
