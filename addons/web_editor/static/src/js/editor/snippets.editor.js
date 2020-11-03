@@ -597,14 +597,18 @@ var SnippetEditor = Widget.extend({
 
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
-                self.$editable.find('.oe_drop_zone.hide').removeClass('hide');
-                $(this).addClass('hide').first().after(self.$target);
-                self.dropped = true;
+                if (!self.dropped) {
+                    self.dropped = true;
+                    $(this).first().after(self.$target).addClass('invisible');
+                }
             },
             out: function () {
-                $(this).removeClass('hide');
-                self.$target.detach();
-                self.dropped = false;
+                var prev = self.$target.prev();
+                if (this === prev[0]) {
+                    self.dropped = false;
+                    self.$target.detach();
+                    $(this).removeClass('invisible');
+                }
             },
         });
     },
@@ -1803,7 +1807,7 @@ var SnippetsMenu = Widget.extend({
                     over: function () {
                         if (!dropped) {
                             dropped = true;
-                            $(this).first().after($toInsert).addClass('d-none');
+                            $(this).first().after($toInsert).addClass('invisible');
                             $toInsert.removeClass('oe_snippet_body');
                         }
                     },
@@ -1812,7 +1816,7 @@ var SnippetsMenu = Widget.extend({
                         if (this === prev[0]) {
                             dropped = false;
                             $toInsert.detach();
-                            $(this).removeClass('d-none');
+                            $(this).removeClass('invisible');
                             $toInsert.addClass('oe_snippet_body');
                         }
                     },
