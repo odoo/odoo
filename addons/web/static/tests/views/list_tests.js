@@ -5684,6 +5684,70 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('modifiers of other x2many rows a re-evaluated when a subrecord is updated', async function (assert) {
+        // In an x2many, a change on a subrecord might trigger an onchange on the x2many that
+        // updates other sub-records than the edited one. For that reason, modifiers must be
+        // re-evaluated.
+        assert.expect(5);
+
+        this.data.foo.onchanges = {
+            o2m: function (obj) {
+                obj.o2m = [
+                    [5],
+                    [1, 1, { display_name: 'Value 1', stage: 'open' }],
+                    [1, 2, { display_name: 'Value 2', stage: 'draft' }],
+                ];
+            },
+        };
+
+        this.data.bar.fields.stage = {
+            string: "Stage",
+            type: 'selection',
+            selection: [["draft", "Draft"], ["open", "Open"]],
+        };
+
+        this.data.foo.records[0].o2m = [1, 2];
+        this.data.bar.records[0].stage = 'draft';
+        this.data.bar.records[1].stage = 'open';
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<form>
+                    <field name="o2m">
+                        <tree editable="top">
+                            <field name="display_name" attrs="{'invisible': [('stage', '=', 'open')]}"/>
+                            <field name="stage"/>
+                        </tree>
+                    </field>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.hasClass(form.$('.o_field_widget[name=o2m] tbody tr:nth(1) td:nth(0)'), 'o_invisible_modifier',
+            "first cell of second row should have o_invisible_modifier class");
+        assert.doesNotHaveClass(form.$('.o_field_widget[name=o2m] tbody tr:nth(0) td:nth(0)'), 'o_invisible_modifier',
+            "first cell of first row should not have o_invisible_modifier class");
+
+        // Make a change in the list to trigger the onchange
+        await testUtils.dom.click(form.$('.o_field_widget[name=o2m] tbody tr:nth(0) td:nth(1)'));
+        await testUtils.fields.editSelect(form.$('.o_field_widget[name=o2m] tbody select[name="stage"]'), '"open"');
+
+        assert.strictEqual(form.$('.o_data_row:nth(1)').text(), 'Value 2Draft',
+            "the onchange should have been applied");
+        assert.doesNotHaveClass(form.$('.o_field_widget[name=o2m] tbody tr:nth(1) td:nth(0)'), 'o_invisible_modifier',
+            "first cell of second row should not have o_invisible_modifier class");
+        assert.hasClass(form.$('.o_field_widget[name=o2m] tbody tr:nth(0) td:nth(0)'), 'o_invisible_modifier',
+            "first cell of first row should have o_invisible_modifier class");
+
+        form.destroy();
+    });
+
     QUnit.test('leaving unvalid rows in edition', async function (assert) {
         assert.expect(4);
 
