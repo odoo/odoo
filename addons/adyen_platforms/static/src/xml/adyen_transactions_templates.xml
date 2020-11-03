@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-extend="ListView.buttons" t-name="AdyenTransactionsListView.buttons">
-        <t t-jquery="button.o_list_button_discard" t-operation="after">
-            <button type="button" class="btn btn-primary o_button_sync_transactions">
-                Sync Transactions
-            </button>
-        </t>
+    <t t-name="AdyenTransactions.dashboard">
+        <div class="o_adyen_transactions_dashboard">
+            <div class="d-flex justify-content-around flex-column flex-sm-row">
+                <t t-foreach="balances" t-as="balance">
+                    <div class="o_adyen_account_balance_card">
+                        <h4 t-attf-title="Last updated on {{balance.last_update}}"><t t-esc="balance.currency" /><t t-if="balance.last_update_warning">*</t> - Balance</h4>
+                        <ul>
+                            <li class="o_primary_amount"><t t-esc="balance.balance" /></li>
+                            <li t-if="balance.payout_date">Next Payout Date: <t t-esc="balance.payout_date" /></li>
+                        </ul>
+                    </div>
+                </t>
+            </div>
+        </div>
     </t>
 </templates>

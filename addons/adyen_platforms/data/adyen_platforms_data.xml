@@ -12,7 +12,7 @@
         </record>
 
         <record id="adyen_sync_cron" model="ir.cron">
-            <field name="name">Adyen Sync</field>
+            <field name="name">Odoo Payments Sync</field>
             <field name="model_id" ref="model_adyen_account"/>
             <field name="state">code</field>
             <field name="code">model._sync_adyen_cron()</field>

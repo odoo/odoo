@@ -30,3 +30,15 @@ class AccountMove(models.Model):
 
     def payment_action_void(self):
         self.authorized_transaction_ids._send_void_request()
+
+    def action_view_payment_transactions(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')
+
+        if len(self.transaction_ids) == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.transaction_ids.id
+            action['views'] = []
+        else:
+            action['domain'] = [('id', 'in', self.transaction_ids.ids)]
+
+        return action

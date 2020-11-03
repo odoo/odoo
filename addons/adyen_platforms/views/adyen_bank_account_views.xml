@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="adyen_bank_account_view_form" model="ir.ui.view">
+        <field name="name">adyen.bank.account.view.form</field>
+        <field name="model">adyen.bank.account</field>
+        <field name="arch" type="xml">
+            <form string="Adyen Bank Account">
+                <field name="bank_account_reference" invisible="1" />
+                <field name="bank_account_uuid" invisible="1"/>
+                <field name="bank_statement_filename" invisible="1"/>
+                <field name="currency_name" invisible="1" />
+                <field name="country_code" invisible="1"/>
+                <sheet>
+                    <div class="alert alert-warning" role="alert"
+                        attrs="{'invisible': [('kyc_status_message', '=', False)]}">
+                        <field name="kyc_status_message"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="iban"
+                                attrs="{'invisible': [('country_code', 'not in', ['AT', 'BE', 'CH', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'IE', 'IT', 'LT', 'LU', 'NL', 'PL', 'PT'])],
+                                        'required': [('country_code', 'in', ['AT', 'BE', 'CH', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'IE', 'IT', 'LT', 'LU', 'NL', 'PL', 'PT'])]}"/>
+                            <field name="account_type"
+                                attrs="{'invisible': [('country_code', '!=', 'US')], 'required': [('country_code', '=', 'US')]}"/>
+                            <field name="account_number"
+                                attrs="{'invisible': [('country_code', 'not in', ['AU', 'CA', 'US'])], 'required': [('country_code', 'in', ['AU', 'CA', 'US'])]}"/>
+                            <field name="branch_code"
+                                attrs="{'invisible': [('country_code', 'not in', ['AU', 'CA', 'US'])], 'required': [('country_code', 'in', ['AU', 'CA', 'US'])]}"/>
+                            <field name="bank_city"
+                                attrs="{'invisible': [('currency_name', '!=', 'USD')], 'required': [('currency_name', '=', 'USD')]}"/>
+                            <field name="bank_code"
+                                attrs="{'invisible': [('country_code', '!=', 'CA')], 'required': [('country_code', '=', 'CA')]}"/>
+                            <field name="bank_name"
+                                attrs="{'invisible': [('currency_name', '!=', 'USD')], 'required': [('currency_name', '=', 'USD')]}"/>
+                            <field name="bank_statement" filename="bank_statement_filename" attrs="{'invisible': [('bank_account_uuid', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="owner_name"/>
+                            <label for="owner_street" string="Owner Address" attrs="{'invisible': [('country_code', 'not in', ['CA', 'US'])]}"/>
+                            <div class="o_address_format" attrs="{'invisible': [('currency_name', '!=', 'USD')]}">
+                                <field name="owner_street" placeholder="Street" class="o_address_street" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_house_number_or_name" placeholder="House number or name" class="o_address_street" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_city" placeholder="City" class="o_address_city" attrs="{'required': [('currency_name', '=', 'USD')]}"/>
+                                <field name="owner_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                    attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_zip" placeholder="ZIP" class="o_address_zip" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                    attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
