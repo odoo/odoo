@@ -27,7 +27,7 @@ const ImageCropWidget = Widget.extend({
         this.document = media.ownerDocument;
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         this.aspectRatios = {
-            "0/0": {label: _t("Free"), value: 0},
+            "0/0": {label: _t("Flexible"), value: 0},
             "16/9": {label: "16:9", value: 16 / 9},
             "4/3": {label: "4:3", value: 4 / 3},
             "1/1": {label: "1:1", value: 1},

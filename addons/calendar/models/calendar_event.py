@@ -207,7 +207,7 @@ class Meeting(models.Model):
         'Privacy', default='public', required=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
     show_as = fields.Selection(
-        [('free', 'Free'),
+        [('free', 'Available'),
          ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
     # linked document
