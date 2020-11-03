@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
-    _order = 'priority desc, date_order desc, id desc'
+    _order = 'priority desc, id desc'
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -82,7 +82,7 @@ class PurchaseOrder(models.Model):
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
              "delivery order sent by your vendor.")
-    date_order = fields.Datetime('Order Deadline', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
+    date_order = fields.Datetime('Order Deadline', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
