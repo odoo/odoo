@@ -63,7 +63,7 @@ var PurchaseListDashboardRenderer = ListRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: "purchase.dashboard_open_action_list",
+            action_name: "purchase.purchase_rfq",
             action_context: $action.attr('context'),
         });
     },
