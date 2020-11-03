@@ -107,22 +107,34 @@ class Alias(models.Model):
             except Exception:
                 raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
-    @api.model
-    def create(self, vals):
-        """ Creates an email.alias record according to the values provided in ``vals``,
-            with 2 alterations: the ``alias_name`` value may be cleaned  by replacing
-            certain unsafe characters, and the ``alias_model_id`` value will set to the
-            model ID of the ``model_name`` context value, if provided. Also, it raises
-            UserError if given alias name is already assigned.
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Creates email.alias records according to the values provided in
+        ``vals`` with 1 alteration:
+
+          * ``alias_name`` value may be cleaned by replacing certain unsafe
+            characters;
+
+        :raise UserError: if given alias_name is already assigned or there are
+        duplicates in given vals_list;
         """
-        if vals.get('alias_name'):
-            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
-        return super(Alias, self).create(vals)
+        alias_names = [vals['alias_name'] for vals in vals_list if vals.get('alias_name')]
+        if alias_names:
+            sanitized_names = self._clean_and_check_unique(alias_names)
+            for vals in vals_list:
+                if vals.get('alias_name'):
+                    vals['alias_name'] = sanitized_names[alias_names.index(vals['alias_name'])]
+        return super(Alias, self).create(vals_list)
 
     def write(self, vals):
         """"Raises UserError if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
-            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
+            if len(self) > 1:
+                raise UserError(_(
+                    'Email alias %(alias_name)s cannot be used on %(count)d records at the same time. Please update records one by one.',
+                    alias_name=vals['alias_name'], count=len(self)
+                    ))
+            vals['alias_name'] = self._clean_and_check_unique([vals.get('alias_name')])[0]
         return super(Alias, self).write(vals)
 
     def name_get(self):
@@ -140,22 +152,25 @@ class Alias(models.Model):
                 res.append((record['id'], _("Inactive Alias")))
         return res
 
-    def _clean_and_check_unique(self, name):
+    def _clean_and_check_unique(self, names):
         """When an alias name appears to already be an email, we keep the local
         part only. A sanitizing / cleaning is also performed on the name. If
         name already exists an UserError is raised. """
-        sanitized_name = remove_accents(name).lower().split('@')[0]
-        sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
-        sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+        sanitized_names = []
+        for name in names:
+            sanitized_name = remove_accents(name).lower().split('@')[0]
+            sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+            sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+            sanitized_names.append(sanitized_name)
 
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
-        domain = [('alias_name', '=', sanitized_name)]
+        domain = [('alias_name', 'in', sanitized_names)]
         if self:
             domain += [('id', 'not in', self.ids)]
-        if sanitized_name in [catchall_alias, bounce_alias] or self.search_count(domain):
+        if any(sanitized_name in [catchall_alias, bounce_alias] for sanitized_name in sanitized_names) or self.search_count(domain):
             raise UserError(_('The e-mail alias is already used. Please enter another one.'))
-        return sanitized_name
+        return sanitized_names
 
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:
