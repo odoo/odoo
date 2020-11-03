@@ -223,6 +223,9 @@ ListRenderer.include({
 
             _.each(oldData, function (rec) {
                 if (rec.id !== id) {
+                    // update modifiers of the other rows for the upcoming rendering
+                    self._updateAllModifiers(rec);
+                    // destroy the widgets of the other rows as new ones will be instantiated
                     self._destroyFieldWidgets(rec.id);
                 }
             });
