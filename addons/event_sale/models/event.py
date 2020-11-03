@@ -249,7 +249,12 @@ class EventRegistration(models.Model):
         order = self.sale_order_id.sudo()
         order_line = self.sale_order_line_id.sudo()
         if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
-            payment_status = _('Free')
+            old = _('Free')
+            new = _('Free Admission')
+            new_is_translated = new != 'Free Admission'
+            term = new if new_is_translated else old
+
+            payment_status = term
         elif not order.invoice_ids or any(invoice.invoice_payment_state != 'paid' for invoice in order.invoice_ids):
             payment_status = _('To pay')
             res['alert'] = _('The registration must be paid')
