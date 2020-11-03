@@ -118,35 +118,66 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
             var toolbar = [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
+                [
+                    [
+                        'ParagraphButton',
+                        'Heading1Button',
+                        'Heading2Button',
+                        'Heading3Button',
+                        'Heading4Button',
+                        'Heading5Button',
+                        'Heading6Button',
+                        'PreButton',
+                    ],
+                ],
+                [
+                    'BoldButton',
+                    'ItalicButton',
+                    'UnderlineButton',
+                    'RemoveFormatButton'
+                ],
+                [
+                    'OrderedListButton',
+                    'UnorderedListButton',
+                    [
+                        'AlignLeftButton',
+                        'AlignCenterButton',
+                        'AlignRightButton',
+                        'AlignJustifyButton',
+                    ],
+                ],
+                ['TableButton'],
             ];
             if (hasFullEdit) {
-                toolbar.push(['insert', ['link', 'picture']]);
+                toolbar.push(['OdooLinkToggleButton']);
+                toolbar.push(['OdooMediaButton']);
             }
-            toolbar.push(['history', ['undo', 'redo']]);
-
+            toolbar.push(['UndoButton', 'RedoButton']);
             var options = {
-                height: 200,
-                minHeight: 80,
-                toolbar: toolbar,
-                styleWithSpan: false,
-                wrapperClass: 'note-editable flex-grow-1 ',
+                toolbarLayout: toolbar,
+                height: '100%',
+                wrapperClass: 'note-editable o_editable flex-grow-1 ',
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                enableResizer: false,
                 value: textarea.value.trim() ? textarea.value : '<p><br/></p>',
+                interface: `
+                    <t-dialog><t t-zone="default"/></t-dialog>
+                    <t-range><t t-zone="tools"/></t-range>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <t t-zone="container">
+                            <div class="d-flex overflow-auto note-editing-area d-flex flex-grow-1" style="height: 200px; min-height: 80px;">
+                                <t t-zone="main"/>
+                            </div>
+                        </t>
+                        <div class="o_debug_zone">
+                            <t t-zone="debug"/>
+                        </div>
+                    </div>`,
             };
-            if (!hasFullEdit) {
-                options.plugins = {
-                    LinkPlugin: false,
-                    MediaPlugin: false,
-                };
-            }
 
             await wysiwygLoader.loadFromTextarea(this, $textarea, options);
         });
