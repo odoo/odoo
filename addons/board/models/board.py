@@ -9,8 +9,8 @@ class Board(models.AbstractModel):
     _description = "Board"
     _auto = False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         return self
 
     @api.model
