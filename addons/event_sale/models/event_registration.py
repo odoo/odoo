@@ -15,7 +15,7 @@ class EventRegistration(models.Model):
     payment_status = fields.Selection(string="Payment Status", selection=[
             ('to_pay', 'Not Paid'),
             ('paid', 'Paid'),
-            ('free', 'Free'),
+            ('free', 'Free Admission'),
         ], compute="_compute_payment_status", compute_sudo=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
