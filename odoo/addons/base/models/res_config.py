@@ -6,7 +6,7 @@ import re
 
 from lxml import etree
 
-from odoo import api, models, _
+from odoo import api, models, _, Command
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
 
@@ -577,10 +577,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 if self[name] == current_settings[name]:
                     continue
                 if int(self[name]):
-                    groups.write({'implied_ids': [(4, implied_group.id)]})
+                    groups.write({'implied_ids': [Command.link(implied_group.id)]})
                 else:
-                    groups.write({'implied_ids': [(3, implied_group.id)]})
-                    implied_group.write({'users': [(3, user.id) for user in groups.users]})
+                    groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+                    implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()

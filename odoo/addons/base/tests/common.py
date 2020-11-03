@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase, HttpCase
+from odoo import Command
 
 
 class TransactionCaseWithUserDemo(TransactionCase):
@@ -24,7 +25,7 @@ class TransactionCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': self.partner_demo.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -48,7 +49,7 @@ class HttpCaseWithUserDemo(HttpCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': self.partner_demo.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -71,7 +72,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
     @classmethod
@@ -94,78 +95,78 @@ class SavepointCaseWithUserDemo(TransactionCase):
             {
                 'name': 'Inner Works', # Wood Corner
                 'state_id': cls.env.ref('base.state_us_1').id,
-                'category_id': [(6, 0, [cls.partner_category_child_1.id, cls.partner_category_child_2.id,])],
-                'child_ids': [(0, 0, {
+                'category_id': [Command.set([cls.partner_category_child_1.id, cls.partner_category_child_2.id,])],
+                'child_ids': [Command.create({
                     'name': 'Sheila Ruiz', # 'Willie Burke',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Wyatt Howard', # 'Ron Gibson',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Austin Kennedy', # Tom Ruiz
                 })],
             }, {
                 'name': 'Pepper Street', # 'Deco Addict',
                 'state_id': cls.env.ref('base.state_us_2').id,
-                'child_ids': [(0, 0, {
+                'child_ids': [Command.create({
                     'name': 'Liam King', # 'Douglas Fletcher',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Craig Richardson', # 'Floyd Steward',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Adam Cox', # 'Addison Olson',
                 })],
             }, {
                 'name': 'AnalytIQ', #'Gemini Furniture',
                 'state_id': cls.env.ref('base.state_us_3').id,
-                'child_ids': [(0, 0, {
+                'child_ids': [Command.create({
                     'name': 'Pedro Boyd', # Edwin Hansen
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Landon Roberts', # 'Jesse Brown',
                     'company_id': cls.env.ref('base.main_company').id,
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Leona Shelton', # 'Soham Palmer',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Scott Kim', # 'Oscar Morgan',
                 })],
             }, {
                 'name': 'Urban Trends', # 'Ready Mat',
                 'state_id': cls.env.ref('base.state_us_4').id,
-                'category_id': [(6, 0, [cls.partner_category_child_1.id, cls.partner_category_child_2.id,])],
-                'child_ids': [(0, 0, {
+                'category_id': [Command.set([cls.partner_category_child_1.id, cls.partner_category_child_2.id,])],
+                'child_ids': [Command.create({
                     'name': 'Louella Jacobs', # 'Billy Fox',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Albert Alexander', # 'Kim Snyder',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Brad Castillo', # 'Edith Sanchez',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Sophie Montgomery', # 'Sandra Neal',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Chloe Bates', # 'Julie Richards',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Mason Crawford', # 'Travis Mendoza',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Elsie Kennedy', # 'Theodore Gardner',
                 })],
             }, {
                 'name': 'Ctrl-Alt-Fix', # 'The Jackson Group',
                 'state_id': cls.env.ref('base.state_us_5').id,
-                'child_ids': [(0, 0, {
+                'child_ids': [Command.create({
                     'name': 'carole miller', # 'Toni Rhodes',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Cecil Holmes', # 'Gordon Owens',
                 })],
             }, {
                 'name': 'Ignitive Labs', # 'Azure Interior',
                 'state_id': cls.env.ref('base.state_us_6').id,
-                'child_ids': [(0, 0, {
+                'child_ids': [Command.create({
                     'name': 'Jonathan Webb', # 'Brandon Freeman',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Clinton Clark', # 'Nicole Ford',
-                }), (0, 0, {
+                }), Command.create({
                     'name': 'Howard Bryant', # 'Colleen Diaz',
                 })],
             }, {
                 'name': 'Amber & Forge', # 'Lumber Inc',
                 'state_id': cls.env.ref('base.state_us_7').id,
-                'child_ids': [(0, 0, {
+                'child_ids': [Command.create({
                     'name': 'Mark Webb', # 'Lorraine Douglas',
                 })],
             }, {
@@ -194,5 +195,5 @@ class HttpCaseWithUserPortal(HttpCase):
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': self.partner_portal.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+                'groups_id': [Command.set([self.env.ref('base.group_portal').id])],
             })

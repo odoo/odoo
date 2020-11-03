@@ -9,6 +9,7 @@ from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo.osv import expression
+from odoo import Command
 
 
 class TestExpression(SavepointCaseWithUserDemo):
@@ -32,9 +33,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         cat_b = categories.create({'name': 'test_expression_category_B'})
 
         partners = self.env['res.partner']
-        a = partners.create({'name': 'test_expression_partner_A', 'category_id': [(6, 0, [cat_a.id])]})
-        b = partners.create({'name': 'test_expression_partner_B', 'category_id': [(6, 0, [cat_b.id])]})
-        ab = partners.create({'name': 'test_expression_partner_AB', 'category_id': [(6, 0, [cat_a.id, cat_b.id])]})
+        a = partners.create({'name': 'test_expression_partner_A', 'category_id': [Command.set([cat_a.id])]})
+        b = partners.create({'name': 'test_expression_partner_B', 'category_id': [Command.set([cat_b.id])]})
+        ab = partners.create({'name': 'test_expression_partner_AB', 'category_id': [Command.set([cat_a.id, cat_b.id])]})
         c = partners.create({'name': 'test_expression_partner_C'})
 
         # The tests.
@@ -99,7 +100,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         }
         pids = {}
         for name, cat_ids in partners_config.items():
-            pids[name] = partners.create({'name': name, 'category_id': [(6, 0, cat_ids)]}).id
+            pids[name] = partners.create({'name': name, 'category_id': [Command.set(cat_ids)]}).id
 
         base_domain = [('id', 'in', list(pids.values()))]
 
@@ -707,8 +708,8 @@ class TestExpression(SavepointCaseWithUserDemo):
         vals = {
             'name': 'OpenERP Test',
             'active': False,
-            'category_id': [(6, 0, [self.partner_category.id])],
-            'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
+            'category_id': [Command.set([self.partner_category.id])],
+            'child_ids': [Command.create({'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
         }
         Partner.create(vals)
         partner = self._search(Partner, [('category_id', 'ilike', 'sellers'), ('active', '=', False)], [('active', '=', False)])
@@ -1317,9 +1318,9 @@ class TestOne2many(TransactionCase):
         self.partner = self.Partner.create({
             'name': 'Foo',
             'bank_ids': [
-                (0, 0, {'acc_number': '123', 'acc_type': 'bank'}),
-                (0, 0, {'acc_number': '456', 'acc_type': 'bank'}),
-                (0, 0, {'acc_number': '789', 'acc_type': 'bank'}),
+                Command.create({'acc_number': '123', 'acc_type': 'bank'}),
+                Command.create({'acc_number': '456', 'acc_type': 'bank'}),
+                Command.create({'acc_number': '789', 'acc_type': 'bank'}),
             ],
         })
 

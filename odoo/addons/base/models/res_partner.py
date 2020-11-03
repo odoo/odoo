@@ -14,7 +14,7 @@ from lxml import etree
 from random import randint
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -404,7 +404,7 @@ class Partner(models.Model):
             elif field.type == 'one2many':
                 raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
             elif field.type == 'many2many':
-                values[fname] = [(6, 0, self[fname].ids)]
+                values[fname] = [Command.set(self[fname].ids)]
             else:
                 values[fname] = self[fname]
         return values
@@ -616,7 +616,7 @@ class Partner(models.Model):
             # Set new company as my parent
             self.write({
                 'parent_id': new_company.id,
-                'child_ids': [(1, partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
+                'child_ids': [Command.update(partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
             })
         return True
 
