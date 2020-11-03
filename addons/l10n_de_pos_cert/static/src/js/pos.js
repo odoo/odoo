@@ -2,10 +2,10 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
     "use strict";
 
     const models = require('point_of_sale.models');
-    const { uuidv4 } = require('l10n_de_pos_cert.utils');
-    const { convertFromEpoch } = require('l10n_de_pos_cert.utils');
+    const { uuidv4, convertFromEpoch } = require('l10n_de_pos_cert.utils');
+    const { TaxError } = require('l10n_de_pos_cert.exceptions');
 
-    const rateMapping = {
+    const RATE_MAPPING = {
         16: 'NORMAL',
         19: 'NORMAL',
         5:  'REDUCED_1',
@@ -134,6 +134,13 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
             }
         },
+        //@Override
+        add_product(product, options) {
+            if (product.taxes_id.length === 0 || !(this.pos.taxes_by_id[product.taxes_id[0]].amount in RATE_MAPPING)) {
+                throw new TaxError(product);
+            }
+            return _super_order.add_product.apply(this, arguments);
+        },
         _authenticate() {
             return $.ajax({
                 url: this.pos.getApiUrl() + 'auth',
@@ -190,7 +197,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 'NULL': [],
             };
             this.get_tax_details().forEach((detail) => {
-                rateIds[rateMapping[detail.tax.amount]].push(detail.tax.id);
+                rateIds[RATE_MAPPING[detail.tax.amount]].push(detail.tax.id);
             });
             const amountPerVatRate = { 'NORMAL': 0, 'REDUCED_1': 0, 'NULL': 0 };
             for (var rate in rateIds) {
