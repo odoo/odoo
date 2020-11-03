@@ -7,7 +7,7 @@ import logging
 import os
 import re
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
 
@@ -213,7 +213,7 @@ class Company(models.Model):
         self.clear_caches()
         company = super(Company, self).create(vals)
         # The write is made on the user to set it automatically in the multi company group.
-        self.env.user.write({'company_ids': [(4, company.id)]})
+        self.env.user.write({'company_ids': [Command.link(company.id)]})
 
         # Make sure that the selected currency is enabled
         if vals.get('currency_id'):

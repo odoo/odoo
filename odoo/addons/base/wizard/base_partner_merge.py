@@ -8,7 +8,7 @@ import logging
 import psycopg2
 import datetime
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 from odoo import SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger
@@ -44,7 +44,7 @@ class MergePartnerAutomatic(models.TransientModel):
             if 'state' in fields:
                 res['state'] = 'selection'
             if 'partner_ids' in fields:
-                res['partner_ids'] = [(6, 0, active_ids)]
+                res['partner_ids'] = [Command.set(active_ids)]
             if 'dst_partner_id' in fields:
                 res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
         return res
@@ -315,7 +315,7 @@ class MergePartnerAutomatic(models.TransientModel):
         # Make the company of all related users consistent with destination partner company
         if dst_partner.company_id:
             partner_ids.mapped('user_ids').sudo().write({
-                'company_ids': [(4, dst_partner.company_id.id)],
+                'company_ids': [Command.link(dst_partner.company_id.id)],
                 'company_id': dst_partner.company_id.id
             })
 
@@ -451,7 +451,7 @@ class MergePartnerAutomatic(models.TransientModel):
             current_partner_ids = literal_eval(current_line.aggr_ids)
             values.update({
                 'current_line_id': current_line.id,
-                'partner_ids': [(6, 0, current_partner_ids)],
+                'partner_ids': [Command.set(current_partner_ids)],
                 'dst_partner_id': self._get_ordered_partner(current_partner_ids)[-1].id,
                 'state': 'selection',
             })

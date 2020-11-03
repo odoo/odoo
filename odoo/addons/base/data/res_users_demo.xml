@@ -35,7 +35,7 @@
             <field name="password">demo</field>
             <field name="signature" type="xml"><span>-- <br/>+Mr Demo</span></field>
             <field name="company_id" ref="main_company"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
             <field name="image_1920" type="base64" file="base/static/img/user_demo-image.jpg"/>
         </record>
 
@@ -77,11 +77,11 @@
             <field name="login">portal</field>
             <field name="password">portal</field>
             <field name="signature"><![CDATA[<span>-- <br/>Mr Demo Portal</span>]]></field>
-            <field name="groups_id" eval="[(5,)]"/><!-- Avoid auto-including this user in any default group -->
+            <field name="groups_id" eval="[Command.clear()]"/><!-- Avoid auto-including this user in any default group -->
         </record>
 
         <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
-            <field name="users" eval="[(4,ref('demo_user0'))]"/>
+            <field name="users" eval="[Command.link(ref('demo_user0'))]"/>
         </record>
     </data>
 </odoo>

@@ -22,7 +22,7 @@ import pytz
 from lxml import etree
 from lxml.builder import E
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
@@ -78,11 +78,11 @@ def parse_m2m(commands):
     ids = []
     for command in commands:
         if isinstance(command, (tuple, list)):
-            if command[0] in (1, 4):
+            if command[0] in (Command.UPDATE, Command.LINK):
                 ids.append(command[1])
-            elif command[0] == 5:
+            elif command[0] == Command.CLEAR:
                 ids = []
-            elif command[0] == 6:
+            elif command[0] == Command.SET:
                 ids = list(command[2])
         else:
             ids.append(command)
@@ -1086,10 +1086,10 @@ class UsersImplied(models.Model):
                 if not user.has_group('base.group_user') and user in users_before:
                     # if we demoted a user, we strip him of all its previous privileges
                     # (but we should not do it if we are simply adding a technical group to a portal user)
-                    vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
+                    vals = {'groups_id': [Command.clear()] + values['groups_id']}
                     super(UsersImplied, user).write(vals)
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
-                vals = {'groups_id': [(4, g.id) for g in gs]}
+                vals = {'groups_id': [Command.link(g.id) for g in gs]}
                 super(UsersImplied, user).write(vals)
         return res
 
@@ -1324,9 +1324,9 @@ class UsersView(models.Model):
         if group_multi_company_id:
             for user in users:
                 if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
-                    user.write({'groups_id': [(3, group_multi_company_id)]})
+                    user.write({'groups_id': [Command.unlink(group_multi_company_id)]})
                 elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
-                    user.write({'groups_id': [(4, group_multi_company_id)]})
+                    user.write({'groups_id': [Command.link(group_multi_company_id)]})
         return users
 
     def write(self, values):
@@ -1338,9 +1338,9 @@ class UsersView(models.Model):
         if group_multi_company:
             for user in self:
                 if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                    user.write({'groups_id': [(3, group_multi_company.id)]})
+                    user.write({'groups_id': [Command.unlink(group_multi_company.id)]})
                 elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                    user.write({'groups_id': [(4, group_multi_company.id)]})
+                    user.write({'groups_id': [Command.link(group_multi_company.id)]})
         return res
 
     @api.model
@@ -1350,9 +1350,9 @@ class UsersView(models.Model):
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company and 'company_ids' in values:
             if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                user.update({'groups_id': [(3, group_multi_company.id)]})
+                user.update({'groups_id': [Command.unlink(group_multi_company.id)]})
             elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                user.update({'groups_id': [(4, group_multi_company.id)]})
+                user.update({'groups_id': [Command.link(group_multi_company.id)]})
         return user
 
     def _remove_reified_groups(self, values):
@@ -1509,7 +1509,7 @@ class ChangePasswordWizard(models.TransientModel):
     def _default_user_ids(self):
         user_ids = self._context.get('active_model') == 'res.users' and self._context.get('active_ids') or []
         return [
-            (0, 0, {'user_id': user.id, 'user_login': user.login})
+            Command.create({'user_id': user.id, 'user_login': user.login})
             for user in self.env['res.users'].browse(user_ids)
         ]
 
