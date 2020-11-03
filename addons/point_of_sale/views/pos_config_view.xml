@@ -356,6 +356,10 @@
                                         <label string="Rounding Method" for="rounding_method" class="col-lg-3 o_light_label" />
                                         <field name="rounding_method" attrs="{'required' : [('cash_rounding', '=', True)]}" domain="[('company_id', '=', company_id)]"/>
                                     </div>
+                                    <div class="row mt16">
+                                        <label string="Only on cash methods" for="only_round_cash_method" class="col-lg-3 o_light_label" />
+                                        <field name="only_round_cash_method"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
