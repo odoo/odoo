@@ -857,6 +857,30 @@ class TestTemplating(ViewCase):
             '/hello[1]/world[4]',
             "The node's xpath position should be correct")
 
+        # Also test inherit via non-xpath t-field node, direct children of data,
+        # is not impacted by the feature
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <world t-field="a" position="replace">
+                        <world t-field="z"/>
+                    </world>
+                </data>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        node = arch.xpath('//world')[1]
+        self.assertEqual(
+            node.get('t-field'),
+            'z',
+            "The node has properly been replaced")
+
     def test_branding_primary_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
