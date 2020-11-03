@@ -15,20 +15,30 @@ class PosOrder(models.Model):
     fiskaly_signature_value = fields.Char(string="Signature value", readonly=True, copy=False)
     fiskaly_signature_algorithm = fields.Char(string="Signature algo", readonly=True, copy=False)
     fiskaly_signature_public_key = fields.Char(string="Signature public key", readonly=True, copy=False)
-    fiskaly_client_serial = fields.Char(string="Client serial", readonly=True, copy=False)
+    fiskaly_client_serial_number = fields.Char(string="Client serial", readonly=True, copy=False)
 
     @api.model
     def _order_fields(self, ui_order):
         fields = super(PosOrder, self)._order_fields(ui_order)
         fields['fiskaly_transaction_uuid'] = ui_order['fiskaly_uuid']
-        fields['fiskaly_transaction_number'] = ui_order['tss_info']['number']
-        fields['fiskaly_time_start'] = ui_order['tss_info']['timeStart']
-        fields['fiskaly_time_end'] = ui_order['tss_info']['timeEnd']
-        fields['fiskaly_certificate_serial'] = ui_order['tss_info']['certificateSerial']
-        fields['fiskaly_timestamp_format'] = ui_order['tss_info']['timestampFormat']
-        fields['fiskaly_signature_value'] = ui_order['tss_info']['signatureValue']
-        fields['fiskaly_signature_algorithm'] = ui_order['tss_info']['signatureAlgorithm']
-        fields['fiskaly_signature_public_key'] = ui_order['tss_info']['signaturePublicKey']
-        fields['fiskaly_client_serial'] = ui_order['tss_info']['clientSerialnumber']
+        for key, value in ui_order['tss_info'].items():
+            fields['fiskaly_'+key] = value
 
         return fields
+
+    def _export_for_ui(self, order):
+        json = super(PosOrder, self)._export_for_ui(order)
+        tss_info = {
+            'transaction_number': order.fiskaly_transaction_number,
+            'time_start': order.fiskaly_time_start,
+            'time_end': order.fiskaly_time_end,
+            'certificate_serial': order.fiskaly_certificate_serial,
+            'timestamp_format': order.fiskaly_timestamp_format,
+            'signature_value': order.fiskaly_signature_value,
+            'signature_algorithm': order.fiskaly_signature_algorithm,
+            'signature_public_key': order.fiskaly_signature_public_key,
+            'client_serial_number': order.fiskaly_client_serial_number
+        }
+        json['tss_info'] = tss_info
+
+        return json
