@@ -6,7 +6,7 @@ var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
-var basicFields = require('web.basic_fields');
+const basicFields = require('web.basic_fields');
 const fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
@@ -2260,7 +2260,7 @@ QUnit.module('Views', {
 
         var MyWidget = basicFields.FieldChar.extend({
             _renderEdit: function () {
-                var $el = $(`<div class="oe_form_field">Coucou<footer>this should not be moved</footer></div>`);
+                var $el = $(`<div class="o_field_widget">Coucou<footer>this should not be moved</footer></div>`);
                 this.$el.replaceWith($el);
                 this.$el = $el;
 
