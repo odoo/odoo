@@ -12,101 +12,25 @@
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="import_id"/>
-            <div class="oe_import_box d-none">
-                <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
-                      name="file" class="oe_import_file" type="file" style="display:none;"/>
-                <div class="oe_import_with_file row">
-                    <a href="#" class="oe_import_toggle col-sm-12">
-                        Formatting Options…</a>
-                        <div class="row col-sm-12">
-                            <div class="oe_import_toggled oe_import_options js_import_options col-md-6 col-lg-4">
-                                <p t-foreach="widget.opts" t-as="option">
-                                    <!-- no @name, avoid submission when file_update called -->
-                                    <label t-attf-for="#{option.name}_#{_id}">
-                                        <t t-esc="option.label"/></label>
-                                    <input t-attf-id="#{option.name}_#{_id}"
-                                           t-attf-class="oe_import_#{option.name}"
-                                           style="width: 50%;"
-                                           t-att-value="option.value"/>
-                                </p>
-                            </div>
-                            <div t-foreach="[widget.parse_opts_formats, widget.parse_opts_separators]" t-as="options" class="oe_import_toggled oe_import_options col-md-6 col-lg-4">
-                                <p t-foreach="options" t-as="option">
-                                    <!-- no @name, avoid submission when file_update called -->
-                                    <label t-attf-for="#{option.name}_#{_id}">
-                                        <t t-esc="option.label"/></label>
-                                    <input t-attf-id="#{option.name}_#{_id}"
-                                           t-attf-class="oe_import_#{option.name}"
-                                           style="width: 50%;"
-                                           t-att-value="option.value"/>
-                                </p>
-                            </div>
-                        </div>
-                </div>
+
+            <div class="d-flex h-100">
+                <t t-call="ImportView.side_panel"/>
+                <t t-call="ImportView.data_matching"/>
             </div>
-            <div class="o_import_batch_alert alert alert-warning d-none">
-                Due to its large size, the file will be imported by batches.
-            </div>
+
             <div class="o_import_partial_alert alert alert-warning d-none">
                 Click 'Resume' to proceed with the import, resuming at line
                 <span class="o_import_partial_count">0</span>.<br/>
                 You can test or reload your file before resuming the import.
             </div>
 
-            <div class="oe_import_with_file d-none">
-                <h2>Map your columns to import</h2>
-                <div class="oe_import_debug_options">
-                    <div title="If the model uses openchatter, history tracking will set up subscriptions and send notifications during the import, but lead to a slower import." class="oe_import_debug_option">
-                        <input type="checkbox" id="oe_import_tracking"/>
-                        <label for="oe_import_tracking">
-                            Track history during import
-                        </label>
-                    </div>
-
-                    <div class="oe_import_has_multiple_sheets js_import_options">
-                        <label for="oe_import_sheet">Selected Sheet:</label>
-                        <input class="oe_import_sheet" id="oe_import_sheet"/>
-                    </div>
-
-                    <div>
-                        <input type="checkbox" class="oe_import_has_header"
-                               id="oe_import_has_header" checked="checked"/>
-                        <label for="oe_import_has_header">The first row
-                         contains the label of the column</label>
-                    </div>
-                    <div class="js_import_options oe_import_debug_option oe_import_batch_limit">
-                        <label for="oe_import_batch_limit">Batch limit</label>
-                        <input id="oe_import_batch_limit" value="2000"/>
-                    </div>
-                    <div class="js_import_options oe_import_debug_option" title="Warning: ignores the labels line, empty lines and
-                            lines composed only of empty cells">
-                        <label for="oe_import_row_start">Start at line</label>
-                        <input id="oe_import_row_start" value="1"/>
-                    </div>
-                    <div class="oe_import_debug_option">
-                        <input type="checkbox" class="oe_import_advanced_mode" checked="checked"
-                               id="oe_import_advanced_mode"/>
-                        <label for="oe_import_advanced_mode">Show fields of relation fields (advanced)</label>
-                    </div>
-                </div>
-                <p class="oe_import_noheaders text-muted">If the file contains
-                the column names, Odoo can try auto-detecting the
-                field corresponding to the column. This makes imports
-                simpler especially when the file has many columns.</p>
-
-                <div class="oe_import_error_report"></div>
-                <div class="table-responsive">
-                    <table class="table-striped table-bordered oe_import_grid bg-white" />
-                </div>
-                <h6 class="oe_padding">This is a preview of the first 10 rows of your file</h6>
-            </div>
             <div class="o_view_nocontent">
                 <div class="o_nocontent_help">
                     <p class="o_view_nocontent_smiling_face">
-                        Select a CSV or Excel file to import.
+                        Upload an Excel or CSV file to import
                     </p>
                     <p>
-                        Excel files are recommended as fields formatting is automatic.
+                        Excel files are recommended as formatting is automatic.
                     </p>
                     <div class="mt16 mb4">Need Help?</div>
                     <div t-foreach="widget.importTemplates" t-as="template">
@@ -124,47 +48,73 @@
         <button type="button" class="btn btn-primary o_import_import o_import_import_full d-none">Import</button>
         <button type="button" class="btn btn-primary o_import_import o_import_import_partial d-none">Resume</button>
         <button type="button" class="btn btn-secondary o_import_validate d-none">Test</button>
-        <button type="button" class="btn btn-primary oe_import_file">Load File</button>
+        <button type="button" class="btn btn-primary oe_import_file">Upload File</button>
         <button type="button" class="btn btn-secondary o_import_cancel">Cancel</button>
     </t>
 
     <t t-name="ImportView.create_record_option">
-        <div class="mt4">
-            <label title="Creates new records if they can't be found (instead of failing to import). Note that the value in the column will be used as the new record's 'name', and assumes this is sufficient to create the record.">
-                <input type="checkbox" class="o_import_create_option"/>
-                Create if doesn't exist
-            </label>
+        <div t-attf-class="oe_import_dropdown o_import_field_#{data.type} position-relative alert alert-error">
+            <b>When a value cannot be matched:</b>
+            <select class="o_import_create_option" t-att-type="data.type" t-att-field="data.id"
+                    t-att-model="data.comodel_name || data.model_name">
+                <option value="prevent">Prevent import</option>
+                <t t-if="data.type === 'boolean'">
+                    <option value="false">Set to: False</option>
+                    <option value="true" >Set to: True</option>
+                </t>
+                <option t-if="show_skip" value="skip">Skip unknown values</option>
+                <option t-if="is_relational" value="create">Create new values</option>
+                <t t-if="data.type === 'selection'">
+                    <option t-foreach="values" t-as="value" t-att-value="value">Set to: <t t-esc="value"/></option>
+                </t>
+            </select>
         </div>
     </t>
 
     <t t-name="ImportView.preview">
         <thead>
-            <tr t-if="headers" class="oe_import_grid-header">
-                <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
-                    ><span class="o_import_header_name o_single_line_text" t-att-title="header"><t t-esc="header"/></span></td>
-            </tr>
-            <tr class="oe_import_fields">
-                <!-- Iterate on first row to ensure we have all columns -->
-                <td t-foreach="preview[0]" t-as="column">
-                    <input class="oe_import_match_field"/>
-                </td>
+            <tr class="oe_import_grid-header">
+                <td class="oe_import_grid-cell border-0 font-weight-bold" style="width: 20%;">
+                    <span class="o_single_line_text" title="File Column">File Column</span></td>
+                <td class="oe_import_grid-cell border-0 font-weight-bold" style="width: 15%;" >
+                    <span class="o_single_line_text" title="File Column">Odoo Field</span></td>
+                <td class="oe_import_grid-cell border-0 font-weight-bold">
+                    <span class="o_single_line_text" title="File Column">Comments</span></td>
             </tr>
         </thead>
         <tbody>
-            <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
-                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell">
-                    <!-- content can be displayed on several lines if it contains whitespaces -->
-                    <!-- in that case, we only display the 120 first characters -->
-                    <!-- otherwise, we let the text-overflow: ellipsis do the job -->
-                    <t t-set="multiline" t-value="cell.includes(' ')"/>
-                    <t t-set="content" t-value="(multiline &amp;&amp; cell.length &gt; 120) ? (cell.substring(0, 120) + '...') : cell"/>
-                    <span t-attf-class="#{multiline ? 'o_multi_line_text' : 'o_single_line_text'}">
-                        <t t-esc="content"/>
+            <t t-set="columns" t-value="headers || preview"/>
+            <tr t-if="columns" t-foreach="columns" t-as="column" class="oe_import_grid-row">
+                <td class="oe_import_grid-cell oe_import_name_cell">
+                    <span class="o_import_header_name o_single_line_text" t-att-title="column">
+                        <span t-if="column" t-esc="column"/>
+                        <span t-else="">Untitled</span>
                     </span>
+                    <span t-if="options['has_headers']" class="font-italic text-muted small"><t t-esc="preview[column_index]"/></span>
+                </td>
+                <td class="oe_import_grid-cell oe_import_match_cell">
+                    <input class="oe_import_match_field oe_import_dropdown"/>
+                </td>
+                <td class="oe_import_grid-cell oe_import_comment_cell">
+                    <div class="oe_import_comments_div"/>
+                    <div class="oe_import_options_div d-none"/>
                 </td>
             </tr>
         </tbody>
     </t>
+
+    <t t-name="ImportView.comment_same_mapped_field">
+        <div class="oe_import_same_mapped_field alert alert-info">
+            This column will be concatenated in field <b t-esc="field"/>
+        </div>
+    </t>
+
+    <t t-name="ImportView.comment_m2m_field">
+        <div class="oe_import_m2m_field alert alert-info">
+            To import multiple values, separate them by a comma
+        </div>
+    </t>
+
     <t t-name="ImportView.preview.error">
         <div class="oe_import_report alert alert-danger">
             <p>Import preview failed due to: <t t-esc="error"/>.</p>
@@ -173,55 +123,196 @@
         </div>
         <pre t-if="preview"><t t-esc="preview"/></pre>
     </t>
-    <ul t-name="ImportView.error">
-        <li t-foreach="errors" t-as="error"
-            t-attf-class="oe_import_report alert alert-#{error_value[0].type}">
-            <t t-if="error_value.length gt 1">
-                <t t-call="ImportView.error.multi.header">
-                    <t t-set="error" t-value="error_value[0]"/>
-                    <t t-set="error_length" t-value="error_value.length"/>
-                </t>
-                <ul>
-                    <t t-foreach="error_value.length" t-as="index">
-                        <li t-att-class="index gt 4 ? 'oe_import_report_more':''">
-                            <t t-call="ImportView.error.multi.body">
-                                <t t-set="error" t-value="error_value[index]"/>
-                                <t t-set="index" t-value="index"/>
-                            </t>
-                        </li>
-                        <li t-if="error_value.length gt 5 and index == 4" style="display: block;">
-                            <a href="#" class="oe_import_report_count">
-                                <t t-esc="more(error_value.length - 5)"/>
-                            </a>
-                        </li>
-                    </t>
-                </ul>
-                <t t-if="error_value[0].moreinfo" t-raw="info(error_value[0].moreinfo)"/>
 
-            </t>
-            <t t-else="">
-                <t t-call="ImportView.error.single">
-                    <t t-set="error" t-value="error_value[0]"/>
+    <t t-name="ImportView.error">
+        <div t-foreach="errors" t-as="error" t-attf-class="oe_import_report alert alert-#{error.type}">
+            <span class="oe_import_report_message">
+                <b><t t-esc="error.message"/></b>
+                <t t-if="error.rows" t-call="ImportView.error.at">
+                    <t t-set="rows" t-value="error.rows"/>
                 </t>
+            </span>
+            <t t-if="error.moreinfo" t-call="ImportView.error.more_info">
+                <t t-set="messages" t-value="error.moreinfo"/>
             </t>
-        </li>
-    </ul>
-    <t t-name="ImportView.error.multi.header">
-        <span class="oe_import_report_message">
-            <t t-esc="error.message"/>
-            <t t-esc="at_multi_header(error_length)"/>
-        </span>
+        </div>
     </t>
-    <t t-name="ImportView.error.multi.body">
+
+    <div t-name="ImportView.fieldError" t-attf-class="oe_import_report alert alert-#{errors[0].type}">
+        <t t-if="errors.length &gt; 1" t-call="ImportView.fieldError.multi"></t>
+        <t t-else="" t-call="ImportView.fieldError.single">
+            <t t-set="error" t-value="errors[0]"/>
+        </t>
+    </div>
+    <t t-name="ImportView.fieldError.single">
         <span class="oe_import_report_message">
-            <t t-esc="at_multi(error.rows)"/>
+            <t t-if="error.value &amp;&amp; !error.error_message">
+                No matching records found for <t t-esc="error.field_type"/> <b>'<t t-esc="error.value"/>'</b> in field <b t-esc="error.field_name"/>
+            </t>
+            <b t-else="" t-esc="error.message"/>
         </span>
+        <t t-if="error.rows" t-call="ImportView.error.at">
+            <t t-set="rows" t-value="error.rows"/>
+        </t>
+        <t t-if="error.moreinfo" t-call="ImportView.error.more_info">
+            <t t-set="messages" t-value="error.moreinfo"/>
+        </t>
     </t>
-    <t t-name="ImportView.error.single">
-        <span class="oe_import_report_message">
-            <t t-esc="error.message"/>
-        </span>
-        <t t-if="error.rows"  t-esc="at(error.rows)"/>
-        <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
+
+    <t t-name="ImportView.fieldError.multi">
+        <div class="oe_import_report_message">
+            <t t-if="errors[0].value">
+            No matching records found for the following <t t-esc="errors[0].field_type"/> </t>
+            <t t-else="">Multiple errors occured </t>
+            in field <b t-esc="errors[0].field_name"/>:
+            <ul>
+                <t t-foreach="errors.length" t-as="index">
+                    <li t-att-class="index &gt; 2 ? 'oe_import_report_more':''">
+                        <b t-if="errors[index].error_message" t-esc="errors[index].message"/>
+                        <b t-else="" t-esc="errors[index].value || errors[index].message"/>
+                        <t t-if="errors[index].rows" t-call="ImportView.error.at">
+                            <t t-set="rows" t-value="errors[index].rows"/>
+                        </t>
+                    </li>
+                    <li t-if="errors.length &gt; 3 and index == 2" style="display: block;">
+                        <a href="#" class="oe_import_report_count">
+                            ( <i class="arrow down"></i> <t t-esc="errors.length - 3"/> more)
+                        </a>
+                    </li>
+                </t>
+            </ul>
+        </div>
+
+        <t t-if="errors[0].moreinfo" t-call="ImportView.error.more_info">
+            <t t-set="messages" t-value="errors[0].moreinfo"/>
+        </t>
+    </t>
+
+    <t t-name="ImportView.error.at">
+        <t t-set="from" t-value="rows.from + offset"/>
+        <t t-set="to" t-value="rows.to + offset"/>
+
+        <t t-if="from === to">
+            at row <t t-esc="from"/> <t t-if="result_names.length > rows.from &amp;&amp; result_names[rows.from] !== ''">(<t t-esc="result_names[rows.from]"/>)</t>
+        </t>
+        <t t-else="">
+            at multiple rows
+        </t>
+    </t>
+
+    <t t-name="ImportView.error.more_info">
+        <div t-if="typeof messages === 'string'" class="oe_import_moreinfo oe_import_moreinfo_action">
+            <t t-esc="messages"/>
+        </div>
+        <div t-elif="messages instanceof Array" class="oe_import_moreinfo oe_import_moreinfo_choices">
+            <a href="#" class="oe_import_report_see_possible_value oe_import_see_all">
+                <i class="fa fa-arrow-right"/> See possible values </a>
+            <ul class="oe_import_report_more">
+                <li t-foreach="messages" t-as="msg"><t t-esc="msg"/></li>
+            </ul>
+        </div>
+        <div t-else="" class="oe_import_moreinfo oe_import_moreinfo_action">
+            <a href="#" t-att-data-action="JSON.stringify(messages)" class="oe_import_see_all">
+                <i class="fa fa-arrow-right"/> See possible values </a>
+        </div>
+    </t>
+
+    <t t-name="ImportView.data_matching">
+        <div class="oe_import_with_file d-none">
+            <div class="oe_import_noheaders">
+                <p class="alert alert-info">If the file contains
+                    the column names, Odoo can try auto-detecting the
+                    field corresponding to the column. This makes imports
+                    simpler especially when the file has many columns.</p>
+            </div>
+            <div class="oe_import_error_report px-3 py-2"></div>
+            <div class="table-responsive">
+                <table class="table-striped oe_import_grid w-100 overflow-hidden" />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ImportView.side_panel">
+        <div class="oe_import_box d-none bg-white overflow-auto">
+            <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
+                  name="file" class="oe_import_file" type="file" style="display:none;"/>
+            <div class="oe_import_with_file">
+                <h4>Imported file</h4>
+                <div class="mb-2 d-flex align-items-center">
+                    <i class="fa fa-file white mr-2"></i>
+                    <div id="oe_imported_file" class="font-italic truncate"></div>
+                    <span id="oe_imported_file_extension" class="font-italic"></span>
+                </div>
+
+                <div class="oe_import_has_multiple_sheets js_import_options flex-column mt-2">
+                    <label for="oe_import_sheet">Sheet:</label>
+                    <input class="oe_import_sheet oe_import_dropdown" id="oe_import_sheet"/>
+                </div>
+
+                <input type="checkbox" class="oe_import_has_header custom-control-input"
+                       id="oe_import_has_header" checked="checked"/>
+                <label class="custom-control-label" for="oe_import_has_header">Use first row as header</label>
+
+                <div class="o_import_formatting">
+                    <h4 class="mt-3">Formatting</h4>
+                    <div t-foreach="[widget.opts, widget.parse_opts_formats, widget.parse_opts_separators]" t-as="options" class="oe_import_options">
+                        <div t-attf-class="mb-1 oe_import_#{option.type}_box" t-foreach="options" t-as="option">
+                            <!-- no @name, avoid submission when file_update called -->
+                            <label t-attf-for="#{option.name}_#{_id}">
+                                <t t-esc="option.label"/></label>
+                            <input
+                                   t-attf-id="#{option.name}_#{_id}"
+                                   t-attf-class="oe_import_#{option.name} oe_import_dropdown w-100 mb-3"
+                                   t-att-value="option.value"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_import_batch">
+                    <h4 class="mt-3">Batch Import</h4>
+                    <div class="o_import_batch_alert alert alert-info d-none">
+                        The file will be imported by batches.
+                    </div>
+                    <div class="d-flex">
+                        <div class="js_import_options oe_import_options oe_import_batch_limit w-50 pr-1">
+                            <label class="mb-1" for="oe_import_batch_limit">Batch limit</label>
+                            <input class="w-100" id="oe_import_batch_limit" value="2000"/>
+                        </div>
+                        <div class="js_import_options oe_import_options w-50 pl-1" title="Warning: ignores the labels line, empty lines and
+lines composed only of empty cells">
+                            <label class="mb-1" for="oe_import_row_start">Start at line</label>
+                            <input class="w-100" id="oe_import_row_start" value="1"/>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="mt-3">Help</h4>
+                <div t-foreach="widget.importTemplates" t-as="template">
+                    <a t-att-href="template.template" aria-label="Download" title="Download">
+                        <i class="fa fa-download"/> <span>Download Template</span>
+                    </a>
+                </div>
+                <a href="https://www.odoo.com/documentation/user/14.0/general/base_import/import_faq.html" target="new">
+                    <i class="fa fa-external-link"></i> Go to Import FAQ
+                </a>
+
+                <div class="oe_import_debug_option">
+                    <h4 class="mt-3">Advanced</h4>
+                    <div title="If the model uses openchatter, history tracking will set up subscriptions and send notifications during the import, but lead to a slower import.">
+                        <input type="checkbox" id="oe_import_tracking" class="custom-control-input"/>
+                        <label class="custom-control-label" for="oe_import_tracking">
+                            Track history during import
+                        </label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" class="oe_import_advanced_mode custom-control-input" checked="checked"
+                               id="oe_import_advanced_mode"/>
+                        <label class="custom-control-label" for="oe_import_advanced_mode">Allow matching with subfields</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </t>
 </templates>

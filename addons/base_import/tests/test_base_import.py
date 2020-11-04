@@ -9,6 +9,7 @@ import unittest
 from odoo.tests.common import TransactionCase, can_import
 from odoo.modules.module import get_module_resource
 from odoo.tools import mute_logger, pycompat
+from odoo.addons.base_import.models.base_import import ImportValidationError
 
 ID_FIELD = {
     'id': 'id',
@@ -21,10 +22,17 @@ ID_FIELD = {
 }
 
 
-def make_field(name='value', string='Value', required=False, fields=[], field_type='id'):
+def make_field(name='value', string='Value', required=False, fields=None, field_type='id', model_name=None, comodel_name=None):
+    if fields is None:
+        fields = []
+    field = {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields, 'type': field_type}
+    if model_name:
+        field['model_name'] = model_name
+    if comodel_name:
+        field['comodel_name'] = comodel_name
     return [
         ID_FIELD,
-        {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields, 'type': field_type},
+        field,
     ]
 
 
@@ -44,18 +52,19 @@ class BaseImportCase(TransactionCase):
             pprint.pformat(f2).splitlines()
         ))
 
+
 class TestBasicFields(BaseImportCase):
 
     def get_fields(self, field):
-        return self.env['base_import.import'].get_fields('base_import.tests.models.' + field)
+        return self.env['base_import.import'].get_fields_tree('base_import.tests.models.' + field)
 
     def test_base(self):
         """ A basic field is not required """
-        self.assertEqualFields(self.get_fields('char'), make_field(field_type='char'))
+        self.assertEqualFields(self.get_fields('char'), make_field(field_type='char', model_name='base_import.tests.models.char'))
 
     def test_required(self):
         """ Required fields should be flagged (so they can be fill-required) """
-        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True, field_type='char'))
+        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True, field_type='char', model_name='base_import.tests.models.char.required'))
 
     def test_readonly(self):
         """ Readonly fields should be filtered out"""
@@ -63,7 +72,7 @@ class TestBasicFields(BaseImportCase):
 
     def test_readonly_states(self):
         """ Readonly fields with states should not be filtered out"""
-        self.assertEqualFields(self.get_fields('char.states'), make_field(field_type='char'))
+        self.assertEqualFields(self.get_fields('char.states'), make_field(field_type='char', model_name='base_import.tests.models.char.states'))
 
     def test_readonly_states_noreadonly(self):
         """ Readonly fields with states having nothing to do with
@@ -78,9 +87,11 @@ class TestBasicFields(BaseImportCase):
     def test_m2o(self):
         """ M2O fields should allow import of themselves (name_get),
         their id and their xid"""
-        self.assertEqualFields(self.get_fields('m2o'), make_field(field_type='many2one', fields=[
-            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
-            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
+        self.assertEqualFields(self.get_fields('m2o'), make_field(
+            field_type='many2one', comodel_name='base_import.tests.models.m2o.related', model_name='base_import.tests.models.m2o',
+            fields=[
+                {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o'},
+                {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o'},
         ]))
 
     def test_m2o_required(self):
@@ -88,41 +99,43 @@ class TestBasicFields(BaseImportCase):
         required as well (the client has to handle that: requiredness
         is id-based)
         """
-        self.assertEqualFields(self.get_fields('m2o.required'), make_field(field_type='many2one', required=True, fields=[
-            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': [], 'type': 'id'},
-            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id'},
+        self.assertEqualFields(self.get_fields('m2o.required'), make_field(
+            field_type='many2one', required=True, comodel_name='base_import.tests.models.m2o.required.related', model_name='base_import.tests.models.m2o.required',
+            fields=[
+                {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o.required'},
+                {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o.required'},
         ]))
 
 
 class TestO2M(BaseImportCase):
 
     def get_fields(self, field):
-        return self.env['base_import.import'].get_fields('base_import.tests.models.' + field)
+        return self.env['base_import.import'].get_fields_tree('base_import.tests.models.' + field)
 
     def test_shallow(self):
         self.assertEqualFields(
             self.get_fields('o2m'), [
                 ID_FIELD,
-                {'id': 'name', 'name': 'name', 'string': "Name", 'required': False, 'fields': [], 'type': 'char',},
+                {'id': 'name', 'name': 'name', 'string': "Name", 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.o2m'},
                 {
-                    'id': 'value', 'name': 'value', 'string': 'Value',
-                    'required': False, 'type': 'one2many',
+                    'id': 'value', 'name': 'value', 'string': 'Value', 'model_name': 'base_import.tests.models.o2m',
+                    'required': False, 'type': 'one2many', 'comodel_name': 'base_import.tests.models.o2m.child',
                     'fields': [
                         ID_FIELD,
                         {
-                            'id': 'parent_id', 'name': 'parent_id',
-                            'string': 'Parent', 'type': 'many2one',
+                            'id': 'parent_id', 'name': 'parent_id', 'model_name': 'base_import.tests.models.o2m.child',
+                            'string': 'Parent', 'type': 'many2one', 'comodel_name': 'base_import.tests.models.o2m',
                             'required': False, 'fields': [
-                                {'id': 'parent_id', 'name': 'id',
+                                {'id': 'parent_id', 'name': 'id', 'model_name': 'base_import.tests.models.o2m.child',
                                  'string': 'External ID', 'required': False,
                                  'fields': [], 'type': 'id'},
-                                {'id': 'parent_id', 'name': '.id',
+                                {'id': 'parent_id', 'name': '.id', 'model_name': 'base_import.tests.models.o2m.child',
                                  'string': 'Database ID', 'required': False,
                                  'fields': [], 'type': 'id'},
                             ]
                         },
                         {'id': 'value', 'name': 'value', 'string': 'Value',
-                         'required': False, 'fields': [], 'type': 'integer'
+                         'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.o2m.child',
                         },
                     ]
                 }
@@ -133,16 +146,28 @@ class TestO2M(BaseImportCase):
 class TestMatchHeadersSingle(TransactionCase):
 
     def test_match_by_name(self):
-        match = self.env['base_import.import']._match_header('f0', [{'name': 'f0'}], {})
-        self.assertEqual(match, [{'name': 'f0'}])
+        match = self.env['base_import.import']._get_mapping_suggestion('f0', [{'name': 'f0'}], [], {})
+        self.assertEqual(match, {'field_path': ['f0'], 'distance': 0})
 
     def test_match_by_string(self):
-        match = self.env['base_import.import']._match_header('some field', [{'name': 'bob', 'string': "Some Field"}], {})
-        self.assertEqual(match, [{'name': 'bob', 'string': "Some Field"}])
+        match = self.env['base_import.import']._get_mapping_suggestion('some field', [{'name': 'bob', 'string': "Some Field"}], [], {})
+        self.assertEqual(match, {'field_path': ['bob'], 'distance': 0})
 
     def test_nomatch(self):
-        match = self.env['base_import.import']._match_header('should not be', [{'name': 'bob', 'string': "wheee"}], {})
-        self.assertEqual(match, [])
+        match = self.env['base_import.import']._get_mapping_suggestion('should not be', [{'name': 'bob', 'string': "wheee"}], [], {})
+        self.assertEqual(match, {})
+
+    def test_close_match(self):
+        match = self.env['base_import.import']._get_mapping_suggestion('bobe', [{'name': 'bob', 'type': 'char'}], ['char'], {})
+        self.assertEqual(match, {'field_path': ['bob'], 'distance': 0.1428571428571429})
+
+    def test_distant_match(self):
+        Import = self.env['base_import.import']
+        header, field_string = 'same Folding', 'Some Field'
+        match = Import._get_mapping_suggestion(header, [{'name': 'bob', 'string': field_string, 'type': 'char'}], ['char'], {})
+        string_field_dist = Import._get_distance(header.lower(), field_string.lower())
+        self.assertEqual(string_field_dist, 0.36363636363636365)
+        self.assertEqual(match, {})  # if distance >= 0.2, no match returned
 
     def test_recursive_match(self):
         f = {
@@ -153,8 +178,8 @@ class TestMatchHeadersSingle(TransactionCase):
                 {'name': 'f1', 'string': "Sub field 2", 'fields': []},
             ]
         }
-        match = self.env['base_import.import']._match_header('f0/f1', [f], {})
-        self.assertEqual(match, [f, f['fields'][1]])
+        match = self.env['base_import.import']._get_mapping_suggestion('f0/f1', [f], [], {})
+        self.assertEqual(match, {'field_path': [f['name'], f['fields'][1]['name']]})
 
     def test_recursive_nomatch(self):
         """ Match first level, fail to match second level
@@ -167,50 +192,59 @@ class TestMatchHeadersSingle(TransactionCase):
                 {'name': 'f1', 'string': "Sub field 2", 'fields': []},
             ]
         }
-        match = self.env['base_import.import']._match_header('f0/f2', [f], {})
-        self.assertEqual(match, [])
+        match = self.env['base_import.import']._get_mapping_suggestion('f0/f2', [f], [], {})
+        self.assertEqual(match, {})
 
 
 class TestMatchHeadersMultiple(TransactionCase):
 
     def test_noheaders(self):
         self.assertEqual(
-            self.env['base_import.import']._match_headers([], [], {}), ([], {})
+            self.env['base_import.import']._get_mapping_suggestions([], {}, []), {}
         )
 
     def test_nomatch(self):
         self.assertEqual(
-            self.env['base_import.import']._match_headers(
-                iter([
-                    ['foo', 'bar', 'baz', 'qux'],
-                    ['v1', 'v2', 'v3', 'v4'],
-                ]),
-                [],
-                {'headers': True}),
-            (
+            self.env['base_import.import']._get_mapping_suggestions(
                 ['foo', 'bar', 'baz', 'qux'],
-                dict.fromkeys(range(4))
-            )
+                {
+                    (0, 'foo'): ['int'],
+                    (1, 'bar'): ['char'],
+                    (2, 'baz'): ['text'],
+                    (3, 'qux'): ['many2one']
+                },
+                {}),
+            {
+                (0, 'foo'): None,
+                (1, 'bar'): None,
+                (2, 'baz'): None,
+                (3, 'qux'): None
+            }
         )
 
     def test_mixed(self):
         self.assertEqual(
-            self.env['base_import.import']._match_headers(
-                iter(['foo bar baz qux/corge'.split()]),
+            self.env['base_import.import']._get_mapping_suggestions(
+                'foo bar baz qux/corge'.split(),
+                {
+                    (0, 'foo'): ['int'],
+                    (1, 'bar'): ['char'],
+                    (2, 'baz'): ['text'],
+                    (3, 'qux/corge'): ['text']
+                },
                 [
-                    {'name': 'bar', 'string': 'Bar'},
-                    {'name': 'bob', 'string': 'Baz'},
-                    {'name': 'qux', 'string': 'Qux', 'fields': [
-                        {'name': 'corge', 'fields': []},
+                    {'name': 'bar', 'string': 'Bar', 'type': 'char'},
+                    {'name': 'bob', 'string': 'Baz', 'type': 'text'},
+                    {'name': 'qux', 'string': 'Qux', 'type': 'many2one', 'fields': [
+                        {'name': 'corge', 'type': 'text', 'fields': []},
                      ]}
-                ],
-                {'headers': True}),
-            (['foo', 'bar', 'baz', 'qux/corge'], {
-                0: None,
-                1: ['bar'],
-                2: ['bob'],
-                3: ['qux', 'corge'],
-            })
+                ]),
+            {
+                (0, 'foo'): None,
+                (1, 'bar'): {'field_path': ['bar'], 'distance': 0},
+                (2, 'baz'): {'field_path': ['bob'], 'distance': 0},
+                (3, 'qux/corge'): {'field_path': ['qux', 'corge']}
+            }
         )
 
 
@@ -225,10 +259,10 @@ class TestColumnMapping(TransactionCase):
             'file_type': 'text/csv',
             'file_name': 'data.csv',
         })
-        import_record.do(
+        import_record.execute_import(
             ['name', 'somevalue', 'othervalue'],
             ['Name', 'Some Value', 'value'],
-            {'quoting': '"', 'separator': ',', 'headers': True},
+            {'quoting': '"', 'separator': ',', 'has_headers': True},
             True
         )
         fields = self.env['base_import.mapping'].search_read(
@@ -237,6 +271,29 @@ class TestColumnMapping(TransactionCase):
         )
         self.assertItemsEqual([f['column_name'] for f in fields], ['Name', 'Some Value', 'value'])
         self.assertItemsEqual([f['field_name'] for f in fields], ['somevalue', 'name', 'othervalue'])
+
+    def test_fuzzy_match_distance(self):
+        values_to_test = [
+            ('opportunities', 'opportinuties'),
+            ('opportunities', 'opportunate'),
+            ('opportunities', 'operable'),
+            ('opportunities', 'purchasing'),
+            ('lead_id', 'laed_id'),
+            ('lead_id', 'leen_id'),
+            ('lead_id', 'let_id_be'),
+            ('lead_id', 'not related'),
+        ]
+
+        Import = self.env['base_import.import']
+        max_distance = 0.2 # see FUZZY_MATCH_DISTANCE. We don't use it here to avoid making test work after modifying this constant.
+        for value in values_to_test:
+            distance = Import._get_distance(value[0].lower(), value[1].lower())
+            model_fields_info = [{'name': value[0], 'string': value[0], 'type': 'char'}]
+            match = self.env['base_import.import']._get_mapping_suggestion(value[1], model_fields_info, ['char'], {})
+
+            self.assertEqual(
+                bool(match), distance < max_distance
+            )
 
 
 class TestPreview(TransactionCase):
@@ -279,8 +336,8 @@ class TestPreview(TransactionCase):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': b'name,Some Value,Counter\n'
-                    b'foo,1,2\n'
-                    b'bar,3,4\n'
+                    b'foo,,\n'
+                    b'bar,,4\n'
                     b'qux,5,6\n',
             'file_type': 'text/csv'
         })
@@ -288,23 +345,19 @@ class TestPreview(TransactionCase):
         result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': ',',
-            'headers': True,
+            'has_headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['qux', '5', '6'],
-        ])
+        self.assertEqual(result['preview'], ['foo', '5', '4'])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
@@ -317,22 +370,18 @@ class TestPreview(TransactionCase):
         })
 
         result = import_wizard.parse_preview({
-            'headers': True,
+            'has_headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['qux', '5', '6'],
-        ])
+        self.assertEqual(result['preview'], ['foo', '1', '2'])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
@@ -345,22 +394,18 @@ class TestPreview(TransactionCase):
         })
 
         result = import_wizard.parse_preview({
-            'headers': True,
+            'has_headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['qux', '5', '6'],
-        ])
+        self.assertEqual(result['preview'], ['foo', '1', '2'])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
@@ -373,22 +418,19 @@ class TestPreview(TransactionCase):
         })
 
         result = import_wizard.parse_preview({
-            'headers': True,
+            'has_headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue']})
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['aux', '5', '6'],
-        ])
+        self.assertEqual(result['preview'], ['foo', '1', '2'])
+
 
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
@@ -406,7 +448,7 @@ class test_convert_import_data(TransactionCase):
         })
         data, fields = import_wizard._convert_import_data(
             ['name', 'somevalue', 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True}
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
 
         self.assertItemsEqual(fields, ['name', 'somevalue', 'othervalue'])
@@ -425,7 +467,7 @@ class test_convert_import_data(TransactionCase):
 
         })
 
-        results = import_wizard.do(
+        results = import_wizard.execute_import(
             ['name', 'date', 'create_date'],
             [],
             {
@@ -433,7 +475,7 @@ class test_convert_import_data(TransactionCase):
                 'datetime_format': '%Y-%m-%d %H:%M',
                 'quoting': '"',
                 'separator': ',',
-                'headers': True
+                'has_headers': True
             }
         )
 
@@ -457,7 +499,7 @@ class test_convert_import_data(TransactionCase):
             'separator': ',',
             'float_decimal_separator': ',',
             'float_thousand_separator': '.',
-            'headers': True
+            'has_headers': True
         }
         data, import_fields = import_wizard._convert_import_data(
             ['name', 'parent_id/.id', 'parent_id/date', 'parent_id/credit_limit'],
@@ -503,7 +545,7 @@ class test_convert_import_data(TransactionCase):
         })
         data, fields = import_wizard._convert_import_data(
             ['name', False, 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True}
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
@@ -527,7 +569,7 @@ class test_convert_import_data(TransactionCase):
         })
         data, fields = import_wizard._convert_import_data(
             ['name', False, 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True}
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
@@ -549,7 +591,7 @@ class test_convert_import_data(TransactionCase):
         })
         data, fields = import_wizard._convert_import_data(
             ['name', 'somevalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True}
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
 
         self.assertItemsEqual(fields, ['name', 'somevalue'])
@@ -566,7 +608,7 @@ class test_convert_import_data(TransactionCase):
             'file_type': 'text/csv'
 
         })
-        self.assertRaises(ValueError, import_wizard._convert_import_data, [], {'quoting': '"', 'separator': ',', 'headers': True})
+        self.assertRaises(ImportValidationError, import_wizard._convert_import_data, [], {'quoting': '"', 'separator': ',', 'has_headers': True})
 
     def test_falsefields(self):
         import_wizard = self.env['base_import.import'].create({
@@ -577,10 +619,10 @@ class test_convert_import_data(TransactionCase):
         })
 
         self.assertRaises(
-            ValueError,
+            ImportValidationError,
             import_wizard._convert_import_data,
             [False, False, False],
-            {'quoting': '"', 'separator': ',', 'headers': True})
+            {'quoting': '"', 'separator': ',', 'has_headers': True})
 
     def test_newline_import(self):
         """
@@ -601,10 +643,11 @@ class test_convert_import_data(TransactionCase):
         })
         data, _ = import_wizard._convert_import_data(
             ['name', 'somevalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True}
+            {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
 
         self.assertItemsEqual(data, [data_row])
+
 
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
@@ -625,7 +668,7 @@ class TestBatching(TransactionCase):
         result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': ',',
-            'headers': True,
+            'has_headers': True,
             'limit': 100,
         })
         self.assertIsNone(result.get('error'))
@@ -634,7 +677,7 @@ class TestBatching(TransactionCase):
         result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': ',',
-            'headers': True,
+            'has_headers': True,
             'limit': 5,
         })
         self.assertIsNone(result.get('error'))
@@ -669,11 +712,11 @@ class TestBatching(TransactionCase):
             'file_name': 'things.csv',
             'file': f.getvalue(),
         })
-        opts = {'quoting': '"', 'separator': ',', 'headers': True}
+        opts = {'quoting': '"', 'separator': ',', 'has_headers': True}
         preview = import_wizard.parse_preview({**opts, 'limit': 15})
         self.assertIs(preview['batch'], True)
 
-        results = import_wizard.do(
+        results = import_wizard.execute_import(
             ['name', 'value/value'], [],
             {**opts, 'limit': 5}
         )
@@ -681,7 +724,7 @@ class TestBatching(TransactionCase):
         self.assertEqual(len(results['ids']), 1, "should have imported the first record in full, got %s" % results['ids'])
         self.assertEqual(results['nextrow'], 10)
 
-        results = import_wizard.do(
+        results = import_wizard.execute_import(
             ['name', 'value/value'], [],
             {**opts, 'limit': 15}
         )
@@ -692,7 +735,7 @@ class TestBatching(TransactionCase):
 
     def test_batches(self):
         partners_before = self.env['res.partner'].search([])
-        opts = {'headers': True, 'separator': ',', 'quoting': '"'}
+        opts = {'has_headers': True, 'separator': ',', 'quoting': '"'}
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
@@ -710,7 +753,7 @@ g,g@example.com
 """
         })
 
-        results = import_wizard.do(['name', 'email'], [], {**opts, 'limit': 1})
+        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 1})
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 1)
         # titlerow is ignored by lastrow's counter
@@ -718,7 +761,7 @@ g,g@example.com
         partners_1 = self.env['res.partner'].search([]) - partners_before
         self.assertEqual(partners_1.name, 'a')
 
-        results = import_wizard.do(['name', 'email'], [], {**opts, 'limit': 2, 'skip': 1})
+        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 2, 'skip': 1})
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 2)
         # empty row should also be ignored
@@ -726,12 +769,13 @@ g,g@example.com
         partners_2 = self.env['res.partner'].search([]) - (partners_before | partners_1)
         self.assertEqual(partners_2.mapped('name'), ['b', 'c'])
 
-        results = import_wizard.do(['name', 'email'], [], {**opts, 'limit': 10, 'skip': 3})
+        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 10, 'skip': 3})
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 4)
         self.assertEqual(results['nextrow'], 0)
         partners_3 = self.env['res.partner'].search([]) - (partners_before | partners_1 | partners_2)
         self.assertEqual(partners_3.mapped('name'), ['d', 'e', 'f', 'g'])
+
 
 class test_failures(TransactionCase):
     def test_big_attachments(self):
@@ -755,8 +799,8 @@ class test_failures(TransactionCase):
             'file': fout.getvalue(),
             'file_type': 'text/csv'
         })
-        results = import_wizard.do(
+        results = import_wizard.execute_import(
             ['name', 'db_datas'],
             [],
-            {'headers': True, 'separator': ',', 'quoting': '"'})
+            {'has_headers': True, 'separator': ',', 'quoting': '"'})
         self.assertFalse(results['messages'], "results should be empty on successful import")
