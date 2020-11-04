@@ -6,6 +6,7 @@ var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
+var basicFields = require('web.basic_fields');
 const fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
@@ -2252,6 +2253,66 @@ QUnit.module('Views', {
         assert.containsOnce(form, '.o_field_cell[title="New name"]', 'should not crash and value must be edited');
 
         form.destroy();
+    });
+
+    QUnit.test("modal should not use the widget footer elements", async function (assert) {
+        assert.expect(2);
+
+        var MyWidget = basicFields.FieldChar.extend({
+            className: 'oe_form_field d-flex',
+            _renderEdit: function () {
+                var res = this._super();
+                const $el = $(
+                    `<section class="oe_form_field">
+                        <header>title</header>
+                        <article>content ` + this.$el[0].outerHTML + `</article>
+                        <footer><button>button</button></footer>
+                    </section>`);
+                this.$el.replaceWith($el);
+                this.$el = $el;
+                return res;
+            },
+        });
+        fieldRegistry.add('test', MyWidget);
+
+        this.data.partner.records[0].reference = 'partner,2';
+
+        var form = await createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: `<form>
+                        <field name="name"/>
+                        <field name="partner_ids">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                                <field name="reference"/>
+                            </tree>
+                       </field>
+                   </form>`,
+            archs: {
+                'partner,false,form': '<form><field name="display_name" widget="test"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+            res_id: 17,
+        });
+        // current form
+        await testUtils.form.clickEdit(form);
+
+        // open the modal form view of the record pointed by the reference field
+        await testUtils.dom.click(form.$('table td[title="first record"]'));
+        await testUtils.dom.click(form.$('table td button.o_external_button'));
+
+        assert.strictEqual($('.modal-content main.modal-body section footer').html(), '<button>button</button>', "modal should display the custom widget");
+        assert.strictEqual($('.modal-content footer.modal-footer button').text(), 'SaveDiscard', "modal footer should contains 2 buttons");
+
+        form.destroy();
+        delete fieldRegistry.map.test;
     });
 
     QUnit.test('toolbar is hidden when switching to edit mode', async function (assert) {
