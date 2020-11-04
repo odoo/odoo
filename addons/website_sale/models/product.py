@@ -320,6 +320,21 @@ class ProductTemplate(models.Model):
         """
         return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
+    def _get_image_holder(self):
+        """Returns the holder of the image to use as default representation.
+        If the product template has an image it is the product template,
+        otherwise if the product has variants it is the first variant
+
+        :return: this product template or the first product variant
+        :rtype: recordset of 'product.template' or recordset of 'product.product'
+        """
+        self.ensure_one()
+        if self.image_1920:
+            return self
+        variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
+        # if the variant has no image anyway, spare some queries by using template
+        return variant if variant.image_variant_1920 else self
+
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to
         the company of the website. Otherwise use the one from parent method."""
