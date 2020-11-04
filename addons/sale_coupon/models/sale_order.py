@@ -474,9 +474,11 @@ class SaleOrderLine(models.Model):
         if 'product_id' in fnames:
             Program = self.env['coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
+            field_total_order_count = Program._fields['total_order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
+            programs |= self.env.cache.get_records(Program, field_total_order_count)
             if programs:
                 products = self.filtered('is_reward_line').mapped('product_id')
                 for program in programs:
                     if program.discount_line_product_id in products:
-                        self.env.cache.invalidate([(field_order_count, program.ids)])
+                        self.env.cache.invalidate([(field_order_count, program.ids), (field_total_order_count, program.ids)])

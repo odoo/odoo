@@ -79,6 +79,8 @@ class CouponProgram(models.Model):
             domain = ast.literal_eval(program.rule_partners_domain) if program.rule_partners_domain else []
             program.valid_partner_ids = self.env["res.partner"].search(domain).ids
 
-    def get_total_order_count(self):
-        res = super(CouponProgram, self).get_total_order_count()
-        return res + self.pos_order_count
+    @api.depends('pos_order_ids')
+    def _compute_total_order_count(self):
+        super(CouponProgram, self)._compute_total_order_count()
+        for program in self:
+            program.total_order_count += len(program.pos_order_ids)
