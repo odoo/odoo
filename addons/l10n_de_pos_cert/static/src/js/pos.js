@@ -3,7 +3,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
 
     const models = require('point_of_sale.models');
     const { uuidv4, convertFromEpoch } = require('l10n_de_pos_cert.utils');
-    const { TaxError } = require('l10n_de_pos_cert.exceptions');
+    const { TaxError } = require('l10n_de_pos_cert.errors');
 
     const RATE_MAPPING = {
         16: 'NORMAL',

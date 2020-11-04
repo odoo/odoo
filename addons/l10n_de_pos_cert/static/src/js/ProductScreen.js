@@ -3,7 +3,7 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
 
     const ProductScreen = require('point_of_sale.ProductScreen');
     const Registries = require('point_of_sale.Registries');
-    const { TaxError } = require('l10n_de_pos_cert.exceptions');
+    const { TaxError } = require('l10n_de_pos_cert.errors');
 
     const _super_productscreen = ProductScreen.prototype;
 

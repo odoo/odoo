@@ -18,7 +18,7 @@ odoo.define('l10n_de_pos_cert.Chrome', function(require) {
                 const body = event.detail.message.noInternet;
                 await this.showPopup('OfflineErrorPopup', { title, body });
             } else if (error.status === 401 && error.source === 'authenticate') {
-                await this._showForbiddenPopup();
+                await this._showUnauthorizedPopup();
             } else if ((error.status === 400 && error.responseJSON.message.includes('tss_id')) ||
                 (error.status === 404 && error.responseJSON.code === 'E_TSS_NOT_FOUND')) {
                 await this._showBadRequestPopup('TSS ID');
@@ -32,8 +32,8 @@ odoo.define('l10n_de_pos_cert.Chrome', function(require) {
                 await this.showPopup('ErrorPopup', { title, body });
             }
         }
-        async _showForbiddenPopup() {
-            const title = this.env._t('Forbidden access to Fiskaly');
+        async _showUnauthorizedPopup() {
+            const title = this.env._t('Unauthorized error to Fiskaly');
             const body = this.env._t(
                 'It seems that your Fiskaly API key and/or secret are incorrect. Update them in your company settings.'
             );
