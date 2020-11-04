@@ -95,7 +95,7 @@ odoo.define('payment.manage_form', require => {
                 }).guardedCatch(error => {
                     this._displayError(
                         _t("Server Error"),
-                        _t("We are not able to delete your payment method at the moment."),
+                        _t("We are not able to delete your payment method."),
                         error.message.data.message
                     );
                 });

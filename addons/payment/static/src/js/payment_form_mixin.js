@@ -322,7 +322,7 @@ odoo.define('payment.payment_form_mixin', require => {
                     // Submit the form
                     $redirectForm.submit();
                 } else if (flow === 'direct') {
-                    // The direct flow is handled by acquirers in the override of this method
+                    // This flow is handled by acquirers in the override of this method
                     return result;
                 } else if (flow === 'token') {
                     window.location = '/payment/status'; // Tokens have already been processed

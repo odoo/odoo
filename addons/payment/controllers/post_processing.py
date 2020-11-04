@@ -29,7 +29,7 @@ class PaymentPostProcessing(http.Controller):
     def display_status(self, **kwargs):
         """ Display the payment status page.
 
-        :param dict kwargs: Optional data. This parameter is not used here.
+        :param dict kwargs: Optional data. This parameter is not used here
         :return: The rendered status page
         :rtype: str
         """

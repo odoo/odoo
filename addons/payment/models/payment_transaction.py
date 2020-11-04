@@ -317,7 +317,8 @@ class PaymentTransaction(models.Model):
         """ Return a dict of values used to process the transaction.
 
         The returned dict contains the following entries:
-            - acquirer_id: The acquirer handling the transaction, as a `payment.acquirer`id
+            - tx_id: The transaction, as a `payment.transaction` id
+            - acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
             - provider: The provider of the acquirer
             - reference: The reference of the transaction
             - amount: The rounded amount of the transaction
