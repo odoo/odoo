@@ -98,7 +98,9 @@
             <field name="name">Property multi-company</field>
             <field name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <!-- Substituido domain original para resolver o Multi-Compay
+                <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field> -->
+            <field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids.ids)]</field>
         </record>
 
 
