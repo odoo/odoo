@@ -287,8 +287,8 @@ odoo.define('web.searchUtils', function (require) {
         const date = referenceMoment.clone().set(setParam).add(addParam || {});
 
         // compute domain
-        let leftBound = date.clone().startOf(granularity);
-        let rightBound = date.clone().endOf(granularity);
+        let leftBound = date.clone().locale('en').startOf(granularity);
+        let rightBound = date.clone().locale('en').endOf(granularity);
         if (fieldType === 'date') {
             leftBound = leftBound.format('YYYY-MM-DD');
             rightBound = rightBound.format('YYYY-MM-DD');
