@@ -12,6 +12,16 @@ body {
     word-wrap: break-word;
     font-family: $o-default-report-font;
 }
+
+span.o_force_ltr {
+    display: inline-block;
+}
+.o_force_ltr, .o_field_phone {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
 .border-black td, .border-black th {
     border-top: 1px solid black !important;
 }
