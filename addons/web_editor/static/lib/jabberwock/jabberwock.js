@@ -851,9 +851,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this.name = name;
             this.parent = parent;
         }
-        getPrevious() {
-            return this.snapshotOrigin ? this.snapshotOrigin.parent : this.parent;
-        }
     }
     class Memory {
         constructor() {
@@ -1007,19 +1004,19 @@ odoo.define('web_editor.jabberwock', (function(require) {
             };
             const ancestorKey = this._getCommonAncestor(from, to);
             const refs = this._getChangesPath(from, to, ancestorKey);
-            if (from === ancestorKey && from !== to) {
-                refs.shift();
-            }
             const removeFromUpdate = new Set();
-            let previous;
-            let ref;
-            while ((ref = refs.pop())) {
+            let reverse = true;
+            for (const ref of refs) {
+                if (reverse && ref.name === ancestorKey && from !== to) {
+                    reverse = false;
+                    continue;
+                }
                 const linkedParentOfProxy = ref.linkedParentOfProxy;
                 for (const ID in linkedParentOfProxy) {
                     const proxy = this._proxies[ID];
                     if (linkedParentOfProxy[ID].length) {
                         if (ref.ids.has(+ID)) {
-                            if (ref.parent === previous) {
+                            if (reverse) {
                                 diff.remove.push(proxy);
                             }
                             else {
@@ -1032,19 +1029,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         }
                     }
                     else {
-                        if (ref.parent === previous) {
+                        if (reverse) {
                             diff.add.push(proxy);
                         }
                         else {
                             diff.remove.push(proxy);
                         }
-                        removeFromUpdate.add(proxy);
-                    }
-                }
-                if (ref.parent === previous) {
-                    for (const ID of previous.ids) {
-                        const proxy = this._proxies[ID];
-                        diff.remove.push(proxy);
                         removeFromUpdate.add(proxy);
                     }
                 }
@@ -1115,7 +1105,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         }
                     }
                 });
-                previous = ref;
             }
             return diff;
         }
@@ -1201,8 +1190,16 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const sliceKeys = [];
             let ref = this._slices[sliceKey];
             while (ref && ref.name) {
-                sliceKeys.push(ref.name);
-                ref = withoutSnapshot ? ref.getPrevious() : ref.parent;
+                if (withoutSnapshot && ref.snapshotOrigin) {
+                    for (const origin of ref.snapshotOrigin) {
+                        sliceKeys.push(origin.name);
+                        ref = origin;
+                    }
+                }
+                else {
+                    sliceKeys.push(ref.name);
+                }
+                ref = ref.parent;
             }
             return sliceKeys;
         }
@@ -1212,37 +1209,37 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * destination slice.
          *
          * @param fromSliceKey
-         * @param unitSliceKey
+         * @param toSliceKey
          * @param newSliceKey
          */
-        snapshot(fromSliceKey, unitSliceKey, newSliceKey) {
+        snapshot(fromSliceKey, toSliceKey, newSliceKey) {
             const refs = this._slices;
-            const fromRref = refs[fromSliceKey];
-            const untilRref = refs[unitSliceKey];
-            const newRef = this._create(newSliceKey, fromRref.parent && fromRref.parent.name);
-            this._squashInto(fromSliceKey, unitSliceKey, newRef.name);
-            untilRref.children.forEach(child => {
+            const fromRef = refs[fromSliceKey];
+            const toRef = refs[toSliceKey];
+            const newRef = this._create(newSliceKey, fromRef.parent && fromRef.parent.name);
+            const sliceKeys = this._squashInto(fromSliceKey, toSliceKey, newRef.name);
+            toRef.children.forEach(child => {
                 child.parent = newRef;
             });
-            newRef.children = untilRref.children;
-            untilRref.children = [];
-            untilRref.snapshot = newRef;
-            newRef.snapshotOrigin = untilRref;
+            newRef.children = toRef.children;
+            toRef.children = [];
+            toRef.snapshot = newRef;
+            newRef.snapshotOrigin = sliceKeys;
         }
         /**
          * Compress all changes between two parented memory slices and remove all
          * children memory slice.
          *
          * @param fromSliceKey
-         * @param unitSliceKey
+         * @param toSliceKey
          */
-        compress(fromSliceKey, unitSliceKey) {
+        compress(fromSliceKey, toSliceKey) {
             const refs = this._slices;
-            const fromRref = refs[fromSliceKey];
-            const untilRref = refs[unitSliceKey];
-            const toRemove = fromRref.children.slice().map(ref => ref.name);
-            fromRref.children = untilRref.children.splice(0);
-            this._squashInto(fromSliceKey, unitSliceKey, fromSliceKey);
+            const fromRef = refs[fromSliceKey];
+            const toRef = refs[toSliceKey];
+            const toRemove = fromRef.children.slice().map(ref => ref.name);
+            fromRef.children = toRef.children.splice(0);
+            this._squashInto(fromSliceKey, toSliceKey, fromSliceKey);
             let key;
             while ((key = toRemove.pop())) {
                 this._remove(key);
@@ -1382,40 +1379,49 @@ odoo.define('web_editor.jabberwock', (function(require) {
             return ref;
         }
         _getChangesPath(fromSliceKey, toSliceKey, ancestorKey) {
+            var _a, _b;
             const fromPath = [];
+            const ancestor = this._slices[ancestorKey];
             let ref = this._slices[fromSliceKey];
             while (ref) {
-                fromPath.push(ref);
-                if (ref.name === ancestorKey) {
+                if ((_a = ref.snapshotOrigin) === null || _a === void 0 ? void 0 : _a.includes(ancestor)) {
+                    fromPath.push(...ref.snapshotOrigin.slice(0, ref.snapshotOrigin.indexOf(ancestor) + 1));
                     break;
                 }
-                ref = ref.getPrevious();
+                fromPath.push(ref);
+                if (ref === ancestor) {
+                    break;
+                }
+                ref = ref.parent;
             }
             const toPath = [];
             ref = this._slices[toSliceKey];
             while (ref) {
-                if (ref.name === ancestorKey) {
+                if ((_b = ref.snapshotOrigin) === null || _b === void 0 ? void 0 : _b.includes(ancestor)) {
+                    toPath.push(...ref.snapshotOrigin.slice(0, ref.snapshotOrigin.indexOf(ancestor)));
+                    break;
+                }
+                if (ref === ancestor) {
                     break;
                 }
                 toPath.push(ref);
-                ref = ref.getPrevious();
+                ref = ref.parent;
             }
             toPath.reverse();
             return fromPath.concat(toPath);
         }
         _getCommonAncestor(sliceKeyA, sliceKeyB) {
-            const rootB = this._slices[sliceKeyB];
-            let refA = this._slices[sliceKeyA];
-            while (refA) {
-                let refB = rootB;
-                while (refB) {
-                    if (refA.name === refB.name) {
-                        return refA.name;
-                    }
-                    refB = refB.getPrevious();
+            const pathA = this.getPath(sliceKeyA, true).reverse();
+            pathA.push(sliceKeyA);
+            const pathB = this.getPath(sliceKeyB, true).reverse();
+            pathB.push(sliceKeyB);
+            let key;
+            while ((key = pathA.pop())) {
+                if (pathB.includes(key)) {
+                    return key;
                 }
-                refA = refA.getPrevious();
             }
+            return '';
         }
         _getProxyParentedPath(sliceKey, ID) {
             // bubbling up magic for proxyParents
@@ -1540,16 +1546,21 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             return new Set(IDs);
         }
-        _squashInto(fromSliceKey, unitSliceKey, intoSliceKey) {
+        _squashInto(fromSliceKey, toSliceKey, intoSliceKey) {
+            var _a;
             const refs = this._slices;
-            const fromRref = refs[fromSliceKey];
-            const untilRref = refs[unitSliceKey];
+            const fromRef = refs[fromSliceKey];
+            const toRef = refs[toSliceKey];
             const intoRef = refs[intoSliceKey];
             const references = [];
-            let ref = untilRref;
+            let ref = toRef;
             while (ref) {
+                if ((_a = ref.snapshotOrigin) === null || _a === void 0 ? void 0 : _a.includes(fromRef)) {
+                    references.push(...ref.snapshotOrigin.slice(0, ref.snapshotOrigin.indexOf(fromRef)));
+                    break;
+                }
                 references.push(ref);
-                if (ref === fromRref) {
+                if (ref === fromRef) {
                     break;
                 }
                 ref = ref.parent;
@@ -1560,7 +1571,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const intoLinkedParentOfProxy = refs[intoSliceKey].linkedParentOfProxy;
             const intoInvalidCache = refs[intoSliceKey].invalidCache;
             const intoSlices = intoRef.data;
-            while ((ref = references.pop())) {
+            for (let index = references.length - 1; index >= 0; index--) {
+                const ref = references[index];
                 const LinkedParentOfProxy = ref.linkedParentOfProxy;
                 Object.keys(LinkedParentOfProxy).forEach(ID => {
                     intoLinkedParentOfProxy[ID] = LinkedParentOfProxy[ID].slice();
@@ -1611,6 +1623,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     }
                 });
             }
+            return references;
         }
         _autoSnapshot() {
             const refs = [];
@@ -1621,12 +1634,14 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             if (refs.length > this._numberOfFlatSlices + this._numberOfSlicePerSnapshot) {
                 const fromSliceKey = refs[refs.length - 1].name;
-                const unitSliceKey = refs[refs.length - 1 - this._numberOfSlicePerSnapshot].name;
-                const newSliceKey = unitSliceKey +
+                const toSliceKey = refs[refs.length - 1 - this._numberOfSlicePerSnapshot].name;
+                const newSliceKey = toSliceKey +
                     '[snapshot from ' +
                     fromSliceKey.replace(regExpoSnapshotOrigin, '$1') +
                     ']';
-                this.snapshot(fromSliceKey, unitSliceKey, newSliceKey);
+                if (!this._slices[newSliceKey]) {
+                    this.snapshot(fromSliceKey, toSliceKey, newSliceKey);
+                }
             }
         }
     }
@@ -6220,7 +6235,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const nextMemorySlice = this._memoryID.toString();
                 this.memory.create(nextMemorySlice);
                 // Send the commit message with a frozen memory.
-                const changesLocations = this.memory.getChangesLocations(memorySlice, this.memory.sliceKey);
+                const changesLocations = this.memory.getChangesLocations(origin, nextMemorySlice);
                 await this.dispatcher.dispatch('@commit', {
                     changesLocations: changesLocations,
                     commandNames: [...commandNames],
@@ -13601,7 +13616,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         const ids = this._renderedNodes.get(linkedNode);
                         if (ids) {
                             for (const id of ids) {
-                                if (!oldObjects.has(id)) {
+                                if (!this._objects[id]) {
+                                    console.warn('Trying to remove a rendering object that has already been removed. One of the references is wrong.', 'Linked VNode:', linkedNode);
+                                }
+                                else if (!oldObjects.has(id)) {
                                     const object = this._objects[id].object;
                                     this._rendererTreated.delete(object);
                                     this._objectIds.delete(object);
@@ -13635,10 +13653,15 @@ odoo.define('web_editor.jabberwock', (function(require) {
                             const ancestorObjectId = this._fromItem.get(ancestorWithRendering);
                             if (ancestorObjectId && !this._diff[ancestorObjectId]) {
                                 const parentObject = this._objects[ancestorObjectId];
-                                const nodes = this._items.get(parentObject.object);
-                                mapOldIds.set(parentObject.object, new Set([ancestorObjectId]));
-                                this._rendererTreated.delete(parentObject.object);
-                                this._diffObject(renderings, parentObject.object, nodes, mapOldIds);
+                                if (!parentObject) {
+                                    console.warn('Trying to remove a parent that has already been removed. One of the references is wrong.');
+                                }
+                                else {
+                                    const nodes = this._items.get(parentObject.object);
+                                    mapOldIds.set(parentObject.object, new Set([ancestorObjectId]));
+                                    this._rendererTreated.delete(parentObject.object);
+                                    this._diffObject(renderings, parentObject.object, nodes, mapOldIds);
+                                }
                             }
                         }
                     }
@@ -13672,7 +13695,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
             for (const diff of diffs) {
                 for (const id of diff.removedChildren) {
                     const object = this._objects[id];
-                    if (!object.parent) {
+                    if (!object) {
+                        console.warn('Trying to remove a rendering object that has already been removed. One of the references is wrong.');
+                    }
+                    else if (!object.parent) {
                         removeObjects.push(id);
                     }
                 }
@@ -13681,7 +13707,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const object = this._objects[id];
                 for (const childId of object.children) {
                     const child = this._objects[childId];
-                    if ((!child.parent || child.parent === id) && !removeObjects.includes(childId)) {
+                    if (!child) {
+                        console.warn('Trying to remove a rendering object that has already been removed. One of the references is wrong.');
+                    }
+                    else if ((!child.parent || child.parent === id) &&
+                        !removeObjects.includes(childId)) {
                         object.parent = null;
                         removeObjects.push(childId);
                     }
@@ -13691,8 +13721,17 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const allOldDomNodes = [];
             for (const id of removeObjects) {
                 const old = this._objects[id];
+                if (!old) {
+                    console.warn('Trying to remove a rendering object that has already been removed. One of the references is wrong.');
+                    continue;
+                }
                 if (typeof old.object.detach === 'function') {
-                    old.object.detach(...old.dom);
+                    try {
+                        old.object.detach(...old.dom);
+                    }
+                    catch (e) {
+                        console.warn('An error occured while detaching. The target rendering might already have been deleted. Multiple references might target this rendering, in which case at least one of them is wrong.', 'Rendering object', old.object);
+                    }
                 }
                 for (const node of this._locations.get(old.object) || []) {
                     if (this._fromItem.get(node) === id) {
@@ -14405,7 +14444,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 hasChanged = true;
                 for (const childId of oldChildren) {
                     if (!children.includes(childId)) {
-                        if (this._objects[childId].parent === id) {
+                        if (!this._objects[childId]) {
+                            console.warn('Trying to remove a rendering object that has already been removed. One of the references is wrong.', 'Last reference inside:', domObject);
+                        }
+                        else if (this._objects[childId].parent === id) {
                             this._objects[childId].parent = null;
                         }
                         removedChildren.push(childId);
@@ -14509,7 +14551,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
             if (old) {
                 oldIdsToRelease.push(old.id);
                 if (typeof old.object.detach === 'function') {
-                    old.object.detach(...old.dom);
+                    try {
+                        old.object.detach(...old.dom);
+                    }
+                    catch (e) {
+                        console.warn('An error occured while detaching. The target rendering might already have been deleted. Multiple references might target this rendering, in which case at least one of them is wrong.', 'Rendering object:', old.object);
+                    }
                 }
             }
             for (const id of oldIdsToRelease) {
@@ -14804,7 +14851,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     const child = domObject.children[index];
                     if (!(child instanceof AbstractNode)) {
                         for (const node of this._addLocations(child, locations, from)) {
-                            allItems.push(node);
+                            if (!allItems.includes(node)) {
+                                allItems.push(node);
+                            }
                         }
                     }
                 }
@@ -15013,8 +15062,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const descendents = [id];
             for (const id of descendents) {
                 const descendent = this._objects[id];
-                descendent.parentDomNode = parentDomNode;
-                if (this._diff[id]) {
+                if (!descendent) {
+                    console.warn('Trying to render a rendering object that has already been removed. One of the references is wrong.', 'Diff found:', this._diff[id]);
+                }
+                else if (this._diff[id]) {
+                    descendent.parentDomNode = parentDomNode;
                     this._updateDom(id);
                 }
                 else if (!('tag' in descendent.object) && descendent.children) {
@@ -15799,8 +15851,19 @@ odoo.define('web_editor.jabberwock', (function(require) {
             for (const node of add) {
                 update.add(node);
             }
+            // This code is a safeguard, because there are sometimes references to
+            // destroyed VNodes (and in other memory slices).
+            const updateWithoutZombie = new Set();
+            for (const node of update) {
+                if (node.id === undefined) {
+                    console.error('Zombie (wrong VNode reference) are found', node);
+                }
+                else {
+                    updateWithoutZombie.add(node);
+                }
+            }
             // Render nodes.
-            return update;
+            return updateWithoutZombie;
         }
         _filterInRoot(nodes) {
             const inRoot = new Set([this.root]);
@@ -16981,7 +17044,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
      * @param offset
      */
     function targetDeepest(container, offset) {
-        while (container.hasChildNodes()) {
+        var _a;
+        while (container.hasChildNodes() ||
+            (isInstanceOf(container, Element) && ((_a = container.shadowRoot) === null || _a === void 0 ? void 0 : _a.hasChildNodes()))) {
             let childNodes;
             if (isInstanceOf(container, Element) && container.shadowRoot) {
                 childNodes = container.shadowRoot.childNodes;
@@ -17151,7 +17216,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 break;
             }
         }
-        return node && { node, offset };
+        return (node && { node, offset }) || (element && { node: element, offset: 0 });
     }
     function getNearestCharOffset(x, y, text) {
         // Search with a pseudo dichotomic for performance.
