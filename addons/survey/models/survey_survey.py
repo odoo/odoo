@@ -314,8 +314,8 @@ class Survey(models.Model):
         return result
 
     def copy_data(self, default=None):
-        title = _("%s (copy)") % (self.title)
-        default = dict(default or {}, title=title)
+        new_defaults = {'title': _("%s (copy)") % (self.title)}
+        default = dict(new_defaults, **(default or {}))
         return super(Survey, self).copy_data(default)
 
     def toggle_active(self):
