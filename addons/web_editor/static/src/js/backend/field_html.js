@@ -23,8 +23,9 @@ var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
  * nodeOptions:
  *  - style-inline => convert class to inline style (no re-edition) => for sending by email
  *  - no-attachment
- *  - cssEdit
- *  - cssReadonly
+ *  - cssEdit => in edition mode use specific css into a shadow dom
+ *  - cssEditIframe => in edition mode use specific css into an iframe
+ *  - cssReadonly => in readonly mode use specific css into a shadow dom
  *  - snippets
  *  - wrapper
  */
@@ -55,9 +56,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (this.nodeOptions.cssReadonly) {
             this.cssReadonly = await ajax.loadAsset(this.nodeOptions.cssReadonly);
         }
-        if (this.nodeOptions.cssEdit || this.nodeOptions['style-inline']) {
+        const cssEdit = this.nodeOptions.cssEdit || this.nodeOptions.cssEditIframe;
+        if (cssEdit || this.nodeOptions['style-inline']) {
             this.needShadow = true;
-            this.cssEdit = await ajax.loadAsset(this.nodeOptions.cssEdit || 'web_editor.assets_edit_html_field');
+            this.needIframe = !!this.nodeOptions.cssEditIframe;
+            this.cssEdit = await ajax.loadAsset(cssEdit || 'web_editor.assets_edit_html_field');
         }
     },
     /**
@@ -175,7 +178,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _getWysiwygOptions: async function () {
         let main = '<t t-zone="main"/>';
-
+        if (this.nodeOptions.wrapper) {
+            main = this._wrap(main);
+        }
         if (this.needShadow) {
             let style = '';
             if (this.cssEdit) {
@@ -188,7 +193,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     }),
                 ].join('');
             }
-            main = '<t-shadow style="width: 100%;">' + style + '\n' + main + '</t-shadow>';
+            if (this.needIframe) {
+                main = '<t-iframe style="width: 100%;">' + style + '\n' + main + '</t-iframe>';
+            } else {
+                main = '<t-shadow style="width: 100%;">' + style + '\n' + main + '</t-shadow>';
+            }
         }
         const scrollAuto = !this.needShadow;
 
@@ -258,10 +267,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (this.attrs.class && this.attrs.class.indexOf("oe_read_only") !== -1) {
             return this._renderReadonly();
         }
-        var value = this._textToHtml(this.value);
-        if (this.nodeOptions.wrapper) {
-            value = this._wrap(value);
-        }
         var fieldNameAttachment = _.chain(this.recordData)
             .pairs()
             .find(function (value) {
@@ -330,17 +335,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             }
         }
         return value;
-    },
-    /**
-     * Move HTML contents out of their wrapper.
-     *
-     * @private
-     * @param {string} html content
-     * @returns {string} html content
-     */
-    _unWrap: function (html) {
-        var $wrapper = $(html).find('#wrapper');
-        return $wrapper.length ? $wrapper.html() : html;
     },
     /**
      * Wrap HTML in order to create a custom display.

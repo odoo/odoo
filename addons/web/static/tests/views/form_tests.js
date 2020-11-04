@@ -6,7 +6,7 @@ var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
-var basicFields = require('web.basic_fields');
+const basicFields = require('web.basic_fields');
 const fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
@@ -2259,11 +2259,10 @@ QUnit.module('Views', {
         assert.expect(2);
 
         var MyWidget = basicFields.FieldChar.extend({
-            className: 'oe_form_field d-flex',
             _renderEdit: function () {
                 var res = this._super();
                 const $el = $(
-                    `<section class="oe_form_field">
+                    `<section class="o_field_widget">
                         <header>title</header>
                         <article>content ` + this.$el[0].outerHTML + `</article>
                         <footer><button>button</button></footer>
