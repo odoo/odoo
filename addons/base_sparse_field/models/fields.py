@@ -57,7 +57,7 @@ def _compute_sparse(self, records):
 @monkey_patch(fields.Field)
 def _inverse_sparse(self, records):
     for record in records:
-        values = record[self.sparse]
+        values = record[self.sparse] or {}
         value = self.convert_to_read(record[self.name], record, use_name_get=False)
         if value:
             if values.get(self.name) != value:
