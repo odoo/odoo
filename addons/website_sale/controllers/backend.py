@@ -67,7 +67,6 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Sale-based results computation
         sale_order_domain = [
             ('website_id', '=', current_website.id),
-            ('team_id', 'in', request.env['crm.team'].search([('website_ids', '!=', False)]).ids),
             ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
             ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
         so_group_data = request.env['sale.order'].read_group(sale_order_domain, fields=['state'], groupby='state')
