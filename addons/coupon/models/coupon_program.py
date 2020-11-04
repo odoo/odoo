@@ -155,7 +155,7 @@ class CouponProgram(models.Model):
             })
         return generated_coupons
 
-    def get_number_usage(self):
+    def get_total_order_count(self):
         '''This returns the total number of usage of this program.'''
         self.ensure_one()
         return 0
