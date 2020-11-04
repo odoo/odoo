@@ -810,20 +810,20 @@ odoo.define('pos_coupon.pos', function (require) {
 
             // Check max number usage
             if (program.maximum_use_number !== 0) {
-                const numberUse = await rpc
+                const [result] = await rpc
                     .query({
                         model: 'coupon.program',
-                        method: 'get_total_order_count',
-                        args: [program.id],
+                        method: 'read',
+                        args: [program.id, ['total_order_count']],
                         kwargs: { context: session.user_context },
                     })
-                    .catch(() => Promise.resolve(null)); // may happen because offline
-                if (numberUse === null) {
+                    .catch(() => Promise.resolve([false])); // may happen because offline
+                if (!result) {
                     return {
                         successful: false,
                         reason: 'Unable to get the number of usage of the program.',
                     };
-                } else if (!(numberUse < program.maximum_use_number)) {
+                } else if (!(result.total_order_count < program.maximum_use_number)) {
                     return {
                         successful: false,
                         reason: "Program's maximum number of usage has been reached.",
