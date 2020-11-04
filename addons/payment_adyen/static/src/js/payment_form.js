@@ -70,29 +70,10 @@ odoo.define('payment_adyen.payment_form', require => {
          * @return {undefined}
          */
         _dropinOnSubmit: function (state, dropin) {
-            // Call the init route to initialize the transaction and retrieve processing values
-            this._rpc({ // TODO ANV eventually factor this out in payment
+            // Call the init route to create the transaction and retrieve processing values
+            this._rpc({
                 route: this.txContext.initTxRoute,
-                params: {
-                    'payment_option_id': dropin.acquirerId,
-                    'reference_prefix': this.txContext.referencePrefix,
-                    'amount': this.txContext.amount !== undefined
-                        ? parseFloat(this.txContext.amount) : null,
-                    'currency_id': this.txContext.currencyId
-                        ? parseInt(this.txContext.currencyId) : null,
-                    'partner_id': this.txContext.partnerId
-                        ? parseInt(this.txContext.partnerId) : undefined,
-                    'order_id': this.txContext.orderId
-                        ? parseInt(this.txContext.orderId) : undefined,
-                    'flow': 'direct',
-                    'tokenization_requested': this.txContext.tokenizationRequested,
-                    'is_validation': this.txContext.isValidation !== undefined
-                        ? this.txContext.isValidation : false,
-                    'landing_route': this.txContext.landingRoute,
-                    'access_token': this.txContext.accessToken
-                        ? this.txContext.accessToken : undefined,
-                    'csrf_token': core.csrf_token,
-                },
+                params: this._prepareInitTxParams('adyen', dropin.acquirerId, 'direct'),
             }).then(processingValues => {
                 this.adyenDropin.reference = processingValues.reference; // Store final reference
                 return this._rpc({
@@ -218,7 +199,7 @@ odoo.define('payment_adyen.payment_form', require => {
          * @param {string} flow - The online payment flow of the transaction
          * @return {undefined}
          */
-        _processTx: function (provider, paymentOptionId, flow) {
+        _processPayment: function (provider, paymentOptionId, flow) {
             if (provider !== 'adyen') {
                 return this._super(...arguments);
             }

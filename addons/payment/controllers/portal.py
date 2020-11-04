@@ -6,7 +6,6 @@ import werkzeug
 from odoo import _, http
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.tools.float_utils import float_repr
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
@@ -38,8 +37,8 @@ class PaymentPortal(portal.CustomerPortal):
 
     @http.route('/payment/pay', type='http', auth='public', website=True, sitemap=False)
     def payment_pay(
-        self, reference=None, amount=None, currency_id=None, partner_id=None, order_id=None,
-        company_id=None, acquirer_id=None, access_token=None, **kwargs
+        self, reference=None, amount=None, currency_id=None, partner_id=None, company_id=None,
+        acquirer_id=None, access_token=None, **kwargs
     ):
         """ Display the payment form with optional filtering of payment options.
 
@@ -66,45 +65,9 @@ class PaymentPortal(portal.CustomerPortal):
         :rtype: str
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
-
-        def _pick_company(_preferred_company_id, _order, _user_sudo):
-            """ Pick the company that is the most relevant given the transaction context.
-
-            The order's company is preferred over the desired company, while the user's company
-            is used as fallback if neither of the first options is suitable.
-
-            :param int _preferred_company_id|None: The preferred company, as a `res.company` id
-            :param recordset _order|None: The related order, as a `sale.order` recordset
-            :param recordset _user_sudo: The current user with sudo privileges, as a `res.users`
-                                         recordset
-            :return: The id of the relevant company
-            :rtype: int
-            """
-            _company_id = None
-            if _order:  # If a related order exists, pick its company for accounting reasons
-                _company_id = _order.company_id.id
-            elif _preferred_company_id:  # Otherwise, pick the company specified in the parameters
-                _company_id = _preferred_company_id
-            else:  # No company provided, fallback on the user's company
-                _company_id = _user_sudo.company_id.id
-            return _company_id
-
-        def _select_payment_tokens(_acquirers, _partner_id):
-            """ Select and return the payment tokens of the partner for the provided acquirers.
-
-            :param recordset _acquirers: The acquirers, as a `payment.acquirer` recordset
-            :param int _partner_id: The partner making the payment, as a `res.partner` id
-            :return: The payment tokens for the given partner and acquirers
-            :rtype: recordset of `payment.token`
-            """
-            payment_tokens = request.env['payment.token'].search(
-                [('acquirer_id', 'in', _acquirers.ids), ('partner_id', '=', _partner_id)]
-            )
-            return payment_tokens
-
         # Cast numeric parameters as int or float to skip them if their str value is malformed
-        order_id, currency_id, acquirer_id, partner_id, company_id = self.cast_as_numeric(
-            [order_id, currency_id, acquirer_id, partner_id, company_id], numeric_type='int'
+        currency_id, acquirer_id, partner_id, company_id = self.cast_as_numeric(
+            [currency_id, acquirer_id, partner_id, company_id], numeric_type='int'
         )
         amount, = self.cast_as_numeric([amount], numeric_type='float')
 
@@ -136,28 +99,21 @@ class PaymentPortal(portal.CustomerPortal):
         # Instantiate transaction values to their default if not set in parameters
         reference = reference or payment_utils.singularize_reference_prefix(prefix='tx')
         amount = amount or 0.0  # If the amount is invalid, set it to 0 to stop the payment flow
-        currency_id = currency_id or user_sudo.company_id.currency_id.id
-
-        # If a sale order is provided, its currency and amount overwrite any value set before. For
-        # reconciliation, we need both these values to match exactly that of the sale order.
-        order_sudo = None
-        if order_id:
-            order_sudo = request.env['sale.order'].sudo().browse(order_id)
-            currency_id = order_sudo.currency_id.id
-            amount = order_sudo.amount_total
-
-        # Pick the company that is the most relevant given the tx context to filter the acquirers
-        company_id = _pick_company(company_id, order_sudo, user_sudo)
+        currency_id = currency_id or user_sudo.company_id.currency_id.id  # TODO TBE check if a foreign user should pay in his company's currency or not
+        company_id = company_id or user_sudo.company_id.id
 
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
         if not currency or not currency.active:
             currency = user_sudo.company_id.currency_id
 
-        # Select all acquirers that match the constraints
+        # Select all acquirers and tokens that match the constraints
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
             company_id, partner_id, currency_id=currency.id, preferred_acquirer_id=acquirer_id
         )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
+        payment_tokens = request.env['payment.token'].search(
+            [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', partner_id)]
+        ) if logged_in else request.env['payment.token']  #
 
         # Compute the fees taken by acquirers supporting the feature
         country_id = user_sudo.partner_id.country_id.id
@@ -169,22 +125,22 @@ class PaymentPortal(portal.CustomerPortal):
             db_secret, partner_id, amount, currency_id
         )
 
-        tx_context = {
+        rendering_context = {
             'acquirers': acquirers_sudo,
-            'tokens': _select_payment_tokens(acquirers_sudo, partner_id) if logged_in else [],
+            'tokens': payment_tokens,
             'fees_by_acquirer': fees_by_acquirer,
             'show_tokenize_input': logged_in,  # Prevent public partner from saving payment methods
             'reference_prefix': reference,
             'amount': amount,
             'currency': currency,
             'partner_id': partner_id,
-            'order_id': order_id,
             'access_token': access_token,
             'init_tx_route': '/payment/transaction',
             'landing_route': '/payment/confirm',
             'partner_is_different': partner_is_different,
+            **self._get_custom_rendering_context_values(**kwargs),
         }
-        return request.render('payment.pay', tx_context)
+        return request.render('payment.pay', rendering_context)
 
     @http.route('/my/payment_method', type='http', auth='user', website=True)
     def payment_method(self, **kwargs):
@@ -211,8 +167,18 @@ class PaymentPortal(portal.CustomerPortal):
             'access_token': access_token,
             'init_tx_route': '/payment/transaction',
             'landing_route': '/payment/validate',
+            **self._get_custom_rendering_context_values(**kwargs),
         }
         return request.render('payment.payment_methods', tx_context)
+
+    def _get_custom_rendering_context_values(self, **kwargs):
+        """ Return a dict of additional rendering context values.
+
+            :param dict kwargs: Optional data. This parameter is not used here
+            :return: The dict of additional rendering context values
+            :rtype: dict
+            """
+        return {}
 
     @http.route('/payment/transaction', type='json', auth='public', csrf=True)
     def payment_transaction(self, amount, currency_id, partner_id, access_token, **kwargs):
@@ -235,7 +201,7 @@ class PaymentPortal(portal.CustomerPortal):
         if not payment_utils.check_access_token(
             access_token, db_secret, partner_id, amount, currency_id
         ):
-            raise ValidationError("The access token is missing or invalid.")
+            raise ValidationError(_("The access token is missing or invalid."))
 
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
@@ -246,6 +212,77 @@ class PaymentPortal(portal.CustomerPortal):
                                 f'?tx_id={tx_sudo.id}&access_token={access_token}'
 
         return tx_sudo._get_processing_values()
+
+    def _create_transaction(
+            self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
+            tokenization_requested, is_validation, landing_route, custom_create_values=None, **kwargs):
+        """ Create a draft transaction based on the payment context and return it.
+
+        :param int payment_option_id: The payment option handling the transaction, as a
+                                      `payment.acquirer` id or a `payment.token` id
+        :param str reference_prefix: The custom prefix to compute the full reference
+        :param float|None amount: The amount to pay in the given currency.
+                                  None if in a payment method validation operation
+        :param int|None currency_id: The currency of the transaction, as a `res.currency` id.
+                                     None if in a payment method validation operation
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'
+        :param bool tokenization_requested: Whether the user requested that a token is created
+        :param bool is_validation: Whether the operation of the transaction is a validation
+        :param str landing_route: The route the user is redirected to after the transaction
+        :param dict custom_create_values: Additional create values overwriting the default ones
+        :param dict kwargs: Optional data. This parameter is not used here
+        :return: The created transaction
+        :rtype: recordset of `payment.transaction`
+        :raise: UserError if the flow is invalid
+        """
+        # Prepare create values
+        if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
+            acquirer_sudo = request.env['payment.acquirer'].sudo().browse(payment_option_id)
+            token_id = None
+            tokenize = bool(
+                # Public users are not allowed to save tokens as their partner is unknown
+                not request.env.user.sudo()._is_public()
+                # Token is only saved if requested by the user and allowed by the acquirer
+                and tokenization_requested and acquirer_sudo.allow_tokenization
+            )
+        elif flow == 'token':  # Payment by token
+            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
+            acquirer_sudo = token_sudo.acquirer_id
+            token_id = payment_option_id
+            tokenize = False
+        else:
+            raise UserError(
+                _("The payment should either be direct, with redirection, or made by a token.")
+            )
+        reference = request.env['payment.transaction']._compute_reference(
+            acquirer_sudo.provider, prefix=reference_prefix,
+        )
+        if is_validation:  # Acquirers determine the amount and currency in validation operations
+            amount = acquirer_sudo._get_validation_amount()
+            currency_id = acquirer_sudo._get_validation_currency().id
+
+        # Create the transaction
+        tx_sudo = request.env['payment.transaction'].sudo().with_context(lang=None).create({
+            'acquirer_id': acquirer_sudo.id,
+            'reference': reference,
+            'amount': amount,
+            'currency_id': currency_id,
+            'partner_id': partner_id,
+            'token_id': token_id,
+            'operation': f'online_{flow}' if not is_validation else 'validation',
+            'tokenize': tokenize,
+            'landing_route': landing_route,
+            **(custom_create_values or {}),  # Overwrite the default values if there are collisions
+        })  # In sudo mode to allow writing on callback fields
+
+        if flow == 'token':
+            tx_sudo._send_payment_request()  # Payments by token process transaction immediately
+
+        # Monitor the transaction to make it available in the portal
+        PaymentPostProcessing.monitor_transactions(tx_sudo)
+
+        return tx_sudo
 
     @http.route('/payment/confirm', type='http', auth='public', website=True, sitemap=False)
     def payment_confirm(self, tx_id, access_token, **kwargs):
@@ -296,7 +333,7 @@ class PaymentPortal(portal.CustomerPortal):
             return request.redirect('/my/home')
 
     @http.route('/payment/validate', type='http', auth='user', website=True, sitemap=False)
-    def payment_validate(self, tx_id, **kwargs):
+    def payment_validate(self, tx_id, **kwargs):  # TODO ANV currently broken (404)
         """ Refund a payment method validation transaction and redirect the user.
 
         :param str tx_id: The token registration transaction to confirm, as a
@@ -333,77 +370,3 @@ class PaymentPortal(portal.CustomerPortal):
                 pass
             numeric_values.append(numeric_value)
         return tuple(numeric_values)
-
-    @staticmethod
-    def _create_transaction(
-        payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-        tokenization_requested, is_validation, landing_route, custom_create_values=None, **kwargs):
-        """ Create a draft transaction based on the payment context and return it.
-
-        :param int payment_option_id: The payment option handling the transaction, as a
-                                      `payment.acquirer` id or a `payment.token` id
-        :param str reference_prefix: The custom prefix to compute the full reference
-        :param float|None amount: The amount to pay in the given currency.
-                                  None if in a payment method validation operation
-        :param int|None currency_id: The currency of the transaction, as a `res.currency` id.
-                                     None if in a payment method validation operation
-        :param int partner_id: The partner making the payment, as a `res.partner` id
-        :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'
-        :param bool tokenization_requested: Whether the user requested that a token is created
-        :param bool is_validation: Whether the operation of the transaction is a validation
-        :param str landing_route: The route the user is redirected to after the transaction
-        :param dict custom_create_values: Additional create values overwriting the default ones
-        :param dict kwargs: Optional data. Locally processed keys: order_id
-        :return: The created transaction
-        :rtype: recordset of `payment.transaction`
-        :raise: UserError if the flow is invalid
-        """
-        # Prepare create values
-        if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
-            acquirer_sudo = request.env['payment.acquirer'].sudo().browse(payment_option_id)
-            token_id = None
-            tokenize = bool(
-                # Public users are not allowed to save tokens as their partner is unknown
-                not request.env.user.sudo()._is_public()
-                # Token is only saved if requested by the user and allowed by the acquirer
-                and tokenization_requested and acquirer_sudo.allow_tokenization
-            )
-        elif flow == 'token':  # Payment by token
-            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
-            acquirer_sudo = token_sudo.acquirer_id
-            token_id = payment_option_id
-            tokenize = False
-        else:
-            raise UserError(
-                _("The payment should either be direct, with redirection, or made by a token.")
-            )
-        reference = request.env['payment.transaction']._compute_reference(
-            acquirer_sudo.provider, prefix=reference_prefix,
-        )
-        if is_validation:  # Acquirers determine the amount and currency in validation operations
-            amount = acquirer_sudo._get_validation_amount()
-            currency_id = acquirer_sudo._get_validation_currency().id
-        order_id = kwargs.get('order_id')  # TODO ANV move to sale
-
-        # Create the transaction
-        tx_sudo = request.env['payment.transaction'].sudo().with_context(lang=None).create({
-            'acquirer_id': acquirer_sudo.id,
-            'reference': reference,
-            'amount': amount,
-            'currency_id': currency_id,
-            'partner_id': partner_id,
-            'token_id': token_id,
-            'operation': f'online_{flow}' if not is_validation else 'validation',
-            'tokenize': tokenize,
-            'landing_route': landing_route,
-            **({'sale_order_ids': [(6, 0, [int(order_id)])]} if order_id else {}),
-            **(custom_create_values or {}),  # Overwrite the default values if there are collisions
-        })  # In sudo mode to allow writing on callback fields
-
-        if flow == 'token':
-            tx_sudo._send_payment_request()  # Payments by token process transaction immediately
-
-        # Monitor the transaction to make it available in the portal
-        PaymentPostProcessing.monitor_transactions(tx_sudo)
-
-        return tx_sudo

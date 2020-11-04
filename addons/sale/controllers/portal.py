@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.http import request
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
 
@@ -190,7 +191,7 @@ class CustomerPortal(PaymentPortal):
             tokens = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers_sudo.ids),
                 ('partner_id', '=', order_sudo.partner_id.id)
-            ]) if logged_in else []
+            ]) if logged_in else request.env['payment.token']
             fees_by_acquirer = {acquirer: acquirer._compute_fees(
                 order_sudo.amount_total, order_sudo.currency_id, order_sudo.partner_id.country_id.id
             ) for acquirer in acquirers_sudo.filtered('fees_active')}
@@ -354,3 +355,81 @@ class CustomerPortal(PaymentPortal):
 
         # TODO ANV there used to be a call to tx._log_sent_message(). See if still necessary
         return processing_values
+
+    @http.route()
+    def payment_pay(self, *args, sale_order_id=None, access_token=None, **kwargs):
+        """ Replace the transaction values by that of the sale order if it is provided.
+
+        This is necessary for the reconciliation as all transaction values need to match exactly
+        that of the sale order.
+
+        Override of payment.
+
+        :param str sale_order_id: The sale order for which a payment id made, as a `sale.order` id
+        :param str access_token: The access token used to authenticate the partner
+        :param list args: Parent method's position arguments
+        :param dict kwargs: Parent method's keyword arguments
+        :return: The result of the parent method
+        :raise: werkzeug.exceptions.NotFound if the order id is invalid
+        """
+        sale_order_id, = self.cast_as_numeric([sale_order_id], numeric_type='int')
+        if sale_order_id:
+            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id).exists()
+            if not order_sudo:
+                raise ValidationError(_("The provided parameters are invalid."))
+
+            # Check the access token against the order values. Done after fetching the order as we
+            # need the order fields to check the access token.
+            db_secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+            if not payment_utils.check_access_token(
+                access_token,
+                db_secret,
+                order_sudo.partner_id.id,
+                order_sudo.amount_total,
+                order_sudo.currency_id.id
+            ):
+                raise ValidationError(_("The provided parameters are invalid."))
+
+            # Overwrite the base transaction values with that of the order
+            kwargs.update({
+                'amount': order_sudo.amount_total,
+                'currency_id': order_sudo.currency_id.id,
+                'partner_id': order_sudo.partner_id.id,
+                'company_id': order_sudo.company_id.id,
+                'sale_order_id': sale_order_id,
+            })
+        return super().payment_pay(*args, access_token=access_token, **kwargs)
+
+    def _get_custom_rendering_context_values(self, sale_order_id=None, **kwargs):
+        """ Add the sale order id in the custom rendering context values if it is provided.
+
+        :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
+        :param dict custom_create_values: Additional rendering values overwriting the default ones
+        :param list args: Parent method's position arguments
+        :param dict kwargs: Parent method's keyword arguments
+        :return: The extended rendering context values
+        """
+        rendering_context_values = super()._get_custom_rendering_context_values(**kwargs)
+        if sale_order_id:
+            rendering_context_values['sale_order_id'] = sale_order_id
+        return rendering_context_values
+
+    def _create_transaction(self, *args, sale_order_id=None, custom_create_values=None, **kwargs):
+        """ Add the sale order id in the custom create values if it is provided.
+
+        Override of payment.
+
+        :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
+        :param dict custom_create_values: Additional create values overwriting the default ones
+        :param list args: Parent method's position arguments
+        :param dict kwargs: Parent method's keyword arguments
+        :return: The result of the parent method
+        """
+        if sale_order_id:
+            if custom_create_values is None:
+                custom_create_values = {}
+            custom_create_values['sale_order_ids'] = [(6, 0, [int(sale_order_id)])]
+
+        return super()._create_transaction(
+            *args, custom_create_values=custom_create_values, **kwargs
+        )

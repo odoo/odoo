@@ -828,7 +828,7 @@ class WebsiteSale(PaymentPortal):
         )  # In sudo mode to read the fields of acquirers, order and partner (if not logged in)
         tokens = request.env['payment.token'].search(
             [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', order.partner_id.id)]
-        ) if logged_in else []
+        ) if logged_in else request.env['payment.token']
         fees_by_acquirer = {acq_sudo: acq_sudo._compute_fees(
             order.amount_total, order.currency_id, order.partner_id.country_id.id
         ) for acq_sudo in acquirers_sudo.filtered('fees_active')}

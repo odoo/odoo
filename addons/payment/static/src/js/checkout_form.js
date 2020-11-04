@@ -70,7 +70,7 @@ odoo.define('payment.checkout_form', require => {
 
             // Make the payment
             this._disableButton(true);
-            this._processTx(provider, paymentOptionId, flow);
+            this._processPayment(provider, paymentOptionId, flow);
             this._enableButton();
         },
 

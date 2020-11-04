@@ -193,10 +193,10 @@ odoo.define('payment.manage_form', require => {
             const flow = this._getPaymentFlowFromRadio(checkedRadio);
 
             this._disableButton(true);
-            if (flow !== 'token') { // Creation of a new token
+            if (flow !== 'token') { // Creation of a new token  TODO move in prepareInitTx
                 this.txContext.tokenizationRequested = true;
                 this.txContext.isValidation = true;
-                this._processTx(provider, paymentOptionId, flow);
+                this._processPayment(provider, paymentOptionId, flow);
             } else if (this.txContext.allowTokenSelection) { // Assignation of a token to a record
                 this._assignToken(paymentOptionId);
             }

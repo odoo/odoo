@@ -20,7 +20,6 @@
             - 'amount' - The amount to pay
             - 'currency' - The currency of the transaction, as a `res.currency` record
             - 'partner_id' - The id of the partner on behalf of whom the payment should be made
-            - 'order_id' - The id of the related order. Optional
             - 'access_token' - The access token used to authenticate the partner.
             - 'init_tx_route' - The route to call to create a transaction when the user clicks 'Pay'
             - 'landing_route' - The route the user is redirected to after the transaction
@@ -32,7 +31,6 @@
               t-att-data-amount="amount"
               t-att-data-currency-id="currency and currency.id"
               t-att-data-partner-id="partner_id"
-              t-att-data-order-id="order_id"
               t-att-data-access-token="access_token"
               t-att-data-init-tx-route="init_tx_route"
               t-att-data-landing-route="landing_route"

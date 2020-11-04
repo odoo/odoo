@@ -2,7 +2,6 @@ odoo.define('website_sale.payment', require => {
     'use strict';
 
     const checkoutForm = require('payment.checkout_form');
-
     const publicWidget = require('web.public.widget');
 
     const websiteSalePaymentMixin = {

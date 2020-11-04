@@ -31,6 +31,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/sale_portal_templates.xml',
         'views/sale_onboarding_views.xml',
         'views/res_config_settings_views.xml',
+        'views/payment_templates.xml',
         'views/payment_views.xml',
         'views/product_views.xml',
         'views/utm_campaign_views.xml',

@@ -46,6 +46,6 @@ class PortalAccount(portal.PortalAccount):
             # inform that logging in will make them available.
             values.update({
                 'existing_token': bool(tokens),
-                'tokens': [],
+                'tokens': request.env['payment.token'],
             })
         return values

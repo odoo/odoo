@@ -261,6 +261,39 @@ odoo.define('payment.payment_form_mixin', require => {
         },
 
         /**
+         * Prepare the params to send to the init tx route.
+         *
+         * For an acquirer to overwrite generic params or to add acquirer-specific ones, it must
+         * override this method and return the extended init tx params.
+         *
+         * @private
+         * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {number} paymentOptionId - The id of the selected payment option
+         * @param {string} flow - The online payment flow of the selected payment option
+         * @return {object} The init tx params
+         */
+        _prepareInitTxParams: function (provider, paymentOptionId, flow) {
+            return {
+                'payment_option_id': paymentOptionId,
+                'reference_prefix': this.txContext.referencePrefix,
+                'amount': this.txContext.amount !== undefined
+                    ? parseFloat(this.txContext.amount) : null,
+                'currency_id': this.txContext.currencyId
+                    ? parseInt(this.txContext.currencyId) : null,
+                'partner_id': this.txContext.partnerId
+                    ? parseInt(this.txContext.partnerId) : undefined,
+                'flow': flow,
+                'tokenization_requested': this.txContext.tokenizationRequested,
+                'is_validation': this.txContext.isValidation !== undefined
+                    ? this.txContext.isValidation : false,
+                'landing_route': this.txContext.landingRoute,
+                'access_token': this.txContext.accessToken
+                    ? this.txContext.accessToken : undefined,
+                'csrf_token': core.csrf_token,
+            };
+        },
+
+        /**
          * Prepare the acquirer-specific inline form of the selected payment option.
          *
          * For an acquirer to manage an inline form, it must override this method. When the override
@@ -276,7 +309,7 @@ odoo.define('payment.payment_form_mixin', require => {
         _prepareInlineForm: (provider, paymentOptionId, flow) => {},
 
         /**
-         * Create and process the transaction.
+         * Process the payment.
          *
          * For an acquirer to define its own transaction processing flow, to do pre-processing work
          * or to do post-processing work, it must override this method.
@@ -287,30 +320,11 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {string} flow - The online payment flow of the transaction
          * @return {(object|undefined)} The transaction processing values if in direct payment flow
          */
-        _processTx: function (provider, paymentOptionId, flow) {
-            // Call the init route to initialize the transaction and retrieve processing values
+        _processPayment: function (provider, paymentOptionId, flow) {
+            // Call the init route to create the transaction and retrieve processing values
             return this._rpc({
                 route: this.txContext.initTxRoute,
-                params: {
-                    'payment_option_id': paymentOptionId,
-                    'reference_prefix': this.txContext.referencePrefix,
-                    'amount': this.txContext.amount !== undefined
-                        ? parseFloat(this.txContext.amount) : null,
-                    'currency_id': this.txContext.currencyId
-                        ? parseInt(this.txContext.currencyId) : null,
-                    'partner_id': this.txContext.partnerId
-                        ? parseInt(this.txContext.partnerId) : undefined,
-                    'order_id': this.txContext.orderId
-                        ? parseInt(this.txContext.orderId) : undefined,
-                    'flow': flow,
-                    'tokenization_requested': this.txContext.tokenizationRequested,
-                    'is_validation': this.txContext.isValidation !== undefined
-                        ? this.txContext.isValidation : false,
-                    'landing_route': this.txContext.landingRoute,
-                    'access_token': this.txContext.accessToken
-                        ? this.txContext.accessToken : undefined,
-                    'csrf_token': core.csrf_token,
-                }
+                params: this._prepareInitTxParams(provider, paymentOptionId, flow),
             }).then(result => {
                 if (flow === 'redirect') {
                     // Append the redirect form to the body
@@ -325,7 +339,8 @@ odoo.define('payment.payment_form_mixin', require => {
                     // This flow is handled by acquirers in the override of this method
                     return result;
                 } else if (flow === 'token') {
-                    window.location = '/payment/status'; // Tokens have already been processed
+                    // This flow is already complete as payments by tokens are immediately processed
+                    window.location = '/payment/status';
                 }
             }).guardedCatch(error => {
                 error.event.preventDefault();
