@@ -41,7 +41,7 @@ odoo.define('l10n_de_pos_cert.Chrome', function(require) {
         }
         async _showBadRequestPopup(data) {
             const title = this.env._t('Bad request');
-            const body = this.env._t(`Your ${data} is incorrect. Update it in your PoS settings`);
+            const body = _.str.sprintf(this.env._t('Your %s is incorrect. Update it in your PoS settings'), data);
             await this.showPopup('ErrorPopup', { title, body });
         }
     };
