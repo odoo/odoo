@@ -74,6 +74,12 @@ class TestSalesMC(TestSalesCommon):
 
     @classmethod
     def setUpClass(cls):
+        """ Teams / Company
+
+          * sales_team_1: False
+          * team_c2: company_2
+          * team_mc: company_main
+        """
         super(TestSalesMC, cls).setUpClass()
         cls.company_2 = cls.env['res.company'].create({
             'name': 'New Test Company',
@@ -83,5 +89,17 @@ class TestSalesMC(TestSalesCommon):
         cls.team_c2 = cls.env['crm.team'].create({
             'name': 'C2 Team1',
             'sequence': 1,
+            'user_id': False,
             'company_id': cls.company_2.id,
+        })
+        cls.team_mc = cls.env['crm.team'].create({
+            'name': 'MainCompany Team',
+            'user_id': cls.user_admin.id,
+            'sequence': 3,
+            'company_id': cls.company_main.id
+        })
+
+        # admin and sale manager belong to new company also
+        (cls.user_admin | cls.user_sales_manager).write({
+            'company_ids': [(4, cls.company_2.id)]
         })

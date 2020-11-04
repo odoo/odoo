@@ -52,9 +52,13 @@ class CrmTeam(models.Model):
         'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
         help='If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.')
     member_ids = fields.Many2many(
-        'res.users', string='Salespersons', check_company=True, domain=[('share', '=', False)],
+        'res.users', string='Salespersons',
+        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
         compute='_compute_member_ids', inverse='_inverse_member_ids', search='_search_member_ids',
         help="Users assigned to this team.")
+    member_company_ids = fields.Many2many(
+        'res.company', compute='_compute_member_company_ids',
+        help='UX: Limit to team company or all if no company')
     member_warning = fields.Text('Membership Issue Warning', compute='_compute_member_warning')
     crm_team_member_ids = fields.One2many(
         'crm.team.member', 'crm_team_id', string='Sales Team Members',
@@ -130,6 +134,14 @@ class CrmTeam(models.Model):
     def _search_member_ids(self, operator, value):
         return [('crm_team_member_ids.user_id', operator, value)]
 
+    @api.depends('company_id')
+    def _compute_member_company_ids(self):
+        """ Available companies for members. Either team company if set, either
+        any company if not set on team. """
+        all_companies = self.env['res.company'].search([])
+        for team in self:
+            team.member_company_ids = team.company_id or all_companies
+
     def _compute_is_favorite(self):
         for team in self:
             team.is_favorite = self.env.user in team.favorite_user_ids
@@ -163,6 +175,10 @@ class CrmTeam(models.Model):
 
     def write(self, values):
         res = super(CrmTeam, self).write(values)
+        # manually launch company sanity check
+        if values.get('company_id'):
+            self.crm_team_member_ids._check_company(fnames=['crm_team_id'])
+
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res

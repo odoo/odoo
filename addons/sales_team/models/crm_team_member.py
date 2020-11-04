@@ -10,18 +10,22 @@ class CrmTeamMember(models.Model):
     _description = 'Sales Team Member'
     _rec_name = 'user_id'
     _order = 'create_date ASC'
+    _check_company_auto = True
 
     crm_team_id = fields.Many2one(
         'crm.team', string='Sales Team',
         default=False,  # TDE: temporary fix to activate depending computed fields
-        index=True, required=True)
+        check_company=True, index=True, required=True)
     user_id = fields.Many2one(
-        'res.users', string='Salesman',   # check responsible field
-        index=True, ondelete='cascade', required=True,
-        domain="['&', ('share', '=', False), ('id', 'not in', user_in_teams_ids)]")
+        'res.users', string='Salesperson',  # TDE FIXME check responsible field
+        check_company=True, index=True, ondelete='cascade', required=True,
+        domain="[('share', '=', False), ('id', 'not in', user_in_teams_ids), ('company_ids', 'in', user_company_ids)]")
     user_in_teams_ids = fields.Many2many(
         'res.users', compute='_compute_user_in_teams_ids',
         help='UX: Give users not to add in the currently chosen team to avoid duplicates')
+    user_company_ids = fields.Many2many(
+        'res.company', compute='_compute_user_company_ids',
+        help='UX: Limit to team company or all if no company')
     active = fields.Boolean(string='Active', default=True)
     is_membership_multi = fields.Boolean(
         'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
@@ -92,6 +96,12 @@ class CrmTeamMember(models.Model):
                 member.user_in_teams_ids = self.env['crm.team'].browse(self.env.context['default_crm_team_id']).member_ids
             else:
                 member.user_in_teams_ids = self.env['res.users']
+
+    @api.depends('crm_team_id')
+    def _compute_user_company_ids(self):
+        all_companies = self.env['res.company'].search([])
+        for member in self:
+            member.user_company_ids = member.crm_team_id.company_id or all_companies
 
     @api.depends('crm_team_id')
     def _compute_is_membership_multi(self):

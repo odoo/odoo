@@ -45,6 +45,7 @@
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="currency_id" invisible="1"/>
+                            <field name="member_company_ids" invisible="1"/>
                         </group>
                         <group name="right">
                         </group>
@@ -52,7 +53,6 @@
                     <notebook>
                         <page string="Members" name="members_users">
                             <field name="member_ids" mode="kanban"
-                                domain="[('share', '=', False)]"
                                 class="w-100"
                                 attrs="{'invisible': [('is_membership_multi', '=', True)]}">
                                 <kanban>
