@@ -266,6 +266,44 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.assertAlmostEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, 2, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
         self.assertEqual(ref_tax_lines.mapped('tax_tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")
 
+    def test_division_tax(self):
+        '''
+        Test that when using division tax, with percentage amount
+        100% any change on price unit is correctly reflected on
+        the whole move.
+
+        Complete scenario:
+            - Create a division tax, 100% amount, included in price.
+            - Create an invoice, with only the mentioned tax
+            - Change price_unit of the aml
+            - Total price of the move should change as well
+        '''
+
+        sale_tax = self.env['account.tax'].create({
+            'name': 'tax',
+            'type_tax_use': 'sale',
+            'amount_type': 'division',
+            'amount': 100,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        invoice = self._create_invoice([(100, sale_tax)])
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'name': sale_tax.name,
+            'tax_base_amount': 0.0,
+            'balance': -100,
+        }])
+        # change price unit, everything should change as well
+        with Form(invoice) as invoice_form:
+            with invoice_form.line_ids.edit(0) as line_edit:
+                line_edit.price_unit = 200
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'name': sale_tax.name,
+            'tax_base_amount': 0.0,
+            'balance': -200,
+        }])
+
     def test_misc_journal_entry_tax_tags_sale(self):
         sale_tax = self.env['account.tax'].create({
             'name': 'tax',
