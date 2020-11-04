@@ -311,7 +311,7 @@ odoo.define('pos_coupon.pos', function (require) {
         wait_for_push_order: function () {
             return (
                 (this.programIdsToGenerateCoupons && this.programIdsToGenerateCoupons.length) ||
-                Object.keys(this.bookedCouponCodes).length ||
+                this.get_orderlines().filter((line) => line.is_program_reward).length ||
                 _order_super.wait_for_push_order.apply(this, arguments)
             );
         },
@@ -813,7 +813,7 @@ odoo.define('pos_coupon.pos', function (require) {
                 const numberUse = await rpc
                     .query({
                         model: 'coupon.program',
-                        method: 'get_number_usage',
+                        method: 'get_total_order_count',
                         args: [program.id],
                         kwargs: { context: session.user_context },
                     })
