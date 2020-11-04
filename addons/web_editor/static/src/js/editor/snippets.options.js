@@ -4285,7 +4285,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
         // TODO: change #wrapwrap after web_editor rework.
-        const content = document.querySelector('#wrapwrap *, jw-shadow::shadow /deep/ *').parentNode;
+        const content = document.querySelector('#wrapwrap') || (document.querySelector('jw-shadow') || {}).shadowRoot;
         const $wrapwrap = $(content);
         const targetOffset = this.$target.offset();
 
