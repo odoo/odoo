@@ -56,6 +56,7 @@ var SnippetEditor = Widget.extend({
         this.templateOptions = templateOptions;
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
+        this.$scrollingElement = $().getScrollingElement();
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -658,6 +659,11 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
+        // Trigger a scroll on the draggable element so that jQuery updates
+        // the position of the drop zones.
+        this.$scrollingElement.on('scroll.scrolling_element', function () {
+            self.$el.trigger('scroll');
+        });
     },
     /**
      * Called when the snippet is dropped after being dragged thanks to the
@@ -718,6 +724,7 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_stop', {
             $snippet: this.$target,
         });
+        this.$scrollingElement.off('scroll.scrolling_element');
     },
     /**
      * @private
@@ -1912,6 +1919,7 @@ var SnippetsMenu = Widget.extend({
         var $toInsert, dropped, $snippet;
 
         let dragAndDropResolve;
+        const $scrollingElement = $().getScrollingElement();
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
@@ -1979,11 +1987,18 @@ var SnippetsMenu = Widget.extend({
                         },
                     });
 
+                    // Trigger a scroll on the draggable element so that jQuery updates
+                    // the position of the drop zones.
+                    $scrollingElement.on('scroll.scrolling_element', function () {
+                        self.$el.trigger('scroll');
+                    });
+
                     const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
                     self._mutex.exec(() => prom);
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
+                    $scrollingElement.off('scroll.scrolling_element');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
@@ -2039,7 +2054,7 @@ var SnippetsMenu = Widget.extend({
                 },
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $().getScrollingElement(), smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $scrollingElement, smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
