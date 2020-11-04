@@ -1230,10 +1230,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             type = 'warning' if isinstance(exception, Warning) else 'error'
             # logs the logical (not human-readable) field name for automated
             # processing of response, but injects human readable in message
-            exc_vals = dict(base, record=record, field=field_names[field])
+            field_name = field_names[field]
+            exc_vals = dict(base, record=record, field=field_name)
             record = dict(base, type=type, record=record, field=field,
                           message=str(exception.args[0]) % exc_vals)
-            if len(exception.args) > 1 and exception.args[1]:
+            # ensure to add field_name to the exception. Used in import to concatenate multiple errors in the same block
+            if len(exception.args) > 1:
+                if not exception.args[1]:
+                    exception.args = (exception.args[0], {'field_name': field_name})
+                else:
+                    exception.args[1]['field_name'] = field_name
                 record.update(exception.args[1])
             log(record)
 

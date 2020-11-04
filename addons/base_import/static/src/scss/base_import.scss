@@ -1,6 +1,6 @@
 .oe_import {
-    @include o-webclient-padding($top: 8px);
-    overflow: auto;
+    padding: 0px;
+    overflow: hidden;
     position: absolute; // Needed for chrome
     top: 0;
     right: 0;
@@ -22,10 +22,10 @@
     }
 
     .oe_import_box {
-        padding: 8px;
-        background: #F0EEEE;
+        flex: 0 0 250px;
+        padding: 10px 14px;
         border-radius: $border-radius;
-        border: solid 1px #dddddd;
+        border-right: solid 1px #dddddd;
         label {
             font-weight: normal;
         }
@@ -34,26 +34,8 @@
         }
     }
 
-    a.oe_import_toggle {
-        display: block;
-        &:before {
-            content: '+'
-        }
-    }
-    .oe_import_options {
-        margin-top: 8px;
-        p {
-            margin: 0;
-        }
-        label {
-            width: 48%;
-            line-height: 32px;
-            text-align: right;
-        }
-    }
     /* ----------- INITIAL SETUP ------------ */
     dd,
-    .oe_import_toggled,
     .oe_import_grid,
     .oe_import_error_report,
     .oe_import_noheaders,
@@ -61,20 +43,30 @@
         display: none;
     }
 
-    .oe_import_with_file label {
-        font-weight: normal;
-    }
-    .oe_import_debug_options {
-        max-width: 800px;
-        columns: 1;
-        @include media-breakpoint-up(md) {
-            columns: 2;
+    .oe_import_with_file {
+        flex: 1 1 100%;
+        background-color: white;
+        overflow: auto;
+        label {
+            font-weight: normal;
+            &.custom-control-label {
+                left: 20px;
+            }
         }
-        // try to keep the batch fields together, doesn't work on firefox &
-        // not sure how to do that (except by adding intermediate dom
-        // elements)
-        .oe_import_batch_limit {
-            break-before: column;
+        h4 {
+            margin: 10px 0px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        input:checked + label:after {
+            background-image: url('/web_studio/static/src/img/ui/checkbox_active.svg');
+            background-size: cover;
+        }
+        .truncate {
+            max-width: 178px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
@@ -87,11 +79,39 @@
     }
     .oe_import_report_showmore .oe_import_report_more {
         display: list-item;
+        list-style-type: none;
+        li {
+            list-style-type: disc;
+        }
+    }
+    .oe_import_report_count, .oe_import_report_count_less {
+        .arrow {
+          border: solid black;
+          border-width: 0 2px 2px 0;
+          display: inline-block;
+          padding: 2px;
+          margin-right: 2px;
+          pointer-events: none;
+        }
+
+        .down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+          margin-bottom: 2px;
+        }
+
+        .up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
     }
 
     /* ------------- ERRORS AND WARNINGS REPORT ------------ */
-    .oe_import_error_report > ul {
-        padding: 0;
+    .oe_import_error_report {
+        border-bottom: 1px solid lightgrey;
+        > ul {
+            padding: 0;
+        }
     }
     .oe_import_report {
         list-style: none;
@@ -117,16 +137,20 @@
     /* ------------- THE CSV TABLE ------------ */
 
     $cell-max-width: 350px;
-    $cell-padding: 4px;
+    $cell-padding: 8px;
     .oe_import_grid {
         tr {
+            border-bottom: 1px solid lightgrey;
             &.oe_import_grid-header:first-child {
                 line-height: 24px;
                 font-weight: normal;
             }
             .oe_import_grid-cell {
+                cursor:default;
+                border-left: 0px;
+                border-right: 0px;
                 max-width: $cell-max-width;
-                padding: $cell-padding;
+                padding: $cell-padding 12px;
                 vertical-align: top;
                 .o_multi_line_text {
                     word-break: break-word;
@@ -134,13 +158,60 @@
                 .o_single_line_text {
                     @include o-text-overflow($display: table-cell, $max-width: $cell-max-width - $cell-padding);
                 }
+                .alert {
+                    // alias -error to -danger
+                    &.alert-error {
+                        background-color: transparent;
+                    }
+                    &.alert-warning {
+                        background-color: transparent;
+                    }
+                    &.alert-info {
+                        background-color: transparent;
+                    }
+                }
             }
         }
     }
 
     /* Default Color for placeholder on import fields*/
     .select2-default{
-        color: #F00 !important;
+        color: #F0AD4E !important;
+        font-weight: 500;
+    }
+
+    /* Common dropdown style */
+    .oe_import_dropdown {
+        width: 100% !important;
+
+        select {
+            border-radius: 4px;
+            padding-left: 8px;
+        }
+
+        select, .select2-choice {
+            border: 1px solid #aaa;
+            height: 26px;
+            padding-right: 24px;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+            background-image: url('/base_import/static/src/img/ui/dropdown_arrow_small.png');
+            background-position: center right;
+            background-repeat: no-repeat;
+            appearance: none;
+            width: auto;
+        }
+
+        .select2-arrow {
+            display: none !important;
+        }
+    }
+
+    input.oe_import_dropdown {
+        border-radius: 4px;
+        border: 1px solid darkgrey;
+        height: 26px;
+        padding-left: 8px;
     }
 }
 /* ------------- PARTIAL MODE buttons ------------ */
@@ -156,5 +227,10 @@
     ul, li {
         margin: 0; padding: 0;
     }
-    width: 250px !important;
+    .select2-results {
+        max-height: 192px;
+        .text-decoration-underline {
+            text-decoration: underline;
+        }
+    }
 }
