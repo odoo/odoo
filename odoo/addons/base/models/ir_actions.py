@@ -11,7 +11,9 @@ import base64
 from collections import defaultdict
 import functools
 import logging
+import werkzeug
 
+from psycopg2 import OperationalError
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
@@ -488,7 +490,27 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        try:
+            # nocopy allows to return 'action'
+            safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True)
+        except (
+                # some exception with user-facing semantics
+                odoo.exceptions.UserError,
+                odoo.exceptions.RedirectWarning,
+                werkzeug.exceptions.HTTPException,
+                odoo.http.AuthenticationError,
+
+                # some exceptions with frameworks semantics
+                OperationalError, # = retry transaction
+                ZeroDivisionError
+        ):
+            # those special exceptions are logged and re-raised untouched
+            _logger.exception("Failed to evaluate %s", action)
+            raise
+        except Exception as e:
+            # other exceptions are wrapped in a generic ValueError and logged
+            _logger.exception("Failed to evaluate %s", action)
+            raise ValueError("Failed to evaluate %s: %s" % (action, e))
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
