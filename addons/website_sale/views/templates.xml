@@ -152,7 +152,8 @@
                     <a href="#" role="button" class="ribbon btn btn-danger">Sale</a>
                 </div>
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
-                    <span t-field="product.image_1920"
+                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
+                    <span t-field="image_holder.image_1920"
                         t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256'}"
                         class="d-flex h-100 justify-content-center align-items-center"/>
                 </a>
