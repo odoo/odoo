@@ -45,7 +45,7 @@ class FetchmailServer(models.Model):
                                                      "If not enabled, incoming emails will be stripped of any attachments before being processed", default=True)
     original = fields.Boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference "
                                                     "and attached to each processed message. This will usually double the size of your message database.")
-    date = fields.Datetime(string='Last Fetch Date', readonly=True)
+    date = fields.Datetime(string='Last Fetch Date', readonly=True, copy=False)
     user = fields.Char(string='Username', readonly=True, states={'draft': [('readonly', False)]})
     password = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
     object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
