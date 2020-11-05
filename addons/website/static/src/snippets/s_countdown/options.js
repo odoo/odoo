@@ -3,6 +3,7 @@ odoo.define('website.s_countdown_options', function (require) {
 
 const core = require('web.core');
 const options = require('web_editor.snippets.options');
+const CountdownWidget = require('website.s_countdown');
 
 const qweb = core.qweb;
 
@@ -102,6 +103,16 @@ options.registry.countdown = options.Class.extend({
             case 'endAction':
             case 'layout':
                 return this.$target[0].dataset[methodName];
+
+            case 'selectDataAttribute': {
+                if (params.colorNames) {
+                    // In this case, it is a colorpicker controlling a data
+                    // value on the countdown: the default value is determined
+                    // by the countdown public widget.
+                    params.attributeDefaultValue = CountdownWidget.prototype.defaultColor;
+                }
+                break;
+            }
         }
         return this._super(...arguments);
     },
