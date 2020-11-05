@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import subprocess
+import time
 
 from odoo import http, tools
 from odoo.http import send_file
@@ -48,6 +49,18 @@ class DriverController(http.Controller):
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
         """
         req = event_manager.add_request(listener)
+
+        # Search for previous events and remove events older than 5 seconds
+        oldest_time = time.time() - 5
+        for event in list(event_manager.events):
+            if event['time'] < oldest_time:
+                del event_manager.events[0]
+                continue
+            if event['device_identifier'] in listener['devices'] and event['time'] > listener['last_event']:
+                event['session_id'] = req['session_id']
+                return event
+
+        # Wait for new event
         if req['event'].wait(50):
             req['event'].clear()
             req['result']['session_id'] = req['session_id']
