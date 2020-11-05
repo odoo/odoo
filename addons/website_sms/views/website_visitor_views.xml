@@ -38,10 +38,12 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_send_mail']" position="after">
+            <xpath expr="//field[@name='is_connected']" position="before">
                 <field name="mobile" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_send_mail']" position="after">
                 <button name="action_send_sms" type="object" icon="fa-mobile"
-                        attrs="{'invisible': [('mobile', '=', False)]}" string="Send SMS"/>
+                        attrs="{'invisible': [('mobile', '=', False)]}" string="SMS"/>
             </xpath>
         </field>
     </record>

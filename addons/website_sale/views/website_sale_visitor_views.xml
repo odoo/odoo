@@ -66,11 +66,11 @@
                 <button name="%(website_sale.website_sale_visitor_product_action)d" type="action"
                     class="oe_stat_button"
                     icon="fa-tags">
-                    <field name="visitor_product_count" widget="statinfo" string="Product views"/>
+                    <field name="visitor_product_count" widget="statinfo" string="Product Views"/>
                 </button>
             </xpath>
             <xpath expr="//group[@id='visits']/field[@name='page_ids']" position="after">
-                <field name="product_ids" widget="many2many_tags"/>
+                <field name="product_ids" string="Products" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>
@@ -81,7 +81,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='page_ids']" position="after">
-                <field name="product_ids" widget="many2many_tags"/>
+                <field name="product_ids" widget="many2many_tags" string="Products"/>
             </xpath>
         </field>
     </record>

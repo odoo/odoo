@@ -5,7 +5,7 @@
     'name': 'Advanced Events',
     'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
-    'version': '1.1',
+    'version': '1.2',
     'description': "",
     'depends': ['website_event'],
     'data': [

@@ -44,9 +44,11 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='type_visitor']" position="replace">
-                <filter string="Visitors" name="type_visitor" domain="[('partner_id', '=', False), ('lead_ids', '=', False)]"/>
-                <filter string="Leads" name="type_lead" domain="[('partner_id', '=', False), ('lead_ids', '!=', False)]"/>
+            <xpath expr="//filter[@name='filter_type_visitor']" position="attributes">
+                <attribute name="domain">[('partner_id', '=', False), ('lead_ids', '=', False)]</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='filter_type_visitor']" position="after">
+                <filter string="Leads" name="filter_type_lead" domain="[('partner_id', '=', False), ('lead_ids', '!=', False)]"/>
             </xpath>
         </field>
     </record>
@@ -62,8 +64,8 @@
             <xpath expr="//div[@id='o_page_count']" position="after">
                 <div>Leads/Opportunities<span class="float-right font-weight-bold"><field name="lead_count"/></span></div>
             </xpath>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
-                <div class="col">
+            <xpath expr="//div[@id='wvisitor_visited_page']" position="after">
+                <div class="col mx-2">
                     <b><field name="lead_count"/></b>
                     <div>Leads/Opportunities</div>
                 </div>
