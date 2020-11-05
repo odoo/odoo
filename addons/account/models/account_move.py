@@ -2429,6 +2429,7 @@ class AccountMove(models.Model):
         self.write({'state': 'draft'})
 
     def button_cancel(self):
+        self.mapped('line_ids').remove_move_reconcile()
         self.write({'auto_post': False, 'state': 'cancel'})
 
     def action_invoice_sent(self):
