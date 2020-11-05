@@ -1325,7 +1325,6 @@ function factory(dependencies) {
          * @param {boolean} [param0.mail_invite_follower_channel_only=false]
          */
         _promptAddFollower({ mail_invite_follower_channel_only = false } = {}) {
-            const self = this;
             const action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.wizard.invite',
