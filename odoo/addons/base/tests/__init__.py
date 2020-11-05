@@ -46,3 +46,4 @@ from . import test_tests_tags
 from . import test_form_create
 from . import test_cloc
 from . import test_pdf
+from . import test_partner_merge
