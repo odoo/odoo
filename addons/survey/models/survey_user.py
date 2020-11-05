@@ -16,8 +16,9 @@ _logger = logging.getLogger(__name__)
 class SurveyUserInput(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
     _name = "survey.user_input"
-    _rec_name = 'survey_id'
-    _description = 'Survey User Input'
+    _description = "Survey User Input"
+    _rec_name = "survey_id"
+    _order = "create_date desc"
 
     # answer description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
