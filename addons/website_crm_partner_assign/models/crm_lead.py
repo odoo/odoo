@@ -62,7 +62,8 @@ class CrmLead(models.Model):
                 partner_id = partner_dict.get(lead.id, False)
             if not partner_id:
                 tag_to_add = self.env.ref('website_crm_partner_assign.tag_portal_lead_partner_unavailable', False)
-                lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
+                if tag_to_add:
+                    lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
                 continue
             lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude)
             partner = self.env['res.partner'].browse(partner_id)
