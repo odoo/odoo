@@ -46,6 +46,8 @@ var AbstractView = Factory.extend({
     viewType: undefined,
     // determines if a search bar is available
     withSearchBar: true,
+    // determines if a buttons are available
+    withControlPanelButtons: true,
     // determines the search menus available and their orders
     searchMenuTypes: ['filter', 'groupBy', 'favorite'],
     // determines if a control panel should be instantiated
@@ -143,6 +145,7 @@ var AbstractView = Factory.extend({
             isMultiRecord: this.multi_record,
             modelName: params.modelName,
             viewType: this.viewType,
+            withControlPanelButtons: params.withControlPanelButtons,
         };
 
         var controllerState = params.controllerState || {};
@@ -282,6 +285,7 @@ var AbstractView = Factory.extend({
     _extractParamsFromAction: function (action) {
         action = action || {};
         var context = action.context || {};
+        var inDialog = action.target === 'new';
         var inline = action.target === 'inline';
         return {
             actionId: action.id || false,
@@ -299,6 +303,7 @@ var AbstractView = Factory.extend({
             withBreadcrumbs: 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
             withControlPanel: this.withControlPanel,
             withSearchBar: inline ? false : this.withSearchBar,
+            withControlPanelButtons: inDialog ? false : this.withControlPanelButtons,
         };
     },
     /**

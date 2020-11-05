@@ -3540,6 +3540,38 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('buttons are displayed in dialog footer and breadcrumb not displayed when view type is list', async function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 21,
+            name: 'Partner List',
+            res_model: 'partner',
+            target: 'new',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        await actionManager.doAction(21);
+
+        assert.strictEqual($('.o_technical_modal .modal-body .o_control_panel .breadcrumb-item').length, 0,
+            "the breadcrumbs should not be in the body");
+        assert.strictEqual($('.o_technical_modal .modal-body .o_list_buttons').length, 0,
+            "the button should not be in the body");
+        assert.strictEqual($('.o_technical_modal .modal-footer .o_list_buttons').length, 1,
+            "the button should be in the footer");
+        // footer should containt Create, Import, Save and Discard buttons
+        assert.strictEqual($('.o_technical_modal .modal-footer button').length, 4,
+            "the modal footer should contain four button");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
         assert.expect(4);
 

@@ -55,6 +55,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         this.initialState = params.initialState;
         this.bannerRoute = params.bannerRoute;
         this.isMultiRecord = params.isMultiRecord;
+        this.withControlPanelButtons = params.withControlPanelButtons;
         this.actionViews = params.actionViews;
         this.viewType = params.viewType;
         // use a DropPrevious to correctly handle concurrent updates
@@ -353,7 +354,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             $pager: $('<div>'),
         };
 
-        this.renderButtons(elements.$buttons);
+        if (this.withControlPanelButtons) {
+            this.renderButtons(elements.$buttons);
+        }
         var sidebarProm = this.renderSidebar(elements.$sidebar);
         var pagerProm = this.renderPager(elements.$pager);
 
