@@ -63,7 +63,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this.$('#payment_error').remove();
             var messageResult = '<div class="alert alert-danger mb4" id="payment_error">';
             if (title != '') {
-                messageResult = messageResult + '<b>' + _.str.escapeHTML(title) + ':</b></br>';
+                messageResult = messageResult + '<b>' + _.str.escapeHTML(title) + ':</b><br/>';
             }
             messageResult = messageResult + _.str.escapeHTML(message) + '</div>';
             $acquirerForm.append(messageResult);
@@ -448,7 +448,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
                 self.displayError(
                     _t('Server error'),
-                    _t("We are not able to add your payment method at the moment.</p>") +
+                    _t("We are not able to add your payment method at the moment.") +
                         self._parseError(error)
                 );
             });
@@ -517,10 +517,10 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 // if there's records linked to this payment method
                 var content = '';
                 result[pm_id].forEach(function (sub) {
-                    content += '<p><a href="' + sub.url + '" title="' + sub.description + '">' + sub.name + '</a><p/>';
+                    content += '<p><a href="' + sub.url + '" title="' + sub.description + '">' + sub.name + '</a></p>';
                 });
 
-                content = $('<div>').html(_t('<p>This card is currently linked to the following records:<p/>') + content);
+                content = $('<div>').html('<p>' + _t('This card is currently linked to the following records:') + '</p>' + content);
                 // Then we display the list of the records and ask the user if he really want to remove the payment method.
                 new Dialog(self, {
                     title: _t('Warning!'),
