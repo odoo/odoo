@@ -23,6 +23,10 @@
                     <filter string="Status" name="groupby_status" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Order Date" name="groupby_order_date" context="{'group_by':'date'}"/>
+                    <!-- Dashboard filter - used by context -->
+                    <filter string="Last Week" invisible="1" name="week" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter string="Last Month" invisible="1" name="month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter string="Last Year" invisible="1"  name="year" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
                 </group>
             </search>
         </field>
