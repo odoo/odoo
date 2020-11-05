@@ -6,6 +6,7 @@ var Widget = require('web.Widget');
 
 var core = require('web.core');
 var rpc = require('web.rpc');
+const utils = require('web.utils');
 
 var QWeb = core.qweb;
 
@@ -21,17 +22,20 @@ var IAPBuyMoreCreditsWidget = Widget.extend({
     init: function (parent, data, options) {
         this._super.apply(this, arguments);
         this.service_name = options.attrs.service_name;
+        this.hideService = utils.toBoolElse(options.attrs.hide_service || '', false);
     },
 
     /**
      * @override
      */
     start: function () {
-        this.$widget = $(QWeb.render('iap.buy_more_credits'));
+        this.$widget = $(QWeb.render('iap.buy_more_credits', {'hideService': this.hideService}));
         this.$buyLink = this.$widget.find('.buy_credits');
         this.$widget.appendTo(this.$el);
         this.$buyLink.click(this._getLink.bind(this));
-        this.el.querySelector('.o_iap_view_my_services').addEventListener('click', this._getMyServices.bind(this));
+        if (!this.hideService) {
+            this.el.querySelector('.o_iap_view_my_services').addEventListener('click', this._getMyServices.bind(this));
+        }
     },
 
     //--------------------------------------------------------------------------

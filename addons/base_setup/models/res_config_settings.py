@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
         "Default Access Rights",
         config_parameter='base_setup.default_user_rights')
     external_email_server_default = fields.Boolean(
-        "External Email Servers",
+        "Custom Email Servers",
         config_parameter='base_setup.default_external_email_server')
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
@@ -39,7 +39,6 @@ class ResConfigSettings(models.TransientModel):
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
-    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
     external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
     company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
