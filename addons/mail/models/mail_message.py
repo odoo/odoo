@@ -689,6 +689,12 @@ class Message(models.Model):
         for elem in self:
             if elem.is_thread_message():
                 elem._invalidate_documents()
+        for message in self:
+            for channel in message.channel_ids:
+                self.env['bus.bus'].sendmany([
+                    ((self._cr.dbname, 'mail.channel', channel.id),
+                     {'info': 'delete', 'message_id': message.id })
+                ])
         return super(Message, self).unlink()
 
     # ------------------------------------------------------

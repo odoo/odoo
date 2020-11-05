@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageActions" owl="1">
+        <div class="o_MessageActions">
+            <div class="o_dropdown dropdown">
+                <a class="o_dropdown_toggler_btn" data-toggle="dropdown">
+                    <span class="fa fa-ellipsis-h"></span>
+                </a>
+                <ul class="o_dropdown_menu dropdown-menu">
+                    <t t-if="_allowStar()">
+                        <li class="o_menu_item">
+                            <a class="dropdown-item" t-on-click="_onClickStar">
+                                <span class="o_Message_command o_Message_commandStar fa"
+                                      t-att-class="{
+                                             'fa-star': message.isStarred,
+                                             'fa-star-o': !message.isStarred,
+                                             'o-message-selected': props.isSelected,
+                                             'o-message-starred': message.isStarred,
+                                             'o-mobile': env.messaging.device.isMobile,
+                                             }"></span>
+                                Star
+                            </a>
+                        </li>
+                    </t>
+                    <t t-if="props.hasReplyIcon">
+                        <li class="o_menu_item">
+                            <a class="dropdown-item" t-on-click="_onClickReply" title="Reply">
+                                <span class="o_Message_command o_Message_commandReply o_Message_headerCommand fa fa-reply"
+                                      t-att-class="{
+                                             'o-message-selected': props.isSelected,
+                                             'o-mobile': env.messaging.device.isMobile,
+                                             }"
+                                />
+                                Reply
+                            </a>
+                        </li>
+                    </t>
+                    <t t-if="props.hasMarkAsReadIcon">
+                        <li class="o_menu_item">
+                            <a class="dropdown-item" t-on-click="_onClickMarkAsRead" title="Mark as Read">
+                                <span class="o_Message_command o_Message_commandMarkAsRead o_Message_headerCommand fa fa-check"
+                                      t-att-class="{
+                                             'o-message-selected': props.isSelected,
+                                             'o-mobile': env.messaging.device.isMobile,
+                                             }"
+                                />
+                                Mark as read
+                            </a>
+                        </li>
+                    </t>
+                    <t t-if="_allowDelete()">
+                        <li class="o_menu_item">
+                            <a class="dropdown-item" t-on-click="_onDeleteMessage">
+                                <span class="o_Message_command o_Message_commandDelete fa fa-trash"></span>
+                                Trash
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <t t-if="state.hasDeleteConfirmDialog">
+                <MessageDeleteConfirmDialog
+                    messageLocalId="message.localId"
+                    t-on-dialog-closed="_onDeleteConfirmDialogClosed"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

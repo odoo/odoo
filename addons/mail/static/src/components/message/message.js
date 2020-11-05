@@ -9,6 +9,7 @@ const components = {
     ModerationRejectDialog: require('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js'),
     NotificationPopover: require('mail/static/src/components/notification_popover/notification_popover.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
+    MessageActions: require('mail/static/src/components/message_actions/message_actions.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
@@ -30,6 +31,8 @@ class Message extends Component {
     constructor(...args) {
         super(...args);
         this.state = useState({
+            // Open the delete confirmation dialog
+            hasDeleteConfirmDialog: false,
             // Determine if the moderation ban dialog is displayed.
             hasModerationBanDialog: false,
             // Determine if the moderation discard dialog is displayed.
@@ -76,10 +79,6 @@ class Message extends Component {
         });
         useUpdate({ func: () => this._update() });
         /**
-         * The intent of the reply button depends on the last rendered state.
-         */
-        this._wasSelected;
-        /**
          * Reference to the content of the message.
          */
         this._contentRef = useRef('content');
@@ -92,6 +91,7 @@ class Message extends Component {
          * regular time.
          */
         this._intervalId = undefined;
+
         this._constructor();
     }
 
@@ -392,7 +392,6 @@ class Message extends Component {
                 message: this.message,
             });
         }
-        this._wasSelected = this.props.isSelected;
         this.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
@@ -526,40 +525,6 @@ class Message extends Component {
 
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickStar(ev) {
-        ev.stopPropagation();
-        this.message.toggleStar();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        ev.stopPropagation();
-        this.message.markAsRead();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickReply(ev) {
-        // Use this._wasSelected because this.props.isSelected might be changed
-        // by a global capture click handler (for example the one from Composer)
-        // before the current handler is executed. Indeed because it does a
-        // toggle it needs to take into account the value before the click.
-        if (this._wasSelected) {
-            this.env.messaging.discuss.clearReplyingToMessage();
-        } else {
-            this.message.replyTo();
-        }
-    }
-
-    /**
-     * @private
      */
     _onDialogClosedModerationBan() {
         this.state.hasModerationBanDialog = false;
@@ -585,6 +550,7 @@ Object.assign(Message, {
     components,
     defaultProps: {
         hasCheckbox: false,
+        hasCommand: true,
         hasMarkAsReadIcon: false,
         hasReplyIcon: false,
         isSelected: false,
@@ -597,6 +563,7 @@ Object.assign(Message, {
             validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
         },
         hasCheckbox: Boolean,
+        hasCommand: Boolean,
         hasMarkAsReadIcon: Boolean,
         hasReplyIcon: Boolean,
         isSelected: Boolean,

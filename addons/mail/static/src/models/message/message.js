@@ -143,6 +143,14 @@ function factory(dependencies) {
             return data2;
         }
 
+        async deleteServerRecord() {
+            await this.env.services.rpc({
+                model: 'mail.message',
+                method: 'unlink',
+                args: [this.id]
+            });
+        }
+
         /**
          * Mark all messages of current user with given domain as read.
          *

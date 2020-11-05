@@ -109,6 +109,7 @@ function factory(dependencies) {
                 last_message_id,
                 partner_id,
                 partner_name,
+                message_id,
             } = data;
             switch (info) {
                 case 'channel_fetched':
@@ -127,6 +128,8 @@ function factory(dependencies) {
                         partner_id,
                         partner_name,
                     });
+                case "delete":
+                    return this._handleNotificationChannelDelete(channelId, { message_id });
                 default:
                     return this._handleNotificationChannelMessage(channelId, data);
             }
@@ -338,6 +341,14 @@ function factory(dependencies) {
             }
             // manually force recompute of counter
             this.messaging.messagingMenu.update();
+        }
+
+        _handleNotificationChannelDelete(channelId, { message_id }) {
+            const message = this.env.models['mail.message'].findFromIdentifyingData({
+                id: message_id,
+                model: 'mail.message',
+            });
+            message.delete();
         }
 
         /**

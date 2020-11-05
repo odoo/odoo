@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageDeleteConfirmDialog" owl="1">
+        <Dialog contentClass="'o_MessageDeleteConfirmDialog'" title="getTitle()" size="'medium'" t-ref="dialog">
+            <p class="o_MessageDeleteConfirmDialog_mainText" t-esc="getBody()"/>
+            <blockquote>
+                <Message
+                    messageLocalId="message.localId"
+                    hasCommand="false"
+                />
+            </blockquote>
+            <t t-set-slot="buttons">
+                <button class="o_MessageDeleteConfirmDialog_confirmButton btn btn-primary" t-on-click="_onClickOk">Ok</button>
+                <button class="o_MessageDeleteConfirmDialog_cancelButton btn btn-secondary" t-on-click="_onClickCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
