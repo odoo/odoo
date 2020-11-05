@@ -21,6 +21,7 @@ const { useRef } = owl.hooks;
 
 const READ_MORE = _lt("read more");
 const READ_LESS = _lt("read less");
+const { isEventHandled, markEventHandled } = require('mail/static/src/utils/utils.js');
 
 class Message extends Component {
 
@@ -448,7 +449,13 @@ class Message extends Component {
             }
             return;
         }
-        this.state.isClicked = !this.state.isClicked;
+        if (
+            !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
+            !isEventHandled(ev, 'Message.ClickAuthorName') &&
+            !isEventHandled(ev, 'Message.ClickFailure')
+        ) {
+            this.state.isClicked = !this.state.isClicked;
+        }
     }
 
     /**
@@ -456,6 +463,7 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAuthorAvatar(ev) {
+        markEventHandled(ev, 'Message.ClickAuthorAvatar');
         if (!this.hasAuthorOpenChat) {
             return;
         }
@@ -467,6 +475,7 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAuthorName(ev) {
+        markEventHandled(ev, 'Message.ClickAuthorName');
         if (!this.message.author) {
             return;
         }
@@ -478,6 +487,7 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFailure(ev) {
+        markEventHandled(ev, 'Message.ClickFailure');
         this.message.openResendAction();
     }
 
