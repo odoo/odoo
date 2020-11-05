@@ -233,6 +233,11 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         return []
 
+    def _get_ignorable_fields(self):
+        """ Returns the list of fields that should be ignored when merging partners
+        """
+        return []
+
     @api.model
     def _update_values(self, src_partners, dst_partner):
         """ Update values of dst_partner with the ones from the src_partners.
@@ -243,6 +248,7 @@ class MergePartnerAutomatic(models.TransientModel):
 
         model_fields = dst_partner.fields_get().keys()
         summable_fields = self._get_summable_fields()
+        ignorable_fields = self._get_ignorable_fields()
 
         def write_serializer(item):
             if isinstance(item, models.BaseModel):
@@ -255,6 +261,8 @@ class MergePartnerAutomatic(models.TransientModel):
             field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
+                    if column in ignorable_fields:
+                        continue
                     if item[column]:
                         if column in summable_fields and values.get(column):
                             values[column] += write_serializer(item[column])
