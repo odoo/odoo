@@ -340,6 +340,11 @@ $o-cw-filter-avatar-size: 20px;
             justify-content: space-evenly;
             overflow-y: auto;
 
+            @include media-breakpoint-down(sm) {
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+
             > table {
                 height: 100%;
             }
@@ -369,9 +374,18 @@ $o-cw-filter-avatar-size: 20px;
                 min-width: 25rem;
                 box-sizing: border-box;
 
+                @include media-breakpoint-down(sm) {
+                    width: 50%;
+                    min-width: 12rem;
+                }
+
                 > .fc-month {
                     width: 21rem;
                     margin: auto;
+
+                    @include media-breakpoint-down(sm) {
+                        width: 95%;
+                    }
 
                     > .fc-toolbar.fc-header-toolbar {
                         margin-top: 10px;
