@@ -1574,7 +1574,7 @@ snippetOptions.registry.Parallax = snippetOptions.SnippetOptionWidget.extend({
         // there may have been changes in the page that influenced the parallax
         // rendering (new snippets, ...).
         // TODO make this automatic.
-        if (this.parallaxEl) {
+        if (this.getParallaxEl()) {
             this._refreshPublicWidgets();
         }
     },
@@ -1688,10 +1688,11 @@ snippetOptions.registry.Parallax = snippetOptions.SnippetOptionWidget.extend({
      * @param {Event} ev
      */
     _onExternalUpdate(ev) {
-        if (!this.parallaxEl) {
+        const parallaxEl = this.getParallaxEl();
+        if (!parallaxEl) {
             return;
         }
-        const bgImage = this.parallaxEl.style.backgroundImage;
+        const bgImage = parallaxEl.style.backgroundImage;
         if (!bgImage || bgImage === 'none' || this.$target.hasClass('o_background_video')) {
             // The parallax option was enabled but the background image was
             // removed: disable the parallax option.
