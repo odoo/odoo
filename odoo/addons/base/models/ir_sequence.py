@@ -195,11 +195,13 @@ class IrSequence(models.Model):
             return (s % d) if s else ''
 
         def _interpolation_dict():
-            now = range_date = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
+            now = range_date = range_date_end = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
             if self._context.get('ir_sequence_date'):
                 effective_date = fields.Datetime.from_string(self._context.get('ir_sequence_date'))
             if self._context.get('ir_sequence_date_range'):
                 range_date = fields.Datetime.from_string(self._context.get('ir_sequence_date_range'))
+            if self._context.get('ir_sequence_date_range_end'):
+                range_date_end = fields.Datetime.from_string(self._context.get('ir_sequence_date_range_end'))
 
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
@@ -209,6 +211,7 @@ class IrSequence(models.Model):
             for key, format in sequences.items():
                 res[key] = effective_date.strftime(format)
                 res['range_' + key] = range_date.strftime(format)
+                res['range_end_' + key] = range_date_end.strftime(format)
                 res['current_' + key] = now.strftime(format)
 
             return res
@@ -253,7 +256,7 @@ class IrSequence(models.Model):
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
-        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()
+        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from, ir_sequence_date_range_end=seq_date.date_to)._next()
 
     @api.multi
     def next_by_id(self):
@@ -313,6 +316,7 @@ class IrSequence(models.Model):
 class IrSequenceDateRange(models.Model):
     _name = 'ir.sequence.date_range'
     _description = 'Sequence Date Range'
+    _order = "date_from"
     _rec_name = "sequence_id"
 
     def _get_number_next_actual(self):

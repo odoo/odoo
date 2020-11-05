@@ -63,6 +63,11 @@
                                 to use the beginning of the range instead of the current date, e.g. %%(range_year)s instead of %%(year)s.
                             </div>
                         </group>
+                        <group attrs="{'invisible': [('use_date_range', '=', False)]}">
+                            <div>
+                                You can also use 'range_end_' to use the end date of the range, e.g. %%(range_end_year)s.
+                            </div>
+                        </group>
                     </page>
                     </notebook>
                    </sheet>
