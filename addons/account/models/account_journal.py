@@ -77,7 +77,7 @@ class AccountJournal(models.Model):
              "receivable account.", string='Outstanding Receipts Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id)
+                             '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
     payment_credit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         help="Outgoing payments entries triggered by bills/credit notes will be posted on the Outstanding Payments Account "
@@ -86,7 +86,7 @@ class AccountJournal(models.Model):
              "payable account.", string='Outstanding Payments Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id)
+                             '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -543,10 +543,6 @@ class AccountJournal(models.Model):
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
-        # === Fill missing alias name ===
-        if journal_type in ('sale', 'purchase') and 'alias_name' not in vals:
-            vals['alias_name'] = '%s-%s' % (company.name, vals.get('code'))
-
     @api.model
     def create(self, vals):
         # OVERRIDE
@@ -731,7 +727,12 @@ class AccountJournal(models.Model):
 
         accounts = self.payment_debit_account_id + self.payment_credit_account_id
         if not accounts:
-            return 0.0
+            return 0.0, 0
+
+        # Allow user managing payments without any statement lines.
+        # In that case, the user manages transactions only using the register payment wizard.
+        if self.default_account_id in accounts:
+            return 0.0, 0
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(accounts.ids)),
