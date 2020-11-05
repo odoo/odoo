@@ -25,7 +25,7 @@ odoo.define('sale.payment_form', require => {
             return {
                 ...initTxParams,
                 'sale_order_id': this.txContext.saleOrderId
-                    ? parseInt(this.txContext.saleOrderId) : null,
+                    ? parseInt(this.txContext.saleOrderId) : undefined,
             };
         },
 

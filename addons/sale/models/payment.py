@@ -57,8 +57,7 @@ class PaymentTransaction(models.Model):
                 so.message_post(body=post_message)
 
     def _set_pending(self):
-        # Override of payment.transaction._set_pending
-        # to sent the quotations automatically.
+        """ Override of payment to sent the quotations automatically. """
         super(PaymentTransaction, self)._set_pending()
 
         for record in self:
@@ -92,8 +91,7 @@ class PaymentTransaction(models.Model):
                 )
 
     def _set_authorized(self):
-        # Override of payment.transaction._set_authorized
-        # to confirm the quotations automatically.
+        """ Override of payment to confirm the quotations automatically. """
         super(PaymentTransaction, self)._set_authorized()
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for tx in self:
@@ -103,8 +101,7 @@ class PaymentTransaction(models.Model):
         sales_orders._send_order_confirmation_mail()
 
     def _reconcile_after_transaction_done(self):
-        # Override of payment.transaction._set_done
-        # to confirm the quotations automatically and to generate the invoices if needed.
+        """ Override of payment to automatically confirm quotations and generate invoices. """
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
         for tx in self:
             tx._check_amount_and_confirm_order()

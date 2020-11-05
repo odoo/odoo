@@ -142,7 +142,7 @@ class PaymentPortal(portal.CustomerPortal):
         }
         return request.render('payment.pay', rendering_context)
 
-    @http.route('/my/payment_method', type='http', auth='user', website=True)
+    @http.route('/my/payment_method', type='http', auth='user')
     def payment_method(self, **kwargs):
         """ Display the form to manage payment methods.
 
@@ -167,7 +167,6 @@ class PaymentPortal(portal.CustomerPortal):
             'access_token': access_token,
             'init_tx_route': '/payment/transaction',
             'landing_route': '/payment/validate',
-            **self._get_custom_rendering_context_values(**kwargs),
         }
         return request.render('payment.payment_methods', tx_context)
 
@@ -190,7 +189,7 @@ class PaymentPortal(portal.CustomerPortal):
                                      None if in a payment method validation operation
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param str access_token: The access token used to authenticate the partner
-        :param dict kwargs: Optional data. This parameter is not used here
+        :param dict kwargs: Locally unused RPC data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
         :raise: ValidationError if the access token is invalid
@@ -201,7 +200,7 @@ class PaymentPortal(portal.CustomerPortal):
         if not payment_utils.check_access_token(
             access_token, db_secret, partner_id, amount, currency_id
         ):
-            raise ValidationError(_("The access token is missing or invalid."))
+            raise ValidationError(_("The access token is invalid."))
 
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
@@ -214,8 +213,9 @@ class PaymentPortal(portal.CustomerPortal):
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
-            self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-            tokenization_requested, is_validation, landing_route, custom_create_values=None, **kwargs):
+        self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
+        tokenization_requested, is_validation, landing_route, custom_create_values=None, **kwargs
+    ):
         """ Create a draft transaction based on the payment context and return it.
 
         :param int payment_option_id: The payment option handling the transaction, as a
@@ -256,7 +256,7 @@ class PaymentPortal(portal.CustomerPortal):
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
         reference = request.env['payment.transaction']._compute_reference(
-            acquirer_sudo.provider, prefix=reference_prefix,
+            acquirer_sudo.provider, prefix=reference_prefix, **custom_create_values, **kwargs
         )
         if is_validation:  # Acquirers determine the amount and currency in validation operations
             amount = acquirer_sudo._get_validation_amount()
@@ -284,7 +284,9 @@ class PaymentPortal(portal.CustomerPortal):
 
         return tx_sudo
 
-    @http.route('/payment/confirm', type='http', auth='public', website=True, sitemap=False)
+    @http.route(
+        '/payment/confirm', type='http', auth='public', website=True, sitemap=False, csrf=True
+    )
     def payment_confirm(self, tx_id, access_token, **kwargs):
         """ Display the payment confirmation page with the appropriate status message to the user.
 
@@ -321,7 +323,7 @@ class PaymentPortal(portal.CustomerPortal):
                           or _('An error occurred during the processing of this payment.')
 
             # Display the payment confirmation page to the user
-            PaymentPostProcessing.remove_transactions(tx_sudo)
+            PaymentPostProcessing.remove_transactions(tx_sudo)  # TODO ANV why isn't this done everwhere ?
             render_values = {
                 'tx': tx_sudo,
                 'status': status,
@@ -332,7 +334,9 @@ class PaymentPortal(portal.CustomerPortal):
             # Display the portal homepage to the user
             return request.redirect('/my/home')
 
-    @http.route('/payment/validate', type='http', auth='user', website=True, sitemap=False)
+    @http.route(
+        '/payment/validate', type='http', auth='user', website=True, sitemap=False, csrf=True
+    )
     def payment_validate(self, tx_id, **kwargs):  # TODO ANV currently broken (404)
         """ Refund a payment method validation transaction and redirect the user.
 
