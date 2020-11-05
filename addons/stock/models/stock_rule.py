@@ -178,12 +178,13 @@ class StockRule(models.Model):
         """
         new_date = fields.Datetime.to_string(move.date_expected + relativedelta(days=self.delay))
         if self.auto == 'transparent':
+            old_dest_location = move.location_dest_id
             move.write({
                 'date': new_date,
                 'date_expected': new_date,
                 'location_dest_id': self.location_id.id})
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
-            if self.location_id != move.location_dest_id:
+            if self.location_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
                 move._push_apply()
         else:
