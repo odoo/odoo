@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/message/message_tests.js', function (req
 const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
@@ -266,6 +267,7 @@ QUnit.test('Notification Sent', async function (assert) {
 QUnit.test('Notification Error', async function (assert) {
     assert.expect(8);
 
+    const openResendActionDef = makeDeferred();
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -279,6 +281,7 @@ QUnit.test('Notification Error', async function (assert) {
             10,
             "action should have correct message id"
         );
+        openResendActionDef.resolve();
     });
 
     await this.start({ env: { bus } });
@@ -323,10 +326,8 @@ QUnit.test('Notification Error', async function (assert) {
         'fa-envelope',
         "icon should represent email error"
     );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
-    });
+    document.querySelector('.o_Message_notificationIconClickable').click();
+    await openResendActionDef;
     assert.verifySteps(
         ['do_action'],
         "should do an action to display the resend email dialog"
