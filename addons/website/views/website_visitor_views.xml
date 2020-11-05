@@ -103,7 +103,7 @@
                                         t-attf-src="/base/static/img/avatar_grey.png"
                                         width="54px" height="54px" alt="Visitor"/>
                                 </div>
-                                <div class="col o_wvisitor_name">
+                                <div class="col o_wvisitor_name mr-2">
                                     <div>
                                         <b><field name="display_name"/></b>
                                         <div class="float-right">
@@ -117,19 +117,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col mx-2">
                                     <b><field name="time_since_last_action"/></b>
                                     <div>Last Action</div>
                                 </div>
-                                <div class="col">
+                                <div class="col mx-2">
                                     <b><field name="visit_count"/></b>
                                     <div>Visits</div>
                                 </div>
-                                <div class="col">
+                                <div class="col mx-2">
                                     <b><field name="last_visited_page_id"/></b>
                                     <div>Last Page</div>
                                 </div>
-                                <div id="wvisitor_visited_page" class="col">
+                                <div id="wvisitor_visited_page" class="col mx-2">
                                     <b><field name="page_count"/></b>
                                     <div>Visited Pages</div>
                                 </div>
@@ -195,7 +195,7 @@
                         <button name="%(website.website_visitor_page_action)d" type="action"
                                 class="oe_stat_button"
                                 icon="fa-tags">
-                            <field name="visitor_page_count" widget="statinfo" string="Page views"/>
+                            <field name="visitor_page_count" widget="statinfo" string="Page Views"/>
                         </button>
                     </div>
                     <div class="float-right" attrs="{'invisible': [('country_id', '=', False)]}">
@@ -205,7 +205,7 @@
                         <h1><field name="display_name"/></h1>
                     </div>
                     <group id="general_info">
-                        <group string="Visitor Information">
+                        <group string="Details">
                             <field name="active" invisible="1"/>
                             <field name="is_connected" invisible="1"/>
                             <field name="partner_id"/>
@@ -215,9 +215,10 @@
                             <field name="lang_id"/>
                         </group>
                         <group id="visits" string="Visits">
+                            <field name="website_id" groups="website.group_multi_website"/>
                             <field name="create_date"/>
                             <field name="last_connection_datetime"/>
-                            <field name="page_ids" widget="many2many_tags"/>
+                            <field name="page_ids" string="Pages" widget="many2many_tags"/>
                         </group>
                     </group>
                 </sheet>
@@ -229,19 +230,21 @@
         <field name="name">website.visitor.view.tree</field>
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
-            <tree string="Web Visitors" decoration-success="is_connected" decoration-danger="not is_connected" sample="1">
+            <tree string="Web Visitors" decoration-success="is_connected" sample="1">
                 <!--TODO DBE : Handle no_label in treeview-->
                 <field name="country_flag" widget="image_url" options='{"size": [20, 20]}' string=" "/>
-                <field name="display_name"/>
-                <field name="create_date"/>
+                <field name="display_name" string="Name"/>
+                <field name="create_date" optional="hide"/>
                 <field name="last_connection_datetime"/>
                 <field name="lang_id"/>
+                <field name="country_id" optional="hide"/>
                 <field name="visit_count"/>
-                <field name="page_ids" widget="many2many_tags"/>
+                <field name="page_ids" widget="many2many_tags" string="Pages"/>
+                <field name="last_visited_page_id" string="Last Page" optional="hide"/>
                 <field name="is_connected" invisible="1"/>
                 <field name="email" invisible="1"/>
-                <button string="Send Email" name="action_send_mail" type="object"
-                    icon="fa-comment" attrs="{'invisible': [('email', '=', False)]}"/>
+                <button string="Email" name="action_send_mail" type="object"
+                    icon="fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
             </tree>
         </field>
     </record>
@@ -256,16 +259,23 @@
                 <field name="country_id"/>
                 <field name="visit_count"/>
                 <field name="page_ids"/>
-                <filter string="Visitors" name="type_visitor" domain="[('partner_id', '=', False)]"/>
-                <filter string="Customers" name="type_customer" domain="[('partner_id', '!=', False)]"/>
+                <filter string="Last 7 Days" name="filter_last_7_days" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(days=7))]"/>
                 <separator/>
-                <filter string="Archived" name="is_archived" domain="[('active', '=', False)]"/>
+                <filter string="Unregistered" name="filter_type_visitor" domain="[('partner_id', '=', False)]"/>
+                <filter string="Contacts" name="filter_type_customer" domain="[('partner_id', '!=', False)]"/>
                 <separator/>
-                <filter string="Is Connected" name="is_connected" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(minutes=5))]"/>
-                <filter name="filter_create_date" date="create_date"/>
+                <filter string="Connected" name="filter_is_connected" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(minutes=5))]"/>
+                <separator/>
+                <filter string="Archived" name="filter_is_archived" domain="[('active', '=', False)]"/>
+                <separator/>
                 <group string="Group By">
                     <filter string="Country" name="group_by_country" context="{'group_by': 'country_id'}"/>
+                    <filter string="Timezone" name="group_by_timezone" context="{'group_by': 'timezone'}"/>
                     <filter string="Language" name="group_by_lang" context="{'group_by': 'lang_id'}"/>
+                    <filter string="# Visits" name="group_by_visit_count" context="{'group_by': 'visit_count'}"/>
+                    <filter string="Website" name="group_by_website_id" context="{'group_by': 'website_id'}" groups="website.group_multi_website"/>
+                    <filter string="First Connection" name="group_by_create_date" context="{'group_by': 'create_date'}"/>
+                    <filter string="Last Connection" name="group_by_last_connection_datetime" context="{'group_by': 'last_connection_datetime'}"/>
                 </group>
             </search>
         </field>
@@ -275,9 +285,8 @@
         <field name="name">website.visitor.view.graph</field>
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
-            <graph string="Visitors" sample="1">
-                <field name="create_date" type="row"/>
-                <field name="visit_count"/>
+            <graph string="Visitors" type="line" sample="1">
+                <field name="last_connection_datetime" interval="day" type="row"/>
             </graph>
         </field>
     </record>
@@ -287,6 +296,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">website.visitor</field>
         <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="context">{'search_default_filter_last_7_days':1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Wait for visitors to come to your website to see their history.
