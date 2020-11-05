@@ -66,6 +66,51 @@ import time
 if hasattr(time, 'tzset'):
     time.tzset()
 
+# ----------------------------------------------------------
+# module Babel hack
+# misscalculation of the number of weeks in a year
+# Fixed in Babel==2.7.0 with this commit https://github.com/python-babel/babel/commit/ea5bc4988bf7c3be84d296eb874aa11ed86c907d:
+# TODO: Remove this part after upgrade of Babel
+# ----------------------------------------------------------
+
+import babel.dates
+from datetime import date
+
+_DateTimeFormatCusto = babel.dates.DateTimeFormat
+
+def format_year_custo(self, char, num):
+    value = self.value.year
+    if char.isupper():
+        value = self.value.isocalendar()[0]
+    year = self.format(value, num)
+    if num == 2:
+        year = year[-2:]
+    return year
+
+def get_week_number_custo(self, day_of_period, day_of_week=None):
+    if day_of_week is None:
+        day_of_week = self.value.weekday()
+    first_day = (day_of_week - self.locale.first_week_day -
+                    day_of_period + 1) % 7
+    if first_day < 0:
+        first_day += 7
+    week_number = (day_of_period + first_day - 1) // 7
+
+    if 7 - first_day >= self.locale.min_week_days:
+        week_number += 1
+
+    if self.locale.first_week_day == 0:
+        max_weeks = date(year=self.value.year, day=28, month=12).isocalendar()[1]
+        if week_number > max_weeks:
+            week_number -= max_weeks
+
+    return week_number
+
+_DateTimeFormatCusto.format_year = format_year_custo
+_DateTimeFormatCusto.get_week_number = get_week_number_custo
+
+babel.dates.DateTimeFormat = _DateTimeFormatCusto
+
 #----------------------------------------------------------
 # PyPDF2 hack
 # ensure that zlib does not throw error -5 when decompressing
