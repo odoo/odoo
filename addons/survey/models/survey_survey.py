@@ -879,8 +879,7 @@ class Survey(models.Model):
         }
 
     def action_survey_user_input_completed(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
-        action = action_rec.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_completed': 1,
@@ -889,8 +888,7 @@ class Survey(models.Model):
         return action
 
     def action_survey_user_input_certified(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
-        action = action_rec.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_scoring_success': 1,
@@ -899,8 +897,7 @@ class Survey(models.Model):
         return action
 
     def action_survey_user_input(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
-        action = action_rec.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_not_test': 1})

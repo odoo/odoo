@@ -107,7 +107,7 @@ class Partner(models.Model):
         '''
         This function returns an action that displays the opportunities from partner.
         '''
-        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
         else:

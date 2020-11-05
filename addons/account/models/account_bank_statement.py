@@ -419,10 +419,7 @@ class AccountBankStatement(models.Model):
 
     def button_validate_or_action(self):
         if self.journal_type == 'cash' and not self.currency_id.is_zero(self.difference):
-            action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_view_account_bnk_stmt_check')
-            if action_rec:
-                action = action_rec.read()[0]
-                return action
+            return self.env['ir.actions.act_window']._for_xml_id('account.action_view_account_bnk_stmt_check')
 
         return self.button_validate()
 

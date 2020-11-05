@@ -26,8 +26,7 @@ class FleetVehicle(models.Model):
         form_view_ref = self.env.ref('account.view_move_form', False)
         tree_view_ref = self.env.ref('account.view_move_tree', False)
 
-        action = self.env.ref('account.action_move_in_invoice_type')
-        result = action.read()[0]
+        result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         result.update({
             'domain': [('id', 'in', self.account_move_ids.ids)],
             'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
