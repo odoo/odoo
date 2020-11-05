@@ -48,7 +48,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         sale_report_domain = [
             ('website_id', '=', current_website.id),
             ('state', 'in', ['sale', 'done']),
-            ('date', '>=', date_from),
+            ('date', '>=', datetime_from),
             ('date', '<=', fields.Datetime.now())
         ]
         report_product_lines = request.env['sale.report'].read_group(
@@ -81,8 +81,8 @@ class WebsiteSaleBackend(WebsiteBackend):
             domain=[
                 ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
-                ('date', '>=', date_from),
-                ('date', '<=', date_to)],
+                ('date', '>=', datetime_from),
+                ('date', '<=', datetime_to)],
             fields=['team_id', 'price_subtotal'],
             groupby=['team_id'],
         )
