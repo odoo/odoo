@@ -718,6 +718,7 @@ class MrpProduction(models.Model):
                 operation,
                 bom_line
             )
+            move_values['state'] = 'confirmed'
             move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
 
