@@ -2154,6 +2154,58 @@ QUnit.test("mentioned partners should not be notified if they are not member of 
     assert.verifySteps(['message_post'], "the message should be posted");
 });
 
+QUnit.test('[technical] does not crash when an attachment is removed before its upload starts', async function (assert) {
+    // Uploading multiple files uploads attachments one at a time, this test
+    // ensures that there is no crash when an attachment is destroyed before its
+    // upload started.
+    assert.expect(1);
+
+    // Promise to block attachment uploading
+    const uploadPromise = makeTestPromise();
+    await this.start({
+        async mockFetch(resource) {
+            const _super = this._super.bind(this, ...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                await uploadPromise;
+            }
+            return _super();
+        },
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file1 = await createFile({
+        name: 'text1.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    const file2 = await createFile({
+        name: 'text2.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file1, file2]
+        )
+    );
+    await afterNextRender(() => {
+            Array.from(document.querySelectorAll('div'))
+            .find(el => el.textContent === 'text2.txt')
+            .closest('.o_Attachment')
+            .querySelector('.o_Attachment_asideItemUnlink')
+            .click();
+        }
+    );
+    // Simulates the completion of the upload of the first attachment
+    uploadPromise.resolve();
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment:contains("text1.txt")',
+        "should only have the first attachment after cancelling the second attachment"
+    );
+});
+
 });
 });
 });
