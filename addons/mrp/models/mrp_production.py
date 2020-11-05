@@ -947,10 +947,28 @@ class MrpProduction(models.Model):
             else:
                 if move.quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
+<<<<<<< HEAD
                 move._action_cancel()
                 move_to_unlink |= move
         move_to_unlink.unlink()
         return update_info
+=======
+                move[0]._action_cancel()
+                move[0].unlink()
+                return self.env['stock.move'], old_qty, quantity
+        else:
+            operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
+            move_values = self._get_move_raw_values(
+                bom_line.product_id,
+                line_data['qty'],
+                bom_line.product_uom_id,
+                operation,
+                bom_line
+            )
+            move_values['state'] = 'confirmed'
+            move = self.env['stock.move'].create(move_values)
+            return move, 0, quantity
+>>>>>>> 1d1bdeed201... temp
 
     def _get_ready_to_produce_state(self):
         """ returns 'assigned' if enough components are reserved in order to complete
