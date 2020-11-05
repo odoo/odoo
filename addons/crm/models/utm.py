@@ -23,7 +23,7 @@ class UtmCampaign(models.Model):
 
     def action_redirect_to_leads_opportunities(self):
         view = 'crm.crm_lead_all_leads' if self.use_leads else 'crm.crm_lead_opportunities'
-        action = self.env.ref(view).sudo().read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id(view)
         action['view_mode'] = 'tree,kanban,graph,pivot,form,calendar'
         action['domain'] = [('campaign_id', 'in', self.ids)]
         action['context'] = {'active_test': False, 'create': False}

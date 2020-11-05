@@ -26,10 +26,7 @@ class StockInventory(models.Model):
 
     def action_get_account_moves(self):
         self.ensure_one()
-        action_ref = self.env.ref('account.action_move_journal_line')
-        if not action_ref:
-            return False
-        action_data = action_ref.read()[0]
+        action_data = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')
         action_data['domain'] = [('stock_move_id.id', 'in', self.move_ids.ids)]
         action_data['context'] = dict(self._context, create=False)
         return action_data
