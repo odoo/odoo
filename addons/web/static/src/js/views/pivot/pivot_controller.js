@@ -128,6 +128,7 @@ odoo.define('web.PivotController', function (require) {
         // Private
         //--------------------------------------------------------------------------
 
+<<<<<<< HEAD
         /**
          * Export the current pivot table data in a xls file. For this, we have to
          * serialize the current state, then call the server /web/pivot/export_xlsx.
@@ -148,6 +149,45 @@ odoo.define('web.PivotController', function (require) {
                 data: { data: JSON.stringify(table) },
                 complete: framework.unblockUI,
                 error: (error) => this.call('crash_manager', 'rpc_error', error),
+=======
+    /**
+     * Export the current pivot table data in a xls file. For this, we have to
+     * serialize the current state, then call the server /web/pivot/export_xls.
+     * Force a reload before exporting to ensure to export up-to-date data.
+     *
+     * @private
+     */
+    _downloadTable: function () {
+        var self = this;
+        if (self.model.getTableWidth() > 256) {
+            this.call('crash_manager', 'show_message', _t("For Excel compatibility, data cannot be exported if there are more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
+            framework.unblockUI();
+            return;
+        }
+        var table = self.model.exportData();
+        table.title = self.title;
+        session.get_file({
+            url: '/web/pivot/export_xls',
+            data: {data: JSON.stringify(table)},
+            complete: framework.unblockUI,
+            error: (error) => this.call('crash_manager', 'rpc_error', error),
+        });
+    },
+    /**
+     * Render the field selection menu, to select a groupable field. We disable
+     * already selected groupbys.
+     *
+     * @private
+     * @param {number} top top coordinate where we have to render the menu
+     * @param {number} left left coordinate for the menu
+     */
+    _renderGroupBySelection: function (top, shift) {
+        var state = this.model.get({raw: true});
+        var groupedFields = state.rowGroupBys
+            .concat(state.colGroupBys)
+            .map(function (f) {
+                return f.split(':')[0];
+>>>>>>> 38e6167514a... temp
             });
         },
 
@@ -212,11 +252,73 @@ odoo.define('web.PivotController', function (require) {
             const groupId = cell.groupId;
             const type = ev.data.type;
 
+<<<<<<< HEAD
             const group = {
                 rowValues: groupId[0],
                 colValues: groupId[1],
                 type: type
             };
+=======
+        var cssProps = {top: top};
+        // In rtl mode, position().left is distance of the right side to the left part of screen
+        // The other values have the same meaning.
+        /*
+          +=====Screen====================================================+
+          ║                                                               ║
+          ║                                                               ║
+          ║<---position().left--rtl----------------------------------->|  ║
+          ║                                                            |  ║
+          ║                          +=====Container===================+  ║
+          ║                          ║                                 ║  ║
+          ║<---position().left------>║<----shift---->|<---shift---rtl->║  ║
+          ║                          ║               |                 ║  ║
+          ║                          +===============|=================+  ║
+          ║                                          |                    ║
+          +==========================================|====================+
+          |                                          |
+          |<-------clientX-------------------------->|
+        */
+        // shift = clientX - position().left
+        shift = Math.abs(shift);
+        var isRTL = _t.database.parameters.direction === 'rtl';
+        cssProps[isRTL ? 'right' : 'left'] = shift;
+        this.$groupBySelection.find('.dropdown-menu').first().css(cssProps).addClass('show');
+    },
+    /**
+     * @override
+     * @private
+     */
+    _startRenderer: function () {
+        return this.renderer.appendTo(this.$('.o_pivot'));
+    },
+    /**
+     * @override
+     * @private
+     */
+    _update: function () {
+        this._updateButtons();
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @private
+     */
+    _updateButtons: function () {
+        if (!this.$buttons) {
+            return;
+        }
+        var self = this;
+        var state = this.model.get({raw: true});
+        _.each(this.measures, function (measure, name) {
+            var isSelected = _.contains(state.measures, name);
+            self.$buttons.find('.dropdown-item[data-field="' + name + '"]')
+                         .toggleClass('selected', isSelected);
+        });
+        var noDataDisplayed = !state.hasData || !state.measures.length;
+        this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
+        this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
+        this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
+    },
+>>>>>>> 38e6167514a... temp
 
             const state = this.model.get({ raw: true });
             const groupValues = type === 'row' ? groupId[0] : groupId[1];
@@ -266,11 +368,41 @@ odoo.define('web.PivotController', function (require) {
                 }
             });
 
+<<<<<<< HEAD
             const group = {
                 rowValues: cell.groupId[0],
                 colValues: cell.groupId[1],
                 originIndex: cell.originIndexes[0]
             };
+=======
+        this.selectedGroup = group;
+        if (groupValues.length < groupBys.length) {
+            var groupBy = groupBys[groupValues.length];
+            this.model
+                .expandGroup(this.selectedGroup, groupBy)
+                .then(this.update.bind(this, {}, {reload: false}));
+        } else {
+            var position = $target.position();
+            var top = position.top + $target.height();
+            var $container = $target.closest('.o_pivot').find('.o_field_selection');
+            var shift = ev.clientX - $container.position().left;
+            this._renderGroupBySelection(top, shift);
+        }
+    },
+    /**
+     * This handler is called when the user selects a groupby in the dropdown menu.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onGroupByMenuSelection: function (ev) {
+        ev.preventDefault();
+        var $target = $(ev.target);
+        if ($target.hasClass('disabled')) {
+            ev.stopPropagation();
+            return;
+        }
+>>>>>>> 38e6167514a... temp
 
             const domain = this.model._getGroupDomain(group);
 
