@@ -217,22 +217,47 @@ class MailMail(models.Model):
         }
         return res
 
-    def _split_by_server(self):
-        """Returns an iterator of pairs `(mail_server_id, record_ids)` for current recordset.
+    def _split_by_mail_configuration(self):
+        """Group the <mail.mail> based on their "email_from" and their "mail_server_id".
 
-        The same `mail_server_id` may repeat in order to limit batch size according to
-        the `mail.session.batch.size` system parameter.
+        The <mail.mail> will have the "same sending configuration" if they have the same
+        mail server or the same mail from. For performance purpose, we can use an SMTP
+        session in batch and therefore we need to group them by the parameter that will
+        influence the mail server used.
+
+        The same "sending configuration" may repeat in order to limit batch size
+        according to the `mail.session.batch.size` system parameter.
+
+        Return iterators over
+            mail_server_id, email_from, Records<mail.mail>.ids
         """
-        groups = defaultdict(list)
-        # Turn prefetch OFF to avoid MemoryError on very large mail queues, we only care
-        # about the mail server ids in this case.
-        for mail in self.with_context(prefetch_fields=False):
-            groups[mail.mail_server_id.id].append(mail.id)
+        mail_values = self.read(['id', 'email_from', 'mail_server_id'])
+
+        # First group the <mail.mail> per mail_server_id and per email_from
+        group_per_email_from = defaultdict(list)
+        for values in mail_values:
+            mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
+            group_per_email_from[(mail_server_id, values['email_from'])].append(values['id'])
+
+        # Then find the mail server for each email_from and group the <mail.mail>
+        # per mail_server_id and smtp_from
+        mail_servers = self.env['ir.mail_server'].sudo().search([], order='sequence')
+        group_per_smtp_from = defaultdict(list)
+        for (mail_server_id, email_from), mail_ids in group_per_email_from.items():
+            if not mail_server_id:
+                mail_server, smtp_from = self.env['ir.mail_server']._find_mail_server(email_from, mail_servers)
+                mail_server_id = mail_server.id if mail_server else False
+            else:
+                smtp_from = email_from
+
+            group_per_smtp_from[(mail_server_id, smtp_from)].extend(mail_ids)
+
         sys_params = self.env['ir.config_parameter'].sudo()
         batch_size = int(sys_params.get_param('mail.session.batch.size', 1000))
-        for server_id, record_ids in groups.items():
-            for mail_batch in tools.split_every(batch_size, record_ids):
-                yield server_id, mail_batch
+
+        for (mail_server_id, smtp_from), record_ids in group_per_smtp_from.items():
+            for batch_ids in tools.split_every(batch_size, record_ids):
+                yield mail_server_id, smtp_from, batch_ids
 
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
@@ -249,10 +274,10 @@ class MailMail(models.Model):
                 email sending process has failed
             :return: True
         """
-        for server_id, batch_ids in self._split_by_server():
+        for mail_server_id, smtp_from, batch_ids in self._split_by_mail_configuration():
             smtp_session = None
             try:
-                smtp_session = self.env['ir.mail_server'].connect(mail_server_id=server_id)
+                smtp_session = self.env['ir.mail_server'].connect(mail_server_id=mail_server_id, smtp_from=smtp_from)
             except Exception as exc:
                 if raise_exception:
                     # To be consistent and backward compatible with mail_mail.send() raised
@@ -269,7 +294,7 @@ class MailMail(models.Model):
                     smtp_session=smtp_session)
                 _logger.info(
                     'Sent batch %s emails via mail server ID #%s',
-                    len(batch_ids), server_id)
+                    len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
                     smtp_session.quit()

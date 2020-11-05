@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Catchall Email Alias -->
+        <record id="icp_mail_catchall_alias" model="ir.config_parameter">
+            <field name="key">mail.catchall.alias</field>
+            <field name="value">catchall</field>
+        </record>
+
+        <!-- Bounce Email Alias -->
+        <record id="icp_mail_bounce_alias" model="ir.config_parameter">
+            <field name="key">mail.bounce.alias</field>
+            <field name="value">bounce</field>
+        </record>
+
+        <!-- Notifications -->
+        <record id="icp_mail_default_from" model="ir.config_parameter">
+            <field name="key">mail.default.from</field>
+            <field name="value">notifications</field>
+        </record>
+
+    </data>
+</odoo>
