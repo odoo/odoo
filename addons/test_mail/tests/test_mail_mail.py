@@ -2,20 +2,29 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
+from unittest.mock import call
 
 from odoo import api
+from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
 
 @tagged('mail_mail')
-class TestMailMail(TestMailCommon):
+class TestMailMail(TestMailCommon, MockSmtplibCase):
 
     @classmethod
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
         cls._init_mail_gateway()
+        cls._init_mail_servers()
+
+        cls.server_domain_2 = cls.env['ir.mail_server'].create({
+            'name': 'Server 2',
+            'smtp_host': 'test_2.com',
+            'from_filter': 'test_2.com',
+        })
 
         cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
             'name': 'Test',
@@ -55,6 +64,73 @@ class TestMailMail(TestMailCommon):
         with self.mock_mail_gateway():
             mail.send()
         self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s@%s' % (self.alias_bounce, self.alias_domain))
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_send_server(self):
+        """Test that the mails are send in batch.
+
+        Batch are defined by the mail server and the email from field.
+        """
+        self.assertEqual(self.env['ir.mail_server']._get_default_from_address(), 'notifications@test.com')
+
+        mail_values = {
+            'body_html': '<p>Test</p>',
+            'email_to': 'user@example.com',
+        }
+
+        # Should be encapsulated in the notification email
+        mails = self.env['mail.mail'].create([{
+            **mail_values,
+            'email_from': 'test@unknown_domain.com',
+        } for _ in range(5)]) | self.env['mail.mail'].create([{
+            **mail_values,
+            'email_from': 'test_2@unknown_domain.com',
+        } for _ in range(5)])
+
+        # Should use the test_2 mail server
+        # Once with "user_1@test_2.com" as login
+        # Once with "user_2@test_2.com" as login
+        mails |= self.env['mail.mail'].create([{
+            **mail_values,
+            'email_from': 'user_1@test_2.com',
+        } for _ in range(5)]) | self.env['mail.mail'].create([{
+            **mail_values,
+            'email_from': 'user_2@test_2.com',
+        } for _ in range(5)])
+
+        # Mail server is forced
+        mails |= self.env['mail.mail'].create([{
+            **mail_values,
+            'email_from': 'user_1@test_2.com',
+            'mail_server_id': self.server_domain.id,
+        } for _ in range(5)])
+
+        with self.mock_smtplib_connection():
+            mails.send()
+
+        self.assertEqual(self.find_mail_server_mocked.call_count, 4, 'Must be called only once per "mail from" when the mail server is not forced')
+        self.assertEqual(len(self.emails), 25)
+
+        # Check call to the connect method to ensure that we authenticate
+        # to the right mail server with the right login
+        self.assertEqual(self.connect_mocked.call_count, 4, 'Must be called once per batch which share the same mail server and the same smtp from')
+        self.connect_mocked.assert_has_calls(
+            calls=[
+                call(smtp_from='notifications@test.com', mail_server_id=self.server_notification.id),
+                call(smtp_from='user_1@test_2.com', mail_server_id=self.server_domain_2.id),
+                call(smtp_from='user_2@test_2.com', mail_server_id=self.server_domain_2.id),
+                call(smtp_from='user_1@test_2.com', mail_server_id=self.server_domain.id),
+            ],
+            any_order=True,
+        )
+
+        self.assert_email_sent_smtp(message_from='"test@unknown_domain.com" <notifications@test.com>',
+                                    emails_count=5, from_filter=self.server_notification.from_filter)
+        self.assert_email_sent_smtp(message_from='"test_2@unknown_domain.com" <notifications@test.com>',
+                                    emails_count=5, from_filter=self.server_notification.from_filter)
+        self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
+        self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
+        self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
 
 
 class TestMailMailRace(common.TransactionCase):

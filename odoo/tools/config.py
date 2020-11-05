@@ -216,6 +216,8 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "SMTP Configuration")
         group.add_option('--email-from', dest='email_from', my_default=False,
                          help='specify the SMTP email address for sending email')
+        group.add_option('--from-filter', dest='from_filter', my_default=False,
+                         help='specify for which email address the SMTP configuration can be used')
         group.add_option('--smtp', dest='smtp_server', my_default='localhost',
                          help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', my_default=25,
@@ -441,7 +443,7 @@ class configmanager(object):
         keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',

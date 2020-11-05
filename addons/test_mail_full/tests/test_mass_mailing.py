@@ -11,11 +11,6 @@ from odoo.tests import tagged
 
 @tagged('mass_mailing')
 class TestMassMailing(TestMailFullCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestMassMailing, cls).setUpClass()
-
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_w_blacklist_opt_out(self):

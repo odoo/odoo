@@ -8,10 +8,11 @@ import email.message
 import re
 import threading
 
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
-    email_split,
+    email_split, email_domain_normalize,
     misc, formataddr,
     prepend_html_content,
 )
@@ -435,6 +436,23 @@ class TestEmailTools(BaseCase):
                 with self.subTest(pair=pair, charset=charset):
                     self.assertEqual(formataddr(pair, charset), expected)
 
+    def test_extract_rfc2822_addresses(self):
+        tests = [
+            ('"Admin" <admin@example.com>', ['admin@example.com']),
+            ('"Admin" <admin@example.com>, Demo <demo@test.com>', ['admin@example.com', 'demo@test.com']),
+            ('admin@example.com', ['admin@example.com']),
+            ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
+            ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
+        ]
+
+        for (rfc2822_email, expected) in tests:
+            self.assertEqual(extract_rfc2822_addresses(rfc2822_email), expected)
+
+    def test_email_domain_normalize(self):
+        self.assertEqual(email_domain_normalize("Test.Com"), "test.com", "Should have normalized the domain")
+        self.assertEqual(email_domain_normalize("email@test.com"), False, "The domain is not valid, should return False")
+        self.assertEqual(email_domain_normalize(False), False, "The domain is not valid, should return False")
+
 
 class EmailConfigCase(TransactionCase):
     @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
@@ -474,6 +492,7 @@ class TestEmailMessage(TransactionCase):
             """SMTP stub"""
             def __init__(this):
                 this.email_sent = False
+                this.from_filter = 'example.com'
 
             # Python 3 before 3.7.4
             def sendmail(this, smtp_from, smtp_to_list, message_str,
