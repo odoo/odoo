@@ -913,7 +913,7 @@ class WebsiteSale(PaymentPortal):
         return tx_sudo._get_processing_values()
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
-    def payment_get_status(self, sale_order_id, **post):
+    def shop_payment_get_status(self, sale_order_id, **post):
         order = request.env['sale.order'].sudo().browse(sale_order_id).exists()
         if order.id != request.session.get('sale_last_order_id'):
             # either something went wrong or the session is unbound
@@ -928,7 +928,7 @@ class WebsiteSale(PaymentPortal):
         }
 
     @http.route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)
-    def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
+    def shop_payment_validate(self, transaction_id=None, sale_order_id=None, **post):
         """ Method that should be called by the server when receiving an update
         for a transaction. State at this point :
 
@@ -964,7 +964,7 @@ class WebsiteSale(PaymentPortal):
         return request.redirect('/shop/confirmation')
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
-    def payment_confirmation(self, **post):
+    def shop_payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :
 

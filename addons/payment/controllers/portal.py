@@ -142,7 +142,7 @@ class PaymentPortal(portal.CustomerPortal):
         }
         return request.render('payment.pay', rendering_context)
 
-    @http.route('/my/payment_method', type='http', auth='user')
+    @http.route('/my/payment_method', type='http', auth='user', website=True, sitemap=False)
     def payment_method(self, **kwargs):
         """ Display the form to manage payment methods.
 
@@ -256,7 +256,10 @@ class PaymentPortal(portal.CustomerPortal):
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
         reference = request.env['payment.transaction']._compute_reference(
-            acquirer_sudo.provider, prefix=reference_prefix, **custom_create_values, **kwargs
+            acquirer_sudo.provider,
+            prefix=reference_prefix,
+            **(custom_create_values or {}),
+            **kwargs
         )
         if is_validation:  # Acquirers determine the amount and currency in validation operations
             amount = acquirer_sudo._get_validation_amount()
@@ -337,7 +340,7 @@ class PaymentPortal(portal.CustomerPortal):
     @http.route(
         '/payment/validate', type='http', auth='user', website=True, sitemap=False, csrf=True
     )
-    def payment_validate(self, tx_id, **kwargs):  # TODO ANV currently broken (404)
+    def payment_validate(self, tx_id, **kwargs):
         """ Refund a payment method validation transaction and redirect the user.
 
         :param str tx_id: The token registration transaction to confirm, as a
