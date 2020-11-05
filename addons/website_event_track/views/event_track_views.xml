@@ -169,22 +169,28 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Speakers" name="speakers">
-                            <group class="display-flex justify-content-between">
+                        <page string="Speaker" name="speaker">
+                            <group string="Contact Details" class="display-flex justify-content-between">
                                 <group>
-                                    <field name="partner_id"
-                                        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                                        context="{'default_phone': partner_phone, 'default_email': partner_email}"/>
+                                    <field name="partner_id" context="{'default_phone': contact_phone, 'default_email': contact_email}"/>
+                                    <field name="contact_email" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                                    <field name="contact_phone" class="o_force_ltr" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                                </group>
+                            </group>
+                            <group string="Speaker Bio" class="display-flex justify-content-between">
+                                <group>
                                     <field name="partner_name"/>
                                     <field name="partner_email"/>
                                     <field name="partner_phone" class="o_force_ltr"/>
+                                    <field name="partner_function"/>
+                                    <field name="partner_company_name"/>
                                 </group>
                                 <group>
                                     <field name="image" nolabel="1" widget="image" class="oe_avatar"/>
                                 </group>
                             </group>
                             <group>
-                                <field name="partner_biography"/>
+                                <field name="partner_biography" string="Biography"/>
                             </group>
                         </page>
                         <page string="Description" name="description">

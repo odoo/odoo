@@ -7,7 +7,7 @@
         <field name="use_default_to" eval="True"/>
         <field name="body_html" type="xml">
 <div>
-    Dear ${object.partner_name or ''}<br/>
+    Dear ${object.partner_id.name or object.partner_name or ''}<br/>
     We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.
     <br/>
     You will find more details here:

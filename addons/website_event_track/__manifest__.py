@@ -5,7 +5,7 @@
     'name': 'Advanced Events',
     'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
-    'version': '1.2',
+    'version': '1.3',
     'description': "",
     'depends': ['website_event'],
     'data': [
@@ -48,6 +48,8 @@
             'website_event_track/static/src/scss/event_track_templates_online.scss',
             'website_event_track/static/src/scss/pwa_frontend.scss',
             'website_event_track/static/src/js/website_event_track.js',
+            'website_event_track/static/src/js/website_event_track_proposal_form.js',
+            'website_event_track/static/src/js/website_event_track_proposal_form_tags.js',
             'website_event_track/static/src/js/event_track_reminder.js',
             'website_event_track/static/src/js/website_event_pwa_widget.js',
             'website_event_track/static/lib/idb-keyval/idb-keyval.js',

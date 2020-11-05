@@ -51,30 +51,42 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    # speaker
-    partner_id = fields.Many2one('res.partner', 'Speaker')
+    partner_id = fields.Many2one('res.partner', 'Contact', help="Contact of the track, may be different from speaker.")
+    # speaker information
     partner_name = fields.Char(
         string='Name', compute='_compute_partner_name',
-        readonly=False, store=True, tracking=10)
+        readonly=False, store=True, tracking=10,
+        help='Speaker name is used for public display and may vary from contact name')
     partner_email = fields.Char(
         string='Email', compute='_compute_partner_email',
-        readonly=False, store=True, tracking=20)
+        readonly=False, store=True, tracking=20,
+        help='Speaker email is used for public display and may vary from contact email')
     partner_phone = fields.Char(
         string='Phone', compute='_compute_partner_phone',
-        readonly=False, store=True, tracking=30)
+        readonly=False, store=True, tracking=30,
+        help='Speaker phone is used for public display and may vary from contact phone')
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
         readonly=False, store=True)
     partner_function = fields.Char(
-        'Job Position', related='partner_id.function',
-        compute_sudo=True, readonly=True)
+        'Job Position', compute='_compute_partner_function',
+        store=True, readonly=False)
     partner_company_name = fields.Char(
-        'Company Name', related='partner_id.parent_name',
-        compute_sudo=True, readonly=True)
+        'Company Name', compute='_compute_partner_company_name',
+        readonly=False, store=True)
     image = fields.Image(
         string="Speaker Photo", compute="_compute_speaker_image",
         readonly=False, store=True,
         max_width=256, max_height=256)
+    # contact information
+    contact_email = fields.Char(
+        string='Contact Email', compute='_compute_contact_email',
+        readonly=False, store=True, tracking=20,
+        help="Contact email is private and used internally")
+    contact_phone = fields.Char(
+        string='Contact Phone', compute='_compute_contact_phone',
+        readonly=False, store=True, tracking=30,
+        help="Contact phone is private and used internally")
     location_id = fields.Many2one('event.track.location', 'Location')
     # time information
     date = fields.Datetime('Track Date')
@@ -149,19 +161,19 @@ class Track(models.Model):
     @api.depends('partner_id')
     def _compute_partner_name(self):
         for track in self:
-            if not track.partner_name or track.partner_id:
+            if track.partner_id and not track.partner_name:
                 track.partner_name = track.partner_id.name
 
     @api.depends('partner_id')
     def _compute_partner_email(self):
         for track in self:
-            if not track.partner_email or track.partner_id:
+            if track.partner_id and not track.partner_email:
                 track.partner_email = track.partner_id.email
 
     @api.depends('partner_id')
     def _compute_partner_phone(self):
         for track in self:
-            if not track.partner_phone or track.partner_id:
+            if track.partner_id and not track.partner_phone:
                 track.partner_phone = track.partner_id.phone
 
     @api.depends('partner_id')
@@ -174,10 +186,38 @@ class Track(models.Model):
                 track.partner_biography = track.partner_id.website_description
 
     @api.depends('partner_id')
+    def _compute_partner_function(self):
+        for track in self:
+            if track.partner_id and not track.partner_function:
+                track.partner_function = track.partner_id.function
+
+    @api.depends('partner_id', 'partner_id.company_type')
+    def _compute_partner_company_name(self):
+        for track in self:
+            if track.partner_id.company_type == 'company':
+                track.partner_company_name = track.partner_id.name
+            elif not track.partner_company_name:
+                track.partner_company_name = track.partner_id.parent_id.name
+
+    @api.depends('partner_id')
     def _compute_speaker_image(self):
         for track in self:
             if not track.image:
                 track.image = track.partner_id.image_256
+
+    # CONTACT
+
+    @api.depends('partner_id', 'partner_id.email')
+    def _compute_contact_email(self):
+        for track in self:
+            if track.partner_id:
+                track.contact_email = track.partner_id.email
+
+    @api.depends('partner_id', 'partner_id.phone')
+    def _compute_contact_phone(self):
+        for track in self:
+            if track.partner_id:
+                track.contact_phone = track.partner_id.phone
 
     # TIME
 
@@ -342,8 +382,6 @@ class Track(models.Model):
             stage = self.env['event.track.stage'].browse(vals['stage_id'])
             self._synchronize_with_stage(stage)
         res = super(Track, self).write(vals)
-        if vals.get('partner_id'):
-            self.message_subscribe([vals['partner_id']])
         return res
 
     @api.model
@@ -360,6 +398,48 @@ class Track(models.Model):
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
+
+    def _message_get_default_recipients(self):
+        return {
+            track.id: {
+                'partner_ids': [],
+                'email_to': track.contact_email or track.partner_email,
+                'email_cc': False
+            } for track in self
+        }
+
+    def _message_get_suggested_recipients(self):
+        recipients = super(Track, self)._message_get_suggested_recipients()
+        for track in self:
+            if track.partner_id:
+                if track.partner_id not in recipients:
+                    track._message_add_suggested_recipient(recipients, partner=track.partner_id, reason=_('Contact'))
+            else:
+                #  Priority: contact information then speaker information
+                if track.contact_email and track.contact_email != track.partner_id.email:
+                    track._message_add_suggested_recipient(recipients, email=track.contact_email, reason=_('Contact Email'))
+                if not track.contact_email and track.partner_email and track.partner_email != track.partner_id.email:
+                    track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
+        return recipients
+
+    def _message_post_after_hook(self, message, msg_vals):
+        #  OVERRIDE
+        #  If no partner is set on track when sending a message, then we create one from suggested contact selected.
+        #  If one or more have been created from chatter (Suggested Recipients) we search for the expected one and write the partner_id on track.
+        if msg_vals.get('partner_ids') and not self.partner_id:
+            #  Contact(s) created from chatter set on track : we verify if at least one is the expected contact
+            #  linked to the track. (created from contact_email if any, then partner_email if any)
+            main_email = self.contact_email or self.partner_email
+            if main_email:
+                new_partner = message.partner_ids.filtered(lambda partner: partner.email == main_email)
+                if new_partner:
+                    main_email_string = 'contact_email' if self.contact_email else 'partner_email'
+                    self.search([
+                        ('partner_id', '=', False),
+                        (main_email_string, '=', new_partner.email),
+                        ('stage_id.is_cancel', '=', False),
+                    ]).write({'partner_id': new_partner.id})
+        return super(Track, self)._message_post_after_hook(message, msg_vals)
 
     def _track_template(self, changes):
         res = super(Track, self)._track_template(changes)
@@ -380,27 +460,6 @@ class Track(models.Model):
         elif 'kanban_state' in init_values and self.kanban_state == 'done':
             return self.env.ref('website_event_track.mt_track_ready')
         return super(Track, self)._track_subtype(init_values)
-
-    def _message_get_suggested_recipients(self):
-        recipients = super(Track, self)._message_get_suggested_recipients()
-        for track in self:
-            if track.partner_email and track.partner_email != track.partner_id.email:
-                track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
-        return recipients
-
-    def _message_post_after_hook(self, message, msg_vals):
-        if self.partner_email and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.partner_email)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('partner_email', '=', new_partner.email),
-                    ('stage_id.is_cancel', '=', False),
-                ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message, msg_vals)
 
     # ------------------------------------------------------------
     # ACTION
