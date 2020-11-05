@@ -101,7 +101,11 @@ class FileUploader extends Component {
                 attachment.isTemporary &&
                 attachment.filename === file.name
             );
-
+            if (!uploadingAttachment) {
+                // Uploading attachment no longer exists.
+                // This happens when an uploading attachment is being deleted by user.
+                continue;
+            }
             try {
                 const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
                     method: 'POST',
