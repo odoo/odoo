@@ -396,6 +396,7 @@ var ActionManager = Widget.extend({
                     in_DOM: true,
                     callbacks: [{widget: dialog}, {widget: controller.widget}],
                 });
+                controller.widget.$('.o_cp_buttons > div').remove();
                 widget.renderButtons(dialog.$footer);
                 dialog.rebindButtonBehavior();
 
