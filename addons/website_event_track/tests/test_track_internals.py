@@ -9,7 +9,6 @@ from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests.common import users
 
-
 class TestTrackData(TestEventOnlineCommon):
 
     @users('user_eventmanager')
@@ -70,15 +69,31 @@ class TestTrackData(TestEventOnlineCommon):
         new_track.write({'partner_id': customer.id})
         self.assertEqual(new_track.partner_id, customer)
         self.assertEqual(
-            new_track.partner_name, customer.name,
-            'Track customer should take over existing value')
+            new_track.partner_name, 'Nibbler In Space',
+            'Track customer should not take over existing value')
         self.assertEqual(
             new_track.partner_email, customer.email,
-            'Track customer should take over existing value')
+            'Track customer should take over empty value')
         self.assertEqual(
-            new_track.partner_phone, customer.phone,
-            'Track customer should take over existing value')
+            new_track.partner_phone, test_phone,
+            'Track customer should not take over existing value')
 
+        # contacts fields should be updated with track customer
+        new_track = self.env['event.track'].create({
+            'event_id': event.id,
+            'name': 'Mega Track',
+            'contact_phone': test_phone,
+        })
+        self.assertEqual(new_track.contact_email, False)
+        self.assertEqual(new_track.contact_phone, test_phone)
+        new_track.write({'partner_id': customer.id})
+        self.assertEqual(new_track.partner_id, customer)
+        self.assertEqual(
+            new_track.contact_email, customer.email,
+            'Track customer should take over empty contact email value')
+        self.assertEqual(
+            new_track.contact_phone, customer.phone,
+            'Track customer should take over existing contact phone value')
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
