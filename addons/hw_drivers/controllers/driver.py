@@ -64,6 +64,18 @@ class StatusController(http.Controller):
         listener is a dict in witch there are a sessions_id and a dict of device_id to listen
         """
         req = event_manager.add_request(listener)
+
+        # Search for previous events and remove events older than 5 seconds
+        oldest_time = time.time() - 5
+        for event in list(event_manager.events):
+            if event['time'] < oldest_time:
+                del event_manager.events[0]
+                continue
+            if event['device_id'] in listener['devices'] and event['time'] > listener['last_event']:
+                event['session_id'] = req['session_id']
+                return event
+
+        # Wait for new event
         if req['event'].wait(50):
             req['event'].clear()
             req['result']['session_id'] = req['session_id']
@@ -210,6 +222,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
 
 class EventManager(object):
     def __init__(self):
+        self.events = []
         self.sessions = {}
 
     def _delete_expired_sessions(self, max_time=70):
@@ -236,10 +249,15 @@ class EventManager(object):
         return self.sessions[listener['session_id']]
 
     def device_changed(self, device):
+        event = {
+            **device.data,
+            'device_id': device.device_identifier,
+            'time': time.time(),
+        }
+        self.events.append(event)
         for session in self.sessions:
-            if device.device_identifier in self.sessions[session]['devices']:
-                self.sessions[session]['result'] = device.data
-                self.sessions[session]['result']['device_id'] = device.device_identifier
+            if device.device_identifier in self.sessions[session]['devices'] and not self.sessions[session]['event'].isSet():
+                self.sessions[session]['result'] = event
                 self.sessions[session]['event'].set()
 
 
