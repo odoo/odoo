@@ -2805,7 +2805,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 "Invalid _rec_name=%r for model %r" % (cls._rec_name, cls._name)
         elif 'name' in cls._fields:
             cls._rec_name = 'name'
-        elif 'x_name' in cls._fields:
+        elif cls._custom and 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
 
         # 6. determine and validate active_name
