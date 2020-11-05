@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools import formatLang
+from odoo.exceptions import ValidationError
 
 
 class PosPayment(models.Model):
@@ -40,6 +41,12 @@ class PosPayment(models.Model):
             else:
                 res.append((payment.id, formatLang(self.env, payment.amount, currency_obj=payment.currency_id)))
         return res
+
+    @api.constrains('payment_method_id')
+    def _check_payment_method_id(self):
+        for payment in self:
+            if payment.payment_method_id not in payment.session_id.config_id.payment_method_ids:
+                raise ValidationError(_('The payment method selected is not allowed in the config of the POS session.'))
 
     def _export_for_ui(self, payment):
         return {
