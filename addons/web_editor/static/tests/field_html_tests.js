@@ -425,7 +425,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($('jw-toolbar .o_we_color_btn[style="background-color:#00FFFF;"]'));
             await testUtils.form.clickSave(form);
 
-            form.destroy();
+            await form.destroy();
         });
 
         QUnit.module('cssReadonly');
