@@ -2,6 +2,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     'use strict';
 
     var core = require('web.core');
+    const config = require('web.config');
     var CalendarPopover = require('web.CalendarPopover');
     var CalendarController = require("web.CalendarController");
     var CalendarRenderer = require("web.CalendarRenderer");
@@ -171,10 +172,19 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
 
                 // Do not display header if there is no element to display
                 if (result.length > 0) {
-                    var elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
-                        timeoffs: result,
-                    });
-                    self.$el.before(elem);
+                    if (config.device.isMobile) {
+                        result.forEach((data) => {
+                            const elem = QWeb.render('hr_holidays.dashboard_calendar_header_mobile', {
+                                timeoff: data,
+                            });
+                            self.$el.find('.o_calendar_filter_item[data-value=' + data[4] + '] .o_cw_filter_title').append(elem);
+                        });
+                    } else {
+                        const elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
+                            timeoffs: result,
+                        });
+                        self.$el.before(elem);
+                    }
                 }
             });
         },

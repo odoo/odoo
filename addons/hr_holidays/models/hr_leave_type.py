@@ -256,7 +256,7 @@ class HolidaysType(models.Model):
                     'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
                     'virtual_leaves_taken': ('%.2f' % lt.virtual_leaves_taken).rstrip('0').rstrip('.'),
                     'request_unit': lt.request_unit,
-                }, lt.allocation_type, lt.validity_stop)
+                }, lt.allocation_type, lt.validity_stop, lt.id)
             for lt in leave_types]
 
     def _get_contextual_employee_id(self):
