@@ -137,19 +137,20 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
             channel._action_unfollow(partner)
 
     def test_channel_listeners(self):
+        creator = self.env.user.partner_id
         self.assertEqual(self.test_channel.message_channel_ids, self.test_channel)
         self.assertEqual(self.test_channel.message_partner_ids, self.env['res.partner'])
-        self.assertEqual(self.test_channel.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.test_channel.channel_partner_ids, creator)
 
         self._join_channel(self.test_channel, self.test_partner)
         self.assertEqual(self.test_channel.message_channel_ids, self.test_channel)
         self.assertEqual(self.test_channel.message_partner_ids, self.env['res.partner'])
-        self.assertEqual(self.test_channel.channel_partner_ids, self.test_partner)
+        self.assertEqual(self.test_channel.channel_partner_ids, self.test_partner | creator)
 
         self._leave_channel(self.test_channel, self.test_partner)
         self.assertEqual(self.test_channel.message_channel_ids, self.test_channel)
         self.assertEqual(self.test_channel.message_partner_ids, self.env['res.partner'])
-        self.assertEqual(self.test_channel.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.test_channel.channel_partner_ids, creator)
 
     def test_channel_post_nofollow(self):
         self.test_channel.message_post(body='Test', message_type='comment', subtype='mt_comment')
