@@ -4701,7 +4701,7 @@ class AccountMoveLine(models.Model):
         return action
 
     def action_automatic_entry(self):
-        [action] = self.env.ref('account.account_automatic_entry_wizard_action').read()
+        action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')
         # Force the values of the move line in the context to avoid issues
         ctx = dict(self.env.context)
         ctx.pop('active_id', None)

@@ -200,8 +200,7 @@ class Orderpoint(models.Model):
         """ This function returns an action that display existing
         purchase orders of given orderpoint.
         """
-        action = self.env.ref('purchase.purchase_rfq')
-        result = action.read()[0]
+        result = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_rfq')
 
         # Remvove the context since the action basically display RFQ and not PO.
         result['context'] = {}
