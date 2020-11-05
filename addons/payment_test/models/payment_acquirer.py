@@ -31,7 +31,8 @@ class PaymentAcquirerTest(models.Model):
         payment_token = self.env['payment.token'].sudo().create({
             'acquirer_ref': uuid4(),
             'acquirer_id': int(data['acquirer_id']),
-            'partner_id': int(data['partner_id'])
+            'partner_id': int(data['partner_id']),
+            'name': 'XXXXXXXXXXXX%s - %s' % (data['cc_number'][-4:], data['cc_holder_name'])
         })
         return payment_token
 
