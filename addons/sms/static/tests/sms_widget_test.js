@@ -148,7 +148,7 @@ QUnit.module('fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yopSMS',
             "value should be displayed properly with a link to send SMS");
 
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 2,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 2,
             "should have the correct classnames");
 
         // Edit a line and check the result
@@ -165,7 +165,7 @@ QUnit.module('fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'newSMS',
             "value should be properly updated");
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 2,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 2,
             "should still have links with correct classes");
 
         await testUtils.dom.click(list.$('tbody td:not(.o_list_record_selector) .o_field_phone_sms').first());
