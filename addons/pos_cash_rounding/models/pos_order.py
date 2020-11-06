@@ -10,7 +10,19 @@ class PosOrder(models.Model):
 
     def test_paid(self):
         if self.config_id.cash_rounding:
-            total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+            rounding_method = self.config_id.rounding_method.rounding_method
+            precision_rounding = self.config_id.rounding_method.rounding
+            total = float_round(self.amount_total, precision_rounding=precision_rounding, rounding_method=rounding_method)
+            # For POS refunds rounding_method has opposite meaning than how float_round works:
+            # DOWN means "in favor of customer"
+            # UP means "in favor of cashier"
+            # So, we need to adjust result
+            if total > 0 or float_is_zero(total, precision_rounding=self.config_id.currency_id.rounding):
+                pass
+            elif rounding_method == 'DOWN':
+                total -= precision_rounding
+            elif rounding_method == 'UP':
+                total += precision_rounding
             return float_is_zero(total - self.amount_paid, precision_rounding=self.config_id.currency_id.rounding)
         else:
             return super(PosOrder, self).test_paid()
