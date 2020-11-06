@@ -353,12 +353,12 @@ var SnippetEditor = Widget.extend({
             await new Promise(resolve => {
                 this.trigger_up('call_for_each_child_snippet', {
                     $snippet: this.$snippetBlock,
-                    callback: function (editor, $snippet) {
-                        for (var i in editor.snippetOptionInstances) {
-                            editor.snippetOptionInstances[i].onRemove();
+                    callback: async function (editor, $snippet) {
+                        for (const i in editor.snippetOptionInstances) {
+                            await editor.snippetOptionInstances[i].onRemove(context);
                         }
-                        resolve();
                     },
+                    resolve: resolve,
                 });
             });
 
@@ -853,36 +853,37 @@ var SnippetEditor = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onOptionUpdate: function (ev) {
+    _onOptionUpdate: async function (ev) {
         var self = this;
-
         // If multiple option names are given, we suppose it should not be
         // propagated to parent editor
         if (ev.data.optionNames) {
             ev.stopPropagation();
-            _.each(ev.data.optionNames, function (name) {
-                notifyForEachMatchedOption(name);
-            });
+            for (const name of ev.data.optionNames) {
+                await notifyForEachMatchedOption(name);
+            }
         }
         // If one option name is given, we suppose it should be handle by the
         // first parent editor which can do it
         if (ev.data.optionName) {
-            if (notifyForEachMatchedOption(ev.data.optionName)) {
+            const cond = await notifyForEachMatchedOption(ev.data.optionName);
+            if (cond) {
                 ev.stopPropagation();
             }
         }
 
-        function notifyForEachMatchedOption(name) {
+        async function notifyForEachMatchedOption(name) {
             var regex = new RegExp('^' + name + '\\d+$');
             var hasOption = false;
-            for (var key in self.snippetOptionInstances) {
+            for (const key in self.snippetOptionInstances) {
                 if (key === name || regex.test(key)) {
-                    self.snippetOptionInstances[key].notify(ev.data.name, ev.data.data);
+                    await self.snippetOptionInstances[key].notify(ev.data.name, ev.data.data);
                     hasOption = true;
                 }
             }
             return hasOption;
         }
+        ev.data.resolve && ev.data.resolve();
     },
     /**
      * Called when the 'remove' button is clicked.
@@ -1631,7 +1632,7 @@ var SnippetsMenu = Widget.extend({
             const $childSnippet = $(child);
             const snippetEditor = await this._getSnippetEditor($childSnippet);
             if (snippetEditor) {
-                return callback.call(this, snippetEditor, $childSnippet);
+                return await callback.call(this, snippetEditor, $childSnippet);
             }
         });
         return Promise.all(defs);
@@ -2425,8 +2426,9 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onCallForEachChildSnippet: function (ev) {
-        this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
+    _onCallForEachChildSnippet: async function (ev) {
+        await this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
+        ev.data.resolve && ev.data.resolve();
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.

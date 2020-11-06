@@ -172,7 +172,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             }
         });
         this.$target.css('height', '');
-        if (previewMode === false) await this.updateChangesInWysiwyg();
+        if (previewMode === false) await this.updateChangesInWysiwyg(this.$target, params.context);
     },
     /**
      * Displays the images with the "masonry" layout.
@@ -209,7 +209,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             });
             $lowest.append(imgs.shift());
         }
-        if (previewMode === false) await this.updateChangesInWysiwyg();
+        if (previewMode === false) await this.updateChangesInWysiwyg(this.$target, params.context);
     },
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
@@ -217,8 +217,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     mode: async function (previewMode, widgetValue, params) {
-        this._setMode(previewMode, widgetValue, params);
-        if (previewMode === false) await this.updateChangesInWysiwyg();
+        return this._setMode(previewMode, widgetValue, params);
     },
     /**
      * Displays the images with the standard layout: floating images.
@@ -238,7 +237,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
         });
 
         this._replaceContent($row);
-        if (previewMode === false) await this.updateChangesInWysiwyg();
+        if (previewMode === false) await this.updateChangesInWysiwyg(this.$target, params.context);
     },
     /**
      * Allows to remove all images. Restores the snippet to the way it was when
@@ -246,7 +245,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    removeAllImages: async function () {
+    removeAllImages: async function (context) {
         this._images = [];
         const $addImg = $('<div>', {
             class: 'alert alert-info css_editable_mode_display text-center',
@@ -260,7 +259,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
             class: ' fa fa-plus-circle',
         });
         this._replaceContent($addImg.append($icon).append($text), false);
-        await this.updateChangesInWysiwyg();
+        await this.updateChangesInWysiwyg(this.$target, context);
     },
     /**
      * Displays the images with a "slideshow" layout.
@@ -310,9 +309,15 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
         this._super(...arguments);
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
-            await this.mode('reset', this.getMode());
+            if(this._getImages().length === 0){
+                await this.removeAllImages(data.context);
+            } else {
+                await this.mode(false, this.getMode(), {context: data.context});
+            }
+
+            data.resolve();
         } else if (name === 'image_index_request') {
-            const images = this._getImages(this.$('img').get());
+            const images = this._getImages();
             let position = _.indexOf(images, data.$image[0]);
             images.splice(position, 1);
             switch (data.position) {
@@ -376,7 +381,11 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + widgetValue);
-        this[widgetValue]();
+        if (params && params.context) {
+            await this[widgetValue](previewMode, undefined, {context: params.context});
+        } else {
+            await this[widgetValue]();
+        }
         this.trigger_up('cover_update');
         this._refreshPublicWidgets();
     },
@@ -432,7 +441,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
      * @private
      * @returns {DOMElement[]}
      */
-    _getImages: function (imgs) {
+    _getImages: function () {
         var imgs = this.$('img').get();
         var self = this;
         imgs.sort(function (a, b) {
@@ -479,13 +488,17 @@ snippetOptions.registry.gallery_img = snippetOptions.SnippetOptionWidget.extend(
      *
      * @override
      */
-    onRemove: function () {
-        this.trigger_up('option_update', {
-            optionName: 'gallery',
-            name: 'image_removed',
-            data: {
-                $image: this.$target,
-            },
+    onRemove: async function (context) {
+        await new Promise((resolve) => {
+            this.trigger_up('option_update', {
+                optionName: 'gallery',
+                name: 'image_removed',
+                data: {
+                    $image: this.$target,
+                    context: context,
+                    resolve: resolve,
+                },
+            });
         });
     },
 
