@@ -799,11 +799,13 @@ $-hamburger-left: o-website-value('hamburger-position') == 'left';
 $-hamburger-center: o-website-value('hamburger-position') == 'center';
 $-hamburger-right: o-website-value('hamburger-position') == 'right';
 
-$zindex-website-header: $zindex-modal - 20;
+$zindex-website-header: $zindex-fixed !default;
 
 header {
     &#top {
-        // We need this z-index for the shadow option of the header
+        // We need this z-index for the shadow option of the header but also
+        // to create a stacking context so that header dropdowns appear below
+        // and above the same elements as the header.
         z-index: $zindex-website-header;
     }
     &:not(.o_header_no_transition) {
