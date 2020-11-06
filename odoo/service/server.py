@@ -399,20 +399,41 @@ class ThreadedServer(CommonServer):
             self.limit_reached_time = None
 
     def cron_thread(self, number):
+        # Steve Reich timing style with thundering herd mitigation.
+        #
+        # On startup, all workers bind on a notification channel in
+        # postgres so they can be woken up at will. At worst they wake
+        # up every SLEEP_INTERVAL with a jitter. The jitter creates a
+        # chorus effect that helps distribute on the timeline the moment
+        # when individual worker wake up.
+        #
+        # On NOTIFY, all workers are awaken at the same time, sleeping
+        # just a bit prevents they all poll the database at the exact
+        # same time. This is known as the thundering herd effect.
+
         from odoo.addons.base.models.ir_cron import ir_cron
-        while True:
-            time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
-            registries = odoo.modules.registry.Registry.registries
-            _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.d.items():
-                if registry.ready:
-                    thread = threading.currentThread()
-                    thread.start_time = time.time()
-                    try:
-                        ir_cron._acquire_job(db_name)
-                    except Exception:
-                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                    thread.start_time = None
+        conn = odoo.sql_db.db_connect('postgres')
+        with conn.cursor() as cr:
+            pg_conn = cr._cnx
+            cr.execute("LISTEN cron_trigger")
+            cr.commit()
+
+            while True:
+                select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
+                time.sleep(number / 100)
+                pg_conn.poll()
+
+                registries = odoo.modules.registry.Registry.registries
+                _logger.debug('cron%d polling for jobs', number)
+                for db_name, registry in registries.d.items():
+                    if registry.ready:
+                        thread = threading.currentThread()
+                        thread.start_time = time.time()
+                        try:
+                            ir_cron._process_jobs(db_name)
+                        except Exception:
+                            _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                        thread.start_time = None
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -1080,8 +1101,10 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                select.select([self.wakeup_fd_r], [], [], interval)
-                # clear wakeup pipe if we were interrupted
+                select.select([self.wakeup_fd_r, self.dbcursor._cnx], [], [], interval)
+                # clear pg_conn/wakeup pipe if we were interrupted
+                time.sleep(self.pid / 100 % .1)
+                self.dbcursor._cnx.poll()
                 empty_pipe(self.wakeup_fd_r)
             except select.error as e:
                 if e.args[0] != errno.EINTR:
@@ -1108,7 +1131,7 @@ class WorkerCron(Worker):
                 start_memory = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
-            base.models.ir_cron.ir_cron._acquire_job(db_name)
+            base.models.ir_cron.ir_cron._process_jobs(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
@@ -1134,6 +1157,15 @@ class WorkerCron(Worker):
         Worker.start(self)
         if self.multi.socket:
             self.multi.socket.close()
+
+        dbconn = odoo.sql_db.db_connect('postgres')
+        self.dbcursor = dbconn.cursor()
+        self.dbcursor.execute("LISTEN cron_trigger")
+        self.dbcursor.commit()
+
+    def stop(self):
+        super().stop()
+        self.dbcursor.close()
 
 #----------------------------------------------------------
 # start/stop public api
