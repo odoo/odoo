@@ -22,6 +22,16 @@
                         t-ref="messageList"
                     />
                 </t>
+                <t t-elif="threadView.threadCache.hasLoadingFailed">
+                    <div class="o_ThreadView_loadingFailed">
+                        <div class="o_ThreadView_loadingFailedText">
+                            An error occured while fetching messages.
+                        </div>
+                        <button class="o_ThreadView_loadingFailedRetryButton btn btn-link" t-on-click="_onClickRetryLoadMessages">
+                            Click here to retry
+                        </button>
+                    </div>
+                </t>
                 <t t-elif="props.hasComposer">
                     <div class="o-autogrow"/>
                 </t>

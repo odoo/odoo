@@ -130,12 +130,30 @@ class ThreadView extends Component {
             isDeviceMobile: this.env.messaging.device.isMobile,
             thread,
             threadCacheIsLoaded: threadCache && threadCache.isLoaded,
+            threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
             threadIsTemporary: thread && thread.isTemporary,
             threadMassMailing: thread && thread.mass_mailing,
             threadModel: thread && thread.model,
             threadView,
             threadViewIsLoading: threadView && threadView.isLoading,
         };
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onClickRetryLoadMessages() {
+        if (!this.threadView) {
+            return;
+        }
+        if (!this.threadView.threadCache) {
+            return;
+        }
+        this.threadView.threadCache.update({ hasLoadingFailed: false });
     }
 
 }

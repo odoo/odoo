@@ -492,6 +492,20 @@ class MessageList extends Component {
 
     /**
      * @private
+     */
+    _onClickRetryLoadMoreMessages() {
+        if (!this.threadView) {
+            return;
+        }
+        if (!this.threadView.threadCache) {
+            return;
+        }
+        this.threadView.threadCache.update({ hasLoadingFailed: false });
+        this._loadMore();
+    }
+
+    /**
+     * @private
      * @param {ScrollEvent} ev
      */
     onScroll(ev) {
