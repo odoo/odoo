@@ -27,19 +27,19 @@
                                 <field name="partner_id"/>
                             </group>
                         </group>
-                        <notebook colspan="4" groups="stock.group_adv_location">
+                        <notebook colspan="4" groups="stock.group_adv_location,stock.group_stock_multi_warehouses">
                             <page string="Warehouse Configuration" name="warehouse_config" colspan="4">
                                 <group colspan="4">
-                                    <group string="Shipments">
+                                    <group string="Shipments" groups="stock.group_adv_location">
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                     </group>
                                     <group name="group_resupply" string="Resupply" groups="stock.group_stock_multi_warehouses">
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget="many2many_checkboxes" groups="stock.group_stock_multi_warehouses"/>
                                     </group>
                                 </group>
                             </page>
-                            <page string="Technical Information" name="technical_info" groups='base.group_no_one'>
+                            <page string="Technical Information" name="technical_info" groups="base.group_no_one">
                                 <group>
                                     <group string="Locations">
                                         <field name="view_location_id" string="Warehouse view location" readonly="1" required="0"/>

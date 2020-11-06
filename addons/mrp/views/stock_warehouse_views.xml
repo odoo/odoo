@@ -7,14 +7,14 @@
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='resupply_wh_ids']" position="before">
-                    <field name="manufacture_to_resupply" />
-                    <field name="manufacture_steps" attrs="{'invisible': [('manufacture_to_resupply', '=', False)]}" widget="radio"/>
+                    <field name="manufacture_to_resupply"/>
+                    <field name="manufacture_steps" attrs="{'invisible': [('manufacture_to_resupply', '=', False)]}" widget="radio" groups="stock.group_adv_location"/>
                 </xpath>
                 <xpath expr="//field[@name='out_type_id']" position="after">
                     <field name="manu_type_id" readonly="True"/>
                 </xpath>
                 <xpath expr="//group[@name='group_resupply']" position="attributes">
-                    <attribute name="attrs">{}</attribute>
+                    <attribute name="groups">stock.group_adv_location,stock.group_stock_multi_warehouses</attribute>
                 </xpath>
                 <xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
                     <field name="sam_loc_id"/>
