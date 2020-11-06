@@ -100,7 +100,7 @@ class Partner(models.Model):
         action['context'] = {
             'default_partner_ids': partner_ids,
         }
-        action['domain'] = [('id', 'in', self._compute_meeting()[self.id])]
+        action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action
 
     def action_view_opportunity(self):
