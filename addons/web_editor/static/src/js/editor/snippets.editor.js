@@ -894,6 +894,7 @@ var SnippetsMenu = Widget.extend({
         'click .o_install_btn': '_onInstallBtnClick',
         'click .o_we_add_snippet_btn': '_onBlocksTabClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
+        'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
         'mousedown': '_onMouseDown',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
@@ -1760,8 +1761,13 @@ var SnippetsMenu = Widget.extend({
                     }));
                 }
 
-                // Create the delete button for custom snippets
+                // Create the rename and delete button for custom snippets
                 if (isCustomSnippet) {
+                    const btnRenameEl = document.createElement('we-button');
+                    btnRenameEl.dataset.snippetId = $snippet.data('oeSnippetId');
+                    btnRenameEl.classList.add('o_rename_btn', 'fa', 'fa-pencil', 'btn', 'o_we_hover_success');
+                    btnRenameEl.title = _.str.sprintf(_t("Rename %s"), name);
+                    $snippet.append(btnRenameEl);
                     const btnEl = document.createElement('we-button');
                     btnEl.dataset.snippetId = $snippet.data('oeSnippetId');
                     btnEl.classList.add('o_delete_btn', 'fa', 'fa-trash', 'btn', 'o_we_hover_danger');
@@ -2437,6 +2443,50 @@ var SnippetsMenu = Widget.extend({
                 close: true,
             }],
         }).open();
+    },
+    /**
+     * @private
+     */
+    _onRenameBtnClick: function (ev) {
+        const $snippet = $(ev.target).closest('.oe_snippet');
+        const snippetName = $snippet.attr('name');
+        const confirmText = _t('Confirm');
+        const cancelText = _t('Cancel');
+        const $input = $(`
+            <we-input class="o_we_user_value_widget w-100 mx-1">
+                <div>
+                    <input type="text" autocomplete="chrome-off" value="${snippetName}" class="text-left"/>
+                    <we-button class="o_we_confirm_btn o_we_text_success fa fa-check" title="${confirmText}"/>
+                    <we-button class="o_we_cancel_btn o_we_text_danger fa fa-times" title="${cancelText}"/>
+                </div>
+            </we-input>
+        `);
+        $snippet.find('we-button').remove();
+        $snippet.find('span.oe_snippet_thumbnail_title').replaceWith($input);
+        const $textInput = $input.find('input');
+        $textInput.focus();
+        $textInput.select();
+        $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
+        $input.find('.o_we_confirm_btn').click(async () => {
+            const name = $textInput.val();
+            if (name !== snippetName) {
+                this._execWithLoadingEffect(async () => {
+                    await this._rpc({
+                        model: 'ir.ui.view',
+                        method: 'rename_snippet',
+                        kwargs: {
+                            'name': name,
+                            'view_id': parseInt(ev.target.dataset.snippetId),
+                            'template_key': this.options.snippets,
+                        },
+                    });
+                }, true);
+            }
+            await this._loadSnippetsTemplates(name !== snippetName);
+        });
+        $input.find('.o_we_cancel_btn').click(async () => {
+            await this._loadSnippetsTemplates(false);
+        });
     },
     /**
      * Prevents pointer-events to change the focus when a pointer slide from
