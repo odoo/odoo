@@ -147,5 +147,50 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
 
             tourManager.destroy();
         });
+
+        QUnit.test("Anchor repositioning", async function (assert) {
+            assert.expect(3);
+
+            const tourManager = await createTourManager({
+                observe: true,
+                template: '<div class="wrapper" style="padding: 50px 0px;"><input class="anchor"/></div>',
+                tours: [{
+                    name: "Tour",
+                    options: { rainbowMan: false },
+                    steps: [{
+                        trigger: "input.anchor",
+                        position: "top"
+                    }],
+                }],
+                // Use this test in "debug" mode because the tips need to be in
+                // the viewport to be able to test their real positioning
+                // (otherwise, the tips would indicate to the users that they
+                // have to scroll).
+                debug: true,
+            });
+
+            assert.containsOnce(document.body, '.o_tooltip.top:visible',
+                'Viewport has enough space to put the tooltip on top of the element as the config wants');
+
+            // Change the wrapper dimension so that there is NOT enough space to put the tooltip on top
+            $('.wrapper').css('padding-top', '0px');
+            // Simulates the observer picking up the mutation and triggering an update
+            tourManager.update();
+            await testUtils.nextTick();
+
+            assert.containsOnce(document.body, '.o_tooltip.bottom:visible',
+                'Viewport has NOT enough space to put the tooltip on top of the element, it will be on bottom instead');
+
+            // Revert to initial sizing
+            $('.wrapper').css('padding-top', '50px');
+            // Simulates the observer picking up the mutation and triggering an update
+            tourManager.update();
+            await testUtils.nextTick();
+
+            assert.containsOnce(document.body, '.o_tooltip.top:visible',
+                'Viewport has again enough space to put the tooltip on top of the element as the config wants');
+
+            tourManager.destroy();
+        });
     });
 });

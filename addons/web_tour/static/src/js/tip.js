@@ -223,7 +223,6 @@ var Tip = Widget.extend({
         if (forceReposition || this.info.position !== position || this.viewPortState !== viewPortState) {
             this.$el.removeClass('top right bottom left').addClass(position);
             this.viewPortState = viewPortState;
-            this.info.position = position;
             let $location;
             if (this.viewPortState === 'in') {
                 this.$tooltip_content.html(this.info.content);
@@ -245,7 +244,7 @@ var Tip = Widget.extend({
                     }
                     this.$el.appendTo($location);
                 }
-                this._reposition();
+                this._reposition(position);
             }
         }
     },
@@ -273,11 +272,18 @@ var Tip = Widget.extend({
 
         return $location;
     },
-    _reposition: function () {
+    /**
+     * Repositions the tip.
+     *
+     * @private
+     * @param {string} [position] force a position instead of 'this.info.position'
+     *   Typically useful when forcing a temporary position because of lack of viewport space.
+     */
+    _reposition: function (position) {
         this.$el.removeClass("o_animated");
 
         // Reverse left/right position if direction is right to left
-        var appendAt = this.info.position;
+        var appendAt = position || this.info.position;
         var rtlMap = {left: 'right', right: 'left'};
         if (rtlMap[appendAt] && _t.database.parameters.direction === 'rtl') {
             appendAt = rtlMap[appendAt];
@@ -326,10 +332,10 @@ var Tip = Widget.extend({
         // Couldn't use offset() or position() because their values are not the desired ones in all cases
         const offset = {top: this.$el[0].offsetTop, left: this.$el[0].offsetLeft};
         this.$tooltip_overlay.css({
-            top: -Math.min((this.info.position === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
-            right: -Math.min((this.info.position === positionRight ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width)),
-            bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height)),
-            left: -Math.min((this.info.position === positionLeft ? this.info.space : this.info.overlay.x), offset.left),
+            top: -Math.min((appendAt === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
+            right: -Math.min((appendAt === positionRight ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width)),
+            bottom: -Math.min((appendAt === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height)),
+            left: -Math.min((appendAt === positionLeft ? this.info.space : this.info.overlay.x), offset.left),
         });
         this.position = offset;
 
