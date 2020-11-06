@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from threading import Event
 import time
 
+from odoo.http import request
 
 class EventManager(object):
     def __init__(self):
@@ -42,6 +44,7 @@ class EventManager(object):
             **device.data,
             'device_identifier': device.device_identifier,
             'time': time.time(),
+            'request_data': json.loads(request.params['data']) if request else None,
         }
         self.events.append(event)
         for session in self.sessions:
