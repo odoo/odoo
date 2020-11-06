@@ -5,7 +5,6 @@ import logging
 import re
 
 from binascii import Error as binascii_error
-from collections import defaultdict
 from operator import itemgetter
 
 from odoo import _, api, Command, fields, models, modules, tools
@@ -19,8 +18,51 @@ _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n
 
 
 class Message(models.Model):
-    """ Messages model: system notification (replacing res.log notifications),
-        comments (OpenChatter discussion) and incoming emails. """
+    """ Message model: notification (system, replacing res.log notifications),
+    comment (user input), email (incoming emails) and user_notification
+    (user-specific notification)
+
+    Note:: State management / Error codes / Failure types summary
+
+    * mail.notification
+      * notification_status
+        'ready', 'sent', 'bounce', 'exception', 'canceled'
+      * notification_type
+            'inbox', 'email', 'sms' (SMS addon), 'snail' (snailmail addon)
+      * failure_type
+            # mail
+            "SMTP", "RECIPIENT", "BOUNCE", "UNKNOWN"
+            # sms (SMS addon)
+            'sms_number_missing', 'sms_number_format', 'sms_credit',
+            'sms_server', 'sms_acc'
+            # snailmail (snailmail addon)
+            'sn_credit', 'sn_trial', 'sn_price', 'sn_fields',
+            'sn_format', 'sn_error'
+
+    * mail.mail
+      * state
+            'outgoing', 'sent', 'received', 'exception', 'cancel'
+      * failure_reason: text
+
+    * sms.sms (SMS addon)
+      * state
+            'outgoing', 'sent', 'error', 'canceled'
+      * error_code
+            'sms_number_missing', 'sms_number_format', 'sms_credit',
+            'sms_server', 'sms_acc',
+            # mass mode specific codes
+            'sms_blacklist', 'sms_duplicate'
+
+    * snailmail.letter (snailmail addon)
+      * state
+            'pending', 'sent', 'error', 'canceled'
+      * error_code
+            'CREDIT_ERROR', 'TRIAL_ERROR', 'NO_PRICE_AVAILABLE', 'FORMAT_ERROR',
+            'UNKNOWN_ERROR',
+
+    See ``mailing.trace`` model in mass_mailing application for mailing trace
+    information.
+    """
     _name = 'mail.message'
     _description = 'Message'
     _order = 'id desc'
