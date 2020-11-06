@@ -5,13 +5,15 @@ import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.osv import expression
+from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 
 import base64
-from collections import defaultdict
 import functools
 import logging
 import werkzeug
+from collections import defaultdict
+from contextlib import suppress
 
 from psycopg2 import OperationalError
 from pytz import timezone
@@ -241,12 +243,10 @@ class IrActionsActWindow(models.Model):
         if not fields or 'help' in fields:
             for values in result:
                 model = values.get('res_model')
-                if model in self.env:
-                    eval_ctx = dict(self.env.context)
-                    try:
-                        ctx = safe_eval(values.get('context', '{}'), eval_ctx)
-                    except:
-                        ctx = {}
+                if model in self.env and values.get('context'):
+                    eval_ctx, ctx = dict(self.env.context), {}
+                    with suppress(Exception), mute_logger('odoo.tools.safe_eval'):
+                        ctx = safe_eval(values['context'], eval_ctx)
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result
 
