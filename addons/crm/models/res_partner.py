@@ -56,7 +56,7 @@ class Partner(models.Model):
         action['context'] = {
             'default_partner_ids': partner_ids,
         }
-        action['domain'] = [('id', 'in', self.meeting_ids.ids)]
+        action['domain'] = ['|', ('id', 'in', self.meeting_ids.ids), ('partner_ids', 'in', self.ids)]
         return action
 
     def action_view_opportunity(self):
