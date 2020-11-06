@@ -27,7 +27,9 @@ odoo.define('hr.employee_chat', function (require) {
         },
 
         destroy: function () {
-            this.$el.find('.o_employee_chat_btn').off('click');
+            if (this.$el) {
+                this.$el.find('.o_employee_chat_btn').off('click');
+            }
             return this._super();
         },
 
