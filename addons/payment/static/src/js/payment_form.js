@@ -130,12 +130,14 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     },
 
     disableButton: function (button) {
+        $("body").block({overlayCSS: {backgroundColor: "#000", opacity: 0, zIndex: 1050}, message: false});
         $(button).attr('disabled', true);
         $(button).children('.fa-lock').removeClass('fa-lock');
         $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
     },
 
     enableButton: function (button) {
+        $('body').unblock();
         $(button).attr('disabled', false);
         $(button).children('.fa').addClass('fa-lock');
         $(button).find('span.o_loader').remove();
