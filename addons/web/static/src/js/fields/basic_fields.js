@@ -1527,7 +1527,7 @@ var FieldEmail = InputField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+        this.tagName = this.mode === 'readonly' ? 'div' : 'input';
     },
 
     //--------------------------------------------------------------------------
@@ -1540,7 +1540,7 @@ var FieldEmail = InputField.extend({
      * @override
      */
     getFocusableElement: function () {
-        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
+        return this.mode === 'readonly' ? this.$el.find('a') : this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1555,11 +1555,12 @@ var FieldEmail = InputField.extend({
      */
     _renderReadonly: function () {
         if (this.value) {
-            this.$el.text(this.value)
-                .addClass('o_form_uri o_text_overflow')
-                .attr('href', this.prefix + ':' + this.value);
-        } else {
-            this.$el.text('');
+            this.el.classList.add("o_form_uri", "o_text_overflow");
+            const anchorEl = Object.assign(document.createElement('a'), {
+                text: this.value,
+                href: `${this.prefix}:${this.value}`,
+            });
+            this.el.appendChild(anchorEl);
         }
     },
     /**
@@ -1630,7 +1631,7 @@ var UrlWidget = InputField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+        this.tagName = this.mode === 'readonly' ? 'div' : 'input';
         this.websitePath = this.nodeOptions.website_path || false;
     },
 
@@ -1644,7 +1645,7 @@ var UrlWidget = InputField.extend({
      * @override
      */
     getFocusableElement: function () {
-        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
+        return this.mode === 'readonly' ? this.$el.find('a') : this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1664,10 +1665,13 @@ var UrlWidget = InputField.extend({
             const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
             href = !regex.test(this.value) ? `http://${href}` : href;
         }
-        this.$el.text(this.attrs.text || this.value)
-            .addClass('o_form_uri o_text_overflow')
-            .attr('target', '_blank')
-            .attr('href', href);
+        this.el.classList.add("o_form_uri", "o_text_overflow");
+        const anchorEl = Object.assign(document.createElement('a'), {
+            text: this.attrs.text || this.value,
+            href: href,
+            target: '_blank',
+        });
+        this.el.appendChild(anchorEl);
     },
 
     //--------------------------------------------------------------------------

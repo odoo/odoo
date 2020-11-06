@@ -4789,7 +4789,7 @@ QUnit.module('Views', {
             "product_id should be focused");
         form.$('[name="product_id"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         form.$('[name="foo"]:eq(1)').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
-        assert.strictEqual(form.$('[name="display_name"]')[0], document.activeElement,
+        assert.strictEqual(form.$('div[name="display_name"].o_field_url > a')[0], document.activeElement,
             "display_name should be focused");
 
         // simulate shift+tab on active element
