@@ -749,6 +749,9 @@ $-transition-duration: 200ms;
 
 // Header
 header {
+    &#top {
+        z-index: $zindex-fixed;
+    }
     &:not(.o_header_no_transition) {
         .navbar-brand {
             transition: font-size $-transition-duration, opacity $-transition-duration ease-out;
