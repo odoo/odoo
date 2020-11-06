@@ -505,12 +505,12 @@ class IrActionsServer(models.Model):
                 ZeroDivisionError
         ):
             # those special exceptions are logged and re-raised untouched
-            _logger.exception("Failed to evaluate %s", action)
+            _logger.exception("Failed to evaluate %s", self)
             raise
         except Exception as e:
             # other exceptions are wrapped in a generic ValueError and logged
-            _logger.exception("Failed to evaluate %s", action)
-            raise ValueError("Failed to evaluate %s: %s" % (action, e))
+            _logger.exception("Failed to evaluate %s", self)
+            raise ValueError("Failed to evaluate %s: %s" % (self, e))
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):

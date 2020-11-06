@@ -16,6 +16,8 @@ condition/math builtins.
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 import dis
 import functools
+import traceback
+
 import logging
 import types
 from opcode import HAVE_ARGUMENT, opmap, opname
@@ -337,7 +339,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except ZeroDivisionError:
         raise
     except Exception as e:
-        _logger.error('%s: "%s" while evaluating\n%r', type(e), e, expr)
+        _logger.error('%s: "%s" while evaluating\n%r\n%s', type(e), e, expr, ''.join(traceback.format_stack()))
         raise ValueError('%s: "%s", see logs for details' % (type(e), e))
 
 def test_python_expr(expr, mode="eval"):
