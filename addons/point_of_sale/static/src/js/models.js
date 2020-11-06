@@ -3270,8 +3270,10 @@ exports.Order = Backbone.Model.extend({
             const has_cash = _.some(this.get_paymentlines(), function(pl) { return pl.payment_method.is_cash_count == true;});
             if (!only_cash || (only_cash && has_cash)) {
                 var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+                var sign = total > 0 ? 1.0 : -1.0;
 
                 var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
+                rounding_applied *= sign;
                 // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
                     // https://xkcd.com/217/
@@ -3282,7 +3284,7 @@ exports.Order = Backbone.Model.extend({
                 else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 }
-                return rounding_applied;
+                return sign * rounding_applied;
             }
             else {
                 return 0;
