@@ -26,6 +26,7 @@ from datetime import datetime, timedelta
 from odoo import http, _
 from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -253,6 +254,7 @@ class EventManager(object):
             **device.data,
             'device_id': device.device_identifier,
             'time': time.time(),
+            'request_data': json.loads(request.params['data']) if request else None,
         }
         self.events.append(event)
         for session in self.sessions:
