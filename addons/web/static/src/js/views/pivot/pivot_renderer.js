@@ -1,9 +1,69 @@
 /** @odoo-module alias=web.PivotRenderer **/
 
-    import OwlAbstractRenderer from '../abstract_renderer_owl';
-    import field_utils from 'web.field_utils';
+    const GroupByMenu = require('web.GroupByMenu');
+    const CustomGroupByItem = require('web.CustomGroupByItem');
+    const OwlAbstractRenderer = require('web.AbstractRendererOwl');
+    const field_utils = require('web.field_utils');
 
-    const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
+    const { useExternalListener, useState, useSubEnv, onMounted, onPatched } = owl.hooks;
+
+    class PivotCustomGroupByItem extends CustomGroupByItem {
+        //---------------------------------------------------------------------
+        // Handlers
+        //---------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _onApply() {
+            const field = this.props.fields.find(f => f.name === this.state.fieldName);
+            this.model.dispatch('createNewGroupBy', field, true);
+            this.state.open = false;
+        }
+    }
+
+    class PivotGroupByMenu extends GroupByMenu {
+
+        //---------------------------------------------------------------------
+        // Getters
+        //---------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        get items() {
+            const items = this.model.get('filters', f => f.type === 'groupBy');
+            items.forEach(item => {
+                if (this.props.activeGroupBys.includes(item.fieldName)) {
+                    item.isActive = true;
+                }
+            });
+            return items;
+        }
+
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @param {OwlEvent} ev
+         */
+        _onItemSelected(ev) {
+            const { item, interval } = ev.detail;
+            const field = {
+                name: item.fieldName,
+            };
+            this.trigger('groupby_menu_selection', { field, interval });
+            super._onItemSelected(...arguments);
+        }
+    }
+    PivotGroupByMenu.template = "web.PivotGroupByMenu";
+    PivotGroupByMenu.components = { PivotCustomGroupByItem };
+    PivotGroupByMenu.props = Object.assign({}, GroupByMenu.props, {
+        fields: Object,
+        activeGroupBys: Array,
+    });
 
     /**
      * Here is a basic example of the structure of the Pivot Table:
@@ -41,6 +101,12 @@
                 },
             });
 
+            useSubEnv({
+                searchModel: this.props.searchModel,
+            });
+            this.hasSearchGroups = this.props.searchModel.get('filters', f => f.type === 'groupBy' && !f.customGroup);
+            this.customGroupableFields = this._formatFields(this.props.fields);
+
             onMounted(() => this._updateTooltip());
 
             onPatched(() => this._updateTooltip());
@@ -52,6 +118,23 @@
         // Private
         //----------------------------------------------------------------------
 
+        /**
+         * Give `name` and `description` keys to the fields given to the control
+         * panel.
+         * @private
+         * @param {Object} fields
+         * @returns {Object}
+         */
+        _formatFields(fields) {
+            const formattedFields = {};
+            for (const fieldName in fields) {
+                formattedFields[fieldName] = Object.assign({
+                    description: fields[fieldName].string,
+                    name: fieldName,
+                }, fields[fieldName]);
+            }
+            return formattedFields;
+        }
         /**
          * Get the formatted value of the cell
          *
@@ -166,7 +249,24 @@
                     click: 'leftClick'
                 };
             }
-            this.trigger(cell.isLeaf ? 'closed_header_click' : 'opened_header_click', { cell, type });
+            // when opened header is closed then grouping will be removed from pivot groupbys(col/row/extended groupbys)
+            // callback will be called from opened_header_click handler, it is called to toggle those
+            // groups which are active inside search groupby but we collpse it from pivot view
+            const updatePivotGroupBy = () => {
+                this.props.activeGroupBys;
+                this.pivotGroupBy;
+                if (this.hasSearchGroups) {
+                    const searchGroupBys = this.props.searchModel.get('filters', f => f.type === 'groupBy');
+                    searchGroupBys.forEach(group => {
+                        if (group.isActive && !this.props.activeGroupBys.includes(group.fieldName)) {
+                            // TODO: Do not call rpc when toggling filter here as we do not want trigger query here
+                            // pivot reads data for itself
+                            this.props.searchModel.dispatch('toggleFilter', group.id);
+                        }
+                    });
+                }
+            };
+            this.trigger(cell.isLeaf ? 'closed_header_click' : 'opened_header_click', { cell, type, callback: updatePivotGroupBy });
         }
 
         /**
@@ -194,5 +294,8 @@
     }
 
     PivotRenderer.template = 'web.PivotRenderer';
+    PivotRenderer.components = {
+        PivotGroupByMenu,
+    };
 
     export default PivotRenderer;

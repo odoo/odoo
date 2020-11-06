@@ -313,7 +313,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * It is added to the unique group of groupbys.
          * @param {Object} field
          */
-        createNewGroupBy(field) {
+        createNewGroupBy(field, withoutFacet = false) {
             const groupBy = Object.values(this.state.filters).find(f => f.type === 'groupBy');
             const filter = {
                 description: field.string || field.name,
@@ -329,9 +329,9 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             if (['date', 'datetime'].includes(field.type)) {
                 filter.hasOptions = true;
                 filter.defaultOptionId = DEFAULT_INTERVAL;
-                this.toggleFilterWithOptions(filterId);
+                this.toggleFilterWithOptions(filterId, withoutFacet);
             } else {
-                this.toggleFilter(filterId);
+                this.toggleFilter(filterId, withoutFacet);
             }
             groupNumber++;
             filterId++;
@@ -444,7 +444,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * add or remove a corresponding query element.
          * @param {string} filterId
          */
-        toggleFilter(filterId) {
+        toggleFilter(filterId, withoutFacet) {
             const index = this.state.query.findIndex(
                 queryElem => queryElem.filterId === filterId
             );
@@ -455,7 +455,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 if (type === 'favorite') {
                     this.state.query = [];
                 }
-                this.state.query.push({ groupId, filterId });
+                this.state.query.push({ groupId, filterId, withoutFacet });
             }
         }
 
@@ -466,7 +466,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @param {string} filterId
          * @param {string} [optionId]
          */
-        toggleFilterWithOptions(filterId, optionId) {
+        toggleFilterWithOptions(filterId, optionId, withoutFacet) {
             const filter = this.state.filters[filterId];
             optionId = optionId || filter.defaultOptionId;
             const option = this.optionGenerators.find(o => o.id === optionId);
@@ -487,7 +487,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                     );
                 }
             } else {
-                this.state.query.push({ groupId: filter.groupId, filterId, optionId });
+                this.state.query.push({ groupId: filter.groupId, filterId, optionId, withoutFacet });
                 if (filter.type === 'filter' && !yearSelected(this._getSelectedOptionIds(filterId))) {
                     // Here we add 'this_year' as options if no option of type
                     // year is already selected.
@@ -495,6 +495,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                         groupId: filter.groupId,
                         filterId,
                         optionId: option.defaultYearId,
+                        withoutFacet,
                     });
                 }
             }
@@ -1142,7 +1143,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @returns {Object[]}
          */
         _getFacets() {
-            const facets = this._getGroups().map(({ activities, type, id }) => {
+            const facets = this._getGroups(true).map(({ activities, type, id }) => {
                 const values = this._getFacetDescriptions(activities, type);
                 const title = activities[0].filter.description;
                 return { groupId: id, title, type, values };
@@ -1320,12 +1321,16 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @private
          * @returns {Object[]}
          */
-        _getGroups() {
+        _getGroups(filterWithoutFacet) {
             const groups = this.state.query.reduce(
                 (groups, queryElem) => {
-                    const { groupId, filterId } = queryElem;
+                    const { groupId, filterId, withoutFacet } = queryElem;
                     let group = groups.find(group => group.id === groupId);
                     const filter = this.state.filters[filterId];
+                    // if (filterWithoutFacet && withoutFacet) {
+                    if (withoutFacet) {
+                        return groups;
+                    }
                     if (!group) {
                         const { type } = filter;
                         group = {

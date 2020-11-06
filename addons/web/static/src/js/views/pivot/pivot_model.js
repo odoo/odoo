@@ -535,8 +535,13 @@ var PivotModel = AbstractModel.extend({
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
             selectionGroupBys: this._getSelectionGroupBy(groupBys),
-            modelName: this.modelName
+            modelName: this.modelName,
+            activeGroupBys: this._getActiveGroupBys(),
         };
+        // TODO: MSH: add key activeGroupBys, which will call method _getSelectedGroupBys
+        // _getSelectedGroupBys will call this._getGroupBys() and return active groupbys
+        // we will use activeGroupBys while calling <PivotGroupByMenu> in template, will pass
+        // as props and use it in PivotGroupByMenu items getter method to set isActive flag
         if (!raw && state.hasData) {
             state.table = this._getTable();
             state.tree = this.rowGroupTree;
@@ -781,6 +786,15 @@ var PivotModel = AbstractModel.extend({
         } else {
             return values[0];
         }
+    },
+    _getActiveGroupBys() {
+        const groupBys = this._getGroupBys();
+        let groupedFieldNames = groupBys.rowGroupBys
+            .concat(groupBys.colGroupBys)
+            .map(function (g) {
+                return g.split(':')[0];
+            });
+        return groupedFieldNames;
     },
     /**
      * Returns the rowGroupBys and colGroupBys arrays that

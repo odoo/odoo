@@ -712,6 +712,101 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot renders group dropdown same as search groupby dropdown if group tag given in searchview', async function (assert) {
+        assert.expect(4);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="date_filter" date="date" domain="[]" default_period='last_year'/>
+                        <group>
+                            <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                            <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
+                        </group>
+                    </search>
+                `,
+            },
+        });
+
+        // open group by dropdown
+        await testUtils.dom.click(pivot.$('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 2,
+            "should have 2 dropdown items in searchview groupby");
+        assert.containsOnce(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_generator_menu',
+            "should have custom group generator in searchview groupby");
+
+        // click on closed header to open dropdown
+        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
+        assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 2,
+            "should have 2 dropdown items same as searchview groupby");
+        assert.containsOnce(pivot, '.o_pivot_field_menu .o_generator_menu',
+            "should have custom group generator same as searchview groupby");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot group dropdown sync with search groupby dropdown and vice versa', async function (assert) {
+        assert.expect(6);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot>
+                <field name="product_id" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+            archs: {
+                'partner,false,search': `
+                <search>
+                    <filter name="date_filter" date="date" domain="[]" default_period='last_year'/>
+                    <group>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
+                    </group>
+                </search>
+            `,
+            },
+        });
+
+        // open group by dropdown
+        await testUtils.dom.click(pivot.$('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 2,
+            "should have 2 dropdown items in searchview groupby");
+
+        await testUtils.dom.click(pivot.$('.o_control_panel .o_cp_bottom_right .o_generator_menu button.o_add_custom_group_by'));
+        await testUtils.dom.click(pivot.$('.o_control_panel .o_cp_bottom_right .o_generator_menu button.o_apply_group_by'));
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 3,
+            "should have 3 dropdown items in searchview groupby now");
+
+        // click on closed header to open dropdown
+        await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
+        assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 3,
+            "should have 3 dropdown items same as searchview groupby");
+        assert.containsOnce(pivot, '.o_pivot_field_menu .dropdown-item.disabled',
+            "should have 1 disabled item which is selected by search custom group");
+
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
+        await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector'), 'bar');
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_apply_group_by'));
+        assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 4,
+            "should have 4 dropdown items pivot groupby dropdown");
+
+        await testUtils.dom.click(pivot.$('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
+        assert.containsN(pivot, '.o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item', 4,
+            "should have 4 dropdown items in searchview groupby same as pivot groupby dropdown");
+
+        pivot.destroy();
+    });
+
     QUnit.test('can toggle extra measure', async function (assert) {
         assert.expect(8);
 

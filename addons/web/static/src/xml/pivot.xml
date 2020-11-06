@@ -75,8 +75,79 @@
         </th>
     </t>
 
-    <div t-name="web.PivotGroupBySelection" class="dropdown" owl="1">
-        <div class="dropdown-menu o_pivot_field_menu show" data-display="static" role="menu">
+    <t t-name="web.PivotGroupByMenu" owl="1">
+        <div class="dropdown-menu o_pivot_field_menu show"
+            data-display="static"
+            role="menu"
+            t-on-item-selected="_onItemSelected">
+            <t t-set="currentGroup" t-value="null"/>
+            <t t-foreach="items" t-as="item" t-key="item.key || item.id || ('item-' + item_index)">
+                <div t-if="currentGroup !== null and currentGroup !== item.groupNumber"
+                    class="dropdown-divider"
+                    role="separator"/>
+                <t t-if="(item.fieldType === 'date') || (item.fieldType === 'datetime')">
+                    <div role="menuitem" aria-haspopup="true" class="o_inline_dropdown">
+                        <a href="#"
+                           t-on-click.prevent="trigger('item-selected', { item: item, option: 'month', withoutFacet: true })"
+                           class="dropdown-item o_pivot_field_selection"
+                           t-att-class="{ disabled: item.isActive }"
+                           t-att-data-field="item.fieldName"
+                        >
+                            <t t-esc="item.description"/>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a role="menuitem"
+                                t-att-data-field="item.fieldName"
+                                href="#"
+                                class="dropdown-item"
+                                t-on-click.prevent="trigger('item-selected', { item: item, option: 'day', withoutFacet: true })">Day</a>
+                            <a role="menuitem"
+                                t-att-data-field="item.fieldName"
+                                href="#"
+                                class="dropdown-item"
+                                t-on-click.prevent="trigger('item-selected', { item: item, option: 'week', withoutFacet: true })">Week</a>
+                            <a role="menuitem"
+                                t-att-data-field="item.fieldName"
+                                href="#"
+                                class="dropdown-item"
+                                t-on-click.prevent="trigger('item-selected', { item: item, option: 'month', withoutFacet: true })">Month</a>
+                            <a role="menuitem"
+                                t-att-data-field="item.fieldName"
+                                href="#"
+                                class="dropdown-item"
+                                t-on-click.prevent="trigger('item-selected', { item: item, option: 'quarter', withoutFacet: true })">Quarter</a>
+                            <a role="menuitem"
+                                t-att-data-field="item.fieldName"
+                                href="#"
+                                class="dropdown-item"
+                                t-on-click.prevent="trigger('item-selected', { item: item, option: 'quarter', withoutFacet: true })">Year</a>
+                        </div>
+                    </div>
+                </t>
+                <a t-else=""
+                    href="#"
+                    role="menuitem"
+                    class="dropdown-item"
+                    t-att-data-field="item.fieldName"
+                    t-att-class="{ disabled: item.isActive }"
+                    t-on-click.prevent="trigger('item-selected', { item: item, option: false, withoutFacet: true })">
+                    <!-- t-on-click.prevent="_onClickMenuGroupBy(item, false)"> -->
+                    <t t-esc="item.description"/>
+                </a>
+                <t t-set="currentGroup" t-value="item.groupNumber"/>
+            </t>
+            <t t-if="fields.length">
+                <li t-if="items.length" class="dropdown-divider" role="separator"/>
+                <PivotCustomGroupByItem fields="fields" t-on-click.stop=""/>
+            </t>
+        </div>
+    </t>
+
+    <div t-name="web.PivotGroupBySelection" class="dropdown show" owl="1">
+        <PivotGroupByMenu t-if="hasSearchGroups and hasSearchGroups.length"
+            fields="customGroupableFields"
+            activeGroupBys="props.activeGroupBys"/>
+        <div t-else="" class="dropdown-menu o_pivot_field_menu show" data-display="static" role="menu">
             <t t-foreach="props.selectionGroupBys" t-as="field" t-key="field.field.name">
                 <t t-if="(field.field.type === 'date') || (field.field.type === 'datetime')">
                     <div role="menuitem" aria-haspopup="true" class="o_inline_dropdown">
