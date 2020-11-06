@@ -260,10 +260,8 @@ GROUP BY fol.id%s%s""" % (
         res_model and the document res_ids. This method does not handle access rights. This is the
         role of the caller to ensure there is no security breach.
 
-        :param partner_subtypes: optional subtypes for new partner followers. If not given, default
-         ones are computed;
-        :param channel_subtypes: optional subtypes for new channel followers. If not given, default
-         ones are computed;
+        :param partner_subtypes: see ``_add_followers``. If not given, default ones are computed.
+        :param channel_subtypes: see ``_add_followers``. If not given, default ones are computed.
         :param customer_ids: see ``_add_default_followers``
         :param check_existing: see ``_add_followers``;
         :param existing_policy: see ``_add_followers``;
@@ -329,10 +327,18 @@ GROUP BY fol.id%s%s""" % (
          * second one is a dict which keys are follower ids. Value is a dict of values valid for
            updating the related follower record;
 
-        :param check_existing: if True, check for existing followers for given documents and handle
-        them according to existing_policy parameter. Setting to False allows to save some computation
-        if caller is sure there are no conflict for followers;
-        :param existing policy: if check_existing, tells what to do with already-existing followers:
+        :param partner_subtypes: optional subtypes for new partner followers. This
+          is a dict whose keys are partner IDs and value subtype IDs for that
+          partner.
+        :param channel_subtypes: optional subtypes for new channel followers. This
+          is a dict whose keys are channel IDs and value subtype IDs for that
+          channel.
+        :param check_existing: if True, check for existing followers for given
+          documents and handle them according to existing_policy parameter.
+          Setting to False allows to save some computation if caller is sure
+          there are no conflict for followers;
+        :param existing policy: if check_existing, tells what to do with already
+          existing followers:
 
           * skip: simply skip existing followers, do not touch them;
           * force: update existing with given subtypes only;
