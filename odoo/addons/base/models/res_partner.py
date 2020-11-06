@@ -121,9 +121,10 @@ class PartnerCategory(models.Model):
 
 class PartnerTitle(models.Model):
     _name = 'res.partner.title'
-    _order = 'name'
+    _order = 'name,id'
     _description = 'Partner Title'
 
+    active = fields.Boolean(default=True)
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
 

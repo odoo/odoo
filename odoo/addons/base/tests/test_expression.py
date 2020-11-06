@@ -1131,15 +1131,15 @@ class TestQueries(TransactionCase):
                  AND "res_partner_title__name"."name" = %s
                  AND "res_partner_title__name"."lang" = %s
                  AND "res_partner_title__name"."value" != %s)
-            WHERE COALESCE("res_partner_title__name"."value", "res_partner_title"."name") LIKE %s
-            ORDER BY COALESCE("res_partner_title__name"."value", "res_partner_title"."name")
+            WHERE (("res_partner_title"."active" = %s) AND COALESCE("res_partner_title__name"."value", "res_partner_title"."name") LIKE %s )
+            ORDER BY COALESCE("res_partner_title__name"."value", "res_partner_title"."name"), "res_partner_title"."id"
         ''']):
             Model.search([('name', 'like', 'foo')])
 
         with self.assertQueries(['''
             SELECT COUNT(1)
             FROM "res_partner_title"
-            WHERE ("res_partner_title"."id" = %s)
+            WHERE (("res_partner_title"."active" = %s) AND ("res_partner_title"."id" = %s))
         ''']):
             Model.search_count([('id', '=', 1)])
 
