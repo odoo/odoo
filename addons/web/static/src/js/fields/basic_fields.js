@@ -1527,7 +1527,7 @@ var FieldEmail = InputField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+        this.tagName = this.mode === 'readonly' ? 'div' : 'input';
     },
 
     //--------------------------------------------------------------------------
@@ -1555,11 +1555,12 @@ var FieldEmail = InputField.extend({
      */
     _renderReadonly: function () {
         if (this.value) {
-            this.$el.text(this.value)
-                .addClass('o_form_uri o_text_overflow')
-                .attr('href', this.prefix + ':' + this.value);
-        } else {
-            this.$el.text('');
+            this.$el.addClass("o_form_uri o_text_overflow");
+            const anchorEl = Object.assign(document.createElement('a'), {
+                text: this.value,
+                href: `${this.prefix}:${this.value}`,
+            });
+            this.el.appendChild(anchorEl);
         }
     },
     /**
