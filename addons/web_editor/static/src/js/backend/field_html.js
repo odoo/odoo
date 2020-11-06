@@ -45,7 +45,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.enableResizer = true;
+        this.enableResizer = this.attrs.resizer !== 'false';
     },
     /**
      * @override
@@ -209,7 +209,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 ` + (this.nodeOptions.snippets ? '' : '<t-range><t t-zone="tools"/></t-range>') + `
                 <div class="d-flex flex-column flex-grow-1">
                     ` + (this.nodeOptions.snippets ? '<t t-zone="tools"/>' : '') + `
-                    <div class="d-flex flex-row overflow-auto ` + (scrollAuto ? '' : 'overflow-hidden') + `">
+                    <div class="d-flex flex-row flex-grow-1 overflow-auto ` + (scrollAuto ? '' : 'overflow-hidden') + `">
                         <t t-zone="container">
                             <div class="d-flex flex-column ` + (scrollAuto ? 'overflow-auto ' : '') + `o_editor_center">
                                 <div class="d-flex ` + (scrollAuto ? 'overflow-auto ' : '') + `note-editing-area d-flex flex-grow-1">
