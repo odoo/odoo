@@ -221,7 +221,7 @@ function factory(dependencies) {
         static async _fetchImStatus() {
             const partnerIds = [];
             for (const partner of this.all()) {
-                if (partner.im_status !== 'im_partner') {
+                if (partner.im_status !== 'im_partner' && partner.id > 0) {
                     partnerIds.push(partner.id);
                 }
             }
