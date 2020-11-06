@@ -460,8 +460,12 @@ class AccountBankStatement(models.Model):
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
 
-        sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
         if not relaxed:
+            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', '!=', False)]
+            previous_name = self.search(domain + [('date', '<', self.date)], order='date desc', limit=1).name
+            if not previous_name:
+                previous_name = self.search(domain, order='date desc', limit=1).name
+            sequence_number_reset = self._deduce_sequence_number_reset(previous_name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
