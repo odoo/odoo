@@ -17,10 +17,10 @@
             <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
                  <xpath expr="//field[@name='resupply_wh_ids']" position="before">
-                    <field name="buy_to_resupply" />
+                    <field name="buy_to_resupply"/>
                 </xpath>
                 <xpath expr="//group[@name='group_resupply']" position="attributes">
-                    <attribute name="attrs">{}</attribute>
+                    <attribute name="groups">stock.group_adv_location,stock.group_stock_multi_warehouses</attribute>
                 </xpath>
             </field>
         </record>
