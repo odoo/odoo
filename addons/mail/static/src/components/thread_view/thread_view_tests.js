@@ -1816,6 +1816,240 @@ QUnit.test('composer should be focused automatically after clicking on the send 
     );
 });
 
+QUnit.test('failure on loading messages should display error', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                throw new Error();
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_loadingFailed',
+        "should show loading error message"
+    );
+});
+
+QUnit.test('failure on loading messages should prompt retry button', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                throw new Error();
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_loadingFailedRetryButton',
+        "should show a button to allow user to retry loading"
+    );
+});
+
+QUnit.test('failure on loading more messages should not alter message list display', async function (assert) {
+    assert.expect(1);
+
+    // first call needs to be successful as it is the initial loading of messages
+    // second call comes from load more and needs to fail in order to show the error alert
+    // any later call should work so that retry button and load more clicks would now work
+    let messageFetchShouldFail = false;
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
+        return {
+            body: 'coucou',
+            channel_ids: [20],
+            id,
+        };
+    }));
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                if (messageFetchShouldFail) {
+                    throw new Error();
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    messageFetchShouldFail = true;
+    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        30,
+        "should still show 30 messages as load more has failed"
+    );
+});
+
+QUnit.test('failure on loading more messages should display error and prompt retry button', async function (assert) {
+    assert.expect(3);
+
+    // first call needs to be successful as it is the initial loading of messages
+    // second call comes from load more and needs to fail in order to show the error alert
+    // any later call should work so that retry button and load more clicks would now work
+    let messageFetchShouldFail = false;
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
+        return {
+            body: 'coucou',
+            channel_ids: [20],
+            id,
+        };
+    }));
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                if (messageFetchShouldFail) {
+                    throw new Error();
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    messageFetchShouldFail = true;
+    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_alertLoadingFailed',
+        "should show loading error message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_alertLoadingFailedRetryButton',
+        "should show loading error message button"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_loadMore',
+        "should not show load more buttton"
+    );
+});
+
+QUnit.test('Retry loading more messages on failed load more messages should load more messages', async function (assert) {
+    assert.expect(0);
+
+    // first call needs to be successful as it is the initial loading of messages
+    // second call comes from load more and needs to fail in order to show the error alert
+    // any later call should work so that retry button and load more clicks would now work
+    let messageFetchShouldFail = false;
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records = [...Array(90).keys()].map(id => {
+        return {
+            body: 'coucou',
+            channel_ids: [20],
+            id,
+        };
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                if (messageFetchShouldFail) {
+                    throw new Error();
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    messageFetchShouldFail = true;
+    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+
+    messageFetchShouldFail = false;
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_ThreadView_alertLoadingFailedRetryButton').click(),
+        message: "should wait until channel 20 loaded more messages after clicked on load more",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'more-messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20
+            );
+        },
+    });
+});
+
 });
 });
 });
