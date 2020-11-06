@@ -708,10 +708,14 @@ class payment_register(models.TransientModel):
             raise UserError(_("You can only register at the same time for payment that are all inbound or all outbound"))
         if any(inv.company_id != invoices[0].company_id for inv in invoices):
             raise UserError(_("You can only register at the same time for payment that are all from the same company"))
-        # Check the destination account is the same
-        destination_account = invoices.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable')).mapped('account_id')
-        if len(destination_account) > 1:
-            raise UserError(_('There is more than one receivable/payable account in the concerned invoices. You cannot group payments in that case.'))
+        # Check the destination account is the same for each payment group
+        groups_dict = {}
+        for invoice in invoices:
+            key = self._get_payment_group_key(invoice)
+            destination_account = invoice.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable')).mapped('account_id')
+            if len(destination_account) > 1 or groups_dict.get(key, destination_account) != destination_account:
+                raise UserError(_('There is more than one receivable/payable account in the concerned invoices. You cannot group payments in that case.'))
+            groups_dict[key] = destination_account
         if 'invoice_ids' not in rec:
             rec['invoice_ids'] = [(6, 0, invoices.ids)]
         if 'journal_id' not in rec:
