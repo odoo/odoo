@@ -10520,8 +10520,9 @@ QUnit.module('Views', {
 
         list.destroy();
     });
-    QUnit.test("quickcreate in a many2one in a list", async function (assert) {
-        assert.expect(2);
+
+    QUnit.test("edit many2one and click outside many2one in list", async function (assert) {
+        assert.expect(4);
 
         const list = await createView({
             arch: '<tree editable="top"><field name="m2o"/></tree>',
@@ -10532,20 +10533,31 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:first'));
 
-        const $input = list.$('.o_data_row:first .o_data_cell:first input');
-        await testUtils.fields.editInput($input, "aaa");
-        $input.trigger('keyup');
-        $input.trigger('blur');
-        document.body.click();
-
+        await testUtils.fields.editAndTrigger(list.$('.o_field_many2one input'),
+            'aaa', ['keydown', 'keyup']);
+        testUtils.dom.triggerMouseEvent(list.$(".o_control_panel"), "mousedown");
         await testUtils.nextTick();
+        assert.strictEqual(list.$('.o_field_many2one input').val(), "",
+            "should have cleared input if no result found in autocomplete and mousedown outside many2one");
 
-        assert.containsOnce(document.body, '.modal', "the quick_create modal should appear");
+        await testUtils.fields.editAndTrigger(list.$('.o_field_many2one input'),
+            'Value', ['keydown', 'keyup']);
+        // trigger mousedown event somewhere else except many2one
+        testUtils.dom.triggerMouseEvent(list.$(".o_control_panel"), "mousedown");
+        await testUtils.nextTick();
+        assert.strictEqual(list.$('.o_field_many2one input').val(), "Value 1",
+            "should have selected xphone");
 
-        await testUtils.dom.click($('.modal .btn-primary:first'));
+        // clicking on window prevents first click as we have prevented window click in editable
+        // list if user writes something and select m2o dropdown item using mousedown
+        await testUtils.dom.click(document.body);
+        assert.containsOnce(list, '.o_field_many2one input',
+            "should still have many2one widget input");
+
+        // click second time to unselect editable row
         await testUtils.dom.click(document.body);
 
-        assert.strictEqual(list.el.getElementsByClassName('o_data_cell')[0].innerHTML, "aaa",
+        assert.strictEqual(list.el.getElementsByClassName('o_data_cell')[0].innerHTML, "Value 1",
             "value should have been updated");
 
         list.destroy();

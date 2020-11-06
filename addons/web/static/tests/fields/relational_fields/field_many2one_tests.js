@@ -2240,32 +2240,37 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('quick create on a many2one', async function (assert) {
+        QUnit.test('edit many2one and click outside many2one', async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
+            const form = await createView({
                 View: FormView,
                 model: 'partner',
                 data: this.data,
-                arch: '<form string="Partners">' +
-                    '<sheet>' +
-                    '<field name="product_id"/>' +
-                    '</sheet>' +
-                    '</form>',
-                mockRPC: function (route, args) {
-                    if (route === '/web/dataset/call_kw/product/name_create') {
-                        assert.strictEqual(args.args[0], 'new partner',
-                            "should name create a new product");
-                    }
-                    return this._super.apply(this, arguments);
-                },
+                arch: `<form string="Partners">
+                        <sheet>
+                            <field name="product_id"/>
+                        </sheet>
+                    </form>`,
             });
 
-            await testUtils.dom.triggerEvent(form.$('.o_field_many2one input'),'focus');
+            await testUtils.dom.click(form.$('.o_field_many2one input'));
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-            'new partner', ['keyup', 'blur']);
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
-            assert.strictEqual($('.modal .modal-body').text().trim(), "Do you want to create new partner as a new Product?");
+            'x', ['keyup']);
+            // trigger mousedown event somewhere else except many2one
+            testUtils.dom.triggerMouseEvent(form.$(".o_control_panel"), "mousedown");
+            await testUtils.nextTick();
+            assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
+                "should have selected xphone");
+
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
+                'Something that does not exist', ['keydown', 'keyup']);
+            await testUtils.nextTick();
+            // trigger mousedown event somewhere else except many2one
+            testUtils.dom.triggerMouseEvent(form.$(".o_control_panel"), "mousedown");
+            await testUtils.nextTick();
+            assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+                "should have cleared input if no result found in autocomplete and mousedown outside many2one");
 
             form.destroy();
         });
@@ -2340,74 +2345,6 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editInput($('.modal .o_field_widget[name=name]'), 'xyz');
             await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xyz');
-
-            form.destroy();
-        });
-
-        QUnit.test('slow create on a many2one', async function (assert) {
-            assert.expect(11);
-
-            var form = await createView({
-                View: FormView,
-                model: 'partner',
-                data: this.data,
-                arch:
-                    '<form>' +
-                    '<sheet>' +
-                    '<field name="product_id" options="{\'quick_create\': False}"/>' +
-                    '</sheet>' +
-                    '</form>',
-                archs: {
-                    'product,false,form':
-                        '<form>' +
-                        '<field name="name"/>' +
-                        '</form>',
-                },
-            });
-
-            // cancel the many2one creation with Cancel button
-            form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
-            await testUtils.nextTick();
-            assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
-
-            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
-            assert.strictEqual($('.modal').length, 0, "the modal should be closed");
-            assert.strictEqual(form.$('.o_field_many2one input').val(), "",
-                'the many2one should not set a value as its creation has been cancelled (with Cancel button)');
-
-            // cancel the many2one creation with Close button
-            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-                'new product', ['keyup', 'blur']);
-            assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
-            await testUtils.dom.click($('.modal .modal-header button'));
-            assert.strictEqual(form.$('.o_field_many2one input').val(), "",
-                'the many2one should not set a value as its creation has been cancelled (with Close button)');
-            assert.strictEqual($('.modal').length, 0, "the modal should be closed");
-
-            // select a new value then cancel the creation of the new one --> restore the previous
-            await testUtils.fields.many2one.clickOpenDropdown('product_id');
-            await testUtils.fields.many2one.clickItem('product_id','o');
-            assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone", "should have selected xphone");
-
-            form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
-            await testUtils.nextTick();
-            assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
-
-            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
-            assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
-                'should have restored the many2one with its previous selected value (xphone)');
-
-            // confirm the many2one creation
-            form.$('.o_field_many2one input').focus().val('new partner').trigger('keyup').trigger('blur');
-            await testUtils.nextTick();
-            assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
-
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary:contains(Create and edit)'));
-            await testUtils.nextTick();
-            assert.strictEqual($('.modal .o_form_view').length, 1,
-                'a new modal should be opened and contain a form view');
-
-            await testUtils.dom.click($('.modal .o_form_button_cancel'));
 
             form.destroy();
         });
