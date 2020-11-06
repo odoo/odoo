@@ -710,8 +710,67 @@ class AccountPayment(models.Model):
                 (1, counterpart_lines.id, line_vals_list[1]),
             ]
 
+<<<<<<< HEAD
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
+=======
+    @api.model
+    def default_get(self, fields):
+        rec = super(payment_register, self).default_get(fields)
+        active_ids = self._context.get('active_ids')
+        if not active_ids:
+            return rec
+        invoices = self.env['account.move'].browse(active_ids)
+
+        # Check all invoices are open
+        if any(invoice.state != 'posted' or invoice.invoice_payment_state != 'not_paid' or not invoice.is_invoice() for invoice in invoices):
+            raise UserError(_("You can only register payments for open invoices"))
+        # Check all invoices are inbound or all invoices are outbound
+        outbound_list = [invoice.is_outbound() for invoice in invoices]
+        first_outbound = invoices[0].is_outbound()
+        if any(x != first_outbound for x in outbound_list):
+            raise UserError(_("You can only register at the same time for payment that are all inbound or all outbound"))
+        if any(inv.company_id != invoices[0].company_id for inv in invoices):
+            raise UserError(_("You can only register at the same time for payment that are all from the same company"))
+        # Check the destination account is the same for each payment group
+        groups_dict = {}
+        for invoice in invoices:
+            key = self._get_payment_group_key(invoice)
+            destination_account = invoice.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable')).mapped('account_id')
+            if len(destination_account) > 1 or groups_dict.get(key, destination_account) != destination_account:
+                raise UserError(_('There is more than one receivable/payable account in the concerned invoices. You cannot group payments in that case.'))
+            groups_dict[key] = destination_account
+        if 'invoice_ids' not in rec:
+            rec['invoice_ids'] = [(6, 0, invoices.ids)]
+        if 'journal_id' not in rec:
+            rec['journal_id'] = self.env['account.journal'].search([('company_id', '=', self.env.company.id), ('type', 'in', ('bank', 'cash'))], limit=1).id
+        if 'payment_method_id' not in rec:
+            if invoices[0].is_inbound():
+                domain = [('payment_type', '=', 'inbound')]
+            else:
+                domain = [('payment_type', '=', 'outbound')]
+            rec['payment_method_id'] = self.env['account.payment.method'].search(domain, limit=1).id
+        return rec
+
+    @api.onchange('journal_id', 'invoice_ids')
+    def _onchange_journal(self):
+        active_ids = self._context.get('active_ids')
+        invoices = self.env['account.move'].browse(active_ids)
+        if self.journal_id and invoices:
+            if invoices[0].is_inbound():
+                domain_payment = [('payment_type', '=', 'inbound'), ('id', 'in', self.journal_id.inbound_payment_method_ids.ids)]
+            else:
+                domain_payment = [('payment_type', '=', 'outbound'), ('id', 'in', self.journal_id.outbound_payment_method_ids.ids)]
+            domain_journal = [('type', 'in', ('bank', 'cash')), ('company_id', '=', invoices[0].company_id.id)]
+            return {'domain': {'payment_method_id': domain_payment, 'journal_id': domain_journal}}
+        return {}
+
+    def _prepare_communication(self, invoices):
+        '''Define the value for communication field
+        Append all invoice's references together.
+        '''
+        return " ".join(i.invoice_payment_ref or i.ref or i.name for i in invoices)
+>>>>>>> e2fe55c7c8e... temp
 
             if writeoff_lines:
                 line_ids_commands.append((0, 0, line_vals_list[2]))
