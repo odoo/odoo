@@ -301,6 +301,33 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+%we-generic-text-input {
+    > div {
+        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-input-bg;
+
+        &:focus-within {
+            border-color: $o-we-sidebar-content-field-input-border-color;
+        }
+        input {
+            box-sizing: content-box;
+            padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+            border: none;
+            border-radius: 0;
+            background-color: transparent;
+            color: inherit;
+
+            &:focus {
+                outline: none;
+            }
+        }
+        > we-button { // for input-group
+            border: none;
+        }
+    }
+}
+
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
@@ -446,10 +473,10 @@ body.editor_enable.editor_has_snippets {
         #snippet_custom .oe_snippet {
             width: 100%;
 
-            &, .oe_snippet_thumbnail, .o_delete_btn {
+            &, .oe_snippet_thumbnail, .btn {
                 display: flex;
             }
-            .oe_snippet_thumbnail, .o_delete_btn {
+            .oe_snippet_thumbnail, .btn {
                 align-items: center;
             }
             .oe_snippet_thumbnail {
@@ -460,14 +487,39 @@ body.editor_enable.editor_has_snippets {
             }
             .oe_snippet_thumbnail_img {
                 flex-shrink: 0;
-                width: 40px;
-                height: 32px;
+                width: 41px;
+                height: 30px; // 82x60 -> 41x30
                 padding: 0;
             }
-            .o_delete_btn {
+            .btn {
                 @extend %we-generic-link;
                 padding-top: 0;
                 padding-bottom: 0;
+                padding-left: 0;
+            }
+            &:not(:hover) .btn {
+                display: none;
+            }
+            we-input.o_we_user_value_widget {
+                @extend %we-generic-text-input;
+                cursor: pointer;
+                > div {
+                    display: flex;
+                }
+                input {
+                    cursor: text;
+                }
+                we-button {
+                    @extend %we-generic-clickable;
+                    cursor: pointer;
+                    flex: 1 1 auto;
+                    line-height: 17px;
+                    text-align: center;
+
+                    &:hover {
+                        background-color: gray;
+                    }
+                }
             }
         }
     }
@@ -890,45 +942,23 @@ body.editor_enable.editor_has_snippets {
 
         // Inputs
         we-input.o_we_user_value_widget {
-
+            @extend %we-generic-text-input;
             > div {
                 flex: 0 1 auto;
                 width: $o-we-sidebar-content-field-input-max-width;
-                border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-                border-radius: $o-we-sidebar-content-field-border-radius;
-                background-color: $o-we-sidebar-content-field-input-bg;
-
-                &:focus-within {
-                    border-color: $o-we-sidebar-content-field-input-border-color;
-                }
-
-                > we-button { // for input-group
-                    border: none;
-                }
             }
-
             &.o_we_large_input > div {
                 flex: 1 1 auto;
             }
-
             input {
-                box-sizing: content-box;
                 flex: 1 1 auto;
                 width: 0;
                 min-width: 2ch;
                 height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
-                padding: 0 $o-we-sidebar-content-field-clickable-spacing;
-                border: none;
-                border-radius: 0;
-                background-color: transparent;
-                color: inherit;
                 font-family: $o-we-sidebar-content-field-input-font-family;
 
                 &::placeholder {
                     color: $o-we-sidebar-content-field-control-item-color;
-                }
-                &:focus {
-                    outline: none;
                 }
             }
             span {
