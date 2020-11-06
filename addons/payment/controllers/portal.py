@@ -35,7 +35,7 @@ class PaymentPortal(portal.CustomerPortal):
       It redirects the user to `/my/payment_method` to display the result and start the flow over.
     """
 
-    @http.route('/payment/pay', type='http', auth='public', website=True, sitemap=False)
+    @http.route('/payment/pay', type='http', auth='public', website=True)
     def payment_pay(
         self, reference=None, amount=None, currency_id=None, partner_id=None, company_id=None,
         acquirer_id=None, access_token=None, **kwargs
@@ -142,7 +142,7 @@ class PaymentPortal(portal.CustomerPortal):
         }
         return request.render('payment.pay', rendering_context)
 
-    @http.route('/my/payment_method', type='http', auth='user', website=True, sitemap=False)
+    @http.route('/my/payment_method', type='http', auth='user', website=True)
     def payment_method(self, **kwargs):
         """ Display the form to manage payment methods.
 
@@ -287,9 +287,7 @@ class PaymentPortal(portal.CustomerPortal):
 
         return tx_sudo
 
-    @http.route(
-        '/payment/confirmation', type='http', auth='public', website=True, sitemap=False, csrf=True
-    )
+    @http.route('/payment/confirmation', type='http', auth='public', website=True, csrf=True)
     def payment_confirm(self, tx_id, access_token, **kwargs):
         """ Display the payment confirmation page with the appropriate status message to the user.
 
@@ -337,9 +335,7 @@ class PaymentPortal(portal.CustomerPortal):
             # Display the portal homepage to the user
             return request.redirect('/my/home')
 
-    @http.route(
-        '/payment/validation', type='http', auth='user', website=True, sitemap=False, csrf=True
-    )
+    @http.route('/payment/validation', type='http', auth='user', website=True, csrf=True)
     def payment_validation_transaction(self, **kwargs):
         """ Refund a validation transaction and redirect the user.
 

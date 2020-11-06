@@ -851,7 +851,7 @@ class WebsiteSale(PaymentPortal):
             'landing_route': '/shop/payment/validate',
         }
 
-    @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
+    @http.route('/shop/payment', type='http', auth='public', website=True)
     # TODO ANV don't show tokenization option if Subs product in cart
     def shop_payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
