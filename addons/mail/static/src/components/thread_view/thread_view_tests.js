@@ -1166,7 +1166,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
             document.querySelector(`.o_ComposerTextInput_textarea`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
-        })
+        });
     });
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
@@ -1178,6 +1178,66 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
         "Conversation should have a message that has been posted, which contains partner mention"
+    );
+});
+
+QUnit.test('mention 2 different partners that have the same name', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['res.partner'].records.push(
+        {
+            id: 25,
+            email: "partner1@example.com",
+            name: "TestPartner",
+        }, {
+            id: 26,
+            email: "partner2@example.com",
+            name: "TestPartner",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => {
+        ["@", "T", "e"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        });
+    });
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
+    await afterNextRender(() => {
+        ["@", "T", "e"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        });
+    });
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
+    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        "message should contain the first partner mention"
+    );
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_mail_redirect[data-oe-id="26"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        "message should also contain the second partner mention"
     );
 });
 
@@ -1216,12 +1276,12 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
-        "message must contain a link the the mentionned channel"
+        "message must contain a link to the mentioned channel"
     );
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General good boy',
-        "link to the channel must containt # + the channel name"
+        "link to the channel must contains # + the channel name"
     );
 });
 
@@ -1260,16 +1320,16 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
-        "message should contain a link the the mentionned channel"
+        "message should contain a link to the mentioned channel"
     );
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General & good',
-        "link to the channel must containt # + the channel name"
+        "link to the channel must contains # + the channel name"
     );
 });
 
-QUnit.test('start to mention a channel and add a new line after the #', async function (assert) {
+QUnit.test('mention a channel on a second line when the first line contains #', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({
@@ -1289,7 +1349,7 @@ QUnit.test('start to mention a channel and add a new line after the #', async fu
 
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#\n #");
+        document.execCommand('insertText', false, "#blabla\n#");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -1304,16 +1364,16 @@ QUnit.test('start to mention a channel and add a new line after the #', async fu
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
-        "message should contain a link the the mentionned channel"
+        "message should contain a link to the mentioned channel"
     );
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General good',
-        "link to the channel must containt # + the channel name"
+        "link to the channel must contains # + the channel name"
     );
 });
 
-QUnit.test('mention a channel and add a new line and text after the mention', async function (assert) {
+QUnit.test('mention a channel when replacing the space after the mention by another char', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({
@@ -1345,7 +1405,7 @@ QUnit.test('mention a channel and add a new line and text after the mention', as
     await afterNextRender(() => {
         const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
         document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
-        document.execCommand('insertText', false, "\ntest");
+        document.execCommand('insertText', false, ", test");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -1357,12 +1417,70 @@ QUnit.test('mention a channel and add a new line and text after the mention', as
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         '.o_channel_redirect',
-        "message should contain a link the the mentionned channel"
+        "message should contain a link to the mentioned channel"
     );
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General good',
-        "link to the channel must containt # + the channel name"
+        "link to the channel must contains # + the channel name"
+    );
+});
+
+QUnit.test('mention 2 different channels that have the same name', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push(
+        {
+            id: 11,
+            name: "my channel",
+        },
+        {
+            id: 12,
+            name: "my channel",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => {
+        ["#", "m", "y"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        });
+    });
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
+    await afterNextRender(() => {
+        ["#", "m", "y"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        });
+    });
+    await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
+    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_channel_redirect[data-oe-id="11"][data-oe-model="mail.channel"]:contains("#my channel")`,
+        "message should contain the first channel mention"
+    );
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_channel_redirect[data-oe-id="12"][data-oe-model="mail.channel"]:contains("#my channel")`,
+        "message should also contain the second channel mention"
     );
 });
 
