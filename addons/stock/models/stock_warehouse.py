@@ -245,6 +245,9 @@ class Warehouse(models.Model):
                         ('active', '=', True)
                     ])
                     to_disable_route_ids.toggle_active()
+
+        if 'active' in vals:
+            self._check_multiwarehouse_group()
         return res
 
     def unlink(self):
