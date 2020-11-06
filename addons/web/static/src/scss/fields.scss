@@ -127,6 +127,7 @@
                 @include o-text-overflow(inline-block);
                 max-width: 200px;
                 color: inherit;
+                line-height: 1.1;
             }
 
             .o_delete {
@@ -187,7 +188,7 @@
                     & {
                         background-color: white;
                         color: nth($o-colors, $size);
-                        box-shadow: inset 0 0 0 2px nth($o-colors, $size);
+                        box-shadow: inset 0 0 0 1px rgb(221,226,230);
                     }
                     &::after {
                         background-color: nth($o-colors, $size);
