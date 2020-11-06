@@ -15,7 +15,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         :param int invoice_id: The invoice to pay, as an `account.move` id
         :param str access_token: The access token used to authenticate the request
-        :param dict kwargs: Locally unused RPC data passed to `_create_transaction`
+        :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
         :raise: ValidationError if the invoice id or the access token is invalid

@@ -29,9 +29,9 @@ class PaymentPortal(portal.CustomerPortal):
     - `/payment/transaction` is the `init_tx_route` for the standard payment flow.
       It creates a draft transaction, and return the processing values necessary for the completion
       of the transaction.
-    - `/payment/confirm` is the `landing_route` for the standard payment flow.
+    - `/payment/confirmation` is the `landing_route` for the standard payment flow.
       It displays the payment confirmation page to the user when the transaction is validated.
-    - `/payment/validate` is the `landing_route` for the standard payment method validation flow.
+    - `/payment/validation` is the `landing_route` for the standard payment method validation flow.
       It redirects the user to `/my/payment_method` to display the result and start the flow over.
     """
 
@@ -136,7 +136,7 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_id': partner_id,
             'access_token': access_token,
             'init_tx_route': '/payment/transaction',
-            'landing_route': '/payment/confirm',
+            'landing_route': '/payment/confirmation',
             'partner_is_different': partner_is_different,
             **self._get_custom_rendering_context_values(**kwargs),
         }
@@ -166,7 +166,7 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_id': partner.id,
             'access_token': access_token,
             'init_tx_route': '/payment/transaction',
-            'landing_route': '/payment/validate',
+            'landing_route': '/payment/validation',
         }
         return request.render('payment.payment_methods', tx_context)
 
@@ -189,7 +189,7 @@ class PaymentPortal(portal.CustomerPortal):
                                      None if in a payment method validation operation
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param str access_token: The access token used to authenticate the partner
-        :param dict kwargs: Locally unused RPC data passed to `_create_transaction`
+        :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
         :raise: ValidationError if the access token is invalid
@@ -288,7 +288,7 @@ class PaymentPortal(portal.CustomerPortal):
         return tx_sudo
 
     @http.route(
-        '/payment/confirm', type='http', auth='public', website=True, sitemap=False, csrf=True
+        '/payment/confirmation', type='http', auth='public', website=True, sitemap=False, csrf=True
     )
     def payment_confirm(self, tx_id, access_token, **kwargs):
         """ Display the payment confirmation page with the appropriate status message to the user.
@@ -338,23 +338,33 @@ class PaymentPortal(portal.CustomerPortal):
             return request.redirect('/my/home')
 
     @http.route(
-        '/payment/validate', type='http', auth='user', website=True, sitemap=False, csrf=True
+        '/payment/validation', type='http', auth='user', website=True, sitemap=False, csrf=True
     )
-    def payment_validate(self, tx_id, **kwargs):
-        """ Refund a payment method validation transaction and redirect the user.
+    def payment_validation_transaction(self, **kwargs):
+        """ Refund a validation transaction and redirect the user.
 
-        :param str tx_id: The token registration transaction to confirm, as a
-                          `payment.transaction` id
-        :param dict kwargs: Optional data. This parameter is not used here
+        :param dict kwargs: Locally unused data passed to `_refund_validation_transaction`
         """
-        tx_id, = self.cast_as_numeric([tx_id], numeric_type='int')
-        if tx_id:
-            tx = request.env['payment.transaction'].browse(tx_id)
-            tx._send_refund_request()
-            PaymentPostProcessing.remove_transactions(tx)
+        self._refund_validation_transaction(**kwargs)
 
         # Send the user back to the "Manage Payment Methods" page
         return request.redirect('/my/payment_method')
+
+    def _refund_validation_transaction(self, tx_id, **kwargs):
+        """ Refund a validation transaction and remove it from post-processing.
+
+        :param str tx_id: The validation transaction to refund, as a `payment.transaction` id
+        :param dict kwargs: Optional data. This parameter is not used here
+        :return: None
+        :raise: ValidationError if the transaction id is invalid
+        """
+        tx_id, = self.cast_as_numeric([tx_id], numeric_type='int')
+        if not tx_id:
+            raise ValidationError(_("The validation transaction id is invalid."))
+
+        tx = request.env['payment.transaction'].browse(tx_id)
+        tx._send_refund_request()
+        PaymentPostProcessing.remove_transactions(tx)
 
     @staticmethod
     def cast_as_numeric(str_values, numeric_type='int'):
