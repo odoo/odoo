@@ -33,6 +33,10 @@ async function createWysiwyg(parent, options, additionnalAssets = []) {
 }
 
 async function loadFromTextarea(parent, textarea, options) {
+    var loading = textarea.nextElementSibling;
+    if (loading && !loading.classList.contains('o_wysiwyg_loading')) {
+        loading = null;
+    }
     const $textarea = $(textarea);
     const currentOptions = Object.assign({}, options);
     if (!currentOptions.value || !currentOptions.value.trim()) {
@@ -75,6 +79,11 @@ async function loadFromTextarea(parent, textarea, options) {
         $form.find('.note-editable').find('img.float-left').removeClass('float-left');
         $textarea.val(await wysiwyg.getValue());
     });
+
+    // Remove the loading spinner.
+    if (loading) {
+        loading.parentNode.removeChild(loading);
+    }
 
     return wysiwyg;
 }
