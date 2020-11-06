@@ -35,7 +35,6 @@ class Opportunity2Quotation(models.TransientModel):
     action = fields.Selection([
         ('create', 'Create a new customer'),
         ('exist', 'Link to an existing customer'),
-        ('nothing', 'Do not link to a customer')
     ], string='Quotation Customer', required=True)
     lead_id = fields.Many2one('crm.lead', "Associated Lead", required=True)
     partner_id = fields.Many2one('res.partner', 'Customer')
@@ -45,6 +44,5 @@ class Opportunity2Quotation(models.TransientModel):
             the freshly created opportunity view.
         """
         self.ensure_one()
-        if self.action != 'nothing':
-            self.lead_id.handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=(self.action == 'create'))
+        self.lead_id.handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=(self.action == 'create'))
         return self.lead_id.action_new_quotation()

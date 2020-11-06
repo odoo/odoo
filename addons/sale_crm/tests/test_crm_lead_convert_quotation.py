@@ -75,26 +75,3 @@ class TestLeadConvertToTicket(crm_common.TestCrmCommon):
         self.assertEqual(lead.email_from, self.contact_2.email)
         self.assertEqual(lead.mobile, self.contact_2.mobile)
         self.assertEqual(action['context']['default_partner_id'], self.contact_2.id)
-
-    @users('user_sales_salesman')
-    def test_lead_convert_to_quotation_nothing(self):
-        """ Test doing nothing about customer while converting """
-        lead = self.lead_1.with_user(self.env.user)
-
-        # invoke wizard and apply it
-        convert = self.env['crm.quotation.partner'].with_context({
-            'active_model': 'crm.lead',
-            'active_id': lead.id,
-            'default_action': 'nothing',
-        }).create({})
-
-        self.assertEqual(convert.action, 'nothing')
-        self.assertEqual(convert.partner_id, self.env['res.partner'])
-
-        action = convert.action_apply()
-
-        # test lead update
-        new_partner = self.env['res.partner'].search([('email_normalized', '=', 'amy.wong@test.example.com')])
-        self.assertEqual(new_partner, self.env['res.partner'])
-        self.assertEqual(lead.partner_id, self.env['res.partner'])
-        self.assertEqual(action['context']['default_partner_id'], False)
