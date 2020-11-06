@@ -3828,6 +3828,10 @@ class AccountMoveLine(models.Model):
         return ret
 
     def _check_reconcile_validity(self):
+        # Empty self can happen if there is no line to check.
+        if not self:
+            return
+
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []
