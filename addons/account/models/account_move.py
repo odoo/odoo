@@ -1063,8 +1063,14 @@ class AccountMove(models.Model):
                 # it. We only check the first move as an approximation (enough for new in form view)
                 pass
             elif (move.name and move.name != '/') or move.state != 'posted':
-                # Has already a name or is not posted, we don't add to a batch
-                continue
+                try:
+                    if not move.posted_before:
+                        move._constrains_date_sequence()
+                    # Has already a name or is not posted, we don't add to a batch
+                    continue
+                except ValidationError:
+                    # Has never been posted and the name doesn't match the date: recompute it
+                    pass
             group = grouped[journal_key(move)][date_key(move)]
             if not group['records']:
                 # Compute all the values needed to sequence this whole group
@@ -1120,8 +1126,10 @@ class AccountMove(models.Model):
 
         if not relaxed:
             domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
-            reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
-            sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
+            reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
+            if not reference_move_name:
+                reference_move_name = self.search(domain, order='date asc', limit=1).name
+            sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
@@ -1792,6 +1800,8 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it has been posted once.'))
+            if (move.name and move.name != '/' and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
+                raise UserError(_('You cannot edit the journal of an account move if it has already a sequence number assigned.'))
 
             # You can't change the date of a move being inside a locked period.
             if 'date' in vals and move.date != vals['date']:
@@ -3108,6 +3118,28 @@ class AccountMoveLine(models.Model):
             return self.product_id.uom_id
         return False
 
+    def _set_price_and_tax_after_fpos(self):
+        self.ensure_one()
+        # Manage the fiscal position after that and adapt the price_unit.
+        # E.g. mapping a price-included-tax to a price-excluded-tax must
+        # remove the tax amount from the price_unit.
+        # However, mapping a price-included tax to another price-included tax must preserve the balance but
+        # adapt the price_unit to the new tax.
+        # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
+        # 100 as balance but set 120 as price_unit.
+        if self.tax_ids and self.move_id.fiscal_position_id:
+            price_subtotal = self._get_price_total_and_subtotal()['price_subtotal']
+            self.tax_ids = self.move_id.fiscal_position_id.map_tax(
+                self.tax_ids._origin,
+                partner=self.move_id.partner_id)
+            accounting_vals = self._get_fields_onchange_subtotal(
+                price_subtotal=price_subtotal,
+                currency=self.move_id.company_currency_id)
+            amount_currency = accounting_vals['amount_currency']
+            business_vals = self._get_fields_onchange_balance(amount_currency=amount_currency)
+            if 'price_unit' in business_vals:
+                self.price_unit = business_vals['price_unit']
+
     @api.depends('product_id', 'account_id', 'partner_id', 'date')
     def _compute_analytic_account(self):
         for record in self:
@@ -3333,25 +3365,8 @@ class AccountMoveLine(models.Model):
             line.product_uom_id = line._get_computed_uom()
             line.price_unit = line._get_computed_price_unit()
 
-            # Manage the fiscal position after that and adapt the price_unit.
-            # E.g. mapping a price-included-tax to a price-excluded-tax must
-            # remove the tax amount from the price_unit.
-            # However, mapping a price-included tax to another price-included tax must preserve the balance but
-            # adapt the price_unit to the new tax.
-            # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
-            # 100 as balance but set 120 as price_unit.
-            if line.tax_ids and line.move_id.fiscal_position_id:
-                price_subtotal = line._get_price_total_and_subtotal()['price_subtotal']
-                line.tax_ids = line.move_id.fiscal_position_id.map_tax(
-                    line.tax_ids._origin,
-                    partner=line.move_id.partner_id)
-                accounting_vals = line._get_fields_onchange_subtotal(
-                    price_subtotal=price_subtotal,
-                    currency=line.move_id.company_currency_id)
-                amount_currency = accounting_vals['amount_currency']
-                business_vals = line._get_fields_onchange_balance(amount_currency=amount_currency)
-                if 'price_unit' in business_vals:
-                    line.price_unit = business_vals['price_unit']
+            # price_unit and taxes may need to be adapted following Fiscal Position
+            line._set_price_and_tax_after_fpos()
 
             # Convert the unit price to the invoice's currency.
             company = line.move_id.company_id

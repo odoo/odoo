@@ -151,6 +151,19 @@ var SmsWidget = FieldTextEmojis.extend({
      * @override
      * @private
      */
+    _onBlur: function () {
+        var content = this._getValue();
+        if( !content.trim().length && content.length > 0) {
+            this.do_warn(_t("Your SMS Text Message must include at least one non-whitespace character"));
+            this.$input.val(content.trim());
+            this._updateSMSInfo();
+        }
+    },
+
+    /**
+     * @override
+     * @private
+     */
     _onChange: function () {
         this._super.apply(this, arguments);
         this._updateSMSInfo();

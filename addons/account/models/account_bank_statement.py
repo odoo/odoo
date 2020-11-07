@@ -317,7 +317,7 @@ class AccountBankStatement(models.Model):
 
                         st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
                         st_line_vals['counterpart_account_id'] = stmt.journal_id.profit_account_id.id
-                        
+
                     self.env['account.bank.statement.line'].create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
@@ -460,8 +460,12 @@ class AccountBankStatement(models.Model):
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
 
-        sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
         if not relaxed:
+            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', '!=', False)]
+            previous_name = self.search(domain + [('date', '<', self.date)], order='date desc', limit=1).name
+            if not previous_name:
+                previous_name = self.search(domain, order='date desc', limit=1).name
+            sequence_number_reset = self._deduce_sequence_number_reset(previous_name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
@@ -1216,10 +1220,6 @@ class AccountBankStatementLine(models.Model):
                 continue
 
             (line + counterpart_line).reconcile()
-
-            # Update the payment date to match the current bank statement line's date.
-            if counterpart_line.payment_id:
-                counterpart_line.payment_id.date = self.date
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
