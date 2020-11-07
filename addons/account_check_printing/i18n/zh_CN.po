@@ -12,6 +12,7 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,7 +103,7 @@ msgstr "检查上边距"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "支票号码只能由数字组成"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -291,7 +292,7 @@ msgstr "请输入您要打印的第一张预先打印的支票的号码。"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "首选付款方式"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -300,7 +301,7 @@ msgid ""
 "Preferred payment method when paying this vendor. This is used to filter "
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
-msgstr ""
+msgstr "向此供应商付款时的首选付款方式。这用于按首选付款方式筛选供应商帐单，以批量登记付款。用例：为批处理线创建银行文件，检查运行情况。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -362,7 +363,7 @@ msgstr "下个打印支票的序列编号"
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
-msgstr ""
+msgstr "检查布局出现问题，请在开票/记帐设置中选择其他布局，然后重试。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -378,6 +379,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"已使用以下数字：\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -410,6 +413,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"此选项允许您根据 CPA 在支票上打印日期标签。\n"
+"如果预打印的检查包含日期标签，请禁用此选项。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -425,7 +430,7 @@ msgstr "无标记送出"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "虚空检查"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -433,4 +438,4 @@ msgstr ""
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
-msgstr ""
+msgstr "您必须选择检查布局。为此，请进入开票/记帐设置，搜索\"检查布局\"并设置一个。"

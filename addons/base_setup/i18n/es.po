@@ -3,24 +3,9 @@
 # 	* base_setup
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2020
-# Martin Trigaux, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
-# Rick Hunter <rick.hunter.ec@gmail.com>, 2020
-# gabriumaa <gabriel.umana@delfixcr.com>, 2020
-# Antonio Trueba, 2020
-# RGB Consulting <odoo@rgbconsulting.com>, 2020
-# Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2020
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2020
-# Gelo Joga Landoo <gj@landoo.es>, 2020
-# Nicolás Broggi <rnbroggi@gmail.com>, 2020
-# Fernando Herrera <baloosoftware@gmail.com>, 2020
-# Jon Perez <jop@odoo.com>, 2020
-# Jesse Garza <jga@odoo.com>, 2020
-# Efrem Jimenez <efj@odoo.com>, 2020
-# Erick Herrera <erick.herrera@jarsa.com.mx>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# 0bbd034d1b285e7568819a743ec2b501_2b84791 <d5c81972596cfedcd53204f47f6a8434_940895>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -28,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +43,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -70,6 +55,12 @@ msgid ""
 "                                            Active Users\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"                                            Active User\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                            Active Users\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -82,6 +73,13 @@ msgid ""
 "                                        </span>\n"
 "                                        <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                            Company\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                            Companies\n"
+"                                        </span>\n"
+"                                        <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -93,6 +91,12 @@ msgid ""
 "                                                Languages\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                                Language\n"
+"                                            </span>\n"
+"                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                                Languages\n"
+"                                            </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -126,6 +130,7 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
+"<strong>Save</strong> this page and come back here to set up reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -168,7 +173,7 @@ msgstr "Activar el modo desarrollador (con activos de prueba)"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add Language"
-msgstr ""
+msgstr "Add Language"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -355,7 +360,7 @@ msgstr "Editar Diseño"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Email addresses already existing: %s."
-msgstr ""
+msgstr "Email addresses already existing: %s."
 
 #. module: base_setup
 #. openerp-web
@@ -469,7 +474,7 @@ msgstr "Transacciones inter-compañías"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Invalid email addresses: %s."
-msgstr ""
+msgstr "Invalid email addresses: %s."
 
 #. module: base_setup
 #. openerp-web
@@ -518,7 +523,7 @@ msgstr "Cargar datos de prueba"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr ""
+msgstr "Manage API Keys"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -597,7 +602,7 @@ msgstr "En Google Play"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__paperformat_id
@@ -619,7 +624,7 @@ msgstr "Invitaciones Pendientes:"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr ""
+msgstr "Permissions"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -664,7 +669,7 @@ msgstr "Sincronizar tu calendario con Google Calendar"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "Synchronize your calendar with Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
@@ -738,8 +743,9 @@ msgstr "mas"
 msgid ""
 "reCAPTCHA is a free service that protects your website from spam and abuse."
 msgstr ""
+"reCAPTCHA is a free service that protects your website from spam and abuse."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA: Easy on Humans, Hard on Bots"
-msgstr ""
+msgstr "reCAPTCHA: Easy on Humans, Hard on Bots"

@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_sale
+# 	* website_event_sale
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,23 +16,66 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_website__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
+msgid "Free"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
+msgid "From"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Only"
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_event_sale.field_website__id
+msgid "ID"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_website____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
 msgstr ""
 
 #. module: website_event_sale
@@ -41,34 +84,29 @@ msgid "Product"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Quotation"
-msgstr ""
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:56
+#: code:addons/website_event_sale/controllers/main.py:0
 #, python-format
 msgid "Registration"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Remaining"
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Sales Order"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Sold Out"
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
@@ -76,12 +114,23 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:39
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr ""
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "to"
 msgstr ""

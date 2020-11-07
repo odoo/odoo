@@ -14,6 +14,7 @@
 # e2f <projects@e2f.com>, 2020
 # Olivier Dony <odo@odoo.com>, 2020
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2020
+# Clo <clo@odoo.com>, 2020
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2020
 # Miguel Vidali <mvidali129@gmail.com>, 2020
 # Melanie Bernard <mbe@odoo.com>, 2020
@@ -22,7 +23,6 @@
 # bb76cd9ac0cb7e20167a14728edb858b, 2020
 # Frédéric LIETART <stuff@tifred.fr>, 2020
 # Bruno JOLIVEAU, 2020
-# Clo <clo@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2020
@@ -49,7 +49,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: Priscilla (prs) Odoo <prs@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -464,7 +464,7 @@ msgstr ""
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p2
-msgid "<p>Some questions on our Company. Do you really know us ?</p>"
+msgid "<p>Some questions about our company. Do you really know us?</p>"
 msgstr ""
 
 #. module: survey
@@ -742,7 +742,7 @@ msgstr "Un problème est survenu"
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped, either answered. Not both."
+msgid "A question is either skipped or answered, not both."
 msgstr ""
 
 #. module: survey
@@ -1348,7 +1348,7 @@ msgstr "Chaise de conférence"
 
 #. module: survey
 #: model:gamification.badge,description:survey.vendor_certification_badge
-msgid "Congratulation, you are now official vendor of MyCompany"
+msgid "Congratulations, you are now official vendor of MyCompany"
 msgstr ""
 
 #. module: survey
@@ -1380,6 +1380,11 @@ msgstr "Contenus"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Continue"
 msgstr "Continuer"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid "Continue here"
+msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q3_sug4
@@ -2816,8 +2821,8 @@ msgstr "Réponse numérique"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
-msgid "Occurence"
-msgstr "Occurrence"
+msgid "Occurrence"
+msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_5
@@ -2996,7 +3001,7 @@ msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug1
-msgid "Pincaceae"
+msgid "Pinaceae"
 msgstr ""
 
 #. module: survey
@@ -3458,17 +3463,6 @@ msgstr ""
 msgid "Some emails you just entered are incorrect: %s"
 msgstr ""
 "Certaines adresses emails que vous venez de saisir sont incorrectes : %s"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid ""
-"Something went wrong while contacting survey server. <strong class=\"text-"
-"danger\">Your answers have probably not been recorded.</strong> Try "
-"refreshing."
-msgstr ""
-"Un problème s'est présenté lors de la connexion avec le serveur des "
-"enquêtes. <strong class=\"text-danger\">Vos réponses n'ont probablement pas "
-"été enregistrées.</strong> Essayez de rafraîchir la page."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -4158,6 +4152,13 @@ msgid "Title"
 msgstr "Titre"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid ""
+"To take this survey, please close all other tabs on <strong class=\"text-"
+"danger\"/>."
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
 msgstr "Activités du Jour"
@@ -4407,11 +4408,6 @@ msgid "What is the biggest city in the world ?"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
-msgid "What is the highest volcano in Europe ?"
-msgstr ""
-
-#. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email ?"
 msgstr ""
@@ -4475,6 +4471,11 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
 msgid "Which category does a tomato belong to"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
+msgid "Which is the highest volcano in Europe ?"
 msgstr ""
 
 #. module: survey
@@ -4624,12 +4625,8 @@ msgstr "par ex. enquête de satisfaction"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
-msgid "for graduating from"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
-msgid "for gratuating from"
+msgid "for graduating"
 msgstr ""
 
 #. module: survey

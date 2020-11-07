@@ -42,14 +42,15 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # snow wang <147156565@qq.com>, 2020
 # Zang <minoscc@gmail.com>, 2020
+# Lin Li <ljsrzc007@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:11+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Zang <minoscc@gmail.com>, 2020\n"
+"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -920,7 +921,7 @@ msgstr "可用数量"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "更改类型之前，可用数量应设置为零"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -993,6 +994,9 @@ msgid ""
 "            Manual inventory adjustments can also be performed and pre-filled with\n"
 "            suggested counted quantity."
 msgstr ""
+"Barcode scanner can be activated via inventory settings.\n"
+"            Manual inventory adjustments can also be performed and pre-filled with\n"
+"            suggested counted quantity."
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_pdf
@@ -2377,16 +2381,6 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "完美的图标，例如FA任务"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__forecast_availability
-msgid "Forcast Availability"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
-msgid "Forcasted Expected date"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
 msgstr "强制下架策略"
@@ -2395,6 +2389,11 @@ msgstr "强制下架策略"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
 msgid "Forecast"
 msgstr "预测"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecast_availability
+msgid "Forecast Availability"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -2450,6 +2449,11 @@ msgstr "预测的日期"
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Deliveries"
 msgstr "预测的交货"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
+msgid "Forecasted Expected date"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action
@@ -2649,6 +2653,11 @@ msgstr "高度(Z)"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Hidden until next scheduler."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
+msgid "Hide Picking Type"
 msgstr ""
 
 #. module: stock
@@ -2907,7 +2916,7 @@ msgstr "包含短缺的产品"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__exhausted
 msgid "Include also products with quantity of 0"
-msgstr ""
+msgstr "包括数量为0的产品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -3191,7 +3200,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
-msgid "Is late or will be late depending of the deadline and scheduled date"
+msgid "Is late or will be late depending on the deadline and scheduled date"
 msgstr ""
 
 #. module: stock
@@ -4064,7 +4073,7 @@ msgstr "在手数量"
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
-msgstr ""
+msgstr "在转移中未保留的现有数量，以产品的默认计量单位"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -5435,7 +5444,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Reserving a negative quantity is not allowed."
-msgstr ""
+msgstr "不允许保留负数。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_procurement_jit
@@ -6519,7 +6528,7 @@ msgstr "补货数量将翻倍这个倍数。如果它是0， 那么会使用确�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product is not available in sufficient quantity"
-msgstr ""
+msgstr "产品数量不足"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7813,9 +7822,9 @@ msgstr "你必须定义分组和筛选方法并将它们作为参数传递。"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid ""
-"You have to select a product unit of measure that is in the same category "
-"than the default unit of measure of the product"
-msgstr "你必须选择同一计量单位类别内的计量单位而不是产品的默认计量单位。"
+"You have to select a product unit of measure that is in the same category as"
+" the default unit of measure of the product"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -7893,6 +7902,9 @@ msgid ""
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
+"You'll find here smart replenishment propositions based on inventory forecasts.\n"
+"            Choose the quantity to buy or manufacture and launch orders in a click.\n"
+"            To save time in the future, set the rules as \"automated\"."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

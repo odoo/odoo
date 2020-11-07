@@ -6,8 +6,6 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Martin Trigaux, 2020
 # Paolo Valier, 2020
-# Tiziano Zambelli <zstiziano@gmail.com>, 2020
-# 0a243ede81e8afa909e1e8a5469f6f0f_33e3ca1 <267506ad346947b5e4eba05b50cb5ef9_478623>, 2020
 # maiolif <maiolif@mgftools.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Mario Riva <mario.riva@gmail.com>, 2020
@@ -30,7 +28,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr ""
+msgstr "% di consegne puntuali"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -72,7 +70,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tasso di puntualità</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
@@ -130,12 +128,12 @@ msgstr "Acquisto"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
 msgid "Buy rule"
-msgstr "Regole d'acquisto"
+msgstr "Regola di acquisto"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr "Comprare per rifornire"
+msgstr "Rifornire su acquisto"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -145,7 +143,7 @@ msgstr "Aziende"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr ""
+msgstr "Data di completamento del primo ordine di ricezione."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -160,12 +158,12 @@ msgstr "Contatto"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr "Riga Ordine d'Acquisto Creata"
+msgstr "Riga ordine di acquisto creata"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "Descrizione personalizzata"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
@@ -201,7 +199,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr "Tipo di Location di Destinazione"
+msgstr "Tipo ubicazione di destinazione"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
@@ -309,7 +307,7 @@ msgstr "ID"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "Spedizioni in ingresso"
+msgstr "Spedizioni in entrata"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
@@ -385,14 +383,14 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Margine di errore per i tempi di consegna del fornitore. Quando il sistema "
-"genera ordini d'acquisto per procurare prodotti, loro vengono schedati "
-"giorni prima per affrontare imprevisti ritardi dal fornitore"
+"Margine di errore per i tempi di risposta del fornitore. Gli ordini di "
+"acquisto, generati dal sistema per riordinare prodotti, vengono programmati "
+"in anticipo di alcuni giorni per superare ritardi imprevisti del fornitore."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Regola di scorta minima"
+msgstr "Regola di giacenza minima di magazzino"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -415,7 +413,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
 msgid "On-Time Delivery"
-msgstr ""
+msgstr "Puntualità di consegna"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
@@ -423,23 +421,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr ""
+msgstr "Tasso di consegne puntuali"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr ""
+msgstr "Quantità puntuale"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "On-time Delivery"
-msgstr ""
+msgstr "Puntualità di consegna"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr ""
+msgstr "Tasso di puntualità"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -454,6 +452,8 @@ msgid ""
 "Over the past 12 months, number of products received on time / total number "
 "of ordered products."
 msgstr ""
+"Negli ultimi 12 mesi, numero di prodotti ricevuti con puntualità / numero "
+"totale di prodotti ordinati."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -497,7 +497,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
 msgid "Purchase Lines"
-msgstr ""
+msgstr "Righe di acquisto"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -527,7 +527,7 @@ msgstr "Resoconto di acquisto"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr ""
+msgstr "Tempo di risposta sicuro per acquisti"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
@@ -542,7 +542,7 @@ msgstr "Ricezione"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
-msgstr "Ricevi Prodotti"
+msgstr "Ricevi prodotti"
 
 #. module: purchase_stock
 #. openerp-web
@@ -564,7 +564,7 @@ msgstr "Ricezioni"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr "Chiedi ai tuoi fornitori di consegnare ai tuoi clienti"
+msgstr "Richiede ai fornitori di effettuare la consegna ai clienti"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -585,7 +585,7 @@ msgstr "Percorsi"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr "Pianifica in anticipo le ricezioni per evitare ritardi"
+msgstr "Programma in anticipo le ricezioni per evitare ritardi"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -621,18 +621,19 @@ msgstr "Resoconto regola magazzino"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "Campo tecnico utilizzato per visualizzare l'indirizzo Drop Ship"
+msgstr ""
+"Campo tecnico utilizzato per visualizzare l'indirizzo di consegna diretta"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "Technical: used to compute quantities."
-msgstr "Tecnico: usato per calcolare le quantità."
+msgstr "Tecnico: utilizzato per calcolare le quantità."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr ""
+msgstr "È stato generato il seguente ordine di rifornimento"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -641,6 +642,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
+"Le quantità nell'ordine di acquisto risultano inferiori a quelle fatturate, "
+"richiedere un rimborso."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -689,15 +692,15 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
-"Non è possibile cancellare l'ordine di acquisto %s  poiché sono già stati "
-"fatte alcune ricezioni "
+"Impossibile annullare l'ordine di acquisto %s, alcune ricezioni sono già "
+"state completate."
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr ""
+msgstr "Conferma la ricezione di tutti i prodotti ordinati."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
@@ -714,12 +717,12 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
-msgstr ""
+msgstr "Tempo di risposta fornitore"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr ""
+msgstr "Analisi puntualità di consegna fornitore"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -741,8 +744,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
-"Quando sono necessari prodotti in <b>%s</b>, <br/> una richiesta di "
-"preventivo viene creata per soddisfare il bisogno."
+"Quando sono necessari prodotti in <b>%s</b>, <br/> viene creata una "
+"richiesta di preventivo per soddisfare l'esigenza."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -751,14 +754,14 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
-"La quantità ordinata non può essere inferiore alla quantità ricevuta.\n"
-"Creare prima un ritorno."
+"Impossibile ridurre la quantità ordinata al di sotto della quantità ricevuta.\n"
+"Creare prima un reso."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "Dovresti indicare la posizione del fornitore per questo prodotto %s"
+msgstr "Deve essere impostata una ubicazione fornitore per il partner %s"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0

@@ -9,7 +9,6 @@
 # Tiago Baptista, 2020
 # Ricardo Correia <rcorreiavv@gmail.com>, 2020
 # Pedro Castro Silva <pedrocs@exo.pt>, 2020
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2020
 # Pedro Filipe <pedro2.10@hotmail.com>, 2020
 # Martin Trigaux, 2020
@@ -18,14 +17,15 @@
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2020
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Diogo Fonseca <dsf@thinkopensolutions.pt>, 2020\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,13 +183,6 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/tours/mail.js:0
-#, python-format
-msgid "<p> Create a private channel.</p>"
 msgstr ""
 
 #. module: mail
@@ -414,6 +407,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Uma ação pode despoletar comportamentos específicos, como abrir uma vista do"
+" calendário ou marcar automaticamente um documento como concluído depois do "
+"carregamento."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -472,7 +468,7 @@ msgstr "Atividade"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Marcador de Exceções de Atividade"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -498,7 +494,7 @@ msgstr "Tipo de Atividade"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ícone de Tipo de Atividade"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -873,12 +869,12 @@ msgstr "Corpo"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 msgid "Bounce"
-msgstr "Devolver"
+msgstr "Emails Rejeitados"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__bounce
 msgid "Bounced"
-msgstr ""
+msgstr "Emails Rejeitados"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_cc.py:0
@@ -1177,7 +1173,7 @@ msgstr "A conversa está minimizada"
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Contador do número de emails devolvidos para este contacto"
+msgstr "Contador do número de emails rejeitados para este contacto"
 
 #. module: mail
 #. openerp-web
@@ -1286,7 +1282,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_bounced_content
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Mensagem Personalizada de Email Rejeitado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
@@ -1622,13 +1618,13 @@ msgstr "Menu dropdown"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 msgid "Due Date"
-msgstr "Data de vencimento"
+msgstr "Data de Vencimento"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "Data de Vencimento em"
+msgstr "Vencimento em"
 
 #. module: mail
 #. openerp-web
@@ -1862,6 +1858,8 @@ msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
+"Erro não especificado. Provavelmente dever-se-á a atualizações concorrentes "
+"dos registos de notificação. Contacte um administrador."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:0
@@ -3425,7 +3423,7 @@ msgstr "Sumário da Próxima Atividade"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tipo de atividade seguinte "
+msgstr "Tipo da Atividade Seguinte "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -4268,7 +4266,7 @@ msgstr "Responsável"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
-msgstr "Utilizador responsável"
+msgstr "Utilizador Responsável"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -4330,7 +4328,7 @@ msgstr "Planear"
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Agendar Atividade"
 
 #. module: mail
 #. openerp-web
@@ -4753,7 +4751,7 @@ msgstr "A"
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "The 'Due Date In' value can't be negative."
-msgstr ""
+msgstr "O valor do 'Vencimento em' não pode ser negativo."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -4895,9 +4893,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template__auto_delete
 msgid ""
-"This option permanently removes any track of email after send, including "
-"from the Technical menu in the Settings, in order to preserve storage space "
-"of your Odoo database."
+"This option permanently removes any track of email after it's been sent, "
+"including from the Technical menu in the Settings, in order to preserve "
+"storage space of your Odoo database."
 msgstr ""
 
 #. module: mail
@@ -5146,14 +5144,14 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr ""
+msgstr "Carregar Documento"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Upload file"
-msgstr ""
+msgstr "Carregar ficheiro"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
