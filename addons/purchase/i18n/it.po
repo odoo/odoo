@@ -270,13 +270,13 @@ msgid ""
 "[('mail_reminder_confirmed', '=', False)]}\">(confirmed by vendor)</span>"
 msgstr ""
 "<span class=\"text-muted\" attrs=\"{'invisible': "
-"[('mail_reminder_confirmed', '=', False)]}\">(confermato dal "
+"[('mail_reminder_confirmed', '=', False)]}\">(confermata dal "
 "fornitore)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "<span> days before</span>"
-msgstr ""
+msgstr "<span> giorno/i prima</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -307,7 +307,7 @@ msgstr "<strong>Importo</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "<strong>Confirmation Date:</strong>"
-msgstr "<strong>Data di conferma:</strong>"
+msgstr "<strong>Data conferma:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -489,7 +489,7 @@ msgstr "Aggiungi sezione"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr ""
+msgstr "Aggiunge da una griglia alcune varianti all'ordine di acquisto "
 
 #. module: purchase
 #. openerp-web
@@ -521,7 +521,7 @@ msgstr "Tutte le RdP in bozza"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
-msgstr ""
+msgstr "Tutte le RdP in ritardo"
 
 #. module: purchase
 #. openerp-web
@@ -542,6 +542,8 @@ msgstr "Tutte le RdP in attesa"
 msgid ""
 "Allow automatically send email to reminder your vendor the receipt date"
 msgstr ""
+"Consente di inviare automaticamente al fornitore e-mail di promemoria della "
+"data di ricezione"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -630,12 +632,12 @@ msgstr "Completamento automatico da un ordine di acquisto precedente."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr ""
+msgstr "Blocco automatico di ordini confermati per impedire la modifica"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically remind the receipt date to your vendors"
-msgstr ""
+msgstr "Ricorda automaticamente al fornitore la data di ricezione"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
@@ -646,6 +648,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
+"Invia una e-mail di conferma automatica al fornitore, X giorni prima della "
+"data di ricezione prevista, chiedendo di confermare la data esatta. "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -662,7 +666,7 @@ msgstr "Giorni medi all'acquisto"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value ("
-msgstr ""
+msgstr "Valore medio ordine ("
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -672,7 +676,7 @@ msgstr "Cordiali saluti,"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__default_purchase_method
 msgid "Bill Control"
-msgstr "Controllo Fatturazione"
+msgstr "Controllo fatture"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
@@ -687,7 +691,7 @@ msgstr "Righe fattura"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed"
-msgstr ""
+msgstr "Fatturata"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -723,7 +727,7 @@ msgstr "Fatture ricevute"
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__block
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__block
 msgid "Blocking Message"
-msgstr "Messaggio bloccante"
+msgstr "Messaggio di blocco"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -835,7 +839,7 @@ msgstr "Conferma ordine"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Confirm Receipt Date"
-msgstr ""
+msgstr "Conferma data ricezione"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -855,7 +859,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date"
-msgstr "Data di conferma"
+msgstr "Data conferma"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -892,13 +896,13 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
-msgstr "Creare fattura"
+msgstr "Crea fattura"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr ""
+msgstr "Crea fatture"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_batch_bills
@@ -969,7 +973,7 @@ msgstr "giorni"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
-msgstr ""
+msgstr "Giorni prima della ricezione"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1004,6 +1008,8 @@ msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
 msgstr ""
+"Data di consegna promessa dal fornitore. È utilizzata per determinare "
+"l'arrivo previsto dei prodotti."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__date_order
@@ -1019,8 +1025,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
-"Rappresenta la data di quando la quotazione sarà validata e convertita in un"
-" ordine d'acquisto."
+"Rappresenta la data entro la quale il preventivo deve essere confermato e "
+"convertito in un ordine di acquisto."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -1135,7 +1141,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
 msgid "Fully Billed"
-msgstr ""
+msgstr "Completamente fatturato"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1151,7 +1157,7 @@ msgstr "Ottieni 2 livelli di approvazione per confermare un ordine d'acquisto"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr "Ottieni segnalazioni negli ordini per prodotti o fornitori"
+msgstr "Ricezione di avvisi per prodotti o fornitori negli ordini"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1229,6 +1235,8 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
+"Se installate, le varianti prodotto vengono aggiunte agli ordini di acquisto"
+" attraverso una voce della griglia."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1271,7 +1279,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Invoices and Incoming Shipments"
-msgstr "Fatture e spedizioni in ingresso"
+msgstr "Fatture e spedizioni in entrata"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1339,21 +1347,21 @@ msgstr "Attività in ritardo"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late RFQs"
-msgstr ""
+msgstr "RdP in ritardo"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
-msgstr ""
+msgstr "Tempo di risposta acquisti"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
-msgstr ""
+msgstr "Creiamo la prima richiesta di preventivo."
 
 #. module: purchase
 #. openerp-web
@@ -1364,6 +1372,8 @@ msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and"
 " invoice control."
 msgstr ""
+"Proviamo l'applicazione Acquisti. Serve a gestire il flusso, dall'acquisto "
+"alla ricezione e al controllo fatture."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -1383,7 +1393,7 @@ msgstr "Blocca"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "Blocca Ordini confermati"
+msgstr "Blocco ordini confermati"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1401,12 +1411,13 @@ msgstr "Allegato principale"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
-msgstr "Assicurati di pagare le fatture relative a prodotti che hai ordinato"
+msgstr ""
+"Garantisce che vengano pagate solo le fatture di merci ordinate e ricevute"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "Gestisci gli accordi di acquisto (tender o ordini aperti)"
+msgstr "Gestione contratti di acquisto (bandi di gara, ordini quadro)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1431,9 +1442,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Margine di errore per i tempi di consegna del fornitore. Quando il sistema "
-"genera ordini d'acquisto per procurare prodotti, loro vengono schedati "
-"giorni prima per affrontare imprevisti ritardi dal fornitore"
+"Margine di errore per i tempi di risposta del fornitore. Gli ordini di "
+"acquisto, generati dal sistema per ottenere prodotti, vengono programmati in"
+" anticipo di alcuni giorni per superare ritardi imprevisti del fornitore."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1442,9 +1453,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Margine di errore per i tempi di consegna del fornitore. Quando il sistema "
-"genera ordini d'acquisto per procurare prodotti, loro vengono schedati "
-"giorni prima per affrontare imprevisti ritardi dal fornitore"
+"Margine di errore per i tempi di risposta del fornitore. Gli ordini di "
+"acquisto, generati dal sistema per riordinare prodotti, vengono programmati "
+"in anticipo di alcuni giorni per superare ritardi imprevisti del fornitore."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1496,7 +1507,7 @@ msgstr "Le mie RdP in bozza"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
-msgstr ""
+msgstr "Le mie RdP in ritardo"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1520,7 +1531,7 @@ msgstr "Le mie RdP"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
-msgstr ""
+msgstr "Le mie RdP in attesa"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1623,6 +1634,8 @@ msgstr "Numero di azioni"
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
 msgstr ""
+"Numero di giorni, prima della data di ricezione promessa, per l'invio "
+"dell'e-mail di promemoria"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -1656,8 +1669,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
-"Su quantità ordinate: fatture di controllo basate sulle quantità ordinate.\n"
-"Su quantità ricevute: fatture di controllo basate sulle quantità ricevute."
+"Su quantità ordinate: controllo fatture basato sulle quantità ordinate.\n"
+"Su quantità ricevute: controllo fatture basato sulle quantità ricevute."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
@@ -1906,7 +1919,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
 msgid "Purchase Lead Time"
-msgstr "Tempo di consegna Acquisto"
+msgstr "Tempo di risposta per acquisti"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -2051,6 +2064,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"Acquisto di varianti prodotto usando gli attributi (taglia, colore ecc.)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2063,7 +2077,7 @@ msgstr "Acquistata"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days ("
-msgstr ""
+msgstr "Acquisti ultimi 7 giorni ("
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2168,7 +2182,7 @@ msgstr "RdP"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
-msgstr ""
+msgstr "RdP inviate ultimi 7 giorni"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -2195,12 +2209,12 @@ msgstr "Data ricezione"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
 msgid "Receipt Reminder"
-msgstr ""
+msgstr "Promemoria ricezione"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
 msgid "Receipt Reminder Email"
-msgstr ""
+msgstr "E-mail promemoria ricezione"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2268,7 +2282,7 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
-"Riferimento al documento che ha creato questa richiesta di ordine di "
+"Riferimento al documento che ha generato la richiesta dell'ordine di "
 "acquisto (es. un ordine di vendita)"
 
 #. module: purchase
@@ -2278,9 +2292,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
-"Riferimento all'ordine di vednita o all'offerta inviata dal Fornitore. E "
-"utilizzato per controllare quando ricevi i prodotti ed è riportato "
-"solitamente sul buono di consegna del fonitore"
+"Riferimento all'ordine di vendita o all'offerta inviata dal fornitore. "
+"Utilizzato per effettuare l'abbinamento quando vengono ricevuti i prodotti, "
+"di solito è riportato nell'ordine di consegna inviato dal fornitore."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2310,6 +2324,8 @@ msgstr "Richiesta di preventivo n° "
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
 msgstr ""
+"Richiesta ai supervisori di approvare ordini al di sopra di un importo "
+"minimo"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
@@ -2375,7 +2391,7 @@ msgstr "Nome sezione (es. prodotti, servizi)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr "Tempi di consegna per gli acquisti"
+msgstr "Tempo di risposta sicuro per acquisti"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -2387,7 +2403,7 @@ msgstr "Token di sicurezza"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr "Seleziona un prodotto o creane al volo uno nuovo."
+msgstr "Seleziona un prodotto oppure creane uno nuovo al volo."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -2472,7 +2488,7 @@ msgstr "Origine"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
 msgid "Source Document"
-msgstr "Documento origine"
+msgstr "Documento di origine"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2805,7 +2821,7 @@ msgstr "Campo di utilità per esprimere la valuta importo"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Voce griglia per variante"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
@@ -2881,7 +2897,7 @@ msgstr "In attesa"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__to_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Waiting Bills"
-msgstr "In attesa di fatture"
+msgstr "In attesa di fatturazione"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2958,7 +2974,7 @@ msgstr "Sì"
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"È possibile trovare un fornitore per nome, codice fiscale, e-mail o "
+"Un fornitore può essere trovato per nome, codice fiscale, e-mail o "
 "riferimento interno."
 
 #. module: purchase
@@ -2994,4 +3010,4 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "days before"
-msgstr ""
+msgstr "giorno/i prima"

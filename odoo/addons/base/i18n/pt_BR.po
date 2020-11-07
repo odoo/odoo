@@ -3,6 +3,7 @@
 # 	* base
 # 
 # Translators:
+# nle_odoo, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # mariana rodrigues <mariana12v@gmail.com>, 2020
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2020
@@ -31,7 +32,6 @@
 # falexandresilva <falexandresilva@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
-# nle_odoo, 2020
 # grazziano <gra.negocia@gmail.com>, 2020
 # Silmar <pinheirosilmar@gmail.com>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
@@ -42,6 +42,8 @@
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # PopSolutions Cooperativa Digital <popsolutions.co@gmail.com>, 2020
 # Liane Cafarate <lic@odoo.com>, 2020
+# Luis Felipe Miléo <mileo@kmee.com.br>, 2020
+# Éder Brito <britoederr@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -49,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:25+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Liane Cafarate <lic@odoo.com>, 2020\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8147,7 +8149,7 @@ msgid ""
 "                                <span colspan=\"2\">Day: %(day)s</span>"
 msgstr ""
 "<span colspan=\"2\">Ano atual com século: %(year)s</span>\n"
-"                                <span colspan=\"2\">Ano Atual sem Século: %(y)s</span>\n"
+"                                <span colspan=\"2\">Ano atual sem século: %(y)s</span>\n"
 "                                <span colspan=\"2\">Mês: %(month)s</span>\n"
 "                                <span colspan=\"2\">Dia: %(day)s</span>"
 
@@ -8158,9 +8160,9 @@ msgid ""
 "                                <span colspan=\"2\">Week of the Year: %(woy)s</span>\n"
 "                                <span colspan=\"2\">Day of the Week (0:Monday): %(weekday)s</span>"
 msgstr ""
-"<span colspan=\"2\">Dia do Ano: %(doy)s</span><span colspan=\"2\">Semana do "
-"Ano: %(woy)s</span>Dia da Semana<span colspan=\"2\">(0:Segunda-feira): "
-"%(weekday)s</span>"
+"<span colspan=\"2\">Dia do ano: %(doy)s</span>\n"
+"                                <span colspan=\"2\">Semana do ano: %(woy)s</span>\n"
+"                                <span colspan=\"2\">Dia da semana (0:Segunda): %(weekday)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -9775,7 +9777,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "É necessário um e-mail para find_or_create funcionar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -14910,12 +14912,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "Conteúdo do Arquivo (base64)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Conteúdo do arquivo (raw)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -14939,6 +14941,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Arquivo de onde a visualização se origina.\n"
+"                                                          Útil para redefinir visões quebradas (difícil) ou para ler o arco do arquivo no modo dev-xml."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -15056,7 +15060,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
-msgstr ""
+msgstr "Bandeira"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__flag_image_url
@@ -17104,7 +17108,7 @@ msgstr "Internet das Coisas"
 #: model:ir.module.category,name:base.module_category_internet_of_things_(iot)
 #: model:ir.module.category,name:base.module_category_manufacturing_internet_of_things_(iot)
 msgid "Internet of Things (IoT)"
-msgstr ""
+msgstr "Internet das coisas (IoT)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_number
@@ -17239,6 +17243,8 @@ msgid ""
 "Invalid server name !\n"
 " %s"
 msgstr ""
+"Nome de Servidor Inválido\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -17993,7 +17999,7 @@ msgstr "Leiaute em Relatórios"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "Enriquecimento de Lead"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
@@ -18261,7 +18267,7 @@ msgstr "Localização"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "Localizações"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -18498,7 +18504,7 @@ msgstr "Maintenance - HR"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_maintenance
 msgid "Maintenance - MRP"
-msgstr "Atualização no MRP"
+msgstr "Manutenção - MRP"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -19330,7 +19336,7 @@ msgstr "Modelos"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "Arquitetura Modificada"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -19358,7 +19364,7 @@ msgstr "Categoria de Módulos"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Module Info"
-msgstr "Module Info"
+msgstr "Informações do Módulo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
@@ -22658,7 +22664,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "Arquitetura de Visualização Anterior"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__lastcall
@@ -22675,7 +22681,7 @@ msgstr "Precisão do Preço"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Cor Primária"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_check_printing
@@ -23568,7 +23574,7 @@ msgstr "Remover do menu 'Imprimir'"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related this report"
-msgstr "Remover ação contextual no relatório relacionado"
+msgstr "Remova a ação contextual relacionada a este relatório"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -23636,7 +23642,7 @@ msgstr "Rodapé do Relatório"
 #. module: base
 #: model:ir.model,name:base.model_report_layout
 msgid "Report Layout"
-msgstr ""
+msgstr "Layout de Relatório"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -23776,7 +23782,7 @@ msgstr "Extensões de restaurante para o Ponto de Venda "
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "Restaurar versões anteriores (reinicialização suave)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__restrict
@@ -24350,7 +24356,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__secondary_color
 msgid "Secondary Color"
-msgstr ""
+msgstr "Cor secundária"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
@@ -24669,6 +24675,8 @@ msgid ""
 "Server replied with following exception:\n"
 " %s"
 msgstr ""
+"O servidor respondeu com a seguinte exceção:\n"
+"%s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -26417,7 +26425,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Este campo é o mesmo que o campo 'arch' sem traduções"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
@@ -26431,11 +26439,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Este campo deve ser usado ao acessar a arquitetura da visualização. Vai usar tradução.\n"
+"                               Observe que ele irá ler `arch_db` ou `arch_fs` se estiver no modo dev-xml."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Este campo armazena a arquitetura da visualização."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -26443,6 +26453,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Este campo salvará o ʻarch_db` atual antes de escrever nele.\n"
+"                                                                         Útil para redefinir (suavemente) uma vista interrompida.."
 
 #. module: base
 #: code:addons/image.py:0
@@ -27128,6 +27140,8 @@ msgid ""
 "Turn emails received in your Outlook mailbox into leads and log their "
 "content as internal notes."
 msgstr ""
+"Transforme e-mails recebidos em sua caixa de correio do Outlook em leads e "
+"registre seu conteúdo como notas internas."
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -27569,7 +27583,7 @@ msgstr "Atualizações"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr "Atualização"
+msgstr "Atualizar"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -27584,7 +27598,7 @@ msgstr "Url"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr ""
+msgstr "URL da imagem da bandeira estática"
 
 #. module: base
 #: model:res.country,name:base.uy

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -1505,7 +1505,7 @@ msgstr "Ripulisce i filtri"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid ""
-"Click here to send a verification email allowing you to participate to the "
+"Click here to send a verification email allowing you to participate at the "
 "eLearning."
 msgstr ""
 
@@ -1690,40 +1690,33 @@ msgstr "Configurazione"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"Congratulation you've created your first course.<br/>Click on the title of "
-"this content to see it in fullscreen mode."
+"Congratulations! Your first lesson is available. Let's see the options "
+"available here. The tag \"<b>New</b>\" indicates that this lesson was "
+"created less than 7 days ago."
 msgstr ""
-"Congratulazioni, hai creato il tuo primo corso.<br/>Fai clic sul titolo del "
-"contenuto per visualizzarlo a schermo intero."
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-#, python-format
-msgid ""
-"Congratulation! Your first lesson is available. Let's see the options "
-"available here. The tag \"<b>New</b>\" indicate that this lesson has less "
-"than 7 days."
-msgstr ""
-"Congratulazioni, la tua prima lezione è disponibile. Dai un'occhiata alle "
-"opzioni disponibili. L'etichetta \"<b>Nuova</b>\" indica che la lezione ha "
-"meno di 7 giorni."
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-#, python-format
-msgid ""
-"Congratulation, your course is created, but there isn't any content yet. "
-"First, let's add a <b>Section</b> to give your course a structure."
-msgstr ""
-"Congratulazioni, il corso è stato creato ma è ancora senza contenuti. Per "
-"prima cosa aggiungi una <b>sezione</b> per dare una struttura al corso."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Congratulations, you have reached the last rank!"
 msgstr "Congratulazioni, hai raggiunto l'ultimo livello!"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, you've created your first course.<br/>Click on the title of"
+" this content to see it in fullscreen mode."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, your course has been created, but there isn't any content "
+"yet. First, let's add a <b>Section</b> to give your course a structure."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -2055,10 +2048,10 @@ msgstr "Elimina domanda"
 msgid ""
 "Depending the promote strategy, a slide will appear on the top of the course's page :\n"
 " * Latest Published : the slide created last.\n"
-" * Most Voted : the slide which have to most vote.\n"
-" * Most Viewed ; the slide which have been viewed the most.\n"
+" * Most Voted : the slide which has to most votes.\n"
+" * Most Viewed ; the slide which has been viewed the most.\n"
 " * Specific : You choose the slide to appear.\n"
-" * None : There won't be any slide showing.\n"
+" * None : No slides will be shown.\n"
 msgstr ""
 
 #. module: website_slides
@@ -2596,6 +2589,7 @@ msgstr "Chiave API Google Drive"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/activity.xml:0
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Grant Access"
@@ -3883,7 +3877,7 @@ msgstr ""
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 invalid answer"
+msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
 
 #. module: website_slides
@@ -3997,6 +3991,7 @@ msgstr "Destinatari"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/activity.xml:0
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Refuse Access"
@@ -4792,7 +4787,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
-msgid "This is the correct answer, congratulation"
+msgid "This is the correct answer, congratulations"
 msgstr ""
 
 #. module: website_slides
@@ -5397,7 +5392,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
-msgid "You may now participate to our eLearning."
+msgid "You may now participate in our eLearning."
 msgstr ""
 
 #. module: website_slides
@@ -5433,11 +5428,9 @@ msgstr "Il tuo"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"Your Google API key is invalid, please update it into your settings.\n"
+"Your Google API key is invalid, please update it in your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
-"Chiave API di Google non valida, aggiornarla nelle impostazioni.\n"
-"Impostazioni → Sito web → Funzionalità → Chiave API"
 
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
@@ -5552,9 +5545,9 @@ msgstr "login"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"means? The YouTube unlisted meaning is a video which can be viewed only by "
-"the users having the link to it. Your video will never come up in the search"
-" results nor on your channel."
+"means? The YouTube \"unlisted\" means it is a video which can be viewed only"
+" by the users with the link to it. Your video will never come up in the "
+"search results nor on your channel."
 msgstr ""
 
 #. module: website_slides

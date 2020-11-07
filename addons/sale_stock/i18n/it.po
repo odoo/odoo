@@ -174,7 +174,7 @@ msgstr "Disponibile"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available in stock"
-msgstr ""
+msgstr "Disponibile a magazzino"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -233,7 +233,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
+msgstr "Visualizzare lotti/numeri di serie su fatture"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
@@ -343,7 +343,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr "Scorta prevista"
+msgstr "Giacenza prevista"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -480,7 +480,7 @@ msgstr "Lotto/Serie"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Mostra i lotti e i numeri di serie nella fattura"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -500,9 +500,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"Margine di errore per le date promesse al cliente. Le consegne saranno "
-"programmate con tanti giorni di anticipo sulla data promessa, per compensare"
-" le scadenze inaspettate sulla catena di approvvigionamento."
+"Margine di errore per date promesse ai clienti. Per superare ritardi "
+"imprevisti nella catena di distribuzione, la consegna dei prodotti viene "
+"programmata con alcuni giorni di anticipo sull'attuale data promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -513,9 +513,10 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"Margine di errore per le date promesse al cliente. Le consegne saranno "
-"programmate con tanti giorni di anticipo sulla data promessa, per compensare"
-" le scadenze inaspettate sulla catena di approvvigionamento."
+"Margine di errore per date promesse ai clienti. Per superare ritardi "
+"imprevisti nella catena di distribuzione, l'approvvigionamento e la consegna"
+" dei prodotti vengono programmate con alcuni giorni di anticipo sull'attuale"
+" data promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -612,11 +613,11 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
-"Si consiglia di prenotare i prodotti manualmente creando ordini di consegna "
-"o eseguendo il pianificatore per gestire meglio le priorità in caso di "
-"lunghi tempi di consegna clienti e/o frequenti esaurimenti di scorte. Per "
-"impostazione predefinita, il pianificatore viene eseguito automaticamente "
-"ogni 24 ore. "
+"Per gestire al meglio le priorità, in caso di tempi lunghi di consegna "
+"cliente o esaurimento frequente di scorte, è consigliato riservare i "
+"prodotti manualmente negli ordini di consegna oppure eseguire lo "
+"schedulatore. Per impostazione predefinita, viene eseguito automaticamente "
+"ogni 24 ore."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -682,7 +683,7 @@ msgstr "Giorni di Sicurezza per la Vendita"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "Pianifica le consegne prima per evitare i ritardi"
+msgstr "Programma in anticipo le consegne per evitare ritardi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -692,12 +693,12 @@ msgstr "Data programmata"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Scadenza di sicurezza"
+msgstr "Tempo di risposta sicuro"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "Scadenza di sicurezza per le vendite"
+msgstr "Tempo di risposta sicuro per vendite"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
@@ -707,12 +708,12 @@ msgstr "Selezionabile sulle righe dell'ordine di vendita"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr "Spedire tutti i prodotti in una sola operazione"
+msgstr "Spedire insieme tutti i prodotti"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr "Consegnare prodotti non appena sono disponibili con ordini arretrati"
+msgstr "Spedire prodotti non appena disponibili, con ordini residui"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -847,12 +848,12 @@ msgstr "Quando tutti i prodotti sono pronti"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr "Quando riservare i prodotti venduti"
+msgstr "Prenotazione dei prodotti venduti"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "Quando iniziare la consegna"
+msgstr "Avvio della spedizione"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0

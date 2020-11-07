@@ -43,12 +43,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s o %(time_start)s do\n"
+" %(date_end)s o %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s o (%(start)s do %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -308,7 +310,7 @@ msgstr "<span> hodiny</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "A user cannot have twice the same contact."
-msgstr ""
+msgstr "Používateľ nemôže mať dvakrát rovnaký kontakt."
 
 #. module: calendar
 #. openerp-web
@@ -376,12 +378,12 @@ msgstr "Po celý deň"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Celý deň, %(day)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 msgid "All events"
-msgstr ""
+msgstr "Všetky udalosti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -404,7 +406,7 @@ msgstr "Status účastníka"
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Attendees"
-msgstr "Účastníci"
+msgstr "Účastníkov"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -432,7 +434,7 @@ msgstr "Dňom"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 msgid "Byday"
-msgstr ""
+msgstr "Do dňa"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
@@ -487,6 +489,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"Vyberte, čo sa má robiť s ďalšími udalosťami v opakovaní. Aktualizácia "
+"všetkých udalostí nie je povolená, ak dôjde k zmene dátumu alebo času"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
@@ -1623,6 +1627,9 @@ msgid ""
 "Updating All Events is not allowed when dates or time is modified. You can "
 "only update one particular event and following events."
 msgstr ""
+"Aktualizácia všetkých udalostí nie je povolená, ak dôjde k zmene dátumu "
+"alebo času. Môžete aktualizovať iba jednu konkrétnu udalosť a nasledujúce "
+"udalosti."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users

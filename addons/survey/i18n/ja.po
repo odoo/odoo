@@ -18,14 +18,15 @@
 # Martin Trigaux, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Takuya Sawada <takuya@tuntunkun.com>, 2020
+# Noma Yuki, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Takuya Sawada <takuya@tuntunkun.com>, 2020\n"
+"Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -404,7 +405,7 @@ msgstr ""
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p2
-msgid "<p>Some questions on our Company. Do you really know us ?</p>"
+msgid "<p>Some questions about our company. Do you really know us?</p>"
 msgstr ""
 
 #. module: survey
@@ -662,7 +663,7 @@ msgstr ""
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped, either answered. Not both."
+msgid "A question is either skipped or answered, not both."
 msgstr ""
 
 #. module: survey
@@ -709,7 +710,7 @@ msgstr "活動"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "例外の活動を示す文字装飾"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
@@ -719,7 +720,7 @@ msgstr "活動状態"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "活動種別アイコン"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1058,7 +1059,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model_terms:ir.ui.view,arch_db:survey.survey_tree
 msgid "Certification"
-msgstr ""
+msgstr "証明書"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
@@ -1138,7 +1139,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Chart"
-msgstr ""
+msgstr "チャート"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
@@ -1260,7 +1261,7 @@ msgstr ""
 
 #. module: survey
 #: model:gamification.badge,description:survey.vendor_certification_badge
-msgid "Congratulation, you are now official vendor of MyCompany"
+msgid "Congratulations, you are now official vendor of MyCompany"
 msgstr ""
 
 #. module: survey
@@ -1292,6 +1293,11 @@ msgstr "内容"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Continue"
 msgstr "次へ進む"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid "Continue here"
+msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q3_sug4
@@ -1948,7 +1954,7 @@ msgstr "アイコン"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "例外的なアクティビティを示唆するアイコン"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__access_token
@@ -2707,7 +2713,7 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
-msgid "Occurence"
+msgid "Occurrence"
 msgstr ""
 
 #. module: survey
@@ -2887,7 +2893,7 @@ msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug1
-msgid "Pincaceae"
+msgid "Pinaceae"
 msgstr ""
 
 #. module: survey
@@ -3343,14 +3349,6 @@ msgid "Some emails you just entered are incorrect: %s"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid ""
-"Something went wrong while contacting survey server. <strong class=\"text-"
-"danger\">Your answers have probably not been recorded.</strong> Try "
-"refreshing."
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Sorry, no one answered this survey yet."
 msgstr ""
@@ -3563,7 +3561,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr ""
+msgstr "ユーザーの入力を調査する"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
@@ -4020,6 +4018,13 @@ msgid "Title"
 msgstr "タイトル"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid ""
+"To take this survey, please close all other tabs on <strong class=\"text-"
+"danger\"/>."
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
 msgstr "本日の活動"
@@ -4265,11 +4270,6 @@ msgid "What is the biggest city in the world ?"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
-msgid "What is the highest volcano in Europe ?"
-msgstr ""
-
-#. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email ?"
 msgstr ""
@@ -4333,6 +4333,11 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
 msgid "Which category does a tomato belong to"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
+msgid "Which is the highest volcano in Europe ?"
 msgstr ""
 
 #. module: survey
@@ -4471,12 +4476,8 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
-msgid "for graduating from"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
-msgid "for gratuating from"
+msgid "for graduating"
 msgstr ""
 
 #. module: survey

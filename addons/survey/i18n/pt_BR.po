@@ -29,14 +29,16 @@
 # Martin Trigaux, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
+# Éder Brito <britoederr@gmail.com>, 2020
+# Luis Felipe Miléo <mileo@kmee.com.br>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020\n"
+"Last-Translator: Luis Felipe Miléo <mileo@kmee.com.br>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +74,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "$80"
-msgstr ""
+msgstr "R$80"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -415,7 +417,7 @@ msgstr ""
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p2
-msgid "<p>Some questions on our Company. Do you really know us ?</p>"
+msgid "<p>Some questions about our company. Do you really know us?</p>"
 msgstr ""
 
 #. module: survey
@@ -675,7 +677,7 @@ msgstr "Ocorreu um problema"
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped, either answered. Not both."
+msgid "A question is either skipped or answered, not both."
 msgstr ""
 
 #. module: survey
@@ -732,7 +734,7 @@ msgstr "Estado de Atividade"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ícone do Tipo de Atividade"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -855,7 +857,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
 msgid "Answer that will trigger the display the current question."
-msgstr ""
+msgstr "Resposta que irá desencadear a exibição da pergunta atual."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -1151,7 +1153,7 @@ msgstr "Proteção de piso para cadeiras"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Chart"
-msgstr ""
+msgstr "Gráfico"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
@@ -1273,7 +1275,7 @@ msgstr ""
 
 #. module: survey
 #: model:gamification.badge,description:survey.vendor_certification_badge
-msgid "Congratulation, you are now official vendor of MyCompany"
+msgid "Congratulations, you are now official vendor of MyCompany"
 msgstr ""
 
 #. module: survey
@@ -1305,6 +1307,11 @@ msgstr "Conteúdo"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Continue"
 msgstr "Continuar"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid "Continue here"
+msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q3_sug4
@@ -1735,7 +1742,7 @@ msgstr "Seguidores (Parceiros)"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Ícone do Font Awesome. Ex: fa-tasks"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -2720,8 +2727,8 @@ msgstr "Resposta numérica"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
-msgid "Occurence"
-msgstr "Ocorrência"
+msgid "Occurrence"
+msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_5
@@ -2900,7 +2907,7 @@ msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug1
-msgid "Pincaceae"
+msgid "Pinaceae"
 msgstr ""
 
 #. module: survey
@@ -3355,17 +3362,6 @@ msgstr ""
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
 msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid ""
-"Something went wrong while contacting survey server. <strong class=\"text-"
-"danger\">Your answers have probably not been recorded.</strong> Try "
-"refreshing."
-msgstr ""
-"Algo deu errado ao entrar em contato com servidor de pesquisa. <strong class"
-"=\"text-danger\">Suas respostas provavelmente não foram gravadas.</strong> "
-"Tente atualizar."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -4039,6 +4035,13 @@ msgid "Title"
 msgstr "Título"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
+msgid ""
+"To take this survey, please close all other tabs on <strong class=\"text-"
+"danger\"/>."
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
 msgstr "Atividades de Hoje"
@@ -4086,7 +4089,7 @@ msgstr "Tipo"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo de atividade de exceção registrada."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__suggested_answer_ids
@@ -4103,6 +4106,8 @@ msgstr ""
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"Não foi possível postar mensagem, configure o endereço de e-mail do "
+"remetente."
 
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
@@ -4284,11 +4289,6 @@ msgid "What is the biggest city in the world ?"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
-msgid "What is the highest volcano in Europe ?"
-msgstr ""
-
-#. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email ?"
 msgstr ""
@@ -4352,6 +4352,11 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
 msgid "Which category does a tomato belong to"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
+msgid "Which is the highest volcano in Europe ?"
 msgstr ""
 
 #. module: survey
@@ -4494,12 +4499,8 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
-msgid "for graduating from"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
-msgid "for gratuating from"
+msgid "for graduating"
 msgstr ""
 
 #. module: survey

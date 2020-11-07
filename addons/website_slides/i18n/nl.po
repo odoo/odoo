@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -1552,11 +1552,11 @@ msgstr "Filters verwijderen"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid ""
-"Click here to send a verification email allowing you to participate to the "
+"Click here to send a verification email allowing you to participate at the "
 "eLearning."
 msgstr ""
-"Klik hier om een e-mailverificatie te sturen waarmee u kunt deelnemen aan de"
-" e-Learning."
+"Klik hier om een verificatie-e-mail te sturen waarmee u kunt deelnemen aan "
+"de eLearning."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -1746,8 +1746,26 @@ msgstr "Configuratie"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"Congratulation you've created your first course.<br/>Click on the title of "
-"this content to see it in fullscreen mode."
+"Congratulations! Your first lesson is available. Let's see the options "
+"available here. The tag \"<b>New</b>\" indicates that this lesson was "
+"created less than 7 days ago."
+msgstr ""
+"Gefeliciteerd! Je eerste les is beschikbaar. Laten we eens kijken naar de "
+"opties die hier beschikbaar zijn. De tag \"<b>Nieuw</b>\" geeft aan dat deze"
+" les minder dan 7 dagen heeft."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
+msgid "Congratulations, you have reached the last rank!"
+msgstr "Gefeliciteerd, u hebt de laatste rang bereikt!"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, you've created your first course.<br/>Click on the title of"
+" this content to see it in fullscreen mode."
 msgstr ""
 "Gefeliciteerd, je hebt je eerste cursus gemaakt.<br/>Klik op de titel van "
 "deze inhoud om deze in een volledig scherm te zien."
@@ -1757,29 +1775,11 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"Congratulation! Your first lesson is available. Let's see the options "
-"available here. The tag \"<b>New</b>\" indicate that this lesson has less "
-"than 7 days."
-msgstr ""
-"Gefeliciteerd! Je eerste les is beschikbaar. Laten we eens kijken naar de "
-"opties die hier beschikbaar zijn. De tag \"<b>Nieuw</b>\" geeft aan dat deze"
-" les minder dan 7 dagen heeft."
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-#, python-format
-msgid ""
-"Congratulation, your course is created, but there isn't any content yet. "
-"First, let's add a <b>Section</b> to give your course a structure."
+"Congratulations, your course has been created, but there isn't any content "
+"yet. First, let's add a <b>Section</b> to give your course a structure."
 msgstr ""
 "Gefeliciteerd, je cursus is gemaakt, maar er is nog geen inhoud. Laten we "
 "eerst een <b>sectie</b> toevoegen om je cursus structuur te geven."
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
-msgid "Congratulations, you have reached the last rank!"
-msgstr "Gefeliciteerd, u hebt de laatste rang bereikt!"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -2112,10 +2112,10 @@ msgstr "Verwijder vraag"
 msgid ""
 "Depending the promote strategy, a slide will appear on the top of the course's page :\n"
 " * Latest Published : the slide created last.\n"
-" * Most Voted : the slide which have to most vote.\n"
-" * Most Viewed ; the slide which have been viewed the most.\n"
+" * Most Voted : the slide which has to most votes.\n"
+" * Most Viewed ; the slide which has been viewed the most.\n"
 " * Specific : You choose the slide to appear.\n"
-" * None : There won't be any slide showing.\n"
+" * None : No slides will be shown.\n"
 msgstr ""
 "Afhankelijk van de promotiestrategie verschijnt er een dia bovenaan de cursuspagina:\n"
 "* Laatst gepubliceerd: de laatst gemaakte dia.\n"
@@ -2661,6 +2661,7 @@ msgstr "Google Drive API sleutel"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/activity.xml:0
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Grant Access"
@@ -3960,7 +3961,7 @@ msgstr "Vraag \"%s\" moet 1 juist antwoord hebben."
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 invalid answer"
+msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
 "Vraag \"%s\" moet 1 juist antwoord hebben en minstens 1 ongeldig antwoord."
 
@@ -4075,6 +4076,7 @@ msgstr "Ontvangers"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/activity.xml:0
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Refuse Access"
@@ -4883,8 +4885,8 @@ msgstr "Dit is het correcte antwoord"
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
-msgid "This is the correct answer, congratulation"
-msgstr "Dit is het correcte antwoord, gefeliciteerd"
+msgid "This is the correct answer, congratulations"
+msgstr "Dit is het correcte antwoord, proficiat"
 
 #. module: website_slides
 #. openerp-web
@@ -5493,7 +5495,7 @@ msgstr "Je moet je eerst aanmelden."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
-msgid "You may now participate to our eLearning."
+msgid "You may now participate in our eLearning."
 msgstr "U mag nu deelnemen aan onze e-learning."
 
 #. module: website_slides
@@ -5529,7 +5531,7 @@ msgstr "Uw"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"Your Google API key is invalid, please update it into your settings.\n"
+"Your Google API key is invalid, please update it in your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
 "Je Google API-sleutel is ongeldig. Werk deze bij in je instellingen.\n"
@@ -5651,12 +5653,12 @@ msgstr "in te loggen"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"means? The YouTube unlisted meaning is a video which can be viewed only by "
-"the users having the link to it. Your video will never come up in the search"
-" results nor on your channel."
+"means? The YouTube \"unlisted\" means it is a video which can be viewed only"
+" by the users with the link to it. Your video will never come up in the "
+"search results nor on your channel."
 msgstr ""
-"Dit betekent? De niet-vermelde betekenis van YouTube is een video die alleen"
-" kan worden bekeken door de gebruikers die de link ernaar hebben. Je video "
+"betekent? De \"niet-vermeld\" betekenis van YouTube is een video die alleen "
+"kan worden bekeken door de gebruikers die de link ernaar hebben. Je video "
 "komt nooit voor in de zoekresultaten of op je kanaal."
 
 #. module: website_slides

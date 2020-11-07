@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_sale
+# 	* pos_sale
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,38 +16,54 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_report_all_channels_sales
-msgid "All sales orders grouped by sales channels"
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "<span class=\"o_form_label\">Sales Team</span>"
 msgstr ""
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:103
-#, python-format
-msgid "Dashboard"
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
+msgid "Currency Rate"
 msgstr ""
 
 #. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Day"
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_dashboard_graph_group_pos
-msgid "Group by"
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+msgid "ID"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_crm_team_dashboard_graph_group_pos
-msgid "How this channel's dashboard graph will group the results."
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
+msgid "Invoiced"
 msgstr ""
 
 #. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Month"
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report____last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_pos_sessions_open_count
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
+msgid "New"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
 msgstr ""
 
@@ -57,37 +73,56 @@ msgid "Open Sessions"
 msgstr ""
 
 #. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-#: model:crm.team,name:pos_sale.pos_sales_team
-msgid "Point of Sale"
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
+msgid "Paid"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_pos_config_ids
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
 msgstr ""
 
 #. module: pos_sale
-#: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
-msgid "Sales"
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
+msgid "Posted"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "Sales Reporting"
 msgstr ""
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
-#: model:ir.model.fields,field_description:pos_sale.field_pos_config_crm_team_id
-#: model:ir.model.fields,field_description:pos_sale.field_pos_session_crm_team_id
-msgid "Sales Channel"
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
+msgid "Sales Team"
 msgstr ""
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:115
-#, python-format
-msgid "Sales: Untaxed Amount"
-msgstr ""
-
-#. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Salesperson"
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "Sales are reported to the following sales team"
 msgstr ""
 
 #. module: pos_sale
@@ -96,7 +131,7 @@ msgid "Session Running"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_pos_order_amount_total
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
 msgstr ""
 
@@ -106,22 +141,19 @@ msgid "Sessions Running"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_pos_config_crm_team_id
-#: model:ir.model.fields,help:pos_sale.field_pos_session_crm_team_id
-msgid "This Point of sale's sales will be related to this Sales Channel."
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
+msgid "Status"
 msgstr ""
 
 #. module: pos_sale
-#: selection:crm.team,dashboard_graph_group_pos:0
-msgid "Week"
+#: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_config
-msgid "pos.config"
-msgstr ""
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_session
-msgid "pos.session"
+#: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
+msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
