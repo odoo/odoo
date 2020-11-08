@@ -2458,8 +2458,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
+            column_format = field.column_format
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, field.column_format, column_name)
+                self._table, column_name, column_format, column_name)
             self._cr.execute(query, (value,))
 
     @ormcache()
@@ -4268,6 +4269,13 @@ Fields:
 
         :return: the qualified field name (or expression) to use for ``field``
         """
+        if self._fields[field].translation_storage == 'json':
+            source_value = '"%s"."%s"' % (table_alias, field)
+            if self.env.lang:
+                translated_value = '"%s"."%s"->>\'%s\'' % (table_alias, self._fields[field].translation_column, self.env.lang)
+                return 'COALESCE(%s, %s)' % (translated_value, source_value)
+            else:
+                return source_value
         if self.env.lang:
             alias, alias_statement = query.add_join(
                 (table_alias, 'ir_translation', 'id', 'res_id', field),

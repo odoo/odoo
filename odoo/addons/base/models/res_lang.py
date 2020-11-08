@@ -89,12 +89,22 @@ class Lang(models.Model):
             _logger.error("No language is active.")
 
     @api.model
+    def _create_translation_indexes(self):
+        model_fields = self.env["ir.model.fields"].search(
+            [("translate", "=", True), ("translation_storage", "=", "json")])
+        for model_field in model_fields:
+            model = self.env[model_field.model]
+            field = model._fields[model_field.name]
+            field._update_translation_index(model)
+
+    @api.model
     def load_lang(self, lang, lang_name=None):
         """ Create the given language if necessary, and make it active. """
         # if the language exists, simply make it active
         language = self.with_context(active_test=False).search([('code', '=', lang)], limit=1)
         if language:
             language.write({'active': True})
+            self._create_translation_indexes()
             return language.id
 
         # create the language with locale information
@@ -149,7 +159,9 @@ class Lang(models.Model):
             'grouping' : str(conv.get('grouping', [])),
         }
         try:
-            return self.create(lang_info).id
+            res = self.create(lang_info).id
+            self._create_translation_indexes()
+            return res
         finally:
             tools.resetlocale()
 

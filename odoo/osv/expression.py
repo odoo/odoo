@@ -1113,8 +1113,7 @@ class expression(object):
                     else:
                         push_result(leaf)
 
-
-                elif field.translate is True and right:
+                elif field.translate is True and right and not field.translation_storage == "json":
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
@@ -1180,6 +1179,12 @@ class expression(object):
         assert not isinstance(right, BaseModel), \
             "Invalid value %r in domain term %r" % (right, leaf)
 
+        field = left in model._fields and model._fields[left]
+        if leaf not in (TRUE_LEAF, FALSE_LEAF):
+            quoted_left = _quote(left)
+            if field.translation_storage == "json":
+                quoted_left = "%s->>'%s'" % (_quote(field.translation_column), get_lang(model.env).code)
+
         table_alias = '"%s"' % (eleaf.generate_alias())
 
         if leaf == TRUE_LEAF:
@@ -1191,11 +1196,11 @@ class expression(object):
             params = []
 
         elif operator == 'inselect':
-            query = '(%s."%s" in (%s))' % (table_alias, left, right[0])
+            query = '(%s.%s in (%s))' % (table_alias, quoted_left, right[0])
             params = right[1]
 
         elif operator == 'not inselect':
-            query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
+            query = '(%s.%s not in (%s))' % (table_alias, quoted_left, right[0])
             params = right[1]
 
         elif operator in ['in', 'not in']:
@@ -1204,12 +1209,12 @@ class expression(object):
             if isinstance(right, bool):
                 _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (leaf,))
                 if (operator == 'in' and right) or (operator == 'not in' and not right):
-                    query = '(%s."%s" IS NOT NULL)' % (table_alias, left)
+                    query = '(%s.%s IS NOT NULL)' % (table_alias, quoted_left)
                 else:
-                    query = '(%s."%s" IS NULL)' % (table_alias, left)
+                    query = '(%s.%s IS NULL)' % (table_alias, quoted_left)
                 params = []
             elif isinstance(right, (list, tuple)):
-                if model._fields[left].type == "boolean":
+                if field.type == "boolean":
                     params = [it for it in (True, False) if it in right]
                     check_null = False in right
                 else:
@@ -1219,34 +1224,33 @@ class expression(object):
                     if left == 'id':
                         instr = ','.join(['%s'] * len(params))
                     else:
-                        field = model._fields[left]
                         instr = ','.join([field.column_format] * len(params))
                         params = [field.convert_to_column(p, model, validate=False) for p in params]
-                    query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
+                    query = '(%s.%s %s (%s))' % (table_alias, quoted_left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
                     query = 'FALSE' if operator == 'in' else 'TRUE'
                 if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
-                    query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
+                    query = '(%s OR %s.%s IS NULL)' % (query, table_alias, quoted_left)
                 elif operator == 'not in' and check_null:
-                    query = '(%s AND %s."%s" IS NOT NULL)' % (query, table_alias, left)  # needed only for TRUE.
+                    query = '(%s AND %s.%s IS NOT NULL)' % (query, table_alias, quoted_left)  # needed only for TRUE.
             else:  # Must not happen
                 raise ValueError("Invalid domain term %r" % (leaf,))
 
-        elif left in model and model._fields[left].type == "boolean" and ((operator == '=' and right is False) or (operator == '!=' and right is True)):
-            query = '(%s."%s" IS NULL or %s."%s" = false )' % (table_alias, left, table_alias, left)
+        elif field and field.type == "boolean" and ((operator == '=' and right is False) or (operator == '!=' and right is True)):
+            query = '(%s.%s IS NULL or %s.%s = false )' % (table_alias, quoted_left, table_alias, quoted_left)
             params = []
 
         elif (right is False or right is None) and (operator == '='):
-            query = '%s."%s" IS NULL ' % (table_alias, left)
+            query = '%s.%s IS NULL ' % (table_alias, quoted_left)
             params = []
 
-        elif left in model and model._fields[left].type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
-            query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table_alias, left, table_alias, left)
+        elif field and field.type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
+            query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table_alias, quoted_left, table_alias, quoted_left)
             params = []
 
         elif (right is False or right is None) and (operator == '!='):
-            query = '%s."%s" IS NOT NULL' % (table_alias, left)
+            query = '%s.%s IS NOT NULL' % (table_alias, quoted_left)
             params = []
 
         elif operator == '=?':
@@ -1266,18 +1270,17 @@ class expression(object):
 
             if left not in model:
                 raise ValueError("Invalid field %r in domain term %r" % (left, leaf))
-            format = '%s' if need_wildcard else model._fields[left].column_format
+            format = '%s' if need_wildcard else field.column_format
             unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
-            column = '%s.%s' % (table_alias, _quote(left))
+            column = '%s.%s' % (table_alias, quoted_left)
             query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
 
             if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
-                query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
+                query = '(%s OR %s.%s IS NULL)' % (query, table_alias, quoted_left)
 
             if need_wildcard:
                 params = ['%%%s%%' % pycompat.to_text(right)]
             else:
-                field = model._fields[left]
                 params = [field.convert_to_column(right, model, validate=False)]
 
         return query, params

@@ -366,6 +366,7 @@ class IrModelFields(models.Model):
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
     translate = fields.Boolean(string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
+    translation_storage = fields.Selection(selection=[("json", "json"), ("ir_translations", "ir_translations")])
     size = fields.Integer()
     state = fields.Selection([('manual', 'Custom Field'), ('base', 'Base Field')], string='Type', default='manual', required=True, readonly=True, index=True)
     on_delete = fields.Selection([('cascade', 'Cascade'), ('set null', 'Set NULL'), ('restrict', 'Restrict')],
@@ -873,6 +874,7 @@ class IrModelFields(models.Model):
             'selectable': bool(field.search or field.store),
             'size': getattr(field, 'size', None),
             'translate': bool(field.translate),
+            'translation_storage': field.translation_storage,
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
@@ -968,6 +970,7 @@ class IrModelFields(models.Model):
         }
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
+            attrs['translation_storage'] = field_data['translation_storage']
             attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])

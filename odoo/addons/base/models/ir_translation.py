@@ -7,6 +7,7 @@ import logging
 import operator
 from collections import defaultdict
 from difflib import get_close_matches
+from psycopg2.extensions import AsIs
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -549,6 +550,47 @@ class IrTranslation(models.Model):
                     if value2 != value0:
                         raise ValidationError(_("Translation is not valid:\n%s") % val)
 
+    def _sync_translation_column(self):
+        for record in self.filtered(lambda r: r.type == 'model'):
+            mname, fname = record.name.split(',')
+            model = self.env[mname]
+            field = model._fields[fname]
+            if field.translation_storage != "json":
+                continue
+            self.env.cr.execute("""
+                UPDATE
+                    %s
+                SET %s = jsonb_set(%s, '{\"%s\"}', to_jsonb(%s::text))
+                WHERE id = %s
+            """, (
+                AsIs(model._table),
+                AsIs(field.translation_column),
+                AsIs(field.translation_column),
+                AsIs(record.lang),
+                record.value,
+                record.res_id,
+            ))
+
+    def _clean_translation_colum(self):
+        for record in self.filtered(lambda r: r.type == 'model'):
+            mname, fname = record.name.split(',')
+            model = self.env[mname]
+            field = model._fields[fname]
+            if field.translation_storage != "json":
+                continue
+            self.env.cr.execute("""
+                UPDATE
+                    %s
+                SET %s = %s - %s
+                WHERE id = %s
+            """, (
+                AsIs(model._table),
+                AsIs(field.translation_column),
+                AsIs(field.translation_column),
+                record.lang,
+                record.res_id
+            ))
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super(IrTranslation, self.sudo()).create(vals_list).with_env(self.env)
@@ -556,7 +598,7 @@ class IrTranslation(models.Model):
         records._modified()
         # DLE P62: `test_translate.py`, `test_sync`
         self.flush()
-        return records
+        records._sync_translation_column()
 
     def write(self, vals):
         if vals.get('value'):
@@ -573,11 +615,13 @@ class IrTranslation(models.Model):
         # this causes issues when changing the src/value of a translation, as when we read, we ask the flush,
         # but its not really the field which is in the towrite values, but its translation
         self.flush()
+        self._sync_translation_column()
         return result
 
     def unlink(self):
         self.check('unlink')
         self._modified()
+        self._clean_translation_column()
         return super(IrTranslation, self.sudo()).unlink()
 
     @api.model

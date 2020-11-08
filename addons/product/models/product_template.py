@@ -45,14 +45,14 @@ class ProductTemplate(models.Model):
             category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
-    name = fields.Char('Name', index=True, required=True, translate=True)
+    name = fields.Char('Name', index=True, required=True, translate=True, translation_storage='json')
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
-        'Description', translate=True)
+        'Description', translate=True, translation_storage='json')
     description_purchase = fields.Text(
-        'Purchase Description', translate=True)
+        'Purchase Description', translate=True, translation_storage='json')
     description_sale = fields.Text(
-        'Sales Description', translate=True,
+        'Sales Description', translate=True,  translation_storage='json',
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
