@@ -55,7 +55,6 @@
 # Gelo Joga Landoo <gj@landoo.es>, 2020
 # Nelson Ramírez Sánchez <info@konos.cl>, 2020
 # Carlos Dauden <carlos.dauden@tecnativa.com>, 2020
-# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # 
@@ -8233,6 +8232,12 @@ msgstr ""
 " antes de continuar."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Por favor utilice la siguiente referencia al realizar su pago: "
@@ -12524,12 +12529,6 @@ msgstr ""
 "Debería configurar la 'Cuenta de pérdidas por tasa de cambio' en las "
 "opciones de contabilidad para gestionar automáticamente los asientos "
 "relacionados con diferencias entre tipos de cambio."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "Establezca un valor de redondeo positivo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

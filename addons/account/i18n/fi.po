@@ -2575,15 +2575,13 @@ msgid ""
 "Cannot create a credit note for the invoice which is already reconciled, "
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
-msgstr ""
-"Laskua, joka on jo sovitettu, ei voi luoda hyvityslaskuun, lasku olisi ensin"
-" sovitettava yhteen, mutta vain voit lisätä tämän laskun luottotiedot."
+msgstr "Täsmäytettyä laskua ei voida hyvittää. Täsmäytys täytyy ensin purkaa."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot create credit note for the draft/cancelled invoice."
-msgstr "Luotto- tai peruutettuun laskuun ei voida luoda hyvityslaskua"
+msgstr "Hyvityslaskua ei voida luoda luonnoslaskuun tai peruutettuun laskuun."
 
 #. module: account
 #: code:addons/account/models/account_move.py:358
@@ -8082,6 +8080,12 @@ msgid ""
 msgstr "Asenna tilikartta tai luo sekalaiset lokit ennen kuin jatkat."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr ""
@@ -12292,12 +12296,6 @@ msgstr ""
 "Sinun pitäisi määrittää Loss Exchange Rate -tilin kirjanpitoasetuksissa, "
 "jotta voit hallita automaattisesti valuuttakurssien välisiin eroihin "
 "liittyviä kirjanpitotietoja."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
