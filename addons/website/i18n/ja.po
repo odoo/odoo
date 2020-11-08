@@ -14,7 +14,7 @@
 # Hau Dao <hau@quartile.co>, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2020
-# Noma Yuki <yuki.noma@rakus.co.jp>, 2020
+# Noma Yuki, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Noma Yuki <yuki.noma@rakus.co.jp>, 2020\n"
+"Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,25 +47,25 @@ msgstr ""
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
-msgstr ""
+msgstr "\"URL to\" は空にすることはできません。"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must start with a leading slash."
-msgstr ""
+msgstr "\"URL to\" は先頭のスラッシュで始める必要があります。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
-msgstr ""
+msgstr "# 訪問したページ"
 
 #. module: website
 #: code:addons/website/models/website.py:0
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "%s (id:%s)"
-msgstr ""
+msgstr "%s (id:%s)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -100,14 +100,14 @@ msgstr "&times;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "' did not match any pages."
-msgstr ""
+msgstr "' はどのページとも一致しませんでした。"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "(could be used in"
-msgstr ""
+msgstr "(使用できる用途は"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -122,6 +122,8 @@ msgid ""
 ".\n"
 "            Changing its name will break these calls."
 msgstr ""
+".\n"
+"            名前を変更すると、これらの呼び出しが中断されます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.default_csv
@@ -157,7 +159,7 @@ msgstr "1s"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "2 <span class=\"sr-only\">(current)</span>"
-msgstr ""
+msgstr "2 <span class=\"sr-only\">(現在)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -187,17 +189,17 @@ msgstr "3/5"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
 msgid "301 Moved permanently"
-msgstr ""
+msgstr "301 は恒久的に移動しました"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
 msgid "302 Moved temporarily"
-msgstr ""
+msgstr "302 は一時的に移動しました"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__308
 msgid "308 Redirect / Rewrite"
-msgstr ""
+msgstr "308 リダイレクト/再編集"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -212,7 +214,7 @@ msgstr "4/5"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
 msgid "404 Not Found"
-msgstr ""
+msgstr "404 見つかりませんでした"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -237,7 +239,7 @@ msgstr "75%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
 msgid "<b>50,000+ companies</b> run Odoo to grow their businesses."
-msgstr ""
+msgstr "<b>50,000以上の企業が</b> Odooを利用して事業を拡大しています。"
 
 #. module: website
 #. openerp-web
@@ -308,6 +310,8 @@ msgid ""
 "<font style=\"background-color: rgb(255, 255, 255);\">Good writing is "
 "simple, but not simplistic.</font>"
 msgstr ""
+"<font style=\"background-color: rgb(255, 255, "
+"255);\">良い文章は単純ですが、単純ではありません。</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -315,6 +319,8 @@ msgid ""
 "<font style=\"font-size: 62px; background-color: rgb(255, 255, 255);\">Edit "
 "this title</font>"
 msgstr ""
+"<font style=\"font-size: 62px; background-color: rgb(255, 255, "
+"255);\">このタイトルを編集する</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -324,7 +330,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid "<font style=\"font-size: 62px;\">A punchy Headline</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\">パンチの効いた見出し</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -339,18 +345,18 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid "<font style=\"font-size: 62px;\">Slide Title</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\">スライドのタイトル</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_parallax
 #: model_terms:ir.ui.view,arch_db:website.s_title
 msgid "<font style=\"font-size: 62px;\">Your Site Title</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\">あなたのサイトのタイトル</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card
 msgid "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>2 days ago</small>"
-msgstr ""
+msgstr "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>2日前</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -365,6 +371,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Create a Google Project and Get a Key"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Googleプロジェクトを作成し、キーを取得します"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -372,6 +380,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Enable billing on your Google Project"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Googleプロジェクトで請求を有効にする"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -379,6 +389,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            How to get my Client ID"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            クライアントIDを取得する方法"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -386,6 +398,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            How to get my Tracking ID"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            トラッキングIDを取得する方法"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -490,7 +504,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-heart\"/> Hearts"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-heart\"/> ハート"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -555,12 +569,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-square\"/> Squares"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-square\"/> 四角"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-star\"/> Stars"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-star\"/> 星"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -597,6 +611,8 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-circle text-success\"/>\n"
 "                            <span>Connected</span>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-circle text-success\"/>\n"
+"                            <span>接続済</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -636,12 +652,12 @@ msgstr "<i class=\"fa fa-th-large\"/> 構造"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<i class=\"fa fa-th-large\"/> WEBSITE"
-msgstr ""
+msgstr "<i class=\"fa fa-th-large\"/> WEBSITE"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
-msgstr ""
+msgstr "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -649,16 +665,18 @@ msgid ""
 "<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
 "tack\"/>"
 msgstr ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
-msgstr ""
+msgstr "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
-msgstr ""
+msgstr "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -679,7 +697,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "<p><b>Click here</b> to create a new page.</p>"
-msgstr ""
+msgstr "<p><b>ここをクリック</b> して新しいページを作成します。</p>"
 
 #. module: website
 #. openerp-web
@@ -688,14 +706,14 @@ msgstr ""
 msgid ""
 "<p><b>Your homepage is live.</b></p><p>Let's add a new page for your "
 "site.</p>"
-msgstr ""
+msgstr "<p><b>あなたのホームページは公開されています。</b></p><p>あなたのサイトに新しいページを追加しましょう。</p>"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "<p>Enter a title for the page.</p>"
-msgstr ""
+msgstr "<p>ページのタイトルを入力します。</p>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -732,6 +750,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
 "specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.company_description
@@ -739,6 +759,8 @@ msgid ""
 "<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
 "label=\"Address\" title=\"Address\"/>"
 msgstr ""
+"<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
+"label=\"Address\" title=\"Address\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -753,7 +775,7 @@ msgstr "<span class=\"fa fa-plus mr-2\"/>新規"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=\"Sort\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=\"Sort\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page
@@ -769,6 +791,8 @@ msgid ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/> Add Images</span>"
 msgstr ""
+"<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
+"plus-circle\"/> イメージを追加</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -777,6 +801,9 @@ msgid ""
 "                                <span class=\"s_comparisons_price\"><b>125</b></span>\n"
 "                                <span class=\"s_comparisons_decimal\">.00</span>"
 msgstr ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>125</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -785,6 +812,9 @@ msgid ""
 "                                <span class=\"s_comparisons_price\"><b>35</b></span>\n"
 "                                <span class=\"s_comparisons_decimal\">.00</span>"
 msgstr ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>35</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -793,6 +823,9 @@ msgid ""
 "                                <span class=\"s_comparisons_price\"><b>65</b></span>\n"
 "                                <span class=\"s_comparisons_decimal\">.00</span>"
 msgstr ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>65</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -805,6 +838,8 @@ msgid ""
 "<span title=\"Mobile preview\" role=\"img\" aria-label=\"Mobile preview\" "
 "class=\"fa fa-mobile\"/>"
 msgstr ""
+"<span title=\"Mobile preview\" role=\"img\" aria-label=\"Mobile preview\" "
+"class=\"fa fa-mobile\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -841,7 +876,7 @@ msgstr ""
 msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
-msgstr ""
+msgstr "CDNは、世界中のどこにいる訪問者にも高可用性と高性能と共にWebサイトのコンテンツを提供するのに役立ちます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -855,6 +890,7 @@ msgid ""
 "for headers and footers, a wide variety of content, contextual background "
 "colors, and powerful display options."
 msgstr ""
+"カードは、柔軟で拡張可能なコンテンツコンテナです。ヘッダーとフッターのオプション、さまざまなコンテンツ、コンテキストの背景色、および強力な表現力があります。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_base_automation__website_published
@@ -881,12 +917,12 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
 msgid ""
 "A new visit is considered if last connection was more than 8 hours ago."
-msgstr ""
+msgstr "最後の接続が8時間以上前の場合は、新規の訪問と判断されます。"
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
 msgid "A partner is linked to only one visitor."
-msgstr ""
+msgstr "パートナーは1人の訪問者にのみリンクされています。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -1270,7 +1306,7 @@ msgstr "CDN フィルタ"
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__can_publish
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "公開可能"
 
 #. module: website
 #. openerp-web
@@ -2807,7 +2843,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_instagram
 #: model:ir.model.fields,field_description:website.field_website__social_instagram
 msgid "Instagram Account"
-msgstr ""
+msgstr "インスタグラムのアカウント"
 
 #. module: website
 #. openerp-web
@@ -3366,7 +3402,7 @@ msgstr "モデル"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "変更されたアーキテクチャ"
 
 #. module: website
 #. openerp-web
@@ -4776,7 +4812,7 @@ msgstr "このフィールドは、ウェブサイト上にファビコンを表
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "このフィールドは、翻訳なしの'arch'フィールドと同じです。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
@@ -4789,11 +4825,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"このフィールドは、ビューアーチにアクセスするときに使用する必要があります。翻訳を使用します。\n"
+"                               dev-xmlモードの場合、'arch_db'または'arch_fs'を読み取ることに注意してください。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "このフィールドには、ビューアーチが格納されます。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_prev
@@ -5279,7 +5317,7 @@ msgstr "表示グループ"
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "現在のウェブサイトで見える状態"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visit_datetime
@@ -5522,7 +5560,7 @@ msgstr "ウェブサイトのURL"
 #: model:ir.model,name:website.model_website_visitor
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Website Visitor"
-msgstr ""
+msgstr "ウェブサイト訪問者"
 
 #. module: website
 #: code:addons/website/models/website_visitor.py:0
