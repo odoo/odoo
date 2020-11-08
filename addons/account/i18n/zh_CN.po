@@ -21,7 +21,7 @@
 # neter ji <jifuyi@qq.com>, 2018
 # yuan wenpu <1140021222@qq.com>, 2018
 # 敬洪 甘 <349220879@qq.com>, 2018
-# 演奏王 <wangwhai@qq.com>, 2018
+# 稀饭~~ <wangwhai@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # Youfu Sheng <wdmsyf@sina.com>, 2018
 # keecome <7017511@qq.com>, 2018
@@ -34,6 +34,7 @@
 # John An <johnxan@163.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # 红瑜 陶 <823103015@qq.com>, 2019
+# 黎伟杰 <674416404@qq.com>, 2019
 # 夏 冰 <qndym@126.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
@@ -41,7 +42,6 @@
 # liAnGjiA <liangjia@qq.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
 # mao luo <dooms21day@163.com>, 2020
-# 黎伟杰 <674416404@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: 黎伟杰 <674416404@qq.com>, 2020\n"
+"Last-Translator: mao luo <dooms21day@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7935,6 +7935,12 @@ msgid ""
 msgstr "请在处理之前先安装会计科目表或创建一个杂项日记账."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "请使用以下付款方式："
@@ -11896,12 +11902,6 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr "您应该在会计配置配置 '汇率损失科目' ，自动管理与汇率之间的差额的会计分录的录入."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "请设置一个正的舍入值。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

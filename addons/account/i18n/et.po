@@ -17,9 +17,9 @@
 # Maidu Targama <m.targama@gmail.com>, 2019
 # Indrek Linnas <indrek@estpos.ee>, 2019
 # Algo Kärp <algokarp@gmail.com>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
 # Triine Aavik <triine@avalah.ee>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2020
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2020\n"
+"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7957,6 +7957,12 @@ msgstr ""
 "Enne jätkamist paigalda palun kontoplaan või loo muude kannete andmik."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Kasutage makse saamiseks järgmist teatist:"
@@ -11492,7 +11498,7 @@ msgstr "Vaade"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "View accounts detail"
-msgstr ""
+msgstr "Vaadake kontode üksikasju"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -12043,12 +12049,6 @@ msgstr ""
 "Peaksid raamatupidamisseadetes 'Vahetuskursi kaotuse konto' seadistama, et "
 "automaatselt vahetuskursi erinevustega seotud raamatupidamiskannete "
 "broneerimist hallata. "
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

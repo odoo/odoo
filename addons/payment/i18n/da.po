@@ -13,9 +13,9 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2019
-# JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# JonathanStein <jstein@image.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: JonathanStein <jstein@image.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +81,8 @@ msgid ""
 "<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
 "been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
+"<i class=\"fa fa-close text-danger\" title=\"Denne betalingsmetode er ikke "
+"verificeret af vores system.\" role=\"img\" aria-label=\"Not verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
@@ -106,7 +108,7 @@ msgstr "<i class=\"fa fa-trash\"/> Slet"
 #: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Annuller,</i> Din betaling er blevet annulleret."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:120
@@ -115,6 +117,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Færdig,</i> Din online betaling er blevet korrekt gennemført. Tak for din"
+" ordre."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:128
@@ -124,6 +128,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Fejl,</i> Vær opmærksom på, at der opstod en fejl under transaktionen. "
+"Ordren er blevet bekræftet, men vil ikke blive betalt. Kontakt os, hvis du "
+"har spørgsmål vedr. status på din ordre."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -132,6 +139,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Afventer,</i> Din online betaling er blevet behandlet. Men din ordre er "
+"endnu ikke godkendt."
 
 #. module: payment
 #. openerp-web
@@ -143,7 +152,7 @@ msgstr "<p>Dette kort er i øjebliket forbundet med følgende datasæt:<p/>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Create a PayPal account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Opret en PayPal konto</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -153,7 +162,7 @@ msgstr "<span class=\"fa fa-arrow-right\"> Hent mine Stripe nøgler</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Credit card(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kreditkort</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -582,7 +591,7 @@ msgstr "Konfigurer"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Configure your payment methods."
-msgstr ""
+msgstr "Opsæt dine betalingsmetoder"
 
 #. module: payment
 #. openerp-web
@@ -858,7 +867,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:132
 #, python-format
 msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Hvis betalingen ikke er blevet bekræftet, kan du kontakte os."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
@@ -1182,26 +1191,26 @@ msgstr "Kun administratorer kan tilgå dette data."
 #: code:addons/payment/models/payment_acquirer.py:723
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Kun kladde-transaktioner kan godkendes."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:714
 #: code:addons/payment/models/payment_acquirer.py:775
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Kun kladde-transaktioner kan behandles."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:763
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
+msgstr "Kun kladde og godkendte transaktioner kan annulleres."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:732
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr ""
+msgstr "Kun kladde og godkendte transaktioner kan bogføres."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1018
@@ -1239,7 +1248,7 @@ msgstr "Partner navn"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "Betal med PayPal"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1249,7 +1258,7 @@ msgstr "Betal med en anden betalingsmodtager"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Betal med kreditkort (via Stripe)"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1259,7 +1268,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "Paypal e-mail ID"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -1403,6 +1412,14 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Betalinger registreres i denne journal. Hvis du modtager betalingerne "
+"enkeltvis på din bankkonto, skal du vælge din bankkonto. Hvis du modtager "
+"betalingerne i samlede overførsler for flere transaktioner, skal du oprette "
+"en betalingsjournal til denne betalingsmetode for nemt at styre "
+"bankafstemningen. Du posterer beløbet på en midlertidig konto (oprettes "
+"automatisk, når du opretter betalingsjournal). Når du modtager en "
+"udbetaling, afstemmer du kontoudtogslinjen med denne midlertidige konto. "
+"Brug afstemningsskabeloner til at gøre det med et enkelt klik."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1418,7 +1435,7 @@ msgstr "Paypal Merchant ID"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "Paypal PDT Token"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -1447,6 +1464,8 @@ msgid ""
 "Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"Overfør venligst betalingen til <ul><li>Bank: %s</li><li>Kontonummer: "
+"%s</li><li>Reference: %s</li></ul>"
 
 #. module: payment
 #. openerp-web
@@ -1821,6 +1840,8 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
+"Denne skabelon renderer betalingsknappen med alle nødvendige værdier.\n"
+"                                            Den renderes med qWeb med denne kontekst:"
 
 #. module: payment
 #. openerp-web
@@ -1955,14 +1976,14 @@ msgstr "Vi kan ikke omdirigere dig til betalingsformularen."
 #: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Vi kan ikke omdirigere dig til betalingsformularen."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_processing.js:117
 #, python-format
 msgid "We are processing your payments, please wait ..."
-msgstr ""
+msgstr "Vi behandler din betaling, vent venligst ..."
 
 #. module: payment
 #. openerp-web
