@@ -36,6 +36,11 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"Le <i>configurazioni Vantiv</i> definiscono quali account usare per elaborare\n"
+"                                le transazioni con carta di credito nel punto vendita. Una configurazione\n"
+"                                Vantiv consente di abilitare pagamenti con diverse carte di credito\n"
+"                                (es. Visa, MasterCard, Discovery, American Express ecc...). Dopo averla impostata,\n"
+"                                la configurazione va associata al metodo di pagamento di un punto vendita."
 
 #. module: pos_mercury
 #. openerp-web
@@ -172,7 +177,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Handling transaction..."
-msgstr ""
+msgstr "Gestione della transazione..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__id
@@ -193,11 +198,13 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Se non avete ancora un account Vantiv, contattateci al n. +1 (800) 846-4472\n"
+"                                per crearne uno."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
-msgstr ""
+msgstr "Numero di fattura dal pagamento Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -235,13 +242,13 @@ msgstr "Nome"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Vantiv configuration"
-msgstr ""
+msgstr "Nome della configurazione Vantiv"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No Vantiv configuration associated with the payment method."
-msgstr ""
+msgstr "Nessuna configurazione Vantiv associata al metodo di pagamento."
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
@@ -254,7 +261,7 @@ msgstr "Nessuna sessione aperta dell'utente %s trovata per il punto vendita."
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
-msgstr ""
+msgstr "Nessuna risposta da Vantiv (dispositivo fuori uso?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -315,14 +322,14 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Vantiv Pay"
-msgstr ""
+msgstr "Numero di riferimento del pagamento Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "Impostare l'account commerciante Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -342,12 +349,12 @@ msgstr "Pagamenti punto vendita"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "Configurazione Vantiv del punto vendita"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "Transazione Vantiv nel punto vendita"
 
 #. module: pos_mercury
 #. openerp-web
@@ -397,7 +404,7 @@ msgstr "Il numero della carta usato per il pagamento."
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Vantiv used for this journal"
-msgstr ""
+msgstr "Configurazione Vantiv utilizzata per il registro"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -444,23 +451,23 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
-msgstr ""
+msgstr "Account Vantiv"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr ""
+msgstr "Configurazioni Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "Credenziali Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Vantiv invoice number"
-msgstr ""
+msgstr "Numero fattura Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
@@ -470,7 +477,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr ""
+msgstr "Numero di riferimento Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
@@ -492,6 +499,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
+"Per la lettura delle carte è attualmente supportato il dispositivo MagTek Dynamag. Può\n"
+"                                essere collegato al punto vendita direttamente o attraverso il box IoT."
 
 #. module: pos_mercury
 #. openerp-web
