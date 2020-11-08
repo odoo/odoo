@@ -704,19 +704,23 @@ return AbstractRenderer.extend({
         }
 
         if (!this.hideDate) {
-            if (!isSameDayEvent && start.isSame(end, 'month')) {
-                // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
-                context.eventDate.date = start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
-            } else {
-                context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
-            }
-
             if (eventData.record.allday && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
             } else if (eventData.record.allday && !isSameDayEvent) {
                 var daysLocaleData = moment.localeData();
                 var days = moment.duration(end.diff(start)).days();
                 context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
+            }
+
+            if (eventData.allDay) {
+                // cancel correction done in _recordToCalendarEvent
+                end.subtract(1, 'day');
+            }
+            if (!isSameDayEvent && start.isSame(end, 'month')) {
+                // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
+                context.eventDate.date = start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
+            } else {
+                context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
             }
         }
 

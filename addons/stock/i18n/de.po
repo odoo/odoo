@@ -38,6 +38,7 @@
 # JEK Odoo <jek@odoo.com>, 2020
 # Caroline Renson <car@odoo.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
+# Tobias Arndt, 2020
 # 
 msgid ""
 msgstr ""
@@ -45,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Kevin Harrings <kha@odoo.com>, 2020\n"
+"Last-Translator: Tobias Arndt, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +104,18 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+"* Entwurf\\: Dieser Transfer ist noch nicht bestätigt. Reservierungen werden"
+" nicht angewendet. * Auf anderen Vorgang warten\\: Bevor dieser Transfer "
+"bereit ist, muss auf einen anderen Vorgang gewartet werden. * Wartet\\: "
+"Dieser Transfer wartet auf die Verfügbarkeit von einigen Produkten. (a) Die "
+"Versandpolitik ist \"Sobald wie möglich\"\\: keine Produkte können "
+"reserviert werden. (b) Die Versandpolitik ist „Wenn alle Produkte bereit“\\:"
+" nicht alle Produkte können reserviert. * Bereit\\: Der Transfer ist zur "
+"Bearbeitung bereit. (a) Die Versandpolitik ist „Sobald wie möglich\"\\: "
+"wenigstens ein Produkt kann reserviert werden. (b) Die Versandpolitik ist "
+"„Wenn alle Produkte bereit\"\\: alle Produkte können reserviert werden. * "
+"Fertig\\: Der Transfer wurde getätigt. * Storniert\\: Der Transfer wurde "
+"storniert."
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
@@ -911,7 +924,7 @@ msgstr "Verfügbare Produkte"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "Bevor der Typ geändert wird, sollte die verfügbare Menge 0 sein"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -2339,7 +2352,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Deliveries"
-msgstr ""
+msgstr "prognostizierte Lieferungen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action
@@ -2367,7 +2380,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Prognostizierter Bestand"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -5113,7 +5126,7 @@ msgstr "Aufstocken"
 #. module: stock
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "Auffüllung nach Auftrag (MTO)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -5188,7 +5201,7 @@ msgstr "Manager Veranstaltung"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr ""
+msgstr "Beschaffung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
@@ -5936,7 +5949,7 @@ msgstr "Verarbeitete Lagerbuchungen"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Lagerregelbericht"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__type__product
@@ -5994,7 +6007,7 @@ msgstr "Vom Lager entnehmen"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
 msgid "Take From Stock, if unavailable, Trigger Another Rule"
-msgstr ""
+msgstr "Lagerentnahme, falls nicht verfügbar wird eine andere Regel ausgelöst"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
@@ -6277,7 +6290,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The serial number must contain at least one digit."
-msgstr ""
+msgstr "Die Seriennummer muss mindestens eine Zahl enthalten."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer

@@ -100,6 +100,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if not partner_ids:
             return [], [], {}
 
+        lines[False] = []
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []

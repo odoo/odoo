@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Iulian Cutui <iulian.cutui@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -187,7 +187,7 @@ msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span class=\"pos-change_title\">Change</span>"
-msgstr "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\">Rest</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -257,18 +257,6 @@ msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Apăsând \"Confirmă\" veți valida plata."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"A Chart of Accounts is not yet installed in your current company. Please "
-"install a Chart of Accounts through the Invoicing/Accounting settings before"
-" launching a PoS session."
-msgstr ""
-"Un grafic de conturi nu este încă instalat în compania dvs. curentă. Vă "
-"rugăm să instalați o diagramă de conturi prin setările de facturare / "
-"contabilitate înainte de a lansa o sesiune PoS."
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
@@ -332,9 +320,7 @@ msgstr "ABC"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr ""
-"Acceptați sfaturile clienților sau convertiți schimbarea acestora într-un "
-"sfat"
+msgstr "Acceptați bacșiș sau convertiți restul acestora într-un bacșiș"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -716,7 +702,7 @@ msgstr "Evită tipărirea din browser și tipărirea prin proxy hardware"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "CHANGE"
-msgstr "SCHIMBĂ"
+msgstr "REST"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3111,6 +3097,13 @@ msgstr "Vă rugăm să furnizați un partener pentru vânzare."
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please provide valid email"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Please select a payment method."
@@ -3122,6 +3115,13 @@ msgstr "Vă rugăm alegeți o metodă de plată."
 #, python-format
 msgid "Please select the Customer"
 msgstr "Vă rugăm selectați Clientul"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please select the customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3257,6 +3257,7 @@ msgstr "Raport Comenzi Punct de Vânzare"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_import_journal_creation__pos_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
 msgstr "Metode plată Punct de vânzare"
@@ -4623,7 +4624,7 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
-"În sesiune există încă comenzi în starea de proiectare. Plătește sau anulează următoarele comenzi pentru validarea sesiunii:\n"
+"În sesiune există încă comenzi în starea de ciornă. Plătește sau anulează următoarele comenzi pentru validarea sesiunii:\n"
 "%s"
 
 #. module: point_of_sale
@@ -4679,6 +4680,15 @@ msgstr "La aceasta se adaugă alegerea unei monede pe lista de prețuri."
 msgid ""
 "This barcode is already assigned to another contact. Please make sure you "
 "assign a unique barcode to this contact."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"This customer does not have a valid email address, define one or do not send"
+" an email."
 msgstr ""
 
 #. module: point_of_sale
@@ -4935,6 +4945,11 @@ msgid "Transaction cancelled"
 msgstr "Tranzacția a fost anulată"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 msgid "Type"
 msgstr "Tip"
@@ -5105,13 +5120,6 @@ msgstr "Etichete utilizator"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "TVA:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5345,6 +5353,14 @@ msgstr ""
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "Trebuie să alegeți un client înainte de a factura o comandă."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"You need to select the customer before you can send the receipt via email."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

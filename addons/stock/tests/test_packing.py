@@ -662,3 +662,67 @@ class TestPacking(SavepointCase):
 
         pick_picking.move_line_ids.qty_done = 3
         first_pack = pick_picking.put_in_pack()
+
+    def test_action_assign_package_level(self):
+        """calling _action_assign on move does not erase lines' "result_package_id"
+        At the end of the method ``StockMove._action_assign()``, the method
+        ``StockPicking._check_entire_pack()`` is called. This method compares
+        the move lines with the quants of their source package, and if the entire
+        package is moved at once in the same transfer, a ``stock.package_level`` is
+        created. On creation of a ``stock.package_level``, the result package of
+        the move lines is directly updated with the entire package.
+        This is good on the first assign of the move, but when we call assign for
+        the second time on a move, for instance because it was made partially available
+        and we want to assign the remaining, it can override the result package we
+        selected before.
+        An override of ``StockPicking._check_move_lines_map_quant_package()`` ensures
+        that we ignore:
+        * picked lines (qty_done > 0)
+        * lines with a different result package already
+        """
+        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        dest_package1 = self.env["stock.quant.package"].create({"name": "Dest Pack1"})
+
+        # Create new picking: 120 productA
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.warehouse.pick_type_id
+        with picking_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 120
+        picking = picking_form.save()
+
+        # mark as TO-DO
+        picking.action_confirm()
+
+        # Update quantity on hand: 100 units in package
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+
+        # Check Availability
+        picking.action_assign()
+
+        self.assertEqual(picking.state, "assigned")
+        self.assertEqual(picking.package_level_ids.package_id, package)
+
+        move = picking.move_lines
+        line = move.move_line_ids
+
+        # change the result package and set a qty_done
+        line.qty_done = 100
+        line.result_package_id = dest_package1
+
+        # Update quantity on hand: 20 units in new_package
+        new_package = self.env["stock.quant.package"].create({"name": "New Pack"})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20, package_id=new_package)
+
+        # Check Availability
+        picking.action_assign()
+
+        # Check that result package is not changed on first line
+        new_line = move.move_line_ids - line
+        self.assertRecordValues(
+            line + new_line,
+            [
+                {"qty_done": 100, "result_package_id": dest_package1.id},
+                {"qty_done": 0, "result_package_id": new_package.id},
+            ],
+        )

@@ -46,7 +46,7 @@
                         type="object"
                         attrs="{'invisible':['|', ('state', '!=', 'posted'),
                                              '|', ('l10n_ch_isr_sent', '=', True),
-                                             '|', ('type', 'not in', ('out_invoice', 'out_refund')),
+                                             '|', ('type', '!=', 'out_invoice'),
                                              ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         class="oe_highlight"
@@ -57,7 +57,7 @@
                         type="object"
                         attrs="{'invisible':['|', ('state', '!=', 'posted'),
                                              '|', ('l10n_ch_isr_sent', '=', False),
-                                             '|', ('type', 'not in', ('out_invoice', 'out_refund')),
+                                             '|', ('type', '!=', 'out_invoice'),
                                              ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         />

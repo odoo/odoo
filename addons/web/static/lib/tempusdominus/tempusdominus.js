@@ -2092,9 +2092,11 @@ var TempusDominusBootstrap4 = function ($) {
                 daysViewHeader.eq(2).addClass('disabled');
             }
 
-            currentDate = this._viewDate.clone().startOf('M').startOf('w').startOf('d');
             // !! ODOO FIX START !!
             var now = this.getMoment();
+            // currentDate = this._viewDate.clone().startOf('M').startOf('w').startOf('d');
+            // avoid issue of safari + DST at midnight
+            currentDate = this._viewDate.clone().startOf('M').startOf('w').add(12, 'hours');
             // !! ODOO FIX END !!
 
             for (i = 0; i < 42; i++) {

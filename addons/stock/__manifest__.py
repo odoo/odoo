@@ -57,6 +57,7 @@
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
+        'views/product_views.xml',
         'views/stock_production_lot_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_scrap_views.xml',
@@ -66,7 +67,6 @@
         'views/stock_warehouse_views.xml',
         'views/stock_move_line_views.xml',
         'views/stock_move_views.xml',
-        'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',

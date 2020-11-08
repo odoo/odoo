@@ -70,7 +70,7 @@ _ref_vat = {
     'at': 'ATU12345675',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'ch': 'CHE-123.456.788 TVA or CH TVA 123456',  # Swiss by Yannick Vaucher @ Camptocamp
+    'ch': 'CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA',  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
     'co': 'CO213123432-1 or CO213.123.432-1',
     'cy': 'CY12345678F',
@@ -204,23 +204,16 @@ class ResPartner(models.Model):
             return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
         return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
 
-    __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
-    __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+    __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
     def check_vat_ch(self, vat):
         '''
         Check Switzerland VAT number.
         '''
-        # VAT number in Switzerland will change between 2011 and 2013
-        # http://www.estv.admin.ch/mwst/themen/00154/00589/01107/index.html?lang=fr
-        # Old format is "TVA 123456" we will admit the user has to enter ch before the number
-        # Format will becomes such as "CHE-999.999.99C TVA"
-        # Both old and new format will be accepted till end of 2013
+        # A new VAT number format in Switzerland has been introduced between 2011 and 2013
+        # https://www.estv.admin.ch/estv/fr/home/mehrwertsteuer/fachinformationen/steuerpflicht/unternehmens-identifikationsnummer--uid-.html
+        # The old format "TVA 123456" is not valid since 2014 
         # Accepted format are: (spaces are ignored)
-        #     CH TVA ######
-        #     CH IVA ######
-        #     CH MWST #######
-        #
         #     CHE#########MWST
         #     CHE#########TVA
         #     CHE#########IVA
@@ -228,11 +221,12 @@ class ResPartner(models.Model):
         #     CHE-###.###.### TVA
         #     CHE-###.###.### IVA
         #
-        if self.__check_vat_ch_re1.match(vat):
-            return True
-        match = self.__check_vat_ch_re2.match(vat)
+        # /!\ The english abbreviation VAT is not valid /!\
+
+        match = self.__check_vat_ch_re.match(vat)
+
         if match:
-            # For new TVA numbers, do a mod11 check
+            # For new TVA numbers, the last digit is a MOD11 checksum digit build with weighting pattern: 5,4,3,2,7,6,5,4
             num = [s for s in match.group(1) if s.isdigit()]        # get the digits only
             factor = (5, 4, 3, 2, 7, 6, 5, 4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])

@@ -166,6 +166,9 @@ var LinkDialog = Dialog.extend({
         // Hide the duplicate color buttons (most of the times, primary = alpha
         // and secondary = beta for example but this may depend on the theme)
         this.opened().then(function () {
+            if (self.__showDuplicateColorButtons) {
+                return;
+            }
             var colors = [];
             _.each(self.$('.o_link_dialog_color .o_btn_preview'), function (btn) {
                 var $btn = $(btn);

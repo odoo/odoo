@@ -16,6 +16,7 @@
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Nicolas Galler <ngaller@gmail.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
@@ -55,7 +56,7 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') a 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
+"'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -63,8 +64,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') a 'Quotation' "
-"or 'Order'} (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -94,8 +95,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') a 'Cenová ponuka - %s' % (object.name)) "
-"alebo 'Objednávka - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'Cenová ponuka - %s' % (object.name))"
+" or 'Objednávka - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -276,7 +277,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        % set transaction = object.get_portal_last_transaction()\n"
 "        Vaša objednávka <strong>${object.name}</strong> vo výške <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        % if object.state == 'sale' alebo (transaction and transaction.state in ('done', 'authorized')) :\n"
+"        % if object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized')) :\n"
 "            bola potvrdená.<br/>\n"
 "            Ďakujeme za dôveru!\n"
 "        % elif transaction and transaction.state == 'čaká' :\n"
@@ -1858,7 +1859,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__invoiced
 msgid "Fully Invoiced"
-msgstr "Plne vyfaktúrované"
+msgstr "Plne faktúrované"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2097,14 +2098,14 @@ msgstr "Fakturovať objednané množstvá"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
-msgstr "Fakturovanej"
+msgstr "Fakturované"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 #, python-format
 msgid "Invoiced Quantity"
-msgstr "Vyfaktúrované množstvo"
+msgstr "Faktúrované množstvo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced

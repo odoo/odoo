@@ -173,6 +173,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     _createWysiwygIntance: function () {
         var self = this;
         this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
+        this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
 
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
@@ -224,7 +225,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
-                if ("mailing.mailing" === self.model) {
+                if (self.field.sanitize && self.field.sanitize_tags) {
                     options.noVideos = true;
                 }
                 options.prettifyHtml = false;

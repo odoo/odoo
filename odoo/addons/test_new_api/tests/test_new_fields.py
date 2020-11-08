@@ -121,6 +121,7 @@ class TestFields(common.TransactionCase):
         field = self.env['test_new_api.message']._fields['x_bool_false_computed']
         self.assertFalse(field.depends)
 
+    @mute_logger('odoo.fields')
     def test_10_computed_custom_invalid_transitive_depends(self):
         self.patch(type(self.env["ir.model.fields"]), "_check_depends", lambda self: True)
         self.env["ir.model.fields"].create(
@@ -1814,10 +1815,21 @@ class TestFields(common.TransactionCase):
         self.assertEqual(image_data_uri(record.image_256)[:30], 'data:image/png;base64,iVBORw0K')
 
         # ensure invalid image raises
-        with self.assertRaises(UserError):
+        with self.assertRaises(UserError), self.cr.savepoint():
             record.write({
                 'image': 'invalid image',
             })
+
+        # assignment of invalid image on new record does nothing, the value is
+        # taken from origin instead (use-case: onchange)
+        new_record = record.new(origin=record)
+        new_record.image = '31.54 Kb'
+        self.assertEqual(record.image, image_h)
+        self.assertEqual(new_record.image, image_h)
+
+        # assignment to new record with origin should not do any query
+        with self.assertQueryCount(0):
+            new_record.image = image_w
 
     def test_95_binary_bin_size(self):
         binary_value = base64.b64encode(b'content')

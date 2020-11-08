@@ -104,12 +104,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return invoice_vals
 
     def _get_advance_details(self, order):
+        context = {'lang': order.partner_id.lang}
         if self.advance_payment_method == 'percentage':
             amount = order.amount_untaxed * self.amount / 100
             name = _("Down payment of %s%%") % (self.amount)
         else:
             amount = self.fixed_amount
             name = _('Down Payment')
+        del context
 
         return amount, name
 
@@ -130,6 +132,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return invoice
 
     def _prepare_so_line(self, order, analytic_tag_ids, tax_ids, amount):
+        context = {'lang': order.partner_id.lang}
         so_values = {
             'name': _('Down Payment: %s') % (time.strftime('%m %Y'),),
             'price_unit': amount,
@@ -142,6 +145,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'tax_id': [(6, 0, tax_ids)],
             'is_downpayment': True,
         }
+        del context
         return so_values
 
     def create_invoices(self):
@@ -169,14 +173,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     tax_ids = order.fiscal_position_id.map_tax(taxes, self.product_id, order.partner_shipping_id).ids
                 else:
                     tax_ids = taxes.ids
-                context = {'lang': order.partner_id.lang}
                 analytic_tag_ids = []
                 for line in order.order_line:
                     analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
 
                 so_line_values = self._prepare_so_line(order, analytic_tag_ids, tax_ids, amount)
                 so_line = sale_line_obj.create(so_line_values)
-                del context
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
             return sale_orders.action_view_invoice()

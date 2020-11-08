@@ -44,6 +44,9 @@ var WysiwygRoot = Widget.extend({
 
             var Wysiwyg = self._getWysiwygContructor();
             var instance = new Wysiwyg(self, self._params);
+            if (self.__extraAssetsForIframe) {
+                instance.__extraAssetsForIframe = self.__extraAssetsForIframe;
+            }
             self._params = null;
 
             _.each(self.publicMethods, function (methodName) {

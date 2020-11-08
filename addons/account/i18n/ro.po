@@ -633,7 +633,7 @@ msgstr "<span>Cantitate</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr "<span>Referinţă</span>"
+msgstr "<span>Referință</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1310,8 +1310,7 @@ msgstr "Cont cu intrări"
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid "Account; Post draft entries with auto_post set to True up to today"
 msgstr ""
-"Cont; Publicați intrările de proiect cu auto_post setată la Adevărat până "
-"astăzi"
+"Cont; Postați intrările ciornă cu auto_post setată la Adevărat până astăzi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1487,7 +1486,7 @@ msgstr "Adaugă"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "Stornare"
+msgstr "Notă credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__add_sign
@@ -2583,7 +2582,7 @@ msgstr "După țară"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "Prin stornare"
+msgstr "Prin notă credit"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -2989,7 +2988,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Bifați această casetă dacă nu doriți să utilizați aceleași secvențe pentru "
-"facturi și stornări realizate din acest jurnal"
+"facturi și note credit realizate din acest jurnal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3342,7 +3341,7 @@ msgstr "Confirmă"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Confirmed"
-msgstr "Nelansată"
+msgstr "Confirmat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -3777,7 +3776,7 @@ msgstr "Credit Move"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "Stornare"
+msgstr "Notă credit"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3796,7 +3795,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Stornări"
+msgstr "Note credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_number_next
@@ -3880,7 +3879,7 @@ msgstr "Client"
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__out_refund
 #, python-format
 msgid "Customer Credit Note"
-msgstr "Factură de stornare client"
+msgstr "Notă credit client"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__type__out_invoice
@@ -4486,13 +4485,13 @@ msgstr "Factură ciornă"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "Factură stornare ciornă"
+msgstr "Notă credit ciornă"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Entry"
-msgstr "Proiect de intrare"
+msgstr "Intrare ciornă"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4517,13 +4516,13 @@ msgstr "Plată ciornă"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Purchase Receipt"
-msgstr "Proiect de chitanță de cumpărare"
+msgstr "Chitanță de achiziție ciornă"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Sales Receipt"
-msgstr ""
+msgstr "Chitanță de vânzare ciornă"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6108,7 +6107,7 @@ msgstr "Factură plătită"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Invoice send & Print"
-msgstr "Trimite factura & Tipăreşte"
+msgstr "Trimite factura & Tipărește"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -6266,8 +6265,7 @@ msgstr "Acționează ca un cont implicit pentru valoarea debitului"
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr ""
-"Creează proiecte de facturi client și facturi funrizor prin trimiterea unui "
-"e-mail."
+"Creează facturi ciornă și facturi de achiziție prin trimiterea unui e-mail."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_sent
@@ -6455,6 +6453,8 @@ msgstr "Nume Jurnal"
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Journal group are used in reporting to display relevant data together."
 msgstr ""
+"Grupele de jurnale sunt utilizate în raportare pentru a afișa date relevante"
+" împreună. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -12159,7 +12159,7 @@ msgstr "Facturi furnizor"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Credit Note"
-msgstr "Stornare furnizori"
+msgstr "Notă credit furnizor"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

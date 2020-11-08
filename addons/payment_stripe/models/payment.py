@@ -74,8 +74,15 @@ class PaymentAcquirerStripe(models.Model):
             PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
         ]
 
+        existing_icons = [icon.name.lower() for icon in self.env['payment.icon'].search([])]
+        linked_icons = [icon.name.lower() for icon in self.payment_icon_ids]
+
+        # We don't filter out pmt in the case the icon doesn't exist at all as it would be **implicit** exclusion
+        icon_filtered = filter(lambda pmt: pmt.name == 'card' or
+                                           pmt.name in linked_icons or
+                                           pmt.name not in existing_icons, all_payment_method_types)
         country = (tx_values['billing_partner_country'].code or 'no_country').lower()
-        pmt_country_filtered = filter(lambda pmt: not pmt.countries or country in pmt.countries, all_payment_method_types)
+        pmt_country_filtered = filter(lambda pmt: not pmt.countries or country in pmt.countries, icon_filtered)
         currency = (tx_values.get('currency').name or 'no_currency').lower()
         pmt_currency_filtered = filter(lambda pmt: not pmt.currencies or currency in pmt.currencies, pmt_country_filtered)
         pmt_recurrence_filtered = filter(lambda pmt: tx_values.get('type') != 'form_save' or pmt.recurrence == 'recurring',
