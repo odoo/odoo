@@ -616,7 +616,7 @@ msgstr "Tutti i lavori"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 msgid "Allowed Internal Users"
-msgstr ""
+msgstr "Utenti interni autorizzati"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_portal_user_ids
@@ -762,7 +762,7 @@ msgstr "Agosto"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr ""
+msgstr "Generazione automatica di lavori per attività abituali"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1406,7 +1406,7 @@ msgstr "Modello e-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr "CC e-mail"
+msgstr "E-mail in cc"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
@@ -1756,8 +1756,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Se il campo attivo è impostato a «Falso», consente di nascondere il progetto"
-" senza rimuoverlo."
+"Se il campo attivo è impostato a falso, consente di nascondere il progetto "
+"senza rimuoverlo."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -1825,9 +1825,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"E-mail interna associata al progetto. Le e-mail in ingresso vengono "
-"automaticamente sincronizzate con i lavori (o con i problemi se è installato"
-" il modulo di monitoraggio problemi)."
+"E-mail interna associata al progetto. Le e-mail in arrivo vengono "
+"automaticamente sincronizzate con i lavori (o con i problemi, se è "
+"installato il modulo di monitoraggio problemi)."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
@@ -2001,14 +2001,14 @@ msgstr "Ultima valutazione - Soddisfatto"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr "Crea il tuo primo <b>progetto</b>."
+msgstr "Creiamo il primo <b>progetto</b>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr "Crea il tuo primo <b>lavoro</b>."
+msgstr "Creiamo il primo <b>lavoro</b>."
 
 #. module: project
 #. openerp-web
@@ -2035,7 +2035,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Elenco dei CC dalle e-mail in ingresso."
+msgstr "Elenco cc dalle e-mail in arrivo."
 
 #. module: project
 #. openerp-web
@@ -2527,6 +2527,8 @@ msgid ""
 "Plan resource allocation accross projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
+"Pianifica l'assegnazione delle risorse all'interno di progetti e lavori, con"
+" stima più accurata delle scadenze"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -2665,7 +2667,7 @@ msgstr "Lavori progetto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
+msgstr "Visibilità progetto"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__subtask_project_id
@@ -2891,7 +2893,7 @@ msgstr "Ricorrenza"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "Aggiornamento ricorrenza"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -2932,7 +2934,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_interval
 msgid "Repeat Every"
-msgstr "Ripetere ogni"
+msgstr "Ripetuto ogni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_month
@@ -3548,7 +3550,7 @@ msgid ""
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Il modello (tipo di documento Odoo) a cui corrisponde questo alias. Le "
-"e-mail in ingresso che non rispondono a un record esistente attiveranno la "
+"e-mail in arrivo che non rispondono a un record esistente attivano la "
 "creazione di un nuovo record per questo modello (es. lavoro di un progetto)"
 
 #. module: project
@@ -3557,8 +3559,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Il nome dell’alias e-mail, es. “jobs” per intercettare le e-mail "
-"<jobs@example.odoo.com>"
+"Il nome dell’alias e-mail, es. “lavori” per intercettare le e-mail a "
+"<lavori@esempio.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -3582,8 +3584,8 @@ msgid ""
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
 "Il progetto non può essere condiviso con i destinatari a causa delle "
-"impostazioni di privacy. Impostare il progetto a \"Visibile dai clienti "
-"follower\" per renderlo accessibile ai destinatari."
+"restrizioni per la privacy. Impostare il progetto a \"Visibile dai seguenti "
+"clienti\" per renderlo accessibile ai destinatari."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3602,8 +3604,8 @@ msgid ""
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
 "Il lavoro non può essere condiviso con i destinatari a causa delle "
-"impostazioni di privacy. Impostare il progetto a \"Visibile dai clienti "
-"follower\" per renderlo accessibile ai destinatari."
+"restrizioni per la privacy. Impostare il progetto a \"Visibile dai seguenti "
+"clienti\" per renderlo accessibile ai destinatari."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -3762,7 +3764,7 @@ msgstr "Monitora la soddisfazione cliente sui lavori"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "Tiene traccia dei tempi dedicati a progetti e lavori"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue

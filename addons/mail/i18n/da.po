@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -45,13 +45,13 @@ msgstr "Denne kanal er privat. Folk skal inviteres for at komme med."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "${object.partner_id.lang}"
-msgstr ""
+msgstr "${object.partner_id.lang}"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)s tildelt dig"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -129,6 +129,8 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">Intet datasæt for denne model</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -140,6 +142,11 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
+"<br><br>\n"
+"            Skriv <b>@brugernavn</b> for at nævne nogen, og fange deres opmærksomhed.<br>\n"
+"            Skriv <b>#kanal</b> for at nævne en kanal.<br>\n"
+"            Skriv <b>/kommando</b> for at afvikle en kommando.<br>\n"
+"            Skriv <b>:genvej</b> for at indsætte et opsat svar i din besked.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -188,13 +195,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/tours/mail.js:0
-#, python-format
-msgid "<p> Create a private channel.</p>"
-msgstr "<p> Opret en privat kanal.</p>"
 
 #. module: mail
 #. openerp-web
@@ -4974,13 +4974,10 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template__auto_delete
 msgid ""
-"This option permanently removes any track of email after send, including "
-"from the Technical menu in the Settings, in order to preserve storage space "
-"of your Odoo database."
+"This option permanently removes any track of email after it's been sent, "
+"including from the Technical menu in the Settings, in order to preserve "
+"storage space of your Odoo database."
 msgstr ""
-"Denne indstilling fjerne permanent ethvert spor af en email efter "
-"afsendelse, inklusiv fra Teknisk menu i Indstillinger, for at vedligeholde "
-"lagerplads på din Odoo database."
 
 #. module: mail
 #. openerp-web
