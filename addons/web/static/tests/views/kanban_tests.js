@@ -1276,7 +1276,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel when not dirty', function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         var kanban = createView({
             View: KanbanView,
@@ -1334,6 +1334,17 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
             "first column should still contain one record");
+
+        // click to reopen the quick create
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 1,
+            "should have open the quick create widget");
+
+        // clicking on the quick create itself should keep it open
+        kanban.$('.o_kanban_quick_create').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 1,
+            "the quick create should not have been destroyed when clicked on itself");
+
 
         kanban.destroy();
     });

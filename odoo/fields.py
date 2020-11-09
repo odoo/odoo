@@ -739,9 +739,8 @@ class Field(MetaField('DummyField', (object,), {})):
                     model = model0.env.get(field.comodel_name)
                     path = None if path is None else path + [fname]
         except KeyError:
-            _logger.error("Field %s cannot find dependency %r on model %r.",
-                          self, fname, model._name)
-            raise
+            msg = "Field %s cannot find dependency %r on model %r."
+            raise ValueError(msg % (self, fname, model._name))
 
         # add self's model dependencies
         for mname, fnames in model0._depends.items():
