@@ -66,7 +66,7 @@ class StockPicking(models.Model):
             for subcontracted_production in productions_to_done:
                 if subcontracted_production.state == 'progress':
                     subcontracted_production._post_inventory()
-                else:
+                elif subcontracted_production.state != 'to_close':
                     subcontracted_production.with_context(subcontract_move_id=True).button_mark_done()
                 # For concistency, set the date on production move before the date
                 # on picking. (Tracability report + Product Moves menu item)
