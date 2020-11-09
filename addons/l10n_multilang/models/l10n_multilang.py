@@ -12,19 +12,20 @@ _logger = logging.getLogger(__name__)
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
-        res = super(AccountChartTemplate, self)._load(sale_tax_rate, purchase_tax_rate, company)
+    def _load_chart_template(self):
+        # OVERRIDE
+        res = super()._load_chart_template()
         # Copy chart of account translations when loading chart of account
-        for chart_template in self.filtered('spoken_languages'):
+        if self.spoken_languages:
             external_id = self.env['ir.model.data'].search([
                 ('model', '=', 'account.chart.template'),
-                ('res_id', '=', chart_template.id),
+                ('res_id', '=', self.id),
             ], order='id', limit=1)
             module = external_id and self.env.ref('base.module_' + external_id.module)
             if module and module.state == 'installed':
-                langs = chart_template._get_langs()
+                langs = self._get_langs()
                 if langs:
-                    chart_template._process_single_company_coa_translations(company.id, langs)
+                    self._process_single_company_coa_translations(self.env.company.id, langs)
         return res
 
     def process_translations(self, langs, in_field, in_ids, out_ids):

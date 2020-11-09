@@ -299,8 +299,9 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
 
-        account_vals = self.company_id.chart_template_id. \
-            _prepare_transfer_account_for_direct_creation(self.name, self.company_id)
+        coa = self.company_id.chart_template_id.with_company(self.company_id)
+        account_vals = coa._prepare_payment_acquirer_account()
+        account_vals['name'] = self.name
         account = self.env['account.account'].create(account_vals)
         inbound_payment_method_ids = []
         if self.allow_tokenization:

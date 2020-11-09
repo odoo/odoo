@@ -7,11 +7,10 @@ from odoo import api, models, fields
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    @api.model
-    def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        journal_data = super(AccountChartTemplate, self)._prepare_all_journals(
-            acc_template_ref, company, journals_dict)
-        for journal in journal_data:
-            if journal['type'] in ('sale', 'purchase') and company.account_fiscal_country_id.code == "LU":
-                journal.update({'refund_sequence': True})
-        return journal_data
+    def _prepare_journals(self, loaded_data):
+        # OVERRIDE
+        res = super()._prepare_journals(loaded_data)
+        if self.env.company.account_fiscal_country_id.code == 'LU':
+            for journal_vals in res['sale'] + res['purchase']:
+                journal_vals['refund_sequence'] = True
+        return res

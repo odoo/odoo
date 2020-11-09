@@ -160,7 +160,6 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
         self.invoice.write({
             'invoice_line_ids': [(1, self.invoice.invoice_line_ids.id, {'tax_ids': [(6, 0, self.tax_group.ids)]})],
         })
-
         applied_xpath = '''
             <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
                 <ChargeAmount currencyID="Gol">275.000</ChargeAmount>

@@ -277,12 +277,12 @@ class ResCompany(models.Model):
 
         # Reflect the change on accounts
         for company in self:
-            if values.get('bank_account_code_prefix'):
-                new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
+            if values.get('bank_account_code_prefix') and company.bank_account_code_prefix:
+                new_bank_code = values['bank_account_code_prefix']
                 company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code)
 
-            if values.get('cash_account_code_prefix'):
-                new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
+            if values.get('cash_account_code_prefix') and company.cash_account_code_prefix:
+                new_cash_code = values['cash_account_code_prefix']
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code)
 
             #forbid the change of currency_id if there are already some accounting entries existing

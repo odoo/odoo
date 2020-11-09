@@ -8,10 +8,11 @@ class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
     @api.model
-    def _prepare_transfer_account_for_direct_creation(self, name, company):
-        res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
-        if company.account_fiscal_country_id.code == 'DK':
-            account_tag_liquidity = self.env.ref('l10n_dk.account_tag_liquidity')
-            res['tag_ids'] = [(6, 0, account_tag_liquidity.ids)]
-            res['name'] = 'Bank i transfer'
-        return res
+    def _prepare_payment_acquirer_account(self):
+        # OVERRIDE
+        vals = super()._prepare_payment_acquirer_account()
+        if self.env.company.account_fiscal_country_id.code == 'DK':
+            vals.setdefault('tag_ids', [])
+            vals['tag_ids'].append((4, self.env.ref('l10n_dk.account_tag_liquidity').id))
+            vals['name'] = "Bank i transfer"
+        return vals
