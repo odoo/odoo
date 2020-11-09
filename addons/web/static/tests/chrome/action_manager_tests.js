@@ -3920,6 +3920,55 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('listview in dialog shows buttons in the dialog footer and do not show breadcrumbs', async function (assert) {
+        assert.expect(5);
+
+        this.actions.push({
+            id: 21,
+            name: 'Partner List',
+            res_model: 'partner',
+            target: 'new',
+            type: 'ir.actions.act_window',
+            views: [[1, 'list']],
+        });
+
+        this.archs['partner,1,list'] = `
+            <tree>
+                <header>
+                    <button name="test" type="object" string="Test"/>
+                </header>
+                <field name="foo"/>
+            </tree>
+        `;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        await actionManager.doAction(21);
+
+        // check breadcrumb in control panel in wizard in case of listview
+        assert.strictEqual($('.o_technical_modal .modal-body .o_control_panel .breadcrumb-item').length, 0,
+            "the breadcrumbs should not be in the wizard with listview");
+
+        // check view switcher in control panel in wizard in case of listview
+        assert.strictEqual($('.o_technical_modal .modal-body .o_control_panel .o_cp_switch_buttons').length, 0,
+            "the view switcher should not be in the wizard with listview");
+
+        assert.strictEqual($('.o_technical_modal .modal-body .o_list_buttons').length, 0,
+            "the button should not be in the body");
+        assert.strictEqual($('.o_technical_modal .modal-footer button').length, 0,
+            "the button should not be there in the footer initially");
+
+        // select a record
+        await testUtils.dom.click($('.o_technical_modal .o_data_row .o_list_record_selector input:first'));
+        assert.strictEqual($('.o_technical_modal .modal-footer button').length, 1,
+            "one button should be there in the footer");
+
+        actionManager.destroy();
+    });
+
     QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
         assert.expect(2);
         const actions = [

@@ -25,7 +25,6 @@ var ListController = BasicController.extend({
      */
     buttons_template: 'ListView.buttons',
     events: _.extend({}, BasicController.prototype.events, {
-        'click .o_list_export_xlsx': '_onDirectExportData',
         'click .o_list_select_domain': '_onSelectDomain',
     }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
@@ -120,7 +119,7 @@ var ListController = BasicController.extend({
      * @override
      */
     renderButtons: function ($node) {
-        if (this.noLeaf || !this.hasButtons) {
+        if (this.noLeaf || !this.withControlPanelButtons || !this.hasButtons) {
             this.hasButtons = false;
             this.$buttons = $('<div>');
         } else {
@@ -136,6 +135,7 @@ var ListController = BasicController.extend({
             });
             this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
+            this.$buttons.on('click', '.o_list_export_xlsx', this._onDirectExportData.bind(this));
         }
         if ($node) {
             this.$buttons.appendTo($node);

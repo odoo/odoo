@@ -61,6 +61,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         this.dp = new concurrency.DropPrevious();
 
         this.withControlPanel = params.withControlPanel;
+        this.withControlPanelButtons = params.withControlPanelButtons;
         this.withSearchPanel = params.withSearchPanel;
         if (params.searchModel) {
             this.searchModel = params.searchModel;

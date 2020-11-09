@@ -73,7 +73,7 @@
                 <div class="o_cp_pager" role="search" t-ref="pager">
                     <Pager t-if="props.pager and props.pager.limit" t-props="props.pager"/>
                 </div>
-                <nav t-if="props.views.length gt 1" class="btn-group o_cp_switch_buttons" role="toolbar" aria-label="View switcher">
+                <nav t-if="props.withViewSwitcher and props.views.length gt 1" class="btn-group o_cp_switch_buttons" role="toolbar" aria-label="View switcher">
                     <t t-foreach="props.views" t-as="view" t-key="view.type">
                         <t t-call="web.ViewSwitcherButton"/>
                     </t>
