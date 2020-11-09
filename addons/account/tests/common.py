@@ -11,6 +11,10 @@ from lxml import etree
 class AccountTestInvoicingCommon(TransactionCase):
 
     @classmethod
+    def safe_copy(cls, record):
+        return record and record.copy()
+
+    @classmethod
     def copy_account(cls, account):
         suffix_nb = 1
         while True:
@@ -59,9 +63,9 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
-        cls.tax_sale_b = cls.company_data['default_tax_sale'].copy()
+        cls.tax_sale_b = cls.safe_copy(cls.company_data['default_tax_sale'])
         cls.tax_purchase_a = cls.company_data['default_tax_purchase']
-        cls.tax_purchase_b = cls.company_data['default_tax_purchase'].copy()
+        cls.tax_purchase_b = cls.safe_copy(cls.company_data['default_tax_purchase'])
         cls.tax_armageddon = cls.setup_armageddon_tax('complex_tax', cls.company_data)
 
         # ==== Products ====
@@ -89,16 +93,13 @@ class AccountTestInvoicingCommon(TransactionCase):
         # ==== Fiscal positions ====
         cls.fiscal_pos_a = cls.env['account.fiscal.position'].create({
             'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
+            'tax_ids': ([(0, None, {
                     'tax_src_id': cls.tax_sale_a.id,
                     'tax_dest_id': cls.tax_sale_b.id,
-                }),
-                (0, None, {
+            })] if cls.tax_sale_b else []) + ([(0, None, {
                     'tax_src_id': cls.tax_purchase_a.id,
                     'tax_dest_id': cls.tax_purchase_b.id,
-                }),
-            ],
+            })] if cls.tax_purchase_b else []),
             'account_ids': [
                 (0, None, {
                     'account_src_id': cls.product_a.property_account_income_id.id,
@@ -332,7 +333,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'amount_type': 'percent',
                     'amount': 10.0,
                     'tax_exigibility': 'on_payment',
-                    'cash_basis_transition_account_id': company_data['default_account_tax_sale'].copy().id,
+                    'cash_basis_transition_account_id': cls.safe_copy(company_data['default_account_tax_sale']).id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
                             'factor_percent': 100,
