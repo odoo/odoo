@@ -62,7 +62,6 @@ class AccountMove(models.Model):
         product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
         consumable = set(['consu', 'product'])
         service = set(['service'])
-        mixed = set(['consu', 'service', 'product'])
         # on expo invoice you can mix services and products
         expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']
 
