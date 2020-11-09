@@ -309,6 +309,7 @@ async function createWysiwyg() {
 
     var self = this
     return this.wysiwyg.attachTo(this).then(function () {
+        self._appendTranslateButton();
         if (wysiwygOptions.snippets) {
             var defSnippets = testUtils.makeTestPromise();
             testUtils.mock.intercept(self.wysiwyg, "snippets_loaded", function () {
