@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_position_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <form string="Fiscal Position">
+                    <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="states_count" invisible="1"/>
+                            <field name="company_country_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="auto_apply"/>
+                            <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="foreign_vat"/>
+                            <field name="country_id"
+                                attrs="{'invisible': [('auto_apply', '!=', True), ('foreign_vat', '=', False)], 'required': [('foreign_vat', '!=', False)]}"
+                                options="{'no_open': True, 'no_create': True}"/>
+                            <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
+                                attrs="{'invisible': ['|', '|', '&amp;', ('auto_apply', '!=', True), ('foreign_vat', '=', False), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
+                            <label for="zip_from" string="Zip Range"
+                                attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}"/>
+                            <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}">
+                                <span> From </span>
+                                <field name="zip_from" class="oe_inline"/>
+                                <div class="oe_edit_only"/>
+                                <span> To </span>
+                                <field name="zip_to" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="tax_mapping" string="Tax Mapping">
+                        <group>
+                            <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
+                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
+                                    <field name="tax_src_id"
+                                        domain="[
+                                            ('type_tax_use', '!=', 'none'),
+                                            ('country_id', '=', parent.company_country_id),
+                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                                        ]"
+                                        context="{'append_type_to_tax_name': True}"
+                                    />
+
+                                    <field name="tax_dest_id"
+                                        domain="[
+                                            ('type_tax_use', '!=', 'none'),
+                                            ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
+                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                        context="{'append_type_to_tax_name': True}"
+                                    />
+                                </tree>
+                                <form name="tax_map_form" string="Tax Mapping">
+                                    <group>
+                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                        </page>
+                        <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
+                        <group>
+                            <field name="account_ids" widget="one2many" nolabel="1">
+                                <tree string="Account Mapping" editable="bottom">
+                                    <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                </tree>
+                                <form string="Account Mapping">
+                                    <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                </form>
+                            </field>
+                        </group>
+                        </page>
+                    </notebook>
+                    <field name="note" placeholder="Legal Notes..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_position_filter" model="ir.ui.view">
+            <field name="name">account.fiscal.position.filter</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <search string="Search Fiscal Positions">
+                    <field name="name" string="Fiscal Position"/>
+                    <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_position_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.tree</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <tree string="Fiscal Position">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_fiscal_position_form" model="ir.actions.act_window">
+            <field name="name">Fiscal Positions</field>
+            <field name="res_model">account.fiscal.position</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_account_position_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new fiscal position
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -33,6 +33,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
         'wizard/pos_box.xml',
+        'views/account_fiscal_position_views.xml',
         'views/partner_view.xml',
         'views/account_account_type_views.xml',
         'views/account_account_views.xml',
