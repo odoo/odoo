@@ -34,6 +34,18 @@
                     <field name="edi_state" invisible="1" />
                     <field name="edi_state" attrs="{'invisible': ['|', ('edi_document_ids', '=', []), ('state', '=', 'draft')]}"/>
                 </xpath>
+                <xpath expr="//group[@name='group3']" position="after">
+                    <group groups="base.group_no_one">
+                        <field name="edi_document_ids" string="EDI Documents">
+                            <tree create="false" delete="false" edit="false" decoration-danger="error">
+                                <field name="name"/>
+                                <field name="edi_format_name"/>
+                                <field name="state"/>
+                                <field name="error" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>
