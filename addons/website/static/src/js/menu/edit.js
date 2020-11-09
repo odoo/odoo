@@ -196,7 +196,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
 
         const websiteToolbar = [
-            ['TableButton'],
+            ['TableButton', 'TableOptionsButton'],
             ['OdooTextColorButton', 'OdooBackgroundColorButton'],
             [
                 [
