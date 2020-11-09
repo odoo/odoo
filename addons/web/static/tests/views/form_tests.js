@@ -2934,7 +2934,6 @@ QUnit.module('Views', {
             },
         });
 
-        // edit record
         await testUtils.fields.editInput(form.$('input[name="foo"]'), 'pinkypie');
         // discard
         await testUtils.dom.click(form.$('.o_control_panel .o_form_button_cancel'));
@@ -2944,11 +2943,63 @@ QUnit.module('Views', {
         assert.containsN($('.modal'), '.modal-footer button', 3,
             "should have 3 buttons");
 
-        // cancel
+        // Save
         await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
         assert.strictEqual(form.$('span[name="foo"]').text(), 'pinkypie',
             "value should be saved");
 
+        form.destroy();
+    });
+
+    QUnit.test('buttons are enabled on close of discard changes dialog after save fail from discard changes dialog', async function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.foo.required = true;
+        this.data.partner.fields.foo.default = undefined;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<form string="Partners">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </form>`,
+            services: {
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        if (params.type !== 'danger') {
+                            return;
+                        }
+                        assert.strictEqual(params.title, 'Invalid fields:',
+                            "should have a warning with correct title");
+                        assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
+                            "should have a warning with correct message");
+                    }
+                }),
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('input[name="display_name"]'), 'pinkypie');
+        // discard
+        await testUtils.dom.click(form.$('.o_control_panel .o_form_button_cancel'));
+
+        assert.containsOnce(document.body, '.modal',
+            "should have a confirmation modal dialog to confirm discard action");
+        assert.containsN($('.modal'), '.modal-footer button', 3,
+            "should have 3 buttons");
+
+        // try to save without filling required fields
+        await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+        assert.containsN(form.$buttons, 'button:disabled', 4,
+            "control panel buttons should be disabled");
+        assert.containsOnce(document.body, '.modal',
+            "should have a confirmation modal dialog still open to confirm discard action");
+
+        await testUtils.dom.click($('.modal .modal-footer button.btn-secondary:eq(1)'));
+        assert.containsNone(form.$buttons, 'button:disabled',
+            "control panel buttons should be enabled");
         form.destroy();
     });
 

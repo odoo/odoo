@@ -94,10 +94,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.discardingDef = new Promise(function (resolve, reject) {
             const confirmCallback = () => {
                 resolve({ needDiscard: true});
+                // enable buttons if user first save which fails because of required field missed
+                // and then confirm discard changes dialog
+                self._enableButtons();
                 self.discardingDef = null;
             };
             const cancelCallback = () => {
                 reject();
+                // enable buttons if user first save which fails because of required field missed
+                // and then cancel confirmation dialog
+                self._enableButtons();
                 self.discardingDef = null;
             };
             var dialog = Dialog.confirm(self, message, {

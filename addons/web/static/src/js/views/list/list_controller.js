@@ -741,8 +741,8 @@ var ListController = BasicController.extend({
                 this._saveMultipleRecords(this.lastFieldChangedEvent.data.dataPointID, target.__node, this.lastFieldChangedEvent.data.changes);
             return this.multipleRecordsSavingPromise;
         };
-        const recordID = this.lastFieldChangedEvent.data.dataPointID;
-        if (this.renderer.isInMultipleRecordEdition(recordID)) {
+        const recordID = this.lastFieldChangedEvent && this.lastFieldChangedEvent.data.dataPointID;
+        if (recordID && this.renderer.isInMultipleRecordEdition(recordID)) {
             this._discardChanges(false, { saveFunction: saveMulti }).then(() => {
                 this.fieldChangedPrevented = false;
             });
@@ -762,9 +762,6 @@ var ListController = BasicController.extend({
      */
     _onDiscardMousedown: function (ev) {
         var self = this;
-        // make this.fieldChangedPrevented to true if it is not set, Discard and cancel will
-        // remove last field changed information, this way we will set fieldChangedPrevented
-        // to true only first time
         this.fieldChangedPrevented = true;
         window.addEventListener('mouseup', function (mouseupEvent) {
             var preventedEvent = self.fieldChangedPrevented;
