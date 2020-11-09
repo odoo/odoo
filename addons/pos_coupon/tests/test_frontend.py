@@ -100,9 +100,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             for promo_program in self.promo_programs:
                 pos_config.promo_program_ids.add(promo_program)
 
-        self.main_pos_config.with_user(self.env.ref("base.user_admin")).open_session_cb(
-            check_coa=False
-        )
+        self.main_pos_config.open_session_cb(check_coa=False)
 
         ##
         # Tour Part 1
@@ -113,7 +111,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosCouponTour1",
-            login="admin",
+            login="accountman",
         )
 
         # check coupon usage
@@ -161,7 +159,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosCouponTour2",
-            login="admin",
+            login="accountman",
         )
         self.assertEqual(self.coupon4.state, "new")
         self.assertEqual(promo_coupon4.state, "new")
