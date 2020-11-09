@@ -8,4 +8,23 @@
     .o_forecasted_row {
         background-color: #dee2e6;
     }
+
+    .o_priority {
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        &.o_priority_star {
+            background-color: transparent;
+            font-size: 1.35em;
+            &.fa-star-o {
+                color: #a8a8a8;
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
+    }
+    .table td {
+        vertical-align: middle;
+    } 
 }
