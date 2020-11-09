@@ -74,9 +74,10 @@ class PaymentTransaction(models.Model):
     def _check_amount_and_confirm_order(self):
         self.ensure_one()
         for order in self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent')):
-            if order.currency_id.compare_amounts(self.amount, order.amount_total) == 0:
+            diff_sign = order.currency_id.compare_amounts(self.amount, order.amount_total)
+            if diff_sign != -1:
                 order.with_context(send_email=True).action_confirm()
-            else:
+            if diff_sign != 0:
                 _logger.warning(
                     '<%s> transaction AMOUNT MISMATCH for order %s (ID %s): expected %r, got %r',
                     self.acquirer_id.provider,order.name, order.id,
