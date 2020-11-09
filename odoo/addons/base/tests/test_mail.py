@@ -296,6 +296,12 @@ class TestSanitizer(BaseCase):
     #     for ext in test_mail_examples.MSOFFICE_1_OUT:
     #         self.assertNotIn(ext, new_html)
 
+    def test_big_nesting(self):
+        """Sanitizing lots of nested tags."""
+        untrusted_html = "{}<p>Hello</p>{}".format("<span>" * 255, "</span>" * 255)
+        trusted_html = html_sanitize(untrusted_html)
+        self.assertIn("Hello", trusted_html)
+
 
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """

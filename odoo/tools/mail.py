@@ -4,6 +4,7 @@
 import base64
 import collections
 import logging
+import lxml
 from lxml.html import clean
 import random
 import re
@@ -21,6 +22,7 @@ from odoo.tools import pycompat, misc
 
 _logger = logging.getLogger(__name__)
 
+HUGE_PARSER = lxml.html.HTMLParser(huge_tree=True)
 
 #----------------------------------------------------------
 # HTML Sanitizer
@@ -231,10 +233,14 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             'strip_classes': strip_classes,  # remove classes, even when keeping other attributes
         })
 
+    # Avoid hard limit of 254 nested levels on some situations
+    elm_count = src.count("<") - src.count("</")
+    src_doc = lxml.html.fromstring(src, parser=lxml.html.html_parser if elm_count > 15000 else HUGE_PARSER)
+
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
-        cleaned = cleaner.clean_html(src)
+        cleaned = cleaner.clean_html(src_doc)
         assert isinstance(cleaned, pycompat.text_type)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace(u'%24', u'$')
