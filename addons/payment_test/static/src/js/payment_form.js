@@ -24,7 +24,9 @@ odoo.define('payment_test.payment_form', require => {
          * @param {string} flow - The online payment flow of the transaction
          * @return {undefined}
          */
-        _processPayment: function (provider, paymentOptionId, flow) {
+        _processPayment: function (provider, paymentOptionId, flow) {.
+//        arj todo: override prepare ... voir dans sale comment c'est fait et rajouter ce dont j'ai besoin/
+//          j'aurais les params que je get
             const prom = this._super(...arguments);
             prom.then(result => {
                 if (provider === 'test' && flow === 'direct') {
