@@ -49,7 +49,10 @@ class MergeOpportunity(models.TransientModel):
         if self.user_id:
             user_in_team = False
             if self.team_id:
-                user_in_team = self.env['crm.team'].search_count([('id', '=', self.team_id.id), '|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
-            if not user_in_team:
+                user_teams = self.env["crm.team"].search(["|", ("user_id", "=", self.user_id.id), ("member_ids", "=", self.user_id.id)])
+                user_in_team = not user_teams or self.team_id in user_teams
+            if user_in_team:
+                team_id = self.team_id
+            else:
                 team_id = self.env['crm.team'].search(['|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)], limit=1)
         self.team_id = team_id

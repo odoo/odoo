@@ -66,7 +66,13 @@ class Lead2OpportunityPartner(models.TransientModel):
         """
         if self.user_id:
             if self.team_id:
-                user_in_team = self.env['crm.team'].search_count([('id', '=', self.team_id.id), '|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
+                # A user is considered to be in the team if:
+                # - he is actually part of the team
+                # - he is not in any team
+                # Indeed, if the user is not in any team it means that any team can be selected,
+                # in particular the current one.
+                user_teams = self.env["crm.team"].search(["|", ("user_id", "=", self.user_id.id), ("member_ids", "=", self.user_id.id)])
+                user_in_team = not user_teams or self.team_id in user_teams
             else:
                 user_in_team = False
             if not user_in_team:

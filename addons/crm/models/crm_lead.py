@@ -350,7 +350,7 @@ class Lead(models.Model):
     def _valid_team(self):
         for lead in self:
             if lead.user_id:
-                values = lead.with_context(team_id=lead.team_id.id)._onchange_user_values(lead.user_id.id)
+                values = lead.with_context(team_id=lead.team_id.id,default_team_id=lead.team_id.id)._onchange_user_values(lead.user_id.id)
                 if values:
                     lead.update(values)
 
