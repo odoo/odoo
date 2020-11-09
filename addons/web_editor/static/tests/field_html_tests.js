@@ -460,8 +460,7 @@ QUnit.module('web_editor', {}, function () {
 
         QUnit.module('translation');
 
-        // TODO : need to be checked and fixed to pass with new JW editor
-        QUnit.skip('field html translatable', async function (assert) {
+        QUnit.test('field html translatable', async function (assert) {
             assert.expect(4);
 
             var multiLang = _t.database.multi_lang;
