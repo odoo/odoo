@@ -67,6 +67,7 @@ class ReplenishmentReport(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': 'product.product',
             'docs': self._get_report_data(product_variant_ids=docids),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }
 
     def _get_report_data(self, product_template_ids=False, product_variant_ids=False):
@@ -122,8 +123,8 @@ class ReplenishmentReport(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'uom_id': product.uom_id,
-            'receipt_date': format_datetime(self.env, move_in.date, timezone, 'medium') if move_in else False,
-            'delivery_date': format_datetime(self.env, move_out.date, timezone, 'medium') if move_out else False,
+            'receipt_date': format_date(self.env, move_in.date) if move_in else False,
+            'delivery_date': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
             'quantity': quantity,
             'move_out': move_out,
@@ -219,4 +220,5 @@ class ReplenishmentTemplateReport(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': 'product.product',
             'docs': self._get_report_data(product_template_ids=docids),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }

@@ -30,7 +30,7 @@
     </template>
 
     <template id="report_replenishment_header">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex flex-wrap justify-content-between">
             <div class="o_product_name">
                 <h3>
                     <t t-if="docs['product_templates']">
@@ -92,12 +92,11 @@
                     <thead>
                         <tr class="bg-light">
                             <td>Replenishment</td>
-                            <td>Expected Receipt</td>
+                            <td>Receipt</td>
                             <td t-if="docs['multiple_product']">Product</td>
-                            <td class="text-right">Quantity</td>
-                            <td groups="uom.group_uom">UoM</td>
+                            <td class="text-right"><t t-esc="docs['uom']"/></td>
                             <td>Used by</td>
-                            <td>Expected Delivery</td>
+                            <td>Delivery</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,6 +119,13 @@
                                     t-att-res-id="line['document_in'].id"/>
                                 <t t-elif="line['reservation']">
                                     Reserved from stock
+                                    <button t-if="line['move_out'] and line['move_out'].picking_id"
+                                        class="btn btn-sm btn-primary o_report_replenish_unreserve"
+                                        t-attf-model="stock.picking"
+                                        t-att-model-id="line['move_out'].picking_id.id"
+                                        name="unreserve_link">
+                                        Unreserve
+                                    </button>
                                 </t>
                                 <t t-elif="line['replenishment_filled']">
                                     <t t-if="line['document_out']">Inventory On Hand</t>
@@ -130,9 +136,14 @@
                             <td t-esc="line['receipt_date'] or ''"
                                 t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
                             <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
-                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']"/></td>
-                            <td t-esc="line['uom_id'].name" groups="uom.group_uom"/>
-                            <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}">
+                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options="{'widget': 'float', 'precision': precision}"/></td>
+                            <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}" name="usedby_cell">
+                                <button t-if="line['move_out'] and line['move_out'].picking_id"
+                                    t-attf-class="o_priority o_priority_star o_report_replenish_change_priority fa fa-star#{' one' if line['move_out'].picking_id.priority=='1' else '-o zero'}"
+                                    t-attf-model="stock.picking"
+                                    t-att-model-id="line['move_out'].picking_id.id"
+                                    name="change_priority_link"
+                                />
                                 <a t-if="line['document_out']"
                                     t-attf-href="#" t-esc="line['document_out'].name"
                                     class="font-weight-bold" view-type="form"
@@ -146,27 +157,23 @@
                     <thead>
                         <tr class="o_forecasted_row">
                             <td colspan="2">Forecasted Inventory</td>
-                            <td t-esc="docs['virtual_available']" class="text-right"/>
-                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                            <td t-esc="docs['virtual_available']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
                         </tr>
                     </thead>
                     <tbody t-if="docs['qty']['in']">
                         <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
                             <td colspan="2">Incoming Draft Transfer</td>
-                            <td t-esc="docs['draft_picking_qty']['in']" class="text-right"/>
-                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                            <td t-esc="docs['draft_picking_qty']['in']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
                         </tr>
                         <tr t-if="docs['draft_picking_qty']['out']" name="draft_picking_out">
                             <td colspan="2">Outgoing Draft Transfer</td>
-                            <td t-esc="-docs['draft_picking_qty']['out']" class="text-right"/>
-                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                            <td t-esc="-docs['draft_picking_qty']['out']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
                         </tr>
                     </tbody>
                     <thead>
                         <tr class="o_forecasted_row">
                             <td colspan="2">Forecasted with Pending</td>
-                            <td t-esc="future_virtual_available" class="text-right"/>
-                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                            <td t-esc="future_virtual_available" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
                         </tr>
                     </thead>
                 </table>
