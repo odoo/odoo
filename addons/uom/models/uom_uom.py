@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import api, fields, tools, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -11,22 +13,21 @@ class UoMCategory(models.Model):
 
     name = fields.Char('Unit of Measure Category', required=True, translate=True)
 
-    def unlink(self):
-        uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
-        uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
-        if any(categ.id in (uom_categ_unit + uom_categ_wtime).ids for categ in self):
-            raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
-        return super(UoMCategory, self).unlink()
-
 
 class UoM(models.Model):
     _name = 'uom.uom'
     _description = 'Product Unit of Measure'
     _order = "name"
 
+    def _unprotected_uom_xml_ids(self):
+        return [
+            "product_uom_hour", # NOTE: this uom is protected when hr_timesheet is installed.
+            "product_uom_dozen",
+        ]
+
     name = fields.Char('Unit of Measure', required=True, translate=True)
     category_id = fields.Many2one(
-        'uom.category', 'Category', required=True, ondelete='cascade',
+        'uom.category', 'Category', required=True, ondelete='restrict',
         help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios.")
     factor = fields.Float(
         'Ratio', default=1.0, digits=0, required=True,  # force NUMERIC with unlimited precision
@@ -44,7 +45,7 @@ class UoM(models.Model):
         ('bigger', 'Bigger than the reference Unit of Measure'),
         ('reference', 'Reference Unit of Measure for this category'),
         ('smaller', 'Smaller than the reference Unit of Measure')], 'Type',
-        default='reference', required=1)
+        default='reference', required=True)
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
@@ -61,6 +62,23 @@ class UoM(models.Model):
     def _onchange_uom_type(self):
         if self.uom_type == 'reference':
             self.factor = 1
+
+    @api.onchange('factor', 'factor_inv', 'uom_type', 'rounding', 'category_id')
+    def _onchange_critical_fields(self):
+        if self._filter_protected_uoms() and self.create_date < (fields.Datetime.now() - timedelta(days=1)):
+            return {
+                'warning': {
+                    'title': _("Warning for %s", self.name),
+                    'message': _(
+                        "Some critical fields have been modified on %s.\n"
+                        "Note that existing data WON'T be updated by this change.\n\n"
+                        "As units of measure impact the whole system, this may cause critical issues.\n"
+                        "E.g. modifying the rounding could disturb your inventory balance.\n\n"
+                        "Therefore, changing core units of measure in a running database is not recommended.",
+                        self.name,
+                    )
+                }
+            }
 
     @api.constrains('category_id', 'uom_type', 'active')
     def _check_category_reference_uniqueness(self):
@@ -107,11 +125,13 @@ class UoM(models.Model):
         return super(UoM, self).write(values)
 
     def unlink(self):
-        uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
-        uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
-        if any(uom.category_id.id in (uom_categ_unit + uom_categ_wtime).ids and uom.uom_type == 'reference' for uom in self):
-            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
-        return super(UoM, self).unlink()
+        locked_uoms = self._filter_protected_uoms()
+        if locked_uoms:
+            raise UserError(_(
+                "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
+                ", ".join(locked_uoms.mapped('name')),
+            ))
+        return super().unlink()
 
     @api.model
     def name_create(self, name):
@@ -166,3 +186,16 @@ class UoM(models.Model):
         if to_unit:
             amount = amount / to_unit.factor
         return amount
+
+    def _filter_protected_uoms(self):
+        """Verifies self does not contain protected uoms."""
+        linked_model_data = self.env['ir.model.data'].search([
+            ('model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('module', '=', 'uom'),
+            ('name', 'not in', self._unprotected_uom_xml_ids()),
+        ])
+        if not linked_model_data:
+            return self.browse()
+        else:
+            return self.browse(set(linked_model_data.mapped('res_id')))
