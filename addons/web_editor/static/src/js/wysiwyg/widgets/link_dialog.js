@@ -176,7 +176,7 @@ var LinkDialog = Dialog.extend({
         var $url = this.$('input[name="url"]');
         var url = $url.val();
         var label = this.state.text;
-        if (this.needLabel) {
+        if (this.state.needLabel) {
             label = this.$('input[name="label"]').val() || url || '';
             label = label.replace('<', "&lt;").replace('>', "&gt;");
         }
