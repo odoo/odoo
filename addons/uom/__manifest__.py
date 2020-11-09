@@ -16,6 +16,9 @@ This is the base module for managing Units of measure.
         'security/ir.model.access.csv',
         'views/uom_uom_views.xml',
     ],
+    'demo': [
+        'data/uom_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
 }
