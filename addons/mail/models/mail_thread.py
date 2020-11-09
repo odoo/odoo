@@ -2480,7 +2480,8 @@ class MailThread(models.AbstractModel):
         return hm
 
     def _notify_get_action_link(self, link_type, **kwargs):
-        local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
+        whitelisted_kwargs = ['access_token', 'auth_signup_token', 'auth_login', 'controller', 'email', 'model', 'res_id']
+        local_kwargs = dict((k, v) for k, v in kwargs.items() if k in whitelisted_kwargs)  # do not modify in-place, modify copy instead
         base_params = {
             'model': kwargs.get('model', self._name),
             'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
@@ -2489,6 +2490,7 @@ class MailThread(models.AbstractModel):
         local_kwargs.pop('message_id', None)
         local_kwargs.pop('model', None)
         local_kwargs.pop('res_id', None)
+        local_kwargs.pop('body', None)
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params, **local_kwargs)
