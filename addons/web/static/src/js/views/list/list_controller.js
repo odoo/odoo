@@ -742,8 +742,6 @@ var ListController = BasicController.extend({
         };
         this._discardChanges(false, { saveFunction: saveMulti }).then(() => {
             this.fieldChangedPrevented = false;
-        }, () => {
-            this.fieldChangedPrevented = false;
         });
     },
     /**
@@ -756,7 +754,12 @@ var ListController = BasicController.extend({
      */
     _onDiscardMousedown: function (ev) {
         var self = this;
-        this.fieldChangedPrevented = true;
+        // make this.fieldChangedPrevented to true if it is not set, Discard and cancel will
+        // remove last field changed information, this way we will set fieldChangedPrevented
+        // to true only first time
+        if (!this.fieldChangedPrevented) {
+            this.fieldChangedPrevented = true;
+        }
         window.addEventListener('mouseup', function (mouseupEvent) {
             var preventedEvent = self.fieldChangedPrevented;
             // If the user starts clicking (mousedown) on the button and stops clicking
