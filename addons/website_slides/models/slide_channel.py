@@ -27,6 +27,12 @@ class ChannelUsersRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
 
+    _sql_constraints = [
+        ('slide_channel_partner_unique',
+         'UNIQUE(channel_id,partner_id)',
+         'Error, channel / partner memberships should not be duplicated.'),
+    ]
+
     def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
@@ -218,7 +224,7 @@ class Channel(models.Model):
         default='public', string='Visibility', required=True,
         help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
     partner_ids = fields.Many2many(
-        'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
+        'res.partner', compute='_compute_partner_ids', search='_search_partner_ids',
         string='Members', help="All members of the channel.", context={'active_test': False}, copy=False, depends=['channel_partner_ids'])
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     members_done_count = fields.Integer('Attendees Done Count', compute='_compute_members_done_count')
@@ -249,6 +255,23 @@ class Channel(models.Model):
     def _compute_slide_last_update(self):
         for record in self:
             record.slide_last_update = fields.Date.today()
+
+    @api.depends('channel_partner_ids.channel_id', 'channel_partner_ids.partner_id')
+    def _compute_partner_ids(self):
+        if not self.ids:
+            return
+        members = self.env['slide.channel.partner'].sudo().search([('channel_id', 'in', self.ids)])
+        channel_members = dict.fromkeys(self.ids, self.env['res.partner'])
+        for member in members:
+            channel_members[member.channel_id.id] += member.partner_id
+        for channel in self:
+            channel.partner_ids = channel_members[channel.id].ids
+
+    def _search_partner_ids(self, operator, value):
+        members = self.env['slide.channel.partner'].sudo().search([
+            ('partner_id', operator, value)
+        ])
+        return [('id', 'in', members.channel_id.ids)]
 
     @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):

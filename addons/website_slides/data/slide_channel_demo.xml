@@ -41,7 +41,8 @@
     <!-- This channel will gain a forum -->
     <record id="slide_channel_demo_2_gard2" model="slide.channel">
         <field name="name">Trees, Wood and Gardens</field>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="channel_partner_ids" eval="False"/>
         <field name="enroll">public</field>
         <field name="channel_type">documentation</field>
         <field name="allow_comment" eval="True"/>
@@ -60,7 +61,7 @@
 
     <record id="slide_channel_demo_3_furn0" model="slide.channel">
         <field name="name">Choose your wood !</field>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="enroll">public</field>
         <field name="channel_type">training</field>
         <field name="allow_comment" eval="True"/>
