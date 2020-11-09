@@ -61,6 +61,7 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this.lastFieldChangedEvent = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
         this.isExportEnable = false;
@@ -730,19 +731,26 @@ var ListController = BasicController.extend({
      */
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
-        this.fieldChangedPrevented;
         const saveMulti = () => {
-            // if fieldChangedPrevented.data.__originalComponent is set, it is the field Component
-            // that triggered the event, otherwise fieldChangedPrevented.target is the legacy field
-            // Widget that triggered the event
-            const target = this.fieldChangedPrevented.data.__originalComponent || this.fieldChangedPrevented.target;
+            // lastFieldChangedEvent will have information of last field_changed event
+            // if lastFieldChangedEvent.data.__originalComponent is set, it is the field Component
+            // that triggered field_changed last, otherwise lastFieldChangedEvent.target is the legacy
+            // field Widget
+            const target = this.lastFieldChangedEvent.data.__originalComponent || this.lastFieldChangedEvent.target;
             this.multipleRecordsSavingPromise =
-                this._saveMultipleRecords(this.fieldChangedPrevented.data.dataPointID, target.__node, this.fieldChangedPrevented.data.changes);
+                this._saveMultipleRecords(this.lastFieldChangedEvent.data.dataPointID, target.__node, this.lastFieldChangedEvent.data.changes);
             return this.multipleRecordsSavingPromise;
         };
-        this._discardChanges(false, { saveFunction: saveMulti }).then(() => {
-            this.fieldChangedPrevented = false;
-        });
+        const recordID = this.lastFieldChangedEvent.data.dataPointID;
+        if (this.renderer.isInMultipleRecordEdition(recordID)) {
+            this._discardChanges(false, { saveFunction: saveMulti }).then(() => {
+                this.fieldChangedPrevented = false;
+            });
+        } else {
+            this._discardChanges().then(() => {
+                this.reload();
+            });
+        }
     },
     /**
      * Used to detect if the discard button is about to be clicked.
@@ -757,9 +765,7 @@ var ListController = BasicController.extend({
         // make this.fieldChangedPrevented to true if it is not set, Discard and cancel will
         // remove last field changed information, this way we will set fieldChangedPrevented
         // to true only first time
-        if (!this.fieldChangedPrevented) {
-            this.fieldChangedPrevented = true;
-        }
+        this.fieldChangedPrevented = true;
         window.addEventListener('mouseup', function (mouseupEvent) {
             var preventedEvent = self.fieldChangedPrevented;
             // If the user starts clicking (mousedown) on the button and stops clicking
@@ -837,6 +843,7 @@ var ListController = BasicController.extend({
     _onFieldChanged: function (ev) {
         ev.stopPropagation();
         const recordId = ev.data.dataPointID;
+        this.lastFieldChangedEvent = ev;
 
         if (this.fieldChangedPrevented) {
             this.fieldChangedPrevented = ev;

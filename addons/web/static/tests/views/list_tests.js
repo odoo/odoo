@@ -10,6 +10,7 @@ var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
 var fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
+const ListController = require('web.ListController');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
@@ -7650,7 +7651,14 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: clicking on Discard button in multi edition and Save', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
+
+        testUtils.mock.patch(ListController, {
+            _saveMultipleRecords() {
+                assert.ok('_saveMultipleRecords called.');
+                return this._super(...arguments);
+            },
+        });
 
         const list = await createView({
             arch: `
@@ -7703,6 +7711,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oof");
 
         list.destroy();
+        testUtils.mock.unpatch(ListController);
     });
 
     QUnit.test('editable list view: click on Discard button in multi edition and Cancel and again click Discard and Save', async function (assert) {
