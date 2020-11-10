@@ -23,6 +23,9 @@ from odoo.tools.image import image_data_uri
 class TestFields(TransactionCaseWithUserDemo):
 
     def setUp(self):
+        # for tests methods that create custom models/fields
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_caches)
         super(TestFields, self).setUp()
         self.env.ref('test_new_api.discussion_0').write({'participants': [(4, self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)

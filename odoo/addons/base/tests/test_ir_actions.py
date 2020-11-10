@@ -319,17 +319,16 @@ class TestCustomFields(common.TransactionCase):
 
     def setUp(self):
         # check that the registry is properly reset
-        registry = odoo.registry()
-        fnames = set(registry[self.MODEL]._fields)
+        fnames = set(self.registry[self.MODEL]._fields)
+
         @self.addCleanup
         def check_registry():
-            assert set(registry[self.MODEL]._fields) == fnames
+            assert set(self.registry[self.MODEL]._fields) == fnames
 
-        super(TestCustomFields, self).setUp()
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_caches)
 
-        # use a test cursor instead of a real cursor
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        super().setUp()
 
     def create_field(self, name, *, field_type='char'):
         """ create a custom field and return it """
