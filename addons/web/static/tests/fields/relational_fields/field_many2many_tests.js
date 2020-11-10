@@ -1383,8 +1383,7 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.dom.click($modal.find('.btn.btn-primary.o_select_button'));
 
-            var m2m_records = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_data_cell:not(.o_many2many_tags_cell)');
-            assert.equal(m2m_records.length, 51,
+            assert.strictEqual(form.$('.o_data_row').length, 51,
                 'We should have added all the records present in the search view to the m2m field'); // the 50 in batch + 'gold'
 
             await testUtils.dom.click(form.$buttons.find('.btn.btn-primary.o_form_button_save'));
@@ -1411,8 +1410,7 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.dom.click($modal.find('.btn.btn-primary.o_select_button'));
 
-            pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
-            assert.equal(pager_limit.text(), '51',
+            assert.strictEqual(form.$('.o_data_row').length, 51,
                 'We should have 51 records in the m2m field');
 
             form.destroy();
