@@ -39,7 +39,7 @@
                                 <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin" role="img" title="Loading"/>
                             </div>
                         </t>
-                        <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-att-src="attachmentViewer.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                        <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-on-load="_onLoadImage" t-att-src="attachmentViewer.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-key="'image_' + attachmentViewer.attachment.id" t-ref="image_{{ attachmentViewer.attachment.id }}"/>
                     </div>
                 </t>
                 <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
