@@ -184,40 +184,12 @@ class Pricelist(models.Model):
 
             price_uom = self.env['uom.uom'].browse([qty_uom_id])
             for rule in items:
-                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
+                price_tmp = rule._check_pricelist_rule(
+                    product, qty, uom_id, partner, date, qty_in_product_uom, price_uom)
+                if price_tmp is False:
                     continue
-                if is_product_template:
-                    if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and not (product.product_variant_count == 1 and product.product_variant_id.id == rule.product_id.id):
-                        # product rule acceptable on template if has only one variant
-                        continue
-                else:
-                    if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and product.id != rule.product_id.id:
-                        continue
-
-                if rule.categ_id:
-                    cat = product.categ_id
-                    while cat:
-                        if cat.id == rule.categ_id.id:
-                            break
-                        cat = cat.parent_id
-                    if not cat:
-                        continue
-
-                if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
-                    price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.user.company_id, date, round=False)
-                else:
-                    # if base option is public price take sale price else cost price of product
-                    # price_compute returns the price in the context UoM, i.e. qty_uom_id
-                    price = product.price_compute(rule.base)[product.id]
-
-                if price is not False:
-                    price = rule._compute_price(price, price_uom, product, quantity=qty, partner=partner)
-                    suitable_rule = rule
+                price = price_tmp
+                suitable_rule = rule
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
@@ -536,4 +508,49 @@ class PricelistItem(models.Model):
             if self.price_max_margin:
                 price_max_margin = convert_to_price_uom(self.price_max_margin)
                 price = min(price, price_limit + price_max_margin)
+        return price
+
+    def _check_pricelist_rule(self, product, qty, uom_id, partner, date, qty_in_product_uom, price_uom):
+        """Method to check if the item is a suitable one for the quantity that is going to be need it, a certain
+        product, uom, and partner if all the conditions pass we are returning the rule's price for the product.
+        If the rule isn't suitable we are returning a False value.
+        """
+        self.ensure_one()
+        if self.min_quantity and qty_in_product_uom < self.min_quantity:
+            return False
+
+        if product._name == "product.template":
+            if self.product_tmpl_id and product.id != self.product_tmpl_id.id:
+                return False
+            if self.product_id and not (
+               product.product_variant_count == 1 and product.product_variant_id.id == self.product_id.id):
+                # product rule acceptable on template if has only one variant
+                return False
+        else:
+            if self.product_tmpl_id and product.product_tmpl_id.id != self.product_tmpl_id.id:
+                return False
+            if self.product_id and product.id != self.product_id.id:
+                return False
+
+        if self.categ_id:
+            cat = product.categ_id
+            while cat:
+                if cat.id == self.categ_id.id:
+                    break
+                cat = cat.parent_id
+            if not cat:
+                return False
+
+        if self.base == 'pricelist' and self.base_pricelist_id:
+            price_tmp = self.base_pricelist_id._compute_price_rule(
+                [(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
+            price = self.base_pricelist_id.currency_id._convert(
+                price_tmp, self.pricelist_id.currency_id, self.env.user.company_id, date, round=False)
+        else:
+            # if base option is public price take sale price else cost price of product
+            # price_compute returns the price in the context UoM, i.e. qty_uom_id
+            price = product.price_compute(self.base)[product.id]
+
+        if price is not False:
+            price = self._compute_price(price, price_uom, product, quantity=qty, partner=partner)
         return price
