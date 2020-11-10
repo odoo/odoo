@@ -40,7 +40,9 @@ class TestOutOfOffice(TestHrHolidaysBase):
         partner = self.employee_hruser.user_id.partner_id
         partner2 = self.user_employee.partner_id
 
-        channel = self.env['mail.channel'].with_context({
+        # test is wrong: tries to create a DM between partner and partner2, but
+        # does so through a third user -> really creates a private chat
+        channel = self.env['mail.channel'].sudo(self.user_employee).with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_channel_noautofollow': True,
