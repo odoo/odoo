@@ -81,7 +81,7 @@ class AcquirerPaypal(models.Model):
         else:
             percentage = self.fees_int_var
             fixed = self.fees_int_fixed
-        fees = (percentage / 100.0 * amount) + fixed / (1 - percentage / 100.0)
+        fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
     def paypal_form_generate_values(self, values):
