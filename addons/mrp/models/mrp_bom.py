@@ -49,7 +49,12 @@ class MrpBom(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
+<<<<<<< HEAD
         'mrp.routing', 'Routing', check_company=True,
+=======
+        'mrp.routing', 'Routing',
+        track_visibility='onchange',
+>>>>>>> 74a48f6cb32... temp
         help="The operations for producing this BoM.  When a routing is specified, the production orders will "
              " be executed through work orders, otherwise everything is processed in the production order itself. ")
     ready_to_produce = fields.Selection([
