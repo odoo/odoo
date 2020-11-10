@@ -40,3 +40,4 @@ Sébastien Alix sebastien.alix@camptocamp.com https://github.com/sebalix
 Thomas Nowicki thomas.nowicki@camptocamp.com https://github.com/Tonow-c2c
 Telmo Santos telmo.santos@camptocamp.com https://github.com/santostelmo
 Thierry Ducrest thierry.ducrest@camptocamp.com https://github.com/TDu
+Stéphane Mangin stephane.mangin@camptocamp.com https://github.com/StephaneMangin
