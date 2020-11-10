@@ -239,7 +239,7 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
         new_notification = self.test_record.message_notify(
             subject='This should be a subject',
             body='<p>You have received a notification</p>',
-            partner_ids=[self.partner_1.id, self.partner_admin.id, self.user_employee.partner_id.id],
+            partner_ids=[self.partner_1.id, self.user_employee.partner_id.id],
         )
 
         self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
@@ -247,22 +247,8 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
         self.assertEqual(new_notification.body, '<p>You have received a notification</p>')
         self.assertEqual(new_notification.author_id, self.env.user.partner_id)
         self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
-        self.assertEqual(new_notification.notified_partner_ids, self.partner_1 | self.user_employee.partner_id | self.partner_admin)
+        self.assertEqual(new_notification.notified_partner_ids, self.partner_1 | self.user_employee.partner_id)
         self.assertNotIn(new_notification, self.test_record.message_ids)
-
-        admin_mails = [x for x in self._mails if self.partner_admin.name in x.get('email_to')[0]]
-        self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
-        admin_mail = admin_mails[0].get('body')
-        admin_access_link = admin_mail[admin_mail.index('model='):admin_mail.index('/>') - 1] if 'model=' in admin_mail else None
-  
-        self.assertIsNotNone(admin_access_link, 'The email sent to admin should contain an access link')
-        self.assertIn('model=%s' % self.test_record._name, admin_access_link, 'The access link should contain a valid model argument')
-        self.assertIn('res_id=%d' % self.test_record.id, admin_access_link, 'The access link should contain a valid res_id argument')
-
-        partner_mails = [x for x in self._mails if self.partner_1.name in x.get('email_to')[0]]
-        self.assertEqual(len(partner_mails), 1, 'There should be exactly one email sent to partner')
-        partner_mail = partner_mails[0].get('body')
-        self.assertNotIn('/mail/view?model=', partner_mail, 'The email sent to admin should not contain an access link')
         # todo xdo add test message_notify on thread with followers and stuff
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
