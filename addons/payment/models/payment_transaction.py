@@ -82,6 +82,9 @@ class PaymentTransaction(models.Model):
     tokenize = fields.Boolean(
         string="Create Token",
         help="Whether a payment token should be created when post-processing the transaction")
+    validation_route = fields.Char(
+        string="Validation Route",
+        help="The route the user is redirected to in order to refund a validation transaction")
     landing_route = fields.Char(
         string="Landing Route",
         help="The route the user is redirected to after the transaction")
@@ -706,7 +709,9 @@ class PaymentTransaction(models.Model):
             'currency_code': self.currency_id.name,
             'state': self.state,
             'state_message': self.state_message,
+            'is_validation': self.operation == 'validation',
             'is_post_processed': self.is_post_processed,
+            'validation_route': self.validation_route,
             'landing_route': self.landing_route,
         }
         _logger.info(

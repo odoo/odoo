@@ -284,8 +284,8 @@ odoo.define('payment.payment_form_mixin', require => {
                     ? parseInt(this.txContext.partnerId) : undefined,
                 'flow': flow,
                 'tokenization_requested': this.txContext.tokenizationRequested,
-                'is_validation': this.txContext.isValidation !== undefined
-                    ? this.txContext.isValidation : false,
+                'validation_route': this.txContext.validationRoute
+                    ? this.txContext.validationRoute : null,
                 'landing_route': this.txContext.landingRoute,
                 'access_token': this.txContext.accessToken
                     ? this.txContext.accessToken : undefined,

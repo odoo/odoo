@@ -166,7 +166,8 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_id': partner.id,
             'access_token': access_token,
             'init_tx_route': '/payment/transaction',
-            'landing_route': '/payment/validation',
+            'validation_route': '/payment/validation',
+            'landing_route': '/my/payment_method',
         }
         return request.render('payment.payment_methods', tx_context)
 
@@ -206,12 +207,14 @@ class PaymentPortal(portal.CustomerPortal):
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
 
-        # Generic payment landing routes require the tx id and access token to be provided in order
-        # to display the tx result and to verify the user, since there is no document to rely on.
-        # The access token is recomputed in case we are dealing with a validation transaction.
+        # The generic validation and landing routes require the tx id and access token to be
+        # provided, since there is no document to rely on. The access token is recomputed in case
+        # we are dealing with a validation transaction (acquirer-specific amount and currency).
         access_token = payment_utils.generate_access_token(
             db_secret, tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
         )
+        tx_sudo.validation_route = tx_sudo.validation_route \
+                                   and f'{tx_sudo.validation_route}&access_token={access_token}'
         tx_sudo.landing_route = f'{tx_sudo.landing_route}' \
                                 f'?tx_id={tx_sudo.id}&access_token={access_token}'
 
@@ -219,7 +222,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     def _create_transaction(
         self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-        tokenization_requested, is_validation, landing_route, custom_create_values=None, **kwargs
+        tokenization_requested, validation_route, landing_route, custom_create_values=None, **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
 
@@ -233,7 +236,8 @@ class PaymentPortal(portal.CustomerPortal):
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'
         :param bool tokenization_requested: Whether the user requested that a token is created
-        :param bool is_validation: Whether the operation of the transaction is a validation
+        :param str validation_route: The route the user is redirected to in order to refund a
+                                     validation transaction
         :param str landing_route: The route the user is redirected to after the transaction
         :param dict custom_create_values: Additional create values overwriting the default ones
         :param dict kwargs: Optional data. This parameter is not used here
@@ -266,7 +270,7 @@ class PaymentPortal(portal.CustomerPortal):
             **(custom_create_values or {}),
             **kwargs
         )
-        if is_validation:  # Acquirers determine the amount and currency in validation operations
+        if validation_route:  # Acquirers determine the amount and currency in validation operations
             amount = acquirer_sudo._get_validation_amount()
             currency_id = acquirer_sudo._get_validation_currency().id
 
@@ -278,11 +282,14 @@ class PaymentPortal(portal.CustomerPortal):
             'currency_id': currency_id,
             'partner_id': partner_id,
             'token_id': token_id,
-            'operation': f'online_{flow}' if not is_validation else 'validation',
+            'operation': f'online_{flow}' if not validation_route else 'validation',
             'tokenize': tokenize,
+            'validation_route': validation_route,
             'landing_route': landing_route,
             **(custom_create_values or {}),  # Overwrite the default values if there are collisions
         })  # In sudo mode to allow writing on callback fields
+        # Validation routes require the transaction id to be provided
+        tx_sudo.validation_route = validation_route and f'{validation_route}?tx_id={tx_sudo.id}'
 
         if flow == 'token':
             tx_sudo._send_payment_request()  # Payments by token process transaction immediately
@@ -342,7 +349,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     @http.route('/payment/validation', type='http', methods=['GET'], auth='user', website=True)
     def payment_validation_transaction(self, tx_id, access_token, **kwargs):
-        """ Refund a validation transaction and redirect the user.
+        """ Refund a validation transaction and redirect the user to the landing route.
 
         :param str tx_id: The validation transaction, as a `payment.transaction` id
         :param str access_token: The access token used to verify the user
@@ -361,17 +368,16 @@ class PaymentPortal(portal.CustomerPortal):
         ):
             raise werkzeug.exceptions.NotFound  # Don't leak info about existence of an id
 
-        self._refund_validation_transaction(tx_id=tx_id, **kwargs)
-
-        # Send the user back to the "Manage Payment Methods" page
-        return request.redirect('/my/payment_method')
+        landing_route = self._refund_validation_transaction(tx_id=tx_id, **kwargs)
+        return request.redirect(landing_route)
 
     def _refund_validation_transaction(self, tx_id, **kwargs):
         """ Refund a validation transaction and remove it from post-processing.
 
         :param str tx_id: The validation transaction to refund, as a `payment.transaction` id
         :param dict kwargs: Optional data. This parameter is not used here
-        :return: None
+        :return: The landing route of the transaction
+        :rtype: str
         :raise: ValidationError if the transaction id is invalid
         """
         tx_id, = self.cast_as_numeric([tx_id], numeric_type='int')
@@ -383,6 +389,8 @@ class PaymentPortal(portal.CustomerPortal):
             tx._send_refund_request()
 
         PaymentPostProcessing.remove_transactions(tx)
+
+        return tx.landing_route
 
     @staticmethod
     def cast_as_numeric(str_values, numeric_type='int'):

@@ -54,7 +54,7 @@ class PaymentPostProcessing(http.Controller):
                 'error': 'no_tx_found',
             }
 
-        # Build the dict of display values with the display message and post-processing values
+        # Build the list of display values with the display message and post-processing values
         display_values_list = []
         for tx in monitored_txs:
             display_message = None

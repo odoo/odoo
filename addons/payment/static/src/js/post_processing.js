@@ -80,7 +80,11 @@ odoo.define('payment.post_processing', function (require) {
                 // In almost every cases there will be a single transaction to display. If there are
                 // more than one transaction, the last one will most likely be the one that was
                 // confirmed. We use this one to redirect the user to the final page.
-                window.location = display_values_list[0].landing_route;
+                if (display_values_list[0].is_validation) {
+                    window.location = display_values_list[0].validation_route;
+                } else {
+                    window.location = display_values_list[0].landing_route;
+                }
                 return;
             }
 
