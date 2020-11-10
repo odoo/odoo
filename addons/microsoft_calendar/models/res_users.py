@@ -19,6 +19,7 @@ class User(models.Model):
     _inherit = 'res.users'
 
     microsoft_calendar_sync_token = fields.Char('Microsoft Next Sync Token', copy=False)
+    microsoft_synchronization_stopped = fields.Boolean('Outlook Synchronization stopped', copy=False)
 
     def _microsoft_calendar_authenticated(self):
         return bool(self.sudo().microsoft_calendar_rtoken)
@@ -67,6 +68,8 @@ class User(models.Model):
 
     def _sync_microsoft_calendar(self, calendar_service: MicrosoftCalendarService):
         self.ensure_one()
+        if self.microsoft_synchronization_stopped:
+            return False
         full_sync = not bool(self.microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
             try:
@@ -94,7 +97,7 @@ class User(models.Model):
     @api.model
     def _sync_all_microsoft_calendar(self):
         """ Cron job """
-        users = self.env['res.users'].search([('microsoft_calendar_rtoken', '!=', False)])
+        users = self.env['res.users'].search([('microsoft_calendar_rtoken', '!=', False), ('microsoft_synchronization_stopped', '=', False)])
         microsoft = MicrosoftCalendarService(self.env['microsoft.service'])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
@@ -102,3 +105,13 @@ class User(models.Model):
                 user.with_user(user).sudo()._sync_microsoft_calendar(microsoft)
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+
+    def stop_microsoft_synchronization(self):
+        self.ensure_one()
+        self.sudo().microsoft_synchronization_stopped = True
+
+    def restart_microsoft_synchronization(self):
+        self.ensure_one()
+        self.sudo().microsoft_synchronization_stopped = False
+        self.env['calendar.recurrence']._restart_microsoft_sync()
+        self.env['calendar.event']._restart_microsoft_sync()

@@ -13,7 +13,7 @@ class MicrosoftCalendarController(http.Controller):
         """ This route/function is called when we want to synchronize Odoo
             calendar with Microsoft Calendar.
             Function return a dictionary with the status :  need_config_from_admin, need_auth,
-            need_refresh, success if not calendar_event
+            need_refresh, sync_stopped, success if not calendar_event
             The dictionary may contains an url, to allow Odoo Client to redirect user on
             this URL for authorization for example
         """
@@ -42,6 +42,13 @@ class MicrosoftCalendarController(http.Controller):
                 }
             # If App authorized, and user access accepted, We launch the synchronization
             need_refresh = request.env.user.sudo()._sync_microsoft_calendar(MicrosoftCal)
+
+            # If synchronization has been stopped
+            if not need_refresh and request.env.user.microsoft_synchronization_stopped:
+                return {
+                    "status": "sync_stopped",
+                    "url": ''
+                }
             return {
                 "status": "need_refresh" if need_refresh else "no_new_event_from_microsoft",
                 "url": ''
