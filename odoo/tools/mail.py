@@ -233,7 +233,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             'strip_classes': strip_classes,  # remove classes, even when keeping other attributes
         })
 
-    # Avoid hard limit of 254 nested levels on some situations
+    # Allow nesting up to 15000 levels. We cannot know the nesting level without
+    # actually traversing the DOM, so this quick test just counts tags.
+    # If there are less than 15000 tags, there will be 15000 or less nesting levels 
+    # for sure, so it is safe to disable lxml's hardcoded limit of 254 levels.
     elm_count = src.count("<") - src.count("</")
     src_doc = lxml.html.fromstring(src, parser=lxml.html.html_parser if elm_count > 15000 else HUGE_PARSER)
 
