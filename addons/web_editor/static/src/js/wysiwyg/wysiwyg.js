@@ -564,6 +564,12 @@ var Wysiwyg = Widget.extend({
             colorpicker.on('color_picked', this, (e) => {
                 this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode, true);
             });
+            colorpicker.on('color_hover', this, (e) => {
+                this._setColor(colorpicker, setCommandId, unsetCommandId, e.data.color, $dropdownNode, false);
+            });
+            colorpicker.on('color_leave', this, (e) => {
+                this._setColor(colorpicker, 'undo', 'undo', undefined, $dropdownNode, false);
+            });
         }
     },
     /**
