@@ -336,7 +336,7 @@ class PaymentPortal(portal.CustomerPortal):
                           or _('An error occurred during the processing of this payment.')
 
             # Display the payment confirmation page to the user
-            PaymentPostProcessing.remove_transactions(tx_sudo)  # TODO ANV why isn't this done everywhere ?
+            PaymentPostProcessing.remove_transactions(tx_sudo)
             render_values = {
                 'tx': tx_sudo,
                 'status': status,
