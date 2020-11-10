@@ -205,3 +205,15 @@ class PaypalForm(PaypalCommon):
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
         self.assertEqual(fields.Datetime.to_string(tx.date), '2013-11-18 11:21:19', 'paypal: wrong validation date')
+
+    def test_21_paypal_compute_fees(self):
+        #If the merchant needs to keep 100€, the transaction will be equal to 103.30€.
+        #In this way, Paypal will take 103.30 * 2.9% + 0.30 = 3.30€
+        #And the merchant will take 103.30 - 3.30 = 100€
+        self.paypal.write({
+            'fees_active': True,
+            'fees_int_fixed': 0.30,
+            'fees_int_var': 2.90,
+        })
+        total_fee = self.paypal.paypal_compute_fees(100, False, False)
+        self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')
