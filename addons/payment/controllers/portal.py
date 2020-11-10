@@ -35,7 +35,9 @@ class PaymentPortal(portal.CustomerPortal):
       It redirects the user to `/my/payment_method` to display the result and start the flow over.
     """
 
-    @http.route('/payment/pay', type='http', methods=['GET'], auth='public', website=True)
+    @http.route(
+        '/payment/pay', type='http', methods=['GET'], auth='public', website=True, sitemap=False,
+    )
     def payment_pay(
         self, reference=None, amount=None, currency_id=None, partner_id=None, company_id=None,
         acquirer_id=None, access_token=None, **kwargs
@@ -56,7 +58,6 @@ class PaymentPortal(portal.CustomerPortal):
         :param str amount: The amount to pay
         :param str currency_id: The desired currency, as a `res.currency` id
         :param str partner_id: The partner making the payment, as a `res.partner` id
-        :param str order_id: The related order, as a `sale.order` id
         :param str company_id: The related company, as a `res.company` id
         :param str acquirer_id: The desired acquirer, as a `payment.acquirer` id
         :param str access_token: The access token used to authenticate the partner
