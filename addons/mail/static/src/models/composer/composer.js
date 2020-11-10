@@ -170,7 +170,7 @@ function factory(dependencies) {
                     recordReplacement = this[this.activeSuggestedRecordName].name;
                     break;
                 case 'activeSuggestedPartner':
-                    recordReplacement = this[this.activeSuggestedRecordName].name.replace(/ /g, '\u00a0');
+                    recordReplacement = this[this.activeSuggestedRecordName].name;
                     this.update({
                         mentionedPartners: [['link', this[this.activeSuggestedRecordName]]],
                     });
@@ -510,15 +510,18 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeMentionedPartners() {
-            const inputMentions = this.textInputContent.replace(/\n/g, "\n ").match(
-                new RegExp("@[^ ]+(?= |&nbsp;|$)", 'g')
-            ) || [];
             const unmentionedPartners = [];
+            // ensure the same mention is not used multiple times if multiple
+            // partners have the same name
+            const namesIndex = {};
             for (const partner of this.mentionedPartners) {
-                let inputMention = inputMentions.find(item => {
-                    return item === ("@" + partner.name).replace(/ /g, '\u00a0');
-                });
-                if (!inputMention) {
+                const fromIndex = namesIndex[partner.name] !== undefined
+                    ? namesIndex[partner.name] + 1 :
+                    0;
+                const index = this.textInputContent.indexOf(`@${partner.name}`, fromIndex);
+                if (index !== -1) {
+                    namesIndex[partner.name] = index;
+                } else {
                     unmentionedPartners.push(partner);
                 }
             }
@@ -533,15 +536,18 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeMentionedChannels() {
-            const inputMentions = this.textInputContent.match(
-                new RegExp("#[^ ]+(?= |&nbsp;|$)", 'g')
-            ) || [];
             const unmentionedChannels = [];
+            // ensure the same mention is not used multiple times if multiple
+            // channels have the same name
+            const namesIndex = {};
             for (const channel of this.mentionedChannels) {
-                let inputMention = inputMentions.find(item => {
-                    return item === ("#" + channel.name).replace(/ /g, '\u00a0');
-                });
-                if (!inputMention) {
+                const fromIndex = namesIndex[channel.name] !== undefined
+                    ? namesIndex[channel.name] + 1 :
+                    0;
+                const index = this.textInputContent.indexOf(`#${channel.name}`, fromIndex);
+                if (index !== -1) {
+                    namesIndex[channel.name] = index;
+                } else {
                     unmentionedChannels.push(channel);
                 }
             }
@@ -577,45 +583,45 @@ function factory(dependencies) {
          * @returns {string}
          */
         _generateMentionsLinks(body) {
-            if (this.mentionedPartners.length === 0 && this.mentionedChannels.length === 0) {
-                return body;
+            // List of mention data to insert in the body.
+            // Useful to do the final replace after parsing to avoid using the
+            // same tag twice if two different mentions have the same name.
+            const mentions = [];
+            for (const partner of this.mentionedPartners) {
+                const placeholder = `@-mention-partner-${partner.id}`;
+                const text = `@${owl.utils.escape(partner.name)}`;
+                mentions.push({
+                    class: 'o_mail_redirect',
+                    id: partner.id,
+                    model: 'res.partner',
+                    placeholder,
+                    text,
+                });
+                body = body.replace(text, placeholder);
             }
-            const inputMentions = body.replace(new RegExp('<br/>', 'g'), "<br/> ")
-                .match(new RegExp("(@|#)" + '[^ ]+(?= |&nbsp;|$)', 'g'))
-                .filter(match => !match.endsWith("<br/>"));
-            const substrings = [];
-            let startIndex = 0;
-            for (const match of inputMentions) {
-                const suggestionDelimiter = match[0];
-                const matchName = owl.utils.escape(match.substring(1).replace(new RegExp('\u00a0', 'g'), ' '));
-                const endIndex = body.indexOf(match, startIndex) + match.length;
-                let field = "mentionedPartners";
-                let model = "res.partner";
-                let cssClass = "o_mail_redirect";
-                if (suggestionDelimiter === "#") {
-                    field = "mentionedChannels";
-                    model = "mail.channel";
-                    cssClass = "o_channel_redirect";
-                }
-                const mention = this[field].find(mention =>
-                    mention.name === matchName
-                );
-                let mentionLink = suggestionDelimiter + matchName;
-                if (mention) {
-                    const baseHREF = this.env.session.url('/web');
-                    const href = `href='${baseHREF}#model=${model}&id=${mention.id}'`;
-                    const attClass = `class='${cssClass}'`;
-                    const dataOeId = `data-oe-id='${mention.id}'`;
-                    const dataOeModel = `data-oe-model='${model}'`;
-                    const target = `target='_blank'`;
-                    mentionLink = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} >${suggestionDelimiter}${matchName}</a>`;
-                }
-                substrings.push(body.substring(startIndex, body.indexOf(match, startIndex)));
-                substrings.push(mentionLink);
-                startIndex = endIndex;
+            for (const channel of this.mentionedChannels) {
+                const placeholder = `#-mention-channel-${channel.id}`;
+                const text = `#${owl.utils.escape(channel.name)}`;
+                mentions.push({
+                    class: 'o_channel_redirect',
+                    id: channel.id,
+                    model: 'mail.channel',
+                    placeholder,
+                    text,
+                });
+                body = body.replace(text, placeholder);
             }
-            substrings.push(body.substring(startIndex, body.length));
-            return substrings.join('');
+            const baseHREF = this.env.session.url('/web');
+            for (const mention of mentions) {
+                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
+                const attClass = `class='${mention.class}'`;
+                const dataOeId = `data-oe-id='${mention.id}'`;
+                const dataOeModel = `data-oe-model='${mention.model}'`;
+                const target = `target='_blank'`;
+                const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
+                body = body.replace(mention.placeholder, link);
+            }
+            return body;
         }
 
         /**
