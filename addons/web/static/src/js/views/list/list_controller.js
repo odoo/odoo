@@ -741,15 +741,16 @@ var ListController = BasicController.extend({
                 this._saveMultipleRecords(this.lastFieldChangedEvent.data.dataPointID, target.__node, this.lastFieldChangedEvent.data.changes);
             return this.multipleRecordsSavingPromise;
         };
+        const onSaved = () => {
+            this.reload();
+        };
         const recordID = this.lastFieldChangedEvent && this.lastFieldChangedEvent.data.dataPointID;
         if (recordID && this.renderer.isInMultipleRecordEdition(recordID)) {
-            this._discardChanges(false, { saveFunction: saveMulti }).then(() => {
+            this._discardChanges(false, { saveFunction: saveMulti, onSaved: onSaved }).then(() => {
                 this.fieldChangedPrevented = false;
             });
         } else {
-            this._discardChanges().then(() => {
-                this.reload();
-            });
+            this._discardChanges(false, { onSaved: onSaved });
         }
     },
     /**

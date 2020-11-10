@@ -7783,6 +7783,43 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: create new record, click on Discard button and Save from confirmation dialog', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            arch: `
+            <tree editable="top">
+                <field name="foo"/>
+            </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.ok("create should called");
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        assert.containsN(list, '.o_data_row', 4, "There should be 4 rows");
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget'), 'some value');
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
+
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+
+        await testUtils.dom.click($('.modal .btn-primary')); // Click on Save
+        assert.containsNone($('body'), '.modal', "should not have a modal");
+        assert.containsN(list, '.o_data_row', 5, 'There should be 5 rows');
+        assert.strictEqual(list.$('.o_data_row:last() .o_data_cell:first()').text(), "some value");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view (multi edition): mousedown on "Discard", but mouseup somewhere else', async function (assert) {
         assert.expect(1);
 

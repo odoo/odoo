@@ -119,6 +119,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                             const prom = options.saveFunction ? options.saveFunction() : self.saveRecord(recordID);
                             return prom.then(() => {
                                 self._enableButtons();
+                                if (options.onSaved) {
+                                    options.onSaved();
+                                }
                                 resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
                                 self.discardingDef = null;
                             });
