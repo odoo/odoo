@@ -468,6 +468,16 @@ class AccountJournal(models.Model):
                 return journal_code
 
     @api.model
+    def _prepare_liquidity_account_vals(self, company, code, vals):
+        return {
+            'name': vals.get('name'),
+            'code': code,
+            'user_type_id': self.env.ref('account.data_account_type_liquidity').id,
+            'currency_id': vals.get('currency_id'),
+            'company_id': company.id,
+        }
+
+    @api.model
     def _fill_missing_values(self, vals):
         journal_type = vals.get('type')
 
@@ -508,17 +518,9 @@ class AccountJournal(models.Model):
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
-                liquidity_account = self.env['account.account'].create({
-                    'name': vals.get('name'),
-                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
-                    'user_type_id': liquidity_type.id,
-                    'currency_id': vals.get('currency_id'),
-                    'company_id': company.id,
-                })
-
-                vals.update({
-                    'default_account_id': liquidity_account.id,
-                })
+                default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
+                default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
+                vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
             if not has_payment_accounts:
                 vals['payment_debit_account_id'] = self.env['account.account'].create({
                     'name': _("Outstanding Receipts"),
