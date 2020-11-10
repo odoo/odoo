@@ -323,6 +323,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 groupNumber,
                 id: filterId,
                 type: 'groupBy',
+                customGroup: true,
             };
             this.state.filters[filterId] = filter;
             if (['date', 'datetime'].includes(field.type)) {
