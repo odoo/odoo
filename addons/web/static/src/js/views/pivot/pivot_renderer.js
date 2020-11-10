@@ -1,9 +1,105 @@
 /** @odoo-module alias=web.PivotRenderer **/
 
+    import DropdownMenu from 'web.DropdownMenu';
+    import DropdownMenuItem from 'web.DropdownMenuItem';
     import OwlAbstractRenderer from '../abstract_renderer_owl';
     import field_utils from 'web.field_utils';
+    import { DEFAULT_INTERVAL, INTERVAL_OPTIONS } from 'web.searchUtils';
 
     const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
+
+    class PivotCustomGroupByItem extends DropdownMenuItem {
+        constructor() {
+            super(...arguments);
+            this.canBeOpened = true;
+            this.state.fieldName = this.props.fields[0].name;
+        }
+
+        //---------------------------------------------------------------------
+        // Handlers
+        //---------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _onApply() {
+            const { fieldName } = this.state;
+            const { type } = this.props.fields.find(f => f.name === fieldName);
+            let interval = null;
+            if (['date', 'datetime'].includes(type)) {
+                interval = DEFAULT_INTERVAL;
+            }
+            this.trigger('groupby-menu-selection', { fieldName, interval, custom: true });
+            this.state.open = false;
+        }
+
+        /**
+         * Stops propagation of click event if custom groupby menu is toggled.
+         * Propagates click event when Apply button is clicked to close dropdown
+         * @param {OwlEvent} ev
+         */
+        _onToggleCustomGroupbyItem(ev) {
+            if (
+                !ev.target.classList.contains('o_apply_group_by') &&
+                (this.el.contains(ev.target) || this.el.contains(document.activeElement))
+            ) {
+                ev.stopPropagation();
+            }
+        }
+    }
+
+    PivotCustomGroupByItem.template = "web.PivotCustomGroupByItem";
+    PivotCustomGroupByItem.props = { fields: Array };
+
+    export class PivotGroupByMenu extends DropdownMenu {
+
+        constructor() {
+            super(...arguments);
+            this.intervalOptions = INTERVAL_OPTIONS;
+        }
+
+        //---------------------------------------------------------------------
+        // Getters
+        //---------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        get items() {
+            if (this.props.hasSearchArchGroupBys) {
+                const groupBys = this.props.searchModel.get('filters', f => f.type === 'groupBy');
+                let groupNumber = 1 + Math.max(...groupBys.map(g => g.groupNumber), 0);
+                for (const [_, customGroupBy] of this.props.customGroupBys) {
+                    customGroupBy.groupNumber = groupNumber++;
+                    groupBys.push(customGroupBy);
+                }
+                return groupBys;
+            }
+            return this.props.fields;
+        }
+
+        //---------------------------------------------------------------------
+        // Handlers
+        //---------------------------------------------------------------------
+
+        /**
+         * @param {string} fieldName
+         * @param {string|null} interval
+        */
+        _onClickMenuGroupBy(fieldName, interval) {
+            this.trigger('groupby-menu-selection', { fieldName, interval });
+        }
+    }
+
+    PivotGroupByMenu.template = "web.PivotGroupByMenu";
+    PivotGroupByMenu.components = { PivotCustomGroupByItem };
+    PivotGroupByMenu.props = {
+        ...DropdownMenu.props,
+        customGroupBys: Map,
+        fields: Object,
+        hasSearchArchGroupBys: Boolean,
+        searchModel: true,
+    };
 
     /**
      * Here is a basic example of the structure of the Pivot Table:
@@ -40,6 +136,15 @@
                     click: false
                 },
             });
+
+            const searchArchGroupBys = this.props.searchModel.get(
+                'filters',
+                f => f.type === 'groupBy' && !f.custom
+            );
+            // searchArchGroupBys is not an array when the control panel model
+            // extension is not installed (e.g. in an embedded pivot view)
+            this.hasSearchArchGroupBys = Boolean(searchArchGroupBys && searchArchGroupBys.length);
+            this.customGroupBys = new Map();
 
             onMounted(() => this._updateTooltip());
 
@@ -135,18 +240,19 @@
         // Handlers
         //----------------------------------------------------------------------
 
-
         /**
-         * Handles a click on a menu item in the dropdown to select a groupby.
-         *
          * @private
-         * @param {Object} field
-         * @param {string} interval
+         * @param {OwlEvent} ev
          */
-        _onClickMenuGroupBy(field, interval) {
-            this.trigger('groupby_menu_selection', { field, interval });
+        _onGroupByMenuSelection(ev) {
+            if (this.hasSearchArchGroupBys) {
+                const { custom, fieldName } = ev.detail;
+                if (custom && !this.customGroupBys.has(fieldName)) {
+                    const field = this.props.groupableFields.find(g => g.fieldName === fieldName)
+                    this.customGroupBys.set(fieldName, field);
+                }
+            }
         }
-
 
         /**
          * Handles a click on a header node
@@ -194,5 +300,6 @@
     }
 
     PivotRenderer.template = 'web.PivotRenderer';
+    PivotRenderer.components = { PivotGroupByMenu };
 
     export default PivotRenderer;

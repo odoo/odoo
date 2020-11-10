@@ -534,7 +534,6 @@ var PivotModel = AbstractModel.extend({
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
-            selectionGroupBys: this._getSelectionGroupBy(groupBys),
             modelName: this.modelName
         };
         if (!raw && state.hasData) {
@@ -566,7 +565,6 @@ var PivotModel = AbstractModel.extend({
      * @param {string[]} params.rowGroupBys
      * @param {string} [params.default_order]
      * @param {string} params.modelName
-     * @param {Object[]} params.groupableFields
      * @param {Object} params.timeRanges
      * @returns {Promise}
      */
@@ -577,7 +575,6 @@ var PivotModel = AbstractModel.extend({
 
         this.fields = params.fields;
         this.modelName = params.modelName;
-        this.groupableFields = params.groupableFields;
         const measures = this._processMeasures(params.context.pivot_measures) ||
                             params.measures.map(m => m);
         this.data = {
@@ -1059,30 +1056,6 @@ var PivotModel = AbstractModel.extend({
         });
 
         return originRow;
-    },
-
-    /**
-     * Get the selection needed to display the group by dropdown
-     * @returns {Object[]}
-     * @private
-     */
-    _getSelectionGroupBy: function (groupBys) {
-        let groupedFieldNames = groupBys.rowGroupBys
-            .concat(groupBys.colGroupBys)
-            .map(function (g) {
-                return g.split(':')[0];
-            });
-
-        var fields = Object.keys(this.groupableFields)
-            .map((fieldName, index) => {
-                return {
-                    name: fieldName,
-                    field: this.groupableFields[fieldName],
-                    active: groupedFieldNames.includes(fieldName)
-                }
-            })
-            .sort((left, right) => left.field.string < right.field.string ? -1 : 1);
-        return fields;
     },
 
     /**

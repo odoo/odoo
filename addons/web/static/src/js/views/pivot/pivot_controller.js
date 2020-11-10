@@ -35,8 +35,6 @@
          * @param model
          * @param renderer
          * @param {Object} params
-         * @param {Object} params.groupableFields a map from field names to field
-         *   props
          */
         init: function (parent, model, renderer, params) {
             this._super(...arguments);
@@ -260,10 +258,10 @@
         _onGroupByMenuSelection: async function (ev) {
             ev.stopPropagation();
 
-            let groupBy = ev.data.field.name;
-            const interval = ev.data.interval;
+            const { fieldName, interval } = ev.data;
+            let groupBy = fieldName;
             if (interval) {
-                groupBy = groupBy + ':' + interval;
+                groupBy = `${groupBy}:${interval}`;
             }
             this.model.addGroupBy(groupBy, this.selectedGroup.type);
             await this.model.expandGroup(this.selectedGroup, groupBy);

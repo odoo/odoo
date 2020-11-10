@@ -76,32 +76,67 @@
     </t>
 
     <div t-name="web.PivotGroupBySelection" class="dropdown" owl="1">
+        <PivotGroupByMenu 
+            customGroupBys="customGroupBys"
+            fields="props.groupableFields"
+            hasSearchArchGroupBys="hasSearchArchGroupBys"
+            searchModel="props.searchModel"
+            t-on-groupby-menu-selection="_onGroupByMenuSelection"
+            />
+    </div>
+
+    <t t-name="web.PivotGroupByMenu" owl="1">
         <div class="dropdown-menu o_pivot_field_menu show" data-display="static" role="menu">
-            <t t-foreach="props.selectionGroupBys" t-as="field" t-key="field.field.name">
-                <t t-if="(field.field.type === 'date') || (field.field.type === 'datetime')">
+            <t t-set="currentGroup" t-value="null"/>
+            <t t-foreach="items" t-as="item" t-key="item.fieldName">
+                <div t-if="item.groupNumber and currentGroup !== null and currentGroup !== item.groupNumber"
+                    class="dropdown-divider"
+                    role="separator"/>
+                <t t-if="(item.fieldType === 'date') || (item.fieldType === 'datetime')">
                     <div role="menuitem" aria-haspopup="true" class="o_inline_dropdown">
                         <a href="#"
-                           t-on-click.prevent="_onClickMenuGroupBy(field, 'month')"
+                           t-on-click.prevent="_onClickMenuGroupBy(item.fieldName, 'month')"
                            class="dropdown-item o_pivot_field_selection"
-                           t-att-class="{ disabled: field.active }"
-                           t-att-data-field="field.name"
+                           t-att-data-field="item.fieldName"
                         >
-                            <t t-esc="field.field.string"/>
+                            <t t-esc="item.description"/>
                         </a>
                         <div class="dropdown-menu" role="menu">
-                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'day')">Day</a>
-                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'week')">Week</a>
-                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'month')">Month</a>
-                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'quarter')">Quarter</a>
-                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'year')">Year</a>
+                            <t t-foreach="Object.values(intervalOptions)" t-as="option" t-key="option.id">
+                                <a role="menuitem"
+                                    t-att-data-field="item.fieldName"
+                                    href="#"
+                                    class="dropdown-item"
+                                    t-on-click.prevent="_onClickMenuGroupBy(item.fieldName, option.id)"
+                                    >
+                                    <t t-esc="option.description"/>
+                                </a>
+                            </t>
                         </div>
                     </div>
                 </t>
-                <a t-else="" href="#" role="menuitem" class="dropdown-item" t-att-data-field="field.name" t-att-class="{ disabled: field.active }" t-on-click.prevent="_onClickMenuGroupBy(field, false)">
-                    <t t-esc="field.field.string"/>
+                <a t-else=""
+                    href="#"
+                    role="menuitem"
+                    class="dropdown-item"
+                    t-att-data-field="item.fieldName"
+                    t-on-click.prevent="_onClickMenuGroupBy(item.fieldName, null)"
+                    >
+                    <t t-esc="item.description"/>
                 </a>
+                <t t-set="currentGroup" t-value="item.groupNumber"/>
+            </t>
+            <t t-if="props.fields.length and props.hasSearchArchGroupBys">
+                <li t-if="items.length" class="dropdown-divider" role="separator"/>
+                <PivotCustomGroupByItem fields="props.fields"/>
             </t>
         </div>
-    </div>
+    </t>
+
+    <t t-name="web.PivotCustomGroupByItem" t-inherit="web.CustomGroupByItem" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_generator_menu')]" position="attributes">
+            <attribute name="t-on-click">_onToggleCustomGroupbyItem</attribute>
+        </xpath>
+    </t>
 
 </templates>
