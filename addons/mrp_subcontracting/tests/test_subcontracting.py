@@ -416,10 +416,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_receipt.id)])
         self.assertTrue(backorder)
         self.assertEqual(backorder.move_lines.product_uom_qty, 2)
-        subcontract_order = backorder.move_lines.move_orig_ids.production_id.filtered(lambda p: p.state != 'done')
-        self.assertTrue(subcontract_order)
-        self.assertEqual(subcontract_order.product_uom_qty, 5)
-        self.assertEqual(subcontract_order.qty_produced, 3)
+        mo_done = backorder.move_lines.move_orig_ids.production_id.filtered(lambda p: p.state == 'done')
+        backorder_mo = backorder.move_lines.move_orig_ids.production_id.filtered(lambda p: p.state != 'done')
+        self.assertTrue(mo_done)
+        self.assertEqual(mo_done.qty_produced, 3)
+        self.assertEqual(mo_done.product_uom_qty, 3)
+        self.assertTrue(backorder_mo)
+        self.assertEqual(backorder_mo.product_uom_qty, 2)
+        self.assertEqual(backorder_mo.qty_produced, 0)
         backorder.move_lines.quantity_done = 2
         backorder._action_done()
         self.assertTrue(picking_receipt.move_lines.move_orig_ids.production_id.state == 'done')
@@ -600,6 +604,52 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(avail_qty_comp1, -1)
         self.assertEqual(avail_qty_comp2, -1)
         self.assertEqual(avail_qty_finished, 1)
+
+    def test_flow_tracked_only_finished(self):
+        """ Test when only the finished product is tracked """
+        self.finished_product.tracking = "serial"
+        self.comp1_sn.tracking = "none"
+        nb_finished_product = 3
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished_product
+            move.product_uom_qty = nb_finished_product
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        # We shouldn't be able to call the 'record_components' button
+        self.assertFalse(picking_receipt.display_action_record_components)
+
+        wh = picking_receipt.picking_type_id.warehouse_id
+        lot_names_finished = [f"subtracked_{i}" for i in range(nb_finished_product)]
+
+        move_details = Form(picking_receipt.move_lines, view='stock.view_stock_move_nosuggest_operations')
+        for lot_name in lot_names_finished:
+            with move_details.move_line_nosuggest_ids.new() as ml:
+                ml.qty_done = 1
+                ml.lot_name = lot_name
+        move_details.save()
+
+        picking_receipt.button_validate()
+        # Check the created manufacturing order
+        # Should have one mo by serial number
+        mos = picking_receipt.move_lines.move_orig_ids.production_id
+        self.assertEqual(len(mos), nb_finished_product)
+        self.assertEqual(mos.mapped("state"), ["done"] * nb_finished_product)
+        self.assertEqual(mos.picking_type_id, wh.subcontracting_type_id)
+        self.assertFalse(mos.picking_type_id.active)
+        self.assertEqual(set(mos.lot_producing_id.mapped("name")), set(lot_names_finished))
+
+        # Available quantities should be negative at the subcontracting location for each components
+        avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        avail_qty_comp2 = self.env['stock.quant']._get_available_quantity(self.comp2, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
+        avail_qty_finished = self.env['stock.quant']._get_available_quantity(self.finished_product, wh.lot_stock_id)
+        self.assertEqual(avail_qty_comp1, -nb_finished_product)
+        self.assertEqual(avail_qty_comp2, -nb_finished_product)
+        self.assertEqual(avail_qty_finished, nb_finished_product)
 
     def test_flow_tracked_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product """
