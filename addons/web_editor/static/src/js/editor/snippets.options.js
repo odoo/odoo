@@ -81,17 +81,25 @@ function _buildTitleElement(title) {
  * @param {string} src
  * @returns {HTMLElement}
  */
+const _buildImgElementCache = {};
 async function _buildImgElement(src) {
-    if (src.split('.').pop() === 'svg') {
-        const response = await window.fetch(src);
-        const text = await response.text();
-        const parser = new window.DOMParser();
-        const xmlDoc = parser.parseFromString(text, 'text/xml');
-        return xmlDoc.getElementsByTagName('svg')[0];
+    if (!(src in _buildImgElementCache)) {
+        _buildImgElementCache[src] = (async () => {
+            if (src.split('.').pop() === 'svg') {
+                const response = await window.fetch(src);
+                const text = await response.text();
+                const parser = new window.DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'text/xml');
+                return xmlDoc.getElementsByTagName('svg')[0];
+            } else {
+                const imgEl = document.createElement('img');
+                imgEl.src = src;
+                return imgEl;
+            }
+        })();
     }
-    const imgEl = document.createElement('img');
-    imgEl.src = src;
-    return imgEl;
+    const node = await _buildImgElementCache[src];
+    return node.cloneNode(true);
 }
 /**
  * Build the correct DOM for a we-row element.
@@ -882,7 +890,9 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     close: function () {
         this._super(...arguments);
-        this.menuTogglerEl.classList.remove('active');
+        if (this.menuTogglerEl) {
+            this.menuTogglerEl.classList.remove('active');
+        }
     },
     /**
      * @override
