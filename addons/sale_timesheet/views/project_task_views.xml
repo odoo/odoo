@@ -70,10 +70,6 @@
             <field name="allow_timesheets" position="after">
                 <field name="company_id" invisible="1"/>
                 <field name="allow_billable"/>
-                <field name="bill_type" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
-                <field name="partner_id" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('bill_type', '!=', 'customer_project')], 'required': [('bill_type', '=', 'customer_project')]}"/>
-                <field name="pricing_type" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('bill_type', '!=', 'customer_project')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
-                <field name="timesheet_product_id" string="Service" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
             </field>
         </field>
     </record>
