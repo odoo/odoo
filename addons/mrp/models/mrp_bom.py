@@ -48,7 +48,15 @@ class MrpBom(models.Model):
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
+<<<<<<< HEAD
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
+=======
+    routing_id = fields.Many2one(
+        'mrp.routing', 'Routing', check_company=True,
+        tracking=True,
+        help="The operations for producing this BoM.  When a routing is specified, the production orders will "
+             " be executed through work orders, otherwise everything is processed in the production order itself. ")
+>>>>>>> 2709f9ba3a6... temp
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
