@@ -514,8 +514,15 @@ var dom = {
             if (options.maxWidth) {
                 maxWidth = options.maxWidth();
             } else {
-                var mLeft = $el.is('.ml-auto, .mx-auto, .m-auto');
-                var mRight = $el.is('.mr-auto, .mx-auto, .m-auto');
+                var mLeft;
+                var mRight;
+                if (_t.database.parameters.direction === 'rtl') {
+                    mLeft = $el.is('.mr-auto, .mx-auto, .m-auto');
+                    mRight = $el.is('.ml-auto, .mx-auto, .m-auto');
+                } else {
+                    mLeft = $el.is('.ml-auto, .mx-auto, .m-auto');
+                    mRight = $el.is('.mr-auto, .mx-auto, .m-auto');
+                }
                 maxWidth = computeFloatOuterWidthWithMargins($el[0], mLeft, mRight);
                 var style = window.getComputedStyle($el[0]);
                 maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
