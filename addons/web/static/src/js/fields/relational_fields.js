@@ -1210,12 +1210,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
             }
         }
-        return this._super.apply(this, arguments).then(() => {
-            if (this.view) {
-                this._renderButtons();
-                this._updateControlPanel();
-            }
-        });
+        return this._super.apply(this, arguments);
     },
 
     /**
@@ -1348,7 +1343,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 columnInvisibleFields: this.currentColInvisibleFields,
                 keepWidths: true,
             }).then(() => {
-                this._updateControlPanel({ size: this.value.count });
+                return this._updateControlPanel({ size: this.value.count });
             });
         }
         var arch = this.view.arch;
@@ -1460,9 +1455,16 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      */
     _updateControlPanel: function (pagingState) {
         if (this._controlPanelWrapper) {
+            this._renderButtons();
+            const pagerProps = Object.assign(this.pagingState, pagingState, {
+                // sometimes, we temporarily want to increase the pager limit
+                // (for instance, when we add a new record on a page that already
+                // contains the maximum number of records)
+                limit: Math.max(this.value.limit, this.value.data.length),
+            });
             const newProps = {
                 cp_content: { $buttons: this.$buttons },
-                pager: Object.assign(this.pagingState, pagingState),
+                pager: pagerProps,
             };
             return this._controlPanelWrapper.update(newProps);
         }
@@ -1851,16 +1853,6 @@ var FieldOne2Many = FieldX2Many.extend({
                     var index = 0;
                     if (self.editable !== 'top') {
                         index = self.value.data.length - 1;
-                        // we consider that a new record, created in the bottom,
-                        // does not count as a record worth mentioning in the
-                        // pager, at least not until the line has been saved.
-                        // We prevent the pager from increasing its size, which
-                        // means that the pager is not displayed when we just
-                        // reach the limit.  For example, if limit is 3, if we
-                        // have 3 records, and we click on add, we will see the
-                        // 4 records on the same page, but we do not want a
-                        // pager.
-                        self._updateControlPanel({ size: self.value.count - 1 });
                     }
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
