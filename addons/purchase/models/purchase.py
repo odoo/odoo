@@ -82,8 +82,13 @@ class PurchaseOrder(models.Model):
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
              "delivery order sent by your vendor.")
+    request_ref = fields.Char('Request Reference', copy=False,
+                              help="Request Reference is used to control visibility of the Order Deadline field. "
+                                   "Order Deadline is made invisible when Request Reference has the value of 'ABC'.")
     date_order = fields.Datetime('Order Deadline', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
+    hide_date_order = fields.Boolean(string="Invisible", compute="_hide_order_deadline", store=False, default=False)
+
     date_approve = fields.Datetime('Confirmation Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Drop Ship Address', states=READONLY_STATES,
@@ -192,6 +197,10 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
+
+    @api.onchange('request_ref')
+    def _hide_order_deadline(self):
+        self.hide_date_order = self.request_ref == "ABC"
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
