@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
     _name = "product.template"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product Template"
-    _order = "default_code, id"
+    _order = "name"
 
     @tools.ormcache()
     def _get_default_category_id(self):
@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
             category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
         'Description', translate=True)
@@ -132,7 +132,7 @@ class ProductTemplate(models.Model):
     barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
-        inverse='_set_default_code', store=True, index=True)
+        inverse='_set_default_code', store=True)
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_item_count")
 
