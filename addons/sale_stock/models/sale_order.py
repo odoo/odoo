@@ -148,7 +148,7 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_id=picking_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
         return action
 
     def action_cancel(self):

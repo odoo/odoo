@@ -14,17 +14,18 @@
 # Anton Vassilev, 2020
 # aleksandar ivanov, 2020
 # Albena Mincheva <albena_vicheva@abv.bg>, 2020
-# Maria Boyadjieva <marabo2000@gmail.com>, 2020
 # Ivan Goychev <igoychev.projects@gmail.com>, 2020
 # Igor Sheludko <igor.sheludko@gmail.com>, 2020
+# Александра Николова <alexandra1nikolova@gmail.com>, 2020
+# Maria Boyadjieva <marabo2000@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2020\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -262,15 +263,6 @@ msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Натискането на бутон \"Потвърждавам\" ще валидира плащането."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"A Chart of Accounts is not yet installed in your current company. Please "
-"install a Chart of Accounts through the Invoicing/Accounting settings before"
-" launching a PoS session."
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
@@ -444,7 +436,7 @@ msgstr "Адрес"
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Администриране"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3083,6 +3075,13 @@ msgstr "Моля, изберете контрагент за тази прода
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please provide valid email"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Please select a payment method."
@@ -3094,6 +3093,13 @@ msgstr "Моля, изберете метод на плащане."
 #, python-format
 msgid "Please select the Customer"
 msgstr "Моля, изберете клиент"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please select the customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3229,6 +3235,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_import_journal_creation__pos_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
 msgstr ""
@@ -3731,7 +3738,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS при грешка на доставка"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -4243,6 +4250,7 @@ msgstr "Дисплей за данъци"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -4622,6 +4630,15 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"This customer does not have a valid email address, define one or do not send"
+" an email."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 msgid ""
 "This field depicts the maximum difference allowed between the ending balance"
@@ -4871,6 +4888,11 @@ msgid "Transaction cancelled"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Прехвърлете"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 msgid "Type"
 msgstr "Вид"
@@ -5034,13 +5056,6 @@ msgstr "Потребителски етикети"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "ДДС:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5262,6 +5277,14 @@ msgstr ""
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "Трябва да изберете клиента, преди да можете да фактурирате поръчка."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"You need to select the customer before you can send the receipt via email."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

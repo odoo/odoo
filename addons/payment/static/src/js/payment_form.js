@@ -22,9 +22,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        if(!$('#checkbox_cgv').length){
-            $("#o_payment_form_pay").removeAttr('disabled');
-        }
+        this._adaptPayButton();
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.options = _.extend(self.$el.data(), self.options);
@@ -147,6 +145,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             return e.message.data.arguments[0] + e.message.data.arguments[1];
         }
         return e.message.data.arguments[0];
+    },
+    _adaptPayButton: function () {
+        var $payButton = $("#o_payment_form_pay");
+        var disabledReasons = $payButton.data('disabled_reasons') || {};
+        $payButton.prop('disabled', _.contains(disabledReasons, true));
     },
 
     //--------------------------------------------------------------------------

@@ -692,7 +692,11 @@ class Field(MetaField('DummyField', (object,), {})):
                     # recomputations of fields on transient models
                     break
 
-                field = field_model._fields[fname]
+                try:
+                    field = field_model._fields[fname]
+                except KeyError:
+                    msg = "Field %s cannot find dependency %r on model %r."
+                    raise ValueError(msg % (self, fname, field_model._name))
                 if field is self and index:
                     self.recursive = True
 

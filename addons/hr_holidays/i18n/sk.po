@@ -505,6 +505,9 @@ msgid ""
 "                            Off Till\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Off Till\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -553,6 +556,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        Zamestnanec má iné časové pásmo ako vy! Tu sa dátumy a časy zobrazujú v časovom pásme zamestnanca\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        Spoločnosť tohto oddelenia má iné časové pásmo ako vy! Tu sa dátumy a časy zobrazujú v časovom pásme spoločnosti\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        Spoločnosť má iné časové pásmo ako vy! Tu sa dátumy a časy zobrazujú v časovom pásme spoločnosti\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -885,6 +898,11 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
+"Povoliť vytváranie požiadaviek v dávkach:\n"
+"- Podľa zamestnanca: pre konkrétneho zamestnanca\n"
+"- Podľa spoločnosti: všetci zamestnanci uvedenej spoločnosti\n"
+"- Podľa oddelenia: všetci zamestnanci uvedeného oddelenia\n"
+"- Podľa tagu zamestnanca: všetci zamestnanci konkrétnej kategórie skupín zamestnancov"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2462,7 +2480,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_number_per_interval_check
 msgid "The number per interval should be greater than 0"
-msgstr ""
+msgstr "Počet v intervale by mal byť väčší ako 0"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -2477,6 +2495,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Keď sa vytvorí žiadosť o voľno, stav je nastavený na „Odoslať“.\n"
+"Stav je „Schváliť“, keď používateľ potvrdí žiadosť o voľno.\n"
+"Stav je „Odmietnutý“, keď manažér odmietne žiadosť o voľno.\n"
+"Stav je Schválené, keď manažér schváli žiadosť o voľno."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -2486,6 +2508,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Keď je vytvorená žiadosť o pridelenie, stav je nastavený na „Odoslať“.\n"
+"Stav je „Schváliť“, keď používateľ potvrdí žiadosť o pridelenie.\n"
+"Stav je odmietnutý, keď manažér zamietne žiadosť o pridelenie.\n"
+"Stav je Schválené, keď manažér žiadosť o pridelenie schváli."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

@@ -28,13 +28,10 @@ class ProductProduct(models.Model):
     def button_bom_cost(self):
         self.ensure_one()
         price = self._get_price_from_bom()
-        if self.valuation == 'real_time':
-            action_rec = self.env.ref('stock_account.action_view_change_standard_price')
-            action = action_rec.read([])[0]
-            action['context'] = {'default_new_price': price}
-            return action
-        else:
-            self.standard_price = price
+        action_rec = self.env.ref('stock_account.action_view_change_standard_price')
+        action = action_rec.read([])[0]
+        action['context'] = {'default_new_price': price}
+        return action
 
     def action_bom_cost(self):
         real_time_products = self.filtered(lambda p: p.valuation == 'real_time')

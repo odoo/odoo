@@ -28,6 +28,7 @@
 # Maurício Liell <mauricio@liell.com.br>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Vanderlei Romera <vanderleiromera@gmail.com>, 2020\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr "${object.company_id.name} Pedido (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr ""
+msgstr "'Pedido de Cotação - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -264,7 +265,7 @@ msgstr "<strong>Produto</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative:</strong>"
-msgstr ""
+msgstr "<strong>Representante de Compra:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -348,6 +349,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"De acordo com a configuração do produto, a quantidade recebida pode ser calculada automaticamente pelo mecanismo :\n"
+"  - Manual: a quantidade será definida manualmente na linha\n"
+"  - Movimento de Estoque: a quantidade vem a partir dos pickings confirmados\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -2077,7 +2081,7 @@ msgstr "Valor total"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo de atividade de exceção registrada."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2168,7 +2172,7 @@ msgstr "Campo utilitário para expressar total em moeda"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Entrada de Grade Variável"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id

@@ -261,6 +261,44 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.assertAlmostEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, 2, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
         self.assertEqual(ref_tax_lines.mapped('tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")
 
+    def test_division_tax(self):
+        '''
+        Test that when using division tax, with percentage amount
+        100% any change on price unit is correctly reflected on
+        the whole move.
+
+        Complete scenario:
+            - Create a division tax, 100% amount, included in price.
+            - Create an invoice, with only the mentioned tax
+            - Change price_unit of the aml
+            - Total price of the move should change as well
+        '''
+
+        sale_tax = self.env['account.tax'].create({
+            'name': 'tax',
+            'type_tax_use': 'sale',
+            'amount_type': 'division',
+            'amount': 100,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        invoice = self._create_invoice([(100, sale_tax)])
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'name': sale_tax.name,
+            'tax_base_amount': 0.0,
+            'balance': -100,
+        }])
+        # change price unit, everything should change as well
+        with Form(invoice) as invoice_form:
+            with invoice_form.line_ids.edit(0) as line_edit:
+                line_edit.price_unit = 200
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'name': sale_tax.name,
+            'tax_base_amount': 0.0,
+            'balance': -200,
+        }])
+
     def test_misc_journal_entry_tax_tags_sale(self):
         sale_tax = self.env['account.tax'].create({
             'name': 'tax',
@@ -293,6 +331,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             ],
         })
 
+        inv_tax_rep_ln = sale_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        ref_tax_rep_ln = sale_tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+
         # === Tax in debit ===
 
         move_form = Form(self.env['account.move'], view='account.view_move_form')
@@ -317,9 +358,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': []},
-            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids},
-            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids},
+            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': ref_tax_rep_ln.id},
+            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
         ])
 
         # === Tax in credit ===
@@ -346,9 +387,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1000.0,    'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids},
-            {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids},
-            {'balance': 1100.0,     'tax_ids': [],              'tag_ids': []},
+            {'balance': -1000.0,    'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': inv_tax_rep_ln.id},
+            {'balance': 1100.0,     'tax_ids': [],              'tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
         ])
 
     def test_misc_journal_entry_tax_tags_purchase(self):
@@ -383,6 +424,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             ],
         })
 
+        inv_tax_rep_ln = purch_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        ref_tax_rep_ln = purch_tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+
         # === Tax in debit ===
 
         move_form = Form(self.env['account.move'])
@@ -407,9 +451,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': []},
-            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids},
-            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids},
+            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': inv_tax_rep_ln.id},
+            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
         ])
 
         # === Tax in credit ===
@@ -436,9 +480,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertRecordValues(move.line_ids.sorted('balance'), [
-            {'balance': -1000.0,    'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids},
-            {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids},
-            {'balance': 1100.0,     'tax_ids': [],              'tag_ids': []},
+            {'balance': -1000.0,    'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0,       'tax_repartition_line_id': False},
+            {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000,    'tax_repartition_line_id': ref_tax_rep_ln.id},
+            {'balance': 1100.0,     'tax_ids': [],              'tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
         ])
 
     def test_tax_calculation_foreign_currency_large_quantity(self):

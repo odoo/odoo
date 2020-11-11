@@ -219,6 +219,13 @@ class AccountMove(models.Model):
         def get_vat_country(vat):
             return vat[:2].upper()
 
+        def in_eu(partner):
+            europe = self.env.ref('base.europe', raise_if_not_found=False)
+            country = partner.country_id
+            if not europe or not country or country in europe.country_ids:
+                return True
+            return False
+
         formato_trasmissione = "FPR12"
         if len(self.commercial_partner_id.l10n_it_pa_index or '1') == 6:
             formato_trasmissione = "FPA12"
@@ -245,6 +252,7 @@ class AccountMove(models.Model):
             'discount_type': discount_type,
             'get_vat_number': get_vat_number,
             'get_vat_country': get_vat_country,
+            'in_eu': in_eu,
             'abs': abs,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,

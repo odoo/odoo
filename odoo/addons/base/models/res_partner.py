@@ -165,7 +165,7 @@ class Partner(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
@@ -229,11 +229,6 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
-
-    def init(self):
-        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
-        if not self._cr.fetchone():
-            self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):

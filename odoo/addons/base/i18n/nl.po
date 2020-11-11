@@ -2810,6 +2810,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Financiële rapportages volgens het Kasstelsel \n"
+"========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -8456,6 +8460,8 @@ msgid ""
 "- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)r horen bij bedrijf %(company)r en %(field)r (%(fname)s: "
+"%(values)s) horen bij een ander bedrijf."
 
 #. module: base
 #: code:addons/model.py:0
@@ -8474,6 +8480,8 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Record is bedrijf %(company)r en %(field)r (%(fname)s: %(values)s) horen "
+"bij een ander bedrijf."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9499,7 +9507,7 @@ msgstr "Toegang tot privé adressen"
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Toegang tot ongeautoriseerde of ongeldige bedrijven."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -9878,7 +9886,7 @@ msgstr "Mogelijkheid tot barcode scanning toevoegen aan evenement beheer."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr ""
+msgstr "Voeg kasstelsel rapportage functionaliteit toe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -11643,6 +11651,12 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
 "U kan geen taal deactiveren die momenteel in gebruik is door een gebruiker."
@@ -11674,7 +11688,7 @@ msgstr "Trapsgewijs"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_basis
 msgid "Cash Basis Accounting Reports"
-msgstr ""
+msgstr "Financiële rapportages volgens het kasstelsel"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__category_id
@@ -13336,6 +13350,8 @@ msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
 "you use the digital formatting."
 msgstr ""
+"Datum eenheid gebruikt voor de afronding. De waarde moet kleiner zijn dan "
+"'uur' indien u de digitale formattering gebruikt."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -15113,6 +15129,12 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"Bestand %r niet geïmporteerd vanwege een verkeerd ingedeeld bestand.\n"
+"\n"
+"Dit probleem kan worden veroorzaakt door dubbele vermeldingen die naar hetzelfde veld verwijzen. Controleer de inhoud van het bestand dat u probeert te importeren.\n"
+"\n"
+"Technische details:\n"
+"%s"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:0
@@ -15407,6 +15429,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Meer dan 10 fouten gevonden en meer dan één fout per 10 records, onderbroken"
+" om te voorkomen dat er teveel fouten worden weergegeven."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -19785,7 +19809,7 @@ msgstr "NIT"
 #. module: base
 #: model:res.country,vat_label:base.id
 msgid "NPWP"
-msgstr ""
+msgstr "NPWP"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_name
@@ -22291,6 +22315,9 @@ msgid ""
 "One or more of the selected modules have already been uninstalled, if you "
 "believe this to be an error, you may try again later or contact support."
 msgstr ""
+"Een of meer van de geselecteerde modules zijn al verwijderd. Als u denkt dat"
+" dit een fout is, kunt u het later opnieuw proberen of contact opnemen met "
+"de ondersteuning."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -26132,7 +26159,7 @@ msgstr "Loonstroken werknemer opslaan in de documenten app"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
 msgid "Store employee's time off documents  in the Document app"
-msgstr ""
+msgstr "Bewaar verlofdocumenten van werknemers in de Document-app"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -27491,14 +27518,6 @@ msgstr ""
 "%(groups_list)s"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Scheidingsteken voor duizendtallen"
@@ -28045,7 +28064,7 @@ msgstr "Kleine afgelegen eilanden van de Verenigde Staten"
 #. module: base
 #: model:res.country,vat_label:base.at
 msgid "USt"
-msgstr ""
+msgstr "USt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_utm
@@ -28911,6 +28930,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Wij zijn een technologisch advies- en strategisch adviesbureau dat "
+"waardeverhogende oplossingen creëert door het gebruik van geavanceerde "
+"software voor onze klanten wereldwijd. Bij Lumber Inc brengen we "
+"operationele ervaring gecombineerd ..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -28919,6 +28942,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Wij zijn een technologisch advies- en strategisch adviesbureau dat waardeverhogende oplossingen creëert door het gebruik van geavanceerde software voor onze klanten wereldwijd.\n"
+"\n"
+"Bij Lumber Inc brengen we operationele ervaring gecombineerd met technologisch inzicht. We begrijpen dat alle software die bedrijfsactiviteiten ondersteunt, zo moet worden ontworpen dat het de uitvoering van kritieke operationele processen vergemakkelijkt en dient als hulpmiddel voor de gebruikers en niet als barrière. Onze benadering is eerst gericht op het proces, ervoor zorgen dat het bijdraagt aan de doelstellingen van het bedrijf, we optimaliseren het en ontwerpen de softwareoplossingen om het zo goed mogelijk te ondersteunen."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
