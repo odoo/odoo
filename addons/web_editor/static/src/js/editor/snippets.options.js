@@ -3846,10 +3846,14 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 return color || '';
             }
             case 'flipX': {
-                return this.$target.find('> .o_we_shape.o_we_flip_x').length !== 0;
+                // Compat: flip classes are no longer used but may be present in client db
+                const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_x').length !== 0;
+                return hasFlipClass || this._getShapeData().flip.includes('x');
             }
             case 'flipY': {
-                return this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
+                // Compat: flip classes are no longer used but may be present in client db
+                const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
+                return hasFlipClass || this._getShapeData().flip.includes('y');
             }
         }
         return this._super(...arguments);
@@ -3955,11 +3959,27 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             target.style.position = 'relative';
         }
         shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
-        flip.forEach(dir => {
-            shapeContainer.classList.add(`o_we_flip_${dir}`);
-        });
-        // Custom colors, overwrite shape that is set by the class
-        $(shapeContainer).css('background-image', colors ? `url("${this._getShapeSrc()}")` : '');
+        // Compat: remove old flip classes as flipping is now done inside the svg
+        shapeContainer.classList.remove('o_we_flip_x', 'o_we_flip_y');
+
+        if (colors || flip.length) {
+            // Custom colors/flip, overwrite shape that is set by the class
+            $(shapeContainer).css('background-image', `url("${this._getShapeSrc()}")`);
+            shapeContainer.style.backgroundPosition = '';
+            if (flip.length) {
+                let [xPos, yPos] = $(shapeContainer)
+                    .css('background-position')
+                    .split(' ')
+                    .map(p => parseFloat(p));
+                // -X + 2*Y is a symmetry of X around Y, this is a symmetry around 50%
+                xPos = flip.includes('x') ? -xPos + 100 : xPos;
+                yPos = flip.includes('y') ? -yPos + 100 : yPos;
+                shapeContainer.style.backgroundPosition = `${xPos}% ${yPos}%`;
+            }
+        } else {
+            // Remove custom bg image and let the shape class set the bg shape
+            $(shapeContainer).css('background-image', '');
+        }
     },
     /**
      * Overwrites shape properties with the specified data.
@@ -3998,16 +4018,19 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @private
      */
     _getShapeSrc() {
-        const {shape, colors} = this._getShapeData();
+        const {shape, colors, flip} = this._getShapeData();
         if (!shape) {
             return '';
         }
-        const queryString = Object.entries(colors)
+        const searchParams = Object.entries(colors)
             .map(([colorName, colorValue]) => {
                 const encodedCol = encodeURIComponent(colorValue);
                 return `${colorName}=${encodedCol}`;
-            }).join('&');
-        return `/web_editor/shape/${shape}.svg?${queryString}`;
+            });
+        if (flip.length) {
+            searchParams.push(`flip=${flip.sort().join('')}`);
+        }
+        return `/web_editor/shape/${shape}.svg?${searchParams.join('&')}`;
     },
     /**
      * Retrieves current shape data from the target's dataset.
