@@ -613,6 +613,7 @@ class Environment(Mapping):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
+        lazy_property.reset_all(self)
         self.cache.invalidate()
         self.all.tocompute.clear()
         self.all.towrite.clear()
