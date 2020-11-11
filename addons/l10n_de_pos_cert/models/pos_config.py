@@ -33,17 +33,26 @@ class PosConfig(models.Model):
             res.create_tss_process()
         return res
 
-    @api.model
     def write(self, values):
         res = super(PosConfig, self).write(values)
         if 'create_tss_flag' in values and values['create_tss_flag']:
             self.create_tss_process()
         return res
 
+    def unlink(self):
+        cache = {
+            'fiskaly_tss_id': self.fiskaly_tss_id,
+            'fiskaly_secret': self.company_id.fiskaly_secret,
+            'fiskaly_key': self.company_id.fiskaly_key
+        }
+        res = super(PosConfig, self).unlink()
+        self.delete_tss(cache)
+        return res
+
     def create_tss_process(self):
         if self.create_tss_flag and not self.fiskaly_tss_id and not self.fiskaly_client_id:
             try:
-                headers = self.fiskaly_authentication()
+                headers = self.fiskaly_authentication(self.company_id.fiskaly_secret, self.company_id.fiskaly_key)
                 phantom_tss = self.retrieve_phantom_tss(headers)
                 if not phantom_tss:
                     tss_id = self.create_fiskaly_tss(headers)
@@ -59,13 +68,29 @@ class PosConfig(models.Model):
             except ConnectTimeout:
                 raise ValidationError(_("There are some connection issues between us and Fiskaly, try again later."))
 
-    def fiskaly_authentication(self):
+    def delete_tss(self, cache):
+        try:
+            url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
+            timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
+
+            headers = self.fiskaly_authentication(cache['fiskaly_secret'], cache['fiskaly_key'])
+            disable_tss_response = requests.put('{0}tss/{1}'.format(url, cache['fiskaly_tss_id']),
+                                                {'state': 'DISABLED'}, headers=headers,
+                                                timeout=timeout)
+            if disable_tss_response.status_code != 200:
+                raise ValidationError(_("It seems there are some issues, please try again later."))
+        except ConnectionError:
+            raise ValidationError(_("Check your internet connection and try again."))
+        except ConnectTimeout:
+            raise ValidationError(_("There are some connection issues between us and Fiskaly, try again later."))
+
+    def fiskaly_authentication(self, secret, key):
         url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
         auth_response = requests.post(url + 'auth', {
-            'api_key': self.company_id.fiskaly_key,
-            'api_secret': self.company_id.fiskaly_secret
+            'api_secret': secret,
+            'api_key': key
         }, timeout=timeout)
         if auth_response.status_code == 401:
             raise ValidationError(_("The combination of your Fiskaly API key and secret is incorrect. " +
@@ -101,7 +126,6 @@ class PosConfig(models.Model):
 
         return None
 
-    @api.model
     def create_fiskaly_tss(self, headers):
         url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
@@ -115,7 +139,6 @@ class PosConfig(models.Model):
 
         return tss_id
 
-    @api.model
     def create_fiskaly_client(self, headers, tss_id):
         url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
