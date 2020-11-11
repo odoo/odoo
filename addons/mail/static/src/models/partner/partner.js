@@ -95,7 +95,8 @@ function factory(dependencies) {
                 if (partners.length < limit) {
                     if (
                         partner !== currentPartner &&
-                        searchRegexp.test(partner.name)
+                        searchRegexp.test(partner.name) &&
+                        partner.user
                     ) {
                         partners.push(partner);
                     }
