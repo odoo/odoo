@@ -264,10 +264,11 @@ class ProjectTask(models.Model):
 
     @api.depends('sale_line_id', 'project_id', 'allow_billable', 'bill_type', 'pricing_type', 'non_allow_billable')
     def _compute_sale_order_id(self):
+        is_fsm_order = self.env.context.get('fsm_task_id', False)
         for task in self:
-            if task.allow_billable and task.bill_type == 'customer_project' and task.pricing_type == 'employee_rate' and task.non_allow_billable:
+            if not is_fsm_order and task.allow_billable and task.bill_type == 'customer_project' and task.pricing_type == 'employee_rate' and task.non_allow_billable:
                 task.sale_order_id = False
-            elif task.allow_billable and task.bill_type == 'customer_project':
+            elif not is_fsm_order and task.allow_billable and task.bill_type == 'customer_project':
                 task.sale_order_id = task.project_id.sale_order_id
             elif task.allow_billable and task.bill_type == 'customer_task':
                 task.sale_order_id = task.sale_line_id.sudo().order_id
