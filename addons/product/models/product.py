@@ -73,7 +73,7 @@ class ProductProduct(models.Model):
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'default_code, name, id'
+    _order = 'default_code, id'
 
     # price: total price, context dependent (partner, pricelist, quantity)
     price = fields.Float(
