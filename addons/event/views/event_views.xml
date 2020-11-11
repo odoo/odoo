@@ -174,6 +174,19 @@
                 </p>
             </field>
         </record>
+        <!-- Copy of action to register above, but showing confirmed registrations. -->
+        <record id="act_event_registration_confirmed" model="ir.actions.act_window">
+            <field name="res_model">event.registration</field>
+            <field name="view_type">form</field>
+            <field name="name">Attendees</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_confirmed': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new attendee
+                </p>
+            </field>
+        </record>
 
         <!-- EVENT.EVENT VIEWS -->
         <record id="event_event_action_pivot" model="ir.actions.act_window" >
@@ -346,7 +359,7 @@
                                             <t t-esc="record.seats_expected.raw_value"/> Expected attendees
                                         </a>
                                         <t t-if="(record.seats_reserved.raw_value + record.seats_used.raw_value) > 0 "><br/>
-                                            <a name="%(event_event_action_pivot)d" type="action">
+                                            <a name="%(act_event_registration_confirmed)d" type="action">
                                                 <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Confirmed attendees
                                             </a>
                                         </t>
