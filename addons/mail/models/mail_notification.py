@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError
 
 
 class Notification(models.Model):
@@ -28,3 +29,16 @@ class Notification(models.Model):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_res_partner_id_is_read_email_status_mail_message_id',))
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_email_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, is_read, email_status, mail_message_id)')
+
+    @api.model
+    def create(self, vals):
+        msg = self.env['mail.message'].browse(vals['mail_message_id'])
+        msg.check_access_rights('read')
+        msg.check_access_rule('read')
+        return super(Notification, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if ('mail_message_id' in vals or 'res_partner_id' in vals) and not self.env.user._is_admin():
+            raise AccessError(_("Can not update the message or recipient of a notification."))
+        return super(Notification, self).write(vals)
