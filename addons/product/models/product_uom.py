@@ -56,18 +56,16 @@ class ProductUoM(models.Model):
 
     @api.onchange('rounding')
     def _onchange_rounding(self):
-        precision = self.env.ref('product.decimal_product_uom').digits
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if self.rounding < 1.0 / 10.0**precision:
-            warning = {
-                    'title': _('Warning!'),
-                    'message':  _(
-                        "This rounding precision is higher than the Decimal Accuracy"
-                        " (%s digits).\nThis may cause inconsistencies in reservations.\n"
-                         "Please set a precision between %s and 1.")
-                         %(str(precision), str(1.0 / 10.0**precision))
-                    ,
-                }
-            return {'warning': warning}
+            return {'warning': {
+                'title': _('Warning!'),
+                'message': _(
+                    "This rounding precision is higher than the Decimal Accuracy"
+                    " (%s digits).\nThis may cause inconsistencies in computations.\n"
+                    "Please set a precision between %s and 1."
+                ) % (precision, 1.0 / 10.0**precision),
+            }}
 
     @api.model
     def create(self, values):
