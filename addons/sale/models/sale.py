@@ -855,7 +855,7 @@ Reason(s) of this behavior could be:
 
     def action_done(self):
         for order in self:
-            tx = order.sudo().transaction_ids.get_last_transaction()
+            tx = order.sudo().transaction_ids._get_last()
             if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
@@ -995,7 +995,7 @@ Reason(s) of this behavior could be:
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.transaction_ids.get_last_transaction()
+        return self.transaction_ids._get_last()
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):

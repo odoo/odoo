@@ -743,6 +743,14 @@ class PaymentTransaction(models.Model):
         """
         return
 
+    def _get_last(self):
+        """ Return the last transaction of the recordset.
+
+        :return: The last transaction of the recordset, sorted by id
+        :rtype: recordset of `payment.transaction`
+        """
+        return self.filtered(lambda t: t.state != 'draft').sorted()[:1]
+
     #=== LOGGING METHODS ===#
 
     def _log_sent_message(self):  # TODO ANV call this _only_ in payment's /transaction route
@@ -846,11 +854,6 @@ class PaymentTransaction(models.Model):
         return message
 
     # --> CLEANED & SORTED |
-
-    def get_last_transaction(self):
-        """ TODO. """
-        transactions = self.filtered(lambda t: t.state != 'draft')
-        return transactions and transactions[0] or transactions
 
     def _cron_finalize_post_processing(self):
         """ TODO. """

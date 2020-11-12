@@ -20,7 +20,7 @@ class AccountMove(models.Model):
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.transaction_ids.get_last_transaction()
+        return self.transaction_ids._get_last()
 
     def payment_action_capture(self):
         self.authorized_transaction_ids.s2s_capture_transaction()
