@@ -17,12 +17,14 @@ class MailingTrace(models.Model):
         'exception', 'bounced', 'ignored'
       * failure_type
         # mass_mailing
-        "SMTP", "RECIPIENT", "BOUNCE", "UNKNOWN"
+        "SMTP", "RECIPIENT", "BOUNCE", "UNKNOWN", "mail_email_missing"
+        # mass mailing mass mode specific codes
+        "mail_bl", "mail_optout", "mail_dup"
         # mass_mailing_sms
         'sms_number_missing', 'sms_number_format', 'sms_credit',
         'sms_server', 'sms_acc'
         # mass_mailing_sms mass mode specific codes
-        'sms_blacklist', 'sms_duplicate'
+        'sms_blacklist', 'sms_duplicate', 'sms_optout',
       * ignored:
         * mail: set in get_mail_values in composer, if email is blacklisted
           (mail) or in opt_out / seen list (mass_mailing) or email_to is void
@@ -30,13 +32,10 @@ class MailingTrace(models.Model):
         * sms: set in _prepare_mass_sms_trace_values in composer if sms is
           in cancel state; either blacklisted (sms) or in opt_out / seen list
           (sms);
-        * difference: void mail -> cancel -> ignore, void sms -> error
-          sms_number_missing -> exception
-        * difference: invalid mail -> cancel -> ignore, invalid sms -> error
-          sms_number_format -> sent + bounce;
+        * void mail / void sms number -> error (mail_missing, sms_number_missing)
+        * invalid mail / invalid sms number -> error (RECIPIENT, sms_number_format)
       * exception: set in  _postprocess_sent_message (_postprocess_iap_sent_sms)
-        if mail (sms) not sent with failure type, reset if sent; also set for
-        sms in _prepare_mass_sms_trace_values if void number
+        if mail (sms) not sent with failure type, reset if sent;
       * sent: set in _postprocess_sent_message (_postprocess_iap_sent_sms) if
         mail (sms) sent
       * clicked: triggered by add_click
@@ -100,6 +99,11 @@ class MailingTrace(models.Model):
         ("RECIPIENT", "Invalid email address"),
         ("BOUNCE", "Email address rejected by destination"),
         ("UNKNOWN", "Unknown error"),
+        ("mail_email_missing", "Missing email address"),
+        # mass mode
+        ("mail_bl", "Blacklisted Address"),
+        ("mail_optout", "Opted Out"),
+        ("mail_dup", "Duplicated Email"),
     ], string='Failure type')
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
                                    help='Last state update of the mail',

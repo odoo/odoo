@@ -104,14 +104,15 @@ class MassMailCase(MailCase, MockLinkTracker):
                 'MailTrace: email %s (recipient %s, state: %s, record: %s): found %s records (1 expected)' % (email, partner, state, record, len(recipient_trace))
             )
             self.assertTrue(bool(recipient_trace.mail_mail_id_int))
+            if 'failure_type' in recipient_info or state in ('ignored', 'exception', 'canceled', 'bounced'):
+                self.assertEqual(recipient_trace.failure_type, recipient_info['failure_type'])
 
             if check_mail:
                 if author is None:
                     author = self.env.user.partner_id
 
+                # mail.mail specific values to check
                 fields_values = {'mailing_id': mailing}
-                if 'failure_type' in recipient_info:
-                    fields_values['failure_type'] = recipient_info['failure_type']
 
                 # specific for partner: email_formatted is used
                 if partner:
