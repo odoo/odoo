@@ -114,49 +114,49 @@ msgstr "Yêu cầu phải có %d karma để có thể gắn cờ một bài vi�
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to mark a post as offensive."
-msgstr ""
+msgstr "Bạn cần có %s karma để có thể đánh dấu một bài là mang tính công kích."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to post an image or link."
-msgstr ""
+msgstr "Bạn cần có %s karma để có thể đăng hình hoặc link."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to refuse a post."
-msgstr ""
+msgstr "Bạn cần có %s karma để có thể từ chối một bài."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to retag."
-msgstr "Cần phải có %d karma để gắn lại từ khoá."
+msgstr "Bạn cần có %s karma để có thể gắn lại từ khoá."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to unlink a comment."
-msgstr ""
+msgstr "Bạn cần có %s karma để có thể xóa bình luận."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to unlink a post."
-msgstr ""
+msgstr "Bạn cần có %s karma để có thể xóa bài."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to upvote."
-msgstr ""
+msgstr "Bạn cần có %s karma để có bình chọn."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to validate a post."
-msgstr ""
+msgstr "Bạn cần có %s karma để có thể duyệt bài."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -337,6 +337,10 @@ msgid ""
 "            - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "            - it really helps to select the best questions and answers!"
 msgstr ""
+"<b>Vui lòng cung cấp một trả lời thực tế.</b> Nếu bạn muốn bình luận câu hỏi hoăc câu trả lời, chỉ cần\n"
+"            <b>sử dụng công cụ bình luận.</b> Lưu ý rằng bạn sẽ luôn của thể <b>thay đổi nội dung trả lời</b>\n"
+"            - không cần thiết phải trả lời 2 lần cho cùng một câu hỏi. Đồng thời <b>đừng quên bầu chọn</b>,\n"
+"            - điều đó thực sự giúp ích cho việc lựa chọn ra câu hỏi và câu trả lời tốt nhất!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -349,10 +353,8 @@ msgid ""
 "<b>This forum is empty.</b><br/>\n"
 "                    Be the first one asking a question"
 msgstr ""
-"<b>Vui lòng đưa câu trả lời thực tế, có giá trị, mang tính giải pháp.</b> Nếu bạn chỉ định bình luận vào một câu hỏi hay câu trả lời, hãy\n"
-"        <b>sử dụng công cụ bình luận.</b> Hãy nhớ rằng, bạn luôn có thể <b>sửa đổi các câu trả lời của bạn</b>\n"
-"        - không cần thiết phải trả lời 2 lần cho cùng một câu hỏi. Cũng <b>đừng quên bình chọn</b>\n"
-"        - điều đó sẽ thực sự giúp ích cho việc lựa chọn ra câu hỏi và câu trả lời tốt nhất!"
+"<b>Diễn đàn vẫn còn trống.</b><br/>\n"
+"                    Hãy là người đầu tiên đặt một câu hỏi"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -393,7 +395,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "<b>You already have a pending post.</b><br/>"
-msgstr ""
+msgstr "<b>Bạn đã có một bài đang treo.</b><br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -406,6 +408,8 @@ msgid ""
 "<b>|</b>\n"
 "                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy badge-gold ml-2\" role=\"img\" aria-label=\"Huy chương vàng\" title=\"Huy chương vàng\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -425,12 +429,12 @@ msgstr "<i class=\"fa fa-bell fa-fw\"/> Bài được theo dõi"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-bug\"/> Filter Tool"
-msgstr ""
+msgstr "<i class=\"fa fa-bug\"/> Công cụ lọc"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw mr-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw mr-1\"/>Chấp thuận"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -448,7 +452,7 @@ msgstr "<i class=\"fa fa-check\"/> Làm thế nào để cấu hình Thuế GTGT
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "<i class=\"fa fa-check-square-o fa-fw\"/> To Validate"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-fw\"/> Chờ thẩm định"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
@@ -533,6 +537,8 @@ msgid ""
 "<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
 "label=\"Negative votes\" title=\"Negative votes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ml-3\" role=\"img\" aria-"
+"label=\"Bầu chọn tiêu cực\" title=\"Bầu chọn tiêu cực\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -540,6 +546,8 @@ msgid ""
 "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
 " votes\" title=\"Positive votes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Bầu chọn tích cực"
+" votes\" title=\"Bầu chọn tích cực\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -588,6 +596,8 @@ msgid ""
 "<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
 "label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy badge-bronze ml-2\" role=\"img\" aria-"
+"label=\"Huy chương đồng\" title=\"Huy chương đồng\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -595,16 +605,18 @@ msgid ""
 "<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
 "label=\"Silver badge\" title=\"Silver badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy badge-silver ml-2\" role=\"img\" aria-"
+"label=\"Huy chương bạc\" title=\"Huy chương bạc\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<span class=\"font-weight-bold\">No answer posted yet.</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Chưa có bài trả lời nào được đăng.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<span class=\"font-weight-bold\">No question posted yet.</span>"
-msgstr ""
+msgstr "<span class=\"font-weight-bold\">Chưa có câu hỏi nào được đăng.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -614,9 +626,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "<span class=\"navbar-text mr-1\">Go to:</span>"
-msgstr ""
-"<span class=\"text-muted\">(chỉ cho phép một câu trả lời duy nhất cho mỗi "
-"câu hỏi)</span>"
+msgstr "<span class=\"navbar-text mr-1\">Đi đến:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -630,11 +640,14 @@ msgid ""
 "                            Best Answer\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill font-weight-bold text-success ml-2 px-2\">\n"
+"                            Bài trả lời tốt nhất\n"
+"                        </span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted mx-3\">hoặc</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -775,7 +788,7 @@ msgstr "Tất cả các chủ đề"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "All forums"
-msgstr ""
+msgstr "Tất cả các Diễn đàn"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
@@ -785,7 +798,7 @@ msgstr "Cho phép Đẩy lên"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Amazing! There are not answered questions!"
-msgstr ""
+msgstr "Tuyệt! Chưa có câu hỏi nào được trả lời!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -804,7 +817,7 @@ msgstr "Trả lời được Sửa"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accepted
 msgid "Answer accepted"
-msgstr "Câu trả lời được chấp thuận"
+msgstr "Bài trả lời được chấp thuận"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_6
@@ -884,7 +897,7 @@ msgstr "Trả lời"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
 msgid "Answers Count"
-msgstr ""
+msgstr "Số lượng Bài trả lời"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_gamification_challenge__category
@@ -1016,12 +1029,12 @@ msgstr "Huy chương"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Be less specific in your wording for a wider search result"
-msgstr ""
+msgstr "Hãy dùng các từ khóa ít đặc trưng hơn để có kết quả tìm kiếm rộng hơn"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Browse All"
-msgstr ""
+msgstr "Duyệt toàn bộ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
@@ -1125,7 +1138,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Check your spelling and try again"
-msgstr ""
+msgstr "Kiểm tra lỗi chính tả và thử lại"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -1200,7 +1213,7 @@ msgstr "Được đóng vào"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Closing"
-msgstr ""
+msgstr "Đang đóng"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__name
@@ -1390,7 +1403,7 @@ msgstr "Xoá bài của chính mình"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Deleted"
-msgstr ""
+msgstr "Đã xóa"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
@@ -1705,7 +1718,7 @@ msgstr "Chế độ Diễn đàn"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Forum Mode:"
-msgstr ""
+msgstr "Chế độ Diễn đàn:"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
@@ -1717,7 +1730,7 @@ msgstr "Tên Diễn đàn"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Forum Name:"
-msgstr ""
+msgstr "Tên Diễn đàn:"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -1746,7 +1759,7 @@ msgstr "Diễn đàn"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_website__forums_count
 msgid "Forums Count"
-msgstr ""
+msgstr "Số lượng Diễn đàn"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
@@ -1842,15 +1855,12 @@ msgstr "Ẩn Giới thiệu"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "I'm <b>Following</b>"
-msgstr ""
+msgstr "Tôi <b>Đang theo dõi</b>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "I'm Following"
-msgstr ""
-"Làm thế nào để Kiểm kho cho một ngày trong quá khứ?; Số giờ còn lại của "
-"nhiệm vụ được tính toán thế nào?; Làm thế nào để cấu hình thuế GTGT và thuế "
-"TTĐB cho hệ thống thuế Việt Nam?; v.v."
+msgstr "Tôi đang theo dõi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
@@ -1947,7 +1957,7 @@ msgstr "Hình 1024"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Hình 128"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_256
@@ -2001,7 +2011,7 @@ msgstr "Tiểu sử của tác giả có thể nhìn thấy từ bài viết c�
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to modify someone else's vote."
-msgstr ""
+msgstr "Không cho phép điều chỉnh bầu chọn của người khác."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2014,7 +2024,7 @@ msgstr "Nó không được phép bỏ phiếu cho bài viết của mình."
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Karma Error"
-msgstr ""
+msgstr "Lỗi Karma"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -2112,7 +2122,7 @@ msgstr "Đánh dấu là xúc phạm"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as spam"
-msgstr ""
+msgstr "Đánh dấu là spam"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -2136,12 +2146,12 @@ msgstr "Điều chỉnh bài"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation"
-msgstr ""
+msgstr "Điều hành"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "Moderation tools"
-msgstr ""
+msgstr "Công cụ điều hành"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -2181,22 +2191,22 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "My <b>Favourites</b>"
-msgstr ""
+msgstr "<b>Mục yêu thích</b> của tôi"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "My <b>Questions</b>"
-msgstr ""
+msgstr "<b>Câu hỏi</b> của tôi"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "My Favourites"
-msgstr ""
+msgstr "Mục yêu thích của tôi"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "My Questions"
-msgstr ""
+msgstr "Câu hỏi của tôi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_vote
@@ -2274,27 +2284,27 @@ msgstr "Câu hỏi tốt"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_activities
 msgid "No activities yet!"
-msgstr ""
+msgstr "Chưa có hoạt động nào!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "No favourite questions in this forum (yet).<br/>"
-msgstr ""
+msgstr "Chưa có câu hỏi yêu thích nào trong diễn đàn này.<br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "No flagged posts"
-msgstr ""
+msgstr "Không có bài bị gắn cờ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 msgid "No forum is available yet."
-msgstr ""
+msgstr "Chưa có diễn đàn nào khả dụng."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "No post to be validated"
-msgstr ""
+msgstr "Chưa có bài nào được duyệt"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -2304,7 +2314,7 @@ msgstr "Không có Từ khoá"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 msgid "No vote given by you yet!"
-msgstr ""
+msgstr "Bạn chưa bầu chọn cho bài nào cả!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
@@ -2401,7 +2411,7 @@ msgstr "Trung bình,"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Only one answer per question is allowed"
-msgstr ""
+msgstr "Bạn có thể thể tạo một và chỉ một bài trả lời cho một câu hỏi"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -2447,6 +2457,8 @@ msgid ""
 "Please wait for a moderator to validate your previous post before "
 "continuing."
 msgstr ""
+"Vui lòng đợi điều hành viên thẩm định bài trước của bạn trước khi bạn "
+"có thể tiếp tục."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2498,7 +2510,7 @@ msgstr "Lý do Đóng Bài"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
 msgid "Post Count"
-msgstr ""
+msgstr "Số lượng Bài"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -2513,7 +2525,7 @@ msgstr "Đăng câu hỏi của bạn"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Post comment"
-msgstr ""
+msgstr "Đă ng bình luận"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -2549,7 +2561,7 @@ msgstr "Bài viết"
 #: model:gamification.challenge.line,name:website_forum.line_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr "Pundit"
+msgstr "Học giả"
 
 #. module: website_forum
 #. openerp-web
@@ -2583,7 +2595,7 @@ msgstr "Câu hỏi bị sửa"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Question by"
-msgstr ""
+msgstr "Hỏi bởi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
@@ -2648,7 +2660,7 @@ msgstr "Câu hỏi"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Questions and Answers"
-msgstr ""
+msgstr "Hỏi và Đáp"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__mode
@@ -2656,11 +2668,13 @@ msgid ""
 "Questions mode: only one answer allowed\n"
 " Discussions mode: multiple answers allowed"
 msgstr ""
+"Chế độ câu hỏi: chỉ duy nhất một bài trả lời được cho phép\n"
+" Chế độ thảo luận: cho phép nhiều câu trả lời"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
 msgid "Ranks"
-msgstr ""
+msgstr "Chức danh"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2674,7 +2688,7 @@ msgstr "V/v: %s"
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Read the guidelines to know how to gain karma."
-msgstr "Đọc hướng dẫn để biết cách đạt karma."
+msgstr "Đọc hướng dẫn để biết cách đạt được karma."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -2732,7 +2746,7 @@ msgstr "Mở lại"
 #: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Reply should not be empty."
-msgstr ""
+msgstr "Phản hồi không được để trống."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
@@ -2748,7 +2762,7 @@ msgstr "Hạn chế phát hành cho website này"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the forum."
-msgstr ""
+msgstr "Quay về diễn đàn"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2790,7 +2804,7 @@ msgstr "Học giả"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Search Tips"
-msgstr ""
+msgstr "Gợi ý tìm kiếm"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -2810,7 +2824,7 @@ msgstr "Thông số liên quan thứ hai"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "See"
-msgstr ""
+msgstr "Xem"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -2866,7 +2880,7 @@ msgstr "Tuỳ chọn Chia sẻ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Show"
-msgstr "Trình diễn"
+msgstr "Hiển thị"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -2923,6 +2937,8 @@ msgid ""
 "Sorry, we could not find any <b>%s</b> result <b>\n"
 "                        %s</b> %s%s%s."
 msgstr ""
+"Xin lỗi, chúng tôi không thể tìm thấy <b>%s</b> kết quả <b>\n"
+"                        %s</b> %s%s%s."
 
 #. module: website_forum
 #. openerp-web
@@ -3035,7 +3051,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr ""
+msgstr "Câu hỏi đã bị đóng lại"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3075,7 +3091,7 @@ msgid ""
 "                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
 msgstr ""
 "Cộng đồng này dành cho các chuyên gia và những người đam mê các sản phẩm và dịch vụ của chúng tôi.\n"
-"                                        <br>Chia sẻ và thảo luận về nội dung tốt nhất và ý tưởng tiếp thị mới, xây dựng hồ sơ chuyên nghiệp của bạn và trở thành một nhà tiếp thị tốt hơn cùng nhau."
+"                                        <br>Chia sẻ và thảo luận về nội dung tốt nhất và ý tưởng mới, xây dựng hồ sơ cá nhân chuyên nghiệp của bạn và cùng nhau xây dựng thương hiệu cá nhân."
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -3125,6 +3141,8 @@ msgid ""
 "This post is currently awaiting moderation and it's not published yet.<br/>\n"
 "                Do you want <b>Accept</b> or <b>Reject</b> this post ?"
 msgstr ""
+"Bài này hiện đang chờ điều hành thẩm định và vẫn chưa được xuất bản.<br/>\n"
+"                Bạn có muốn <b>Chấp thuận</b> hoặc <b>Từ chối</b> bài này?"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__name
@@ -3176,7 +3194,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Topics"
-msgstr ""
+msgstr "Chủ đề"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
@@ -3191,7 +3209,7 @@ msgstr "Xu hướng"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Try searching for one or two words"
-msgstr ""
+msgstr "Hãy thử tìm kiếm một hoặc hai từ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3201,7 +3219,7 @@ msgstr "Chưa trả lời"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Undelete"
-msgstr ""
+msgstr "Thôi xoá"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
@@ -3216,7 +3234,7 @@ msgstr "Xoá bình luận của chính mình"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Unmark as Best Answer"
-msgstr ""
+msgstr "Bỏ đánh dấu là Bài trả lời tốt nhất"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_unread
@@ -3235,7 +3253,7 @@ msgstr "Bộ đếm Thông điệp chưa đọc"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Unsolved"
-msgstr ""
+msgstr "Chưa giải quyết"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
@@ -3315,7 +3333,7 @@ msgstr "Xem"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
 msgid "Views Count"
-msgstr ""
+msgstr "Số lượt xem"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
@@ -3325,7 +3343,7 @@ msgstr "Bầu chọn"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists !"
-msgstr ""
+msgstr "Bầu chọn đã tồn tại!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3428,9 +3446,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "You already have a pending post"
-msgstr ""
-"Bạn đã có một bài đang treo.<br/>\n"
-"            Vui lòng đợi điều hành viên thẩm định bài trước của bạn trước khi bạn có thể tiếp tục."
+msgstr "Bạn đã có một bài đang treo"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -3446,12 +3462,12 @@ msgstr "Bạn không được gửi câu trả lời rỗng (không nội dung)"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "You have no questions in this forum (yet)."
-msgstr ""
+msgstr "Bạn chưa có câu hỏi nào trong diễn đàn này."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "You need to have sufficient karma to edit tags"
-msgstr ""
+msgstr "Bạn cần phải có một số điểm karma nhất định để có thể sửa các từ khoá"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3468,7 +3484,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "You're not following any topic in this forum (yet).<br/>"
-msgstr ""
+msgstr "Bạn vẫn chưa theo dõi bất kỳ chủ đề nào trong diễn đàn này.<br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3494,7 +3510,7 @@ msgstr "chấp thuận bất kỳ trả lời nào"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "[Closed]"
-msgstr ""
+msgstr "[Đã đóng]"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -3504,7 +3520,7 @@ msgstr "ví dụ tồi"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "[Offensive]"
-msgstr ""
+msgstr "[Có tính công kích]"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3592,7 +3608,8 @@ msgstr "vì lý do:"
 msgid ""
 "has been posted and require your validation. Click here to access the "
 "question :"
-msgstr "đã được gửi và yêu cầu sự thẩm định của bạn. Bấm để truy cập câu hỏi:"
+msgstr "đã được gửi và yêu cầu sự thẩm định của bạn. Bấm để truy cập "
+"câu hỏi:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -3622,7 +3639,7 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "how to develop modules for your own need,"
 msgstr ""
-"làm thế nào để phát triển các phân hệ (module) theo đặc thù của chính bạn,"
+"làm thế nào để phát triển các phân hệ (module) theo nhu cầu của chính bạn,"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3643,17 +3660,17 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "in your favourites"
-msgstr ""
+msgstr "trong mục ưa thích"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "in your followed list"
-msgstr ""
+msgstr "trong danh mục được theo dõi"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "in your questions"
-msgstr ""
+msgstr "trong các câu hỏi của bạn"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
@@ -3682,7 +3699,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "karma is required to perform this action. "
-msgstr ""
+msgstr "karma là bắt buộc để thực hiện hành động này. "
 
 #. module: website_forum
 #. openerp-web
@@ -3699,17 +3716,17 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "most answered"
-msgstr ""
+msgstr "nhiều trả lời nhất"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "most voted"
-msgstr ""
+msgstr "bầu chọn nhiều nhất"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "newest"
-msgstr ""
+msgstr "mới nhất"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
@@ -3882,4 +3899,4 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "圾 Text"
-msgstr ""
+msgstr "Câu từ rác rưởi"
