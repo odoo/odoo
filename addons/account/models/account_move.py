@@ -2265,10 +2265,11 @@ class AccountMove(models.Model):
 
         for move in self:
             if not move.partner_id: continue
+            partners = (move.partner_id | move.partner_id.commercial_partner_id)
             if move.type.startswith('out_'):
-                move.partner_id._increase_rank('customer_rank')
+                partners._increase_rank('customer_rank')
             elif move.type.startswith('in_'):
-                move.partner_id._increase_rank('supplier_rank')
+                partners._increase_rank('supplier_rank')
             else:
                 continue
 
