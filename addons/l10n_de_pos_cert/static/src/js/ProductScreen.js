@@ -8,19 +8,36 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
     const _super_productscreen = ProductScreen.prototype;
 
     const PosDeProductScreen = ProductScreen => class extends ProductScreen {
+        //@Override
         async _clickProduct(event) {
             _super_productscreen._clickProduct.apply(this,arguments).catch(async (error) => {
                 if (error instanceof TaxError) {
-                    const title = this.env._t('Tax error');
-                    const body = this.env._t(
-                        'Product has an invalid tax amount. Only standard (16% or 19%), reduced (5% or 7%) and zero (0%) rates are allowed.'
-                    );
-                    await this.showPopup('ErrorPopup', { title, body });
+                    await this._showTaxError()
                 } else {
                     return Promise.reject(error);
                 }
             });
         }
+        //@Override
+        _barcodeProductAction(code) {
+            try {
+                _super_productscreen._barcodeProductAction.apply(this,arguments);
+            } catch(error) {
+                if (error instanceof TaxError) {
+                    this._showTaxError()
+                } else {
+                    throw error;
+                }
+            }
+        }
+        async _showTaxError() {
+            const title = this.env._t('Tax error');
+            const body = this.env._t(
+                'Product has an invalid tax amount. Only standard (16% or 19%), reduced (5% or 7%) and zero (0%) rates are allowed.'
+            );
+            await this.showPopup('ErrorPopup', { title, body });
+        }
+
     }
 
     Registries.Component.extend(ProductScreen, PosDeProductScreen);
