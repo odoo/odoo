@@ -1387,6 +1387,7 @@ class AccountMove(models.Model):
 
             for line in self.env['account.move.line'].search(domain):
 
+<<<<<<< HEAD
                 if line.currency_id == move.currency_id:
                     # Same foreign currency.
                     amount = abs(line.amount_residual_currency)
@@ -1401,6 +1402,20 @@ class AccountMove(models.Model):
 
                 if move.currency_id.is_zero(amount):
                     continue
+=======
+        reconciled_vals = []
+        pay_term_line_ids = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        partials = pay_term_line_ids.mapped('matched_debit_ids') + pay_term_line_ids.mapped('matched_credit_ids')
+        for partial in partials:
+            counterpart_lines = partial.debit_move_id + partial.credit_move_id
+            # In case we are in an onchange, line_ids is a NewId, not an integer. By using line_ids.ids we get the correct integer value.
+            counterpart_line = counterpart_lines.filtered(lambda line: line.id not in self.line_ids.ids)
+
+            if foreign_currency and partial.currency_id == foreign_currency:
+                amount = partial.amount_currency
+            else:
+                amount = partial.company_currency_id._convert(partial.amount, self.currency_id, self.company_id, self.date)
+>>>>>>> a186b3006a9... temp
 
                 payments_widget_vals['content'].append({
                     'journal_name': line.ref or line.move_id.name,
