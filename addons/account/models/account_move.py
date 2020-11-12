@@ -2453,9 +2453,9 @@ class AccountMove(models.Model):
             elif move.is_purchase_document():
                 supplier_count[move.partner_id] += 1
         for partner, count in customer_count.items():
-            partner._increase_rank('customer_rank', count)
+            (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
         for partner, count in supplier_count.items():
-            partner._increase_rank('supplier_rank', count)
+            (partner | partner.commercial_partner_id)._increase_rank('supplier_rank', count)
 
         # Trigger action for paid invoices in amount is zero
         to_post.filtered(
