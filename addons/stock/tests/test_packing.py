@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 
 
 class TestPackingCommon(SavepointCase):
-
     @classmethod
     def setUpClass(cls):
         super(TestPackingCommon, cls).setUpClass()
@@ -730,3 +729,74 @@ class TestPacking(TestPackingCommon):
                 {"qty_done": 0, "result_package_id": new_package.id},
             ],
         )
+
+    def test_entire_pack_overship(self):
+        """
+        Test the scenario of overshipping: we send the customer an entire package, even though it might be more than
+        what they initially ordered, and update the quantity on the sales order to reflect what was actually sent.
+        """
+        self.warehouse.delivery_steps = 'ship_only'
+        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+        self.warehouse.out_type_id.show_entire_packs = True
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        with Form(picking) as picking_form:
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.productA
+                move.product_uom_qty = 75
+        picking.action_confirm()
+        picking.action_assign()
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.new() as package_level:
+                package_level.package_id = package
+        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.edit(0) as package_level:
+                package_level.is_done = True
+        action = picking.button_validate()
+        print(action)
+
+        self.assertEqual(action, True, 'Should not open wizard')
+
+        for ml in picking.move_line_ids:
+            self.assertEqual(ml.package_id, package, 'move_line.package')
+            self.assertEqual(ml.result_package_id, package, 'move_line.result_package')
+            self.assertEqual(ml.state, 'done', 'move_line.state')
+        quant = package.quant_ids.filtered(lambda q: q.location_id == self.customer_location)
+        self.assertEqual(len(quant), 1, 'Should have quant at customer location')
+        self.assertEqual(quant.reserved_quantity, 0, 'quant.reserved_quantity should = 0')
+        self.assertEqual(quant.quantity, 100.0, 'quant.quantity should = 100')
+        self.assertEqual(sum(ml.qty_done for ml in picking.move_line_ids), 100.0, 'total move_line.qty_done should = 100')
+        backorders = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        self.assertEqual(len(backorders), 0, 'Should not create a backorder')
+
+    def test_remove_package(self):
+        """
+        In the overshipping scenario, if I remove the package after adding it, we should not remove the associated 
+        stock move.
+        """
+        self.warehouse.delivery_steps = 'ship_only'
+        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+        self.warehouse.out_type_id.show_entire_packs = True
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        with Form(picking) as picking_form:
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.productA
+                move.product_uom_qty = 75
+        picking.action_assign()
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.new() as package_level:
+                package_level.package_id = package
+        with Form(picking) as picking_form:
+            picking_form.package_level_ids.remove(0)
+        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
