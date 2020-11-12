@@ -55,15 +55,19 @@ class SaleOrder(models.Model):
                 order.is_abandoned_cart = False
 
     def _search_abandoned_cart(self, operator, value):
-        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
-        abandoned_domain = expression.normalize_domain([
-            ('date_order', '<=', abandoned_datetime),
-            ('website_id', '!=', False),
+        website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
+        deadlines = [[
+            '&', '&',
+            ('website_id', '=', website_id['id']),
+            ('date_order', '<=', fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
+            ('partner_id', '!=', website_id['partner_id'][0])
+        ] for website_id in website_ids]
+        abandoned_domain = [
             ('state', '=', 'draft'),
-            ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)
-        ])
+        ]
+        abandoned_domain.extend(expression.OR(deadlines))
+        abandoned_domain = expression.normalize_domain(abandoned_domain)
         # is_abandoned domain possibilities
         if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
             return abandoned_domain
