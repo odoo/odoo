@@ -147,8 +147,6 @@ class StockPackageLevel(models.Model):
         if vals.get('location_dest_id'):
             result.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
             result.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})
-        if result.picking_id.state != 'draft' and result.location_id and result.location_dest_id and not result.move_ids and not result.move_line_ids:
-            result._generate_moves()
         return result
 
     def write(self, vals):
