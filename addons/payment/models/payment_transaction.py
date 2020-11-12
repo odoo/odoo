@@ -110,8 +110,6 @@ class PaymentTransaction(models.Model):
     partner_country_id = fields.Many2one(string="Country", comodel_name='res.country')
     partner_phone = fields.Char(string="Phone")
 
-# partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
-
     _sql_constraints = [
         ('reference_uniq', 'unique(reference)', "Reference must be unique!"),
     ]
@@ -133,6 +131,20 @@ class PaymentTransaction(models.Model):
         tx_data = {tx_id: invoice_count for tx_id, invoice_count in query_res}
         for tx in self:
             tx.invoice_ids_nbr = tx_data.get(tx.id, 0)
+
+    #=== CONSTRAINS & ONCHANGE METHODS ===#
+
+    @api.constrains('state')
+    def _check_state_authorized_supported(self):
+        """ Check that authorization is supported for a transaction in the 'authorized' state. """
+        illegal_authorize_state_tx = self.filtered(
+            lambda tx: tx.state == 'authorized' and not tx.acquirer_id.support_authorization
+        )
+        if illegal_authorize_state_tx:
+            raise ValidationError(_(
+                "Transaction authorization is not supported by the following payment acquirers: %s",
+                ', '.join(set(illegal_authorize_state_tx.mapped('acquirer_id.name')))
+            ))
 
     #=== CRUD METHODS ===#
 
@@ -882,13 +894,6 @@ class PaymentTransaction(models.Model):
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]
         return action
-
-    @api.constrains('state', 'acquirer_id')
-    def _check_authorize_state(self):
-        """ TODO. """
-        failed_tx = self.filtered(lambda tx: tx.state == 'authorized' and tx.acquirer_id.provider not in self.env['payment.acquirer']._get_feature_support()['authorize'])
-        if failed_tx:
-            raise ValidationError(_("The %s payment acquirers are not allowed to manual capture mode!", failed_tx.mapped('acquirer_id.name')))
 
     def s2s_capture_transaction(self, **kwargs):
         """ TODO. """
