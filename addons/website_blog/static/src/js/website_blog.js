@@ -1,5 +1,6 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
+var core = require('web.core');
 
 var publicWidget = require('web.public.widget');
 
@@ -86,13 +87,15 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     _onShareArticle: function (ev) {
         var url = '';
         var articleURL;
+        var twitterText = core._t("Amazing blog article : %s! Check it live: %s");
         ev.preventDefault();
         var $element = $(ev.currentTarget);
         if ($element.is('*[class*="_complete"]')) {
             var blogTitleComplete = encodeURIComponent($('#blog_post_name').html() || '');
             articleURL = encodeURIComponent(window.location.href);
             if ($element.hasClass('o_twitter_complete')) {
-                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogTitleComplete + "! Check it live: " + articleURL;
+                var tweetText = _.string.sprintf(twitterText, blog_title_complete, articleURL);
+                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + tweetText;
             } else if ($element.hasClass('o_facebook_complete')) {
                 url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin_complete')) {
@@ -106,7 +109,8 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
             var blogArticleLink = blogPost.find('.o_blog_post_title').parent('a').attr('href');
             articleURL = encodeURIComponent(window.location.host + blogArticleLink);
             if ($element.hasClass('o_twitter')) {
-                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogPostTitle + "! " + articleURL;
+                var tweetText = _.string.sprintf(twitterText, blog_post_title, articleURL);
+                url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + tweetText;
             } else if ($element.hasClass('o_facebook')) {
                 url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
             } else if ($element.hasClass('o_linkedin')) {
