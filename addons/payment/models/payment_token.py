@@ -112,8 +112,8 @@ class PaymentToken(models.Model):
     def get_linked_records_info(self):
         """ Return a list of information about records linked to the current token.
 
-        For a module to implement payments, it must override this method and complete the dict
-        returned by this method with information about linked records.
+        For a module to implement payments and link documents to a token, it must override this
+        method and complete the returned dict with information about linked records.
 
         The information must be structured as a dict with the following keys:
           - description: The description of the record's model (e.g. "Subscription")

@@ -301,7 +301,6 @@ class CustomerPortal(PaymentPortal):
             custom_create_values={'sale_order_ids': [(6, 0, [order_id])]}, **kwargs,
         )
 
-        # TODO ANV there used to be a call to tx._log_sent_message(). See if still necessary
         return tx_sudo._get_processing_values()
 
     # Payment overrides

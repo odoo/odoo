@@ -294,6 +294,8 @@ class PaymentPortal(portal.CustomerPortal):
 
         if flow == 'token':
             tx_sudo._send_payment_request()  # Payments by token process transaction immediately
+        else:
+            tx_sudo._log_sent_message()
 
         # Monitor the transaction to make it available in the portal
         PaymentPostProcessing.monitor_transactions(tx_sudo)

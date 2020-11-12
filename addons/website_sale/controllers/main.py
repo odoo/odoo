@@ -909,7 +909,6 @@ class WebsiteSale(PaymentPortal):
             PaymentPostProcessing.remove_transactions(last_tx)
         request.session['__website_sale_last_tx_id'] = tx_sudo.id
 
-        # TODO ANV there used to be a call to tx._log_sent_message(). See if still necessary
         return tx_sudo._get_processing_values()
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)

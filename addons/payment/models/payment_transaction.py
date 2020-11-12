@@ -743,6 +743,20 @@ class PaymentTransaction(models.Model):
         """
         return
 
+    def _get_linked_documents(self):
+        """ Return the invoices linked to the transaction.
+
+        For a module to implement payments and link documents to a transaction, it must override
+        this method and return the recordset of linked documents, if any, or the result of super.
+
+        Note: self.ensure_one()
+
+        :return: The invoices linked to the transaction
+        :rtype: recordset of `account.move`
+        """
+        self.ensure_one()
+        return self.invoice_ids
+
     def _get_last(self):
         """ Return the last transaction of the recordset.
 
@@ -753,15 +767,16 @@ class PaymentTransaction(models.Model):
 
     #=== LOGGING METHODS ===#
 
-    def _log_sent_message(self):  # TODO ANV call this _only_ in payment's /transaction route
-        """ Log in the chatter of relevant documents that the transactions have been requested.
+    def _log_sent_message(self):
+        """ Log in the chatter of relevant documents that the transactions have been initiated.
 
         :return: None
         """
-        for tx in self.filtered('invoice_ids'):  # TODO ANV rely on a _get_linked_documents method
+        for tx in self:
+            linked_documents = tx._get_linked_documents()
             message = tx._get_sent_message()
-            for invoice in tx.invoice_ids:
-                invoice.message_post(body=message)
+            for document in linked_documents:
+                document.message_post(body=message)
 
     def _get_sent_message(self):
         """ Return the message stating that the transaction has been requested.
@@ -793,7 +808,7 @@ class PaymentTransaction(models.Model):
             )  # TODO ANV check that at least one acquirer uses this, or remove
         return message
 
-    def _log_received_message(self):  # TODO ANV same as for _log_sent_message for the method definition
+    def _log_received_message(self):
         """ Log in the chatter of relevant documents that the transactions have been received.
 
         A transaction is 'received' when a response is received from the provider of the acquirer
@@ -801,10 +816,11 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        for tx in self.filtered(lambda t: t.provider not in ('manual', 'transfer')):
+        for tx in self.filtered(lambda t: t.provider not in ('manual', 'transfer')):  # TODO override and filter in payment_transfer
+            linked_documents = tx._get_linked_documents()
             message = tx._get_received_message()
-            for invoice in tx.invoice_ids:
-                invoice.message_post(body=message)
+            for document in linked_documents:
+                document.message_post(body=message)
 
     def _get_received_message(self):
         """ Return the message stating that the transaction has been received by the provider.

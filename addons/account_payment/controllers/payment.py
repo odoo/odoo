@@ -33,5 +33,4 @@ class PaymentPortal(payment_portal.PaymentPortal):
             custom_create_values={'invoice_ids': [(6, 0, [invoice_id])]}, **kwargs,
         )
 
-        # TODO ANV there used to be a call to tx._log_sent_message(). See if still necessary
         return tx_sudo._get_processing_values()
