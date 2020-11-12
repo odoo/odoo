@@ -10522,7 +10522,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test("edit many2one and click outside many2one in list", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         const list = await createView({
             arch: '<tree editable="top"><field name="m2o"/></tree>',
@@ -10535,24 +10535,18 @@ QUnit.module('Views', {
 
         await testUtils.fields.editAndTrigger(list.$('.o_field_many2one input'),
             'aaa', ['keydown', 'keyup']);
-        testUtils.dom.triggerMouseEvent(list.$(".o_control_panel"), "mousedown");
+        testUtils.dom.triggerMouseEvent(list.$(".o_control_panel"), "click");
         await testUtils.nextTick();
         assert.strictEqual(list.$('.o_field_many2one input').val(), "",
             "should have cleared input if no result found in autocomplete and mousedown outside many2one");
 
         await testUtils.fields.editAndTrigger(list.$('.o_field_many2one input'),
             'Value', ['keydown', 'keyup']);
-        // trigger mousedown event somewhere else except many2one
-        testUtils.dom.triggerMouseEvent(list.$(".o_control_panel"), "mousedown");
+        // trigger click event somewhere else except many2one
+        testUtils.dom.triggerMouseEvent(list.$(".o_control_panel"), "click");
         await testUtils.nextTick();
         assert.strictEqual(list.$('.o_field_many2one input').val(), "Value 1",
             "should have selected xphone");
-
-        // clicking on window prevents first click as we have prevented window click in editable
-        // list if user writes something and select m2o dropdown item using mousedown
-        await testUtils.dom.click(document.body);
-        assert.containsOnce(list, '.o_field_many2one input',
-            "should still have many2one widget input");
 
         // click second time to unselect editable row
         await testUtils.dom.click(document.body);

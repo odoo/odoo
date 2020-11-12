@@ -118,9 +118,6 @@ var FieldMany2One = AbstractField.extend({
         if (this._onScroll) {
             window.removeEventListener('scroll', this._onScroll, true);
         }
-        if (this._onMouseDown) {
-            window.removeEventListener('mousedown', this._onMouseDown, true);
-        }
         if (this._onWindowClick) {
             window.removeEventListener('click', this._onWindowClick, true);
         }
@@ -260,33 +257,36 @@ var FieldMany2One = AbstractField.extend({
                 };
                 window.addEventListener('scroll', self._onScroll, true);
 
-                let clickPrevented = false;
-                self._onMouseDown = function (ev) {
+                self._onWindowClick = function (ev) {
                     // ignore mousedown in autocomplete dropdowns and many2one widget itself
                     if (self.el.contains(ev.target) || this.el === ev.target || $(ev.target).parents('.ui-autocomplete').length) {
                         return;
                     }
+
+                    let results = [];
+                    self._autocompleteSources.forEach(source => {
+                        if (source.results && source.results.length) {
+                            results = results.concat(source.results);
+                        } else if (source.loading) {
+                            results.push({
+                                label: source.placeholder
+                            });
+                        }
+                    });
+                    results = results.filter(item => {
+                        return item.classname === "o_m2o_option";
+                    });
                     if (self.floating && self.$input.hasClass('ui-autocomplete-input')) {
-                        clickPrevented = true;
-                        console.log("Inside clickPrevented ::: ");
-                        console.trace();
+                        ev.stopImmediatePropagation();
+                        // clickPrevented = false;
                         const $dropdown = self.$input.autocomplete("widget");
-                        const $values = $dropdown && $dropdown.is(":visible") && $dropdown.find("li.o_m2o_option");
-                        if ($values.length) {
-                            $values.first().click();
+                        // const $values = $dropdown && $dropdown.find("li.o_m2o_option");
+                        if (results.length) {
+                            $dropdown.find("li.o_m2o_option:first").click();
                         } else {
                             self.$input.val('');
                             self.reinitialize(false);
                         }
-                    }
-                };
-                // bind mousedown on widnow to select first record if autocomplete is open
-                window.addEventListener('mousedown', self._onMouseDown, true);
-
-                self._onWindowClick = function (ev) {
-                    if (clickPrevented) {
-                        ev.stopImmediatePropagation();
-                        clickPrevented = false;
                     }
                 };
                 window.addEventListener('click', self._onWindowClick, true);
@@ -299,9 +299,6 @@ var FieldMany2One = AbstractField.extend({
                 }
                 if (self._onScroll) {
                     window.removeEventListener('scroll', self._onScroll, true);
-                }
-                if (this._onMouseDown) {
-                    window.removeEventListener('mousedown', this._onMouseDown, true);
                 }
                 if (this._onWindowClick) {
                     window.removeEventListener('click', this._onWindowClick, true);

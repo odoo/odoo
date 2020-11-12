@@ -2257,8 +2257,8 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_many2one input'));
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
             'x', ['keyup']);
-            // trigger mousedown event somewhere else except many2one
-            testUtils.dom.triggerMouseEvent(form.$(".o_control_panel"), "mousedown");
+            // trigger click event somewhere else except many2one
+            testUtils.dom.triggerMouseEvent(form.$(".o_control_panel"), "click");
             await testUtils.nextTick();
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
                 "should have selected xphone");
@@ -2266,8 +2266,8 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 'Something that does not exist', ['keydown', 'keyup']);
             await testUtils.nextTick();
-            // trigger mousedown event somewhere else except many2one
-            testUtils.dom.triggerMouseEvent(form.$(".o_control_panel"), "mousedown");
+            // trigger click event somewhere else except many2one
+            testUtils.dom.triggerMouseEvent(form.$(".o_control_panel"), "click");
             await testUtils.nextTick();
             assert.strictEqual(form.$('.o_field_many2one input').val(), "",
                 "should have cleared input if no result found in autocomplete and mousedown outside many2one");
