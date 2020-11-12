@@ -367,14 +367,14 @@ class Slide(models.Model):
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
                 record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
-            elif record.slide_type == 'video' and record.document_id:
-                if not record.mime_type:
+            elif record.document_id:
+                if record.slide_type == 'video' and not record.mime_type:
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
                     record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
-                    # embed google doc video
+                    # embed google doc
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
             else:
                 record.embed_code = False
