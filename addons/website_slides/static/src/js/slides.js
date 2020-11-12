@@ -150,71 +150,13 @@ var page_widgets = {};
      * Social Sharing Statistics Widget
      */
     if ($('div#statistic').length) {
-        var slide_url = $("div#statistic").attr('slide-url');
-        var social_urls = {
-            'linkedin': 'https://www.linkedin.com/countserv/count/share?url=',
-            'twitter': 'https://cdn.api.twitter.com/1/urls/count.json?url=',
-            'facebook': 'https://graph.facebook.com/?id=',
-            'gplus': 'https://clients6.google.com/rpc'
-        }
-
-        var update_statistics = function(social_site, slide_url) {
-            if (social_site == 'gplus') {
-                $.ajax({
-                    url: social_urls['gplus'],
-                    type: "POST",
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify([{
-                        "method": "pos.plusones.get",
-                        "id": "p",
-                        "params": {
-                            "nolog": true,
-                            "id": slide_url,
-                            "source": "widget",
-                            "userId": "@viewer",
-                            "groupId": "@self"
-                        },
-                        // TDE NOTE: should there be a key here ?
-                        "jsonrpc": "2.0",
-                        "apiVersion": "v1"
-                    }]),
-                    success: function(data) {
-                        $('#google-badge').text(data[0].result.metadata.globalCounts.count || 0);
-                        $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#google-badge').text()));
-                    },
-                });
-            } else {
-                $.ajax({
-                    url: social_urls[social_site] + slide_url,
-                    dataType: 'jsonp',
-                    success: function(data) {
-                        var shareCount = (social_site === 'facebook' ? data.shares : data.count) || 0;
-                        $('#' + social_site + '-badge').text(shareCount);
-                        $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + social_site+ '-badge').text()));
-                    },
-                });
-            }
-        };
-
-        $.each(social_urls, function(key, value) {
-            update_statistics(key, slide_url);
-        });
-
         $("a.o_slides_social_share").on('click', function(ev) {
             ev.preventDefault();
-            var key = $(ev.currentTarget).attr('social-key');
             var popUpURL = $(ev.currentTarget).attr('href');
-            var popUp = window.open(
+            window.open(
                 popUpURL,
                 'Share Dialog',
                 'width=626,height=436');
-            $(window).on('focus', function() {
-                if (popUp.closed) {
-                    update_statistics(key, slide_url);
-                    $(window).off('focus');
-                }
-            });
         });
     }
 })();
