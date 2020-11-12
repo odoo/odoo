@@ -104,6 +104,8 @@ class StockPackageLevel(models.Model):
                 package_level.state = 'done'
             elif package_level.move_line_ids.filtered(lambda ml: ml.state == 'cancel') or package_level.move_ids.filtered(lambda m: m.state == 'cancel'):
                 package_level.state = 'cancel'
+            else:
+                package_level.state = 'draft'
 
     def _compute_show_lot(self):
         for package_level in self:
