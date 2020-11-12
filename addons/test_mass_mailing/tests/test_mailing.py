@@ -245,8 +245,8 @@ class TestMassMailing(TestMassMailCommon):
             [{'email': 'test.record.00@test.example.com'},
              {'email': 'test.record.01@test.example.com'},
              {'email': 'test.record.02@test.example.com'},
-             {'email': 'test.record.03@test.example.com', 'state': 'ignored'},
-             {'email': 'test.record.04@test.example.com', 'state': 'ignored'}],
+             {'email': 'test.record.03@test.example.com', 'state': 'ignored', 'failure_type': 'mail_bl'},
+             {'email': 'test.record.04@test.example.com', 'state': 'ignored', 'failure_type': 'mail_bl'}],
             mailing, recipients, check_mail=True
         )
         self.assertEqual(mailing.ignored, 2)
@@ -271,11 +271,11 @@ class TestMassMailing(TestMassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test.record.00@test.example.com', 'state': 'ignored'},
-             {'email': 'test.record.01@test.example.com', 'state': 'ignored'},
+            [{'email': 'test.record.00@test.example.com', 'state': 'ignored', 'failure_type': 'mail_optout'},
+             {'email': 'test.record.01@test.example.com', 'state': 'ignored', 'failure_type': 'mail_optout'},
              {'email': 'test.record.02@test.example.com'},
              {'email': 'test.record.03@test.example.com'},
-             {'email': 'test.record.04@test.example.com', 'state': 'ignored'}],
+             {'email': 'test.record.04@test.example.com', 'state': 'ignored', 'failure_type': 'mail_bl'}],
             mailing, recipients, check_mail=True
         )
         self.assertEqual(mailing.ignored, 3)
@@ -332,10 +332,10 @@ class TestMassMailing(TestMassMailCommon):
 
         self.assertMailTraces(
             [{'email': 'test@test.example.com', 'state': 'sent'},
-             {'email': 'test@test.example.com', 'state': 'ignored'},
+             {'email': 'test@test.example.com', 'state': 'ignored', 'failure_type': 'mail_dup'},
              {'email': 'test3@test.example.com'},
              {'email': 'test4@test.example.com'},
-             {'email': 'test5@test.example.com', 'state': 'ignored'}],
+             {'email': 'test5@test.example.com', 'state': 'ignored', 'failure_type': 'mail_optout'}],
             mailing,
             mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
             check_mail=True

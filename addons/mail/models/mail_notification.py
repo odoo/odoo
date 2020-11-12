@@ -38,6 +38,7 @@ class MailNotification(models.Model):
         ("RECIPIENT", "Invalid email address"),
         ("BOUNCE", "Email address rejected by destination"),
         ("UNKNOWN", "Unknown error"),
+        ("mail_email_missing", "Missing email address"),
         ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 

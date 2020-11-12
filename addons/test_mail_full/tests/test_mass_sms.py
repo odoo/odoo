@@ -183,14 +183,14 @@ class TestMassSMSInternals(TestMassSMSCommon):
         # missing number
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': False,
-              'content': 'Dear %s this is a mass SMS.' % void_record.display_name, 'state': 'exception',
+              'content': 'Dear %s this is a mass SMS.' % void_record.display_name, 'state': 'ignored',
               'failure_type': 'sms_number_missing'}],
             self.mailing, void_record,
         )
         # wrong values
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': record.phone_nbr,
-              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'bounced',
+              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'state': 'ignored',
               'failure_type': 'sms_number_format'}
              for record in falsy_record_1 + falsy_record_2],
             self.mailing, falsy_record_1 + falsy_record_2,
@@ -395,8 +395,8 @@ class TestMassSMS(TestMassSMSCommon):
             mailing.action_send_sms()
 
         self.assertSMSTraces(
-            [{'number': '+32456000000', 'state': 'ignored', 'failure_type': 'sms_blacklist'},  # TDE FIXME: should be opt_out
-             {'number': '+32456000101', 'state': 'ignored', 'failure_type': 'sms_blacklist'},  # TDE FIXME: should be opt_out
+            [{'number': '+32456000000', 'state': 'ignored', 'failure_type': 'sms_optout'},
+             {'number': '+32456000101', 'state': 'ignored', 'failure_type': 'sms_optout'},
              {'number': '+32456000202', 'state': 'sent'},
              {'number': '+32456000303', 'state': 'sent'},
              {'number': '+32456000404', 'state': 'ignored', 'failure_type': 'sms_blacklist'}],

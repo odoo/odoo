@@ -182,7 +182,7 @@ class MailMail(models.Model):
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
-        if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
+        if not failure_type or failure_type in ['RECIPIENT', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
             self.browse(mail_to_delete_ids).sudo().unlink()
         return True
@@ -376,6 +376,8 @@ class MailMail(models.Model):
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
+                # TDE note: could be great to pre-detect missing to/cc and skip sending it
+                # to go directly to failed state update
                 for email in email_list:
                     msg = IrMailServer.build_email(
                         email_from=mail.email_from,
@@ -401,7 +403,11 @@ class MailMail(models.Model):
                         processing_pid = None
                     except AssertionError as error:
                         if str(error) == IrMailServer.NO_VALID_RECIPIENT:
-                            failure_type = "RECIPIENT"
+                            # if we have a list of void emails for email_list -> email missing, otherwise generic email failure
+                            if not email.get('email_to') and failure_type != "RECIPIENT":
+                                failure_type = "mail_email_missing"
+                            else:
+                                failure_type = "RECIPIENT"
                             # No valid recipient found for this particular
                             # mail item -> ignore error to avoid blocking
                             # delivery to next recipients, if any. If this is
