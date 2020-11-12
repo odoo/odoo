@@ -231,12 +231,6 @@
                     box-shadow: none;
                 }
 
-                &.disabled {
-                    opacity: 1.0;
-                    color: $text-muted;
-                    pointer-events: none;
-                }
-
                 &:not(:first-child):before, &:not(:first-child):after {
                     content: " ";
                     display: block;
@@ -278,6 +272,13 @@
                 }
             }
 
+            > .o_arrow_button, > .dropdown-menu > .o_arrow_button {
+                &.disabled {
+                    opacity: 1.0;
+                    color: $text-muted;
+                    pointer-events: none;
+                }
+            }
         }
 
         // Touch device mode
