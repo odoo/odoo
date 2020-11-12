@@ -1,5 +1,6 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
+var core = require('web.core');
 
 const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
@@ -73,7 +74,9 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var blogPostTitle = encodeURIComponent($('#o_wblog_post_name').html() || '');
         var articleURL = encodeURIComponent(window.location.href);
         if ($element.hasClass('o_twitter')) {
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogPostTitle + "! " + articleURL;
+            var twitterText = core._t("Amazing blog article: %s! Check it live: %s");
+            var tweetText = _.string.sprintf(twitterText, blogPostTitle, articleURL);
+            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + tweetText;
         } else if ($element.hasClass('o_facebook')) {
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
         } else if ($element.hasClass('o_linkedin')) {
