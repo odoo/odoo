@@ -18,7 +18,7 @@ class IrHttp(models.AbstractModel):
         domain = cls.get_utm_domain_cookies()
         for var, dummy, cook in request.env['utm.mixin'].tracking_fields():
             if var in request.params and request.httprequest.cookies.get(var) != request.params[var]:
-                response.set_cookie(cook, request.params[var], domain=domain)
+                response.delete_cookie(cook, domain=domain)
         return response
 
     @classmethod
