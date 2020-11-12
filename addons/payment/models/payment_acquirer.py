@@ -409,27 +409,3 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
         return self.journal_id.currency_id or self.company_id.currency_id
-
-    # --> CLEANED & SORTED |
-
-    def s2s_process(self, data):
-        """ TODO. """
-        cust_method_name = '%s_s2s_form_process' % (self.provider)
-        if not self.s2s_validate(data):
-            return False
-        if hasattr(self, cust_method_name):
-            # As this method may be called in JSON and overridden in various addons
-            # let us raise interesting errors before having strange crashes
-            if not data.get('partner_id'):
-                raise ValueError(_('Missing partner reference when trying to create a new payment token'))
-            method = getattr(self, cust_method_name)
-            return method(data)
-        return True
-
-    def s2s_validate(self, data):
-        """ TODO. """
-        cust_method_name = '%s_s2s_form_validate' % (self.provider)
-        if hasattr(self, cust_method_name):
-            method = getattr(self, cust_method_name)
-            return method(data)
-        return True
