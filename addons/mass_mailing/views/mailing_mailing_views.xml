@@ -65,7 +65,8 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert"
+                        attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
                         <div class="o_mails_ignored" attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
@@ -111,6 +112,9 @@
                                 <span name="next_departure_text">This mailing is scheduled for </span>
                                 <field name="next_departure" class="oe_inline"/>.
                             </strong>
+                        </div>
+                        <div attrs="{'invisible': [('warning_message', '=', False)]}">
+                            <strong><field name="warning_message"/></strong>
                         </div>
                     </div>
 
