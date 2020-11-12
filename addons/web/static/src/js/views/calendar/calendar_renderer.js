@@ -217,6 +217,7 @@ return AbstractRenderer.extend({
         } else {
             this.$calendar.fullCalendar('render');
         }
+        this._renderEvents();
     },
     /**
      * @override
