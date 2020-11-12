@@ -36,6 +36,7 @@ class MailingTrace(models.Model):
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
+        ('sms_optout', 'Opted Out'),
     ])
 
     @api.model_create_multi

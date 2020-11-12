@@ -57,18 +57,38 @@ class MailComposeMessage(models.TransientModel):
             seen_list = self._context.get('mass_mailing_seen_list')
             mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
             for res_id in res_ids:
+                if mail_values.get('body_html') and mass_mail_layout:
+                    mail_values['body_html'] = mass_mail_layout._render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
+
                 mail_values = res[res_id]
                 if mail_values.get('email_to'):
-                    mail_to = tools.email_normalize(mail_values['email_to'])
+                    mail_to = mail_values['email_to']
                 else:
                     partner_id = (mail_values.get('recipient_ids') or [(False, '')])[0][1]
-                    mail_to = tools.email_normalize(partners_email.get(partner_id))
-                if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
-                        or (not mail_to or not email_re.findall(mail_to)):
-                    # prevent sending to blocked addresses that were included by mistake
+                    mail_to = partners_email.get(partner_id)
+                mail_to_normalized = tools.email_normalize(mail_to)
+
+                # prevent sending to blocked addresses that were included by mistake
+                # blacklisted or optout or duplicate -> cancel
+                error_code = False
+                if mail_values.get('state') == 'cancel':
+                    error_code = 'mail_bl'
+                elif opt_out_list and mail_to in opt_out_list:
                     mail_values['state'] = 'cancel'
+                    error_code = 'mail_optout'
+                elif seen_list and mail_to in seen_list:
+                    mail_values['state'] = 'cancel'
+                    error_code = 'mail_dup'
+                # void of falsey values -> error
+                elif not mail_to:
+                    mail_values['state'] = 'cancel'
+                    error_code = 'mail_email_missing'
+                elif not mail_to_normalized or not email_re.findall(mail_to):
+                    mail_values['state'] = 'cancel'
+                    error_code = "RECIPIENT"
                 elif seen_list is not None:
                     seen_list.add(mail_to)
+
                 trace_vals = {
                     'model': self.model,
                     'res_id': res_id,
@@ -76,11 +96,14 @@ class MailComposeMessage(models.TransientModel):
                     # if mail_to is void, keep falsy values to allow searching / debugging traces
                     'email': mail_to or mail_values.get('email_to'),
                 }
-                if mail_values.get('body_html') and mass_mail_layout:
-                    mail_values['body_html'] = mass_mail_layout._render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
-                # propagate ignored state to trace when still-born
+                # propagate failed states to trace when still-born
                 if mail_values.get('state') == 'cancel':
                     trace_vals['ignored'] = fields.Datetime.now()
+                elif mail_values.get('state') == 'exception':
+                    trace_vals['exception'] = fields.Datetime.now()
+                if error_code:
+                    trace_vals['failure_type'] = error_code
+
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
                     'mailing_trace_ids': [(0, 0, trace_vals)],

@@ -42,6 +42,7 @@ class SmsSms(models.Model):
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
+        ('sms_optout', 'Opted Out'),
     ], copy=False)
 
     def send(self, delete_all=False, auto_commit=False, raise_exception=False):

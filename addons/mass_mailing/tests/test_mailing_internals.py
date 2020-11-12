@@ -276,7 +276,7 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
         self.assertMailTraces(
             [{'partner': partner_a},
-             {'partner': partner_b, 'state': 'ignored'}],
+             {'partner': partner_b, 'state': 'ignored', 'failure_type': 'mail_bl'}],
             mailing, partner_a + partner_b, check_mail=True
         )
 
