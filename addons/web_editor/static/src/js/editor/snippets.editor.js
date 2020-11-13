@@ -1086,8 +1086,6 @@ var SnippetsMenu = Widget.extend({
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
 
-        this.textEditorPanelEl = document.createElement('div');
-        this.textEditorPanelEl.classList.add('o_we_snippet_text_tools', 'd-none');
 
         if (this.options.onlyStyleTab) {
             await this._loadSnippetsTemplates();
@@ -1850,7 +1848,6 @@ var SnippetsMenu = Widget.extend({
         // Add the computed template and make elements draggable
         this.$el.html($html);
         this.$el.append(this.customizePanel);
-        this.$el.append(this.textEditorPanelEl);
         this.$el.append(this.invisibleDOMPanelEl);
         this._makeSnippetDraggable(this.$snippets);
         await this._disableUndroppableSnippets();
@@ -2244,7 +2241,6 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_snippet_search_filter').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.$('#o_scroll').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.customizePanel.classList.toggle('d-none', tab === this.tabs.BLOCKS);
-        this.textEditorPanelEl.classList.toggle('d-none', tab !== this.tabs.OPTIONS);
 
         this.$('.o_we_add_snippet_btn').toggleClass('active', tab === this.tabs.BLOCKS);
         this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS)
@@ -2808,9 +2804,6 @@ var SnippetsMenu = Widget.extend({
             // Sometimes not enough...
             return;
         }
-        this.textEditorPanelEl.classList.add('d-block');
-        const hasVisibleButtons = !!$(this.textEditorPanelEl).find('.btn:visible').length;
-        this.textEditorPanelEl.classList.remove('d-block');
         if (!hasVisibleButtons) {
             // Ugly way to detect that summernote was updated but there is no
             // visible text tools.

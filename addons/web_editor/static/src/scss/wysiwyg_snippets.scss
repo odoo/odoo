@@ -38,112 +38,6 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
-// Ugly hack to force ugly rules... while waiting for new editor
-#oe_snippets#oe_snippets .o_we_snippet_text_tools {
-    $-text-tools-gap: 3px;
-    $-text-tools-header-height: 35px;
-
-    padding: $-text-tools-header-height $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
-    z-index: $o-we-zindex;
-
-    .popover {
-        position: static !important;
-        top: 0 !important;
-        left: 0 !important;
-        transform: none !important;
-        border: none !important;
-    }
-    .popover-body {
-        padding: 0 !important;
-        border: none !important;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: $-text-tools-gap;
-
-        > * {
-            margin: 0 0 $o-we-sidebar-content-field-spacing*.5 0;
-        }
-    }
-    .btn {
-        @extend %we-generic-button;
-        border-radius: 0;
-        padding: 0 $o-we-sidebar-content-field-button-group-button-spacing!important;
-        line-height: $o-we-sidebar-content-field-height + ($o-we-sidebar-content-field-border-width*2)!important;
-    }
-    // Achieve a "button-group effect" for siblings buttons.
-    .popover-body > .btn-group {
-        > .btn  {
-            border-radius: 0;
-        }
-        > .btn:first-of-type, > div:first-of-type .btn {
-            @include border-left-radius($o-we-sidebar-content-field-border-radius);
-        }
-        > .btn:last-of-type, > div:last-of-type .btn {
-            @include border-right-radius($o-we-sidebar-content-field-border-radius);
-        }
-    }
-    .btn-group {
-
-        &.note-color {
-            order: -3;
-
-            .note-back-color-preview {
-                margin-left: $-text-tools-gap;
-            }
-            .btn::after {
-                display: none;
-            }
-        }
-        &.note-style {
-            order: -2;
-
-            &, > div {
-                flex-grow: 1;
-            }
-        }
-        &.note-fontsize {
-            order: -1;
-        }
-        &.note-font [data-name="clear"] {
-            @include o-position-absolute(($-text-tools-header-height*-1) + 5px, 0);
-            background: 0;
-            border: 0;
-            @extend %we-generic-link;
-        }
-        &.note-para {
-            flex-grow: 1;
-            gap: $-text-tools-gap;
-            justify-content: space-between;
-
-            > * {
-                flex: 1 1 33%;
-            }
-        }
-        > .d-none + * {
-            margin-left: 0 !important;
-        }
-    }
-    .note-color {
-        .btn-group {
-            position: static;
-        }
-        .dropdown-menu { // Drop up
-          top: auto;
-          bottom: 100%;
-          margin-top: 0;
-          margin-bottom: $dropdown-spacer;
-        }
-    }
-    .note-popover ~ .note-popover,
-    .note-handle ~ .note-handle,
-    .note-dialog ~ .note-dialog {
-        // Prevent flickering of summernote when switching text tools...
-        display: none;
-    }
-}
-
 .oe_snippet {
     // No root because can be drag and drop (and the helper is in the body)
     position: relative;
@@ -292,7 +186,7 @@ body.editor_enable.editor_has_snippets {
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
-
+    overflow: auto;
     display: flex;
     flex-flow: column nowrap;
     width: $o-we-sidebar-width;
@@ -369,7 +263,6 @@ body.editor_enable.editor_has_snippets {
 
     > #o_scroll, > .o_we_customize_panel {
         min-height: 0;
-        overflow: auto;
     }
 
     > #o_scroll {
