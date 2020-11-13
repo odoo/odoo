@@ -575,7 +575,7 @@ class Picking(models.Model):
         return [('move_lines', 'in', late_stock_moves.ids)]
 
     @api.onchange('picking_type_id', 'partner_id')
-    def onchange_picking_type(self):
+    def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
             if self.picking_type_id.default_location_src_id:
@@ -681,10 +681,6 @@ class Picking(models.Model):
         self.mapped('move_lines')._action_cancel()
         self.with_context(prefetch_fields=False).mapped('move_lines').unlink()  # Checks if moves are not done
         return super(Picking, self).unlink()
-
-    def action_assign_partner(self):
-        for picking in self:
-            picking.move_lines.write({'partner_id': picking.partner_id.id})
 
     def do_print_picking(self):
         self.write({'printed': True})

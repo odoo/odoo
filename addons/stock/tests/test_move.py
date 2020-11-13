@@ -3749,7 +3749,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 0)
         move1.product_uom_qty = 100
         move1.product_id = self.product_serial
-        move1.onchange_product_id()
+        move1._onchange_product_id()
         self.assertEqual(move1.product_uom_qty, 100)
 
     def test_scrap_1(self):

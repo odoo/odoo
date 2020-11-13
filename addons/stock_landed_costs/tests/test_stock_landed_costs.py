@@ -51,8 +51,8 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             })],
         })
         picking_landed_cost_1 = self.env['stock.picking'].new(vals)
-        picking_landed_cost_1.onchange_picking_type()
-        picking_landed_cost_1.move_lines.onchange_product_id()
+        picking_landed_cost_1._onchange_picking_type()
+        picking_landed_cost_1.move_lines._onchange_product_id()
         picking_landed_cost_1.move_lines.name = 'move 1'
         vals = picking_landed_cost_1._convert_to_write(picking_landed_cost_1._cache)
         picking_landed_cost_1 = self.env['stock.picking'].create(vals)
@@ -76,8 +76,8 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             })],
         })
         picking_landed_cost_2 = self.env['stock.picking'].new(vals)
-        picking_landed_cost_2.onchange_picking_type()
-        picking_landed_cost_2.move_lines.onchange_product_id()
+        picking_landed_cost_2._onchange_picking_type()
+        picking_landed_cost_2.move_lines._onchange_product_id()
         picking_landed_cost_2.move_lines.name = 'move 2'
         vals = picking_landed_cost_2._convert_to_write(picking_landed_cost_2._cache)
         picking_landed_cost_2 = self.env['stock.picking'].create(vals)
