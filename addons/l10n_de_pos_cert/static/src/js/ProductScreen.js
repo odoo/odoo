@@ -10,24 +10,32 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
     const PosDeProductScreen = ProductScreen => class extends ProductScreen {
         //@Override
         async _clickProduct(event) {
-            _super_productscreen._clickProduct.apply(this,arguments).catch(async (error) => {
-                if (error instanceof TaxError) {
-                    await this._showTaxError()
-                } else {
-                    return Promise.reject(error);
-                }
-            });
+            if (this.env.pos.isCountryGermany()) {
+                _super_productscreen._clickProduct.apply(this, arguments).catch(async (error) => {
+                    if (error instanceof TaxError) {
+                        await this._showTaxError()
+                    } else {
+                        return Promise.reject(error);
+                    }
+                });
+            } else {
+                _super_productscreen._clickProduct.apply(this, arguments)
+            }
         }
         //@Override
         _barcodeProductAction(code) {
-            try {
-                _super_productscreen._barcodeProductAction.apply(this,arguments);
-            } catch(error) {
-                if (error instanceof TaxError) {
-                    this._showTaxError()
-                } else {
-                    throw error;
+            if (this.env.pos.isCountryGermany()) {
+                try {
+                    _super_productscreen._barcodeProductAction.apply(this, arguments);
+                } catch(error) {
+                    if (error instanceof TaxError) {
+                        this._showTaxError()
+                    } else {
+                        throw error;
+                    }
                 }
+            } else {
+                _super_productscreen._barcodeProductAction.apply(this, arguments);
             }
         }
         async _showTaxError() {

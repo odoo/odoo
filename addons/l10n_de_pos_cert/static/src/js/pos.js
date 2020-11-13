@@ -43,6 +43,9 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         },
         getClientId() {
             return this.config.fiskaly_client_id;
+        },
+        isCountryGermany() {
+            return this.company.country.code === "DE";
         }
     });
 
@@ -51,11 +54,13 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         // @Override
         initialize() {
             _super_order.initialize.apply(this,arguments);
-            this.fiskalyUuid = this.fiskalyUuid || uuidv4();
-            this.txLastRevision = this.txLastRevision || null;
-            this.transactionState = this.transactionState || 'inactive'; // Used to know when we need to create the fiskaly transaction
-            this.tssInformation = this.tssInformation || this._initTssInformation();
-            this.save_to_db();
+            if (this.pos.isCountryGermany()) {
+                this.fiskalyUuid = this.fiskalyUuid || uuidv4();
+                this.txLastRevision = this.txLastRevision || null;
+                this.transactionState = this.transactionState || 'inactive'; // Used to know when we need to create the fiskaly transaction
+                this.tssInformation = this.tssInformation || this._initTssInformation();
+                this.save_to_db();
+            }
         },
         _initTssInformation() {
             return {
@@ -72,19 +77,19 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             };
         },
         isTransactionInactive() {
-            return this.transactionState == 'inactive';
+            return this.transactionState === 'inactive';
         },
         transactionStarted() {
             this.transactionState = 'started';
         },
         isTransactionStarted() {
-            return this.transactionState == 'started';
+            return this.transactionState === 'started';
         },
         transactionFinished() {
             this.transactionState = 'finished';
         },
         isTransactionFinished() {
-            return this.transactionState == 'finished';
+            return this.transactionState === 'finished';
         },
         setLastRevision(revision) {
             this.txLastRevision = revision;
@@ -95,51 +100,58 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         // @Override
         export_for_printing() {
             const receipt = _super_order.export_for_printing.apply(this, arguments);
-            receipt['tss'] = {};
-            $.extend(true, receipt['tss'], this.tssInformation);
+            if (this.pos.isCountryGermany()) {
+                receipt['tss'] = {};
+                $.extend(true, receipt['tss'], this.tssInformation);
+            }
             return receipt;
         },
         //@Override
         export_as_JSON() {
             const json = _super_order.export_as_JSON.apply(this, arguments);
-            json['fiskaly_uuid'] = this.fiskalyUuid;
-            json['transaction_state'] = this.transactionState;
-            if (this.txLastRevision) {
-                json['last_revision'] = this.txLastRevision;
-            }
-            if (this.isTransactionFinished()) {
-                json['tss_info'] = {};
-                for (var key in this.tssInformation) {
-                    if (key !== 'erstBestellung') {
-                        json['tss_info'][key] = this.tssInformation[key].value;
+            if (this.pos.isCountryGermany()) {
+                json['fiskaly_uuid'] = this.fiskalyUuid;
+                json['transaction_state'] = this.transactionState;
+                if (this.txLastRevision) {
+                    json['last_revision'] = this.txLastRevision;
+                }
+                if (this.isTransactionFinished()) {
+                    json['tss_info'] = {};
+                    for (var key in this.tssInformation) {
+                        if (key !== 'erstBestellung') {
+                            json['tss_info'][key] = this.tssInformation[key].value;
+                        }
                     }
                 }
-
             }
             return json;
         },
         //@Override
         init_from_JSON(json) {
             _super_order.init_from_JSON.apply(this, arguments);
-            this.fiskalyUuid = json.fiskaly_uuid;
-            this.transactionState = json.transaction_state;
-            if (json.last_revision) {
-                this.txLastRevision = json.last_revision;
-            }
-            if (json.tss_info) {
-                this.tssInformation = this._initTssInformation();
-                for (var key in json.tss_info) {
-                    this.tssInformation[key].value = json.tss_info[key];
+            if (this.pos.isCountryGermany()) {
+                this.fiskalyUuid = json.fiskaly_uuid;
+                this.transactionState = json.transaction_state;
+                if (json.last_revision) {
+                    this.txLastRevision = json.last_revision;
                 }
-                this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+                if (json.tss_info) {
+                    this.tssInformation = this._initTssInformation();
+                    for (var key in json.tss_info) {
+                        this.tssInformation[key].value = json.tss_info[key];
+                    }
+                    this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+                }
             }
         },
         //@Override
         add_product(product, options) {
-            if (product.taxes_id.length === 0 || !(this.pos.taxes_by_id[product.taxes_id[0]].amount in RATE_MAPPING)) {
-                throw new TaxError(product);
+            if (this.pos.isCountryGermany()) {
+                if (product.taxes_id.length === 0 || !(this.pos.taxes_by_id[product.taxes_id[0]].amount in RATE_MAPPING)) {
+                    throw new TaxError(product);
+                }
             }
-            return _super_order.add_product.apply(this, arguments);
+            _super_order.add_product.apply(this, arguments);
         },
         _authenticate() {
             return $.ajax({
@@ -169,9 +181,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             return $.ajax({
                 url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}`,
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${this.pos.getApiToken()}`
-                },
+                headers: { 'Authorization': `Bearer ${this.pos.getApiToken()}` },
                 data: JSON.stringify(data),
                 contentType: 'application/json'
             }).then((data) => {
@@ -249,9 +259,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 }
             };
             return $.ajax({
-                headers: {
-                    'Authorization': `Bearer ${this.pos.getApiToken()}`
-                },
+                headers: { 'Authorization': `Bearer ${this.pos.getApiToken()}` },
                 url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}?last_revision=${this.txLastRevision}`,
                 method: 'PUT',
                 data: JSON.stringify(data),
@@ -298,9 +306,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             return $.ajax({
                 url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}?last_revision=${this.txLastRevision}`,
                 method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${this.pos.getApiToken()}`
-                },
+                headers: { 'Authorization': `Bearer ${this.pos.getApiToken()}` },
                 data: JSON.stringify(data),
                 contentType: 'application/json'
             }).catch(async (error) => {

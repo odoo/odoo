@@ -5,33 +5,36 @@
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//h2[@name='order']" position="before">
-                <h2 name="fiskaly">Fiskaly API</h2>
-                <div class="row mt16 o_settings_container" attrs="{'invisible': [('fiskaly_tss_id','!=',False)]}">
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="create_tss_flag"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Create TSS</span>
-                            <div class="text-muted">
-                                Create a Technical Security System which is mandatory by the new regulations of Germany.
+                <field name="is_company_country_germany" invisible="1"/>
+                <div attrs="{'invisible': [('is_company_country_germany','!=',False)]}">
+                    <h2 name="fiskaly">Fiskaly API</h2>
+                    <div class="row mt16 o_settings_container" attrs="{'invisible': [('fiskaly_tss_id','!=',False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="create_tss_flag"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Create TSS</span>
+                                <div class="text-muted">
+                                    Create a Technical Security System which is mandatory by the new regulations of Germany.
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row mt16 o_settings_container" attrs="{'invisible': [('fiskaly_tss_id','=', False)]}">
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                            <label for="fiskaly_tss_id"/>
-                            <br/>
-                            <field name="fiskaly_tss_id"/>
+                    <div class="row mt16 o_settings_container" attrs="{'invisible': [('fiskaly_tss_id','=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="fiskaly_tss_id"/>
+                                <br/>
+                                <field name="fiskaly_tss_id"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                            <label for="fiskaly_client_id"/>
-                            <br/>
-                            <field name="fiskaly_client_id"/>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="fiskaly_client_id"/>
+                                <br/>
+                                <field name="fiskaly_client_id"/>
+                            </div>
                         </div>
                     </div>
                 </div>

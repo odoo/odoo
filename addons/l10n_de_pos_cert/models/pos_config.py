@@ -12,6 +12,14 @@ class PosConfig(models.Model):
     fiskaly_tss_id = fields.Char(string="TSS ID", readonly=True)
     fiskaly_client_id = fields.Char(string="Client ID", readonly=True)
     create_tss_flag = fields.Boolean(default=False)
+    is_company_country_germany = fields.Boolean(compute='_compute_is_company_country_germany')
+
+    @api.depends('company_id.country_id')
+    def _compute_is_company_country_germany(self):
+        if self.company_id.country_id and self.company_id.country_id.code == "DE":
+            self.is_company_country_germany = True
+        else:
+            self.is_company_country_germany = False
 
     def _check_fiskaly_key_secret(self):
         if not self.company_id.fiskaly_key or not self.company_id.fiskaly_secret:
@@ -22,8 +30,11 @@ class PosConfig(models.Model):
             raise UserError(_("You have to set your Fiskaly TSS ID and Client ID in your PoS settings."))
 
     def open_ui(self):
-        self._check_fiskaly_key_secret()
-        self._check_fiskaly_tss_client_ids()
+        if not self.company_id.country_id:
+            raise UserError(_("You have to set a country in your company setting."))
+        if self.company_id.country_id.code == "DE":
+            self._check_fiskaly_key_secret()
+            self._check_fiskaly_tss_client_ids()
         return super(PosConfig, self).open_ui()
 
     @api.model
@@ -40,14 +51,17 @@ class PosConfig(models.Model):
         return res
 
     def unlink(self):
-        cache = {
-            'fiskaly_tss_id': self.fiskaly_tss_id,
-            'fiskaly_secret': self.company_id.fiskaly_secret,
-            'fiskaly_key': self.company_id.fiskaly_key
-        }
-        res = super(PosConfig, self).unlink()
-        self.delete_tss(cache)
-        return res
+        if self.create_tss_flag:
+            cache = {
+                'fiskaly_tss_id': self.fiskaly_tss_id,
+                'fiskaly_secret': self.company_id.fiskaly_secret,
+                'fiskaly_key': self.company_id.fiskaly_key
+            }
+            res = super(PosConfig, self).unlink()
+            self.delete_tss(cache)
+            return res
+        else:
+            return super(PosConfig, self).unlink()
 
     def create_tss_process(self):
         if self.create_tss_flag and not self.fiskaly_tss_id and not self.fiskaly_client_id:
@@ -70,7 +84,7 @@ class PosConfig(models.Model):
 
     def delete_tss(self, cache):
         try:
-            url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
+            url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_kassensichv_api_url')
             timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
             headers = self.fiskaly_authentication(cache['fiskaly_secret'], cache['fiskaly_key'])
@@ -85,7 +99,7 @@ class PosConfig(models.Model):
             raise ValidationError(_("There are some connection issues between us and Fiskaly, try again later."))
 
     def fiskaly_authentication(self, secret, key):
-        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
+        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_kassensichv_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
         auth_response = requests.post(url + 'auth', {
@@ -99,7 +113,7 @@ class PosConfig(models.Model):
         return headers
 
     def retrieve_phantom_tss(self, headers):
-        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
+        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_kassensichv_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
         # We first check if we've already created a TSS and Client which are not linked yet to Odoo
@@ -127,7 +141,7 @@ class PosConfig(models.Model):
         return None
 
     def create_fiskaly_tss(self, headers):
-        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
+        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_kassensichv_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
         tss_id = str(uuid.uuid4())
@@ -140,7 +154,7 @@ class PosConfig(models.Model):
         return tss_id
 
     def create_fiskaly_client(self, headers, tss_id):
-        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_url')
+        url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_kassensichv_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
         client_id = str(uuid.uuid4())

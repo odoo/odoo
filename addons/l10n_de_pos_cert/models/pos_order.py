@@ -20,25 +20,25 @@ class PosOrder(models.Model):
     @api.model
     def _order_fields(self, ui_order):
         fields = super(PosOrder, self)._order_fields(ui_order)
-        fields['fiskaly_transaction_uuid'] = ui_order['fiskaly_uuid']
-        for key, value in ui_order['tss_info'].items():
-            fields['fiskaly_'+key] = value
-
+        if self.env.company.country_id and self.env.company.country_id.code == "DE":
+            fields['fiskaly_transaction_uuid'] = ui_order['fiskaly_uuid']
+            for key, value in ui_order['tss_info'].items():
+                fields['fiskaly_'+key] = value
         return fields
 
     def _export_for_ui(self, order):
         json = super(PosOrder, self)._export_for_ui(order)
-        tss_info = {
-            'transaction_number': order.fiskaly_transaction_number,
-            'time_start': order.fiskaly_time_start,
-            'time_end': order.fiskaly_time_end,
-            'certificate_serial': order.fiskaly_certificate_serial,
-            'timestamp_format': order.fiskaly_timestamp_format,
-            'signature_value': order.fiskaly_signature_value,
-            'signature_algorithm': order.fiskaly_signature_algorithm,
-            'signature_public_key': order.fiskaly_signature_public_key,
-            'client_serial_number': order.fiskaly_client_serial_number
-        }
-        json['tss_info'] = tss_info
-
+        if self.env.company.country_id and self.env.company.country_id.code == "DE":
+            tss_info = {
+                'transaction_number': order.fiskaly_transaction_number,
+                'time_start': order.fiskaly_time_start,
+                'time_end': order.fiskaly_time_end,
+                'certificate_serial': order.fiskaly_certificate_serial,
+                'timestamp_format': order.fiskaly_timestamp_format,
+                'signature_value': order.fiskaly_signature_value,
+                'signature_algorithm': order.fiskaly_signature_algorithm,
+                'signature_public_key': order.fiskaly_signature_public_key,
+                'client_serial_number': order.fiskaly_client_serial_number
+            }
+            json['tss_info'] = tss_info
         return json
