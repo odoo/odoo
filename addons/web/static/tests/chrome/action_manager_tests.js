@@ -2,6 +2,7 @@ odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var ajax = require('web.ajax');
 var ReportClientAction = require('report.client_action');
 var Notification = require('web.Notification');
 var NotificationService = require('web.NotificationService');
@@ -15,6 +16,7 @@ var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
 var SessionStorageService = require('web.SessionStorageService');
 var testUtils = require('web.test_utils');
+var WarningDialog = require('web.CrashManager').WarningDialog;
 var Widget = require('web.Widget');
 var createActionManager = testUtils.createActionManager;
 
@@ -579,6 +581,59 @@ QUnit.module('ActionManager', {
 
         await actionManager.doAction(5); // target 'new'
         assert.containsN(document.body, '.modal .o_form_view', 2);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('executing a window action with onchange warning does not hide it', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo.onChange = true;
+
+        this.archs['partner,false,form'] = `
+            <form>
+              <field name="foo"/>
+            </form>`;
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        value: {},
+                        warning: {
+                            title: "Warning",
+                            message: "Everything is alright",
+                            type: 'dialog',
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                warning: function (event) {
+                    new WarningDialog(actionManager, {
+                        title: event.data.title,
+                    }, event.data).open();
+                },
+            },
+        });
+
+        await actionManager.doAction(3);
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        assert.containsOnce(
+            $,
+            '.modal.o_technical_modal.show',
+            "Warning modal should be opened");
+
+        await testUtils.dom.click($('.modal.o_technical_modal.show button.close'));
+        assert.containsNone(
+            $,
+            '.modal.o_technical_modal.show',
+            "Warning modal should be closed");
 
         actionManager.destroy();
     });
