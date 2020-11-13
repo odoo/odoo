@@ -522,7 +522,7 @@ class MrpProduction(models.Model):
         return ['|', ('move_raw_ids', 'in', late_stock_moves.ids), ('move_finished_ids', 'in', late_stock_moves.ids)]
 
     @api.onchange('company_id')
-    def onchange_company_id(self):
+    def _onchange_company_id(self):
         if self.company_id:
             if self.move_raw_ids:
                 self.move_raw_ids.update({'company_id': self.company_id})
@@ -533,7 +533,7 @@ class MrpProduction(models.Model):
                 ], limit=1).id
 
     @api.onchange('product_id', 'picking_type_id', 'company_id')
-    def onchange_product_id(self):
+    def _onchange_product_id(self):
         """ Finds UoM of changed product. """
         if not self.product_id:
             self.bom_id = False
@@ -645,14 +645,12 @@ class MrpProduction(models.Model):
         self.move_finished_ids = update_value_list
 
     @api.onchange('picking_type_id')
-    def onchange_picking_type(self):
-        location = self.env.ref('stock.stock_location_stock')
-        try:
-            location.check_access_rule('read')
-        except (AttributeError, AccessError):
-            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id
-        self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
-        self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
+    def _onchange_picking_type(self):
+        if not self.picking_type_id.default_location_src_id or not self.picking_type_id.default_location_dest_id.id:
+            company_id = self.company_id.id if (self.company_id and self.company_id in self.env.companies) else self.env.company.id
+            fallback_loc = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).lot_stock_id
+        self.location_src_id = self.picking_type_id.default_location_src_id.id or fallback_loc.id
+        self.location_dest_id = self.picking_type_id.default_location_dest_id.id or fallback_loc.id
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
