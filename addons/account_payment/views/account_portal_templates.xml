@@ -28,7 +28,7 @@
                 <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
-                <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed' or last_tx.state == 'done'">
+                <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Reversed</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
