@@ -90,7 +90,8 @@ class StockMove(models.Model):
         'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
-    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
+    allowed_operation_ids = fields.One2many(
+        'mrp.routing.workcenter', related='raw_material_production_id.bom_id.operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]")
@@ -126,24 +127,6 @@ class StockMove(models.Model):
     def _compute_order_finished_lot_ids(self):
         for move in self:
             move.order_finished_lot_ids = move.raw_material_production_id.lot_producing_id
-
-    @api.depends('raw_material_production_id.bom_id')
-    def _compute_allowed_operation_ids(self):
-        for move in self:
-            if (
-                not move.raw_material_production_id or
-                not move.raw_material_production_id.bom_id or not
-                move.raw_material_production_id.bom_id.operation_ids
-            ):
-                move.allowed_operation_ids = self.env['mrp.routing.workcenter']
-            else:
-                operation_domain = [
-                    ('id', 'in', move.raw_material_production_id.bom_id.operation_ids.ids),
-                    '|',
-                        ('company_id', '=', self.company_id.id),
-                        ('company_id', '=', False)
-                ]
-                move.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
 
     @api.depends('raw_material_production_id.is_locked', 'production_id.is_locked')
     def _compute_is_locked(self):
