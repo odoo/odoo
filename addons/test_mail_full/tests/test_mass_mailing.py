@@ -63,11 +63,8 @@ class TestMassMailing(TestMailFullCommon):
                 recipient_info['state'] = 'ignored'
             # falsy: ignored (cancel mail)
             elif recipient == recipient_falsy_1:
-                # TDE FIXME: currently setting False as email
-                # recipient_info['state'] = 'ignored'
-                # recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
                 recipient_info['state'] = 'ignored'
-                recipient_info['email'] = False
+                recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
                 email = self._find_sent_mail_wemail(recipient.email_normalized)
                 # preview correctly integrated rendered jinja
