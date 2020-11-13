@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, _
 from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN
 from odoo.osv import expression
 
@@ -193,8 +193,8 @@ class RatingMixin(models.AbstractModel):
             if hasattr(self, 'message_post'):
                 feedback = tools.plaintext2html(feedback or '')
                 self.message_post(
-                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
-                    % (rate, rate, feedback),
+                    body="<span style='float:left;margin-right: 5px;'>%s:</span><img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+                    % (_("Rating"), rate, rate, feedback),
                     subtype_xmlid=subtype_xmlid or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
