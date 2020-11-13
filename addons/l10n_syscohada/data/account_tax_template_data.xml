@@ -39,7 +39,6 @@
                 'account_id': ref('pcg_4431'),
             }),
         ]"/>
-    <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_vente_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_services_18">
         <field name="name">TVA 18% (services)</field>
@@ -70,7 +69,6 @@
                 'account_id': ref('pcg_4432'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_services_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_travaux_18">
         <field name="name">TVA 18% (travaux)</field>
@@ -101,7 +99,6 @@
                 'account_id': ref('pcg_4433'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_travaux_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_lasm_18">
         <field name="name">TVA 18% (lasm)</field>
@@ -130,7 +127,6 @@
                 'repartition_type': 'tax',
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_lasm_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_services_10">
         <field name="name">TVA 10% (services)</field>
@@ -161,7 +157,6 @@
                 'account_id': ref('pcg_4433'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_services_10')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_assets_18">
         <field name="name">TVA 18% (immobilisations)</field>
@@ -192,7 +187,6 @@
                 'account_id': ref('pcg_4451'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_purchase_18">
         <field name="name">TVA 18% (achat)</field>
@@ -223,7 +217,6 @@
                 'account_id': ref('pcg_4452'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_transport_18">
         <field name="name">TVA 18% (transport)</field>
@@ -254,7 +247,6 @@
                 'account_id': ref('pcg_4453'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_transport_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_purchase_services_18">
         <field name="name">TVA 18% (achat service)</field>
@@ -285,7 +277,6 @@
                 'account_id': ref('pcg_4454'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_services_18')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_achat_services_10">
         <field name="name">TVA 10% (achat service taux reduit)</field>
@@ -316,7 +307,6 @@
                 'account_id': ref('pcg_4454'),
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_purchase_services_10')])]"/> -->
     </record>
     <record model="account.tax.template" id="tva_exonere">
         <field name="name">Exonéré de TVA (vente)</field>
@@ -344,6 +334,5 @@
                 'repartition_type': 'tax',
             }),
         ]"/>
-        <!-- <field name="tag_ids" eval="[(6,0,[ref('TVA_vente_exempt_0')])]"/> -->
     </record>
 </odoo>
