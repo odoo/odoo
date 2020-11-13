@@ -52,6 +52,8 @@ class TestProcRule(TransactionCase):
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 10.00,
                 'procure_method': 'make_to_order',
+                'location_id': self.ref('stock.stock_location_output'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         }
         pick_output = self.env['stock.picking'].create(vals)

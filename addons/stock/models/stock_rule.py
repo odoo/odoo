@@ -489,10 +489,8 @@ class ProcurementGroup(models.Model):
             ('state', 'in', ['confirmed', 'partially_available']),
             ('product_uom_qty', '!=', 0.0)
         ]
-        # TODO: make picking_type_id/reservation method one value on stock.move
-        moves_domain = expression.AND([moves_domain, ['|', '|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
-                                                                ('picking_id.picking_type_id.reservation_method', '=', 'at_confirm'),
-                                                                ('reservation_date', '<=', fields.Date.today())]])
+        moves_domain = expression.AND([moves_domain, ['|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
+                                                           ('reservation_date', '<=', fields.Date.today())]])
         if company_id:
             moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
         return moves_domain

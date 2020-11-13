@@ -115,6 +115,13 @@ class StockMove(models.Model):
         for move in self:
             move.priority = move.raw_material_production_id.priority or move.priority or '0'
 
+    @api.depends('raw_material_production_id.picking_type_id', 'production_id.picking_type_id')
+    def _compute_picking_type_id(self):
+        super()._compute_picking_type_id()
+        for move in self:
+            if move.raw_material_production_id or move.production_id:
+                move.picking_type_id = (move.raw_material_production_id or move.production_id).picking_type_id
+
     @api.depends('raw_material_production_id.lot_producing_id')
     def _compute_order_finished_lot_ids(self):
         for move in self:
