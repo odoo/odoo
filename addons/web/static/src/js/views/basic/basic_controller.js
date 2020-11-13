@@ -124,11 +124,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                                 }
                                 resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
                                 self.discardingDef = null;
-                            }, () => {
-                                reject();
-                                self._enableButtons();
-                                self.discardingDef = null;
                             });
+                            // , () => {
+                            //     reject();
+                            //     self._enableButtons();
+                            //     self.discardingDef = null;
+                            // });
                         },
                     },
                     {
