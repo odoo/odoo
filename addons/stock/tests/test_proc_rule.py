@@ -57,7 +57,7 @@ class TestProcRule(TransactionCase):
             })],
         }
         pick_output = self.env['stock.picking'].create(vals)
-        pick_output.move_lines.onchange_product_id()
+        pick_output.move_lines._onchange_product_id()
 
         # Confirm delivery order.
         pick_output.action_confirm()
