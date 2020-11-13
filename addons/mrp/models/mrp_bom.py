@@ -291,7 +291,7 @@ class MrpBomLine(models.Model):
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
-    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
+    allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Consumed in Operation', check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]",
@@ -342,20 +342,6 @@ class MrpBomLine(models.Model):
         """ If the BOM line refers to a BOM, return the ids of the child BOM lines """
         for line in self:
             line.child_line_ids = line.child_bom_id.bom_line_ids.ids or False
-
-    @api.depends('bom_id')
-    def _compute_allowed_operation_ids(self):
-        for bom_line in self:
-            if not bom_line.bom_id.operation_ids:
-                bom_line.allowed_operation_ids = self.env['mrp.routing.workcenter']
-            else:
-                operation_domain = [
-                    ('id', 'in', bom_line.bom_id.operation_ids.ids),
-                    '|',
-                        ('company_id', '=', bom_line.company_id.id),
-                        ('company_id', '=', False)
-                ]
-                bom_line.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -433,24 +419,10 @@ class MrpByProduct(models.Model):
         default=1.0, digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', index=True)
-    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
+    allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Produced in Operation', check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]")
-
-    @api.depends('bom_id')
-    def _compute_allowed_operation_ids(self):
-        for byproduct in self:
-            if not byproduct.bom_id.operation_ids:
-                byproduct.allowed_operation_ids = self.env['mrp.routing.workcenter']
-            else:
-                operation_domain = [
-                    ('id', 'in', byproduct.bom_id.operation_ids.ids),
-                    '|',
-                        ('company_id', '=', byproduct.company_id.id),
-                        ('company_id', '=', False)
-                ]
-                byproduct.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
 
     @api.onchange('product_id')
     def onchange_product_id(self):
