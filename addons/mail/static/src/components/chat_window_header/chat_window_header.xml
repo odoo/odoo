@@ -28,13 +28,15 @@
                 </t>
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
-                    <t t-if="chatWindow.hasShiftLeft">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftLeft" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftLeft" title="Shift left">
+                    <t t-if="chatWindow.hasShiftPrev">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftPrev" t-att-title="shiftPrevText">
+                            <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-left"/>
                         </div>
                     </t>
-                    <t t-if="chatWindow.hasShiftRight">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftRight" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftRight" title="Shift right">
+                    <t t-if="chatWindow.hasShiftNext">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickShiftNext" t-att-title="shiftNextText">
+                            <!-- this is reversed automatically when language is rtl -->
                             <i class="fa fa-angle-right"/>
                         </div>
                     </t>
