@@ -74,7 +74,11 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     content: "Check a template is listed",
     in_modal: false,
     trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
-    run() {},
+    run() {
+        // calling many2one input will press keydown event which will make floating true
+        // due to which we have to explicitly close m2o dropdown
+        document.querySelector('.modal .o_content .o_form_view').click();
+    },
 }, {
     content: "Send message",
     trigger: '.o_mail_send',
