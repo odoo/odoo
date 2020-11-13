@@ -518,7 +518,7 @@ cursor for the current database transaction and allows executing SQL directly,
 either for queries which are difficult to express using the ORM (e.g. complex
 joins) or for performance reasons::
 
-    self.env.cr.execute("some_sql", param1, param2, param3)
+    self.env.cr.execute("some_sql", params)
 
 Because models use the same cursor and the :class:`~odoo.api.Environment`
 holds various caches, these caches must be invalidated when *altering* the
