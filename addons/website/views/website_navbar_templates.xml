@@ -66,6 +66,15 @@
                 </ul>
 
                 <ul class="o_menu_systray d-none d-md-block" groups="website.group_website_publisher">
+                    <li id="warning-issues" class="d-none">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" accesskey="i">
+                            <i class="fa fa-exclamation-triangle text-warning"/>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <!-- TODO write that page and keep it updated -->
+                            <a role="menuitem" href="https://www.odoo.com/website/seo-best-practices" class="dropdown-item text-info small text-center">More info</a>
+                        </div>
+                    </li>
                     <t t-call="website.website_publisher">
                         <t t-set="extra_classes" t-value=""/>
                         <t t-set="desktop_navbar" t-value="true"/>
