@@ -26,7 +26,8 @@ var Tip = Widget.extend({
      *    - handler [function] the handler
      *  - position [String] tip's position ('top', 'right', 'left' or 'bottom'), default 'right'
      *  - width [int] the width in px of the tip when opened, default 270
-     *  - space [int] space in px between anchor and tip, default 10
+     *  - space [int] space in px between anchor and tip, default to 0, added to
+     *    the natural space chosen in css
      *  - hidden [boolean] if true, the tip won't be visible (but the handlers will still be
      *    bound on the anchor, so that the tip is consumed if the user clicks on it)
      *  - overlay [Object] x and y values for the number of pixels the mouseout detection area
@@ -37,7 +38,7 @@ var Tip = Widget.extend({
         this.info = _.defaults(info, {
             position: "right",
             width: 270,
-            space: 10,
+            space: 0,
             overlay: {
                 x: 50,
                 y: 50,
@@ -74,9 +75,9 @@ var Tip = Widget.extend({
     start() {
         this.$tooltip_overlay = this.$(".o_tooltip_overlay");
         this.$tooltip_content = this.$(".o_tooltip_content");
-        this.init_width = this.$el.innerWidth();
-        this.init_height = this.$el.innerHeight();
-        this.double_border_width = this.$el.outerWidth() - this.init_width;
+        this.init_width = this.$el.outerWidth();
+        this.init_height = this.$el.outerHeight();
+        this.double_border_width = 0; // TODO remove me in master
         this.content_width = this.$tooltip_content.outerWidth(true);
         this.content_height = this.$tooltip_content.outerHeight(true);
         this.$tooltip_content.html(this.info.scrollContent);
@@ -98,7 +99,7 @@ var Tip = Widget.extend({
         this._updatePosition(true);
 
         this.$el.toggleClass('d-none', !!this.info.hidden);
-        this.el.style.setProperty('opacity', '1', 'important');
+        this.el.classList.add('o_tooltip_visible');
         core.bus.on("resize", this, _.debounce(function () {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
@@ -326,8 +327,8 @@ var Tip = Widget.extend({
         const offset = {top: this.$el[0].offsetTop, left: this.$el[0].offsetLeft};
         this.$tooltip_overlay.css({
             top: -Math.min((this.info.position === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
-            right: -Math.min((this.info.position === positionRight ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width + this.double_border_width)),
-            bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height + this.double_border_width)),
+            right: -Math.min((this.info.position === positionRight ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width)),
+            bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height)),
             left: -Math.min((this.info.position === positionLeft ? this.info.space : this.info.overlay.x), offset.left),
         });
         this.position = offset;
@@ -437,9 +438,9 @@ var Tip = Widget.extend({
         var overflow = false;
         var posVertical = (this.info.position === "top" || this.info.position === "bottom");
         if (posVertical) {
-            overflow = (offset.left + this.content_width + this.double_border_width + this.info.overlay.x > this.$window.width());
+            overflow = (offset.left + this.content_width + this.info.overlay.x > this.$window.width());
         } else {
-            overflow = (offset.top + this.content_height + this.double_border_width + this.info.overlay.y > this.$window.height());
+            overflow = (offset.top + this.content_height + this.info.overlay.y > this.$window.height());
         }
         if (posVertical && overflow || this.info.position === "left" || (_t.database.parameters.direction === 'rtl' && this.info.position == "right")) {
             mbLeft -= (this.content_width - this.init_width);
@@ -482,7 +483,6 @@ var Tip = Widget.extend({
         this.timerOut = undefined;
 
         this.tip_opened = false;
-
         this.$el.removeClass("active").addClass("o_animated");
         this.el.style.setProperty('width', `${this.init_width}px`, 'important');
         this.el.style.setProperty('height', `${this.init_height}px`, 'important');
