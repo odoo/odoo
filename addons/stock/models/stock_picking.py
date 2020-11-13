@@ -118,9 +118,9 @@ class PickingType(models.Model):
                     })
         return super(PickingType, self).write(vals)
 
-    def _compute_picking_count(self):
+    def _compute_picking_count_domains(self):
         # TDE TODO count picking can be done using previous two
-        domains = {
+        return {
             'count_picking_draft': [('state', '=', 'draft')],
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state', '=', 'assigned')],
@@ -128,6 +128,9 @@ class PickingType(models.Model):
             'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed'))],
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
+
+    def _compute_picking_count(self):
+        domains = self._compute_picking_count_domains()
         for field in domains:
             data = self.env['stock.picking'].read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
