@@ -400,6 +400,7 @@ var Wysiwyg = Widget.extend({
                     }
                 }
                 this.snippetsMenu.updateJabberwockToolbarContainer(currentSelectionType);//.bind(this.snippetsMenu);
+                this.snippetsMenu.updateCurrentSnippetEditorOverlay();
 
                 if (params.commandNames.includes('undo') || params.commandNames.includes('redo')) {
                     setTimeout(() => {
