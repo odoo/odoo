@@ -148,76 +148,6 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(self.product1.value_svl, 120)
 
-    def test_change_currency_rate_average_1(self):
-        """ Confirm a purchase order in another currency and create the associated receipt, change
-        the currency rate, validate the receipt and then check that the value of the received goods
-        is set according to the last currency rate.
-        """
-        self.env['res.currency.rate'].search([]).unlink()
-        usd_currency = self.env.ref('base.USD')
-        self.env.company.currency_id = usd_currency.id
-
-        eur_currency = self.env.ref('base.EUR')
-
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-
-        # default currency is USD, create a purchase order in EUR
-        po1 = self.env['purchase.order'].create({
-            'partner_id': self.partner_id.id,
-            'currency_id': eur_currency.id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product1.name,
-                    'product_id': self.product1.id,
-                    'product_qty': 10.0,
-                    'product_uom': self.product1.uom_po_id.id,
-                    'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                }),
-            ],
-        })
-        po1.button_confirm()
-
-        picking1 = po1.picking_ids[0]
-        move1 = picking1.move_lines[0]
-
-        # convert the price unit in the company currency
-        price_unit_usd = po1.currency_id._convert(
-            po1.order_line.price_unit, po1.company_id.currency_id,
-            self.env.company, fields.Date.today(), round=False)
-
-        # the unit price of the move is the unit price of the purchase order line converted in
-        # the company's currency
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
-
-        # change the rate of the currency
-        self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y-%m-%d'),
-            'rate': 2.0,
-            'currency_id': eur_currency.id,
-            'company_id': po1.company_id.id,
-        })
-        eur_currency._compute_current_rate()
-        price_unit_usd_new_rate = po1.currency_id._convert(
-            po1.order_line.price_unit, po1.company_id.currency_id,
-            self.env.company, fields.Date.today(), round=False)
-
-        # the new price_unit is lower than th initial because of the rate's change
-        self.assertLess(price_unit_usd_new_rate, price_unit_usd)
-
-        # the unit price on the stock move is not directly updated
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
-
-        # validate the receipt
-        res_dict = picking1.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        wizard.process()
-
-        # the unit price of the valuation layer used the latest value
-        self.assertAlmostEqual(move1.stock_valuation_layer_ids.unit_cost, price_unit_usd_new_rate)
-
-        self.assertAlmostEqual(self.product1.value_svl, price_unit_usd_new_rate * 10, delta=0.1)
-
     def test_extra_move_fifo_1(self):
         """ Check that the extra move when over processing a receipt is correctly merged back in
         the original move.
@@ -352,6 +282,76 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
             'property_stock_journal': cls.stock_journal.id,
         })
+
+    def test_change_currency_rate_average_1(self):
+        """ Confirm a purchase order in another currency and create the associated receipt, change
+        the currency rate, validate the receipt and then check that the value of the received goods
+        is set according to the last currency rate.
+        """
+        self.env['res.currency.rate'].search([]).unlink()
+        usd_currency = self.env.ref('base.USD')
+        self.env.company.currency_id = usd_currency.id
+
+        eur_currency = self.env.ref('base.EUR')
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+
+        # default currency is USD, create a purchase order in EUR
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'currency_id': eur_currency.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+
+        picking1 = po1.picking_ids[0]
+        move1 = picking1.move_lines[0]
+
+        # convert the price unit in the company currency
+        price_unit_usd = po1.currency_id._convert(
+            po1.order_line.price_unit, po1.company_id.currency_id,
+            self.env.company, fields.Date.today(), round=False)
+
+        # the unit price of the move is the unit price of the purchase order line converted in
+        # the company's currency
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
+
+        # change the rate of the currency
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-%m-%d'),
+            'rate': 2.0,
+            'currency_id': eur_currency.id,
+            'company_id': po1.company_id.id,
+        })
+        eur_currency._compute_current_rate()
+        price_unit_usd_new_rate = po1.currency_id._convert(
+            po1.order_line.price_unit, po1.company_id.currency_id,
+            self.env.company, fields.Date.today(), round=False)
+
+        # the new price_unit is lower than th initial because of the rate's change
+        self.assertLess(price_unit_usd_new_rate, price_unit_usd)
+
+        # the unit price on the stock move is not directly updated
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
+
+        # validate the receipt
+        res_dict = picking1.button_validate()
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        # the unit price of the valuation layer used the latest value
+        self.assertAlmostEqual(move1.stock_valuation_layer_ids.unit_cost, price_unit_usd_new_rate)
+
+        self.assertAlmostEqual(self.product1.value_svl, price_unit_usd_new_rate * 10, delta=0.1)
 
     def test_fifo_anglosaxon_return(self):
         self.env.company.anglo_saxon_accounting = True
