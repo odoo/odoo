@@ -19,7 +19,6 @@ class TestMassMailing(TestMailFullCommon):
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_w_blacklist_opt_out(self):
-        # TDE FIXME: better URLs check for unsubscribe / view (res_id + email + correct parse of url)
         mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
 
         mailing.write({'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id})
@@ -64,11 +63,8 @@ class TestMassMailing(TestMailFullCommon):
                 recipient_info['state'] = 'ignored'
             # falsy: ignored (cancel mail)
             elif recipient == recipient_falsy_1:
-                # TDE FIXME: currently setting False as email
-                # recipient_info['state'] = 'ignored'
-                # recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
                 recipient_info['state'] = 'ignored'
-                recipient_info['email'] = False
+                recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
                 email = self._find_sent_mail_wemail(recipient.email_normalized)
                 # preview correctly integrated rendered jinja
