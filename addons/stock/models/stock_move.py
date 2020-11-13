@@ -132,7 +132,7 @@ class StockMove(models.Model):
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time', compute="_compute_delay_alert_date", store=True)
-    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
+    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', compute='_compute_picking_type_id', store=True, check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
     move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=['|', ('product_qty', '=', 0.0), ('qty_done', '!=', 0.0)])
@@ -156,10 +156,10 @@ class StockMove(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure', inverse='_quantity_done_set')
-    show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations', readonly=False)
+    show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
+    picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     show_reserved_availability = fields.Boolean('From Supplier', compute='_compute_show_reserved_availability')
-    picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     product_type = fields.Selection(related='product_id.type', readonly=True)
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(compute='_compute_is_locked', readonly=True)
@@ -200,6 +200,12 @@ class StockMove(models.Model):
         for move in self:
             move.priority = move.picking_id.priority or '0'
 
+    @api.depends('picking_id.picking_type_id')
+    def _compute_picking_type_id(self):
+        for move in self:
+            if move.picking_id:
+                move.picking_type_id = move.picking_id.picking_type_id
+
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
         for move in self:
@@ -225,10 +231,10 @@ class StockMove(models.Model):
             elif len(move.move_line_ids) > 1:
                 move.show_details_visible = True
             else:
-                move.show_details_visible = (((consignment_enabled and move.picking_id.picking_type_id.code != 'incoming') or
+                move.show_details_visible = (((consignment_enabled and move.picking_code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and
                                              move._show_details_in_draft() and
-                                             move.picking_id.picking_type_id.show_operations is False)
+                                             move.show_operations is False)
 
     def _compute_show_reserved_availability(self):
         """ This field is only of use in an attrs in the picking view, in order to hide the
@@ -300,7 +306,7 @@ class StockMove(models.Model):
             else:
                 move.delay_alert_date = False
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id')
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id.show_reserved')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
@@ -400,7 +406,7 @@ class StockMove(models.Model):
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
-    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty', 'location_id')
+    @api.depends('product_id', 'picking_type_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty', 'location_id')
     def _compute_forecast_information(self):
         """ Compute forecasted information of the related product by warehouse."""
         self.forecast_availability = False
@@ -415,11 +421,10 @@ class StockMove(models.Model):
 
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
         for move in product_moves:
-            picking_type = move.picking_type_id or move.picking_id.picking_type_id
             is_unreserved = move.state in ('waiting', 'confirmed', 'partially_available')
-            if picking_type.code in self._consuming_picking_types() and is_unreserved:
+            if move.picking_type_id.code in self._consuming_picking_types() and is_unreserved:
                 outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
-            elif picking_type.code in self._consuming_picking_types():
+            elif move.picking_type_id.code in self._consuming_picking_types():
                 move.forecast_availability = move.reserved_availability
 
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
@@ -497,17 +502,13 @@ class StockMove(models.Model):
                     move_lines_commands.append((0, 0, move_line_vals))
             move.write({'move_line_ids': move_lines_commands})
 
-    @api.depends('picking_id', 'picking_type_id', 'date')
+    @api.depends('picking_type_id', 'date')
     def _compute_reservation_date(self):
         for move in self:
-            if move.state in ['draft', 'confirmed', 'waiting', 'partially_available']:
-                picking_type_id = False
-                if move.picking_type_id:
-                    picking_type_id = move.picking_type_id
-                elif move.picking_id:
-                    picking_type_id = move.picking_id.picking_type_id
-                if picking_type_id and picking_type_id.reservation_method == 'by_date':
-                    move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=move.picking_type_id.reservation_days_before)
+            if move.state not in ['draft', 'confirmed', 'waiting', 'partially_available']:
+                continue
+            if move.picking_type_id and move.picking_type_id.reservation_method == 'by_date':
+                move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=move.picking_type_id.reservation_days_before)
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -614,13 +615,11 @@ class StockMove(models.Model):
         """
         self.ensure_one()
 
-        picking_type_id = self.picking_type_id or self.picking_id.picking_type_id
-
         # If "show suggestions" is not checked on the picking type, we have to filter out the
         # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
         # different views to display one field or another so that the webclient doesn't have to
         # fetch both.
-        if picking_type_id.show_reserved:
+        if self.picking_type_id.show_reserved:
             view = self.env.ref('stock.view_stock_move_operations')
         else:
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
@@ -637,8 +636,8 @@ class StockMove(models.Model):
             'context': dict(
                 self.env.context,
                 show_owner=self.picking_type_id.code != 'incoming',
-                show_lots_m2o=self.has_tracking != 'none' and (picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
-                show_lots_text=self.has_tracking != 'none' and picking_type_id.use_create_lots and not picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
+                show_lots_m2o=self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
+                show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
                 show_source_location=self.picking_type_id.code != 'incoming',
                 show_destination_location=self.picking_type_id.code != 'outgoing',
                 show_package=not self.location_id.usage == 'supplier',
@@ -897,7 +896,7 @@ class StockMove(models.Model):
                 'warning': {'title': _('Warning'), 'message': _('Existing Serial numbers (%s). Please correct the serial numbers encoded.') % ','.join(used_lots.lot_id.mapped('display_name'))}
             }
 
-    @api.onchange('move_line_ids', 'move_line_nosuggest_ids')
+    @api.onchange('move_line_ids', 'move_line_nosuggest_ids', 'picking_type_id')
     def onchange_move_line_ids(self):
         if not self.picking_type_id.use_create_lots:
             # This onchange manages the creation of multiple lot name. We don't
@@ -1141,7 +1140,6 @@ class StockMove(models.Model):
                        and move.state == 'confirmed'
                        and (move._should_bypass_reservation()
                             or move.picking_type_id.reservation_method == 'at_confirm'
-                            or move.picking_id.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
              ._action_assign()
         if new_push_moves:
@@ -1169,7 +1167,7 @@ class StockMove(models.Model):
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,
-            'warehouse_id': self.warehouse_id or self.picking_id.picking_type_id.warehouse_id or self.picking_type_id.warehouse_id,
+            'warehouse_id': self.warehouse_id or self.picking_type_id.warehouse_id,
             'priority': self.priority,
             'orderpoint_id': self.orderpoint_id,
         }
@@ -1800,8 +1798,7 @@ class StockMove(models.Model):
         for move in self:
             domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
         static_domain = [('state', 'in', ['confirmed', 'partially_available']), ('procure_method', '=', 'make_to_stock')]
-        reservation_domain = ['|', '|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
-                              ('picking_id.picking_type_id.reservation_method', '=', 'at_confirm'),
-                              ('reservation_date', '<=', fields.Date.today())]
+        reservation_domain = ['|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
+                                   ('reservation_date', '<=', fields.Date.today())]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains), reservation_domain]))
         moves_to_reserve._action_assign()

@@ -453,6 +453,8 @@ class TestProcurement(TestMrpCommon):
                 'product_uom': product_1.uom_id.id,
                 'product_uom_qty': 10.00,
                 'procure_method': 'make_to_stock',
+                'location_id': self.warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
         pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
