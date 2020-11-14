@@ -45,6 +45,13 @@ class lang(osv.osv):
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
+        """ Create the given language if necessary, and make it active. """
+        # if the language exists, simply make it active
+        lang_ids = self.search(cr, uid, [('code', '=', lang)], context={'active_test': False})
+        if lang_ids:
+            self.write(cr, uid, lang_ids, {'active': True})
+            return lang_ids[0]
+
         # create the language with locale information
         fail = True
         iso_lang = tools.get_iso_codes(lang)

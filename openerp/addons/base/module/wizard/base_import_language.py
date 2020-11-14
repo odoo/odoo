@@ -35,6 +35,7 @@ class base_language_import(osv.osv_memory):
         this = self.browse(cr, uid, ids[0])
         if this.overwrite:
             context = dict(context, overwrite=True)
+        self.env["res.lang"].load_lang(cr, uid, lang=self.code, lang_name=self.name)
         fileobj = TemporaryFile('w+')
         try:
             fileobj.write(base64.decodestring(this.data))
