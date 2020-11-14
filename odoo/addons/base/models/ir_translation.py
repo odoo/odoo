@@ -228,7 +228,7 @@ class IrTranslation(models.Model):
 
         CREATE TRIGGER sync_jsonb_model_tanslation
         AFTER INSERT OR UPDATE OR DELETE ON ir_translation
-        FOR EACH ROW EXECUTE FUNCTION sync_jsonb_model_tanslation()
+        FOR EACH ROW EXECUTE PROCEDURE sync_jsonb_model_tanslation();
         """)
 
         return res
