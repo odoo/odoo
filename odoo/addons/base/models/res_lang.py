@@ -93,9 +93,10 @@ class Lang(models.Model):
         model_fields = self.env["ir.model.fields"].search(
             [("translate", "=", True), ("translation_storage", "=", "json")])
         for model_field in model_fields:
-            model = self.env[model_field.model]
-            field = model._fields[model_field.name]
-            field._update_translation_index(model)
+            if model_field.model in self.env:
+                model = self.env[model_field.model]
+                field = model._fields[model_field.name]
+                field._update_translation_index(model)
 
     @api.model
     def load_lang(self, lang, lang_name=None):
