@@ -197,6 +197,39 @@ class IrTranslation(models.Model):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src)) WHERE type = 'code'")
         if not tools.index_exists(self._cr, 'ir_translation_model_unique'):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_model_unique ON ir_translation (type, lang, name, res_id) WHERE type = 'model'")
+        self._cr.execute("""
+        DROP TRIGGER IF EXISTS sync_jsonb_model_tanslation ON ir_translation;
+
+        CREATE OR REPLACE FUNCTION sync_jsonb_model_tanslation() RETURNS TRIGGER AS
+        $func$
+        DECLARE
+            model_table varchar;
+            field_col varchar;
+            _name varchar;
+        BEGIN
+            IF (new.type = 'model' or old.type='model') THEN
+                _name := COALESCE(new.name, old.name);
+                model_table := REPLACE(SPLIT_PART(_name, ',', 1), '.', '_')::varchar;
+                field_col := SPLIT_PART(_name ,',', 2)::varchar || '_translations';
+                PERFORM COLUMN_NAME FROM information_schema.columns where columns.table_name = model_table and columns.column_name = field_col;
+                IF FOUND THEN
+                    IF (TG_OP = 'DELETE') THEN
+                        EXECUTE FORMAT('UPDATE %I SET %I = %I - $1 WHERE id = $2', model_table, field_col, field_col) USING OLD.lang, OLD.res_id;
+                    ELSIF (TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND NEW.value <> OLD.value)) THEN
+                        EXECUTE FORMAT('UPDATE %I SET %I = jsonb_set(%I, ''{%I}'', to_jsonb($1)) WHERE id = $2', model_table, field_col, field_col, NEW.lang) USING COALESCE(NULLIF(NEW.value, ''), NEW.src), NEW.res_id;
+                    END IF;
+                END IF;
+            END IF;
+            RETURN NULL;
+        END
+        $func$
+        LANGUAGE plpgsql;
+
+
+        CREATE TRIGGER sync_jsonb_model_tanslation
+        AFTER INSERT OR UPDATE OR DELETE ON ir_translation
+        FOR EACH ROW EXECUTE FUNCTION sync_jsonb_model_tanslation()
+        """)
 
         return res
 
@@ -550,47 +583,6 @@ class IrTranslation(models.Model):
                     if value2 != value0:
                         raise ValidationError(_("Translation is not valid:\n%s") % val)
 
-    def _sync_translation_column(self):
-        for record in self.filtered(lambda r: r.type == 'model'):
-            mname, fname = record.name.split(',')
-            model = self.env[mname]
-            field = model._fields[fname]
-            if field.translation_storage != "json":
-                continue
-            self.env.cr.execute("""
-                UPDATE
-                    %s
-                SET %s = jsonb_set(%s, '{\"%s\"}', to_jsonb(%s::text))
-                WHERE id = %s
-            """, (
-                AsIs(model._table),
-                AsIs(field.translation_column),
-                AsIs(field.translation_column),
-                AsIs(record.lang),
-                record.value,
-                record.res_id,
-            ))
-
-    def _clean_translation_colum(self):
-        for record in self.filtered(lambda r: r.type == 'model'):
-            mname, fname = record.name.split(',')
-            model = self.env[mname]
-            field = model._fields[fname]
-            if field.translation_storage != "json":
-                continue
-            self.env.cr.execute("""
-                UPDATE
-                    %s
-                SET %s = %s - %s
-                WHERE id = %s
-            """, (
-                AsIs(model._table),
-                AsIs(field.translation_column),
-                AsIs(field.translation_column),
-                record.lang,
-                record.res_id
-            ))
-
     @api.model_create_multi
     def create(self, vals_list):
         records = super(IrTranslation, self.sudo()).create(vals_list).with_env(self.env)
@@ -598,7 +590,7 @@ class IrTranslation(models.Model):
         records._modified()
         # DLE P62: `test_translate.py`, `test_sync`
         self.flush()
-        records._sync_translation_column()
+        return records
 
     def write(self, vals):
         if vals.get('value'):
@@ -615,13 +607,11 @@ class IrTranslation(models.Model):
         # this causes issues when changing the src/value of a translation, as when we read, we ask the flush,
         # but its not really the field which is in the towrite values, but its translation
         self.flush()
-        self._sync_translation_column()
         return result
 
     def unlink(self):
         self.check('unlink')
         self._modified()
-        self._clean_translation_column()
         return super(IrTranslation, self.sudo()).unlink()
 
     @api.model

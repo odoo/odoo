@@ -2458,9 +2458,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
-            column_format = field.column_format
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, column_format, column_name)
+                self._table, column_name, field.column_format, column_name)
             self._cr.execute(query, (value,))
 
     @ormcache()
