@@ -123,7 +123,7 @@ class Followers(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(Followers, self).create(vals)
+        res = super(Followers, self).create(vals)._check_rights()
         res._invalidate_documents()
         return res
 
@@ -132,6 +132,7 @@ class Followers(models.Model):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
         res = super(Followers, self).write(vals)
+        self._check_rights()
         self._invalidate_documents()
         return res
 
@@ -139,6 +140,21 @@ class Followers(models.Model):
     def unlink(self):
         self._invalidate_documents()
         return super(Followers, self).unlink()
+
+    def _check_rights(self):
+        user_partner = self.env.user.partner_id
+        for record in self:
+            obj = self.env[record.res_model].browse(record.res_id)
+            if record.channel_id or record.partner_id != user_partner:
+                obj.check_access_rights('write')
+                obj.check_access_rule('write')
+                subject = record.channel_id or record.partner_id
+                subject.check_access_rights('read')
+                subject.check_access_rule('read ')
+            else:
+                obj.check_access_rights('read')
+                obj.check_access_rule('read')
+        return self
 
     _sql_constraints = [
         ('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.'),
