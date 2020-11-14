@@ -206,14 +206,17 @@ class IrTranslation(models.Model):
             model_table varchar;
             field_col varchar;
             _name varchar;
+            _value varchar;
+            _type varchar;
         BEGIN
-            IF (new.type = 'model' or old.type='model') THEN
-                
-                IF TG_OP = 'UPDATE' or TG_OP = 'DELETE' THEN 
-                    _name := old.name;
-                ELSE
-                    _name := new.name;
-                END IF;
+            IF TG_OP = 'UPDATE' or TG_OP = 'DELETE' THEN 
+                _name := old.name;
+                _type := old.type;
+            ELSE
+                _name := new.name;
+                _type := new.type;
+            END IF;
+            IF (_type = 'model') THEN
                 model_table := REPLACE(SPLIT_PART(_name, ',', 1), '.', '_')::varchar;
                 field_col := SPLIT_PART(_name ,',', 2)::varchar || '_translations';
                 PERFORM COLUMN_NAME FROM information_schema.columns where columns.table_name = model_table and columns.column_name = field_col;
