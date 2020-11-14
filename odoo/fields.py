@@ -22,7 +22,7 @@ import psycopg2
 
 from psycopg2.extensions import AsIs
 
-from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
+from .tools import config, float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
     ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process, merge_sequences
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -1372,24 +1372,33 @@ class _String(Field):
 
     _related_translate = property(attrgetter('translate'))
 
-    def update_db(self, model, columns):
-        super().update_db(model, columns)
-        if self.translate and self.translation_storage == "json":
-            column = columns.get(self.name)
-            if not column:
-                self.update_translation_column(model, column)
-
     def update_db_column(self, model, column):
         super().update_db_column(model, column)
         if self.translate and self.translation_storage == "json":
             if not column or not sql.column_exists(model._cr, model._table, self.translation_column):
                 # the jsonb translation column does not exist, create it
                 sql.create_column(model._cr, model._table, self.translation_column, "jsonb", self.string + " translations")
+                self.update_translation_column(model, column)
 
     def update_translation_column(self, model, column):
         if not sql.column_exists(model._cr, model._table, self.translation_column):
             return
         cr = model._cr
+        # initialize default lang
+        default_lang = (config.get('load_language') or 'en_US').split(',')[0]
+        _logger.info("Init default translations for %s field '%s' in %s", model._name, self.name, default_lang)
+        cr.execute("""
+            UPDATE
+                %s
+            SET %s = jsonb_set(%s, '{\"%s\"}', to_jsonb(%s))
+        """, (
+            AsIs(model._table),
+            AsIs(self.translation_column),
+            AsIs(self.translation_column),
+            AsIs(default_lang),
+            AsIs(self.name),
+        ))
+        # add translations
         query = """SELECT DISTINCT lang FROM ir_translation
                     WHERE name = %s AND ir_translation.type = 'model'"""
         cr.execute(query, ("%s,%s" % (model._name, self.name),))
@@ -1407,6 +1416,8 @@ class _String(Field):
                     and ir_translation.type = 'model'
                     and lang = %s
                     and ir_translation.name = '%s,%s'
+                    and value <> ''
+                    and value is not null
 
                 """, (AsIs(model._table),
                       AsIs(self.translation_column),

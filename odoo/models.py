@@ -4268,14 +4268,12 @@ Fields:
 
         :return: the qualified field name (or expression) to use for ``field``
         """
-        if self._fields[field].translation_storage == 'json':
-            source_value = '"%s"."%s"' % (table_alias, field)
-            if self.env.lang:
+        if self.env.lang:
+            if self._fields[field].translation_storage == 'json':
+                source_value = '"%s"."%s"' % (table_alias, field)
                 translated_value = '"%s"."%s"->>\'%s\'' % (table_alias, self._fields[field].translation_column, self.env.lang)
                 return 'COALESCE(%s, %s)' % (translated_value, source_value)
-            else:
-                return source_value
-        if self.env.lang:
+
             alias, alias_statement = query.add_join(
                 (table_alias, 'ir_translation', 'id', 'res_id', field),
                 implicit=False,
