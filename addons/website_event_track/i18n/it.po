@@ -7,7 +7,6 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Martin Trigaux, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -34,7 +33,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
 msgid "# Wishlisted"
-msgstr ""
+msgstr "N. nella lista dei desideri"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/website.py:0
@@ -114,17 +113,19 @@ msgstr "<b>Introduzione presentazione</b>:"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
 msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban mr-2\"/>Non pubblicato"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Wishlisted Talks"
 msgstr ""
+"<i class=\"fa fa-bell mr-2 text-muted\"/> Presentazioni nella lista dei "
+"desideri"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "<i class=\"fa fa-folder-open\"/> Favorites"
-msgstr ""
+msgstr "<i class=\"fa fa-folder-open\"/> Preferiti"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -152,7 +153,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"mr-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>risultati"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -205,8 +206,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
 msgid "A technical explanation of how to use computer design apps"
-msgstr ""
-"Una spiegazione tecnica su come usare applicazioni di progettazione CAD"
+msgstr "Spiegazione tecnica sull'uso di applicazioni per la progettazione CAD"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -303,12 +303,12 @@ msgstr "Agenda"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "All Talks"
-msgstr ""
+msgstr "Tutte le presentazioni"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Allow Track Proposals"
-msgstr ""
+msgstr "Consenti proposte sessione"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -323,12 +323,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Always Wishlisted"
-msgstr ""
+msgstr "Sempre in lista dei desideri"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
 msgid "Announced"
-msgstr "Announciato"
+msgstr "Annunciata"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -495,12 +495,12 @@ msgstr ""
 #: code:addons/website_event_track/controllers/event_track.py:0
 #, python-format
 msgid "Coming soon"
-msgstr ""
+msgstr "Prossimamente"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Coming soon ..."
-msgstr ""
+msgstr "Prossimamente..."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -846,7 +846,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
 msgid "Events App Name"
-msgstr ""
+msgstr "Nome applicazione eventi"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -1147,7 +1147,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Interactivity"
-msgstr ""
+msgstr "Interattività"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1160,7 +1160,7 @@ msgstr "Introduzione"
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
 msgid "Inventory and Warehouse management"
-msgstr ""
+msgstr "Gestione inventario e magazzino"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_accepted
@@ -1221,7 +1221,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
 msgid "Is Wishlisted"
-msgstr ""
+msgstr "Nella lista dei desideri"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
@@ -1406,7 +1406,7 @@ msgstr "Pranzo"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
 msgid "Magic Button"
-msgstr ""
+msgstr "Pulsante magico"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_main_attachment_id
@@ -1555,7 +1555,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "No track found."
-msgstr ""
+msgstr "Nessuna sessione trovata."
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -1702,7 +1702,7 @@ msgstr "Proposte sul sito web"
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 msgid "Published"
-msgstr "Pubblicato"
+msgstr "Pubblicata"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -1717,7 +1717,7 @@ msgstr "Rosso"
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr "Declinato"
+msgstr "Rifiutata"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -1791,7 +1791,7 @@ msgstr "Errore di consegna SMS"
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
 msgid "Sales and Distribution"
-msgstr ""
+msgstr "Vendita e diffusione"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
@@ -1825,7 +1825,7 @@ msgstr "Sequenza"
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Set Favorite"
-msgstr ""
+msgstr "Imposta preferita"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1835,7 +1835,7 @@ msgstr "Mostra tutti i record con data prossima azione precedente a oggi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Showcase Tracks"
-msgstr ""
+msgstr "Mostra sessioni"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
@@ -1882,7 +1882,7 @@ msgstr "Telefono relatori"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Picture"
-msgstr ""
+msgstr "Immagine relatori"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -1966,6 +1966,8 @@ msgid ""
 "Sponsors might be advertised on you event pages footer.<br>\n"
 "    Exhibitors might have a dedicated page with chat room for people to connect with them."
 msgstr ""
+"Gli sponsor possono essere pubblicizzati nel piè di pagina delle pagine evento.<br>\n"
+"    Gli espositori possono avere una pagina dedicata, con una stanza chat per comunicare con le persone."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
@@ -1986,7 +1988,7 @@ msgstr "Nome fase"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "Starting in"
-msgstr ""
+msgstr "Inizia tra"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -2064,21 +2066,21 @@ msgstr "Titolo presentazione"
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk added to your Favorites"
-msgstr ""
+msgstr "Presentazione aggiunta ai preferiti"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk already in your Favorites"
-msgstr ""
+msgstr "Presentazione già nei preferiti"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk removed from your Favorites"
-msgstr ""
+msgstr "Presentazione rimossa dai preferiti"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_event.py:0
@@ -2158,7 +2160,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Quando nella vista kanban non ci sono record da visualizzare per la fase, "
+"Se nella vista kanban non sono presenti record da visualizzare per la fase, "
 "quest'ultima viene minimizzata."
 
 #. module: website_event_track
@@ -2426,7 +2428,7 @@ msgstr "Visitatore"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
 msgid "Visitor Wishlist"
-msgstr ""
+msgstr "Lista dei desideri visitatori"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
@@ -2489,7 +2491,7 @@ msgstr "Sito web"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
 msgid "Website App Icon"
-msgstr ""
+msgstr "Icona applicazione sito web"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
@@ -2499,7 +2501,7 @@ msgstr "Menù evento sito web"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
 msgid "Website Image"
-msgstr ""
+msgstr "Immagine sito web"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_menu
@@ -2566,14 +2568,14 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Wishlisted By"
-msgstr ""
+msgstr "Nella lista desideri di"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
 #: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_kanban
 msgid "Wishlisted Tracks"
-msgstr ""
+msgstr "Sessioni nella lista dei desideri"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_7
@@ -2623,7 +2625,7 @@ msgstr "ore"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after talk start"
-msgstr ""
+msgstr "minuti dopo l'inizio della presentazione"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete

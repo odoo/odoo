@@ -3,7 +3,6 @@
 # 	* sale_project
 # 
 # Translators:
-# 0bbd034d1b285e7568819a743ec2b501_2b84791 <d5c81972596cfedcd53204f47f6a8434_940895>, 2020
 # Martin Trigaux, 2020
 # 
 msgid ""
@@ -116,8 +115,6 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
-"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
-"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -204,11 +201,6 @@ msgid ""
 "timesheet entry will be linked to the sales order item defined on the "
 "project."
 msgstr ""
-"Sales order item to which the project is linked. If an employee timesheets "
-"on a task that does not have a sale order item defines, and if this employee"
-" is not in the 'Employee/Sales Order Item Mapping' of the project, the "
-"timesheet entry will be linked to the sales order item defined on the "
-"project."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -228,12 +220,12 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr "Sales order to which the project is linked."
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Sales order to which the task is linked."
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -242,8 +234,6 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
-"Select a billable project on which tasks can be created. This setting must "
-"be set for each company."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
@@ -252,13 +242,11 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
-"Select a billable project to be the skeleton of the new created project when"
-" selling the current product. Its stages and tasks will be duplicated."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr "Select a non billable project on which tasks can be created."
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -282,7 +270,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "Task Recurrence"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
@@ -305,7 +293,6 @@ msgstr "Tareas asociadas a esta etapa"
 msgid ""
 "The Project should be linked to a Sale Order to select an Sale Order Items."
 msgstr ""
-"The Project should be linked to a Sale Order to select an Sale Order Items."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -314,8 +301,6 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
-"The product %s should not have a global project since it will generate a "
-"project."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -324,8 +309,6 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
-"The product %s should not have a project nor a project template since it "
-"will not generate project."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -334,8 +317,6 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
-"The product %s should not have a project template since it will generate a "
-"task in a global project."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -359,8 +340,6 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"You cannot link the order item %(order_id)s - %(product_id)s to this task "
-"because it is a re-invoiced expense."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -368,9 +347,8 @@ msgstr ""
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
 msgstr ""
-"You have to unlink the task from the sale order item in order to delete it."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "project's sale order"
-msgstr "project's sale order"
+msgstr ""

@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2020
-# Antoine Gilard <ang@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Wynand Tastenhoye <wta@odoo.com>, 2020
 # Alice Van Goethem <vga@odoo.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
@@ -100,6 +99,7 @@ msgstr "%s (kopie)"
 #, python-format
 msgid "%s Use the %s icon to organize your daily activities."
 msgstr ""
+"%s Gebruik het %s pictogram om je dagelijkse activiteiten te organiseren."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -249,6 +249,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Log notities</b> voor interne communicatie <i>(de mensen die deze taak volgen, worden niet op de hoogte gesteld\n"
+"     van de notitie die je aan het loggen bent, tenzij je ze specifiek tagt)</i>. Gebruik @<b>vermeldingen</b> om een collega te pingen\n"
+"     of # <b></b>om een heel team te bereiken."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -331,6 +334,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Beste ${object.partner_id.name or 'customer'},<br/>\n"
+"    Bedankt voor je aanvraag.<br/>\n"
+"    Heb je vragen, laat het ons weten.\n"
+"    <br/><br/>\n"
+"    Dank je,\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+" "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -361,12 +376,15 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"Klant uitgeschakeld op projecten\"/><b> "
+"Klantbeoordelingen </b> zijn uitgeschakeld voor de volgende project "
+"(en):<br/>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr ""
+msgstr "<p><em>Aantal taken: %(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -385,7 +403,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"fa fa-check-circle\"/> Next Occurrences:"
-msgstr ""
+msgstr "<span class=\"fa fa-check-circle\"/> Volgende gebeurtenissen:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -413,16 +431,19 @@ msgid ""
 "                                    Customer Satisfaction\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Klanttevredenheid\n"
+"                                 </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">in herhaling</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr ""
+msgstr "<span>Weet je zeker dat je dit project wilt verwijderen?</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -430,6 +451,8 @@ msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
 msgstr ""
+"<span>Je kunt een project met taken niet verwijderen. Je kunt het archiveren"
+" of eerst alle taken verwijderen.</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -544,13 +567,15 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"Voeg kolommen toe om uw taken in <b>fasen</b> te ordenen, <i>bijv. Nieuw - "
+"In uitvoering - Gereed</i>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr ""
+msgstr "Voeg je taak toe zodra deze klaar is."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -675,7 +700,7 @@ msgstr "Weet je zeker dat je door wilt gaan?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr ""
+msgstr "Weet je zeker dat je deze fasen wilt verwijderen?"
 
 #. module: project
 #. openerp-web
@@ -874,6 +899,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site...</i>"
 msgstr ""
+"Kies een <b>naam</b> voor je project. <i>Het kan alles zijn wat je wilt: de naam van een klant,\n"
+"van een product, van een team, van een bouwplaats...</i>"
 
 #. module: project
 #. openerp-web
@@ -882,6 +909,7 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"Kies een <b>taaknaam</b> <i>(bijv. Website-ontwerp, goederen kopen...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -927,6 +955,10 @@ msgid ""
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 " %s"
 msgstr ""
+"Communiceer met klanten over de taak via de e-mailgateway. Voeg logo-"
+"ontwerpen toe aan de taak, zodat de informatie stroomt van ontwerpers naar "
+"de werknemers die het t-shirt bedrukken. Organiseer prioriteiten tussen "
+"orders %s met behulp van het pictogram. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1125,6 +1157,10 @@ msgid ""
 "you can communicate on the task directly. Your managers decide which "
 "feedback is accepted %s and which feedback is moved to the %s column. %s"
 msgstr ""
+"Klanten stellen feedback per e-mail voor; Odoo maakt automatisch taken aan "
+"en u kunt rechtstreeks over de taak communiceren. Je leidinggevende beslist "
+"welke feedback wordt geaccepteerd %s en welke feedback naar de %s kolom %s "
+"wordt verplaatst."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1133,6 +1169,9 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
+"Pas aan hoe taken worden benoemd volgens het project en maak op maat "
+"gemaakte statusberichten voor elke stap van de workflow. Het helpt om je "
+"workflow te documenteren: wat moet er bij welke stap worden gedaan."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1217,12 +1256,10 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
-"Definieert de zichtbaarheid van de taken van het project:- Uitgenodigde "
-"medewerkers: medewerkers mogen alleen het gevolgde project en de taken "
-"zien.- Alle medewerkers: medewerkers mogen alle projecten en taken zien.- "
-"Portaal gebruikers en alle medewerkers: medewerkers mogen alles zien. "
-"Portaal gebruikers mogen het project en de taken zien en door wie het "
-"gevolgd wordt. zij of door iemand van hun bedrijf."
+"Definieert de zichtbaarheid van de taken van het project:\n"
+"- Uitgenodigde medewerkers: medewerkers mogen alleen het gevolgde project en de taken zien.\n"
+"- Alle medewerkers: medewerkers mogen alle projecten en taken zien.\n"
+"- Portaal gebruikers en alle medewerkers: medewerkers mogen alles zien. Portaal gebruikers mogen het project en de taken zien en door wie het gevolgd wordt door hen of door iemand van hun bedrijf."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1383,6 +1420,8 @@ msgid ""
 "Edit tasks' description collaboratively in real time. See each author's text"
 " in a distinct color."
 msgstr ""
+"Bewerk de beschrijving van taken samen in realtime. Bekijk de tekst van elke"
+" auteur in een aparte kleur."
 
 #. module: project
 #. openerp-web
@@ -1453,6 +1492,9 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized. %s"
 msgstr ""
+"Iedereen kan ideeën aandragen en de redacteur markeert de beste als %s. Voeg"
+" alle documenten of links rechtstreeks aan de taak toe, zodat alle "
+"informatie over een onderzoek gecentraliseerd is. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1485,6 +1527,10 @@ msgid ""
 "review the %s column to move important tasks %s. Every Monday, you review "
 "the %s column. %s"
 msgstr ""
+"Vul je inbox gemakkelijk met de e-mailgateway. Controleer regelmatig je "
+"Postvak IN en plan taken door ze naar andere kolommen te verplaatsen. Elke "
+"dag bekijk je de %skolom om belangrijke taken te verplaatsen %s. Elke "
+"maandag bekijk je de %skolom.%s"
 
 #. module: project
 #. openerp-web
@@ -1623,6 +1669,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea. %s"
 msgstr ""
+"Behandel je ideeënverzameling binnen Taken van je nieuwe project en bespreek"
+" ze in de chatter van de taken. Gebruik de %s 'and' %s om aan te geven wat "
+"de huidige status van je idee is. %s"
 
 #. module: project
 #. openerp-web
@@ -2023,6 +2072,8 @@ msgid ""
 "Let's go back to your <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Laten we teruggaan naar je <b>kanbanweergave</b> om een overzicht te krijgen"
+" van je volgende taken."
 
 #. module: project
 #. openerp-web
@@ -2035,7 +2086,7 @@ msgstr "Laten we aan uw taak beginnen."
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr ""
+msgstr "Laten we wachten tot je klanten zich manifesteren."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2088,6 +2139,9 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step. %s"
 msgstr ""
+"Beheer de levenscyclus van je project met de kanbanweergave. Voeg een nieuw "
+"verworven project toe, wijs ze toe en gebruik de %s 'and' %s om te bepalen "
+"of het project klaar is voor de volgende stap. %s"
 
 #. module: project
 #. openerp-web
@@ -2108,7 +2162,7 @@ msgstr "Maart"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Material Sourcing"
-msgstr ""
+msgstr "Materiaal sourcing"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
@@ -2532,6 +2586,8 @@ msgid ""
 "Plan resource allocation accross projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
+"Plan de toewijzing van middelen over projecten en taken, en schat deadlines "
+"nauwkeuriger in."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -2553,7 +2609,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr ""
+msgstr "Podcast en videoproductie"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -2583,6 +2639,10 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
+"Geef prioriteit aan taken door het %s pictogram%s te gebruiken. Gebruik de "
+"%s knop om je collega's te informeren dat een taak klaar is voor de volgende"
+" fase.%s Gebruik de %s om een probleem of behoefte aan discussie over een "
+"taak aan te geven.%s"
 
 #. module: project
 #. openerp-web
@@ -2593,6 +2653,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task.%s"
 msgstr ""
+"Geef prioriteit aan taken door het %s pictogram%s te gebruiken. Gebruik de "
+"%s knop om je collega's te laten weten dat een taak klaar is voor de "
+"volgende fase.%s Gebruik de %s om een probleem of behoefte aan discussie "
+"over een taak aan te geven.%s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2633,7 +2697,7 @@ msgstr "Aantal projecten"
 #. module: project
 #: model:ir.model,name:project.model_project_delete_wizard
 msgid "Project Delete Wizard"
-msgstr ""
+msgstr "Wizard Project verwijderen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -2654,7 +2718,7 @@ msgstr "Projectnaam"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "Wizard Projectfase verwijderen"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -2735,6 +2799,8 @@ msgstr "Project gearchiveerd"
 msgid ""
 "Projects regroup tasks on the same topic and each have their own dashboard."
 msgstr ""
+"Projecten hergroeperen taken over hetzelfde onderwerp en hebben elk hun "
+"eigen dashboard."
 
 #. module: project
 #. openerp-web
@@ -3603,6 +3669,8 @@ msgid ""
 "The project visibility setting doesn't allow portal users to see the "
 "project's tasks. (%s)"
 msgstr ""
+"Met de instelling voor projectzichtbaarheid kunnen portalgebruikers de "
+"projecttaken niet zien. (%s)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3624,7 +3692,7 @@ msgstr "Er zijn geen projecten."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr ""
+msgstr "Er zijn momenteel geen beoordelingen voor dit project."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3698,6 +3766,8 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
+"Hiermee worden de fasen en alle taken die ze bevatten van de volgende "
+"projecten gearchiveerd:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -3725,7 +3795,7 @@ msgstr "Geplande tijd om deze taak te volbrengen (inclusief de subtaken)."
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr ""
+msgstr "Tip: pas taken en fasen aan volgens het project"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3833,7 +3903,7 @@ msgstr "T/m"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Use <b>activities</b> to organize your daily work."
-msgstr ""
+msgstr "Gebruik <b>activiteiten</b> om je dagelijkse werk te organiseren."
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -3875,6 +3945,8 @@ msgid ""
 "Use this chatter to <b>send emails</b> and communicate efficently with your customers. \n"
 "    Add new people in the followers list to make them aware about the main changes about this task."
 msgstr ""
+"Gebruik deze chatter om <b>e-mails te verzenden</b> en efficiënt met je klanten te communiceren.\n"
+"      Voeg nieuwe mensen toe aan de lijst met volgers om ze op de hoogte te brengen van de belangrijkste wijzigingen in deze taak."
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3901,7 +3973,7 @@ msgstr "Zichtbaar voor"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets. %s"
-msgstr ""
+msgstr "Wachten op de volgende fase: gebruik %s en %s bullets. %s"
 
 #. module: project
 #. openerp-web
@@ -4030,6 +4102,7 @@ msgstr ""
 msgid ""
 "You cannot archive recurring tasks. Please, disable the recurrence first."
 msgstr ""
+"Je kunt geen terugkerende taken archiveren. Schakel eerst de herhaling uit."
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -4057,6 +4130,7 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please, disable the recurrence first."
 msgstr ""
+"Je kunt geen terugkerende taken verwijderen. Schakel eerst de herhaling uit."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -4064,6 +4138,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"Je kunt geen fasen met taken verwijderen. Je kunt ze archiveren of eerst al "
+"de taken verwijderen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -4071,6 +4147,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken "
+"verwijderen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

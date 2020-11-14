@@ -160,11 +160,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente con un meccanismo:\n"
-"  - Manuale: la quantità viene impostata manualmente sulla riga\n"
-"  - Calcolo analitico delle spese: la quantità è la somma delle spese registrate\n"
-"  - Foglio ore: la quantità è la somma delle ore registrate sulle attività collegate a questa riga di vendita\n"
-"  - Movimenti magazzino: la quantità proviene da prelievi confermati\n"
+"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica da note spese: quantità calcolata come somma delle note spese confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
@@ -470,7 +470,7 @@ msgstr "Servizio clienti (ore prepagate)"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
 msgid "Customer Type"
-msgstr ""
+msgstr "Tipologia cliente"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -504,7 +504,7 @@ msgstr "Giorni registrati"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Sales Order Item"
-msgstr ""
+msgstr "Voce predefinita ordine di vendita"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -569,7 +569,7 @@ msgstr "Dipendente"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Tariffa per dipendente"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -596,7 +596,7 @@ msgstr "Servizi a prezzo fisso"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Fixed rate"
-msgstr ""
+msgstr "Tariffa fissa"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -702,7 +702,7 @@ msgstr "Fattura"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
 msgid "Invoice all tasks to a single customer"
-msgstr ""
+msgstr "Fatturare tutti i lavori a un singolo cliente"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -712,7 +712,7 @@ msgstr "Fattura creata dal foglio ore"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
 msgid "Invoice tasks separately to different customers"
-msgstr ""
+msgstr "Fatturare lavori separatamente a clienti diversi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
@@ -967,13 +967,13 @@ msgstr "Quantità ordinate"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
 msgid "Other Costs"
-msgstr ""
+msgstr "Altri costi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__other_revenues
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other Revenues"
-msgstr ""
+msgstr "Altri ricavi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1355,7 +1355,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__analytic_account_id
 msgid "The analytic account related to a sales order."
-msgstr "Il conto analitico collegato a un ordine di vendita."
+msgstr "Conto analitico collegato a un ordine di vendita."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__pricing_type
@@ -1493,7 +1493,7 @@ msgstr "Costi foglio ore"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Duration"
-msgstr ""
+msgstr "Durata foglio ore"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1627,17 +1627,17 @@ msgstr "Imponibile fatturato"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
 msgid "Untaxed Amount Re-invoiced"
-msgstr ""
+msgstr "Imponibile rifatturato"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount to Invoice"
-msgstr ""
+msgstr "Imponibile da fatturare"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Untaxed Amount to Re-invoice"
-msgstr ""
+msgstr "Imponibile da rifatturare "
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

@@ -621,7 +621,7 @@ msgstr "Utenti interni autorizzati"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_portal_user_ids
 msgid "Allowed Portal Users"
-msgstr ""
+msgstr "Utenti portale autorizzati"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_user_ids
@@ -1154,7 +1154,7 @@ msgstr "Data dell'anno"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
-msgstr "Giorno della settimana"
+msgstr "Giorno settimanale"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__day
@@ -1216,6 +1216,11 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Definisce la visibilità dei lavori del progetto:\n"
+"- Dipendenti invitati: i dipendenti possono vedere solo i progetti e i lavori seguiti.\n"
+"- Tutti i dipendenti: i dipendenti possono vedere tutti i progetti e i lavori.\n"
+"- Utenti portale e tutti i dipendenti: i dipendenti possono vedere tutti i progetti e i lavori, gli utenti del portale solo quelli\n"
+"   seguiti da loro o da qualcuno dell'azienda."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1729,8 +1734,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
-"Se attiva, quando il lavoro o il problema raggiunge questa fase verrà "
-"inviata una e-mail al cliente."
+"Se impostato, viene inviata una e-mail al cliente quando il lavoro o il "
+"problema raggiunge questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -1739,9 +1744,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
-"Se attiva, e se il progetto è configurato per una \"Valutazione al cambio di"
-" fase\", verrà inviata una e-mail al cliente quando il lavoro raggiunge "
-"questo livello. "
+"Se impostato, e se il progetto è configurato con \"Valutazione al cambio di "
+"fase\", viene inviata una e-mail al cliente quando il lavoro raggiunge "
+"questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -1837,7 +1842,7 @@ msgstr "Utenti interni invitati"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users"
-msgstr ""
+msgstr "Utenti portale invitati e tutti gli utenti interni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -2437,8 +2442,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Sostituisce il valore predefinito visualizzato per lo stato bloccato nella "
-"selezione kanban, quando il lavoro o il problema si trova in quella fase."
+"Nella selezione kanban, sostituisce il valore predefinito visualizzato per "
+"lo stato bloccato, quando il lavoro o il problema si trova in quella fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -2447,8 +2452,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Sostituisce il valore predefinito visualizzato per lo stato completato nella"
-" selezione kanban, quando il lavoro o il problema si trova in quella fase."
+"Nella selezione kanban, sostituisce il valore predefinito visualizzato per "
+"lo stato completato, quando il lavoro o il problema si trova in quella fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -2619,7 +2624,7 @@ msgstr "Priorità"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Project"
-msgstr "Progetti"
+msgstr "Progetto"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -3511,7 +3516,7 @@ msgstr "Analisi lavori"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks In Progress"
-msgstr ""
+msgstr "Lavori in corso"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3533,7 +3538,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_project_task_type__is_closed
 msgid "Tasks in this stage are considered as closed."
-msgstr "Le attività in questa fase vengono considerate chiuse"
+msgstr "I lavori in questa fase vengono considerati chiusi."
 
 #. module: project
 #. openerp-web
@@ -3594,6 +3599,8 @@ msgid ""
 "The project visibility setting doesn't allow portal users to see the "
 "project's tasks. (%s)"
 msgstr ""
+"Le impostazioni di visibilità del progetto non consentono agli utenti del "
+"portale di vedere i lavori. (%s)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3670,7 +3677,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Quando nella vista kanban non ci sono record da visualizzare per la fase, "
+"Se nella vista kanban non sono presenti record da visualizzare per la fase, "
 "quest'ultima viene minimizzata."
 
 #. module: project
@@ -3885,7 +3892,7 @@ msgstr "Visibilità"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allowed_user_ids
 msgid "Visible to"
-msgstr ""
+msgstr "Visibile a"
 
 #. module: project
 #. openerp-web
@@ -4012,7 +4019,7 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Inoltre è possibile aggiungere una descrizione per aiutare i colleghi a "
+"È inoltre possibile aggiungere una descrizione per aiutare i colleghi a "
 "capire il significato e lo scopo della fase. "
 
 #. module: project

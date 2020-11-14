@@ -105,7 +105,7 @@ msgstr "<strong>Termine di resa: </strong>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Termine di resa:</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
@@ -127,11 +127,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente con un meccanismo:\n"
-"  - Manuale: la quantità viene impostata manualmente sulla riga\n"
-"  - Calcolo analitico delle spese: la quantità è la somma delle spese registrate\n"
-"  - Foglio ore: la quantità è la somma delle ore registrate sulle attività collegate a questa riga di vendita\n"
-"  - Movimenti magazzino: la quantità proviene da prelievi confermati\n"
+"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica da note spese: quantità calcolata come somma delle note spese confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -385,9 +385,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Se si consegnano tutti i prodotti in una sola volta, l'ordine di consegna "
-"sarà pianificato in base al prodotto con il maggior tempo di consegna. In "
-"caso contrario, si baserà sul prodotto con il tempo più breve."
+"Se i prodotti vengono consegnati tutti in una volta, l'ordine di consegna "
+"viene programmato in base al tempo di risposta prodotto più lungo. In caso "
+"contrario, in base al più breve."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

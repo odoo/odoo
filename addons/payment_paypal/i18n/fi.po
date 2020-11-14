@@ -1,19 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_paypal
-# 
-# Translators:
-# Martin Trigaux, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# 	* payment_paypal
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,39 +16,49 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
-msgid "Access Token"
-msgstr "Pääsytunniste"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
-msgid "Access Token Validity"
-msgstr "Pääsytunnisteen voimassaolo"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Kiinteä kustannus kotimaassa"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr "Kiinteä kustannus kansainvälisesti"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -62,24 +66,31 @@ msgid "How to configure your paypal account?"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction____last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Maksun vastaanottaja"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
@@ -91,35 +102,20 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Maksutapahtuma"
+msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
-msgid "Paypal Email ID"
-msgstr "Paypal sähköposti-ID"
-
-#. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
-msgstr "Paypal välitön maksuilmoitus"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid "Paypal Merchant ID"
-msgstr "Paypal kauppiaan ID"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid "Paypal PDT Token"
 msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:138
+#: code:addons/payment_paypal/models/payment.py:0
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""
@@ -127,26 +123,11 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "Palveluntarjoaja"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
-msgid "Rest API Password"
-msgstr "REST API:n salasana"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
-msgid "Rest API Username"
-msgstr "REST API:n käyttäjätunnus"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
 msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
 msgstr ""
 
 #. module: payment_paypal
@@ -155,23 +136,16 @@ msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
 msgstr ""
-"Kauppiaan ID:tä käytetään varmentamaan että Paypalilta tuleva kommunikaatio "
-"on validia ja turvallista."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
 msgid "Transaction type"
-msgstr "Tapahtuman tyyppi"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
-msgstr "Käytä välitöntä maksuilmoitusta"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
-msgid "Use Rest API"
-msgstr "Käytä REST API:a"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
@@ -182,8 +156,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr ""
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Tilisiirto"

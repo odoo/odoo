@@ -194,7 +194,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Dokument URL\"/>"
 
 #. module: mail
 #. openerp-web
@@ -285,6 +285,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">Force a language: </span>"
 msgstr ""
+"<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">Gennemtving et sprog: "
+"</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -887,7 +889,7 @@ msgstr "nægt-liste dato"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Blokerede Email Adresser"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -976,7 +978,7 @@ msgstr "kulkopiér beskedmodtagere"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "Carbon copy modtagere"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
@@ -986,7 +988,7 @@ msgstr "Carbon copy modtagere (placeholders kan anvendes her)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
 msgid "Catchall"
-msgstr ""
+msgstr "Catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
@@ -1154,7 +1156,7 @@ msgstr "Konfigurér dine aktivitetstyper"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr ""
+msgstr "Konfigurer din egen email servere"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -1227,13 +1229,13 @@ msgstr "Opret UID"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr ""
+msgstr "Opret nyt %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr ""
+msgstr "Opret nyt %(document)s ved at sende en email til %(email_link)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -1421,7 +1423,7 @@ msgstr "Definér en ny chat kortkode"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
 msgid "Delay Label"
-msgstr ""
+msgstr "Forsink Mærkat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
@@ -1747,7 +1749,7 @@ msgstr "E-mail konfiguration"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
 msgid "Email Mass Mailing"
-msgstr ""
+msgstr "Email Masse Mailing"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -1834,7 +1836,7 @@ msgstr "E-mail meddelelse"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__email
 msgid "Email of the related partner (if exist) or False"
-msgstr ""
+msgstr "Email på den relaterede partner (hvis denne eksisterer) eller Falsk"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -1858,7 +1860,7 @@ msgstr "E-mail"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_internal
 msgid "Employee Only"
-msgstr ""
+msgstr "Kun Medarbejder"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
@@ -1956,13 +1958,13 @@ msgstr "Fejlede"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s"
-msgstr ""
+msgstr "Kunne ikke gengive skabelon : %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s (%d)"
-msgstr ""
+msgstr "Kunne ikke gengive skabelon %s (%d)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -2270,6 +2272,9 @@ msgid ""
 "The following email sent to %s cannot be accepted because this is a private email address.\n"
 "Only allowed people can contact us at this address."
 msgstr ""
+"Hej,<br/>\n"
+"Den følgende email afsendt til %s kan ikke accepteres, fordi den er en privat email adresse.\n"
+"Kun folk med tilladelse kan kontakte os på denne adresse."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
@@ -2287,6 +2292,7 @@ msgstr "Skjul subtypen i tilhørende valgmuligheder"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
+"Gem for offentlige / portal brugere, uafhængigt af undertype konfiguration."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__id
@@ -2461,6 +2467,8 @@ msgstr ""
 msgid ""
 "If the related partner is active (if exist) or if related channel exist"
 msgstr ""
+"Hvis den relaterede partner er aktiv (hvis denne eksisterer) eller hvis den "
+"relaterede kanal eksisterer"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -2583,7 +2591,7 @@ msgstr "Ugyldigt primær email felt på model %s"
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
-msgstr ""
+msgstr "Invitation til at følge %(document_model)s: %(document_name)s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2598,7 +2606,7 @@ msgstr "Kun inviterede personer"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
 msgid "Is Active"
-msgstr ""
+msgstr "Er Aktiv"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
@@ -2939,7 +2947,7 @@ msgstr "Mail kanal formular"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "Mail Render Mixin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -3124,7 +3132,7 @@ msgstr "Modtagere (emails)"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Message should be a valid EmailMessage instance"
-msgstr ""
+msgstr "Besked bør være en gyldig EmailMessage instans"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
@@ -3294,7 +3302,7 @@ msgstr "Moderering"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation List"
-msgstr ""
+msgstr "Moderations Liste"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
@@ -3374,6 +3382,8 @@ msgstr "Hent navn for relateret dokument."
 #: model:ir.model.fields,help:mail.field_mail_followers__name
 msgid "Name of the related partner (if exist) or the related channel"
 msgstr ""
+"Navn på den relaterede partner (hvis de eksisterer) eller den relaterede "
+"kanal"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__report_name
@@ -3497,7 +3507,7 @@ msgstr "Ingen fejl"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "Intet Datasæt"
 
 #. module: mail
 #. openerp-web
@@ -3766,7 +3776,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_id
 msgid "Optional mail_mail ID. Used mainly to optimize searches."
-msgstr ""
+msgstr "Valgfri mail_mail ID. Anvendes primært til at optimere søgninger."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__mail_server_id
@@ -3924,7 +3934,7 @@ msgstr "Partner skrivebeskyttet"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr ""
+msgstr "Partner med yderligere information for mail genafsendelse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
@@ -4024,7 +4034,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
 msgid "Post on Multiple Documents"
-msgstr ""
+msgstr "Poster på Flere Dokumenter"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -4058,7 +4068,7 @@ msgstr "Foretrukket besvarelses adresse"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
 msgid "Preferred response address"
-msgstr ""
+msgstr "Foretrukket respons adresse"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -4236,7 +4246,7 @@ msgstr "Relateret dokument model navn"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__mail_template_id
 msgid "Related Mail Template"
-msgstr ""
+msgstr "Relateret Mail Skabelon"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4256,7 +4266,7 @@ msgstr "Relationsfelt"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr ""
+msgstr "Fjern email fra blokeringsliste guide"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4298,7 +4308,7 @@ msgstr "Rapport filnavn"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr ""
+msgstr "Anmodende Partner"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -4403,7 +4413,7 @@ msgstr "Skemalæg aktivitet"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr ""
+msgstr "Planlæg aktiviteter for at hjælpe dig med at få ting gjort."
 
 #. module: mail
 #. openerp-web
@@ -4540,7 +4550,7 @@ msgstr "Send beskeder pr. e-mail"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
 msgid "Sender address"
-msgstr ""
+msgstr "Afsender adresse"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_from
@@ -4574,13 +4584,13 @@ msgstr "Server handling"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
-msgstr ""
+msgstr "Sæt aktiv til falsk for at skjule kanalen uden at fjerne den."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
 #: model:ir.model.fields,field_description:mail.field_mail_message__description
 msgid "Short description"
-msgstr ""
+msgstr "Kort beskrivelse"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form
@@ -4597,7 +4607,7 @@ msgstr "Genvej"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Show a helper message"
-msgstr ""
+msgstr "Vis hjælpe besked"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -4747,7 +4757,7 @@ msgstr "System besked"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
-msgstr ""
+msgstr "Mål model"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -4771,6 +4781,8 @@ msgid ""
 "Technical field to keep track of the model at the start of editing to "
 "support UX related behaviour"
 msgstr ""
+"Teknisk felt til at sporer modellen ved start af redigering, for at "
+"understøtte UX relateret opførsel"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
@@ -4792,19 +4804,19 @@ msgstr "Skabelon forhåndsvisningssprog"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering for language should be called with a list of IDs."
-msgstr ""
+msgstr "Skabelon gengivelse for sprog bør kaldes med en liste af ID'er."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering should be called only using on a list of IDs."
-msgstr ""
+msgstr "Skabelon gengivelse bør kun kaldes ved brug af en liste af ID'er."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering supports only jinja or qweb."
-msgstr ""
+msgstr "Skabelon gengivelse understøtter kun jinja eller qweb."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -4835,7 +4847,7 @@ msgstr "'Afleveringsfrist' værdien kan ikke være negativ."
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "The e-mail alias is already used. Please enter another one."
-msgstr ""
+msgstr "E-mail aliasset er allerede i brug. Angiv venligst et andet."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
@@ -4900,7 +4912,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr ""
+msgstr "Kø manageren vil afsende emailen efter datoen"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -4978,6 +4990,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Denne indstilling fjerner permanent ethvert spor af emailen efter den er "
+"blevet sendt, inklusiv fra Teknisk menuen i Indstillinger, for at bevare "
+"lagerplads på din Odoo database."
 
 #. module: mail
 #. openerp-web
@@ -5156,13 +5171,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "Fjern blokering"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr ""
+msgstr "Fjern blokering Grund: %s"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_alias_unique
@@ -5227,7 +5242,7 @@ msgstr "Ikke understøttet søgefilter på moderationsstatus"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Unsuspected None"
-msgstr ""
+msgstr "Ikke Mistænkt Ingen"
 
 #. module: mail
 #. openerp-web
@@ -5306,7 +5321,7 @@ msgstr "Brugere"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Users in this channel: %(members)s %(dots)s and you."
-msgstr ""
+msgstr "Brugere i denne kanal: %(members)s %(dots)s og dig."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5576,7 +5591,7 @@ msgstr "efter godkendelses dato"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "alias %(name)s: %(error)s"
-msgstr ""
+msgstr "alias %(name)s: %(error)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -5648,12 +5663,12 @@ msgstr "generelt"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr ""
+msgstr "er blevet oprette fra:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been modified from:"
-msgstr ""
+msgstr "er blevet modificeret fra:"
 
 #. module: mail
 #: code:addons/mail/models/models.py:0
@@ -5670,7 +5685,7 @@ msgstr "ukorrekt konfigureret kaldenavn (ukendt reference datasæt)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "mail_blacklist_removal"
-msgstr ""
+msgstr "mail_blacklist_removal"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5726,6 +5741,8 @@ msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
 msgstr ""
+"svar til manglende dokument (%(model)s, %(thread)s), fald tilbage til "
+"dokument oprettelse"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5792,7 +5809,7 @@ msgstr "bruger"
 #: code:addons/mail/static/src/xml/many2one_avatar_user.xml:0
 #, python-format
 msgid "value"
-msgstr ""
+msgstr "værdi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
