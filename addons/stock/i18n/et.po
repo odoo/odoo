@@ -14,9 +14,9 @@
 # Ants Peetsalu <ants@avalah.ee>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
 # Triine Aavik <triine@avalah.ee>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: Triine Aavik <triine@avalah.ee>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -715,7 +715,7 @@ msgstr "Kõik tagastuse siirded"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr ""
+msgstr "Lubatud asukoht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_route_ids
@@ -833,7 +833,7 @@ msgstr "Automaatne"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Automatiseeri tellimused"
+msgstr "Muuda tellimine automaatseks"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1220,7 +1220,7 @@ msgstr "Ettevõte"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs"
-msgstr ""
+msgstr "Transpordihinna arvutamine"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1809,7 +1809,7 @@ msgstr "Tarneviisid"
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "Kauba väljastus"
+msgstr "Saatelehed"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -1861,7 +1861,7 @@ msgstr "Kirjeldus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Tarnetellimuste kirjeldus"
+msgstr "Saatelehtede kirjeldus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1882,7 +1882,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Kirjeldus tarnetellimustel"
+msgstr "Kirjeldus saatelehtedel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
@@ -1995,7 +1995,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
 msgid "Display Lots & Serial Numbers on Delivery Slips"
-msgstr ""
+msgstr "Kuvage saatelehtedel partii- ja seerianumbrid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__display_name
@@ -2123,7 +2123,7 @@ msgstr "Tegelik kuupäev"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Email Confirmation"
-msgstr ""
+msgstr "Meili teel kinnitamine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3578,6 +3578,8 @@ msgid ""
 "Lots/Serial numbers help you tracking the path followed by your products.\n"
 "            From their traceability report you will see the full history of their use, as well as their composition."
 msgstr ""
+"Partiid/seerianumbrid aitavad teil jälgida teie toodete teekondi.\n"
+"Nende jälgimisraportist näete nii nende kasutusajalugu kui ka nende koostist."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -3781,7 +3783,7 @@ msgstr "Mitme etapilised marsruudid"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
-msgstr "Mitu kogust"
+msgstr "Koguse kordaja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4159,7 +4161,7 @@ msgstr "Ost"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
-msgstr "Telli üks kord"
+msgstr "Tee tellimus"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4563,12 +4565,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr ""
+msgstr "Eelistatud marsruut"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
 msgid "Preferred Routes"
-msgstr ""
+msgstr "Eelistatud marsruudid"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
@@ -5357,7 +5359,7 @@ msgstr "Tellimise viisard"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Replenishment"
-msgstr "Juurde tellimine"
+msgstr "Telli juurde"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -5384,7 +5386,7 @@ msgstr "Aruandlus"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr ""
+msgstr "Nõudke enda saatelehtedele allkiri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_procurement_jit
@@ -5602,7 +5604,7 @@ msgstr "Käivita planeerija"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
 msgid "SMS Confirmation"
-msgstr ""
+msgstr "Sõnumi teel kinnitamine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_has_sms_error
@@ -6828,18 +6830,18 @@ msgstr "Tegemiseks"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
-msgstr "Tellida"
+msgstr "Tellitav kogus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
-msgstr "Tootmiseks"
+msgstr "Töösse"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "To Reorder"
-msgstr "Juurde tellida"
+msgstr "Telli juurde"
 
 #. module: stock
 #. openerp-web
@@ -7006,7 +7008,7 @@ msgstr "Transiidi asukohad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
 msgid "Trigger"
-msgstr "Päästik"
+msgstr "Tellimise meetod"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
@@ -7222,7 +7224,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes"
-msgstr ""
+msgstr "Kasutage enda loodud marsruute"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -7589,7 +7591,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "Kõik on korras, ühtegi tellimist pole tarvis esitada!"
+msgstr "Kõik on korras ja ühtegi tellimust pole tarvis esitada!"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0

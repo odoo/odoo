@@ -33,23 +33,25 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "(%(sign)s%(hours)s:%(minutes)s remaining)"
-msgstr ""
+msgstr "(%(sign)s%(hours)s:%(minutes)s tilbage)"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "(%s days remaining)"
-msgstr ""
+msgstr "(%s dage tilbage)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "(Total:"
-msgstr ""
+msgstr "(Samlet:"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for employee:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Timesedler for "
+"medarbejdere:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -59,12 +61,12 @@ msgstr "<em class=\"font-weight-normal text-muted\">Timesedler for projekt:</em>
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for task:</em>"
-msgstr ""
+msgstr "<em class=\"font-weight-normal text-muted\">Timesedler for opgaver:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets on </em>"
-msgstr ""
+msgstr "<em class=\"font-weight-normal text-muted\">Timesedler for </em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -101,16 +103,18 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Sub-tasks Hours Spent</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Sub-tasks Days Spent</span>"
 msgstr ""
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Under-opgaver Timer Brugt</span> \n"
+"                              <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Under-opgaver Dage Brugt</span> "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">Samlet (Dage)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span style=\"margin-right: 15px;\">Total (Hours)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">Samlet (Timer)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -125,7 +129,7 @@ msgstr "<span>Deres ref.</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Project</span>"
-msgstr ""
+msgstr "<span>Projekt</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -135,7 +139,7 @@ msgstr "<span>Ansvarlig</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Task</span>"
-msgstr ""
+msgstr "<span>Opgave</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -145,12 +149,12 @@ msgstr "<strong>Varighed: </strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "<strong>Round Timesheets</strong>"
-msgstr ""
+msgstr "<strong>Afrund Timesedler</strong>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Active Analytic Account"
-msgstr ""
+msgstr "Aktiv Analytisk Konto"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -218,7 +222,7 @@ msgstr "Godkender"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr ""
+msgstr "Associeret Timesedler"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
@@ -346,7 +350,7 @@ msgstr "Vis fremgang for den aktuelle opgave."
 #: code:addons/hr_timesheet/static/src/js/timesheet_config_form_view.js:0
 #, python-format
 msgid "Download our App"
-msgstr ""
+msgstr "Hent vores Applikation"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_subtask_timesheet_tables
@@ -398,7 +402,7 @@ msgstr "Opsæt timeregistrering på projektet."
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr ""
+msgstr "Indkod Måleenhed i Dage"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -460,7 +464,7 @@ msgstr "ID"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Initially Planned Days"
-msgstr ""
+msgstr "Opridneligt Planlagte Dage"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -478,7 +482,7 @@ msgstr "Intern"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
 msgid "Is Encode Uom Days"
-msgstr ""
+msgstr "Er Indkodet Måleenhed Dage"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line____last_update
@@ -557,13 +561,13 @@ msgstr "Nyeste"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No activities found."
-msgstr ""
+msgstr "Ingen aktiviteter fundet."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No activities found. Let's start a new one!"
-msgstr ""
+msgstr "Ingen aktiviteter fundet. Lad os starte en ny!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -574,7 +578,7 @@ msgstr "Ingen"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 msgid "Overtime"
-msgstr ""
+msgstr "Overtid"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
@@ -612,7 +616,7 @@ msgstr "Projekt tidsenhed"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr ""
+msgstr "Projekts Timesedler"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
@@ -662,7 +666,7 @@ msgstr "Spar tid"
 #: code:addons/hr_timesheet/static/src/xml/qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Awesome Timesheet app:"
-msgstr ""
+msgstr "Scan denne QR kode for at få den Fantastiske Timeseddel applikation:"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -674,13 +678,13 @@ msgstr "Søg i alle"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr ""
+msgstr "Søg i Beskrivelse"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr ""
+msgstr "Søg i Medarbejder"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -692,19 +696,19 @@ msgstr "Søg i Projekt"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr ""
+msgstr "Søg i Opgave"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "See own timesheets"
-msgstr ""
+msgstr "Se egne timesedler"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr ""
+msgstr "Se timeseddel poster"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -720,7 +724,7 @@ msgstr "Tid brugt på underopgaver"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Planned Days"
-msgstr ""
+msgstr "Under-opgaver Planlagte Dage"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -746,7 +750,7 @@ msgstr "Opgave som vi opretter en salgsordre til"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr ""
+msgstr "Opgaves Timesedler"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
@@ -756,7 +760,7 @@ msgstr "Opgave analyse"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Tasks in Overtime"
-msgstr ""
+msgstr "Opgaver i Overtid"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -785,6 +789,8 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
 msgstr ""
+"Disse projekter har nogle timeseddel posteringer der henviser til dem. Før "
+"fjernelse af disse projekter, skal du fjerne disse timeseddel posteringer."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -793,6 +799,8 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
+"Disse opgaver har nogle timeseddel posteringer der henviser til dem. Før du "
+"fjerne disse opgaver, skal du fjerne disse timeseddel posteringer."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -813,6 +821,8 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
 msgstr ""
+"Dette projekt har nogle timeseddel posteringer der henviser til den. Før du "
+"fjerner dette projekt, skal du fjerne disse timeseddel posteringer."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -821,6 +831,8 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
+"Denne opgave har nogle timeseddel posteringer der henviser til den. Før du "
+"fjerner denne opgave, skal du fjerne disse timeseddel posteringer."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -883,32 +895,33 @@ msgstr "Fri"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time Spent (Days)"
-msgstr ""
+msgstr "Tid Brugt (Dage)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time Spent (Hours)"
-msgstr ""
+msgstr "Tid Brugt (Timer)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
 msgstr ""
+"Tid brugt på under-opgaver (og deres egne under-opgaver) for denne opgave."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
 msgid "Time spent on this task, excluding its sub-tasks."
-msgstr ""
+msgstr "Tid brugt på denne opgave, eksklusiv dens under-opgaver."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task, including its sub-tasks."
-msgstr ""
+msgstr "Tid brugt på denne opgave, inklusiv dens under-opgaver."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr ""
+msgstr "Tidsenhed anvendt ved registrering på din timesedler"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -996,7 +1009,7 @@ msgstr "Timesedler kan registreres på denne opgave."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_subtask_timesheet_tables
 msgid "Timesheets for sub-task:"
-msgstr ""
+msgstr "Timesedler for under-opgave:"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -1021,7 +1034,7 @@ msgstr "I alt"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr ""
+msgstr "Samlet Antal Dage"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1033,12 +1046,12 @@ msgstr "Totale antal timer"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_subtask_timesheet_tables
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Total Hours:"
-msgstr ""
+msgstr "Samlet Antal Timer:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr ""
+msgstr "Samlet Timeseddel Tid"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
@@ -1046,6 +1059,8 @@ msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
 msgstr ""
+"Samlet antal tid (i behørig måleenhed) registreret for projektet, afrundet "
+"til enheden."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
@@ -1060,6 +1075,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
 msgstr ""
+"Spor din tid fra hvor som helst, selv uden forbindelse, med vores web/mobil "
+"applikationer"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1072,6 +1089,8 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
+"Spor dine arbejdstimer per projekt hver dag og fakturer dine kunder for din "
+"tid."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/__init__.py:0
@@ -1112,6 +1131,9 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
+"Du kan ikke logge timesedler på dette projekt eftersom det er forbundet til "
+"en inaktiv analytisk konto. Vær venlig at ændre denne konto, eller "
+"genaktivere den nuværende til timeseddel for projektet."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet

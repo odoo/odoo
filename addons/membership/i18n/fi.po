@@ -1,24 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * membership
+# 	* membership
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Timo Koukkari <ti.ko@netikka.fi>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Timo Koukkari <ti.ko@netikka.fi>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,23 +18,28 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
 msgid "# Invoiced"
-msgstr "# Laskutettu"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_paid
 msgid "# Paid"
-msgstr "# Maksettu"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_waiting
 msgid "# Waiting"
-msgstr "# Odottaa"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/><strong> From: </strong>"
+msgstr ""
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 msgstr ""
 
 #. module: membership
@@ -60,18 +54,16 @@ msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Jäsen, johon haluat liittää jäsenyyden. Jäsenyydessä huomioidaan liittyvän "
-"jäsenen tila."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr "Tilin laskurivi"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Add a description..."
-msgstr "Lisää kuvaus..."
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
@@ -79,19 +71,9 @@ msgid "Add a new member"
 msgstr ""
 
 #. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "All Members"
-msgstr "Kaikki jäsenet"
-
-#. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "All non Members"
-msgstr "Kaikki ei-jäsenet"
-
-#. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__member_price
 msgid "Amount for the membership"
-msgstr "Jäsenyyden hinta"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__associate_member_id
@@ -99,102 +81,107 @@ msgstr "Jäsenyyden hinta"
 #: model:ir.model.fields,field_description:membership.field_res_users__associate_member
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr "Liittyvä jäsen"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "Yhteistyökumppani"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr "Osta jäsenyys"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Cancel"
-msgstr "Peruuta"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
 msgid "Cancel Membership Date"
-msgstr "Jäsenyyden peruuttamispäivä"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
 msgid "Cancel date"
-msgstr "Peruutuspäivämäärä"
+msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
 msgid "Cancelled Member"
-msgstr "Peruutettu jäsen"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Category"
-msgstr "Ryhmä"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership
 #: model:ir.model.fields,help:membership.field_product_template__membership
 msgid "Check if the product is eligible for membership."
-msgstr "Tarkasta jos tuote on oikeutettu jäsenyyteen."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__company_id
 #: model:ir.model.fields,field_description:membership.field_report_membership__company_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Yritys"
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__company_id
+msgid "Company related to this journal"
+msgstr ""
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
 msgid "Configuration"
-msgstr "Asetukset"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_tree
 msgid "Contacts"
-msgstr "Yhteystiedot"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_uid
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_uid
 msgid "Created by"
-msgstr "Luonut"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__create_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__create_date
 msgid "Created on"
-msgstr "Luotu"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr "Jäsenyyden tila"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_state
 msgid "Current Membership Status"
-msgstr "Jäsenyyden tila"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Customers"
-msgstr "Asiakkaat"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership_date_from
@@ -202,18 +189,18 @@ msgstr "Asiakkaat"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_start
 #: model:ir.model.fields,help:membership.field_res_users__membership_start
 msgid "Date from which membership becomes active."
-msgstr "Päivä, jolloin jäsenyys astuu voimaan."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__date
 msgid "Date on which member has joined the membership"
-msgstr "Päivä jolloin jäsen on liittynyt jäseneksi"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,help:membership.field_res_users__membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr "Päivä jolloin jäsenyys on peruutettu"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership_date_to
@@ -221,35 +208,39 @@ msgstr "Päivä jolloin jäsenyys on peruutettu"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_stop
 #: model:ir.model.fields,help:membership.field_res_users__membership_stop
 msgid "Date until which membership remains active."
-msgstr "Päivä johon asti jäsenyys pysyy voimassa."
+msgstr ""
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__display_name
+#: model:ir.model.fields,field_description:membership.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_product_template__display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership__display_name
+#: model:ir.model.fields,field_description:membership.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Näyttönimi"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
 msgid "Earned Amount"
-msgstr "Ansaittu summa"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
-msgstr "Päättymispäivä"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr "Jäsenyyden päättämispäivä"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
-msgstr "Jäsenyyden päättymispäivä"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -257,80 +248,77 @@ msgid "Ending Date Of Membership"
 msgstr ""
 
 #. module: membership
-#: sql_constraint:product.template:0
+#: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr "Virhe! Päättymispäivä ei voi olla ennen alkamispäivää."
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Forecast"
-msgstr "Ennuste"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__free_member
 #: model:ir.model.fields,field_description:membership.field_res_users__free_member
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__free
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__free
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__free
 msgid "Free Member"
-msgstr "Vapaa jäsen"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
-msgstr "Lähtöpaikka"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Group By"
-msgstr "Ryhmittely"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Group by..."
-msgstr "Ryhmittele..."
+msgstr ""
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__id
+#: model:ir.model.fields,field_description:membership.field_account_move_line__id
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__id
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_product_template__id
 #: model:ir.model.fields,field_description:membership.field_report_membership__id
+#: model:ir.model.fields,field_description:membership.field_res_partner__id
 msgid "ID"
-msgstr "Tunniste (ID)"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Inactive"
-msgstr "Passiivinen"
+msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_id
 msgid "Invoice"
-msgstr "Lasku"
+msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Laskun rivi"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr "Laskuta jäsenyys"
+msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__invoiced
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__invoiced
 msgid "Invoiced Member"
-msgstr "Laskutettu Jäsen"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr "Laskutettu/Maksettu/Ilmainen"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_state
@@ -344,12 +332,6 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
-"Määrittää jäsenyyden tilan.\n"
-"- Ei jäsen: kumppani joka ei ole hakenut jäsenyyttä.\n"
-"- Peruttu jäsen: jäsen joka on perunut jäsenyytensä.\n"
-"- Vanha jäsen: jäsen jonka jäsenyys on vanhentunut.\n"
-"- Odottava jäsen: jäsen joka on hakenut jäsenyyttä, mutta laskua ei ole vielä luotu.\n"
-"- Maksava jäsen: jäsen joka on maksanut jäsenmaksun. "
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__state
@@ -362,60 +344,73 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
-"Määrittää jäsenyyden tilan.\n"
-"- Ei jäsen: kumppani, joka ei ole hakenut jäsenyyttä.\n"
-"- Peruttu jäsen: jäsen, joka on perunut jäsenyytensä.\n"
-"- Vanha jäsen: jäsenyys on vanhentunut.\n"
-"- Odottava jäsen: hakenut jäsenyyttä, mutta laskua ei ole vielä luotu.\n"
-"- Laskutettu jäsen: jäsenlasku on luotu. \n"
-"- Maksanut jäsen: maksanut jäsenmaksun. "
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
 msgid "Join Date"
-msgstr "Liittymispäivä"
+msgstr ""
 
 #. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+msgid "Join Membership"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move____last_update
+#: model:ir.model.fields,field_description:membership.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_invoice____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:membership.field_product_template____last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership____last_update
+#: model:ir.model.fields,field_description:membership.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_uid
 msgid "Last Updated by"
-msgstr "Viimeksi päivittänyt"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
 msgid "Last Updated on"
-msgstr "Viimeksi päivitetty"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
 msgid "Member"
-msgstr "Jäsen"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
 msgid "Member Price"
-msgstr "Jäsenhinta"
+msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_members_tree
+#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Members"
-msgstr "Jäsenet"
+msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 msgid "Members Analysis"
-msgstr "Jäsenanalyysi"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__product_id
@@ -429,23 +424,23 @@ msgstr "Jäsenanalyysi"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership"
-msgstr "Jäsenyys"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
 msgid "Membership Amount"
-msgstr "Jäsenyyden hinta"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr "Jäsenyysanalyysi"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr "Jäsenyyden kesto"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product__membership_date_to
@@ -453,20 +448,20 @@ msgstr "Jäsenyyden kesto"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_stop
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_stop
 msgid "Membership End Date"
-msgstr "Jäsenyyden päättymispäivä"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__member_price
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership Fee"
-msgstr "Jäsenmaksu"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr "Jäsenyyslasku"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -476,20 +471,21 @@ msgstr ""
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr "Jäsenyyskumppanit"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_id
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership Product"
-msgstr "Jäsenyystuote"
+msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr "Jäsenyystuotteet"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product__membership_date_from
@@ -497,23 +493,23 @@ msgstr "Jäsenyystuotteet"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_start
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_start
 msgid "Membership Start Date"
-msgstr "Jäsenyyden alkupäivä"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr "Jäsenyyden tila"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
 msgid "Membership Status"
-msgstr "Jäsenyyden tila"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership products"
-msgstr "Jäsentuotteet"
+msgstr ""
 
 #. module: membership
 #: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
@@ -525,24 +521,24 @@ msgstr ""
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
-msgstr "Jäsenyydet"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
-msgstr "Kuukausi"
+msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__none
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__none
 msgid "Non Member"
-msgstr "Ei Jäsen"
-
-#. module: membership
-#: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "None/Canceled/Old/Waiting"
-msgstr "Ei ole/Peruttu/Vanha/Odottaa"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
@@ -552,80 +548,80 @@ msgid ""
 msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__old
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__old
 msgid "Old Member"
-msgstr "Vanha jäsen"
+msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__paid
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__paid
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__paid
 msgid "Paid Member"
-msgstr "Maksanut Jäsen"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__partner
 msgid "Partner"
-msgstr "Kumppani"
+msgstr ""
 
 #. module: membership
-#: code:addons/membership/models/partner.py:186
+#: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr "Kumppanilla ei ole laskutettavaa osoitetta."
+msgstr ""
 
 #. module: membership
-#: code:addons/membership/models/partner.py:184
+#: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "Partner is a free Member."
-msgstr "Kumppani on ilmaisjäsen."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
 msgid "Pending Amount"
-msgstr "Odottava määrä"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
-msgstr "Tuotemalli"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__quantity
 msgid "Quantity"
-msgstr "Määrä"
+msgstr ""
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Reporting"
-msgstr "Raportointi"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr "Tehty liikevaihto"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__user_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Salesperson"
-msgstr "Myyjä"
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__free_member
 #: model:ir.model.fields,help:membership.field_res_users__free_member
 msgid "Select if you want to give free membership."
-msgstr "Valitse jos haluat antaa ilmaisen jäsenyyden."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
-msgstr "Alkupäivä"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -635,48 +631,53 @@ msgstr ""
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Taxes"
-msgstr "Verot"
+msgstr ""
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line__account_invoice_id
+msgid "The move of this entry line."
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,help:membership.field_res_users__membership_amount
 msgid "The price negotiated by the partner"
-msgstr "Kumppanin neuvottelema hinta"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr "Tämä huomautus näytetään tarjouksissa..."
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr "Tämä näyttää kentät \"maksettu\", \"vanha\", ja \"yhteensä\""
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "Tämä näyttää kentät \"odottaa\", \"laskutettu\" ja \"odottaa yhteensä\""
+msgstr ""
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
 msgid "To"
-msgstr "Vastaanottaja"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Vendors"
-msgstr "Toimittajat"
+msgstr ""
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
+#: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__waiting
+#: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__waiting
 msgid "Waiting Member"
-msgstr "Odottava jäsen"
+msgstr ""
 
 #. module: membership
-#: code:addons/membership/models/partner.py:162
+#: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "You cannot create recursive associated members."
 msgstr ""

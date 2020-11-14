@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Yip132 <yannick.renders@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
@@ -33,6 +34,9 @@ msgid ""
 "                        Open the two-factor authentication app on your\n"
 "                        device to obtain a code and verify your identity"
 msgstr ""
+"<i class=\"fa fa-2x fa-mobile pull-left\"/>\n"
+"                        Open de tweestapsverificatie app op uw\n"
+"                        toestel om een code te bekomen en uw identiteit te bevestigen"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -40,6 +44,8 @@ msgid ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                Two-factor authentication enabled"
 msgstr ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                                Tweestapsverificatie ingeschakeld"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -47,6 +53,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/>\n"
 "                                Two-factor authentication not enabled"
 msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                                Tweestapsverificatie uitgeschakeld"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -56,6 +64,10 @@ msgid ""
 "                            Two-factor authentication not enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"alert alert-info\" role=\"status\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                            Tweestapsverificatie niet ingeschakeld\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -65,6 +77,10 @@ msgid ""
 "                            Two-factor authentication enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-success\">\n"
+"                            <i class=\"fa fa-check-circle\"/>\n"
+"                            Tweestapsverificatie ingeschakeld\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -73,11 +89,14 @@ msgid ""
 "                                should enter below. Don't worry if the code changes in the app,\n"
 "                                it stays valid a bit longer."
 msgstr ""
+"Na het scannen van de barcode, zal de app een 6-cijferige code tonen dat u\n"
+"                                hieronder moet ingeven. Maak u geen zorgen als de code wijzigt in de app\n"
+"                                deze blijft een beetje langer geldig."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code (6 digits)"
-msgstr ""
+msgstr "Verificatiecode (6 cijfers)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -98,7 +117,7 @@ msgstr "Aangemaakt op"
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable TOTP on users"
-msgstr ""
+msgstr "TOTP uitschakelen voor gebruikers"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
@@ -111,7 +130,7 @@ msgstr "Schermnaam"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Enable Two-Factor Authentication"
-msgstr ""
+msgstr "Tweestapsverificatie inschakelen"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -122,7 +141,7 @@ msgstr "Schakel tweefactorauthenticatie in"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter the 6-digit code from your app"
-msgstr ""
+msgstr "Voer de 6-cijferige code van uw app in"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -140,7 +159,7 @@ msgstr "ID"
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "Invalid authentication code format."
-msgstr ""
+msgstr "Ongeldig formaat verificatiecode"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard____last_update
@@ -162,12 +181,12 @@ msgstr "Laatst bijgewerkt op"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Or enter the secret code manually:"
-msgstr ""
+msgstr "Of voeg de geheime code handmatig in:"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr ""
+msgstr "QR-code"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -175,11 +194,13 @@ msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
 "                                If you cannot scan the barcode, here are some alternative options:"
 msgstr ""
+"Scan de afbeelding hieronder met de tweestapsverificatie app op uw toestel.<br/>\n"
+"                                Indien u de barcode niet kan scannen, hier zijn enkele andere opties:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode with your app"
-msgstr ""
+msgstr "Scan deze barcode met uw app"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
@@ -190,22 +211,22 @@ msgstr "Geheim"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
-msgstr ""
+msgstr "De verificatie code mag enkel cijfers bevatten"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr ""
+msgstr "Totp geheim"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "Two-Factor Setup Wizard"
-msgstr ""
+msgstr "Tweestapsverificatie instellen"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "Tweestapsverificatie"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -216,25 +237,25 @@ msgstr "Twee-factor-authenticatie"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr ""
+msgstr "Tweestapsverificatie reeds ingeschakeld"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr ""
+msgstr "Tweestapsverificatie kan enkel voor uzelf ingeschakeld worden"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for user(s) %s"
-msgstr ""
+msgstr "Tweestapsverifictie uitgeschakeld voor gebruiker(s) %s"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication is now enabled."
-msgstr ""
+msgstr "Tweestapsverificatie is nu ingeschakeld"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -262,7 +283,7 @@ msgstr "Verificatie code"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Verificatie mislukt, gelieve de 6-cijferige code te controleren."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -272,12 +293,12 @@ msgstr "Controleer"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "What is this?"
-msgstr ""
+msgstr "Wat is dit?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Your two-factor secret:"
-msgstr ""
+msgstr "Uw tweestaps geheim:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard

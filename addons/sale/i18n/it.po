@@ -697,11 +697,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente con un meccanismo:\n"
-"  - Manuale: la quantità viene impostata manualmente sulla riga\n"
-"  - Calcolo analitico delle spese: la quantità è la somma delle spese registrate\n"
-"  - Foglio ore: la quantità è la somma delle ore registrate sulle attività collegate a questa riga di vendita\n"
-"  - Movimenti magazzino: la quantità proviene da prelievi confermati\n"
+"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica da note spese: quantità calcolata come somma delle note spese confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -1191,7 +1191,7 @@ msgstr "Valuta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr "Tasso di cambio"
+msgstr "Tasso valuta"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
@@ -3662,7 +3662,7 @@ msgstr "Fase"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "Inizia controllando i dati aziendali."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
@@ -4229,7 +4229,7 @@ msgstr "Imponibile da fatturare"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "Importo fatturato non tassato"
+msgstr "Imponibile fatturato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal

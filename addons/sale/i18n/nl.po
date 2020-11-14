@@ -11,8 +11,8 @@
 # Martin Trigaux, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,8 +56,7 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') and 'Lopende bestelling' or 'Bestelling'} (Ref ${object.name or "
-"'n/a' })"
+"'pending') and 'Lopende order' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -96,7 +95,7 @@ msgid ""
 "'Order - %s' % (object.name)"
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Offerte - %s' % (object.name)) or "
-"'Bestelling - %s' % (object.name)"
+"'Order - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -1015,8 +1014,8 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
-"Vink dit aan als u offertes naar uw klanten verzendt in plaats van "
-"bestellingen meteen te bevestigen."
+"Vink dit aan als u offertes naar uw klanten verzendt in plaats van orders "
+"meteen te bevestigen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -1461,9 +1460,8 @@ msgid ""
 msgstr ""
 "Leveringsdatum die u aan de klant kunt beloven, berekend vanaf de minimale "
 "doorlooptijd van de orderregels in het geval van serviceproducten. In geval "
-"van verzending wordt rekening gehouden met het verzendbeleid van de "
-"bestelling om de minimale of maximale doorlooptijd van de orderregels te "
-"gebruiken."
+"van verzending wordt rekening gehouden met het verzendbeleid van de order om"
+" de minimale of maximale doorlooptijd van de orderregels te gebruiken."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1569,7 +1567,7 @@ msgstr "Bedrag aanbetaling"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Bedrag aanbetaling (vast)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1930,8 +1928,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
-"Importeren van Amazon bestellingen en het synchroniseren van leveringen"
+msgstr "Importeren van Amazon orders en het synchroniseren van leveringen"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -2946,7 +2943,7 @@ msgstr "Productsjabloon"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Productmaateenheid Alleen lezen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -3897,7 +3894,7 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Deze producten kunnen niet tot één bedrijf %s beperkt worden omdat die al gebruikt werden voor een offerte of bestelling in een andere bedrijf:\n"
+"Deze producten kunnen niet tot één bedrijf %s beperkt worden omdat die al gebruikt werden voor een offerte of order in een andere bedrijf:\n"
 "%s\n"
 "In plaats daarvan kan u deze producten archiveren en opnieuw aanmaken met een bedrijfsrestrictie, of ze als gemeenschappelijk product laten staan."
 
@@ -3910,7 +3907,7 @@ msgid ""
 msgstr ""
 "De factuur wordt automatisch gegenereerd en is beschikbaar in het klantportal wanneer de transactie wordt bevestigd door de betalingsverwerker.\n"
 "De factuur is gemarkeerd als betaald en de betaling is geregistreerd in het betalingsdagboek dat is gedefinieerd in de configuratie van de betalingsverwerker.\n"
-"Deze modus wordt aanbevolen als u de eindfactuur bij de bestelling verstrekt en niet na de levering."
+"Deze modus wordt aanbevolen als u de eindfactuur bij de order verstrekt en niet na de levering."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3987,7 +3984,7 @@ msgid ""
 " the order"
 msgstr ""
 "De koers van de valuta naar de valuta van tarief 1 van toepassing op de "
-"datum van de bestelling"
+"datum van de order"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0

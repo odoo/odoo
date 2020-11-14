@@ -12,7 +12,6 @@
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
-# Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -51,7 +50,7 @@ msgstr "%s (copia)"
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
 msgstr ""
-"'Registrazione evento - %s' % (object.name or "
+"\"Registrazione evento - %s\" % (object.name or "
 "'Partecipante').replace('/','')"
 
 #. module: event
@@ -162,6 +161,18 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Gentile ${object.name},<br/>\n"
+"    La ringraziamo per la Sua richiesta.<br/>\n"
+"    In allegato il tesserino per l'evento ${object.event_id.name}.<br/>\n"
+"    Per qualsiasi domanda, non esiti a contattarci.\n"
+"    <br/><br/>\n"
+"    Grazie,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -767,8 +778,8 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
-"Aggiunge un menù di navigazione alle pagine web dell'evento con orari, "
-"sessioni, un modulo di proposta sessioni ecc."
+"Aggiunge un menù di navigazione alle pagine web dell'evento con programma, "
+"sessioni, modulo di proposta sessioni ecc."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -810,7 +821,7 @@ msgstr "Età"
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr "Un evento non pubblicato"
+msgstr "Evento non pubblicato"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -822,7 +833,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
 msgid "Announced"
-msgstr "Announciato"
+msgstr "Annunciato"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -906,11 +917,13 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"Conferma automatica delle registrazioni. Vengono confermate in modo "
+"automatico subito dopo la creazione."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirmation"
-msgstr ""
+msgstr "Conferma automatica"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -1003,13 +1016,13 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Prenotato"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "Prenotato da"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -1063,7 +1076,7 @@ msgstr ""
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Click <b>add</b> to create a new stage."
-msgstr ""
+msgstr "Fai clic su <b>aggiungi</b> per creare una nuova fase."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -1152,7 +1165,7 @@ msgstr "Conferma registrazione"
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Confirmed"
-msgstr "Confermato"
+msgstr "Con conferma"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2037,7 +2050,7 @@ msgstr "Creiamo il primo <b>evento</b>."
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "Limita registrazioni"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2126,7 +2139,7 @@ msgstr "Gestione e pubblicazione di un programma con sessioni"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "Segna come presente"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2136,7 +2149,7 @@ msgstr "Marketing"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Massimo"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
@@ -2209,7 +2222,7 @@ msgstr "Nome"
 #. module: event
 #: model:event.stage,name:event.event_stage_new
 msgid "New"
-msgstr "Nuova"
+msgstr "Nuovo"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -2275,6 +2288,7 @@ msgstr "Note"
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Adesso che l'evento è pronto, fai clic qui per spostarlo su un'altra fase."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2446,7 +2460,7 @@ msgstr "Acquisti, gestione vendite e acquisti, contabilità finanziaria."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "Quiz per le sessioni"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -2496,7 +2510,7 @@ msgstr "Registrazione"
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr "Tesserino di registrazione"
+msgstr "Tesserino registrazione"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_open
@@ -2648,7 +2662,7 @@ msgstr "Vendita biglietti con ordini di vendita"
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
 #: model:ir.model.fields,field_description:event.field_event_type_mail__notification_type
 msgid "Send"
-msgstr "Invia"
+msgstr "Invio"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2660,7 +2674,7 @@ msgstr "Invia con e-mail"
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Sent"
-msgstr "Inviata"
+msgstr "Inviato"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__sequence
@@ -2673,7 +2687,7 @@ msgstr "Sequenza"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr "Imposta a non confermato"
+msgstr "Imposta a nessuna conferma"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
@@ -3039,7 +3053,7 @@ msgstr "Tipo di eccezione attività sul record."
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
-msgstr "Non confermato"
+msgstr "Nessuna conferma"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
@@ -3080,7 +3094,7 @@ msgstr "Numero messaggi non letti"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr "Eventi del giorno"
+msgstr "Prossimi eventi da oggi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3103,6 +3117,8 @@ msgstr "Usare il fuso orario predefinito"
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
+"Utilizza i <b>percorsi di navigazione</b> per ritornare alla panoramica del "
+"kanban."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -3206,7 +3222,7 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Inoltre è possibile aggiungere una descrizione per aiutare i colleghi a "
+"È inoltre possibile aggiungere una descrizione per aiutare i colleghi a "
 "capire il significato e lo scopo della fase. "
 
 #. module: event

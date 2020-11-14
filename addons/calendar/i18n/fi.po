@@ -1,25 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar
+# 	* calendar
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Jussi Lehto <jussi@gulfeo.com>, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Timo Koukkari <ti.ko@netikka.fi>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Timo Koukkari <ti.ko@netikka.fi>, 2018\n"
+"POT-Creation-Date: 2020-10-02 14:11+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,92 +18,60 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr "${object.event_id.name} - Muistutus"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr "${object.event_id.name}: Päiväys päivitetty"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:741
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid ""
-"%s at %s To\n"
-" %s at %s (%s)"
+"%(date_start)s at %(time_start)s To\n"
+" %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:732
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "%s at (%s To %s) (%s)"
+msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:229
+#: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has accepted invitation"
-msgstr "%s on hyväksynyt kutsun"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:237
+#: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has declined invitation"
-msgstr "%s on hylännyt kutsun"
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_5
-msgid "1 Day(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_3
-msgid "1 Hour(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_1
-msgid "15 Minute(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_4
-msgid "2 Hour(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_1
-msgid "3 Hour(s), by e-mail"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_notif_2
-msgid "30 Minute(s)"
-msgstr ""
-
-#. module: calendar
-#: model:calendar.alarm,name:calendar.alarm_mail_2
-msgid "6 Hour(s), by e-mail"
 msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
 msgid ""
 "<div>\n"
-"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
 "        ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Accept</a>\n"
-"        <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Decline</a>\n"
-"        <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
 "        <td width=\"130px;\">\n"
 "            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
 "                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
@@ -131,6 +87,7 @@ msgid ""
 "            </div>\n"
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
+"        % endif\n"
 "        <td style=\"padding-top: 5px;\">\n"
 "            <p><strong>Details of the event</strong></p>\n"
 "            <ul>\n"
@@ -142,8 +99,11 @@ msgid ""
 "                % if object.event_id.description :\n"
 "                    <li>Description: ${object.event_id.description}</li>\n"
 "                % endif\n"
+"                % if recurrent:\n"
+"                    <li>When: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
@@ -163,8 +123,8 @@ msgid ""
 "    </tr></table>\n"
 "    <br/>\n"
 "    Thank you,\n"
-"    <br/>\n"
-"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
 "        ${object.event_id.user_id.signature | safe}\n"
 "    % endif\n"
 "</div>\n"
@@ -175,20 +135,23 @@ msgstr ""
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
 msgid ""
 "<div>\n"
-"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
 "        The date of the meeting has been updated. The meeting ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Accept</a>\n"
-"        <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Decline</a>\n"
-"        <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
 "        <td width=\"130px;\">\n"
 "            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
 "                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
@@ -204,6 +167,7 @@ msgid ""
 "            </div>\n"
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
+"        % endif\n"
 "        <td style=\"padding-top: 5px;\">\n"
 "            <p><strong>Details of the event</strong></p>\n"
 "            <ul>\n"
@@ -215,8 +179,11 @@ msgid ""
 "                % if object.event_id.description :\n"
 "                    <li>Description: ${object.event_id.description}</li>\n"
 "                % endif\n"
+"                % if recurrent:\n"
+"                    <li>When: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
@@ -236,8 +203,8 @@ msgid ""
 "    </tr></table>\n"
 "    <br/>\n"
 "    Thank you,\n"
-"    <br/>\n"
-"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
 "        ${object.event_id.user_id.signature | safe}\n"
 "    % endif\n"
 "</div>\n"
@@ -249,31 +216,36 @@ msgstr ""
 msgid ""
 "<div>\n"
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <!--\n"
+"        In a recurring event case, the object.event_id is always the first event\n"
+"        This makes the event date (and a lot of other information) incorrect\n"
+"    -->\n"
+"    % set event_id = ctx.get('force_event_id') or object.event_id\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
 "        This is a reminder for the below event :\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/accept?token=${object.access_token}&amp;event_id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Accept</a>\n"
-"        <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Decline</a>\n"
-"        <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
 "        <td width=\"130px;\">\n"
 "            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
-"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                ${event_id.get_interval('dayname', tz=object.partner_id.tz if not event_id.allday else None)}\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                ${event_id.get_interval('day', tz=object.partner_id.tz if not event_id.allday else None)}\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                ${event_id.get_interval('month', tz=object.partner_id.tz if not event_id.allday else None)}\n"
 "            </div>\n"
 "            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
-"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"                ${not event_id.allday and event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
 "            </div>\n"
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
@@ -309,8 +281,8 @@ msgid ""
 "    </tr></table>\n"
 "    <br/>\n"
 "    Thank you,\n"
-"    <br/>\n"
-"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
 "        ${object.event_id.user_id.signature | safe}\n"
 "    % endif\n"
 "</div>\n"
@@ -319,70 +291,90 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr "<span> tuntia</span>"
+msgstr ""
 
 #. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
+msgid "A user cannot have twice the same contact."
+msgstr ""
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Accept"
-msgstr "Hyväksy"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__accepted
 msgid "Accepted"
-msgstr "Hyväksytty"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "Vaatii toimenpiteitä"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
-msgstr "Aktiivinen"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
 msgid "Activities"
-msgstr "Toimenpiteet"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity
 msgid "Activity"
-msgstr "Toimenpide"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Toimenpiteiden tyyppi"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
-#, python-format
-msgid "All Day"
-msgstr "Koko päivä"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:728
-#, python-format
-msgid "AllDay , %s"
-msgstr "Koko päivä , %s"
-
-#. module: calendar
-#: sql_constraint:calendar.contacts:0
-msgid "An user cannot have twice the same contact."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_ir_attachment
-msgid "Attachment"
-msgstr "Liite"
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
+#, python-format
+msgid "All Day"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "All Day, %(day)s"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
+msgid "All events"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Archived"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -390,46 +382,50 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
-msgid "Attendee"
-msgstr "Osallistuja"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
 msgid "Attendee Status"
-msgstr "Osallistujien tila"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
-msgstr "Osallistujat"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
-msgstr "Saatavuus"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1693
-#: selection:calendar.attendee,availability:0
-#: selection:calendar.event,show_as:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
+msgid "Base Event"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
 #, python-format
 msgid "Busy"
-msgstr "Varattu"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__byday
+msgid "By day"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
-msgid "By day"
-msgstr "Päivittäin"
+msgid "Byday"
+msgstr ""
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 msgid "Calendar"
-msgstr "Kalenteri"
+msgstr ""
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -437,7 +433,7 @@ msgstr "Kalenteri"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr "Kalenterihälytys"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
@@ -450,9 +446,15 @@ msgid "Calendar Contacts"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
+msgid "Calendar Event"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr "Kalenterikutsu"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
@@ -467,36 +469,34 @@ msgid "Calendar: Event Reminder"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
+#: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
+msgid ""
+"Choose what to do with other events in the recurrence. Updating All Events "
+"is not allowed when dates or time is modified"
 msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
-msgid "Category"
-msgstr "Ryhmä"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
-"Klikkaa tästä päivittääksesi tämä merkintä, mutta ei toistuvaismerkintöjä."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
 msgid "Common name"
-msgstr "Yleinen nimi"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,state:0
-msgid "Confirmed"
-msgstr "Vahvistettu"
+#. openerp-web
+#: code:addons/calendar/static/src/js/calendar_controller.js:0
+#, python-format
+msgid "Confirm"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
 msgid "Contact"
-msgstr "Kontakti"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
+msgid "Count"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -504,8 +504,9 @@ msgstr "Kontakti"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
 msgid "Created by"
-msgstr "Luonut"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
@@ -513,58 +514,72 @@ msgstr "Luonut"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
 msgid "Created on"
-msgstr "Luotu"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_start
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Date"
-msgstr "Päivämäärä"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,month_by:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__date
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__date
 msgid "Date of month"
-msgstr "Kuukauden päivä"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__day
+msgid "Day"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr "Kuukauden päivä"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,month_by:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__day
 msgid "Day of month"
-msgstr "Kuukauden päivä"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
-msgid "Day(s)"
-msgstr "Päivä(t)"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Decline"
-msgstr "Hylkää"
-
-#. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
-msgid "Declined"
-msgstr "Hylätty"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__description
-msgid "Description"
-msgstr "Kuvaus"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__daily
+msgid "Days"
+msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:18
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
+msgid "Decline"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__declined
+msgid "Declined"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__description
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Description"
+msgstr ""
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "Details"
-msgstr "Tiedot"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -573,19 +588,24 @@ msgstr "Tiedot"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_partner__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_users__display_name
 msgid "Display Name"
-msgstr "Näyttönimi"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
-msgstr "Dokumentti"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr "Dokumentin ID"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
@@ -598,58 +618,81 @@ msgid "Document Model Name"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
+msgid "Dtstart"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
-msgstr "Kesto"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr "Kesto minuuteissa"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#. openerp-web
+#: code:addons/calendar/static/src/js/calendar_controller.js:0
+#, python-format
+msgid "Edit Recurrent event"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Edit recurring event"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
 msgid "Email"
-msgstr "Sähköposti"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hours"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr "Kutsutun henkilön sähköposti"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_id
 msgid "Employee"
-msgstr "Työntekijä"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "Päättymispäivä"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_datetime
-msgid "End Datetime"
-msgstr "Loppuaika"
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
+msgid "End Type"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,end_type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
 msgid "End date"
-msgstr "Päättymispäivä"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr "Päättyy"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_calendar_event
-msgid "Event"
-msgstr "Tapahtuma"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
@@ -667,95 +710,113 @@ msgid "Event Meeting Type"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_calendar_recurrence
+msgid "Event Recurrence Rule"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
-msgstr "Tapahtuman aika"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1234
+#: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "Event recurrence interval cannot be negative."
-msgstr "Tapahtuman toistumisväli ei voi olla negatiivinen."
+msgid "Every %(count)s %(period)s, "
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
 msgid "Everyone"
-msgstr "Näytä kaikille"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/mail_activity.py:38
+#: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: "
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
-msgid "Fifth"
-msgstr "Viides"
-
-#. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 msgid "First"
-msgstr "Ensimmäinen"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:998
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr "Ensin sinun pitää määritellä kutsulle päivä."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
+msgid "Follow Recurrence"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
 msgid "Followers"
-msgstr "Seuraajat"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Seuraajat (kanavat)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seuraajat (kumppanit)"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
+msgid "Forever"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__4
 msgid "Fourth"
-msgstr "Neljäs"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.attendee,availability:0
-#: selection:calendar.event,show_as:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fr
+msgid "Fr"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Free"
-msgstr "Vapaa"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Free/Busy"
-msgstr "Vapaa/Varattu"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
 msgid "Fri"
-msgstr "Pe"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__fr
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__fr
 msgid "Friday"
-msgstr "Perjantai"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "Ryhmittely"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1636
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "Group by date is not supported, use the calendar view instead."
+msgid "Grouping by %s is not allowed."
 msgstr ""
-"Päivämäärällä ryhmittely ei ole tuettu, käytä sen sijaan kalenterinäkymää."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -763,9 +824,9 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-msgid "Hour(s)"
-msgstr "Tunti(a)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
+msgid "Hours"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
@@ -774,18 +835,20 @@ msgstr "Tunti(a)"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:calendar.field_ir_http__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:calendar.field_res_partner__id
+#: model:ir.model.fields,field_description:calendar.field_res_users__id
 msgid "ID"
-msgstr "Tunniste (ID)"
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
@@ -800,24 +863,29 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
+msgid "Interval"
+msgstr ""
+
+#. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr "Kutsu"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 msgid "Invitation Token"
-msgstr "Kutsuavain"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr "Kutsun yksityiskohdat"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr "Kutsu"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
@@ -827,17 +895,12 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr "Kutsut"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_mail_wizard_invite
-msgid "Invite wizard"
-msgstr "Kutsuavustaja"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
-msgstr "On seuraaja"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -845,9 +908,10 @@ msgid "Is the Event Highlighted"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__-1
 msgid "Last"
-msgstr "Viimeinen"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm____last_update
@@ -856,8 +920,14 @@ msgstr "Viimeinen"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence____last_update
+#: model:ir.model.fields,field_description:calendar.field_ir_http____last_update
+#: model:ir.model.fields,field_description:calendar.field_mail_activity____last_update
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type____last_update
+#: model:ir.model.fields,field_description:calendar.field_res_partner____last_update
+#: model:ir.model.fields,field_description:calendar.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
@@ -865,8 +935,9 @@ msgstr "Viimeksi muokattu"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
 msgid "Last Updated by"
-msgstr "Viimeksi päivittänyt"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
@@ -874,35 +945,36 @@ msgstr "Viimeksi päivittänyt"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
 msgid "Last Updated on"
-msgstr "Viimeksi päivitetty"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Peruskalenterin viimeinen ilmoitus on merkitty luetuksi"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 msgid "Let the event automatically repeat at that interval"
-msgstr "Anna tapahtuman toistua säännöllisin väliajoin"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
-msgstr "Sijainti"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__location
 msgid "Location of Event"
-msgstr "Tapahtuman paikka"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Logo"
-msgstr "Logo"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
@@ -912,57 +984,52 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
 msgid "Me"
-msgstr "Minä"
+msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#: selection:mail.activity.type,category:0
 msgid "Meeting"
-msgstr "Tapaaminen"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:942
-#: code:addons/calendar/models/calendar.py:947
+#: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
-msgid "Meeting '%s' starts '%s' and ends '%s'"
+msgid ""
+"Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr "Tapaamisen yksityiskohdat"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
-msgstr "Tapaamisen aihe"
+msgstr ""
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr "Tapaamistyypit"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
 msgid "Meeting linked"
-msgstr "Tapaaminen linkitetty"
+msgstr ""
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
-msgstr "Tapaamiset"
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_mail_message
-msgid "Message"
-msgstr "Viesti"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
@@ -972,74 +1039,117 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
 msgid "Messages"
-msgstr "Viestit"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,interval:0
-msgid "Minute(s)"
-msgstr "Minuutti(a)"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
+msgid "Minutes"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Misc"
-msgstr "Sekalaiset"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__mo
+msgid "Mo"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mo
 msgid "Mon"
-msgstr "Ma"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__mo
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__mo
 msgid "Monday"
-msgstr "Maanantai"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Month(s)"
-msgstr "Kuukautta"
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
+msgid "Month By"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__monthly
+msgid "Months"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "Omat tapaamiset"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
 msgid "Name"
-msgstr "Nimi"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__needsaction
 msgid "Needs Action"
-msgstr "Vaatii toimia"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr "Ei, en osallistu"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "No feedback yet"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
 msgid "Notification"
-msgstr "Ilmoitus"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Days"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minutes"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hours"
+msgstr ""
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minutes"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Toimenpiteiden määrä"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Toimenpiteitä vaativien viestien määrä"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -1047,31 +1157,32 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,end_type:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__count
 msgid "Number of repetitions"
-msgstr "Toistojen määrä"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Lukemattomia viestejä"
+msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:17
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 msgid "Only internal users"
-msgstr "Näytä vain sisäisille käyttäjille"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,privacy:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 msgid "Only me"
-msgstr "Näytä vain minulle"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
@@ -1081,80 +1192,63 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
 msgid "Option"
-msgstr "Valinta"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Options"
-msgstr "Vaihtoehdot"
-
-#. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "Muu"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Owner"
-msgstr "Omistaja"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
-msgstr "Osallistuja"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Käyttäjän kumppanitiedot"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1247
-#, python-format
-msgid "Please select a proper day of the month."
-msgstr "Valitse kuukauden päivä."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
-msgstr "Yksityisyys"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
-msgstr "Toistuvuus"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
+msgid "Recurrence Rule"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr "Toiston päättö"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
+msgid "Recurrence Update"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
 msgid "Recurrent"
-msgstr "Toistuva"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrent_id
-msgid "Recurrent ID"
-msgstr "Toiston ID"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrent_id_date
-msgid "Recurrent ID date"
-msgstr "Toistuvan ID:n päiväys"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
-msgid "Recurrent Meeting"
-msgstr "Toistuva tapaaminen"
+msgid "Recurrent Event"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr "Toistosääntä"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
@@ -1162,60 +1256,72 @@ msgid "Remind Before"
 msgstr ""
 
 #. module: calendar
-#: selection:mail.activity.type,category:0
-msgid "Reminder"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
 msgid "Reminders"
-msgstr "Muistutukset"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Repeat"
-msgstr "Toista"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat Every"
-msgstr "Toista joka"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__final_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
 msgid "Repeat Until"
-msgstr "Toista kunnes"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Toista joka (päivä/viikko/kuukausi/vuosi)"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
-msgstr "Toista x kertaa"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Responsible"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-msgid "Responsible"
-msgstr "Vastuuhenkilö"
+msgid "Responsible Contact"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.alarm,type:0
-msgid "SMS Text Message"
-msgstr "Tekstiviesti"
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
+msgid "Rrule"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
+msgid "Rrule Type"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sa
+msgid "Sa"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
 msgid "Sat"
-msgstr "La"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sa
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__sa
 msgid "Saturday"
-msgstr "Lauantai"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1225,116 +1331,131 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "Hae tapaamiset"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__2
 msgid "Second"
-msgstr "Sekunti"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr "Valitse osallistujat..."
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr "Lähetä sähköpostia"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show Time as"
-msgstr "Näytä aika muodossa"
+msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:19
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
 #, python-format
 msgid "Snooze"
-msgstr "Torkku"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 msgid "Start"
-msgstr "Aloita"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr "Alkupäivä"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_datetime
-msgid "Start DateTime"
-msgstr "Alkuaika"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Tapahtuman alkupäivä, kokopäivän tapahtumille ilman aikaa."
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr "Alkaa"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__state
 msgid "Status"
-msgstr "Tila"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__state
 msgid "Status of the attendee's participation"
-msgstr "Osallistujan osallistumisen tila"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Status:"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
 msgid "Stop"
-msgstr "Lopeta"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Tapahtuman loppupäivä, kokopäivän tapahtumille ilman aikaa."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__su
+msgid "Su"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Subject"
-msgstr "Aihe"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__su
 msgid "Sun"
-msgstr "Su"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__su
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__su
 msgid "Sunday"
-msgstr "Sunnuntai"
+msgstr ""
 
 #. module: calendar
-#: sql_constraint:calendar.event.type:0
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr "Tunnisteen nimi on jo olemassa!"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "Tunnisteet"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Tentative"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__th
+msgid "Th"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr "."
+msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/mail_activity.js:42
+#: code:addons/calendar/static/src/js/mail_activity.js:0
 #, python-format
 msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
@@ -1350,144 +1471,227 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
+msgid "The day must be between 1 and 31"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:946
+#: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,byday:0
-msgid "Third"
-msgstr "Kolmas"
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "The interval cannot be negative."
+msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "This event is linked to a recurrence...<br/>"
-msgstr "Tämä tapahtuma on linkitetty toistuvaistapahtumaan...<br/>"
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "The number of repetitions cannot be negative."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__3
+msgid "Third"
+msgstr ""
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#, python-format
+msgid "This and following events"
+msgstr ""
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#, python-format
+msgid "This event"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th
 msgid "Thu"
-msgstr "To"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__th
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__th
 msgid "Thursday"
-msgstr "Torstai"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/res_users.py:41
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__event_tz
+msgid "Timezone"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__tu
+msgid "Tu"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
 msgid "Tue"
-msgstr "Ti"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__tu
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__tu
 msgid "Tuesday"
-msgstr "Tiistai"
+msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
 msgid "Type"
-msgstr "Tyyppi"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.attendee,state:0
-#: selection:calendar.event,attendee_status:0
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
 msgid "Uncertain"
-msgstr "Epävarma"
-
-#. module: calendar
-#: selection:calendar.event,state:0
-msgid "Unconfirmed"
-msgstr "Vahvistamaton"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
-msgstr "Yksikkö"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 msgid "Unread Messages"
-msgstr "Lukemattomat viestit"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Lukemattomien viestien laskuri"
+msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__until
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
-msgstr "Kunnes"
+msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Update only this instance"
-msgstr "Päivitä vain tämä instanssi"
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid ""
+"Updating All Events is not allowed when dates or time is modified. You can "
+"only update one particular event and following events."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
 msgid "Users"
-msgstr "Käyttäjät"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__we
+msgid "We"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__we
 msgid "Wed"
-msgstr "Ke"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,week_list:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__we
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__we
 msgid "Wednesday"
-msgstr "Keskiviikko"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Week(s)"
-msgstr "Viikko(a)"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__week_list
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__weekday
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__weekday
 msgid "Weekday"
-msgstr "Arkipäivä"
+msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,rrule_type:0
-msgid "Year(s)"
-msgstr "Vuotta"
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__weekly
+msgid "Weeks"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__yearly
+msgid "Years"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Kyllä, osallistun"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:159
+#: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "Et voi kopioida kalenterin mukaista osallistujaa"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "You have to choose at least one day in the week"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "day %s, "
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "esim. lounastapaaminen"
+msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1232
+#: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "interval cannot be negative."
-msgstr "väli ei voi olla negatiivinen."
+msgid "for %s events"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on %s,"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on the %(position)s %(weekday)s, "
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "until %s"
+msgstr ""
