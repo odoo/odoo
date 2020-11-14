@@ -166,7 +166,7 @@
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
                     <i t-if="channel.getType() === 'multi_user_channel' and !channel.isPublic()" class="fa fa-lock" title="Private channel" role="img" aria-label="Private channel"/>
-                    <t t-esc="_.unescape(channel.getName())"/>
+                    <t t-esc="channel.getName()"/>
                     <i t-if="channel.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <t t-if="channel.hasTypingNotification() and channel.isSomeoneTyping()">
