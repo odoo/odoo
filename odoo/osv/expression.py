@@ -649,9 +649,9 @@ class TranslationExtendedLeaf(ExtendedLeaf):
         super().__init__(leaf, model, join_context=join_context, internal=internal)
 
 
-def create_json_translation_leaf(leaf):
+def create_json_translation_leaf(leaf, new_elements=None):
     new_join_context = [tuple(context) for context in leaf.join_context]
-    new_leaf = TranslationExtendedLeaf(leaf.leaf, leaf.model, join_context=new_join_context)
+    new_leaf = TranslationExtendedLeaf(new_elements or leaf.leaf, leaf.model, join_context=new_join_context)
     return new_leaf
 
 
@@ -1129,7 +1129,9 @@ class expression(object):
                         push_result(create_substitution_leaf(leaf, OR_OPERATOR))
                         # search into translation values first
                         push_result(create_json_translation_leaf(leaf))
-                        # fallback on the non translated value
+                        # fallback on the non translated value if  ot value
+                        push_result(create_substitution_leaf(leaf, AND_OPERATOR))
+                        push_result(create_json_translation_leaf(leaf, (leaf.leaf[0], '=', False)))
                         push_result(leaf)
                     else:
                         need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
