@@ -59,7 +59,7 @@ class PortalShare(models.TransientModel):
             saved_lang = self.env.lang
             self = self.with_context(lang=partner.lang)
             template = self.env.ref('portal.portal_share_template', False)
-            active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
+            active_record.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True)).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
                 subject=_("You are invited to access %s", active_record.display_name),
@@ -75,7 +75,7 @@ class PortalShare(models.TransientModel):
             saved_lang = self.env.lang
             self = self.with_context(lang=partner.lang)
             template = self.env.ref('portal.portal_share_template', False)
-            active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
+            active_record.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True)).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
                 subject=_("You are invited to access %s", active_record.display_name),
