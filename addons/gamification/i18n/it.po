@@ -504,8 +504,8 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
-"Un obiettivo viene considerato completato quando il valore corrente "
-"raggiunge il valore da raggiungere"
+"Un obiettivo viene considerato completato dopo il confronto tra il valore "
+"attuale e il valore da raggiungere"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -739,6 +739,8 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
+"Sfida che ha generato l'obiettivo. Per valorizzare il campo, creare "
+"obiettivi assegnando le sfide agli utenti."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -876,7 +878,7 @@ msgstr "Attuale"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
 msgid "Current Value"
-msgstr "Valore Attuale"
+msgstr "Valore attuale"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__daily
@@ -1039,7 +1041,7 @@ msgstr "Esclusivo (completato oppure no)"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__failed
 msgid "Failed"
-msgstr "Invio non riuscito"
+msgstr "Fallito"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_id
@@ -1894,7 +1896,7 @@ msgstr "Raggiunto"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr "Raggiunto quando il valore corrente è"
+msgstr "Raggiunto con il seguente valore attuale."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
@@ -1959,7 +1961,7 @@ msgstr "Karma richiesto"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr "Reimposta completamento"
+msgstr "Annulla completamento"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__manager_id
@@ -2015,7 +2017,7 @@ msgstr "Sfide in corso"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr "Pianifica"
+msgstr "Programma"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
@@ -2177,17 +2179,17 @@ msgstr "Suggerisci agli utenti"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Target"
-msgstr "Obiettivo"
+msgstr "Traguardo"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
 msgid "Target Value to Reach"
-msgstr "Valore da raggiungere"
+msgstr "Valore traguardo da raggiungere"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr "Obiettivo: minore di"
+msgstr "Traguardo: minore di"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
@@ -2255,7 +2257,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
 msgid "The higher the better"
-msgstr "Valori più alti sono considerati migliori"
+msgstr "Più alto possibile"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
@@ -2275,7 +2277,7 @@ msgstr "L'elenco di utenti univoci che hanno ricevuto il riconoscimento."
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
 msgid "The lower the better"
-msgstr "Valori più bassi sono considerati migliori"
+msgstr "Più basso possibile"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
@@ -2358,12 +2360,13 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__monetary
 msgid "The target and current value are defined in the company currency."
 msgstr ""
+"Il valore traguardo e quello attuale sono indicati in valuta aziendale."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__suffix
 msgid "The unit of the target and current values"
-msgstr ""
+msgstr "Unità dei valori traguardo e attuale"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__manager_id
@@ -2673,7 +2676,7 @@ msgstr "aggiorna"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
-msgstr ""
+msgstr "rispetto al traguardo."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view

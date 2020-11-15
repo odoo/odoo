@@ -38,6 +38,12 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+"* Ontwerp: de MO is nog niet bevestigd.\n"
+"* Bevestigd: de MO is bevestigd, de voorraadregels en de herschikking van de componenten worden uitgevoerd.\n"
+"* In uitvoering: De productie is gestart (op de MO of op de WO).\n"
+"* Om te sluiten: de productie is klaar, de MO moet worden gesloten.\n"
+"* Klaar: de MO is gesloten, de voorraadbewegingen zijn geboekt.\n"
+"* Geannuleerd: de MO is geannuleerd, kan niet meer worden bevestigd."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -139,7 +145,7 @@ msgstr "18″ x 2½″ Kwadraat voet"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ": Insufficient Quantity To Unbuild"
-msgstr ""
+msgstr ": Onvoldoende hoeveelheid om te verwijderen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -198,7 +204,7 @@ msgstr "<span class=\"o_stat_text\">Backorders</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Onderliggende MO</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -229,7 +235,7 @@ msgstr "<span class=\"o_stat_text\">Prestatie</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Routing<br/>Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Routing<br/>prestaties</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -240,12 +246,12 @@ msgstr "<span class=\"o_stat_text\">Uitval</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Bron MO</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"text-bf\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"text-bf\">Te produceren</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -281,7 +287,7 @@ msgstr "<span>PLAN ORDERS</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_report_delivery_no_kit_section
 msgid "<span>Products not associated with a kit</span>"
-msgstr ""
+msgstr "<span>Producten die niet aan een kit zijn gekoppeld.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -296,12 +302,12 @@ msgstr "<span>WERKORDERS</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span>minutes</span>"
-msgstr ""
+msgstr "<span>minuten</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mr8 oe_inline\">t/m</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -527,29 +533,29 @@ msgstr "Toegestane Mo"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_move__allowed_operation_ids
 msgid "Allowed Operation"
-msgstr ""
+msgstr "Toegestane werking"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_product_ids
 msgid "Allowed Product"
-msgstr ""
+msgstr "Toegestaan product"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "Mag productie reserveren."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "Mag de productie ongedaan maken."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__warning
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_consumption_warning__consumption__warning
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__warning
 msgid "Allowed with warning"
-msgstr ""
+msgstr "Toegestaan met waarschuwing"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -725,6 +731,8 @@ msgstr "Backorder reeks"
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
+"Volgorde van nalevering, indien gelijk aan 0, betekent dat er geen "
+"gerelateerde nalevering is"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -759,7 +767,7 @@ msgstr "Stuklijstregel"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
 msgid "Bill of Material used on the Production Order"
-msgstr ""
+msgstr "Stuklijst gebruikt op de productieorder."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -1057,7 +1065,7 @@ msgstr "Component"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Availability"
-msgstr ""
+msgstr "Beschikbaarheid van componenten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1067,7 +1075,7 @@ msgstr "Component beschikbaar"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Component of Draft MO"
-msgstr ""
+msgstr "Onderdeel van ontwerp-MO"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -1079,7 +1087,7 @@ msgstr "Componenten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability_state
 msgid "Components Availability State"
-msgstr ""
+msgstr "Beschikbaarheid van componenten"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
@@ -1091,11 +1099,13 @@ msgstr "Componenten locatie"
 msgid ""
 "Components will be reserved first for the MO with the highest priorities."
 msgstr ""
+"Onderdelen worden als eerste gereserveerd voor de MO met de hoogste "
+"prioriteiten."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
 msgid "Compute based on tracked time"
-msgstr ""
+msgstr "Bereken op basis van bijgehouden tijd."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
@@ -1128,7 +1138,7 @@ msgstr "Bevestigd"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Consume"
-msgstr ""
+msgstr "Verbruik"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
@@ -1170,7 +1180,7 @@ msgstr "Verbruik"
 #: model:ir.actions.act_window,name:mrp.action_mrp_consumption_warning
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
-msgstr ""
+msgstr "Consumptiewaarschuwing"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
@@ -1216,6 +1226,9 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
+"Maak een nalevering aan als je verwacht de resterende producten later te "
+"verwerken. Maak geen nalevering aan als je de overige producten niet "
+"verwerkt."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
@@ -1225,7 +1238,7 @@ msgstr "Maak een nieuw productieorder aan"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Create a new operation"
-msgstr ""
+msgstr "Maak een nieuwe bewerking."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1364,6 +1377,8 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
+"Definieer de componenten en afgewerkte producten waarin je wilt gebruiken\n"
+"                 stuklijst en productieorders."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -1378,6 +1393,10 @@ msgid ""
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"Bepaalt of je meer of minder componenten kunt verbruiken dan de hoeveelheid die op de stuklijst is gedefinieerd:\n"
+"* Toegestaan: toegestaan voor alle productiegebruikers.\n"
+"* Toegestaan met waarschuwing: toegestaan voor alle productiegebruikers met een overzicht van de verbruiksverschillen bij het sluiten van de productieorder.\n"
+"* Geblokkeerd: alleen een manager kan een productieorder sluiten als het BoM-verbruik niet wordt gerespecteerd."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet_type
@@ -1496,7 +1515,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr ""
+msgstr "Bevestig je dat je de bouw ongedaan wilt maken?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -1636,7 +1655,7 @@ msgstr "Foutmelding(en):"
 #, python-format
 msgid ""
 "Existing Serial number (%s). Please correct the serial numbers encoded."
-msgstr ""
+msgstr "Bestaand serienummer (%s). Corrigeer de gecodeerde serienummers."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -1733,7 +1752,7 @@ msgstr "Flexibel"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 msgid "Flexible Consumption"
-msgstr ""
+msgstr "Flexibel verbruik"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_follower_ids
@@ -1787,6 +1806,8 @@ msgstr "Algemene informatie"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
 msgid "Get statistics about the work orders duration related to this routing."
 msgstr ""
+"Krijg statistieken over de duur van werkorders met betrekking tot deze "
+"routing."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__priority
@@ -1811,7 +1832,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__sequence
 msgid "Gives the sequence order when displaying a list of work centers."
 msgstr ""
-"Geeft de volgorde weer bij het weergeven van een lijst van werk centrums."
+"Geeft de volgorde weer bij het weergeven van een lijst van werkplekken."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
@@ -2002,28 +2023,28 @@ msgstr "Afbeelding is een link"
 #: model:ir.model,name:mrp.model_mrp_immediate_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production_line__immediate_production_id
 msgid "Immediate Production"
-msgstr ""
+msgstr "Onmiddellijke productie"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_immediate_production_line
 msgid "Immediate Production Line"
-msgstr ""
+msgstr "Onmiddellijke productielijn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production__immediate_production_line_ids
 msgid "Immediate Production Lines"
-msgstr ""
+msgstr "Onmiddellijke productielijnen"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Immediate Production?"
-msgstr ""
+msgstr "Onmiddellijke productie?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
 msgid "Immediate production?"
-msgstr ""
+msgstr "Onmiddellijke productie?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2269,7 +2290,7 @@ msgstr "Te late activiteiten"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late MO or Late delivery of components"
-msgstr ""
+msgstr "Te late MO of te late levering van componenten."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_wood_ply
@@ -2342,11 +2363,13 @@ msgid ""
 "Lock the manufacturing order to prevent changes to what has been consumed or"
 " produced."
 msgstr ""
+"Vergrendel de productieorder om wijzigingen in wat is verbruikt of "
+"geproduceerd te voorkomen."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_locked_by_default
 msgid "Locked by default"
-msgstr ""
+msgstr "Standaard vergrendeld"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
@@ -2384,13 +2407,13 @@ msgstr "Laag"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr ""
+msgstr "MO backorder"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "MO Generated by %s"
-msgstr ""
+msgstr "MO gegenereerd door %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -2422,6 +2445,9 @@ msgid ""
 "Makes confirmed manufacturing orders locked rather than unlocked by default."
 " This only applies to new manufacturing orders, not previously created ones."
 msgstr ""
+"Maakt bevestigde productieorders standaard vergrendeld in plaats van "
+"ontgrendeld. Dit is alleen van toepassing op nieuwe productieorders, niet op"
+" eerder gemaakte."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -2465,7 +2491,7 @@ msgstr "Productie regel"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
-msgstr ""
+msgstr "Fabricage beveiliging doorlooptijd"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
@@ -2573,6 +2599,8 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
+"Productieactiviteiten worden verwerkt op werkplek. Een werkplek kan worden samengesteld uit\n"
+"                  werknemers en/of machines, ze worden gebruikt voor kostprijsberekening, planning, capaciteitsplanning, enz."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -2581,6 +2609,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
+"Productieactiviteiten worden verwerkt op werkplekken. Een werkplek kan worden samengesteld uit\n"
+"                werknemers en/of machines, ze worden gebruikt voor kostprijsberekening, planning, capaciteitsplanning, enz.\n"
+"                Ze kunnen worden gedefinieerd via het configuratiemenu."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -2642,7 +2673,7 @@ msgstr "Ma"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_byproduct_ids
 msgid "Move Byproduct"
-msgstr ""
+msgstr "Verplaats bijproduct"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_line_ids
@@ -2652,19 +2683,19 @@ msgstr "Verplaatsingen te volgen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
 msgid "Mrp Consumption Warning Line"
-msgstr ""
+msgstr "Consumptiewaarschuwing"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_ids
 #: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_ids
 msgid "Mrp Production"
-msgstr ""
+msgstr "MRP productie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
 msgid "Mrp Production Count"
-msgstr ""
+msgstr "MRP productietelling"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
@@ -2718,7 +2749,7 @@ msgstr "Geen backorder"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
-msgstr ""
+msgstr "Geen stuklijst gevonden. Laten we er een maken!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2735,7 +2766,7 @@ msgstr "Nog geen gegevens!"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr ""
+msgstr "Geen productieorder gevonden. Laten we er een maken."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2750,7 +2781,7 @@ msgstr "Geen productiviteitsverlies voor dit apparaat"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "Geen demontageorder gevonden"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -2759,7 +2790,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "No work orders to do!"
-msgstr ""
+msgstr "Geen werkorders te doen!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -2843,14 +2874,14 @@ msgid ""
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
 msgstr ""
-"Aantal stuks dat parallel kan worden geproduceerd. In het geval dat het "
-"werkcentrum een capaciteit heeft van 5 en u 10 stuks op uw werkorder moet "
+"Aantal stuks dat parallel kan worden geproduceerd. In het geval dat de "
+"werkplek een capaciteit heeft van 5 en u 10 stuks op uw werkorder moet "
 "produceren, wordt de gebruikelijke bewerkingstijd met 2 vermenigvuldigd."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
 msgid "Number of source MO"
-msgstr ""
+msgstr "Nummer van bronproductieorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2900,6 +2931,8 @@ msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
+"De bewerking definieert dat wat er moet worden gedaan om een werkorder te realiseren.\n"
+"                Elke bewerking wordt uitgevoerd op een specifieke afdeling en heeft een specifieke duur."
 
 #. module: mrp
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
@@ -3118,7 +3151,7 @@ msgstr "Datum gepland"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
-msgstr ""
+msgstr "Gepland op hetzelfde moment als andere werkbon(nen) op %s"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -3152,7 +3185,7 @@ msgstr "Houtfineer"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
 msgid "Popover Data JSON"
-msgstr ""
+msgstr "Popover-gegevens JSON"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
@@ -3177,6 +3210,8 @@ msgid ""
 "Prevent manufacturing users from modifying quantities to consume, unless a "
 "manager has unlocked the document"
 msgstr ""
+"Voorkom dat productiegebruikers hoeveelheden wijzigen om te gebruiken, "
+"tenzij een manager het document heeft ontgrendeld."
 
 #. module: mrp
 #. openerp-web
@@ -3366,7 +3401,7 @@ msgstr "Productiewerkplek"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Production of Draft MO"
-msgstr ""
+msgstr "Productie van concept productieorder."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -3465,7 +3500,7 @@ msgstr "Hoeveelheid geproduceerd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
 msgid "Quantity Producing"
-msgstr ""
+msgstr "Hoeveelheid produceren"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -3611,7 +3646,7 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Review Consumption"
-msgstr ""
+msgstr "Bekijk het verbruik"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -3675,13 +3710,14 @@ msgstr "Geplande starttdatum"
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
+"Gepland vóór de vorige werkorder, gepland vanaf %(start)s tot %(end)s."
 
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/js/mrp_workorder_popover.js:0
 #, python-format
 msgid "Scheduling Information"
-msgstr ""
+msgstr "Planningsinformatie"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3825,7 +3861,7 @@ msgstr "Laat backorderregels zien"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr "Slot in werkcentrum wanneer gepland"
+msgstr "Slot in werkplek wanneer gepland"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -4092,6 +4128,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
 msgstr ""
+"Technisch veld om te controleren wanneer we hoeveelheden kunnen reserveren."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__unreserve_visible
@@ -4132,7 +4169,7 @@ msgstr "Tekst"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__note
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__operation_note
 msgid "Text worksheet description"
-msgstr ""
+msgstr "Tekst werkbladbeschrijving"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_id
@@ -4156,6 +4193,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
+"De kenmerkwaarde %(attribute)s die op het product %(product)s is ingesteld, "
+"komt niet overeen met het BoM-product %(bom_product)s."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -4218,6 +4257,8 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already"
 " been produced"
 msgstr ""
+"Het serienummer %(number)s dat voor bijproduct %(product_name)s wordt "
+"gebruikt, is al gemaakt."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4226,6 +4267,8 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
+"Het serienummer %(number)s dat voor het onderdeel %(component)s wordt "
+"gebruikt, is al verbruikt."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4241,7 +4284,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "The work order should have already been processed."
-msgstr ""
+msgstr "De werkbon zou al verwerkt moeten zijn."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__theme_template_id
@@ -4281,9 +4324,9 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"Dit veld wordt gebruikt om de verwachte duur van een werkorder in dit "
-"werkcentrum te berekenen. Bijvoorbeeld, als een werkorder een uur duurt en "
-"de efficiëntie factor 100% is, zal de verwachte duur 1 uur zijn. Indien de "
+"Dit veld wordt gebruikt om de verwachte duur van een werkorder in deze "
+"werkplek te berekenen. Bijvoorbeeld, als een werkorder een uur duurt en de "
+"efficiëntie factor 100% is, zal de verwachte duur 1 uur zijn. Indien de "
 "efficiëntie factor 200% is zal de verwachte duur echter 30 minuten zijn."
 
 #. module: mrp
@@ -4312,13 +4355,15 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Dit menu geeft je de volledige traceerbaarheid van voorraadbewerkingen op een specifiek product.\n"
+"                 Je kunt op het product filteren om alle bewegingen van het product in het verleden te zien."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
-msgstr ""
+msgstr "Dit serienummer voor het product %s is al gemaakt."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -4344,7 +4389,7 @@ msgstr "Tijdregistratie"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Time Tracking: %(user)s"
-msgstr ""
+msgstr "Tijdregistratie: %(user)s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
@@ -4372,6 +4417,8 @@ msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
 "first time when there aren't any work orders yet"
 msgstr ""
+"Tijd in minuten: - In handmatige modus, gebruikte tijd - In automatische "
+"modus, veronderstelde eerste keer als er nog geen werkbonnen zijn."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -4382,7 +4429,7 @@ msgstr "Tijdzone"
 #: model:digest.tip,name:mrp.digest_tip_mrp_0
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
 msgid "Tip: Use tablets in the shop to control manufacturing"
-msgstr ""
+msgstr "Tip: gebruik tablets in de winkel om de productie te controleren."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
@@ -4468,7 +4515,7 @@ msgstr "Totaal lopende orders"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_raw
 msgid "Total To Consume"
-msgstr ""
+msgstr "Totaal te gebruiken."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4556,7 +4603,7 @@ msgstr "Demontageorders"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr ""
+msgstr "Demontage: %s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4630,6 +4677,8 @@ msgstr "Deblokkeer"
 msgid ""
 "Unlock the manufacturing order to adjust what has been consumed or produced."
 msgstr ""
+"Ontgrendel de productieorder om aan te passen wat er is verbruikt of "
+"geproduceerd."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4758,7 +4807,7 @@ msgstr "Wachtend op andere WO"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
-msgstr ""
+msgstr "Wachten op de vorige werkorder, gepland van %(start)s tot %(end)s."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -4859,6 +4908,10 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
+"Met het Odoo werkplekcontrolepaneel kan je werknemer werkbonnen in de winkel"
+" starten en de instructies van het werkblad volgen. Kwaliteitstesten zijn "
+"perfect geïntegreerd in het proces. Werknemers kunnen feedbackloops, "
+"onderhoudswaarschuwingen, schrootproducten enz. activeren."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -4870,7 +4923,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
-msgstr ""
+msgstr "Wizard om als klaar te markeren of om een backorder te creëren."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
@@ -5001,6 +5054,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden uitgevoerd als onderdeel van een productieorder.\n"
+"                     Bewerkingen worden gedefinieerd in de stuklijst of rechtstreeks in de productieorder toegevoegd."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -5011,6 +5066,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden uitgevoerd als onderdeel van een productieorder.\n"
+"            Bewerkingen worden gedefinieerd in de stuklijst of rechtstreeks in de productieorder toegevoegd."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -5051,7 +5108,7 @@ msgstr "Werkplek productiviteitsverliezen"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__working_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_state
 msgid "Workcenter Status"
-msgstr "Werkcentrum status"
+msgstr "Werkplek status"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -5190,6 +5247,15 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Je hebt voor de volgende producten een andere hoeveelheid verbruikt dan verwacht.\n"
+"                        <b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"                            Bevestig dat dit met opzet is gedaan.\n"
+"                         </b>\n"
+"                         <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"                             Controleer het verbruik van je componenten of vraag een manager om dit te valideren.\n"
+"                              <span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">deze productieorder</span>\n"
+"                              <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">deze productieorders</span>.\n"
+"                           </b>"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
@@ -5198,6 +5264,8 @@ msgid ""
 "You have already processed %(quantity)s. Please input a quantity higher than"
 " %(minimum)s "
 msgstr ""
+"Je bent %(quantity)s al verwerkt. Voer een hoeveelheid in die hoger is dan "
+"%(minimum)s."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -5206,6 +5274,9 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr ""
+"Je hebt nog geen <i>geproduceerde</i> hoeveelheden geregistreerd, door op "
+"<i>toepassen</i> te klikken zal Odoo alle afgewerkte producten produceren en"
+" alle componenten verbruiken."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5258,7 +5329,7 @@ msgstr "U moet een partij/serienummer opgeven voor het product:"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than initial demand"
-msgstr ""
+msgstr "Je produceerde minder dan de aanvankelijke vraag."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -5278,12 +5349,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "and build finished products using"
-msgstr ""
+msgstr "en bouw afgewerkte producten met"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "bills of materials"
-msgstr ""
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -5293,7 +5364,7 @@ msgstr "geannuleerd"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "components"
-msgstr ""
+msgstr "componenten"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0

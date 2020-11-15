@@ -1501,7 +1501,7 @@ msgstr "Стан дії"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_note
 msgid "Activity Summary"
-msgstr ""
+msgstr "Підсумок дії"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_type_icon
@@ -1514,7 +1514,7 @@ msgstr "Іконка типу дії"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_user_id
 msgid "Activity User"
-msgstr ""
+msgstr "Дії користувача"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_type_id
@@ -1522,6 +1522,8 @@ msgid ""
 "Activity will be automatically scheduled on payment due date, improving "
 "collection process."
 msgstr ""
+"Дію буде автоматично заплановано на дату оплати, вдосконалюючи процес збору "
+"платежів."
 
 #. module: account
 #. openerp-web
@@ -1817,12 +1819,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
 msgid "Allowed account types"
-msgstr ""
+msgstr "Дозволені типи рахунків"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
-msgstr ""
+msgstr "Дозволені рахунки"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2561,6 +2563,9 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
+"Транзакції банківських виписок будуть опубліковані на тимчасовому рахунку, "
+"поки не відбудеться остаточне узгодження, що дозволяє знайти правильний "
+"рахунок."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -4228,7 +4233,7 @@ msgstr ""
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "ПОСТАВКА НА МІСЦЕ"
+msgstr "ПОСТАЧАННЯ В МІСЦІ ПРИЗНАЧЕННЯ"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -4238,7 +4243,7 @@ msgstr ""
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "ПОСТАВКА ЗІ СПЛАТОЮ МИТА"
+msgstr "ПОСТАЧАННЯ ЗІ СПЛАТОЮ МИТА"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
@@ -4385,12 +4390,12 @@ msgstr "Виділена послідовність сторно"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
 msgid "Default Account"
-msgstr ""
+msgstr "Типовий рахунок"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
 msgid "Default Account Type"
-msgstr ""
+msgstr "Тип типового рахунку"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4960,7 +4965,7 @@ msgstr "ПДВ цифрових товарів ЄС"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr "КОЛИШНЯ РОБОТА"
+msgstr "ПОСТАЧАННЯ ЗІ СКЛАДУ ПРОДАВЦЯ"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -5192,17 +5197,17 @@ msgstr "Зовнішнє посилання"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "ВЗДОВЖ БОРТА СУДНА"
+msgstr "ДОСТАВКА ДО СУДНА ЗАМОВНИКА"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "ПЕРЕВІЗНИК"
+msgstr "ДОСТАВКА ПЕРЕВІЗНИКУ ЗАМОВНИКА"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "БОРТ"
+msgstr "ЗАВАНТАЖЕННЯ НА СУДНО ЗАМОВНИКА"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -6169,7 +6174,7 @@ msgstr "Вхідний"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "Методи вхідних платежів"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -6219,6 +6224,11 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
+"Записи вхідних платежів запущені рахунками/поверненнями будуть опубліковані "
+"в Рахунок неузгоджених надходжень та відображатися блакитним рядком у "
+"віджеті банківських узгоджень. Під час процесу узгодження, пов'язані "
+"транзакції будуть узгоджені із записами Рахунку неузгоджених надходжень "
+"замість рахунку дебіторів."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -7304,7 +7314,7 @@ msgstr "Макет"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr ""
+msgstr "Залиште пустим, щоби призначити продавця рахунку."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -8532,7 +8542,7 @@ msgstr "Вихідні"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
 msgid "Outbound Payment Methods"
-msgstr ""
+msgstr "Методи вихідних платежів"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8554,6 +8564,11 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
+"Записи вихідних платежів запущені рахунками/сторно будуть опубліковані в "
+"Рахунку неузгоджених вихідних платежів та відображатимуться блакитним рядком"
+" у віджеті банківських узгоджень. Під час процесу узгодження пов'язані "
+"транзакції будуть узгоджені із записами Рахунку неузгоджених вихідних "
+"платежів замість рахунку кредиторів."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8570,7 +8585,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr ""
+msgstr "Рахунок неузгоджених вихідних платежів"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -8581,7 +8596,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr ""
+msgstr "Рахунок неузгоджених надходжень"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10483,6 +10498,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Надішліть один роздільний email для кожного рахунку.\n"
+"\n"
+"Буде підтверджено будь-яке розширення файлу.\n"
+"\n"
+"Лише PDF та XML-файли будуть інтерпретовані Odoo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -10557,7 +10577,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
 msgid "Sequence Override Regex"
-msgstr ""
+msgstr "Регулярний вираз перевизначення послідовності"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__sequence_prefix
@@ -10691,6 +10711,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
+"Для відображення використовується коротша назва. Записи цього журналу також "
+"будуть названі, використовуючи цей префікс за замовчуванням."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -11085,7 +11107,7 @@ msgstr "Звання постачальника"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr ""
+msgstr "Тимчасовий рахунок"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note

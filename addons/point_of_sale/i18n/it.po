@@ -1224,7 +1224,7 @@ msgstr "Tasso di cambio"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr "Tasso di cambio tra valuta aziendale e valuta dell'ordine."
+msgstr "Tasso di conversione tra valuta aziendale e valuta dell'ordine."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1304,7 +1304,7 @@ msgstr "Valuta"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
-msgstr "Tasso di cambio"
+msgstr "Tasso valuta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_id
@@ -4787,6 +4787,13 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment methods and the point of sale must belong to the same company."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid ""
+"The payment method selected is not allowed in the config of the POS session."
 msgstr ""
 
 #. module: point_of_sale

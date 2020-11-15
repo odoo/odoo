@@ -1,19 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_authorize
+# 	* payment_authorize
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,8 +16,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid ""
+" If you don't have any account, ask your salesperson to grant you a portal "
+"access. "
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
+msgid "API Client Key"
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
+msgid "API Signature Key"
 msgstr ""
 
 #. module: payment_authorize
@@ -32,13 +44,17 @@ msgid "API Transaction Key"
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__provider__authorize
+msgid "Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
+#: code:addons/payment_authorize/models/authorize_request.py:0
+#, python-format
+msgid ""
+"Authorize.net Error:\n"
+"Code: %s\n"
+"Message: %s"
 msgstr ""
 
 #. module: payment_authorize
@@ -47,7 +63,7 @@ msgid "Authorize.net Profile ID"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:177
+#: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
@@ -55,28 +71,15 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "CVC"
-msgstr "CVC"
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Card number"
-msgstr "Kortin numero"
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Cardholder name"
-msgstr ""
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Expires (MM / YY)"
+#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+msgid "Generate Client Key"
 msgstr ""
 
 #. module: payment_authorize
@@ -85,15 +88,14 @@ msgid "How to get paid with Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:64
-#, python-format
-msgid ""
-"If you don't have any account, please ask your salesperson to update your "
-"profile. "
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
@@ -101,24 +103,16 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Maksun vastaanottaja"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -128,30 +122,25 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Maksutapahtuma"
-
-#. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:66
+#: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please complete your profile. "
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:61
+#: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
-msgid "Please sign in to complete your profile."
+msgid "Please sign in to complete the payment."
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
-msgstr "Palveluntarjoaja"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
@@ -159,23 +148,21 @@ msgid "Save Cards"
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
+#. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "Server Error"
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
-
-#. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:365
+#: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:58
+#: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid ""
 "The transaction cannot be processed because some contact details are missing"
@@ -199,6 +186,22 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Tilisiirto"
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid ""
+"Unable to fetch Client Key, make sure the API Login and Transaction Key are "
+"correct."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: payment_authorize
+#. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to add your payment method at the moment."
+msgstr ""

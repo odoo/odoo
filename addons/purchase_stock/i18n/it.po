@@ -8,7 +8,6 @@
 # Paolo Valier, 2020
 # maiolif <maiolif@mgftools.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Mario Riva <mario.riva@gmail.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -34,7 +33,7 @@ msgstr "% di consegne puntuali"
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "<p>Corresponding receipt not found.</p>"
-msgstr ""
+msgstr "<p>Ricezione corrispondente non trovata.</p>"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -57,6 +56,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono "
+"specifici per azienda.\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -81,7 +83,7 @@ msgstr "<span class=\"o_stat_text\">Acquisti</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Termine di resa:</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -114,7 +116,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
 msgid "Average Receipt Delay"
-msgstr ""
+msgstr "Ritardo medio di ricezione"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
@@ -238,7 +240,7 @@ msgstr "Movimenti a valle"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_product_product_replenishment
 msgid "Draft PO"
-msgstr ""
+msgstr "OdA in bozza"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
@@ -272,14 +274,14 @@ msgstr "Eccezioni:"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
-msgstr ""
+msgstr "Genera la fattura fornitore in bozza."
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr ""
+msgstr "Ritorna all'ordine di acquisto per generare la fattura fornitore."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -409,6 +411,8 @@ msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
 " %s is zero."
 msgstr ""
+"Odoo non è in grado di generare le registrazioni anglosassoni. La "
+"valutazione totale di %s è zero."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -465,7 +469,7 @@ msgstr "Numero prelievi"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
-msgstr ""
+msgstr "Elabora tutte le quantità ricevute."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
@@ -549,7 +553,7 @@ msgstr "Ricevi prodotti"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
-msgstr ""
+msgstr "Ricevi i prodotti ordinati."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
@@ -663,17 +667,16 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Questo aggiunge una rotta dropshipping da applicare ai prodotti in modo da "
-"richiedere ai tuoi fornitori di consegnare ai tuoi clienti. Un prodotto da "
-"consegnare in modalità dropship genererà una richiesta di quotazione dopo "
-"che è stato confermato l'ordine di vendita. Questo è un flusso su richiesta."
-" L'indirizzo di spedizione sarà l'indirizzo del cliente e non il tuo "
-"magazzino."
+"Aggiunge un percorso di consegna diretta da applicare ai prodotti, per "
+"richiedere ai fornitori di consegnare ai clienti. Un prodotto a consegna "
+"diretta genera una richiesta di preventivo per l'acquisto dopo la conferma "
+"dell'ordine di vendita. L'indirizzo di consegna richiesto corrisponde a "
+"quello del cliente e non al magazzino."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr "Questo determinerà il tipo di operazione dei ricevimenti"
+msgstr "Determina il tipo di operazione per le spedizioni in entrata"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
