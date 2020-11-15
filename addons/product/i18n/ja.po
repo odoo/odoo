@@ -1779,7 +1779,7 @@ msgstr "プロダクト梱包"
 #: model:ir.model,name:product.model_product_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr ""
+msgstr "製品包装"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
@@ -2308,6 +2308,15 @@ msgid ""
 msgstr "この価格リストは現在のパートナに販売するために、デフォルトのそれに代って使用されます。"
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2617,6 +2626,13 @@ msgid "Volume unit of measure label"
 msgstr "体積単位レベル"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "警告！"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "警告"
@@ -2648,6 +2664,16 @@ msgstr ""
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "白"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

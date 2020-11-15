@@ -13,13 +13,13 @@
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Martin Trigaux, 2019
-# Paolo Valier, 2019
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
 # maiolif <maiolif@mgftools.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Paolo Valier, 2020
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Paolo Valier, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2348,6 +2348,15 @@ msgstr ""
 " partner corrente"
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2661,6 +2670,13 @@ msgid "Volume unit of measure label"
 msgstr "Etichetta unità di misura volume"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Attenzione!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "Avvisi"
@@ -2692,6 +2708,16 @@ msgstr "Etichetta unità di misura peso"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Bianco"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

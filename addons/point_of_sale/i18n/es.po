@@ -23,7 +23,6 @@
 # Luis Ernesto Torres Macías <luis_t@vauxoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
-# 0bbd034d1b285e7568819a743ec2b501_2b84791 <d5c81972596cfedcd53204f47f6a8434_940895>, 2020
 # Martin Trigaux, 2020
 # 
 msgid ""
@@ -4501,6 +4500,13 @@ msgstr ""
 "extracto de caja."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid ""
+"The payment method selected is not allowed in the config of the POS session."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__config_id
 msgid "The physical point of sale you will use."
@@ -5375,7 +5381,6 @@ msgstr ""
 msgid ""
 "You must configure an intermediary account for the payment methods: %s."
 msgstr ""
-"You must configure an intermediary account for the payment methods: %s."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
