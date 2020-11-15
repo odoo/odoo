@@ -168,6 +168,11 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert canned responses in your message.<br>"
 msgstr ""
+"<br><br>\n"
+"            تایپ کن <b>@username</b> برای ارجاع به یک نفر یا جلب توجه او.<br>\n"
+"            تایپ کن <b>#channel</b>.برای ارجاع به کانال.<br>\n"
+"            تایپ کن <b>/command</b> برای اجرای یک فرمان.<br>\n"
+"            تایپ کن <b>:shortcut</b> برای درج پاسخ های از قبل آماده شده در پیام شما.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:722
@@ -235,6 +240,8 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>با همکاران چت کن</b> در لحظه با استفاده از پیام رسانی.</p><p><i>ممکن "
+"است ابتدا لازم باشد کاربران را از برنامه تنظیمات دعوت کنید.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -2379,19 +2386,19 @@ msgstr "سرآیندها"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Hello"
-msgstr ""
+msgstr "سلام"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:35
 #, python-format
 msgid "Hello,"
-msgstr ""
+msgstr "سلام،"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__help_message
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__message
 msgid "Help message"
-msgstr ""
+msgstr "پیام راهنما"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
@@ -2460,7 +2467,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:277
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "بیکار"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread
@@ -2678,7 +2685,7 @@ msgstr "دعوت"
 #: code:addons/mail/static/src/js/followers.js:171
 #, python-format
 msgid "Invite Follower"
-msgstr ""
+msgstr "دعوت از دنبال کننده"
 
 #. module: mail
 #. openerp-web
@@ -2686,14 +2693,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:178
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "دعوت از دیگران"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:1188
 #, python-format
 msgid "Invite people to #%s"
-msgstr ""
+msgstr "دعوت افراد به #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2703,7 +2710,7 @@ msgstr "ویزارد دعوت"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr ""
+msgstr "فقط افراد را دعوت کن"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
@@ -2767,7 +2774,7 @@ msgstr "پیوستن"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
 msgid "Join a group"
-msgstr ""
+msgstr "پیوستن به یک گروه"
 
 #. module: mail
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -3424,7 +3431,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation"
-msgstr ""
+msgstr "نظارت"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
@@ -3453,12 +3460,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_moderator
 msgid "Moderator"
-msgstr ""
+msgstr "ناظر"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
-msgstr ""
+msgstr "ناظرین"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:154
@@ -3529,7 +3536,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_message__needaction
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr ""
+msgstr "نیازمند اقدام"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__need_moderation
@@ -3548,14 +3555,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:182
 #, python-format
 msgid "New Channel"
-msgstr ""
+msgstr "کانال جدید"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:181
 #, python-format
 msgid "New Message"
-msgstr ""
+msgstr "پیام جدید"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
@@ -3595,14 +3602,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:24
 #, python-format
 msgid "New message"
-msgstr ""
+msgstr "پیام جدید"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:429
 #, python-format
 msgid "New messages"
-msgstr ""
+msgstr "پیام ها جدید"
 
 #. module: mail
 #. openerp-web
@@ -3616,7 +3623,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/discuss.js:104
 #, python-format
 msgid "New people"
-msgstr ""
+msgstr "افراد جدید"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_guidelines
@@ -3667,7 +3674,7 @@ msgstr ""
 #: code:addons/mail/models/mail_notification.py:50
 #, python-format
 msgid "No Error"
-msgstr ""
+msgstr "بدون خطا"
 
 #. module: mail
 #. openerp-web
@@ -3696,7 +3703,7 @@ msgstr "داده‌ای برای نمایش نیست"
 #: code:addons/mail/static/src/js/followers.js:186
 #, python-format
 msgid "No follower"
-msgstr ""
+msgstr "بدون دنبال کننده"
 
 #. module: mail
 #. openerp-web
@@ -4728,14 +4735,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:183
 #, python-format
 msgid "Select All"
-msgstr ""
+msgstr "انتخاب همه"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:183
 #, python-format
 msgid "Select all messages to moderate"
-msgstr ""
+msgstr "انتخاب همه پیام ها برای نظارت"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__model_object_field
@@ -4770,7 +4777,7 @@ msgstr "ارسال"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Send Again"
-msgstr ""
+msgstr "ارسال دوباره"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -4942,7 +4949,7 @@ msgstr ""
 #. module: mail
 #: selection:ir.actions.server,activity_user_type:0
 msgid "Specific User"
-msgstr ""
+msgstr "کاربر بخصوص"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__res_model_id
@@ -5036,7 +5043,7 @@ msgstr "موضوع..."
 #: code:addons/mail/static/src/xml/thread.xml:365
 #, python-format
 msgid "Subject:"
-msgstr ""
+msgstr "موضوع:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -5432,7 +5439,7 @@ msgstr ""
 #: selection:mail.notification,failure_type:0
 #, python-format
 msgid "Unknown error"
-msgstr ""
+msgstr "خطای ناشناخته"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_unread
@@ -5458,21 +5465,21 @@ msgstr "شمارنده پیام‌های خوانده‌نشده"
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 #, python-format
 msgid "Unread messages"
-msgstr ""
+msgstr "پیام های خوانده نشده"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:184
 #, python-format
 msgid "Unselect All"
-msgstr ""
+msgstr "عدم انتخاب همه"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:184
 #, python-format
 msgid "Unselect all messages to moderate"
-msgstr ""
+msgstr "عدم انتخاب همه پیام ها برای نظارت"
 
 #. module: mail
 #. openerp-web
@@ -5647,7 +5654,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:752
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "مشاهده %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
@@ -5750,7 +5757,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/composer.xml:12
 #, python-format
 msgid "Write something..."
-msgstr ""
+msgstr "چیزی بنویس..."
 
 #. module: mail
 #. openerp-web
@@ -5758,7 +5765,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/models/messages/abstract_message.js:109
 #, python-format
 msgid "Yesterday"
-msgstr ""
+msgstr "دیروز"
 
 #. module: mail
 #. openerp-web
@@ -5771,7 +5778,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:956
 #, python-format
 msgid "You are alone in this channel."
-msgstr ""
+msgstr "شما در کانال تنها هستید"
 
 #. module: mail
 #. openerp-web
