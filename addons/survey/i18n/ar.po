@@ -20,7 +20,7 @@
 # Martin Trigaux, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Tasneem Sarhan <tsa@odoo.com>, 2020
-# Rachid Alassir <rachidalassir@gmail.com>, 2020
+# Rachid Al Assir <rachidalassir@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Rachid Alassir <rachidalassir@gmail.com>, 2020\n"
+"Last-Translator: Rachid Al Assir <rachidalassir@gmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -315,8 +315,8 @@ msgid ""
 "finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"badge badge-primary only_left_radius filter-all\">كافة "
-"الاستطلاعات</span><span class=\"badge badge-secondary only_right_radius "
-"filter-finished\">الاستطلاعات المنتهية</span>"
+"الاستبيانات</span><span class=\"badge badge-secondary only_right_radius "
+"filter-finished\">الاستبيانات المنتهية</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -335,8 +335,8 @@ msgid ""
 "finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"badge badge-secondary only_left_radius filter-all\">كافة "
-"الاستطلاعات</span><span class=\"badge badge-primary only_right_radius "
-"filter-finished\">الاستطلاعات المنتهية</span>"
+"الاستبيانات</span><span class=\"badge badge-primary only_right_radius "
+"filter-finished\">الاستبيانات المنتهية</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
@@ -513,7 +513,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Add a new survey"
-msgstr "إضافة استطلاع جديد"
+msgstr "إضافة إستبيان جديد"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -931,19 +931,19 @@ msgstr "إنشاء رمز اختبار غير مسموح به لك."
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr "لا يُسمح بإنشاء رمز لأي شخص آخر غير الموظفين للاستطلاعات الداخلية."
+msgstr "لا يُسمح بإنشاء رمز لأي شخص آخر غير الموظفين للاستبيانات الداخلية."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for archived surveys is not allowed."
-msgstr "لا يُسمح بإنشاء رمز مميز للاستطلاعات المؤرشفة."
+msgstr "لا يُسمح بإنشاء رمز مميز للاستبيانات المؤرشفة."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for closed surveys is not allowed."
-msgstr "لا يسمح بإنشاء رمز مميز للاستطلاعات المغلقة."
+msgstr "لا يسمح بإنشاء رمز مميز للاستبيانات المغلقة."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -960,6 +960,7 @@ msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
 msgstr ""
+"سيتلقى الزبائن رمزًا جديدًا وسيتمكنون من إعادة إجراء الاستبيان بالكامل."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1007,6 +1008,8 @@ msgstr "تاريخ الإجابة"
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
+"التاريخ الذي يمكن فيه الزبون من فتح الاستطلاع وتقديم الإجابات\n"
+" "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -1117,12 +1120,12 @@ msgstr "البريد الإلكتروني"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Edit Survey"
-msgstr "تعديل الاستطلاع"
+msgstr "تعديل الإستبيان"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.back
 msgid "Edit Survey."
-msgstr ""
+msgstr "تعديل الإستبيان."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void
@@ -1228,7 +1231,7 @@ msgstr "معلومات عامة"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__category__default
 msgid "Generic Survey"
-msgstr ""
+msgstr "إستبيان عام"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
@@ -1746,7 +1749,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_label_form
 msgid "No survey labels found"
-msgstr "لا توجد بطاقات عنوان للاستطلاع"
+msgstr "لا توجد بطاقات عنوان للإستبيان"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
@@ -1756,7 +1759,7 @@ msgstr "لم يُعثر على بنود مدخلات للمستخدم"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet"
-msgstr "لم يرد أحد على استطلاعك بعد"
+msgstr "لم يرد أحد على استبيانتك بعد"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__new
@@ -1926,7 +1929,7 @@ msgstr "مكتمل جزئيًا"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to ${object.survey_id.title} survey"
-msgstr ""
+msgstr "شارك في إستبيان ${object.survey_id.title}"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -1965,6 +1968,8 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
+"يرجى التأكد من وجود سؤال واحد على الأقل في إستبيانك. تحتاج أيضًا إلى قسم "
+"واحد على الأقل إذا اخترت تخطيط \"صفحة لكل قسم\". <br/>"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q1_sug8
@@ -2196,7 +2201,7 @@ msgstr "بحث الأسئلة"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey"
-msgstr "البحث عن استطلاع"
+msgstr "البحث عن إستبيان"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
@@ -2315,7 +2320,7 @@ msgstr "عذرًا، لم يُجب أحد على هذا السؤال."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Sorry, no one answered this survey yet."
-msgstr ""
+msgstr "عذرًا،  لم يُجب أحد على هذا الاستبيان حتى الآن."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
@@ -2326,7 +2331,7 @@ msgstr "بدء الشهادة"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "Start Survey"
-msgstr "بدء الاستطلاع"
+msgstr "بدء الإستبيان"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__start_datetime
@@ -2436,7 +2441,7 @@ msgstr "استطلاع"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_tree
 msgid "Survey Answer Line"
-msgstr "بند إجابة الاستطلاع"
+msgstr "بند إجابة الإستبيان"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
@@ -2452,57 +2457,57 @@ msgstr ""
 #: model:ir.model,name:survey.model_survey_label
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_tree
 msgid "Survey Label"
-msgstr "بطاقة عنوان الاستطلاع"
+msgstr "بطاقة عنوان الإستبيان"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_tree
 msgid "Survey Question"
-msgstr "سؤال الاستطلاع"
+msgstr "سؤال الإستبيان"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__state
 msgid "Survey Stage"
-msgstr "مرحلة الاستطلاع"
+msgstr "مرحلة الإستبيان"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
 msgid "Survey Title"
-msgstr "عنوان الاستطلاع"
+msgstr "عنوان الإستبيان"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "مُدخلات مستخدم الاستطلاع"
+msgstr "مُدخلات مستخدم الإستبيان"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
 msgid "Survey User Input Line"
-msgstr "بند مُدخلات مستخدم الاستطلاع"
+msgstr "بند مُدخلات مستخدم الإستبيان"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_tree
 msgid "Survey User inputs"
-msgstr "مُدخلات مستخدم الاستطلاع"
+msgstr "مُدخلات مستخدم الإستبيان"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid "Survey filter"
-msgstr "تصفية الاستطلاعات"
+msgstr "تصفية للاستبيانات"
 
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Survey: Clean test answers"
-msgstr "استطلاع: إجابات اختبار نظيفة"
+msgstr "إستبيان: إجابات اختبار نظيفة"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
-msgstr "استطلاعات"
+msgstr "استبيانات"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2591,6 +2596,8 @@ msgid ""
 "The attempts limit needs to be a positive number if the survey has a limited"
 " number of attempts."
 msgstr ""
+"يجب أن يكون حد المحاولات عددًا موجبًا إذا كان الاستبيان عدد محدود من "
+"المحاولات."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
@@ -2724,7 +2731,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__thank_you_message
 msgid "This message will be displayed when survey is completed"
-msgstr "ستُعرض هذه الرسالة عند إكمال الاستطلاع"
+msgstr "ستُعرض هذه الرسالة عند إكمال الاستبيان"
 
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
@@ -2792,7 +2799,7 @@ msgstr "هذا الاستبيان مغلق الان. شكرا على اهتما�
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "This survey is open only to registered people. Please"
-msgstr "هذا الاستطلاع مفتوح للمستخدمين المسجلين فقط. برجاء"
+msgstr "هذا الاستبيان مفتوح للمستخدمين المسجلين فقط. برجاء"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -3036,7 +3043,7 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
-"يمكنك إنشاء استطلاعات لأغراض متعددة: كأخذ آراء العملاء، أو جمع ملاحظات عن "
+"يمكنك إنشاء استبيانات لأغراض متعددة: كأخذ آراء العملاء، أو جمع ملاحظات عن "
 "خدمات، أو مقابلات التوظيف، أو التقييم الدوري للموظف، أو الحملات التسويقية، "
 "إلخ."
 
@@ -3051,13 +3058,13 @@ msgstr ""
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
-msgstr "لا يمكنك إرسال دعوة لاستطلاع لا يحتوي على أسئلة."
+msgstr "لا يمكنك إرسال دعوة لإستبيان لا يحتوي على أسئلة."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "You cannot send invitations for closed surveys."
-msgstr "لا يمكنك إرسال دعوات لاستطلاعات مغلقة."
+msgstr "لا يمكنك إرسال دعوات لاستبيانات مغلقة."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
