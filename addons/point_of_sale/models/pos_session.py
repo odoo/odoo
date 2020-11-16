@@ -259,6 +259,8 @@ class PosSession(models.Model):
     def action_pos_session_closing_control(self):
         self._check_pos_session_balance()
         for session in self:
+            if session.state == 'closed':
+                raise UserError(_('This session is already closed.'))
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
             if not session.config_id.cash_control:
                 session.action_pos_session_close()
@@ -297,6 +299,8 @@ class PosSession(models.Model):
         self.cash_real_transaction = self.cash_register_total_entry_encoding
         self.cash_real_expected = self.cash_register_balance_end
         self.cash_real_difference = self.cash_register_difference
+        if self.state == 'closed':
+            raise UserError(_('This session is already closed.'))
         self._check_if_no_draft_orders()
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
