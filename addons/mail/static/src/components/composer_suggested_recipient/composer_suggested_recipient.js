@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/composer_suggested_recipient/composer_su
 'use strict';
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { FormViewDialog } = require('web.view_dialogs');
 const { ComponentAdapter } = require('web.OwlCompatibility');
@@ -38,6 +39,7 @@ class ComposerSuggestedRecipient extends Component {
                 suggestedRecipientInfo: suggestedRecipientInfo && suggestedRecipientInfo.__state,
             };
         });
+        useUpdate({ func: () => this._update() });
         /**
          * Form view dialog class. Useful to reference it in the template.
          */
@@ -60,14 +62,6 @@ class ComposerSuggestedRecipient extends Component {
          */
         this._isDialogOpen = false;
         this._onDialogSaved = this._onDialogSaved.bind(this);
-    }
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     //--------------------------------------------------------------------------

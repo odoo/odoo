@@ -872,7 +872,7 @@ MockServer.include({
                 const members = channel.members.map(memberId => this._getRecords('res.partner', [['id', '=', memberId]])[0].name);
                 let message = "You are alone in this channel.";
                 if (members.length > 0) {
-                    message = `Users in this channel: ${members.join(', ')} and you`
+                    message = `Users in this channel: ${members.join(', ')} and you`;
                 }
                 const notification = [
                     ["dbName", 'res.partner', this.currentPartnerId],
@@ -987,7 +987,7 @@ MockServer.include({
             this._mockWrite('mail.channel', [
                 [channel.id],
                 { message_unread_counter: (channel.message_unread_counter || 0) + 1 },
-            ])
+            ]);
         }
         return messageId;
     },
