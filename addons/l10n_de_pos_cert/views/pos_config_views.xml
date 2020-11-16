@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//h2[@name='order']" position="before">
                 <field name="is_company_country_germany" invisible="1"/>
-                <div attrs="{'invisible': [('is_company_country_germany','!=',False)]}">
+                <div attrs="{'invisible': [('is_company_country_germany','=',False)]}">
                     <h2 name="fiskaly">Fiskaly API</h2>
                     <div class="row mt16 o_settings_container" attrs="{'invisible': [('fiskaly_tss_id','!=',False)]}">
                         <div class="col-12 col-lg-6 o_setting_box">
