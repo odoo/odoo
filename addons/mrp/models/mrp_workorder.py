@@ -140,12 +140,7 @@ class MrpWorkorder(models.Model):
     production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
     json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
-    consumption = fields.Selection([
-        ('strict', 'Strict'),
-        ('warning', 'Warning'),
-        ('flexible', 'Flexible')],
-        required=True,
-    )
+    consumption = fields.Selection(related='production_id.consumption')
 
     @api.depends('production_state', 'date_planned_start', 'date_planned_finished')
     def _compute_json_popover(self):
