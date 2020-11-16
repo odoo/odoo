@@ -60,7 +60,8 @@
                                    t-att-checked="acquirer.id == default_payment_option_id"
                                    t-att-class="'' if acquirer_count + token_count > 1 else 'd-none'"
                                    t-att-data-payment-option-id="acquirer.id"
-                                   t-att-data-provider="acquirer.provider"/>
+                                   t-att-data-provider="acquirer.provider"
+                                   data-payment-option-type="acquirer"/>
                             <!-- === Acquirer name === -->
                             <span class="payment_option_name">
                                 <b><t t-esc="acquirer.display_as or acquirer.name"/></b>
@@ -87,7 +88,8 @@
                         <div t-raw="acquirer.pre_msg" class="text-muted ml-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
-                    <div t-attf-id="o_payment_inline_form_{{acquirer.id}}"
+                    <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
+                         name="o_payment_inline_form"
                          class="card-footer d-none">
                         <!-- === Inline form content (filled by acquirer) === -->
                         <t t-set="inline_form_xml_id"
@@ -117,7 +119,7 @@
                                    t-att-checked="token.id == default_payment_option_id"
                                    t-att-data-payment-option-id="token.id"
                                    t-att-data-provider="token.acquirer_id.provider"
-                                   data-is-token="true"/>
+                                   data-payment-option-type="token"/>
                             <!-- === Token name === -->
                             <span class="payment_option_name" t-esc="token.name"/>
                             <!-- === "V" check mark === -->
@@ -136,7 +138,9 @@
                         </label>
                     </div>
                     <!-- === Token inline form === -->
-                    <div t-attf-id="o_payment_inline_form_{{token.id}}" class="card-footer d-none"/>
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none"/>
                 </t>
             </div>
             <!-- === "Pay" button === -->
@@ -195,7 +199,8 @@
                                    t-att-checked="acquirer.id == default_payment_option_id"
                                    t-att-class="'' if acquirer_count + token_count > 1 else 'd-none'"
                                    t-att-data-payment-option-id="acquirer.id"
-                                   t-att-data-provider="acquirer.provider"/>
+                                   t-att-data-provider="acquirer.provider"
+                                   data-payment-option-type="acquirer"/>
                             <!-- === Acquirer name === -->
                             <span class="payment_option_name">
                                 <b><t t-esc="acquirer.display_as or acquirer.name"/></b>
@@ -213,7 +218,8 @@
                         <div t-raw="acquirer.pre_msg" class="text-muted ml-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
-                    <div t-attf-id="o_payment_inline_form_{{acquirer.id}}"
+                    <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
+                         name="o_payment_inline_form"
                          class="card-footer d-none">
                         <!-- === Inline form content (filled by acquirer) === -->
                         <div class="clearfix">
@@ -237,7 +243,7 @@
                                    t-att-class="'' if bool(assign_token_route) else 'd-none'"
                                    t-att-data-payment-option-id="token.id"
                                    t-att-data-provider="token.acquirer_id.provider"
-                                   data-is-token="true"/>
+                                   data-payment-option-type="token"/>
                             <!-- === Token name === -->
                             <span class="payment_option_name" t-esc="token.name"/>
                             <!-- === "V" check mark === -->
@@ -261,7 +267,9 @@
                         </button>
                     </div>
                     <!-- === Token inline form === -->
-                    <div t-attf-id="o_payment_inline_form_{{token.id}}" class="card-footer d-none"/>
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none"/>
                 </t>
             </div>
             <!-- === "Save Payment Method" button === -->

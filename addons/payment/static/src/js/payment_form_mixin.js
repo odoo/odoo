@@ -67,7 +67,7 @@ odoo.define('payment.payment_form_mixin', require => {
          *                              undefined otherwise.
          */
         _displayError: function (title, description = '', error = '') {
-            const $checkedRadios = this.$('input[type="radio"]:checked');
+            const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length !== 1) { // Cannot find selected payment option, show dialog
                 return new Dialog(null, {
                     title: _.str.sprintf(_t("Error: %s"), _.str.escapeHTML(title)),
@@ -92,7 +92,8 @@ odoo.define('payment.payment_form_mixin', require => {
                 // Append error to inline form and center the page on the error
                 const checkedRadio = $checkedRadios[0];
                 const paymentOptionId = this._getPaymentOptionIdFromRadio(checkedRadio);
-                const $inlineForm = this.$(`#o_payment_inline_form_${paymentOptionId}`);
+                const formType = $(checkedRadio).data('payment-option-type');
+                const $inlineForm = this.$(`#o_payment_${formType}_inline_form_${paymentOptionId}`);
                 $inlineForm.removeClass('d-none'); // Show the inline form even if it was empty
                 $inlineForm.append(errorHtml).find('div[name="o_payment_error"]')[0]
                     .scrollIntoView({behavior: 'smooth', block: 'center'});
@@ -108,7 +109,7 @@ odoo.define('payment.payment_form_mixin', require => {
          */
         _displayInlineForm: function (radio) {
             // Hide all inline forms
-            this.$('[id*="o_payment_inline_form_"]').addClass('d-none');
+            this.$('[name="o_payment_inline_form"]').addClass('d-none');
             this._hideError();
 
             // Reset the payment flow to let acquirers overwrite it
@@ -121,7 +122,8 @@ odoo.define('payment.payment_form_mixin', require => {
 
             // Prepare the inline form of the selected payment option and display it if not empty
             this._prepareInlineForm(provider, paymentOptionId, flow);
-            const $inlineForm = this.$(`#o_payment_inline_form_${paymentOptionId}`);
+            const formType = $(radio).data('payment-option-type');
+            const $inlineForm = this.$(`#o_payment_${formType}_inline_form_${paymentOptionId}`);
             if ($inlineForm.children().length > 0) {
                 $inlineForm.removeClass('d-none');
             }
@@ -185,7 +187,10 @@ odoo.define('payment.payment_form_mixin', require => {
          * @return {string} The flow of the selected payment option. redirect, direct or token.
          */
         _getPaymentFlowFromRadio: function (radio) {
-            if ($(radio).data('is-token') || this.txContext.flow === 'token') {
+            if (
+                $(radio).data('payment-option-type') === 'token'
+                || this.txContext.flow === 'token'
+            ) {
                 return 'token';
             } else if (this.txContext.flow === 'redirect') {
                 return 'redirect';

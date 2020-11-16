@@ -84,11 +84,12 @@ odoo.define('payment.manage_form', require => {
                     method: 'write',
                     args: [[tokenId], {active: false}],
                 }).then(result => {
-                    if (result === true) { // Token successfully delete, remove it from the view
+                    if (result === true) { // Token successfully deleted, remove it from the view
                         const $tokenCard = this.$(
-                            `input[name="o_payment_radio"][data-payment-option-id="${tokenId}"]`
-                        ).closest('div');
-                        $tokenCard.siblings(`#o_payment_inline_form_${tokenId}`).remove();
+                            `input[name="o_payment_radio"][data-payment-option-id="${tokenId}"]` +
+                            `[data-payment-option-type="token"]`
+                        ).closest('div[name="o_payment_option_card"]');
+                        $tokenCard.siblings(`#o_payment_token_inline_form_${tokenId}`).remove();
                         $tokenCard.remove();
                         this._disableButton(false);
                     }
@@ -160,7 +161,7 @@ odoo.define('payment.manage_form', require => {
             ev.preventDefault();
 
             // Extract contextual values from the delete button
-            const linkedRadio = $(ev.target).siblings().find('input[type="radio"]')[0];
+            const linkedRadio = $(ev.target).siblings().find('input[name="o_payment_radio"]')[0];
             const tokenId = this._getPaymentOptionIdFromRadio(linkedRadio);
 
             // Delete the token
