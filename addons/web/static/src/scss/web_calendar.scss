@@ -8,22 +8,24 @@
     @include o-webclient-padding($top: $o-horizontal-padding/2, $bottom: $o-horizontal-padding/2);
     display: flex;
 
+    // Multidados - Ajustes nas Cores para Melhor Visualização
     @for $index from 1 through $o-nb-calendar-colors {
         .o_calendar_color_#{$index} {
-            color: #0D0D0D;
-            background-color: adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
-            border-color:  adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
-            opacity: 0.7;
+            color: rgb(0, 0, 0) !important;
+            background-color: adjust-hue(rgb(255, 100, 100), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-color:  adjust-hue(rgb(255, 95, 95), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            opacity: 1.0;
             &.o_event_hightlight {
                 opacity: 1.0;
                 color: black;
             }
             &:hover {
-                color: #666 !important;
+                color: rgb(0, 0, 0) !important;
+                background-color: adjust-hue(rgb(255, 60, 60), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
             }
         }
         .o_underline_color_#{$index} {
-            border-bottom: 4px solid adjust-hue(rgba(255, 192, 192, 0.7), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-bottom: 4px solid adjust-hue(rgba(255, 100, 100, 1.0), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
         }
     }
 
