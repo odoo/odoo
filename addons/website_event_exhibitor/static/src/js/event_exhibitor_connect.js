@@ -1,4 +1,4 @@
-odoo.define('website_event_track_exhibitor.event_exhibitor_connect', function (require) {
+odoo.define('website_event_exhibitor.event_exhibitor_connect', function (require) {
 'use strict';
 
 var Dialog = require('web.Dialog');
@@ -62,7 +62,7 @@ var ExhibitorConnectClosedDialog = Dialog.extend({
 
 publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
     selector: '.o_wesponsor_js_connect',
-    xmlDependencies: ['/website_event_track_exhibitor/static/src/xml/event_exhibitor_connect.xml'],
+    xmlDependencies: ['/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml'],
 
     /**
      * @override
