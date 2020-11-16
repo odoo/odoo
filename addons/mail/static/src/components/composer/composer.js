@@ -11,6 +11,7 @@ const components = {
     ThreadTextualTypingStatus: require('mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js'),
 };
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const {
     isEventHandled,
@@ -38,6 +39,7 @@ class Composer extends Component {
                     : undefined,
             };
         });
+        useUpdate({ func: () => this._update() });
         /**
          * Reference of the emoji popover. Useful to include emoji popover as
          * contained "inside" the composer.
@@ -61,11 +63,6 @@ class Composer extends Component {
 
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     willUnmount() {
@@ -201,6 +198,9 @@ class Composer extends Component {
      * @private
      */
     _update() {
+        if (!this.composer) {
+            return;
+        }
         if (this._subjectRef.el) {
             this._subjectRef.el.value = this.composer.subjectContent;
         }
