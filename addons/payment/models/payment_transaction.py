@@ -34,6 +34,8 @@ class PaymentTransaction(models.Model):
     acquirer_id = fields.Many2one(
         string="Acquirer", comodel_name='payment.acquirer', readonly=True, required=True)
     provider = fields.Selection(related='acquirer_id.provider')
+    company_id = fields.Many2one(  # Indexed to fasten ORM searches on c_id (from ir_rule or other)
+        related='acquirer_id.company_id', store=True, index=True)
     reference = fields.Char(
         string="Reference", help="The internal reference of the transaction", readonly=True,
         required=True, index=True)

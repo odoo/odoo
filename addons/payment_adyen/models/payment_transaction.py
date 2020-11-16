@@ -18,7 +18,7 @@ class PaymentTransaction(models.Model):
     adyen_payment_data = fields.Char(
         string="Saved Payment Data",
         help="Data that must be passed back to Adyen when returning from redirect", readonly=True,
-        groups='base.group_system')  # TODO ANV review group
+        groups='base.group_system')
 
     #=== BUSINESS METHODS ===#
 
