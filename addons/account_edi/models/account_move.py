@@ -181,9 +181,7 @@ class AccountMove(models.Model):
 
         return res
 
-    def button_cancel_posted_moves(self):
-        '''Mark the edi.document related to this move to be canceled.
-        '''
+    def _cancel_posted_moves(self):
         to_cancel_documents = self.env['account.edi.document']
         for move in self:
             is_move_marked = False
@@ -199,6 +197,11 @@ class AccountMove(models.Model):
                 move.message_post(body=_("A cancellation of the EDI has been requested."))
 
         to_cancel_documents.write({'state': 'to_cancel', 'error': False})
+
+    def button_cancel_posted_moves(self):
+        '''Mark the edi.document related to this move to be canceled.
+        '''
+        self._cancel_posted_moves()
 
     ####################################################
     # Import Electronic Document
