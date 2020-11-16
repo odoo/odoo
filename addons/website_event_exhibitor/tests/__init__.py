@@ -108,3 +108,21 @@ class TestEventOnlineCommon(TestEventCommon, EventDtPatcher):
             'date_begin': datetime.combine(cls.reference_now, time(7, 0)) - timedelta(days=1),
             'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
         })
+
+        # Sponsorship data
+        cls.sponsor_type_0 = cls.env['event.sponsor.type'].create({
+            'name': 'GigaTop',
+            'sequence': 1,
+        })
+        cls.sponsor_0_partner = cls.env['res.partner'].create({
+            'name': 'EventSponsor',
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'event.sponsor@example.com',
+            'phone': '04856112233',
+        })
+
+        cls.sponsor_0 = cls.env['event.sponsor'].create({
+            'partner_id': cls.sponsor_0_partner.id,
+            'event_id': cls.event_0.id,
+            'sponsor_type_id': cls.sponsor_type_0.id,
+        })

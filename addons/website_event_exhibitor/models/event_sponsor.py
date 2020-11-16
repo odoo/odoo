@@ -71,7 +71,7 @@ class Sponsor(models.Model):
             elif sponsor.partner_id.image_256:
                 sponsor.website_image_url = self.env['website'].image_url(sponsor.partner_id, 'image_256', size=256)
             else:
-                sponsor.website_image_url = get_resource_path('website_event_track', 'static/src/img', 'event_sponsor_default_%d.png' % (sponsor.id % 1))
+                sponsor.website_image_url = get_resource_path('website_event_exhibitor', 'static/src/img', 'event_sponsor_default_%d.png' % (sponsor.id % 1))
 
     def _synchronize_with_partner(self, fname):
         """ Synchronize with partner if not set. Setting a value does not write

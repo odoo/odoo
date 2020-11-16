@@ -4,12 +4,12 @@
 from datetime import datetime
 from unittest.mock import patch
 
-from odoo.addons.website_event_track.tests.common import TestEventTrackOnlineCommon
+from odoo.addons.website_event_exhibitor.tests.common import TestEventExhibitorCommon
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
 
 
-class TestSponsorData(TestEventTrackOnlineCommon):
+class TestSponsorData(TestEventExhibitorCommon):
 
     @classmethod
     def setUpClass(cls):

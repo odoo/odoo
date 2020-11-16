@@ -15,8 +15,15 @@
         'website_jitsi',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'data/event_sponsor_data.xml',
+        'views/event_templates_sponsor.xml',
+        'views/event_sponsor_views.xml',
+        'views/event_event_views.xml',
+        'views/event_menus.xml',
     ],
     'demo': [
+        'data/event_sponsor_demo.xml',
     ],
     'application': False,
     'installable': True,
