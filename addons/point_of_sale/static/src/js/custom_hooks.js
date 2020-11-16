@@ -38,6 +38,14 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                         error.data.debug ||
                         this.env._t('The server encountered an error while receiving your order.'),
                 });
+            } else if (error.code === 700) {
+                // Fiscal module errors
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('Fiscal data module error'),
+                    body:
+                        error.data.error.status ||
+                        this.env._t('The fiscal data module encountered an error while receiving your order.'),
+                });
             } else {
                 // ???
                 await this.showPopup('ErrorPopup', {
