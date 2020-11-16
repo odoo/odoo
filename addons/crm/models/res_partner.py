@@ -64,5 +64,6 @@ class Partner(models.Model):
         This function returns an action that displays the opportunities from partner.
         '''
         action = self.env.ref('crm.crm_lead_opportunities').read()[0]
-        action['domain'] = [('id', 'in', self.opportunity_count_ids.ids)]
+        operator = 'child_of' if self.is_company else '='
+        action['domain'] = [('partner_id', operator, self.id), ('type', '=', 'opportunity')]
         return action
