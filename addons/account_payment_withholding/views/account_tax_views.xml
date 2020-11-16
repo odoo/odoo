@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_tax_search" model="ir.ui.view">
+        <field name="name">account.tax.search</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_account_tax_search"/>
+        <field name="arch" type="xml">
+            <filter name="purchase" position="after">
+                <filter string="Customer Payment" name="customer" domain="[('type_tax_use','=','customer')]" />
+                <filter string="Supplier Payment" name="supplier" domain="[('type_tax_use','=','supplier')]" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="type_tax_use" position="after">
+                <field name="withholding_amount_type" attrs="{'invisible':[('type_tax_use', 'not in', ['customer', 'supplier'])], 'required':[('type_tax_use', 'in', ['customer', 'supplier'])]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
