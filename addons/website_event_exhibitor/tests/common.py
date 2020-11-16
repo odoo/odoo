@@ -4,12 +4,13 @@
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 
 
-class TestEventTrackOnlineCommon(TestEventOnlineCommon):
+class TestEventExhibitorCommon(TestEventOnlineCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestEventTrackOnlineCommon, cls).setUpClass()
+        super(TestEventExhibitorCommon, cls).setUpClass()
 
+        # Sponsorship data
         cls.sponsor_type_0 = cls.env['event.sponsor.type'].create({
             'name': 'GigaTop',
             'sequence': 1,
