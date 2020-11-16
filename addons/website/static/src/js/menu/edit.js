@@ -271,6 +271,19 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             ],
         ]
 
+        const layoutTemplate = `
+            <t-dialog><t t-zone="default"/></t-dialog>
+            <div class="d-none"><t t-zone="tools"/></div>
+            <t-theme name="default">
+                <t t-zone="snippetManipulators"/>
+                <t t-zone="main_sidebar"/>
+                <t t-zone="main"/>
+            </t-theme>
+            <t t-zone="debug"/>
+        `;
+
+        $('#wrapwrap').attr('contenteditable', 'true');
+
         const params = {
             legacy: false,
             snippets: 'website.snippets',
@@ -283,8 +296,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             discardButton: true,
             saveButton: true,
             devicePreview: true,
+            wrapMain: false,
             toolbarLayout: enableTranslation ? translationToolbar : websiteToolbar,
             location: [document.getElementById('wrapwrap'), 'replace'],
+            interface: layoutTemplate,
         };
         params.enableTranslation = enableTranslation;
 

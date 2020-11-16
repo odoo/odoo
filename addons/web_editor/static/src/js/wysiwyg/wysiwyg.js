@@ -260,6 +260,7 @@ var Wysiwyg = Widget.extend({
         }
 
         const $mainSidebar = $('<div class="o_main_sidebar">');
+        if (this.options.enableWebsite) $mainSidebar.addClass('o_website_sidebar');
         const $snippetManipulators = $('<div id="oe_manipulators" />');
 
         const customCommands = {
@@ -307,12 +308,12 @@ var Wysiwyg = Widget.extend({
         const rootElement = this.editorHelpers.getDomNodes(domLayout.root.firstDescendant(JWEditorLib.ContainerNode))[0];
         this.editorEditable = this.editorHelpers.getDomNodes(this.zoneMain)[0] || this.editorHelpers.getDomNodes(this.zoneMain.parent)[0];
 
-        this.$toolbar = $(rootElement).find('jw-toolbar').detach();
+        this.$toolbar = $(rootElement).add('body').find('jw-toolbar').detach();
 
         if (this.options.enableWebsite) {
             const $wrapwrap = $('#wrapwrap');
             $wrapwrap.removeClass('o_editable'); // clean the dom before edition
-            this._getEditable($wrapwrap).addClass('o_editable o_editable_no_shadow');
+            this._getEditable($wrapwrap).addClass('o_editable');
             $wrapwrap.data('wysiwyg', this);
 
             // add class when page content is empty to show the "DRAG BUILDING BLOCKS HERE" block
@@ -338,7 +339,6 @@ var Wysiwyg = Widget.extend({
         };
 
         if (this.options.snippets) {
-            document.body.classList.add('editor_has_snippets');
             this.$webEditorToolbar = $('<div id="web_editor-toolbars">');
 
             var $toolbarHandler = $('#web_editor-top-edit');
@@ -354,6 +354,7 @@ var Wysiwyg = Widget.extend({
                 onlyStyleTab: this.options.enableTranslation,
             }, this.options));
             await this.snippetsMenu.appendTo($mainSidebar);
+            document.body.classList.add('editor_has_snippets');
 
             // Place the history buttons in their right location.
             const $undoButton = $('<button name="undo" class="btn btn-secondary fa fa-undo"></button>');

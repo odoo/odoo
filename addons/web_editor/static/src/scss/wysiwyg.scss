@@ -474,9 +474,6 @@ img::selection {
 .wrap_editor {
     height: 100vh;
 }
-.o_main_sidebar {
-    display: flex;
-}
 .o_editor_center {
     flex: 1 1 auto;
     outline: none;
@@ -617,6 +614,13 @@ jw-follow-range {
 }
 table.table-picker {
     position: fixed !important;
+}
+
+body jw-devtools {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 10000;
 }
 
 .oe_absolute_dropdown {

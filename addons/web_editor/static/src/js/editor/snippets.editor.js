@@ -1160,7 +1160,7 @@ var SnippetsMenu = Widget.extend({
             });
             this.updateCurrentSnippetEditorOverlay();
         }, 250));
-        this.$editor.find('#wrapwrap').on('scroll.snippets_menu', () => {
+        this.$editor.on('scroll.snippets_menu', () => {
             this.updateCurrentSnippetEditorOverlay();
         });
         // Hide the active overlay when scrolling.
@@ -1237,7 +1237,7 @@ var SnippetsMenu = Widget.extend({
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
             this.$scrollingElement.off('.snippets_menu');
-            this.$editor.find('#wrapwrap').off('.snippets_menu');
+            this.$editor.off('.snippets_menu');
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         delete this.cacheSnippetTemplate[this.options.snippets];
@@ -2191,7 +2191,7 @@ var SnippetsMenu = Widget.extend({
                 }
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, this.$editor.find('#wrapwrap').addBack().last(), smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, this.$editor.addBack().last(), smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
@@ -2641,7 +2641,7 @@ var SnippetsMenu = Widget.extend({
     _onContentMouseDown: function (ev) {
         const el = this.editorHelpers.elementFromPoint(ev.clientX, ev.clientY);
 
-        const editable = el && el.closest('.note-editable');
+        const editable = el && el.closest('#wrapwrap, .note-editable');
 
         if (!editable || !this.$editor.is(editable) || this.lastElement === el) {
             return;

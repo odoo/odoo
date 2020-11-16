@@ -4,7 +4,12 @@
 
 // OVERRIDES FOR EDITOR WITH SNIPPETS
 body.editor_enable.editor_has_snippets {
-    position: fixed;
+    padding-right: $o-we-sidebar-width !important;
+    transition: padding-right 400ms ease 0s;
+
+    #web_editor-top-edit .note-popover .popover {
+        right: $o-we-sidebar-width !important;
+    }
 
     .modal:not(.o_technical_modal) {
         top: 0 !important;
@@ -17,6 +22,34 @@ body.editor_enable.editor_has_snippets {
         .o_handles {
             display: none;
         }
+    }
+}
+
+.o_main_sidebar {
+    overflow: hidden;
+    display: flex;
+
+    &.o_loaded {
+        transform: none;
+        width: $o-we-sidebar-width;
+        transition: transform 400ms ease 0s !important;
+    }
+}
+.o_main_sidebar.o_website_sidebar {
+    @include o-position-absolute(0, 0, 0, auto);
+    // transition: width 400ms ease 0s !important;
+    transition: transform 400ms ease 0s;
+    transform: translateX(100%);
+    position: fixed;
+    z-index: $o-we-zindex;
+
+    overflow: hidden;
+    display: flex;
+
+    &.o_loaded {
+        transform: none;
+        width: $o-we-sidebar-width;
+        transition: transform 400ms ease 0s !important;
     }
 }
 
@@ -293,9 +326,9 @@ body.editor_enable.editor_has_snippets {
 #oe_snippets {
     @include o-w-preserve-btn;
 
+    width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    width: $o-we-sidebar-width;
 
     border-left: $o-we-sidebar-border-width solid $o-we-sidebar-border-color;
     background-color: $o-we-sidebar-bg;
@@ -304,12 +337,6 @@ body.editor_enable.editor_has_snippets {
     font-size: $o-we-sidebar-font-size;
     font-weight: 400;
 
-    transition: transform 400ms ease 0s;
-    transform: translateX(100%);
-
-    &.o_loaded {
-        transform: none;
-    }
 
     *::selection {
         background: lighten($o-we-accent, 9);
@@ -1994,9 +2021,6 @@ we-select.o_we_shape_menu {
     // overlay covering).
     position: fixed;
     right: $o-we-sidebar-width;
-}
-.o_main_sidebar:not(.o_loaded) #oe_snippets {
-    display: none !important;
 }
 
 .o_we_force_no_transition {
