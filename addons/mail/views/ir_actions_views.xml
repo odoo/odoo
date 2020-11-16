@@ -22,7 +22,9 @@
                                         'required': [('state', '=', 'next_activity'), ('activity_date_deadline_range', '>', 0)]
                                     }"/>
                                 </div>
-                                <field name="activity_user_type"/>
+                                <field name="activity_user_type" attrs="{
+                                    'required': [('state', '=', 'next_activity')]
+                                }"/>
                                 <field name="activity_user_field_name" attrs="{
                                     'invisible': [('activity_user_type', '=', 'specific')],
                                     'required': [('state', '=', 'next_activity'), ('activity_user_type', '=', 'generic')]
