@@ -24,6 +24,25 @@ class TestSaleOrder(TestCommonSaleNoChart):
         group_employee = cls.env.ref('base.group_user')
         cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id, group_employee.id])]})
         cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id, group_employee.id])]})
+        cls.crm_team0 = cls.env['crm.team'].create({
+            'name': 'crm team 0',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.crm_team1 = cls.env['crm.team'].create({
+            'name': 'crm team 1',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.user_in_team = cls.env['res.users'].create({
+            'email': 'team0user@example.com',
+            'login': 'team0user',
+            'name': 'User in Team 0',
+            'sale_team_id': cls.crm_team0.id
+        })
+        cls.user_not_in_team = cls.env['res.users'].create({
+            'email': 'noteamuser@example.com',
+            'login': 'noteamuser',
+            'name': 'User Not In Team',
+        })
 
         # set up accounts and products and journals
         cls.setUpAdditionalAccounts()
@@ -514,3 +533,50 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 20)
+
+    def test_assign_sales_team_from_partner_user(self):
+        """Use the team from the customer's sales person, if it is set"""
+        partner = self.env['res.partner'].create({
+            'name': 'Customer of User In Team',
+            'user_id': self.user_in_team.id,
+            'team_id': self.crm_team1.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sale_order.onchange_partner_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
+
+    def test_assign_sales_team_from_partner_team(self):
+        """If no team set on the customer's sales person, fall back to the customer's team"""
+        partner = self.env['res.partner'].create({
+            'name': 'Customer of User Not In Team',
+            'user_id': self.user_not_in_team.id,
+            'team_id': self.crm_team1.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sale_order.onchange_partner_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should assign to team of partner')
+
+    def test_assign_sales_team_when_changing_user(self):
+        """When we assign a sales person, change the team on the sales order to their team"""
+        sale_order = self.env['sale.order'].create({
+            'user_id': self.user_not_in_team.id,
+            'partner_id': self.partner_customer_usd.id,
+            'team_id': self.crm_team1.id
+        })
+        sale_order.user_id = self.user_in_team
+        sale_order.onchange_user_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
+
+    def test_keep_sales_team_when_changing_user_with_no_team(self):
+        """When we assign a sales person that has no team, do not reset the team to default"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'team_id': self.crm_team1.id
+        })
+        sale_order.user_id = self.user_not_in_team
+        sale_order.onchange_user_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
