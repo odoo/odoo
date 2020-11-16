@@ -134,6 +134,7 @@ def main(args):
         for db_name in preload:
             try:
                 openerp.service.db._create_empty_database(db_name)
+                config['init']['base'] = True
             except openerp.service.db.DatabaseExists:
                 pass
 
