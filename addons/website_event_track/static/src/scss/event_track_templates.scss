@@ -1,9 +1,3 @@
-// small hack to hide sponsors on specific views
-.o_wevent_hide_sponsors .container.mt32.mb16.d-none.d-md-block.d-print-none {
-    // Not a very accurate way to target the 'sponsors' block -> improve in master
-    display: none !important;
-}
-
 /*
  * EVENT TOOL: REMINDER WIDGET
  */
@@ -180,59 +174,6 @@
                 background-color: rgba(147,101,184,0.2);
             }
         }
-    }
-}
-
-/*
- * EVENT TOOL: SPONSOR WIDGET
- */
-.o_wevent_event .o_wevent_sponsor_card {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border: 1px solid $gray-200;
-    background-color: $white;
-    margin: 0 -1px -1px 0;
-
-    .ribbon-wrapper {
-        width: 50px;
-        height: 50px;
-    }
-
-    .ribbon {
-        font: bold 10px Sans-Serif;
-        padding: 2px 0;
-        top: 10px;
-        width: 70px;
-        background-image: none; // not needed if colors for ribbons (Gold,Silver,Bronze) is removed in website_event_track.css
-
-        &.ribbon_Gold {
-            background-color: #e3aa24;
-            color:$white;
-        }
-
-        &.ribbon_Silver {
-            background-color: #adb5bd;
-            color: $white;
-        }
-
-        &.ribbon_Bronze {
-            background-color: #c7632a;
-            color: $white;
-        }
-    }
-
-    &:before {
-        content: "";
-        display: block;
-        @include o-position-absolute(0,0,0,0);
-        background-color: $black;
-        opacity: 0;
-        transition: opacity .3s;
-    }
-
-    &:hover:before {
-        opacity:.1;
     }
 }
 

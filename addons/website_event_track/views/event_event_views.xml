@@ -15,12 +15,6 @@
                         context="{'default_date': date_begin}">
                     <field name="track_count" string="Tracks" widget="statinfo"/>
                 </button>
-                <button name="%(event_sponsor_action_from_event)d"
-                        type="action"
-                        class="oe_stat_button"
-                        icon="fa-black-tie">
-                    <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
-                </button>
             </xpath>
             <xpath expr="//field[@name='website_menu']" position="after">
                 <label for="website_track" string="Showcase Tracks"/>
@@ -38,7 +32,6 @@
         <field name="arch" type="xml">
             <field name="stage_id" position="after">
                 <field name="track_count" readonly="1" optional="hide"/>
-                <field name="sponsor_count" readonly="1" optional="hide"/>
             </field>
         </field>
     </record>

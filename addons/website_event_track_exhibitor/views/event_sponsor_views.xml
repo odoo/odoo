@@ -3,7 +3,7 @@
     <record id="event_sponsor_view_search" model="ir.ui.view">
         <field name="name">event.sponsor.view.search.inherit.exhibitor</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track.event_sponsor_view_search"/>
+        <field name="inherit_id" ref="website_event_exhibitor.event_sponsor_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='archived']" position="after">
                 <separator/>
@@ -15,7 +15,7 @@
     <record id="event_sponsor_view_tree" model="ir.ui.view">
         <field name="name">event.sponsor.view.tree.inherit.exhibitor</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track.event_sponsor_view_tree"/>
+        <field name="inherit_id" ref="website_event_exhibitor.event_sponsor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='sponsor_type_id']" position="after">
                 <field name="is_published" optional="show"/>
@@ -27,7 +27,7 @@
     <record id="event_sponsor_view_kanban" model="ir.ui.view">
         <field name="name">event.sponsor.view.kanban.inherit.kanban</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track.event_sponsor_view_kanban"/>
+        <field name="inherit_id" ref="website_event_exhibitor.event_sponsor_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="replace">
                 <field name="name"/>
@@ -38,7 +38,7 @@
     <record id="event_sponsor_view_form" model="ir.ui.view">
         <field name="name">event.sponsor.view.form.inherit.exhibitor</field>
         <field name="model">event.sponsor</field>
-        <field name="inherit_id" ref="website_event_track.event_sponsor_view_form"/>
+        <field name="inherit_id" ref="website_event_exhibitor.event_sponsor_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//widget[@name='web_ribbon']" position="before">
                 <div class="oe_button_box" name="button_box">
@@ -90,17 +90,6 @@
         <field name="name">Event Sponsors</field>
         <field name="res_model">event.sponsor</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="help" type="html">
-<p class="o_view_nocontent_smiling_face">
-    Create a Sponsor / Exhibitor
-</p><p>
-    Sponsors might be advertised on your event pages footer.<br />
-    Exhibitors might have a dedicated page with chat room for people to connect with them.
-</p>
-        </field>
-    </record>
-
-    <record id="website_event_track.event_sponsor_action_from_event" model="ir.actions.act_window">
         <field name="help" type="html">
 <p class="o_view_nocontent_smiling_face">
     Create a Sponsor / Exhibitor
