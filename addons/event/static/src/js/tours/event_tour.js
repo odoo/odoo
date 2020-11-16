@@ -38,7 +38,7 @@ tour.register('event_tour', {
     edition: 'community',
 }, {
     trigger: '.o-kanban-button-new',
-    content: _t("Let's <b>create</b> your first event."),
+    content: _t("Let's create your first <b>event</b>."),
     position: 'bottom',
     width: 175,
 }, {

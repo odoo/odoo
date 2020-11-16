@@ -75,7 +75,7 @@ function changeColumnSize(position = "right") {
 function changeIcon(snippet, index = 0, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} i:eq(${index})`,
-        content: _t("<b>Double click on an icon</b> to change it with one of our choice."),
+        content: _t("<b>Double click on an icon</b> to change it with one of your choice."),
         position: position,
         run: "dblclick",
     };
@@ -84,7 +84,7 @@ function changeIcon(snippet, index = 0, position = "bottom") {
 function changeImage(snippet, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} img`,
-        content: _t("<b>Double click on an image</b> to change it with one of our choice."),
+        content: _t("<b>Double click on an image</b> to change it with one of your choice."),
         position: position,
         run: "dblclick",
     };

@@ -76,7 +76,7 @@ kanbanExamplesRegistry.add('project', {
     }, {
         name: _lt('Consulting'),
         columns: [_lt('New Projects'), _lt('Resources Allocation'), _lt('In Progress'), _lt('Done')],
-        description: escFormat(_lt('Manage the lifecycle of your project using the kanban view. Add newly acquired project, assign them and use the %s and %s to define if the project is ready for the next step. %s'), greenBullet, redBullet, description_activities),
+        description: escFormat(_lt('Manage the lifecycle of your project using the kanban view. Add newly acquired projects, assign them and use the %s and %s to define if the project is ready for the next step. %s'), greenBullet, redBullet, description_activities),
         bullets: [greenBullet, redBullet],
     }, {
         name: _lt('Research Project'),

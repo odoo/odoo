@@ -1133,13 +1133,13 @@ class AccountReconcileModelTemplate(models.Model):
     sequence = fields.Integer(required=True, default=10)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', 'Manually create a write-off on clicked button.'),
-        ('writeoff_suggestion', 'Suggest a write-off.'),
-        ('invoice_matching', 'Match existing invoices/bills.')
+        ('writeoff_button', 'Manually create a write-off on clicked button'),
+        ('writeoff_suggestion', 'Suggest a write-off'),
+        ('invoice_matching', 'Match existing invoices/bills')
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
-    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
+    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the information of the counterpart.')
     matching_order = fields.Selection(
         selection=[
             ('old_first', 'Oldest first'),

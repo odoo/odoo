@@ -164,7 +164,7 @@ class User(models.Model):
         can_edit_self = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
         if hr_fields and not can_edit_self:
             # Raise meaningful error message
-            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other informations."))
+            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
 
         result = super(User, self).write(vals)
 

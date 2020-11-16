@@ -266,7 +266,7 @@ class FetchmailServer(models.Model):
                 unable to deliver the file to the Public Administration. The Exchange System will\
                 contact the PA to report the problem and request that they provide a solution. \
                 During the following 15 days, the Exchange System will try to forward the FatturaPA\
-                file to the Administration in question again. More informations:<br/>%s") % (info))
+                file to the Administration in question again. More information:<br/>%s") % (info))
             )
 
         elif receipt_type == 'NE':
