@@ -864,24 +864,18 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        # Choose the message based on the payment flow and provider
-        if self.token_id:  # The payment is made by token
+        # Choose the message based on the payment flow
+        if self.operation in ('online_redirect', 'online_direct'):
+            message = _(
+                "A transaction with reference %(ref)s has been initiated (%(acq_name)s).",
+                ref=self.reference, acq_name=self.acquirer_id.name
+            )
+        else:  # 'online_token'
             message = _(
                 "A transaction with reference %(ref)s has been initiated using the payment method "
                 "%(token_name)s (%(acq_name)s).",
                 ref=self.reference, token_name=self.token_id.name, acq_name=self.acquirer_id.name
             )
-        elif self.provider in ('manual', 'transfer'):  # The payment is made by direct transfer
-            # The reference of the transaction is not logged since it remains in draft forever
-            message = _(
-                "The customer has selected %(acq_name)s to make the payment.",
-                acq_name=self.acquirer_id.name
-            )  # TODO ANV check that payment_transfer indeed uses this, or remove
-        else:  # The payment is direct and initiated through an inline form
-            message = _(
-                "A transaction with reference %(ref)s has been initiated (%(acq_name)s).",
-                ref=self.reference, acq_name=self.acquirer_id.name
-            )  # TODO ANV check that at least one acquirer uses this, or remove
         return message
 
     def _log_received_message(self):
@@ -892,7 +886,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        for tx in self.filtered(lambda t: t.provider not in ('manual', 'transfer')):  # TODO override and filter in payment_transfer
+        for tx in self:
             linked_documents = tx._get_linked_documents()
             message = tx._get_received_message()
             for document in linked_documents:
