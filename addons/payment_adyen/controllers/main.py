@@ -20,9 +20,7 @@ _logger = logging.getLogger(__name__)
 class AdyenController(http.Controller):
 
     @http.route('/payment/adyen/payment_methods', type='json', auth='public')
-    def payment_methods(
-        self, acquirer_id, amount=None, currency_id=None, partner_id=None
-    ):
+    def payment_methods(self, acquirer_id, amount=None, currency_id=None, partner_id=None):
         """ Query the available payment methods based on the transaction context.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
@@ -191,7 +189,7 @@ class AdyenController(http.Controller):
 
         return response_content
 
-    @http.route('/payment/adyen/return', type='http', auth='public', csrf=False)
+    @http.route('/payment/adyen/return', type='http', methods=['GET'], auth='public')
     def return_from_redirect(self, **data):
         """ Process the data returned by Adyen after redirection.
 
@@ -199,7 +197,9 @@ class AdyenController(http.Controller):
                           allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_data('adyen', data)
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            'adyen', data
+        )
         # Overwrite the operation to force the flow to 'redirect'. This is necessary because even
         # thought Adyen is implemented as a direct payment provider, it will redirect the user out
         # of Odoo in some cases. For instance, when a 3DS1 authentication is required, or for
@@ -215,9 +215,7 @@ class AdyenController(http.Controller):
         # Redirect the user to the status page
         return werkzeug.utils.redirect('/payment/status')
 
-    @http.route(
-        '/payment/adyen/notification', type='json', auth='public', methods=['POST'], csrf=False
-    )
+    @http.route('/payment/adyen/notification', type='json', auth='public')
     def notification(self):
         """ Process the data sent by Adyen to the webhook based on the event code.
 
@@ -236,7 +234,7 @@ class AdyenController(http.Controller):
             if not hmac_signature:
                 _logger.warning(f"ignored notification with missing signature")
                 continue
-            acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_data(
+            acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
                 'adyen', notification_data
             ).acquirer_id  # Find the acquirer based on the transaction
             if hmac_signature != to_text(acquirer_sudo._adyen_compute_signature(notification_data)):

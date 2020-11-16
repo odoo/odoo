@@ -459,77 +459,47 @@ class PaymentTransaction(models.Model):
     
     @api.model
     def _handle_feedback_data(self, provider, data):
-        """ Handle the feedback data sent by the provider.
+        """ Match the transaction with the feedback data, update its state and return it.
 
         :param str provider: The provider of the acquirer that handled the transaction
         :param dict data: The feedback data sent by the provider
-        :return: The transaction if found, and the feedback processing result
-        :rtype: tuple[recordset of `payment.transaction`, bool]
+        :return: The transaction if found
+        :rtype: recordset of `payment.transaction`
         """
-        feedback_result = True
-        tx = self._get_tx_from_data(provider, data)
+        tx = self._get_tx_from_feedback_data(provider, data)
         if tx:
-            invalid_parameters = tx._get_invalid_parameters(data)
-            # TODO ANV check later if can be merged in _process_feedback_data (raise if needed)
-            if invalid_parameters:
-                error_message = "received incorrect transaction data:"
-                for parameter in invalid_parameters:
-                    expected_value, received_value = invalid_parameters[parameter]
-                    error_message += f"\n\t{parameter}: " \
-                                     f"expected {expected_value} ; received {received_value}"
-                _logger.error(error_message)
-                feedback_result = False
-            else:
-                feedback_result = tx._process_feedback_data(data)
-                tx._execute_callback()
+            tx._process_feedback_data(data)
+            tx._execute_callback()
         else:
             pass  # The transaction might not be recorded in Odoo in some acquirer-specific flows
-        return tx, feedback_result
+        return tx
 
     @api.model
-    def _get_tx_from_data(self, provider, data):
-        """ Find and return the transaction based on the transaction data and on the acquirer.
+    def _get_tx_from_feedback_data(self, provider, data):
+        """ Find the transaction based on the feedback data.
 
         For an acquirer to handle transaction post-processing, it must overwrite this method and
-        return the transaction that is identified by the data.
+        return the transaction matching the data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The transaction data sent by the acquirer
-        :return: The payment.transaction record if found, else an empty recordset
+        :param dict data: The feedback data sent by the acquirer
+        :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         """
         return self
 
-    def _get_invalid_parameters(self, data):
-        """ List acquirer-specific invalid parameters and return them.
-
-        For an acquirer to handle transaction post-processing, it must overwrite this method and
-        return the invalid parameters found in the data.
-
-        Note: self.ensure_one()
-
-        :param dict data: The transaction data sent by the acquirer
-        :return: The dict of invalid parameters whose entries have the name of the parameter
-                 as key and a tuple (expected value, received value) as value
-        :rtype: dict
-        """
-        self.ensure_one()
-        return dict()
-
     def _process_feedback_data(self, data):
-        """ Process the feedback data for the current transaction and make necessary updates.
+        """ Update the transaction state and the acquirer reference based on the feedback data.
 
         For an acquirer to handle transaction post-processing, it must overwrite this method and
-        process the feedback data, then return whether the processing was successfully done.
+        process the feedback data.
 
         Note: self.ensure_one()
 
-        :param dict data: The transaction data sent by the acquirer
-        :return: True if the feedback is successfully processed, False otherwise
-        :rtype: bool
+        :param dict data: The feedback data sent by the acquirer
+        :return: None
         """
         self.ensure_one()
-        return True
 
     def _set_pending(self):
         """ Update the transactions' state to 'pending'.

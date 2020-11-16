@@ -98,23 +98,22 @@ class PaymentTransaction(models.Model):
             tx._handle_feedback_data('adyen', response_content)
 
     @api.model
-    def _get_tx_from_data(self, provider, data):
-        """ Find the transaction based on the transaction data.
+    def _get_tx_from_feedback_data(self, provider, data):
+        """ Find the transaction based on the feedback data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The transaction data sent by the acquirer
-        :return: The payment.transaction record if found, else None
-        :rtype: recordset or None
+        :param dict data: The feedback data sent by the acquirer
+        :return: The transaction if found
+        :rtype: recordset of `payment.transaction`
+        :raise: ValidationError if inconsistent data were received
         """
         if provider != 'adyen':
-            return super()._get_tx_from_data(provider, data)
+            return super()._get_tx_from_feedback_data(provider, data)
 
-        # Check that all necessary keys are in feedback data
         reference = data.get('merchantReference')
         if not reference:
             raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
 
-        # Fetch the transaction based on the merchant reference
         tx = self.env['payment.transaction'].search([('reference', '=', reference)])
         if not tx or len(tx) > 1:
             raise ValidationError(
@@ -125,50 +124,39 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _get_invalid_parameters(self, data):
-        """ List acquirer-specific invalid parameters and return them.
-
-        Note: self.ensure_one()
-
-        :param dict data: The transaction data sent by the acquirer
-        :return: The dict of invalid parameters whose entries have the name of the parameter
-                 as key and a tuple (expected value, received value) as value
-        :rtype: dict
-        """
-        if self.provider != 'adyen':
-            return super()._get_invalid_parameters(data)
-
-        invalid_parameters = {}
-        if not data.get('resultCode'):
-            invalid_parameters['resultCode'] = ('something', data.get('resultCode'))
-        return invalid_parameters
-
     def _process_feedback_data(self, data):
-        """ Update the transaction status and the acquirer reference based on the feedback data.
+        """ Update the transaction state and the acquirer reference based on the feedback data.
 
         See https://docs.adyen.com/checkout/payment-result-codes for the exhaustive list of codes.
 
         Note: self.ensure_one()
 
-        :param dict data: The transaction data sent by the acquirer
-        :return: True the transaction status is recognized
-        :rtype: bool
+        :param dict data: The feedback data sent by the acquirer
+        :return: None
+        :raise: ValidationError if inconsistent data were received
         """
+        super()._process_feedback_data(data)
         if self.provider != 'adyen':
-            return super()._process_feedback_data(data)
+            return
 
+        # Handle the acquirer reference
         if 'pspReference' in data:
             self.acquirer_reference = data.get('pspReference')
-        tx_status = data.get('resultCode', 'Pending')
-        if tx_status in (
+
+        # Handle the payment state
+        payment_state = data.get('resultCode')
+        if not payment_state:
+            raise ValidationError("Adyen: " + _("Received data with missing payment state."))
+
+        if payment_state in (
             'ChallengeShopper', 'IdentifyShopper', 'Pending', 'PresentToShopper', 'Received',
             'RedirectShopper'
-        ):  # `pending` state
+        ):  # `pending` tx state
             if self.state != 'pending':  # Redundant feedbacks can be sent through the webhook
                 self._set_pending()
-        elif tx_status == 'Authorised':  # `done` state
-            if self.tokenize \
-                    and 'recurring.recurringDetailReference' in data.get('additionalData', {}):
+        elif payment_state == 'Authorised':  # `done` tx state
+            has_token_data = 'recurring.recurringDetailReference' in data.get('additionalData', {})
+            if self.tokenize and has_token_data:
                 # Create the token with the data of the payment method  TODO probably factor that out when manage tokens is in da place
                 token = self.env['payment.token'].create({
                     'name': f"XXXXXXXXXXXX{data['additionalData'].get('cardSummary', '????')}",
@@ -185,15 +173,12 @@ class PaymentTransaction(models.Model):
                 )
             if self.state != 'done':  # Redundant feedbacks can be sent through the webhook
                 self._set_done()
-        elif tx_status == 'Cancelled':  # `cancel` state
+        elif payment_state == 'Cancelled':  # `cancel` tx state
             if self.state != 'cancel':  # Redundant feedbacks can be sent through the webhook
                 self._set_canceled()
-        else:  # `error` state
+        else:  # `error` tx state
             if self.state != 'error':  # Redundant feedbacks can be sent through the webhook
-                _logger.info(f"received data with invalid transaction status: {tx_status}")
-                self._set_error("Adyen: " + _(
-                    "received data with invalid transaction status: %(tx_status)s",
-                    tx_status=tx_status
-                ))
-                return False
-        return True
+                _logger.info(f"received data with invalid payment state: {payment_state}")
+                self._set_error(
+                    "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
+                )
