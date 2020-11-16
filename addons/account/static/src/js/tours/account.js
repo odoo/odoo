@@ -28,7 +28,7 @@ tour.register('account_tour', {
         content: _t("Once everything is as you want it, validate."),
     }, {
         trigger: "a.o_onboarding_step_action[data-method=action_open_account_onboarding_create_invoice]",
-        content: _t("Now, we'll create a your first invoice."),
+        content: _t("Now, we'll create your first invoice."),
         position: "bottom",
     }, {
         trigger: "input[name=name]",

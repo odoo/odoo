@@ -13,7 +13,7 @@
                         <field name="receipt_reminder_email"/>
                         <div attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
                             <field name="reminder_date_before_receipt" class="oe_inline"/>
-                            <span> days before</span>
+                            <span> day(s) before</span>
                         </div>
                     </div>
                     <field name="property_purchase_currency_id" options="{'no_create': True, 'no_open': True}" groups='base.group_multi_currency'/>
