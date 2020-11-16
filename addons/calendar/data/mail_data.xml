@@ -15,7 +15,7 @@
     % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']
     <p>
         Hello ${object.common_name},<br/><br/>
-        ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.
+        ${object.event_id.user_id.partner_id.name} invited you to the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
         % set target = 'recurrence' if recurrent else 'meeting'

@@ -295,7 +295,7 @@ class SelectionConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(SelectionConverter, self).get_available_options()
         options.update(
-            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field informations'), required=True)
+            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field information'), required=True)
         )
         return options
 

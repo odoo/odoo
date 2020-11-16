@@ -19,7 +19,7 @@ TIMEOUT = 60
 
 class AdyenAddressMixin(models.AbstractModel):
     _name = 'adyen.address.mixin'
-    _description = 'Adyen for Plaforms Address Mixin'
+    _description = 'Adyen for Platforms Address Mixin'
 
     country_id = fields.Many2one('res.country', string='Country', domain=[('code', 'in', ADYEN_AVAILABLE_COUNTRIES)], required=True)
     country_code = fields.Char(related='country_id.code')
@@ -85,7 +85,7 @@ class AdyenAccount(models.Model):
     _name = 'adyen.account'
     _inherit = ['mail.thread', 'adyen.id.mixin', 'adyen.address.mixin']
 
-    _description = 'Adyen for Plaforms Account'
+    _description = 'Adyen for Platforms Account'
     _rec_name = 'full_name'
 
     # Credentials
@@ -419,7 +419,7 @@ class AdyenAccount(models.Model):
 class AdyenShareholder(models.Model):
     _name = 'adyen.shareholder'
     _inherit = ['adyen.id.mixin', 'adyen.address.mixin']
-    _description = 'Adyen for Plaforms Shareholder'
+    _description = 'Adyen for Platforms Shareholder'
     _rec_name = 'full_name'
 
     adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
@@ -525,7 +525,7 @@ class AdyenShareholder(models.Model):
 
 class AdyenBankAccount(models.Model):
     _name = 'adyen.bank.account'
-    _description = 'Adyen for Plaforms Bank Account'
+    _description = 'Adyen for Platforms Bank Account'
 
     adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
     bank_account_reference = fields.Char('Reference', default=lambda self: uuid.uuid4().hex)
@@ -637,7 +637,7 @@ class AdyenBankAccount(models.Model):
 
 class AdyenPayout(models.Model):
     _name = 'adyen.payout'
-    _description = 'Adyen for Plaforms Payout'
+    _description = 'Adyen for Platforms Payout'
 
     @api.depends('payout_schedule')
     def _compute_next_scheduled_payout(self):
