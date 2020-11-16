@@ -322,7 +322,7 @@ class BaseAutomation(models.Model):
                 actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
                 if not (actions and self):
                     return write.origin(self, vals, **kw)
-                records = self.with_env(actions.env)
+                records = self.with_env(actions.env).filtered('id')
                 # check preconditions on records
                 pre = {action: action._filter_pre(records) for action in actions}
                 # read old values before the update
