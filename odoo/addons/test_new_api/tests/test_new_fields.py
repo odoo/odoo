@@ -646,6 +646,29 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.bars, False)
         self.assertEqual(record.bares, False)
 
+    def test_16_compute_unassigned_access_error(self):
+        # create a real record
+        record = self.env['test_new_api.compute.unassigned'].create({})
+        record.flush()
+
+        # alter access rights: regular users cannot read 'record'
+        access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
+        access.perm_read = False
+
+        # switch to environment with user demo
+        record = record.with_user(self.user_demo)
+        record.env.cache.invalidate()
+
+        # check that the record is not accessible
+        with self.assertRaises(AccessError):
+            record.bars
+
+        # modify the record and flush() changes with the current environment:
+        # this should not trigger an access error, even if unassigned computed
+        # fields are fetched from database
+        record.foo = "X"
+        record.flush()
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_new_api.mixed'].create({})
