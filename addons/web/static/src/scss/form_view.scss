@@ -222,17 +222,13 @@
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
                     border-left: 1px solid gray('400');
+                    &.disabled {
+                        border-color: gray('300');
+                    }
                 }
 
                 &:active {
                     box-shadow: none;
-                }
-
-                &.disabled {
-                    opacity: 1.0;
-                    color: $text-muted;
-                    pointer-events: none;
-                    border-left: 1px solid gray('300');
                 }
 
                 &:not(:first-child):before, &:not(:first-child):after {
@@ -276,6 +272,13 @@
                 }
             }
 
+            > .o_arrow_button, > .dropdown-menu > .o_arrow_button {
+                &.disabled {
+                    opacity: 1.0;
+                    color: $text-muted;
+                    pointer-events: none;
+                }
+            }
         }
 
         // Touch device mode
