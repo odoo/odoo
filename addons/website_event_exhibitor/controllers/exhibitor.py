@@ -6,13 +6,13 @@ from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import exceptions, http
-from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import format_duration
 
 
-class ExhibitorController(EventTrackController):
+class ExhibitorController(WebsiteEventController):
 
     def _get_event_sponsors_base_domain(self, event):
         search_domain_base = [
@@ -27,13 +27,18 @@ class ExhibitorController(EventTrackController):
     # MAIN PAGE
     # ------------------------------------------------------------
 
-    @http.route(['/event/<model("event.event"):event>/exhibitors'], type='http', auth="public", website=True, sitemap=False)
+    @http.route([
+        # TDE BACKWARD: exhibitors is actually a typo
+        '/event/<model("event.event"):event>/exhibitors',
+        # TDE BACKWARD: matches event/event-1/exhibitor/exhib-1 sub domain
+        '/event/<model("event.event"):event>/exhibitor'
+    ], type='http', auth="public", website=True, sitemap=False)
     def event_exhibitors(self, event, **searches):
         if not event.can_access_from_current_website():
             raise NotFound()
 
         return request.render(
-            "website_event_track_exhibitor.event_exhibitors",
+            "website_event_exhibitor.event_exhibitors",
             self._event_exhibitors_get_values(event, **searches)
         )
 
@@ -125,7 +130,7 @@ class ExhibitorController(EventTrackController):
             options['widescreen'] = True
 
         return request.render(
-            "website_event_track_exhibitor.event_exhibitor_main",
+            "website_event_exhibitor.event_exhibitor_main",
             self._event_exhibitor_get_values(event, sponsor, **options)
         )
 

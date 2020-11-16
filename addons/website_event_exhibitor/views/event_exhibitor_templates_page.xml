@@ -13,8 +13,8 @@
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
                 <div class="row mb-5 mx-0">
-                    <t t-call="website_event_track_exhibitor.exhibitor_aside"/>
-                    <t t-call="website_event_track_exhibitor.exhibitor_main"/>
+                    <t t-call="website_event_exhibitor.exhibitor_aside"/>
+                    <t t-call="website_event_exhibitor.exhibitor_main"/>
                 </div>
             </div>
             <!-- Drag/Drop Area -->
@@ -184,7 +184,7 @@
 <template id="event_sponsor_edit_options" inherit_id="website.user_navbar" name="Edit Event Sponsor Options">
     <xpath expr="//li[@id='edit-page-menu']" position="after">
         <t t-if="main_object._name == 'event.sponsor'"
-            t-set="action" t-value="'website_event_track_exhibitor.event_sponsor_action'"/>
+            t-set="action" t-value="'website_event_exhibitor.event_sponsor_action'"/>
     </xpath>
 </template>
 

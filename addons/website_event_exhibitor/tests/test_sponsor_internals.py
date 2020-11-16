@@ -21,7 +21,7 @@ class TestSponsorData(TestEventExhibitorCommon):
         })
 
         cls.wevent_exhib_dt = patch(
-            'odoo.addons.website_event_track_exhibitor.models.event_sponsor.fields.Datetime',
+            'odoo.addons.website_event_exhibitor.models.event_sponsor.fields.Datetime',
             wraps=FieldsDatetime
         )
         cls.mock_wevent_exhib_dt = cls.wevent_exhib_dt.start()

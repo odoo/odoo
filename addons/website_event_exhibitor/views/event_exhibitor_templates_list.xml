@@ -5,16 +5,16 @@
     <t t-call="website_event.layout">
         <div class="o_wevent_online o_wevent_online_bg o_wesponsor_index">
             <!-- Topbar -->
-            <t t-call="website_event_track_exhibitor.exhibitors_topbar"/>
+            <t t-call="website_event_exhibitor.exhibitors_topbar"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
             <!-- Content -->
             <div class="o_wesponsor_container container">
                 <div class="row">
-                    <t t-call="website_event_track_exhibitor.exhibitors_search"/>
+                    <t t-call="website_event_exhibitor.exhibitors_search"/>
                 </div>
                 <div class="row">
-                    <t t-call="website_event_track_exhibitor.exhibitors_main"/>
+                    <t t-call="website_event_exhibitor.exhibitors_main"/>
                 </div>
             </div>
             <!-- Drag/Drop Area -->
@@ -50,7 +50,7 @@
 
 <!-- Topbar: optional country filters -->
 <template id="exhibitors_topbar_country"
-    inherit_id="website_event_track_exhibitor.exhibitors_topbar"
+    inherit_id="website_event_exhibitor.exhibitors_topbar"
     name="Filter by Country"
     active="True"
     customize_show="True">
@@ -81,7 +81,7 @@
 
 <!-- Topbar: optional sponsorship filters -->
 <template id="exhibitors_topbar_sponsorship"
-    inherit_id="website_event_track_exhibitor.exhibitors_topbar"
+    inherit_id="website_event_exhibitor.exhibitors_topbar"
     name="Filter by Sponsorship"
     active="True"
     customize_show="True">
@@ -129,7 +129,7 @@
         </div>
     </t>
     <!-- Cards -->
-    <div class="col-12" t-call="website_event_track_exhibitor.exhibitors_display_cards"/>
+    <div class="col-12" t-call="website_event_exhibitor.exhibitors_display_cards"/>
 </template>
 
 <!-- Exhibitors: Cards-based display -->
@@ -140,7 +140,7 @@
             <hr class="mt-2 pb-1 mb-1"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
-            <t t-call="website_event_track_exhibitor.exhibitor_card"/>
+            <t t-call="website_event_exhibitor.exhibitor_card"/>
         </div>
     </div>
 </template>
