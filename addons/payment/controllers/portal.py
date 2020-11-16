@@ -100,7 +100,7 @@ class PaymentPortal(portal.CustomerPortal):
         # Instantiate transaction values to their default if not set in parameters
         reference = reference or payment_utils.singularize_reference_prefix(prefix='tx')
         amount = amount or 0.0  # If the amount is invalid, set it to 0 to stop the payment flow
-        currency_id = currency_id or user_sudo.company_id.currency_id.id  # TODO TBE check if a foreign user should pay in his company's currency or not
+        currency_id = currency_id or user_sudo.company_id.currency_id.id  # TODO TBE check if a foreign user should pay in his company's currency or his own
         company_id = company_id or user_sudo.company_id.id
 
         # Make sure that the currency exists and is active

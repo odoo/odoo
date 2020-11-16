@@ -49,7 +49,7 @@ odoo.define('payment.checkout_form', require => {
             ev.preventDefault();
 
             // Check that the user has selected a payment option
-            const $checkedRadios = this.$('input[type="radio"]:checked');
+            const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if (!this._ensureRadioIsChecked($checkedRadios)) {
                 return;
             }

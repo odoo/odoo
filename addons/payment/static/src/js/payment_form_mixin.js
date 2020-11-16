@@ -16,7 +16,7 @@ odoo.define('payment.payment_form_mixin', require => {
             this.$('[data-toggle="tooltip"]').tooltip();
             this.txContext = {};
             Object.assign(this.txContext, this.$el.data());
-            const $checkedRadios = this.$('input[type="radio"]:checked');
+            const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length === 1) {
                 const checkedRadio = $checkedRadios[0];
                 this._displayInlineForm(checkedRadio);
@@ -184,7 +184,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {HTMLInputElement} radio - The radio button linked to the payment option
          * @return {string} The flow of the selected payment option. redirect, direct or token.
          */
-        _getPaymentFlowFromRadio: function (radio) { // TODO ANV search radio based on name attribute to avoid matching radios inside the inline form
+        _getPaymentFlowFromRadio: function (radio) {
             if ($(radio).data('is-token') || this.txContext.flow === 'token') {
                 return 'token';
             } else if (this.txContext.flow === 'redirect') {
@@ -250,7 +250,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @return {boolean} Whether the submit button can be enabled
          */
         _isButtonReady: function () {
-            const $checkedRadios = this.$('input[type="radio"]:checked');
+            const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length === 1) {
                 const checkedRadio = $checkedRadios[0];
                 const flow = this._getPaymentFlowFromRadio(checkedRadio);
@@ -442,9 +442,9 @@ odoo.define('payment.payment_form_mixin', require => {
          */
         _onClickPaymentOption: function (ev) {
             // Uncheck all radio buttons
-            this.$('input[type="radio"]').prop('checked', false);
+            this.$('input[name="o_payment_radio"]').prop('checked', false);
             // Check radio button linked to selected payment option
-            const checkedRadio = $(ev.currentTarget).find('input[type="radio"]')[0];
+            const checkedRadio = $(ev.currentTarget).find('input[name="o_payment_radio"]')[0];
             $(checkedRadio).prop('checked', true);
 
             // Show the inputs in case they had been hidden
