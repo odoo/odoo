@@ -16,10 +16,8 @@ class PosConfig(models.Model):
 
     @api.depends('company_id.country_id')
     def _compute_is_company_country_germany(self):
-        if self.company_id.country_id and self.company_id.country_id.code == "DE":
-            self.is_company_country_germany = True
-        else:
-            self.is_company_country_germany = False
+        for config in self:
+            config.is_company_country_germany = config.company_id.country_id == self.env.ref('base.de')
 
     def _check_fiskaly_key_secret(self):
         if not self.company_id.fiskaly_key or not self.company_id.fiskaly_secret:
@@ -32,7 +30,7 @@ class PosConfig(models.Model):
     def open_ui(self):
         if not self.company_id.country_id:
             raise UserError(_("You have to set a country in your company setting."))
-        if self.company_id.country_id.code == "DE":
+        if self.company_id.country_id == self.env.ref('base.de'):
             self._check_fiskaly_key_secret()
             self._check_fiskaly_tss_client_ids()
         return super(PosConfig, self).open_ui()
@@ -40,13 +38,13 @@ class PosConfig(models.Model):
     @api.model
     def create(self, values):
         res = super(PosConfig, self).create(values)
-        if 'create_tss_flag' in values and values['create_tss_flag']:
+        if values.get('create_tss_flag') is True:
             res.create_tss_process()
         return res
 
     def write(self, values):
         res = super(PosConfig, self).write(values)
-        if 'create_tss_flag' in values and values['create_tss_flag']:
+        if values.get('create_tss_flag') is True:
             self.create_tss_process()
         return res
 

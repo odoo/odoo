@@ -20,15 +20,16 @@ class PosOrder(models.Model):
     @api.model
     def _order_fields(self, ui_order):
         fields = super(PosOrder, self)._order_fields(ui_order)
-        if self.env.company.country_id and self.env.company.country_id.code == "DE":
+        if self.env.company.country_id == self.env.ref('base.de'):
             fields['fiskaly_transaction_uuid'] = ui_order['fiskaly_uuid']
-            for key, value in ui_order['tss_info'].items():
-                fields['fiskaly_'+key] = value
+            if 'tss_info' in ui_order:
+                for key, value in ui_order['tss_info'].items():
+                    fields['fiskaly_'+key] = value
         return fields
 
     def _export_for_ui(self, order):
         json = super(PosOrder, self)._export_for_ui(order)
-        if self.env.company.country_id and self.env.company.country_id.code == "DE":
+        if self.env.company.country_id == self.env.ref('base.de'):
             tss_info = {
                 'transaction_number': order.fiskaly_transaction_number,
                 'time_start': order.fiskaly_time_start,
