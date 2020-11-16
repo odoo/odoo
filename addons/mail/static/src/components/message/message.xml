@@ -6,10 +6,11 @@
             t-att-class="{
                 'o-clicked': state.isClicked,
                 'o-discussion': message and (message.is_discussion or message.is_notification),
+                'o-has-message-selection': threadView and threadView.threadViewer and threadView.threadViewer.selectedMessage,
                 'o-mobile': env.messaging.device.isMobile,
                 'o-not-discussion': message and !(message.is_discussion or message.is_notification),
                 'o-notification': message and message.message_type === 'notification',
-                'o-selected': props.isSelected,
+                'o-selected': isSelected,
                 'o-squashed': props.isSquashed,
                 'o-starred': message and message.isStarred,
             }" t-on-click="_onClick" t-att-data-message-local-id="message and message.localId"
@@ -24,7 +25,7 @@
                                     class="o_Message_partnerImStatusIcon"
                                     t-att-class="{
                                         'o-message-not-discussion': !(message.is_discussion or message.is_notification),
-                                        'o-message-selected': props.isSelected,
+                                        'o-message-selected': isSelected,
                                         'o_Message_partnerImStatusIcon-mobile': env.messaging.device.isMobile,
                                     }"
                                     hasOpenChat="hasAuthorOpenChat"
@@ -34,16 +35,16 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <div class="o_Message_date o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected }">
+                        <div class="o_Message_date o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': isSelected }">
                             <t t-esc="shortTime"/>
                         </div>
-                        <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected, 'o-mobile': env.messaging.device.isMobile }">
+                        <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': isSelected, 'o-mobile': env.messaging.device.isMobile }">
                             <t t-if="message.message_type !== 'notification'">
                                 <div class="o_Message_command o_Message_commandStar fa"
                                     t-att-class="{
                                         'fa-star': message.isStarred,
                                         'fa-star-o': !message.isStarred,
-                                        'o-message-selected': props.isSelected,
+                                        'o-message-selected': isSelected,
                                         'o-message-starred': message.isStarred,
                                         'o-mobile': env.messaging.device.isMobile,
                                     }" t-on-click="_onClickStar"
@@ -73,14 +74,14 @@
                                     Anonymous
                                 </div>
                             </t>
-                            <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
+                            <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': isSelected }" t-att-title="datetime">
                                 - <t t-esc="message.dateFromNow"/>
                             </div>
                             <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
                                 <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
                             </t>
                             <t t-if="threadView and message.originThread and message.originThread !== threadView.thread">
-                                <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': props.isSelected }">
+                                <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': isSelected }">
                                     <t t-if="message.originThread.model === 'mail.channel'">
                                         (from <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread">#<t t-esc="message.originThread.name"/></a>)
                                     </t>
@@ -117,7 +118,7 @@
                                         t-att-class="{
                                             'fa-star': message.isStarred,
                                             'fa-star-o': !message.isStarred,
-                                            'o-message-selected': props.isSelected,
+                                            'o-message-selected': isSelected,
                                             'o-message-starred': message.isStarred,
                                             'o-mobile': env.messaging.device.isMobile,
                                         }" t-on-click="_onClickStar" title="Mark as Todo"
@@ -126,7 +127,7 @@
                                 <t t-if="props.hasReplyIcon">
                                     <span class="o_Message_command o_Message_commandReply o_Message_headerCommand fa fa-reply"
                                         t-att-class="{
-                                            'o-message-selected': props.isSelected,
+                                            'o-message-selected': isSelected,
                                             'o-mobile': env.messaging.device.isMobile,
                                         }" t-on-click="_onClickReply" title="Reply"
                                     />
@@ -134,7 +135,7 @@
                                 <t t-if="props.hasMarkAsReadIcon">
                                     <span class="o_Message_command o_Message_commandMarkAsRead o_Message_headerCommand fa fa-check"
                                         t-att-class="{
-                                            'o-message-selected': props.isSelected,
+                                            'o-message-selected': isSelected,
                                             'o-mobile': env.messaging.device.isMobile,
                                         }" t-on-click="_onClickMarkAsRead" title="Mark as Read"
                                     />
