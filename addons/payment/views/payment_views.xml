@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        
+        <!-- Acquirer Actions -->
+        
+        <record id="action_payment_acquirer" model="ir.actions.act_window">
+            <field name="name">Payment Acquirers</field>
+            <field name="res_model">payment.acquirer</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new payment acquirer
+                </p>
+            </field>
+        </record>
+    
+        <menuitem action="action_payment_acquirer"
+                  id="payment_acquirer_menu"
+                  parent="account.root_payment_menu"
+                  sequence="10"/>
     
         <!-- Acquirer Form View -->
         <record id="acquirer_form" model="ir.ui.view">
@@ -9,8 +27,8 @@
             <field name="arch" type="xml">
                 <form string="Payment Acquirer">
                     <field name="support_authorization" invisible="1"/>
-                    <field name="support_fees_computation" invisible='1'/>
-                    <field name="support_tokenization" invisible='1'/>
+                    <field name="support_fees_computation" invisible="1"/>
+                    <field name="support_tokenization" invisible="1"/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
@@ -86,8 +104,23 @@
                 </form>
             </field>
         </record>
-
-
+    
+        <!-- Acquirer List View -->
+        <record id="acquirer_list" model="ir.ui.view">
+            <field name="name">payment.acquirer.list</field>
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Acquirers">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="provider"/>
+                    <field name="state"/>
+                    <field name="country_ids" widget="many2many_tags" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+    
         <!-- Acquirer Kanban View -->
         <record id="acquirer_kanban" model="ir.ui.view">
             <field name="name">payment.acquirer.kanban</field>
@@ -132,22 +165,6 @@
                 </kanban>
             </field>
         </record>
-    
-        <!-- Acquirer List View -->
-        <record id="acquirer_list" model="ir.ui.view">
-            <field name="name">payment.acquirer.list</field>
-            <field name="model">payment.acquirer</field>
-            <field name="arch" type="xml">
-                <tree string="Payment Acquirers">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                    <field name="provider"/>
-                    <field name="state"/>
-                    <field name="country_ids" widget="many2many_tags" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
 
         <!-- Acquirer Search View -->
         <record id="acquirer_search" model="ir.ui.view">
@@ -165,23 +182,34 @@
                 </search>
             </field>
         </record>
-
-        <record id="action_payment_acquirer" model="ir.actions.act_window">
-            <field name="name">Payment Acquirers</field>
-            <field name="res_model">payment.acquirer</field>
-            <field name='view_mode'>kanban,tree,form</field>
+        
+        
+        <!-- Transaction Actions -->
+    
+        <record id="action_payment_transaction" model="ir.actions.act_window">
+            <field name="name">Payment Transactions</field>
+            <field name="res_model">payment.transaction</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new payment acquirer
+                    Create a new payment transaction
                 </p>
             </field>
         </record>
-
-        <menuitem
-            action='action_payment_acquirer'
-            id='payment_acquirer_menu'
-            parent='account.root_payment_menu'
-            sequence='10' />
+    
+        <record id="action_payment_transaction_linked_to_token" model="ir.actions.act_window">
+            <field name="name">Payment Transactions Linked To Token</field>
+            <field name="res_model">payment.transaction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('token_id','=', active_id)]</field>
+            <field name="context">{'create': False}</field>
+        </record>
+    
+        <menuitem action="action_payment_transaction"
+                  id="payment_transaction_menu"
+                  parent="account.root_payment_menu"
+                  groups="base.group_no_one"
+                  sequence="20"/>
     
         <!-- Transaction Form View -->
         <record id="transaction_form" model="ir.ui.view">
@@ -262,7 +290,7 @@
         </record>
     
         <!-- Transaction Kanban View -->
-        <record id="transaction_view_kanban" model="ir.ui.view">
+        <record id="transaction_kanban" model="ir.ui.view">
             <field name="name">payment.transaction.kanban</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
@@ -291,7 +319,8 @@
             </field>
         </record>
 
-        <record id="transaction" model="ir.ui.view">
+        <!-- Transaction Search View -->
+        <record id="transaction_search" model="ir.ui.view">
             <field name="name">payment.transaction.search</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
@@ -303,45 +332,46 @@
                 </search>
             </field>
         </record>
-
-        <record id="action_payment_transaction" model="ir.actions.act_window">
-            <field name="name">Payment Transactions</field>
-            <field name="res_model">payment.transaction</field>
-            <field name='view_mode'>tree,kanban,form</field>
+        
+        
+        <!-- Token Actions -->
+    
+        <record id="action_payment_token" model="ir.actions.act_window">
+            <field name="name">Payment Tokens</field>
+            <field name="res_model">payment.token</field>
+            <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new payment transaction
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new payment token
+                </p>
             </field>
         </record>
-
-        <menuitem
-            action='action_payment_transaction'
-            id='payment_transaction_menu'
-            parent='account.root_payment_menu'
-            groups="base.group_no_one"
-            sequence='20' />
+    
+        <menuitem action="action_payment_token"
+                  id="payment_token_menu"
+                  parent="account.root_payment_menu"
+                  groups="base.group_no_one"/>
     
         <!-- Token Form View -->
-        <record model='ir.ui.view' id='payment_token_form_view'>
-            <field name='name'>payment.token.form</field>
-            <field name='model'>payment.token</field>
-            <field name='arch' type='xml'>
-                <form string='Payment Tokens' create='false' editable='bottom'>
+        <record id="token_form" model="ir.ui.view">
+            <field name="name">payment.token.form</field>
+            <field name="model">payment.token</field>
+            <field name="arch" type="xml">
+                <form string="Payment Tokens" create="false" editable="bottom">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="%(action_payment_tx_ids)d"
+                            <button class="oe_stat_button" name="%(action_payment_transaction_linked_to_token)d"
                                     type="action" icon="fa-money" string="Payments">
                             </button>
                         </div>
                         <group>
                             <field name="name"/>
-                            <field name='partner_id' />
+                            <field name="partner_id" />
                         </group>
                         <group>
-                            <field name="active" widget='boolean_toggle'/>
-                            <field name='acquirer_id'/>
-                            <field name='acquirer_ref'/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="acquirer_id"/>
+                            <field name="acquirer_ref"/>
                         </group>
                     </sheet>
                 </form>
@@ -349,60 +379,55 @@
         </record>
 
         <!-- Token List View -->
-        <record model='ir.ui.view' id='payment_token_tree_view'>
-            <field name='name'>payment.token.tree</field>
-            <field name='model'>payment.token</field>
-            <field name='arch' type='xml'>
-                <tree string='Payment Tokens'>
+        <record id="token_list" model="ir.ui.view">
+            <field name="name">payment.token.list</field>
+            <field name="model">payment.token</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Tokens">
                     <field name="name"/>
                     <field name="active"/>
-                    <field name='partner_id' />
-                    <field name='acquirer_id' readonly='1'/>
-                    <field name='acquirer_ref' readonly='1'/>
+                    <field name="partner_id" />
+                    <field name="acquirer_id" readonly="1"/>
+                    <field name="acquirer_ref" readonly="1"/>
                 </tree>
             </field>
         </record>
     
         <!-- Token Search View -->
-        <record id='payment_token_view_search' model='ir.ui.view'>
-            <field name='name'>payment.token.search</field>
-            <field name='model'>payment.token</field>
-            <field name='arch' type='xml'>
-                <search string='Payment Tokens'>
-                    <field name='partner_id'/>
+        <record id="token_search" model="ir.ui.view">
+            <field name="name">payment.token.search</field>
+            <field name="model">payment.token</field>
+            <field name="arch" type="xml">
+                <search string="Payment Tokens">
+                    <field name="partner_id"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
 
-        <record id="action_payment_tx_ids" model="ir.actions.act_window">
-            <field name="name">Payment Transactions</field>
-            <field name="res_model">payment.transaction</field>
+        
+        <!-- Icon Actions -->
+    
+        <record id="action_payment_icon" model="ir.actions.act_window">
+            <field name="name">Payment Icons</field>
+            <field name="res_model">payment.icon</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('token_id','=', active_id)]</field>
-            <field name="context">{'create': False}</field>
-        </record>
-
-        <record model='ir.actions.act_window' id='payment_token_action'>
-            <field name='name'>Saved Payment Data</field>
-            <field name='res_model'>payment.token</field>
-            <field name='view_mode'>tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a saved payment data
+                    Create a payment icon
                 </p>
             </field>
         </record>
-
+    
         <menuitem
-            action='payment_token_action'
-            id='payment_token_menu'
-            parent='account.root_payment_menu'
-            groups='base.group_no_one'/>
-
+                action="action_payment_icon"
+                id="payment_icon_menu"
+                parent="account.root_payment_menu"
+                groups="base.group_no_one"/>
+        
         <!-- Icon Form View -->
-        <record model="ir.ui.view" id="payment_icon_form_view">
+        <record id="icon_form" model="ir.ui.view">
             <field name="name">payment.icon.form</field>
             <field name="model">payment.icon</field>
             <field name="arch" type="xml">
@@ -421,22 +446,6 @@
                 </form>
             </field>
         </record>
-
-        <record id="action_payment_icon" model="ir.actions.act_window">
-            <field name="name">Payment Icons</field>
-            <field name="res_model">payment.icon</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create a payment icon
-                </p>
-            </field>
-        </record>
-
-        <menuitem
-            action="action_payment_icon"
-            id="payment_icon_menu"
-            parent="account.root_payment_menu"
-            groups="base.group_no_one"/>
+        
     </data>
 </odoo>
