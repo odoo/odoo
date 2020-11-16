@@ -13,9 +13,8 @@ class Project(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         domain="[('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Sales order item to which the project is linked. If an employee timesheets on a task that does not have a "
-        "sale order item defines, and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, "
-        "the timesheet entry will be linked to the sales order item defined on the project.")
+        help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
+        "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', domain="[('partner_id', '=', partner_id)]", readonly=True, copy=False, help="Sales order to which the project is linked.")
 
     _sql_constraints = [
@@ -36,10 +35,9 @@ class ProjectTask(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', project_sale_order_id)]",
         compute='_compute_sale_line', store=True, readonly=False, copy=False,
-        help="Sales order item to which the task is linked. If an employee timesheets on a this task, "
-        "and if this employee is not in the 'Employee/Sales Order Item Mapping' of the project, the "
-        "timesheet entry will be linked to this sales order item.")
-    project_sale_order_id = fields.Many2one('sale.order', string="project's sale order", related='project_id.sale_order_id')
+        help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
+        "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
+    project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     invoice_count = fields.Integer("Number of invoices", related='sale_order_id.invoice_count')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
 

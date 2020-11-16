@@ -1187,7 +1187,7 @@ may need to directly call a controller (available on some route).
 Notifications
 ==============
 
-The Odoo framework has a standard way to communicate various informations to the
+The Odoo framework has a standard way to communicate various information to the
 user: notifications, which are displayed on the top right of the user interface.
 
 There are two types of notifications:
