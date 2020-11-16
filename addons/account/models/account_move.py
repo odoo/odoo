@@ -2878,6 +2878,8 @@ class AccountMoveLine(models.Model):
     date_maturity = fields.Date(string='Due Date', index=True, tracking=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    currency_symbol = fields.Char(related='currency_id.symbol', string='Line currency', readonly=True,
+                                  help='The currency of this line. Can be used to display it when exporting to csv.')
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_id = fields.Many2one('product.product', string='Product')
