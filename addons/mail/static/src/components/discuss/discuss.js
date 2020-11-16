@@ -13,6 +13,7 @@ const components = {
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -44,6 +45,7 @@ class Discuss extends Component {
                 uncheckedMessages: 1,
             },
         });
+        useUpdate({ func: () => this._update() });
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -66,7 +68,6 @@ class Discuss extends Component {
             this.discuss.openInitThread();
         }
         this._updateLocalStoreProps();
-        this._update();
     }
 
     patched() {
@@ -85,7 +86,6 @@ class Discuss extends Component {
         }
         this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
-        this._update();
     }
 
     willUnmount() {
@@ -146,6 +146,9 @@ class Discuss extends Component {
      * @private
      */
     _update() {
+        if (!this.discuss) {
+            return;
+        }
         if (this.discuss.isDoFocus) {
             this.discuss.update({ isDoFocus: false });
             const composer = this._composerRef.comp;

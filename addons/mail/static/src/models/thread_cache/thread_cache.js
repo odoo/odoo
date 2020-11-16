@@ -30,12 +30,12 @@ function factory(dependencies) {
                 extraDomain: [['id', '<', Math.min(...messageIds)]],
                 limit,
             }));
-            for (const threadView of this.threadViews) {
-                threadView.addComponentHint('more-messages-loaded', { fetchedMessages });
-            }
             this.update({ isLoadingMore: false });
             if (fetchedMessages.length < limit) {
                 this.update({ isAllHistoryLoaded: true });
+            }
+            for (const threadView of this.threadViews) {
+                threadView.addComponentHint('more-messages-loaded', { fetchedMessages });
             }
             return fetchedMessages;
         }
@@ -165,7 +165,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeNonEmptyMessages() {
-            return [['replace', this.messages.filter(message => !message.isEmpty)]]
+            return [['replace', this.messages.filter(message => !message.isEmpty)]];
         }
 
         /**

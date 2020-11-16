@@ -40,7 +40,8 @@ QUnit.module('form_renderer_tests.js', {
                     },
                     viewParams,
                 );
-                const { env, widget } = await start(viewArgs, ...args);
+                const { afterEvent, env, widget } = await start(viewArgs, ...args);
+                this.afterEvent = afterEvent;
                 this.env = env;
                 this.widget = widget;
             });
@@ -639,6 +640,11 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
                 </div>
             </form>
         `,
+        waitUntilEvent: {
+            eventName: 'o-component-message-read-more-less-inserted',
+            message: "should wait until read more/less is inserted initially",
+            predicate: ({ message }) => message.id === 1000,
+        },
     });
     assert.containsOnce(
         document.body,
@@ -655,19 +661,24 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         '.o_Message_readMoreLess',
         "there should be only one read more"
     );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_edit').click();
-    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => document.querySelector('.o_form_button_edit').click(),
+        message: "should wait until read more/less is inserted after clicking on edit",
+        predicate: ({ message }) => message.id === 1000,
+    }));
     assert.containsOnce(
         document.body,
         '.o_Message_readMoreLess',
         "there should still be only one read more after switching to edit mode"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_cancel').click();
-    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => document.querySelector('.o_form_button_cancel').click(),
+        message: "should wait until read more/less is inserted after canceling edit",
+        predicate: ({ message }) => message.id === 1000,
+    }));
     assert.containsOnce(
         document.body,
         '.o_Message_readMoreLess',
@@ -718,6 +729,11 @@ QUnit.test('read more links becomes read less after being clicked', async functi
                 </div>
             </form>
         `,
+        waitUntilEvent: {
+            eventName: 'o-component-message-read-more-less-inserted',
+            message: "should wait until read more/less is inserted initially",
+            predicate: ({ message }) => message.id === 1000,
+        },
     });
     assert.containsOnce(
         document.body,
@@ -740,9 +756,12 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_edit').click();
-    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => document.querySelector('.o_form_button_edit').click(),
+        message: "should wait until read more/less is inserted after clicking on edit",
+        predicate: ({ message }) => message.id === 1000,
+    }));
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read more',

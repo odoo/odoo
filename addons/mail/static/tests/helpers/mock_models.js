@@ -236,6 +236,7 @@ class MockModels {
             },
             'res.fake': {
                 fields: {
+                    activity_ids: { string: "Activities", type: 'one2many', relation: 'mail.activity' },
                     email_cc: { type: 'char' },
                     partner_ids: {
                         string: "Related partners",
