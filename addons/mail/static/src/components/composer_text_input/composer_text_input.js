@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/composer_text_input/composer_text_input.
 'use strict';
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const components = {
     ComposerSuggestionList: require('mail/static/src/components/composer_suggestion_list/composer_suggestion_list.js'),
@@ -29,6 +30,11 @@ class ComposerTextInput extends Component {
             };
         });
         /**
+         * Updates the composer text input content when composer is mounted
+         * as textarea content can't be changed from the DOM.
+         */
+        useUpdate({ func: () => this._update() });
+        /**
          * Last content of textarea from input event. Useful to determine
          * whether the current partner is typing something.
          */
@@ -37,22 +43,6 @@ class ComposerTextInput extends Component {
          * Reference of the textarea. Useful to set height, selection and content.
          */
         this._textareaRef = useRef('textarea');
-    }
-
-    /**
-     * Updates the composer text input content when composer is mounted
-     * as textarea content can't be changed from the DOM.
-     */
-    mounted() {
-        this._update();
-    }
-
-    /**
-     * Updates the composer text input content when composer has changed
-     * as textarea content can't be changed from the DOM.
-     */
-    patched() {
-        this._update();
     }
 
     //--------------------------------------------------------------------------
@@ -153,6 +143,9 @@ class ComposerTextInput extends Component {
      * @private
      */
     _update() {
+        if (!this.composer) {
+            return;
+        }
         this._textareaRef.el.value = this.composer.textInputContent;
         this._textareaRef.el.setSelectionRange(
             this.composer.textInputCursorStart,

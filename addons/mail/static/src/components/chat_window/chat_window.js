@@ -7,6 +7,7 @@ const components = {
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
@@ -29,6 +30,7 @@ class ChatWindow extends Component {
                 thread: thread ? thread.__state : undefined,
             };
         });
+        useUpdate({ func: () => this._update() });
         /**
          * Reference of the header of the chat window.
          * Useful to prevent click on header from wrongly focusing the window.
@@ -55,11 +57,6 @@ class ChatWindow extends Component {
     mounted() {
         this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
         this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     willUnmount() {
@@ -132,7 +129,16 @@ class ChatWindow extends Component {
      * @private
      */
     _saveThreadScrollTop() {
-        if (!this._threadRef.comp || !this.chatWindow.threadViewer) {
+        if (
+            !this._threadRef.comp ||
+            !this.chatWindow.threadViewer ||
+            !this.chatWindow.threadViewer.threadView
+        ) {
+            return;
+        }
+        if (this.chatWindow.threadViewer.threadView.componentHintList.length > 0) {
+            // the current scroll position is likely incorrect due to the
+            // presence of hints to adjust it
             return;
         }
         this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(

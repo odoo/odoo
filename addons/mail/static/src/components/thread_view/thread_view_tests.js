@@ -131,7 +131,18 @@ QUnit.test('message list desc order', async function (assert) {
         hasThreadView: true,
         thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { order: 'desc' }, { isFixedSize: true });
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => this.createThreadViewComponent(threadViewer.threadView, { order: 'desc' }, { isFixedSize: true }),
+        message: "should wait until channel 100 loaded initial messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 100
+            );
+        },
+    });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[0].classList.contains("o_MessageList_loadMore"),
@@ -148,9 +159,20 @@ QUnit.test('message list desc order', async function (assert) {
     );
 
     // scroll to bottom
-    await afterNextRender(() => {
-        document.querySelector(`.o_ThreadView_messageList`).scrollTop =
-            document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => {
+            const messageList = document.querySelector('.o_ThreadView_messageList');
+            messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
+        },
+        message: "should wait until channel 100 loaded more messages after scrolling to bottom",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'more-messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 100
+            );
+        },
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -203,7 +225,18 @@ QUnit.test('message list asc order', async function (assert) {
         hasThreadView: true,
         thread: [['link', thread]],
     });
-    await this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true });
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true }),
+        message: "should wait until channel 100 loaded initial messages",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 100
+            );
+        },
+    });
     const messageItems = document.querySelectorAll(`.o_MessageList_item`);
     assert.notOk(
         messageItems[messageItems.length - 1].classList.contains("o_MessageList_loadMore"),
@@ -220,8 +253,17 @@ QUnit.test('message list asc order', async function (assert) {
     );
 
     // scroll to top
-    await afterNextRender(() => {
-        document.querySelector(`.o_ThreadView_messageList`).scrollTop = 0;
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector(`.o_ThreadView_messageList`).scrollTop = 0,
+        message: "should wait until channel 100 loaded more messages after scrolling to top",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'more-messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 100
+            );
+        },
     });
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
@@ -304,8 +346,8 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             context: {
                 mockedUserId: 10,
             },
-            uuid: thread.uuid,
             message_content: "new message",
+            uuid: thread.uuid,
         },
     }));
     assert.verifySteps(
@@ -313,7 +355,17 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         "Channel should have been fetched but not seen yet"
     );
 
-    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
+        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        message: "should wait until last seen by current partner message id changed after focusing the thread",
+        predicate: ({ thread }) => {
+            return (
+                thread.id === 100 &&
+                thread.model === 'mail.channel'
+            );
+        },
+    }));
     assert.verifySteps(
         ['rpc:channel_seen'],
         "Channel should have been marked as seen after threadView got the focus"
@@ -323,6 +375,16 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
 QUnit.test('mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({
+        id: 10,
+    });
+    this.data['res.users'].records.push({
+        id: 10,
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+    });
     await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fetched' && args.args[0] === 100) {
@@ -343,44 +405,37 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
             return this._super(...arguments);
         }
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 100,
-        isServerPinned: true, // just to avoid joinChannel to be called
-        members: [['insert', [
-            {
-                email: "john@example.com",
-                id: this.env.messaging.currentPartner.id,
-                name: "John",
-            },
-            {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
-            },
-        ]]],
         model: 'mail.channel',
-        serverMessageUnreadCounter: 1, // seen would not be called if not > 0
     });
-
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['link', thread]],
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
     document.querySelector('.o_ComposerTextInput_textarea').focus();
-    const notifications = [
-        [['myDB', 'mail.channel', 100], {
-            channelId: 100,
-            id: 1,
-            body: "<p>fdsfsd</p>",
-            author_id: [10, "Fred"],
-            model: "mail.channel",
-            channel_ids: [100],
-        }]
-    ];
-    await afterNextRender(() =>
-        this.widget.call('bus_service', 'trigger', 'notification', notifications)
-    );
+    // simulate receiving a message
+    await this.afterEvent({
+        eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
+        func: () => this.env.services.rpc({
+            route: '/mail/chat_post',
+            params: {
+                context: {
+                    mockedUserId: 10,
+                },
+                message_content: "<p>fdsfsd</p>",
+                uuid: thread.uuid,
+            },
+        }),
+        message: "should wait until last seen by current partner message id changed after receiving a message while thread is focused",
+        predicate: ({ thread }) => {
+            return (
+                thread.id === 100 &&
+                thread.model === 'mail.channel'
+            );
+        },
+    });
     assert.verifySteps(
         ['rpc:channel_seen'],
         "Channel should have been mark as seen directly"
@@ -489,11 +544,11 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     );
 });
 
-QUnit.test('new messages separator on receiving new message', async function (assert) {
+QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', async function (assert) {
     assert.expect(6);
 
     this.data['res.partner'].records.push({
-        id:11,
+        id: 11,
         name: "Foreigner partner",
     });
     this.data['res.users'].records.push({
@@ -539,16 +594,27 @@ QUnit.test('new messages separator on receiving new message', async function (as
 
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => this.env.services.rpc({
+            route: '/mail/chat_post',
+            params: {
+                context: {
+                    mockedUserId: 42,
+                },
+                message_content: "hu",
+                uuid: thread.uuid,
             },
-            uuid: thread.uuid,
-            message_content: "hu",
+        }),
+        message: "should wait until new message is received",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                threadViewer.thread.id === 20 &&
+                threadViewer.thread.model === 'mail.channel' &&
+                hint.type === 'message-received'
+            );
         },
-    }));
+    });
     assert.containsN(
         document.body,
         '.o_Message',
@@ -564,12 +630,22 @@ QUnit.test('new messages separator on receiving new message', async function (as
     assert.containsOnce(
         document.body,
         `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
-            this.env.models['mail.message'].findFromIdentifyingData({id: 2}).localId
+            this.env.models['mail.message'].findFromIdentifyingData({ id: 2 }).localId
         }"]`,
         "'new messages' separator should be shown above new message received"
     );
 
-    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
+        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        message: "should wait until last seen by current partner message id changed after focusing the thread",
+        predicate: ({ thread }) => {
+            return (
+                thread.id === 20 &&
+                thread.model === 'mail.channel'
+            );
+        },
+    }));
     assert.containsNone(
         document.body,
         '.o_MessageList_separatorNewMessages',
@@ -623,94 +699,6 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         document.body,
         '.o_MessageList_separatorNewMessages',
         "still no separator shown when current partner posted a message"
-    );
-});
-
-QUnit.test('new messages separator on receiving new message', async function (assert) {
-    assert.expect(6);
-
-    this.data['res.partner'].records.push({
-        id:11,
-        name: "Foreigner partner",
-    });
-    this.data['res.users'].records.push({
-        id: 42,
-        name: "Foreigner user",
-        partner_id: 11,
-    });
-    this.data['mail.channel'].records.push({
-        channel_type: 'channel',
-        id: 20,
-        is_pinned: true,
-        message_unread_counter: 0,
-        name: "General",
-        seen_message_id: 1,
-        uuid: 'randomuuid',
-    });
-    this.data['mail.message'].records.push({
-        body: "blah",
-        channel_ids: [20],
-        id: 1,
-    });
-    await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel'
-    });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: [['link', thread]],
-    });
-    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
-
-    assert.containsOnce(
-        document.body,
-        '.o_MessageList_message',
-        "should have an initial message"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "should not display 'new messages' separator"
-    );
-
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
-    // simulate receiving a message
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
-            context: {
-                mockedUserId: 42,
-            },
-            uuid: thread.uuid,
-            message_content: "hu",
-        },
-    }));
-    assert.containsN(
-        document.body,
-        '.o_Message',
-        2,
-        "should now have 2 messages after receiving a new message"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "'new messages' separator should be shown"
-    );
-
-    assert.containsOnce(
-        document.body,
-        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
-            this.env.models['mail.message'].findFromIdentifyingData({id: 2}).localId
-        }"]`,
-        "'new messages' separator should be shown above new message received"
-    );
-
-    await afterNextRender(() => document.querySelector('.o_ComposerTextInput_textarea').focus());
-    assert.containsNone(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "'new messages' separator should no longer be shown as last message has been seen"
     );
 });
 
@@ -861,8 +849,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
                     context: {
                         mockedUserId: 42,
                     },
-                    uuid: thread.uuid,
                     message_content: "hello",
+                    uuid: thread.uuid,
                 },
             }),
         message: "should wait until channel 20 scrolled after receiving a message",
@@ -944,8 +932,8 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
                     context: {
                         mockedUserId: 42,
                     },
-                    uuid: thread.uuid,
                     message_content: "hello",
+                    uuid: thread.uuid,
                 },
             }),
         message: "should wait until channel 20 processed new message hint",
@@ -1720,8 +1708,8 @@ QUnit.test('first unseen message should be directly preceded by the new message 
             context: {
                 mockedUserId: 42,
             },
-            uuid: 'channel20uuid',
             message_content: "test",
+            uuid: 'channel20uuid',
         },
     }));
     assert.containsN(

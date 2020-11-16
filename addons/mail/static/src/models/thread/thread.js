@@ -1427,6 +1427,15 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         */
+        _onChangeLastSeenByCurrentPartnerMessageId() {
+            this.env.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
+                thread: this,
+            });
+        }
+
+        /**
          * Handles change of pinned state coming from the server. Useful to
          * clear pending state once server acknowledged the change.
          *
@@ -1843,6 +1852,16 @@ function factory(dependencies) {
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
             dependencies: ['messages'],
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
+         * the dependencies changes.
+         */
+        onChangeLastSeenByCurrentPartnerMessageId: attr({
+            compute: '_onChangeLastSeenByCurrentPartnerMessageId',
+            dependencies: [
+                'lastSeenByCurrentPartnerMessageId',
+            ],
         }),
         /**
          * Not a real field, used to trigger `_onIsServerPinnedChanged` when one of

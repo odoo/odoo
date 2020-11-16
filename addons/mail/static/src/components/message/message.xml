@@ -74,7 +74,7 @@
                                 </div>
                             </t>
                             <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
-                                - <t t-esc="state.timeElapsed"/>
+                                - <t t-esc="message.dateFromNow"/>
                             </div>
                             <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread">
                                 <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>

@@ -9,6 +9,7 @@ const components = {
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -37,6 +38,7 @@ class Chatter extends Component {
                 attachments: 1,
             },
         });
+        useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to focus it.
          */
@@ -45,14 +47,6 @@ class Chatter extends Component {
          * Reference of the message list. Useful to trigger the scroll event on it.
          */
         this._threadRef = useRef('thread');
-    }
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     //--------------------------------------------------------------------------
@@ -84,6 +78,9 @@ class Chatter extends Component {
      * @private
      */
     _update() {
+        if (!this.chatter) {
+            return;
+        }
         if (this.chatter.thread) {
             this._notifyRendered();
         }
