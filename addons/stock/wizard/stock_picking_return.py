@@ -56,8 +56,12 @@ class ReturnPicking(models.TransientModel):
                     continue
                 if move.move_dest_ids:
                     move_dest_exists = True
-                quantity = move.product_qty - sum(move.move_dest_ids.filtered(lambda m: m.state in ['partially_available', 'assigned', 'done']).\
-                                                  mapped('move_line_ids').mapped('product_qty'))
+                quantity = move.product_qty - sum(move.move_dest_ids.filtered(
+                    lambda m: m.state in ['partially_available', 'assigned']).mapped(
+                        'move_line_ids').mapped('product_qty')) - sum(
+                                move.move_dest_ids.filtered(
+                                    lambda m: m.state in ['done']).mapped('product_qty'))
+
                 quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
                 product_return_moves_data = dict(product_return_moves_data_tmpl)
                 product_return_moves_data.update({
