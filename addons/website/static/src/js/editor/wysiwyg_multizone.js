@@ -85,6 +85,15 @@ var WysiwygMultizone = Wysiwyg.extend({
             }
         }
 
+        // TODO remove this code in master by migrating users who did not
+        // receive the XML change about the 'oe_structure_solo' class (the
+        // header original XML is now correct but we changed specs after
+        // release to not allow multi snippets drop zones in the header).
+        const $headerZones = this._getEditableArea().filter((i, el) => el.closest('header#top') !== null);
+        // oe_structure_multi to ease custo in stable
+        const selector = '.oe_structure[id*="oe_structure"]:not(.oe_structure_multi)';
+        $headerZones.find(selector).addBack(selector).addClass('oe_structure_solo');
+
         return this._super.apply(this, arguments).then(() => {
             // Showing Mega Menu snippets if one dropdown is already opened
             if (this.$('.o_mega_menu').hasClass('show')) {
