@@ -409,9 +409,6 @@ class StockWarehouseOrderpoint(models.Model):
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
-            # ensure that qty_* which depends on datetime.now() are correctly
-            # recomputed
-            orderpoints_batch._compute_qty_to_order()
             orderpoints_exceptions = []
             while orderpoints_batch:
                 procurements = []
