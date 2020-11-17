@@ -492,13 +492,57 @@ class PosOrder(models.Model):
         move = vals['move']
 
         all_lines = []
+        # Taxes used in the orders are sometimes deleted or changed
+        # to map to other taxes, resulting to imbalanced lines.
+        # We track this imbalanced amount to create a balancing
+        # line in order to avoid failure in closing the session.
+        # Note that we don't accumulate based on `amount_currency`
+        # because `amount_currency` values can come from different
+        # dates (order1 sold in day1, order5 sold on day2) so each
+        # `amount_currency` actually has different 'value' in reference
+        # to the company currency. As a result, `imbalance_amount` is
+        # already in company currency.
+        imbalance_amount = 0 # should be credited if (+), debited otherwise
         for group_key, group_data in grouped_data.items():
             for value in group_data:
                 all_lines.append((0, 0, value),)
+                imbalance_amount += value['debit'] - value['credit']
+
+        if (session and not float_is_zero(imbalance_amount, precision_rounding=session.currency_id.rounding)):
+            balancing_vals = self._prepare_balancing_line_vals(imbalance_amount, move, session)
+            all_lines.append((0, 0, balancing_vals))
+
         if move:  # In case no order was changed
             move.sudo().write({'line_ids': all_lines})
             move.sudo().post()
         return True
+
+    @api.model
+    def _prepare_balancing_line_vals(self, imbalance_amount, move, session):
+        """
+        :param imbalance_amount: amount in company currency to be credited
+        """
+        default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+        vals = {
+            'name': _('Difference at closing PoS session'),
+            'credit': imbalance_amount if imbalance_amount > 0 else 0,
+            'debit': -imbalance_amount if imbalance_amount < 0 else 0,
+            'account_id': default_account.id,
+            'move_id': move.id,
+            'partner_id': False,
+        }
+        cur = session.config_id.pricelist_id.currency_id
+        cur_company = session.config_id.company_id.currency_id
+        if (cur != cur_company):
+            # If the session currency is different from the company currency,
+            # it makes more sense to have an equivalent `amount_currency` for
+            # the balancing amount than not having it. And it's value should
+            # be the conversion amount for the day the session is being closed.
+            imb_amount_session_currency = cur_company._convert(abs(imbalance_amount), cur, session.company_id, fields.Date.context_today(self))
+            vals.update({
+                'amount_currency': -imb_amount_session_currency
+            })
+        return vals
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         price_unit = product._get_anglo_saxon_price_unit()
