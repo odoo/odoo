@@ -416,6 +416,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             ('201603-10', '201603-11', '201604-01', '201703-01'),
             ('16-03-10', '16-03-11', '16-04-01', '17-03-01'),
             ('2016-10', '2016-11', '2016-12', '2017-01'),
+            ('045-001-000002', '045-001-000003', '045-001-000004', '045-001-000005'),
             ('JRNL/2016/00001suffix', 'JRNL/2016/00002suffix', 'JRNL/2016/00003suffix', 'JRNL/2017/00001suffix'),
         ]
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
