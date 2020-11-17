@@ -482,6 +482,10 @@ img::selection {
     outline: none;
 }
 
+.o_forum_editor .note-editing-area > div {
+    padding: 3px 5px;
+}
+
 jw-toolbar {
     display: block;
     text-align: center;
@@ -609,6 +613,108 @@ jw-follow-range jw-toolbar {
         border-style: solid;
         content: '';
         position: absolute;
+    }
+
+    jw-select {
+        > jw-group {
+            display: none;
+            background-color: #444;
+            border-radius: 10px;
+            position: absolute;
+            padding: 5px 10px;
+            z-index: 1000;
+            margin-top: 8px !important;
+            &:before {
+                border-color: transparent transparent #444444 transparent;
+                border-width: 9px;
+                top: -17px;
+                border-style: solid;
+                content: '';
+                position: absolute;
+            }
+            jw-button {
+                display: block;
+                line-height: 28px;
+                height: 35px;
+                text-align: left;
+                color: #C6C6C6;
+                border-bottom-width: 0;
+                &.active {
+                    background-color: #586e71 !important;
+                    box-shadow: none;
+                }
+                &:last-child {
+                    border-bottom-width: 1px;
+                }
+                &:first-child {
+                    margin-left: 0; // We need a stronger selector to overrride previous toolbar css
+                }
+                &.p, &.h1, &.h2, &.h3, &.h4, &.h5, &.h6, &.pre {
+                    line-height: 21px;
+                }
+
+            }
+            .h1 {
+                font-size: 1.5em;
+            }
+            .h2 {
+                font-size: 1.3em;
+            }
+            .h3 {
+                font-size: 1.1em;
+            }
+            .h4 {
+                font-size: 1em;
+            }
+            .h5 {
+                font-size: 0.83em;
+            }
+            .h6 {
+                font-size: 0.67em;
+            }
+        }
+        &[aria-pressed="true"] > jw-group {
+            display: block;
+        }
+    }
+    jw-group[name=textSize] jw-select jw-group jw-button {
+        padding-left: 24px;
+        &.active {
+            &:before {
+                color: #01bad2;
+                content: "";
+                right: auto;
+                left: 18px;
+                font-size: 12px;
+                position: absolute;
+                font-family: FontAwesome;
+            }
+        }
+    }
+    jw-group[name=align] jw-select {
+        &>jw-button {
+            font-family: "FontAwesome" !important;
+            text-align: center;
+            &:before {
+                content: "\f036";
+            }
+            &:after {
+                display: inline-block;
+                margin-left: 2px;
+                vertical-align: 2px;
+                content: "";
+                border-top: 0.3em solid;
+                border-right: 0.3em solid transparent;
+                border-bottom: 0;
+                border-left: 0.3em solid transparent;
+            }
+        }
+        jw-group {
+            padding: 10px;
+            jw-button {
+                margin: 0 4px;
+            }
+        }
     }
 }
 

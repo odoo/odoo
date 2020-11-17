@@ -114,11 +114,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         });
 
         _.each($('textarea.o_wysiwyg_loader'), async function (textarea) {
-            var $textarea = $(textarea);
-            var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
-            var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
-            var toolbar = [
-                [
+            const $textarea = $(textarea);
+            const editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
+            const hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
+            let toolbar = {
+                textSize: [
                     [
                         'ParagraphButton',
                         'Heading1Button',
@@ -130,15 +130,17 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                         'PreButton',
                     ],
                 ],
-                [
+                textStyle: [
                     'BoldButton',
                     'ItalicButton',
                     'UnderlineButton',
                     'RemoveFormatButton'
                 ],
-                [
+                list: [
                     'OrderedListButton',
                     'UnorderedListButton',
+                ],
+                align: [
                     [
                         'AlignLeftButton',
                         'AlignCenterButton',
@@ -146,14 +148,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                         'AlignJustifyButton',
                     ],
                 ],
-                ['TableButton'],
-            ];
+                table: ['TableButton'],
+            };
             if (hasFullEdit) {
-                toolbar.push(['OdooLinkToggleButton']);
-                toolbar.push(['OdooMediaButton']);
+                toolbar.link = ['OdooLinkToggleButton'];
+                toolbar.media = ['OdooMediaButton'];
             }
-            toolbar.push(['UndoButton', 'RedoButton']);
-            var options = {
+            toolbar.history = ['UndoButton', 'RedoButton'];
+            const options = {
                 toolbarLayout: toolbar,
                 height: '100%',
                 wrapperClass: 'note-editable o_editable flex-grow-1 ',
@@ -167,7 +169,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 interface: `
                     <t-dialog><t t-zone="default"/></t-dialog>
                     <t-range><t t-zone="tools"/></t-range>
-                    <div class="d-flex flex-column flex-grow-1">
+                    <div class="d-flex flex-column flex-grow-1 o_forum_editor">
                         <t t-zone="container">
                             <div class="d-flex overflow-auto note-editing-area d-flex flex-grow-1" style="height: 200px; min-height: 80px;">
                                 <t t-zone="main"/>
