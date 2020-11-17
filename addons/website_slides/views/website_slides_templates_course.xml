@@ -168,6 +168,7 @@
             </t>
 
             <div class="o_wslides_course_main">
+                <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
                 <!-- ========== TRAINING COURSE ========== -->
                 <div t-if="channel.channel_type == 'training'" class="container">
                     <div class="row">
@@ -198,8 +199,8 @@
                             <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
                                 <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <div class="mb-2 pt-1">
-                                        <t t-if="channel.tag_ids">
-                                            <t t-foreach="channel.tag_ids" t-as="channel_tag">
+                                        <t t-if="channel_frontend_tags">
+                                            <t t-foreach="channel_frontend_tags" t-as="channel_tag">
                                                 <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
                                             </t>
                                         </t>
@@ -699,8 +700,8 @@
     <div class="container">
         <div class="row">
             <div class="mb-2 pt-1 text-left col">
-                <t t-if="channel.tag_ids">
-                    <t t-foreach="channel.tag_ids" t-as="channel_tag">
+                <t t-if="channel_frontend_tags">
+                    <t t-foreach="channel_frontend_tags" t-as="channel_tag">
                         <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
                     </t>
                 </t>

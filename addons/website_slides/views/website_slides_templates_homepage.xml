@@ -215,7 +215,8 @@
                         <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
                         <ul class="navbar-nav flex-grow-1">
                             <t t-foreach="tag_groups" t-as="tag_group">
-                                <li t-att-class="'nav-item dropdown ml16 %s' % ('active' if tag_group in search_tag_groups else '')">
+                                <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>
+                                <li t-att-class="'nav-item dropdown ml16 %s' % ('active' if tag_group in search_tag_groups else '')" t-if="group_frontend_tags">
                                     <a class="nav-link dropdown-toggle"
                                         href="/slides/all"
                                         t-att-data-target="'#navToogleTagGroup%s' % tag_group.id"
@@ -223,7 +224,7 @@
                                         aria-haspopup="true" aria-expanded="false"
                                         t-esc="tag_group.name"/>
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
-                                        <t t-foreach="tag_group.tag_ids" t-as="tag">
+                                        <t t-foreach="group_frontend_tags" t-as="tag">
                                             <a rel="nofollow" t-att-class="'dropdown-item post_link %s' % ('active' if tag in search_tags else '')"
                                                 t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_type=search_slide_type)"
                                                 t-esc="tag.name"/>
@@ -319,6 +320,7 @@
 <template id='course_card' name="Course Card">
     <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
         <t t-set="course_image" t-value="website.image_url(channel, 'image_1024')"/>
+        <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/> 
             <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
@@ -331,8 +333,8 @@
             <span t-if="not channel.is_published" class="badge badge-danger p-1">Unpublished</span>
             <div class="card-text mt-1">
                 <div class="font-weight-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
-                <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
-                    <t t-foreach="channel.tag_ids" t-as="tag">
+                <div t-if="channel_frontend_tags" class="mt-2 pt-1 o_wslides_desc_truncate_2">
+                    <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
                             <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_type=search_slide_type)" t-attf-class="badge post_link #{'badge-primary' if tag in search_tags else 'o_wslides_channel_tag o_tag_color_0'}" t-att-rel="search_tags and 'nofollow'" t-esc="tag.name"/>
                         </t>

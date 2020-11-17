@@ -75,6 +75,17 @@
             <field name="perm_create" eval="1"/>
         </record>
 
+        <record id="rule_slide_channel_tag_public" model="ir.rule">
+            <field name="name">Channel Tag: public/portal: color = published</field>
+            <field name="model_id" ref="model_slide_channel_tag"/>
+            <field name="domain_force">['&amp;', ('color', '!=', False), ('color', '!=', 0)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
         <!-- SLIDE -->
         <record id="rule_slide_slide_global" model="ir.rule">
             <field name="name">Slide: always visible (sub rules exist)</field>
