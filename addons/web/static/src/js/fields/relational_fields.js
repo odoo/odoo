@@ -258,8 +258,10 @@ var FieldMany2One = AbstractField.extend({
                 window.addEventListener('scroll', self._onScroll, true);
 
                 self._onWindowClick = function (ev) {
-                    // ignore mousedown in autocomplete dropdowns and many2one widget itself
-                    if (self.el.contains(ev.target) || this.el === ev.target || $(ev.target).parents('.ui-autocomplete').length) {
+                    // ignore window click in autocomplete dropdowns and many2one widget itself and trash icon on editable list
+                    if (self.el.contains(ev.target) || this.el === ev.target
+                        || $(ev.target).parents('.ui-autocomplete').length
+                        || $(ev.target).closest('.o_list_record_remove').length) {
                         return;
                     }
 
@@ -278,9 +280,7 @@ var FieldMany2One = AbstractField.extend({
                     });
                     if (self.floating && self.$input.hasClass('ui-autocomplete-input')) {
                         ev.stopImmediatePropagation();
-                        // clickPrevented = false;
                         const $dropdown = self.$input.autocomplete("widget");
-                        // const $values = $dropdown && $dropdown.find("li.o_m2o_option");
                         if (results.length) {
                             $dropdown.find("li.o_m2o_option:first").click();
                         } else {
