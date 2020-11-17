@@ -1769,7 +1769,7 @@ class Meeting(models.Model):
         new_args = []
         for arg in args:
             new_arg = arg
-            if arg[0] in ('stop_date', 'stop_datetime', 'stop',) and arg[1] == ">=":
+            if arg[0] in ('stop_date', 'stop_datetime', 'stop',) and arg[1] in ('>=', '>', '=',):
                 if self._context.get('virtual_id', True):
                     new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
             elif arg[0] == "id":
