@@ -1146,17 +1146,17 @@ class TranslationModuleReader:
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root,
                                               extract_keywords={'_': None, '_lt': None})
-                # Javascript source files in the static/src/js directory, rest is ignored (libs)
-                if fnmatch.fnmatch(root, '*/static/src/js*'):
+                if fnmatch.fnmatch(root, '*/static/src*'):
+                    # Javascript source files
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT],
                                                   extract_keywords={'_t': None, '_lt': None})
-                # QWeb template files
-                if fnmatch.fnmatch(root, '*/static/src/xml*'):
+                    # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT])
+
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break
