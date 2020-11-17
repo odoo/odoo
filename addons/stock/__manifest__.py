@@ -23,6 +23,7 @@
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'data/digest_data.xml',
+        'data/mail_templates.xml',
         'views/stock_menu_views.xml',
         'data/stock_traceability_report_data.xml',
         'data/procurement_data.xml',
