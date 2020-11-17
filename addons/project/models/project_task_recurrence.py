@@ -240,6 +240,7 @@ class ProjectTaskRecurrence(models.Model):
             recurrence.recurrence_left -= 1
         recurring_today._set_next_recurrence_date()
 
+    @api.model
     def create(self, vals):
         if vals.get('repeat_number'):
             vals['recurrence_left'] = vals.get('repeat_number')
