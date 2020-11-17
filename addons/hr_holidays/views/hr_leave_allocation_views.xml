@@ -163,7 +163,7 @@
             <xpath expr="//field[@name='allocation_type']" position="after">
                 <label for="date_from" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
                 <div class="o_row" attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
-                    <field name="date_from" widget="date" required="1" class="mr-2"/>
+                    <field name="date_from" widget="date" class="mr-2" attrs="{'required': [('allocation_type', '=', 'accrual')]}" />
                     Run until <field name="date_to" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
                 </div>
                 <label for="date_from" invisible="1"/>
