@@ -46,6 +46,17 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     /**
+     * @override
+     */
+    displayTranslationAlert: function () {
+        // Translation alerts are disabled for res.config.settings:
+        // those are designed to warn user to translate field he just changed, but
+        // * in res.config.settings almost all fields marked as changed (because
+        //   it's not a usual record and all values are set via default_get)
+        // * page is reloaded after saving, so those alerts would be visible
+        //   only for short time after clicking Save
+    },
+    /**
      * initialize modules list.
      * remove module that restricted in groups
      * data contains
