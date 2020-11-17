@@ -108,7 +108,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             }
             self.displayNotification({
                 type: toastType,
-                title: _t(`${toastType === 'success' ? 'Success' : 'Error'}`),
+                title: toastType === 'success' ? _t('Success') : _t('Error'),
                 message: result.toast_content,
                 sticky: true,
             });
