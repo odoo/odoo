@@ -1,6 +1,7 @@
 $o-tip-width: 28px;
 $o-tip-height: 38px;
-$o-tip-anchor-space: 3px;
+$o-tip-anchor-space: 0;
+$o-tip-bounce-half-size: 3px;
 $o-tip-color: $o-enterprise-color;
 $o-tip-border-width: 3px;
 $o-tip-border-color: white;
@@ -13,18 +14,18 @@ $o-tip-size-delay-in: $o-tip-duration-in - $o-tip-size-duration-in;
 
 @keyframes move-left-right {
     0% {
-        transform: translate(-$o-tip-anchor-space, 0);
+        transform: translate(-$o-tip-bounce-half-size, 0);
     }
     100% {
-        transform: translate($o-tip-anchor-space, 0);
+        transform: translate($o-tip-bounce-half-size, 0);
     }
 }
 @keyframes move-bottom-top {
     0% {
-        transform: translate(0, -$o-tip-anchor-space);
+        transform: translate(0, -$o-tip-bounce-half-size);
     }
     100% {
-        transform: translate(0, $o-tip-anchor-space);
+        transform: translate(0, $o-tip-bounce-half-size);
     }
 }
 
