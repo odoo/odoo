@@ -625,7 +625,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('load favorite with group_by', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var controlPanel = await createControlPanel({
             model: 'partner',
@@ -638,21 +638,31 @@ QUnit.module('Views', {
                             user_id: [2,"Mitchell Admin"],
                             name: 'favorite 1',
                             id: 5,
-                            context: "{'group_by': ['company_id'], 'test': 'test'}",
+                            context: "{'group_by': ['company_id'], 'test': 'test', 'test2': True}",
                             sort: "[]",
                             domain: "[('user_id', '=', uid)]",
                         }
                     ]);
                 }
-            }
+            },
+            session: {
+                user_context: { uid: 2 },
+            },
+            searchMenuTypes: ['favorite'],
         });
 
         _.each(controlPanel.exportState().filters, function (filter) {
             if (filter.type === 'favorite') {
-                assert.strictEqual(filter.context, JSON.stringify({'test': 'test'}), 'group_by should not be in context anymore');
+                assert.deepEqual(filter.context, { test: 'test', test2: true }, 'group_by should not be in context anymore');
                 assert.deepEqual(filter.groupBys, ['company_id'], 'group_by should have been moved from context to groupBys');
             }
         });
+
+        await testUtils.dom.click(controlPanel.$('.o_favorites_menu_button'));
+        await testUtils.dom.click(controlPanel.$('.o_menu_item:contains(favorite 1)'));
+
+        assert.strictEqual(controlPanel.$('.o_control_panel .o_facet_values').text().trim(),
+            'favorite 1', 'favorite should be applied with True in its initial context string');
 
         controlPanel.destroy();
     });
