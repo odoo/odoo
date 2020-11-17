@@ -6,6 +6,7 @@ const components = {
     MessageList: require('mail/static/src/components/message_list/message_list.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -18,6 +19,10 @@ class ThreadView extends Component {
     constructor(...args) {
         super(...args);
         useStore((...args) => this._useStoreSelector(...args));
+        useUpdate({
+            func: () => this._update(),
+            priority: 100, // must be executed after composer height adjust
+        });
         /**
          * Reference of the composer. Useful to set focus on composer when
          * thread has the focus.
@@ -27,14 +32,6 @@ class ThreadView extends Component {
          * Reference of the message list. Useful to determine scroll positions.
          */
         this._messageListRef = useRef('messageList');
-    }
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     //--------------------------------------------------------------------------

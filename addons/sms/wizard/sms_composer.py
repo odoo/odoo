@@ -41,15 +41,15 @@ class SendSMS(models.TransientModel):
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
         'Visible records count', compute='_compute_recipients_count', compute_sudo=False,
-        help='UX field computing the number of recipients in mass mode without active domain')
+        help='Number of recipients that will recieve the SMS if sent in mass mode, without applying the Active Domain value')
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
     active_domain_count = fields.Integer(
         'Active records count', compute='_compute_recipients_count', compute_sudo=False,
-        help='UX field computing the number of recipients in mass mode based on given active domain')
+        help='Number of records found when searching with the value in Active Domain')
     comment_single_recipient = fields.Boolean(
         'Single Mode', compute='_compute_comment_single_recipient', compute_sudo=False,
-        help='UX field allowing to know we are sending an SMS to a single specific recipient')
+        help='Indicates if the SMS composer targets a single specific recipient')
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document', default=True)
     mass_force_send = fields.Boolean('Send directly', default=False)

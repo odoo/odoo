@@ -1004,7 +1004,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
         if self.filtered(lambda leave: leave.date_from > leave.date_to):
-            raise ValidationError(_('The start date of the time off must be earlier end date.'))
+            raise ValidationError(_('The start date of the time off must be earlier than the end date.'))
 
     @api.onchange('resource_id')
     def onchange_resource(self):

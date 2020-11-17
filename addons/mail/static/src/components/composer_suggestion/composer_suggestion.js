@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion.
 'use strict';
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
@@ -24,14 +25,7 @@ class ComposerSuggestion extends Component {
                 record: record ? record.__state : undefined,
             };
         });
-    }
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
+        useUpdate({ func: () => this._update() });
     }
 
     //--------------------------------------------------------------------------
