@@ -157,7 +157,7 @@ class PaymentTransaction(models.Model):
         elif payment_state == 'Authorised':  # `done` tx state
             has_token_data = 'recurring.recurringDetailReference' in data.get('additionalData', {})
             if self.tokenize and has_token_data:
-                # Create the token with the data of the payment method  TODO probably factor that out when manage tokens is in da place
+                # Create the token with the data of the payment method
                 token = self.env['payment.token'].create({
                     'name': f"XXXXXXXXXXXX{data['additionalData'].get('cardSummary', '????')}",
                     'partner_id': self.partner_id.id,

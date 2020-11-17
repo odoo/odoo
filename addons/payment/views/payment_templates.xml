@@ -85,7 +85,9 @@
                         <!-- === Payment icon list === -->
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
-                        <div t-raw="acquirer.pre_msg" class="text-muted ml-3"/>
+                        <div t-if="acquirer.pre_msg"
+                             t-raw="acquirer.pre_msg"
+                             class="text-muted ml-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
                     <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
@@ -215,7 +217,9 @@
                         <!-- === Payment icon list === -->
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
-                        <div t-raw="acquirer.pre_msg" class="text-muted ml-3"/>
+                        <div t-if="acquirer.pre_msg"
+                             t-raw="acquirer.pre_msg"
+                             class="text-muted ml-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
                     <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
