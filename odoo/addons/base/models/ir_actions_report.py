@@ -278,6 +278,9 @@ class IrActionsReport(models.Model):
         try:
             if request:
                 command_args.extend(['--cookie', 'session_id', request.session.sid])
+                # add host to avoid session logout by db-filter
+                command_args.extend(['--custom-header', 'Host', request.httprequest.host])
+                command_args.extend(['--custom-header-propagation'])
         except AttributeError:
             pass
 
