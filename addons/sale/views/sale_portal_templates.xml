@@ -286,9 +286,8 @@
                     </div>
 
                     <t t-if="sale_order.transaction_ids">
-                        <t t-call="payment.payment_confirmation_status">
-                            <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
-                            <t t-set="reference" t-value="sale_order.reference"/>
+                        <t t-call="payment.transaction_status">
+                            <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
                         </t>
                     </t>
 
@@ -359,9 +358,8 @@
             <div id="informations">
                 <div t-if="sale_order.transaction_ids and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="sale_order.id">
                     <t t-if="sale_order.transaction_ids">
-                        <t t-call="payment.payment_confirmation_status">
-                            <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
-                            <t t-set="reference" t-value="sale_order.reference"/>
+                        <t t-call="payment.transaction_status">
+                            <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
                         </t>
                     </t>
                 </div>

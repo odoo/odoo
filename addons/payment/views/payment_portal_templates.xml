@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     
-    <!-- Template integrating a conditional "Manage payment methods" link in /my -->
+    <!-- Integration of a conditional "Manage payment methods" link in /my -->
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
@@ -17,10 +17,10 @@
         </xpath>
     </template>
     
-    <!-- Template managing the display of /payment/pay -->
+    <!-- Display of /payment/pay -->
     <template id="pay">
         <!-- Variables description:
-            - TODO ANV - TODO
+            - 'partner_is_different' - Whether the partner logged in is the one making the payment
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment'"/>
@@ -32,35 +32,31 @@
                     <!-- Payment page -->
                     <div class="row">
                         <div class="col-lg-7">
-                            <t t-if="amount and currency">
+                            <div t-if="not amount" class="alert alert-info">
+                                There is nothing to pay.
+                            </div>
+                            <div t-elif="not currency" class="alert alert-warning">
+                                <strong>Warning</strong> The currency is missing or incorrect.
+                            </div>
+                            <div t-elif="not partner_id" class="alert alert-warning">
+                                <strong>Warning</strong> You must be logged in to pay.
+                            </div>
+                            <div t-elif="not acquirers" class="alert alert-warning">
+                                <strong>No suitable payment acquirer could be found.</strong><br/>
+                                If you believe that it is an error, please contact the website administrator.
+                            </div>
+                            <t t-else="">
                                 <div t-if="partner_is_different" class="alert alert-warning">
                                     <strong>Warning</strong> Make sure your are logged in as the right partner before making this payment.
                                 </div>
                                 <t t-if="reference_prefix">
-                                    <b>Reference:</b> <t t-esc="reference_prefix"/><br/>
+                                    <b>Reference:</b>
+                                    <t t-esc="reference_prefix"/><br/>
                                 </t>
-                                <b>Amount:</b> <t t-esc="amount"
-                                                  t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                <div t-if="not partner_id" class="alert alert-danger" role="alert">
-                                    <p>You must be logged in to pay.</p>
-                                </div>
-                                <div t-elif="not acquirers" class="alert alert-danger" role="alert">
-                                    <p>No payment acquirer found.</p>
-                                    <p>Please configure a payment acquirer.</p>
-                                </div>
-                                <t t-else="">
-                                    <t t-call="payment.checkout"/>
-                                </t>
-                            </t>
-                            <t t-elif="not amount">
-                                <div class="alert alert-info">
-                                    There is nothing to pay.
-                                </div>
-                            </t>
-                            <t t-elif="not currency">
-                                <div class="alert alert-warning">
-                                    <strong>Warning</strong> The currency is missing or incorrect.
-                                </div>
+                                <b>Amount:</b>
+                                <t t-esc="amount"
+                                   t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                <t t-call="payment.checkout"/>
                             </t>
                         </div>
                     </div>
@@ -69,11 +65,8 @@
         </t>
     </template>
     
-    <!-- Template managing the display of /my/payment_methods -->
+    <!-- Display of /my/payment_methods -->
     <template id="payment_methods" name="Payment Methods">
-        <!-- Variables description:
-            - TODO ANV - TODO
-        -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Methods'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
@@ -84,16 +77,11 @@
                     <!-- Manage page -->
                     <div class="row">
                         <div class="col-lg-7">
-                            <t t-if="acquirers">
-                                <t t-call="payment.manage"/>
-                            </t>
-                            <t t-else="">
-                                <!-- TODO more friendly info div if no compatible acq found -->
-                                <div class="alert alert-danger" role="alert">
-                                    <p>No payment acquirer found.</p>
-                                    <p>Please configure a payment acquirer.</p>
-                                </div>
-                            </t>
+                            <t t-if="acquirers" t-call="payment.manage"/>
+                            <div t-else="" class="alert alert-warning">
+                                <p><strong>No suitable payment acquirer could be found.</strong></p>
+                                <p>If you believe that it is an error, please contact the website administrator.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,11 +89,8 @@
         </t>
     </template>
     
-    <!-- Template managing the display of /payment/status -->
+    <!-- Display of /payment/status -->
     <template id="payment_status" name="Payment Status">
-        <!-- Variables description:
-            - TODO ANV - TODO
-        -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Status'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
@@ -125,10 +110,12 @@
         </t>
     </template>
     
-    <!-- Template managing the display of /payment/confirmation -->
+    <!-- Display of /payment/confirmation -->
     <template id="confirm">
         <!-- Variables description:
-            - TODO ANV - TODO
+            - 'tx' - The transaction to display
+            - 'message' - The acquirer message configured for the given transaction state
+            - 'status' - The alert class to use for the message
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Confirmation'"/>
@@ -187,8 +174,8 @@
                                     <div class="col-md-4 mt-2 pl-0">
                                         <a role="button"
                                            t-attf-class="btn btn-#{status} float-right"
-                                           href="/my/home"><i class="fa fa-arrow-circle-right"/>
-                                            Back to My Account
+                                           href="/my/home">
+                                            <i class="fa fa-arrow-circle-right"/> Back to My Account
                                         </a>
                                     </div>
                                 </div>
@@ -200,6 +187,7 @@
         </t>
     </template>
     
+    <!-- Breadcrumb for the portal -->
     <template id="portal_breadcrumb">
         <!-- Variables description:
             - 'page_title' - The title of the breadcrumb item
@@ -218,42 +206,6 @@
                     <li class="breadcrumb-item"><t t-esc="page_title"/></li>
                 </ol>
             </div>
-        </div>
-    </template>
-
-    <template id="payment_confirmation_status">
-        <!--
-        Inform the portal user about the transaction status.
-
-        To be called with the 'payment_tx_id' value.
-        -->
-        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable" role="status">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
-            <span t-if='thanks_msg' t-raw="thanks_msg"/>
-            <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and reference">
-                <b>Communication: </b><span t-esc='reference'/>
-            </div>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized' and payment_tx_id.acquirer_id.support_authorization" class="alert alert-success alert-dismissable" role="alert">
-            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
-            <!-- Your payment has been authorized. -->
-            <span t-if='payment_tx_id.acquirer_id.auth_msg' t-raw="payment_tx_id.acquirer_id.auth_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
-            <span t-if='thanks_msg' t-raw="thanks_msg"/>
-            <div t-if="thanks_msg and payment_tx_id.acquirer_id.provider == 'transfer' and reference">
-                <b>Communication: </b><span t-esc='reference'/>
-            </div>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state_message">
-            <span t-esc="payment_tx_id.state_message"/>
         </div>
     </template>
 

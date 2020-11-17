@@ -78,9 +78,8 @@
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
             <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
-                <t t-call="payment.payment_confirmation_status">
-                    <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
-                    <t t-set="reference" t-value="invoice.payment_reference"/>
+                <t t-call="payment.transaction_status">
+                    <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
                 </t>
             </div>
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>

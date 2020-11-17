@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     
+    <!-- Assets -->
     <template id="assets_backend" name="Payment Assets Backend" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet"
@@ -9,6 +10,7 @@
         </xpath>
     </template>
 
+    <!-- Checkout form -->
     <template id="checkout" name="Payment Checkout">
         <!-- Variables description:
             - 'acquirers' - The payment acquirers compatible with the current transaction
@@ -153,6 +155,7 @@
         </form>
     </template>
     
+    <!-- Manage (token create and deletion) form -->
     <template id="manage" name="Payment Manage">
         <!-- Variables description:
             - 'acquirers' - The payment acquirers supporting tokenization
@@ -284,6 +287,7 @@
         </form>
     </template>
     
+    <!-- Expandable payment icon list -->
     <template id="icon_list" name="Payment Icon List">
         <ul class="payment_icon_list float-right list-inline" data-max-icons="3">
             <t t-set="icon_index" t-value="0"/>
@@ -322,6 +326,7 @@
         </ul>
     </template>
     
+    <!-- Generic footer for payment forms -->
     <template id="footer" name="Payment Footer">
         <!-- Variables description:
             - 'label' - The label for the submit button
@@ -336,6 +341,30 @@
                 <i t-attf-class="fa {{icon_class}}"/> <t t-esc="label"/>
             </button>
         </div>
+    </template>
+    
+    <!-- Transaction status in portal -->
+    <template id="transaction_status">
+        <!-- Variables description:
+            - 'tx' - The transaction whose status must be displayed
+        -->
+        <div t-if="tx.state == 'pending'" class="alert alert-warning alert-dismissible">
+            <span t-if='tx.acquirer_id.pending_msg' t-raw="tx.acquirer_id.pending_msg"/>
+            <button class="close" data-dismiss="alert" title="Dismiss">&amp;times;</button>
+        </div>
+        <div t-elif="tx.state == 'authorized'" class="alert alert-success alert-dismissible">
+            <span t-if='tx.acquirer_id.auth_msg' t-raw="tx.acquirer_id.auth_msg"/>
+            <button class="close" data-dismiss="alert" title="Dismiss">&amp;times;</button>
+        </div>
+        <div t-elif="tx.state == 'done'" class="alert alert-success alert-dismissible">
+            <span t-if='tx.acquirer_id.done_msg' t-raw="tx.acquirer_id.done_msg"/>
+            <button class="close" data-dismiss="alert" title="Dismiss">&amp;times;</button>
+        </div>
+        <div t-elif="tx.state == 'cancel'" class="alert alert-danger alert-dismissible">
+            <span t-if='tx.acquirer_id.cancel_msg' t-raw="tx.acquirer_id.cancel_msg"/>
+            <button class="close" data-dismiss="alert" title="Dismiss">&amp;times;</button>
+        </div>
+        <span t-if="tx.state_message" t-esc="tx.state_message"/>
     </template>
     
 </odoo>
