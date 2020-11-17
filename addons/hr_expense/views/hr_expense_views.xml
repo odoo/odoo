@@ -48,10 +48,11 @@
                     <header>
                         <button name="action_submit_expenses" type="object" string="Create Report"/>
                     </header>
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
-                    <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly" readonly="0"/>
                     <field name="name"/>
+                    <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly" readonly="0"/>
                     <field name="employee_id" widget="many2one_avatar_employee"/>
                     <field name="sheet_id" optional="show" invisible="not context.get('show_report', False)" readonly="1"/>
                     <field name="payment_mode" optional="show"/>
@@ -66,6 +67,7 @@
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="tax_ids" optional="show" widget="many2many_tags" groups="account.group_account_user"/>
                     <field name="total_amount" optional="show" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-bf="True"/>
+                    <field name="total_amount_company" optional="show" sum="Total Company Currency" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="True" />
                     <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
@@ -131,32 +133,47 @@
                     </div>
                     <group>
                         <group>
+                            <field name="is_nonzero_product_selected" invisible="1"/>
+                            <field name="is_currency_id_different" invisible="1"/>
                             <field name="is_editable" invisible="1"/>
                             <field name="is_ref_editable" invisible="1"/>
+                            <field name="company_currency_id" invisible="1"/>
                             <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"
                                    widget="many2one_barcode"
                             />
-                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('is_nonzero_product_selected', '=', False)]}" />
                             <field name="product_uom_category_id" invisible="1"/>
-                            <label for="quantity"/>
-                            <div class="o_row">
-                                <field name="quantity" class="oe_inline"/>
+
+                            <label for="quantity" attrs="{'invisible': [('is_nonzero_product_selected', '=', False)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('is_nonzero_product_selected', '=', False)]}">
+                                <field name="quantity" class="oe_inline"   />
                                 <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
                             </div>
-                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
-                            <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            
+                            <label for="total_amount" attrs="{'invisible': [('is_nonzero_product_selected', '=', True)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('is_nonzero_product_selected', '=', True)]}">
+                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/> 
+                            </div>
+                            <div class="o_td_label" attrs="{'invisible': [('is_currency_id_different', '=', False) , ('is_nonzero_product_selected', '=', False)]}">
+                                <field name="label_total_amount_company" nolabel="1" class="o_form_label" />
+                            </div>   
+                            <div class="o_row" attrs="{'invisible': [('is_currency_id_different', '=', False) , ('is_nonzero_product_selected', '=', False)]}">
+                                <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" />
+                                <field name="convert_rate_txt" />
+                            </div>
+                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)], 'invisible': [('is_nonzero_product_selected', '=', True)]}"  context="{'default_company_id': company_id}"/>
                         </group><group>
-                            <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
+                            <field name="reference" groups="account.group_account_readonly" attrs="{'readonly': [('is_ref_editable', '=', False)], 'invisible': [('is_nonzero_product_selected', '=', True)]}" />
                             <field name="date"/>
                             <field name="accounting_date" attrs="{'invisible': ['|', ('accounting_date', '=', False), ('state', 'not in', ['approved', 'done'])]}" />
                             <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}"/>
                             <field name="sheet_id" invisible="1"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                        </group><group>
+                        </group><group attrs="{'invisible': [('is_nonzero_product_selected', '=', True)]}">
                             <label for="payment_mode"/>
                             <div>
                                 <field name="payment_mode" widget="radio"/>

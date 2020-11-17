@@ -72,12 +72,12 @@ class HrExpense(models.Model):
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
-    untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
-    total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True)
-    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
+   # untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account') # I believe this field is not needed any more
+    total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
+    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", readonly=True, default=lambda self: self.env.company.currency_id)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=False, store=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
@@ -101,8 +101,42 @@ class HrExpense(models.Model):
 
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
-
+    is_nonzero_product_selected =  fields.Boolean("Is product with non zero cost selected", compute='_compute_is_nonzero_product_selected')
+    is_currency_id_different = fields.Boolean("Is currency_id different from the company_currency_id", compute='_compute_is_currency_id_different')
     sample = fields.Boolean()
+    label_total_amount_company = fields.Char(compute='_compute_label_total_amount_company')
+    convert_rate_txt = fields.Char(compute='_compute_convert_rate_txt')
+
+
+
+    @api.depends("is_nonzero_product_selected")
+    def _compute_currency_id(self):
+        for expense in self.filtered("is_nonzero_product_selected"):
+            expense.currency_id = expense.company_currency_id
+
+    @api.depends_context('lang')
+    @api.depends("company_currency_id")
+    def _compute_label_total_amount_company(self):
+        for expense in self:
+            expense.label_total_amount_company = _("Total %s",  expense.company_currency_id.name)
+            
+
+    @api.depends("currency_id")
+    def _compute_is_currency_id_different(self):
+        for expense in self:
+            if expense.currency_id != expense.company_currency_id:
+                expense.is_currency_id_different = True
+            else:
+                 expense.is_currency_id_different = False   
+
+    @api.depends("product_id")
+    def _compute_is_nonzero_product_selected(self):
+        for expense in self:
+            if  expense.product_id !=False and expense.unit_amount !=0:  
+
+                expense.is_nonzero_product_selected = True
+            else:
+                expense.is_nonzero_product_selected = False
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -120,21 +154,34 @@ class HrExpense(models.Model):
 
     @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
     def _compute_amount(self):
-        for expense in self:
-            expense.untaxed_amount = expense.unit_amount * expense.quantity
+        for expense in self.filtered('is_nonzero_product_selected'):
+         #   expense.untaxed_amount = expense.unit_amount * expense.quantity
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.total_amount = taxes.get('total_included')
 
-    @api.depends('date', 'total_amount', 'company_currency_id')
-    def _compute_total_amount_company(self):
+    @api.depends('date', 'total_amount', 'currency_id') # Because currency_id can be changed, company_currency_id - not
+    def _compute_total_amount_company(self):  
         for expense in self:
             amount = 0
-            if expense.company_currency_id:
+            if expense.is_currency_id_different: 
                 date_expense = expense.date
                 amount = expense.currency_id._convert(
                     expense.total_amount, expense.company_currency_id,
                     expense.company_id, date_expense or fields.Date.today())
+            else:
+                amount = expense.total_amount
             expense.total_amount_company = amount
+
+    @api.depends('date', 'total_amount', 'currency_id')
+    def _compute_convert_rate_txt(self):
+        records_with_diff_currency = self.filtered('is_currency_id_different')
+        (self - records_with_diff_currency).convert_rate_txt = False
+        for expense in records_with_diff_currency:
+            date_expense = expense.date
+            rate = expense.currency_id._get_conversion_rate(
+                expense.currency_id, expense.company_currency_id, expense.company_id, date_expense or fields.Date.today())
+            rate_txt = '1 {} = {:.{prec}f} {}'.format(expense.currency_id.name, rate, expense.company_currency_id.name, prec=2)
+            expense.convert_rate_txt = rate_txt
 
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
