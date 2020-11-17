@@ -2952,7 +2952,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('buttons are enabled on close of discard changes dialog after save fail from discard changes dialog', async function (assert) {
-        assert.expect(7);
+        assert.expect(5);
 
         this.data.partner.fields.foo.required = true;
         this.data.partner.fields.foo.default = undefined;
@@ -2992,12 +2992,7 @@ QUnit.module('Views', {
 
         // try to save without filling required fields
         await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
-        assert.containsN(form.$buttons, 'button:disabled', 4,
-            "control panel buttons should be disabled");
-        assert.containsOnce(document.body, '.modal',
-            "should have a confirmation modal dialog still open to confirm discard action");
 
-        await testUtils.dom.click($('.modal .modal-footer button.btn-secondary:eq(1)'));
         assert.containsNone(form.$buttons, 'button:disabled',
             "control panel buttons should be enabled");
         form.destroy();

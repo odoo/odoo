@@ -7757,8 +7757,6 @@ QUnit.module('Views', {
 
         // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
         await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
-        // await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
-        //     ['change', 'blur', 'focusout']);
         await testUtils.dom.triggerEvents($discardButton, ['focus']);
         $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
         await testUtils.dom.click($discardButton);
