@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_split, float_is_zero
+from odoo.tools import email_split, float_is_zero, float_repr
 
 
 class HrExpense(models.Model):
@@ -72,14 +72,14 @@ class HrExpense(models.Model):
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
+    # TODO SGV can be removed
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
-    total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True)
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
-    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
+    total_amount = fields.Monetary("Amount paid", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
+    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
-    # TODO make required in master (sgv)
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
@@ -103,8 +103,32 @@ class HrExpense(models.Model):
 
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
-
+    product_has_cost =  fields.Boolean("Is product with non zero cost selected", compute='_compute_product_has_cost')
+    same_currency = fields.Boolean("Is currency_id different from the company_currency_id", compute='_compute_same_currency')
     sample = fields.Boolean()
+    label_total_amount_company = fields.Char(compute='_compute_label_total_amount_company')
+    label_convert_rate = fields.Char(compute='_compute_label_convert_rate')
+
+    @api.depends("product_has_cost")
+    def _compute_currency_id(self):
+        for expense in self.filtered("product_has_cost"):
+            expense.currency_id = expense.company_currency_id
+
+    @api.depends_context('lang')
+    @api.depends("company_currency_id")
+    def _compute_label_total_amount_company(self):
+        for expense in self:
+            expense.label_total_amount_company = _("Total %s", expense.company_currency_id.name)
+
+    @api.depends('currency_id', 'company_currency_id')
+    def _compute_same_currency(self):
+        for expense in self:
+            expense.same_currency = bool(expense.currency_id and expense.currency_id == expense.company_currency_id)
+
+    @api.depends('product_id')
+    def _compute_product_has_cost(self):
+        for expense in self:
+            expense.product_has_cost = bool(expense.product_id and expense.unit_amount)
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -141,16 +165,29 @@ class HrExpense(models.Model):
                 .filtered(lambda line: line.expense_id == self and line.account_internal_type in ('receivable', 'payable'))
             expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
-    @api.depends('date', 'total_amount', 'company_currency_id')
+    @api.depends('date', 'total_amount', 'currency_id', 'company_currency_id')
     def _compute_total_amount_company(self):
         for expense in self:
             amount = 0
-            if expense.company_currency_id:
-                date_expense = expense.date
+            if expense.same_currency:
+                amount = expense.total_amount
+            else:
+                date_expense = expense.date or fields.Date.today()
                 amount = expense.currency_id._convert(
                     expense.total_amount, expense.company_currency_id,
-                    expense.company_id, date_expense or fields.Date.today())
+                    expense.company_id, date_expense)
             expense.total_amount_company = amount
+
+    @api.depends('date', 'total_amount', 'currency_id', 'company_currency_id')
+    def _compute_label_convert_rate(self):
+        records_with_diff_currency = self.filtered(lambda x: not x.same_currency and x.currency_id)
+        (self - records_with_diff_currency).label_convert_rate = False
+        for expense in records_with_diff_currency:
+            date_expense = expense.date or fields.Date.today()
+            rate = expense.currency_id._get_conversion_rate(
+                expense.currency_id, expense.company_currency_id, expense.company_id, date_expense)
+            rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=float_repr(rate, expense.company_currency_id.decimal_places), comp_cur=expense.company_currency_id.name)
+            expense.label_convert_rate = rate_txt
 
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
@@ -428,7 +465,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             company_currency = expense.company_id.currency_id
 
             move_line_values = []
-            taxes = expense.tax_ids.with_context(round=True).compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
+            unit_amount = expense.unit_amount or expense.total_amount
+            quantity = expense.quantity if expense.unit_amount else 1
+            taxes = expense.tax_ids.with_context(round=True).compute_all(unit_amount, expense.currency_id,quantity,expense.product_id)
             total_amount = 0.0
             total_amount_currency = 0.0
             partner_id = expense.employee_id.sudo().address_home_id.commercial_partner_id.id
