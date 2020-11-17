@@ -97,40 +97,5 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
-    <template id="mail_notification_confirm" inherit_id="mail.mail_notification_paynow" name="Purchase: Confirmation mail notification template">
-        <xpath expr="//t[@t-set='access_name']" position="after">
-            <t t-if="record._name == 'purchase.order'">
-                <t t-if="record.state == 'purchase' and not record.env.context.get('is_reminder')">
-                    <t t-set="access_name">Confirm</t>
-                    <t t-set="access_url" t-value="record.get_confirm_url(confirm_type='reception')"/>
-                </t>
-            </t>
-        </xpath>
-        <xpath expr="//a[@t-att-href='access_url']" position="replace">
-            <t t-if="record._name == 'purchase.order' and record.env.context.get('is_reminder')">
-                <a t-att-href="record.get_confirm_url(confirm_type='reminder')"
-                    style="margin-right: 10px; background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                    Yes
-                </a>
-                <a t-att-href="record.get_update_url()"
-                    style="margin-left: 10px; background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                    No, Update Dates
-                </a>
-                <div>&amp;nbsp;</div>
-                <div style="margin: 0px; padding: 0px; font-size:13px; text-align: left;">
-                    If you have any questions, please do not hesitate to contact us.
-                    <div>&amp;nbsp;</div>
-                    Best regards,
-                </div>
-            </t>
-            <t t-else="">
-                <a t-att-href="access_url"
-                    style="margin-left: 10px; background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                    <t t-esc="access_name"/>
-                </a>
-            </t>
-        </xpath>
-    </template>
-
     </data>
 </odoo>
