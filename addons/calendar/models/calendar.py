@@ -1651,7 +1651,7 @@ class Meeting(models.Model):
             if real_id != calendar_id:
                 calendar = self.browse(calendar_id)
                 real = self.browse(real_id)
-                ls = calendar_id2real_id(calendar_id, with_date=True)
+                ls = calendar_id2real_id(calendar_id, with_date=real.duration or 1)
                 for field in fields:
                     f = self._fields[field]
                     if field in ('start', 'start_date', 'start_datetime'):
