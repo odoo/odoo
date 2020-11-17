@@ -94,6 +94,9 @@ class MailGroup(http.Controller):
         """
         unsubscribe = subscription == 'on'
         channel = request.env['mail.channel'].browse(int(channel_id))
+        if not channel.exists():
+            return False
+
         partner_ids = []
 
         # search partner_id
