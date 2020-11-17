@@ -365,6 +365,39 @@
                 records.action_post()
             </field>
         </record>
+    </data>
+    <data noupdate="1">
+        <record id="account_send_payment_receipt_by_email_action" model="ir.actions.act_window">
+            <field name="name">Send receipt by email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context" eval="{
+                'mail_post_autofollow': True,
+                'default_composition_mode': 'comment',
+                'default_use_template': True,
+                'default_template_id': ref('account.mail_template_data_payment_receipt'),
+                'custom_layout': 'mail.mail_notification_light',
+            }"/>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
 
+        <record id="account_send_payment_receipt_by_email_action_multi" model="ir.actions.act_window">
+            <field name="name">Send receipts by email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context" eval="{
+                'mail_post_autofollow': True,
+                'default_composition_mode': 'mass_mail',
+                'default_use_template': True,
+                'default_template_id': ref('account.mail_template_data_payment_receipt'),
+                'custom_layout': 'mail.mail_notification_light',
+            }"/>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_view_types">list</field>
+        </record>
     </data>
 </odoo>
