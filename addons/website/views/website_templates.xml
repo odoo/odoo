@@ -262,7 +262,7 @@
                     <t t-set="_div_classes" t-value="'ml-2'"/>
                 </t>
                 <!-- Button -->
-                <div class="oe_structure" id="oe_structure_header_default_1"/>
+                <div class="oe_structure oe_structure_solo" id="oe_structure_header_default_1"/>
             </div>
         </nav>
     </xpath>
@@ -270,7 +270,7 @@
 
 <template id="template_header_default_oe_structure_header_default_1" inherit_id="website.template_header_default" name="Template Header Default (oe_structure_header_default_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_default_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_default_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_default_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <a href="/contactus" class="btn btn-primary ml-4">Contact Us</a>
@@ -324,10 +324,10 @@
                     <t t-set="_div_classes" t-value="'ml-2'"/>
                 </t>
                 <!-- Button -->
-                <div class="oe_structure" id="oe_structure_header_hamburger_1"/>
+                <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_1"/>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
-                    <div class="oe_structure" id="oe_structure_header_hamburger_2"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_2"/>
                     <t t-call="website.navbar_nav">
                         <!-- Menu -->
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
@@ -337,7 +337,7 @@
                             </t>
                         </t>
                     </t>
-                    <div class="oe_structure" id="oe_structure_header_hamburger_3"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_3"/>
                 </div>
             </div>
         </nav>
@@ -346,7 +346,7 @@
 
 <template id="template_header_hamburger_oe_structure_header_hamburger_1" inherit_id="website.template_header_hamburger" name="Template Header Hamburger (oe_structure_header_hamburger_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_hamburger_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_hamburger_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <a href="/contactus" class="btn btn-primary ml-4">Contact Us</a>
@@ -358,7 +358,7 @@
 
 <template id="template_header_hamburger_oe_structure_header_hamburger_2" inherit_id="website.template_header_hamburger" name="Template Header Hamburger (oe_structure_header_hamburger_2)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_hamburger_2']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_hamburger_2">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="s_hr text-left pt16 pb16" data-name="Separator">
@@ -372,7 +372,7 @@
 
 <template id="template_header_hamburger_oe_structure_header_hamburger_3" inherit_id="website.template_header_hamburger" name="Template Header Hamburger (oe_structure_header_hamburger_3)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_hamburger_3']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_hamburger_3">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_3">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row align-items-center">
@@ -433,7 +433,7 @@
             <div id="top_menu_container" class="container align-items-center flex-row flex-wrap">
                 <!-- Left -->
                 <div class="o_header_centered_logo">
-                    <div class="oe_structure" id="oe_structure_header_vertical_1"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_1"/>
                 </div>
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
@@ -441,7 +441,7 @@
                 </t>
                 <!-- Right -->
                 <div class="o_header_centered_logo text-right">
-                    <div class="oe_structure" id="oe_structure_header_vertical_2"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_2"/>
                 </div>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler">
@@ -453,7 +453,7 @@
                 </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse flex-wrap">
-                    <div class="oe_structure w-100" id="oe_structure_header_vertical_3"/>
+                    <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_vertical_3"/>
                     <!-- Nav -->
                     <t t-call="website.navbar_nav">
                         <t t-set="_nav_class" t-value="'mx-auto'"/>
@@ -484,7 +484,7 @@
 
 <template id="template_header_vertical_oe_structure_header_vertical_1" inherit_id="website.template_header_vertical" name="Template Header Vertical (oe_structure_header_vertical_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_vertical_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_vertical_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="s_share no_icon_color" data-name="Social Media">
@@ -510,7 +510,7 @@
 
 <template id="template_header_vertical_oe_structure_header_vertical_2" inherit_id="website.template_header_vertical" name="Template Header Vertical (oe_structure_header_vertical_2)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_vertical_2']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_vertical_2">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <small><i class="fa fa-1x fa-fw fa-phone mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></small>
@@ -522,7 +522,7 @@
 
 <template id="template_header_vertical_oe_structure_header_vertical_3" inherit_id="website.template_header_vertical" name="Template Header Vertical (oe_structure_header_vertical_3)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_vertical_3']" position="replace">
-        <div class="oe_structure w-100" id="oe_structure_header_vertical_3">
+        <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_vertical_3">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="s_hr w-100 text-left pt0 pb0" data-name="Separator">
@@ -561,7 +561,7 @@
                             </t>
                         </t>
                     </t>
-                    <div class="oe_structure" id="oe_structure_header_sidebar_1"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_sidebar_1"/>
                     <ul class="nav navbar-nav">
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
@@ -585,7 +585,7 @@
 
 <template id="template_header_sidebar_oe_structure_header_sidebar_1" inherit_id="website.template_header_sidebar" name="Template Header Sidebar (oe_structure_header_sidebar_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_sidebar_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_sidebar_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_sidebar_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <!-- Social -->
@@ -631,7 +631,7 @@
                 </t>
                 <!-- Slogan -->
                 <div class="ml-3 mr-auto">
-                    <div class="oe_structure" id="oe_structure_header_slogan_1"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_1"/>
                 </div>
                 <ul class="nav navbar-nav navbar-expand ml-auto order-last order-lg-0">
                     <!-- Sign In -->
@@ -649,12 +649,12 @@
                     </t>
                     <!-- Button -->
                     <li class="nav-item">
-                        <div class="oe_structure" id="oe_structure_header_slogan_2"/>
+                        <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_2"/>
                     </li>
                 </ul>
                 <!-- Separator -->
                 <div class="w-100">
-                    <div class="oe_structure" id="oe_structure_header_slogan_3"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_3"/>
                 </div>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
@@ -682,7 +682,7 @@
 
 <template id="template_header_slogan_oe_structure_header_slogan_1" inherit_id="website.template_header_slogan" name="Template Header Slogan (oe_structure_header_slogan_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_slogan_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_slogan_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <h5 class="m-0" data-name="Slogan">We help <b>you</b> grow your business</h5>
@@ -694,7 +694,7 @@
 
 <template id="template_header_slogan_oe_structure_header_slogan_2" inherit_id="website.template_header_slogan" name="Template Header Slogan (oe_structure_header_slogan_2)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_slogan_2']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_slogan_2">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <a href="/contactus" class="btn btn-primary ml-4">Contact Us</a>
@@ -706,7 +706,7 @@
 
 <template id="template_header_slogan_oe_structure_header_slogan_3" inherit_id="website.template_header_slogan" name="Template Header Slogan (oe_structure_header_slogan_3)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_slogan_3']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_slogan_3">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_3">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="s_hr w-100 pt8 pb8" data-name="Separator">
@@ -720,7 +720,7 @@
 
 <template id="template_header_contact" inherit_id="website.layout" name="Template Header Contact" active="False">
     <xpath expr="//header//nav" position="replace">
-        <div class="oe_structure" id="oe_structure_header_contact_1"/>
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_contact_1"/>
         <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
@@ -763,7 +763,7 @@
 
 <template id="template_header_contact_oe_structure_header_contact_1" inherit_id="website.template_header_contact" name="Template Header Contact (oe_structure_header_contact_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_contact_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_contact_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_contact_1">
             <section class="s_text_block pt8 pb8 o_cc o_cc2" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row align-items-center">
@@ -851,7 +851,7 @@
             <div class="container d-flex align-items-center pb-4">
                 <!-- Social Icons -->
                 <div class="flex-grow-1">
-                    <div class="oe_structure" id="oe_structure_header_boxed_1"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1"/>
                 </div>
                 <ul class="nav ml-auto" contenteditable="false">
                     <!-- Sign In -->
@@ -891,7 +891,7 @@
                         </t>
                     </t>
                     <!-- Button -->
-                    <div class="oe_structure" id="oe_structure_header_boxed_2"/>
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_2"/>
                 </div>
             </nav>
         </div>
@@ -900,7 +900,7 @@
 
 <template id="template_header_boxed_oe_structure_header_boxed_1" inherit_id="website.template_header_boxed" name="Template Header Boxed (oe_structure_header_boxed_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_boxed_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_boxed_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1">
             <section class="s_text_block" data-snippet="s_text_block" name="Text">
                 <div class="container">
                     <div class="s_share text-left" data-name="Social Media">
@@ -923,7 +923,7 @@
 
 <template id="template_header_boxed_oe_structure_header_boxed_2" inherit_id="website.template_header_boxed" name="Template Header Boxed (oe_structure_header_boxed_2)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_boxed_2']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_boxed_2">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_2">
             <section class="s_text_block" data-snippet="s_text_block" name="Text">
                 <div class="container">
                      <a href="/contactus" class="btn btn-primary ml-lg-4">Contact Us</a>
@@ -980,7 +980,7 @@
 
 <template id="template_header_image" inherit_id="website.layout" name="Template Header Image" active="False">
     <xpath expr="//header//nav" position="replace">
-        <div class="oe_structure" id="oe_structure_header_image_1"/>
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1"/>
         <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
@@ -1012,7 +1012,7 @@
                         </t>
                         <!-- Button -->
                         <li class="nav-item">
-                            <div class="oe_structure" id="oe_structure_header_image_2"/>
+                            <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_2"/>
                         </li>
                     </t>
                 </div>
@@ -1027,7 +1027,7 @@
 
 <template id="template_header_image_oe_structure_header_image_1" inherit_id="website.template_header_image" name="Template Header image (oe_structure_header_image_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_image_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_image_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1">
             <section class="s_cover oe_img_bg pt8 pb8" data-snippet="s_cover" data-name="Cover"
                      style="background-image: url('/web/image/website.header_image_1_default_image');">
                 <div class="container s_allow_columns">
@@ -1040,7 +1040,7 @@
 
 <template id="template_header_image_oe_structure_header_image_2" inherit_id="website.template_header_image" name="Template Header image (oe_structure_header_image_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_image_2']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_image_2">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <a href="/contactus" class="btn btn-primary mt-3 mt-lg-0 ml-lg-3">Contact Us</a>
@@ -1090,7 +1090,7 @@
                         </t>
                     </t>
                     <!-- Social Icons -->
-                    <div class="oe_structure w-100" id="oe_structure_header_hamburger_full_1"/>
+                    <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1"/>
                 </div>
             </div>
         </nav>
@@ -1099,7 +1099,7 @@
 
 <template id="template_header_hamburger_full_oe_structure_header_hamburger_full_1" inherit_id="website.template_header_hamburger_full" name="Template Header Hamburger Full (oe_structure_header_hamburger_full_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_hamburger_full_1']" position="replace">
-        <div class="oe_structure w-100" id="oe_structure_header_hamburger_full_1">
+        <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1">
             <div class="s_hr pt32 pb32" data-name="Separator">
                 <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--400);"/>
             </div>
@@ -1131,7 +1131,7 @@
 <template id="template_header_magazine" inherit_id="website.layout" name="Template Header Magazine" active="False">
     <xpath expr="//header//nav" position="replace">
         <!-- Topbar -->
-        <div class="oe_structure" id="oe_structure_header_magazine_1"/>
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1"/>
         <nav data-name="Navbar" class="navbar navbar-light o_colored_level o_cc">
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
@@ -1175,7 +1175,7 @@
 
 <template id="template_header_magazine_oe_structure_header_magazine_1" inherit_id="website.template_header_magazine" name="Template Header Magazine (oe_structure_header_magazine_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_magazine_1']" position="replace">
-        <div class="oe_structure" id="oe_structure_header_magazine_1">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row align-items-center">
