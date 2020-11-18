@@ -682,7 +682,7 @@ form: module.record_id""" % (xml_id,)
                     rec.getroottree().docinfo.URL,
                     rec.sourceline,
                     etree.tostring(rec, encoding='unicode').rstrip()
-                ))
+                )) from e
             finally:
                 self._noupdate.pop()
                 self.envs.pop()
