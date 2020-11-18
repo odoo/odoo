@@ -4,15 +4,15 @@
         <t t-set="val_integer" t-value="Math.floor(val)"/>
         <t t-set="val_decimal" t-value="val - val_integer"/>
         <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
-        <div class="o_website_rating_static" t-att-style="inline_mode ? 'display:inline' : ''">
+        <div class="o_website_rating_static" t-att-style="inline_mode ? 'display:inline' : ''" t-attf-aria-label="#{val} stars on 5" t-attf-title="#{val} stars on 5">
             <t t-foreach="_.range(0, val_integer)" t-as="num">
-                <i class="fa fa-star" role="img" aria-label="One star" title="One star"></i>
+                <i class="fa fa-star" role="img"></i>
             </t>
             <t t-if="val_decimal">
-                <i class="fa fa-star-half-o" role="img" aria-label="Half a star" title="Half a star"></i>
+                <i class="fa fa-star-half-o" role="img"></i>
             </t>
-            <t t-foreach="_.range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="#{empty_star} on 5" t-attf-title="#{empty_star} on 5">
-                <i class="fa fa-star text-black-25"></i>
+            <t t-foreach="_.range(0, empty_star)" t-as="num">
+                <i class="fa fa-star text-black-25" role="img"></i>
             </t>
         </div>
     </t>

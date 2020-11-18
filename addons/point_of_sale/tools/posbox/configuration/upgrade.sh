@@ -108,6 +108,7 @@ copy_raspbian () {
     mkdir -v raspbian
     mount -v "${PART_RASPBIAN_ROOT}" raspbian
     resize2fs "${PART_RASPBIAN_ROOT}"
+    chroot raspbian/ /bin/bash -c "sudo apt-get -y update"
     chroot raspbian/ /bin/bash -c "sudo apt-get -y install kpartx"
     PATH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     cp -v "${PATH_DIR}"/upgrade.sh raspbian/home/pi/

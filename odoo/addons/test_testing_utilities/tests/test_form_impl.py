@@ -227,10 +227,13 @@ class TestM2M(TransactionCase):
         self.assertEqual(f.count, 1)
 
     def test_m2m_changed(self):
+        r1 = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+        r2 = self.env['test_testing_utilities.m2o'].create({'name': "B"})
+
         Sub = self.env['test_testing_utilities.sub2']
         a = Sub.create({'name': 'a'})
         b = Sub.create({'name': 'b'})
-        c = Sub.create({'name': 'c'})
+        c = Sub.create({'name': 'c', 'm2o_ids': [(6, 0, [r1.id, r2.id])]})
         d = Sub.create({'name': 'd'})
 
         f = Form(self.env['test_testing_utilities.f'])

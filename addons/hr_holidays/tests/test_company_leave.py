@@ -314,8 +314,7 @@ class TestCompanyLeave(SavepointCase):
         })
         company_leave._onchange_request_parameters()
 
-        count = 845
-        with self.assertQueryCount(__system__=count, admin=count):
+        with self.assertQueryCount(__system__=846, admin=845):
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()

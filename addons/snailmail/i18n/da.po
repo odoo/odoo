@@ -37,6 +37,9 @@ msgid ""
 "href=\"https://www.odoo.com/help\" target=\"new\">support</a> for further "
 "assistance.</p>"
 msgstr ""
+"<p>Der opstod en ukendt fejl. Kontakt venligst vores <a "
+"href=\"https://www.odoo.com/help\" target=\"new\">support</a> for yderligere"
+" assistance."
 
 #. module: snailmail
 #. openerp-web
@@ -46,6 +49,8 @@ msgid ""
 "<p>The country to which you want to send the letter is not supported by our "
 "service.</p>"
 msgstr ""
+"<p>Landet hvortil du vil sende brevet understøttes ikke af vores "
+"service.</p>"
 
 #. module: snailmail
 #. openerp-web
@@ -57,6 +62,10 @@ msgid ""
 " href=%s target=\"_blank\"><i class= \"fa fa-arrow-right\"/> Buy "
 "credits</a></div>"
 msgstr ""
+"<p>Brevet kunne ikke sendes grundet utilstrækkeligt kredit på din IAP "
+"konto.</p><div class= \"text-right\"><a class=\"btn btn-link buy_credits\" "
+"href=%s target=\"_blank\"><i class= \"fa fa-arrow-right\"/>Køb "
+"kredit</a></div>"
 
 #. module: snailmail
 #. openerp-web
@@ -67,6 +76,9 @@ msgid ""
 "\"text-right\"><a class=\"btn btn-link buy_credits\" href=%s><i class= \"fa "
 "fa-arrow-right\"/> Buy credits</a></div>"
 msgstr ""
+"<p>Du har brug for kredit på din IAP konto for at sende et brev.</p><div "
+"class= \"text-right\"><a class=\"btn btn-link buy_credits\" href=%s><i "
+"class= \"fa fa-arrow-right\"/>Køb kredit</a></div>"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -74,7 +86,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Add a Cover Page"
-msgstr ""
+msgstr "Tilføj coverside"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -86,19 +98,20 @@ msgstr "Adresse"
 #: code:addons/snailmail/static/src/js/mail_failure.js:0
 #, python-format
 msgid "An error occured when sending a letter with Snailmail"
-msgstr ""
+msgstr "Der forekom en fejl ved afsendelse af brevet via almen post"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
+"Der forekom en fejl ved afsendelse af dokumentet via post.<br>Fejl: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Der forekom en ukendt fejl. Kontakt venligst support."
 
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
@@ -107,6 +120,8 @@ msgid ""
 "Are you sure you want to discard %s snailmail delivery failures. You won't "
 "be able to re-send these letters later!"
 msgstr ""
+"Er du sikker på du vil skrotte %s almen post fejlslagne leveringer. Du vil "
+"ikke være i stand til at sende dem som breve igen senere!"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -116,7 +131,7 @@ msgstr "Vedhæftning"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_fname
 msgid "Attachment Filename"
-msgstr ""
+msgstr "Vedhæftelse filnavn"
 
 #. module: snailmail
 #. openerp-web
@@ -128,17 +143,17 @@ msgstr "Afventer afsendelse"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Begge sider"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Begge sider"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
-msgstr ""
+msgstr "KREDIT_FEJL"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
@@ -149,7 +164,7 @@ msgstr "Annullér"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Cancel Letter"
-msgstr ""
+msgstr "Annuller brev"
 
 #. module: snailmail
 #. openerp-web
@@ -158,7 +173,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
 msgid "Cancel letter"
-msgstr ""
+msgstr "Annuller brev"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
@@ -227,7 +242,7 @@ msgstr "Land"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
 msgid "Cover Page"
-msgstr ""
+msgstr "Coverside"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -253,7 +268,7 @@ msgstr "Kassér mislykkede leveringer"
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_cancel_action
 msgid "Discard snailmail delivery failures"
-msgstr ""
+msgstr "Skort almen post leverings fejl"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_cancel
@@ -291,7 +306,7 @@ msgstr "Fejl"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__format_error
 msgid "FORMAT_ERROR"
-msgstr ""
+msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. openerp-web
@@ -300,17 +315,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 #, python-format
 msgid "Failed letter"
-msgstr ""
+msgstr "Fejlslagen brev"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
 msgid "Format Error"
-msgstr ""
+msgstr "Format fejl"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_format_error
 msgid "Format Error Sending a Snailmail Letter"
-msgstr ""
+msgstr "Format fejl ved afsendelse af almen post brev"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_cancel__help_message
@@ -332,6 +347,9 @@ msgid ""
 "notification and review them one by one by clicking on the red paper-plane "
 "next to each message."
 msgstr ""
+"Hvis du vil gensende dem, klik først på Annuler nu, og klik derefter på "
+"notifikationen, og gennemgå dem én efter én, ved at klikke på det røde "
+"tekstfelt, ved siden af hver besked."
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
@@ -378,17 +396,17 @@ msgstr "Brev"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
-msgstr ""
+msgstr "Brev sendt via almen post"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Breve"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
 msgid "MISSING_REQUIRED_FIELDS"
-msgstr ""
+msgstr "MISSING_REQUIRED_FIELDS"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_message
@@ -415,13 +433,13 @@ msgstr "Model"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
 msgid "NO_PRICE_AVAILABLE"
-msgstr ""
+msgstr "NO_PRICE_AVAILABLE"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "En eller flere påkrævede felter er tomme."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -435,6 +453,8 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
+"Vores service kan ikke læse dit brev pga. dets format.<br/>\n"
+"Vær venlig at redigere formatet på skabelonen, eller opdater dine indstillinger for automatisk at tilføje et blankt cover page til alle breve."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -444,12 +464,12 @@ msgstr "Kontakt"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Print begge sider"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Print i farve"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
@@ -461,7 +481,7 @@ msgstr "Qweb felt kontakt"
 #: code:addons/snailmail/static/src/js/thread_widget.js:0
 #, python-format
 msgid "Re-send letter"
-msgstr ""
+msgstr "Gensend brev"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -471,7 +491,7 @@ msgstr "Modtager"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
 msgid "Related Record"
-msgstr ""
+msgstr "Relateret datasæt"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
@@ -494,7 +514,7 @@ msgstr "Sendt"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "Sent by"
-msgstr ""
+msgstr "Sent før"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
@@ -504,37 +524,37 @@ msgstr "Almindelig post"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Postbrev "
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr ""
+msgstr "Postbreve"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_status
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_status
 msgid "Snailmail Status"
-msgstr ""
+msgstr "Postbrev status"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
 msgid "Snailmail Status Message"
-msgstr ""
+msgstr "Postbrev status besked"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
-msgstr ""
+msgstr "Postbrev besked i fejl"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Postbrev: behandling breve kø"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -573,13 +593,13 @@ msgstr "Gade2"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
 msgid "TRIAL_ERROR"
-msgstr ""
+msgstr "TRIAL_ERROR"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
-msgstr ""
+msgstr "Modtager adressen er ikke komplet"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -588,12 +608,14 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Vedhæftelsen til brevet kunne ikke sendes. Tjek venligst, at dets indhold, "
+"og kontakt support hvis problemet bliver ved."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Partnerens land er ikke dækket af almen post."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -601,6 +623,7 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
+"Kunde adressen er ikke komplet. Opdater adressen her og send brevet igen."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -608,6 +631,7 @@ msgstr ""
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
+"Dokumentet blev afsendt per post korrekt. <br>Tracking ID er %s send_id"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -618,22 +642,22 @@ msgstr "Type"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error
 msgid "UNKNOWN_ERROR"
-msgstr ""
+msgstr "UKENDT_FEJL"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Update Config and Re-send"
-msgstr ""
+msgstr "Opdater konfiguration og send igen"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Update address and re-send"
-msgstr ""
+msgstr "Opdater adresse og send igen"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_missing_required_fields
 msgid "Update address of partner"
-msgstr ""
+msgstr "Opdater partners adresse"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -642,6 +666,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Når et brev oprettes, er status 'Afventende'.\n"
+"Hvis brevet afsendes korrekt, overgår status til 'Afsendt'.\n"
+"Hvis ikke, vil det overgå til status 'Fejl', og en fejlmeddelelse vil blive vist i feltet 'Fejl meddelelse'."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -650,6 +677,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Du har ikke en IAP konto registreret for denne service. <br>Gå venligst til "
+"<a href=%s target=\"new\">iap.odoo.com</a> for at gøre krav på dine gratis "
+"kredit."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -658,6 +688,8 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Du har ikke tilstrækkelig kredit til at udføre denne operation. <br>Vær "
+"venlig at gå til din <a href=%s target=\"new\">IAP konto </a>"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields

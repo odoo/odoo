@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from PIL import Image
 
 from odoo import api, fields, models, tools
 
@@ -145,10 +146,9 @@ class BaseDocumentLayout(models.TransientModel):
         w = int(50 * base_w / base_h)
         h = 50
 
-        # Converts to RGBA if no alpha detected
-        image_converted = image.convert(
-            'RGBA') if 'A' not in image.getbands() else image
-        image_resized = image_converted.resize((w, h))
+        # Converts to RGBA (if already RGBA, this is a noop)
+        image_converted = image.convert('RGBA')
+        image_resized = image_converted.resize((w, h), resample=Image.NEAREST)
 
         colors = []
         for color in image_resized.getcolors(w * h):

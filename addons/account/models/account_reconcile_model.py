@@ -521,7 +521,6 @@ class AccountReconcileModel(models.Model):
             LEFT JOIN account_account account       ON account.id = aml.account_id
             WHERE st_line.id IN %s
                 AND aml.company_id = st_line.company_id
-                AND move.state = 'posted'
                 AND (
                         -- the field match_partner of the rule might enforce the second part of
                         -- the OR condition, later in _apply_conditions()
@@ -536,7 +535,33 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND
+                -- "case when" used to enforce evaluation order (performance optimization)
+                AND (CASE WHEN
+                (
+                    (
+                    -- blue lines appearance conditions
+                    aml.account_id IN (journal.default_credit_account_id, journal.default_debit_account_id)
+                    AND aml.statement_id IS NULL
+                    AND (
+                        company.account_bank_reconciliation_start IS NULL
+                        OR
+                        aml.date > company.account_bank_reconciliation_start
+                        )
+                    )
+                    AND (
+                        move.state = 'posted'
+                        OR
+                        ((move.state = 'draft' OR move.state IS NULL) AND journal.post_at = 'bank_rec')
+                    )
+                    OR
+                    (
+                    -- black lines appearance conditions
+                    account.reconcile IS TRUE
+                    AND aml.reconciled IS NOT TRUE
+                    AND move.state = 'posted'
+                    )
+                ) 
+                THEN (CASE WHEN
                 (
                     (
                         line_partner.partner_id != 0
@@ -579,25 +604,7 @@ class AccountReconcileModel(models.Model):
                         )
                     )
                 )
-                AND
-                (
-                    (
-                    -- blue lines appearance conditions
-                    aml.account_id IN (journal.default_credit_account_id, journal.default_debit_account_id)
-                    AND aml.statement_id IS NULL
-                    AND (
-                        company.account_bank_reconciliation_start IS NULL
-                        OR
-                        aml.date > company.account_bank_reconciliation_start
-                        )
-                    )
-                    OR
-                    (
-                    -- black lines appearance conditions
-                    account.reconcile IS TRUE
-                    AND aml.reconciled IS NOT TRUE
-                    )
-                )
+                THEN 1 END) END) = 1
             '''
             # Filter on the same currency.
             if rule.match_same_currency:

@@ -21,11 +21,10 @@ class Users(models.Model):
         if tz:
             end_dt = timezone(tz).localize(end_dt).astimezone(UTC)
 
-        return ['&', '|',
+        return ['&',
                 '&',
                     '|', ['start', '>=', fields.Datetime.to_string(start_dt)], ['stop', '>=', fields.Datetime.to_string(start_dt)],
                     ['start', '<=', fields.Datetime.to_string(end_dt)],
-                '&', ['allday', '=', True], ['start_date', '=', fields.Date.to_string(start_date)],
                 ('attendee_ids.partner_id', '=', self.env.user.partner_id.id)]
 
     @api.model

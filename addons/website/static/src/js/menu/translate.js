@@ -50,7 +50,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         current.href = window.location.toString();
         current.search += (current.search ? '&' : '?') + 'enable_editor=1';
         // we are in translate mode, the pathname starts with '/<url_code/'
-        current.pathname = current.pathname.substr(current.pathname.indexOf('/', 1));
+        current.pathname = current.pathname.substr(Math.max(0, current.pathname.indexOf('/', 1)));
 
         var link = document.createElement('a');
         link.href = '/website/lang/default';

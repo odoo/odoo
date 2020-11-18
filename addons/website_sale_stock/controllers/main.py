@@ -9,7 +9,7 @@ from odoo.exceptions import ValidationError
 
 class WebsiteSaleStock(WebsiteSale):
     @http.route()
-    def payment_transaction(self, **kwargs):
+    def payment_transaction(self, *args, **kwargs):
         """ Payment transaction override to double check cart quantities before
         placing the order
         """
@@ -23,4 +23,4 @@ class WebsiteSaleStock(WebsiteSale):
                     values.append(_('You ask for %s products but only %s is available') % (cart_qty, avl_qty if avl_qty > 0 else 0))
         if values:
             raise ValidationError('. '.join(values) + '.')
-        return super(WebsiteSaleStock, self).payment_transaction(**kwargs)
+        return super(WebsiteSaleStock, self).payment_transaction(*args, **kwargs)

@@ -276,7 +276,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create and change events', async function (assert) {
-        assert.expect(26);
+        assert.expect(28);
 
         var calendar = await createCalendarView({
             View: CalendarView,
@@ -403,6 +403,14 @@ QUnit.module('Views', {
         assert.ok($newevent2.length, "should display the 2 days new record");
         assert.hasAttrValue($newevent2.closest('.fc-event-container'),
             'colspan', "2","the new record should have 2 days");
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(new event in quick create 2) .fc-content'));
+        var $popover_description = calendar.$('.o_cw_popover .o_cw_body .list-group-item');
+        assert.strictEqual($popover_description.children()[1].textContent,'December 20-21, 2016',
+            "The popover description should indicate the correct range");
+        assert.strictEqual($popover_description.children()[2].textContent,'(2 days)',
+            "The popover description should indicate 2 days");
+        await testUtils.dom.click(calendar.$('.o_cw_popover .fa-close'));
 
         // delete the a record
 
@@ -784,6 +792,40 @@ QUnit.module('Views', {
         assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri', "should apply m20 widget");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last strong').text(), 'user : ', "label should be a 'user'");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_form_uri').text(), 'partner 1', "value should be a 'partner 1'");
+
+        await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
+        assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('render popover with modifiers', async function (assert) {
+        assert.expect(3);
+
+        this.data.event.fields.priority = {string: "Priority", type: "selection", selection: [['0', 'Normal'], ['1', 'Important']],};
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week">'+
+                '<field name="priority" widget="priority" readonly="1"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click($('.fc-event:contains(event 4)'));
+
+        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
+        assert.containsOnce(calendar, '.o_cw_popover .o_priority span.o_priority_star', "priority field should not be editable");
 
         await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
         assert.containsNone(calendar, '.o_cw_popover', "should close a popover");

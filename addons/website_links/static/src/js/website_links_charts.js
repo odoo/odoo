@@ -104,7 +104,7 @@ var PieChart = publicWidget.Widget.extend({
                 labels: labels,
                 datasets: [{
                     data: data,
-                    label: this.data[0].key,
+                    label: this.data.length > 0 ? this.data[0].key : _t('No data'),
                 }]
             },
         };

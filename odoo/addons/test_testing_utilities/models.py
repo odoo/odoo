@@ -103,6 +103,7 @@ class M2MSub(models.Model):
     _description = 'Testing Utilities Subtraction 2'
 
     name = fields.Char()
+    m2o_ids = fields.Many2many('test_testing_utilities.m2o')
 
 class M2MChange2(models.Model):
     _name = 'test_testing_utilities.f'

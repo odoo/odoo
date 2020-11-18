@@ -1065,7 +1065,7 @@ var MailManager =  AbstractService.extend({
      */
     _redirectPartner: function (resModel, resID, dmRedirection) {
         var self = this;
-        var domain = [['partner_id', '=', resID]];
+        var domain = [['partner_id', '=', resID], ['share', '=', false]];
         this._rpc({
                 model: 'res.users',
                 method: 'search',

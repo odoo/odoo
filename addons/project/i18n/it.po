@@ -19,11 +19,8 @@
 # Paolo Valier, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
-# Luigia Cimmino Caserta <lcc@odoo.com>, 2019
-# Davide Speranza <dsp@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
 # Mario Riva <mario.riva@gmail.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
@@ -243,8 +240,8 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Spett.le ${object.partner_id.name or 'customer'},<br/>\n"
-"    La ringraziamo per la sua richiesta.<br/>\n"
-"    Per qualsiasi altra domanda, non esiti a contattarci.\n"
+"    La ringraziamo per la Sua richiesta.<br/>\n"
+"    Per qualsiasi domanda, non esiti a contattarci.\n"
 "    <br/><br/>\n"
 "    Grazie,\n"
 "    <br/>\n"
@@ -426,7 +423,7 @@ msgstr "Attività"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Eccezione"
+msgstr "Decorazione eccezione attività"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
@@ -540,7 +537,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "In archivio"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -902,12 +899,12 @@ msgstr "Valuta"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr "Fase corrente del lavoro"
+msgstr "Fase attuale del lavoro"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr "Fase corrente di questo lavoro"
+msgstr "Fase attuale di questo lavoro"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1028,6 +1025,11 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Definisce la visibilità dei lavori del progetto:\n"
+"- Dipendenti invitati: i dipendenti possono vedere solo i progetti e i lavori seguiti.\n"
+"- Tutti i dipendenti: i dipendenti possono vedere tutti i progetti e i lavori.\n"
+"- Utenti del portale e tutti i dipendenti: i dipendenti possono vedere tutti i progetti e i lavori, gli utenti del portale solo quelli\n"
+"   seguiti da loro o da qualcuno dell'azienda."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1093,7 +1095,9 @@ msgstr "Nome visualizzato"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Non hai accesso, salta questi dati per l'e-mail digest dell'utente"
+msgstr ""
+"Accesso non consentito, saltare questi dati nell'e-mail di riepilogo "
+"dell'utente"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1169,7 +1173,7 @@ msgstr "Modello e-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "CC e-mail"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1193,7 +1197,7 @@ msgstr "Errore, impossibile creare gerarchie ricorsive nei lavori."
 msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
 "Errore! La data di inizio del progetto deve essere antecedente alla data di "
-"chiusura."
+"fine."
 
 #. module: project
 #. openerp-web
@@ -1482,8 +1486,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Se il campo attivo è impostato a «Falso», consente di nascondere il progetto"
-" senza rimuoverlo."
+"Se il campo attivo è impostato a falso, consente di nascondere il progetto "
+"senza rimuoverlo."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -1624,7 +1628,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Etichetta usata per i lavori del progetto."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1686,7 +1690,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr "Ultime attività"
+msgstr "Attività in ritardo"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1881,7 +1885,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Newest"
-msgstr "I più recenti"
+msgstr "Più recenti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_activity
@@ -2221,7 +2225,7 @@ msgstr "Progetto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
-msgstr "Totale progetti"
+msgstr "Numero progetti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id

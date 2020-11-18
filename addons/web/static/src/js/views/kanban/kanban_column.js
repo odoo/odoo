@@ -3,6 +3,7 @@ odoo.define('web.KanbanColumn', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
+var session = require('web.session');
 var Dialog = require('web.Dialog');
 var KanbanRecord = require('web.KanbanRecord');
 var RecordQuickCreate = require('web.kanban_record_quick_create');
@@ -327,6 +328,7 @@ var KanbanColumn = Widget.extend({
         new view_dialogs.FormViewDialog(this, {
             res_model: this.relation,
             res_id: this.id,
+            context: session.user_context,
             title: _t("Edit Column"),
             on_saved: this.trigger_up.bind(this, 'reload'),
         }).open();

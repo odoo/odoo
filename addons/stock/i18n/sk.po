@@ -335,7 +335,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
-msgstr "<span class=\"o_stat_text\">Poruke</span>"
+msgstr "<span class=\"o_stat_text\">Na sklade</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -438,7 +438,7 @@ msgstr "<strong>Min množstvo :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr "<strong>Na strane množstva</strong>"
+msgstr "<strong>Množstvo na sklade</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -656,7 +656,7 @@ msgstr "Rozšírené plánovanie"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Pokročilé: Použiť Pravidlá Obstarávania"
+msgstr "Pokročilé: Použiť pravidlá obstarávania"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert
@@ -795,7 +795,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
-msgstr ""
+msgstr "Priraďte sériové čísla"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1687,8 +1687,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or draft manufacturing orders to resupply your stock."
 msgstr ""
-"Definuje pravidlo minimálnych zásob tak aby Odoo automaticky vyžiadal ponuku"
-" alebo návrh výroby na doplnenie skladu."
+"Definuje pravidlo minimálnych zásob tak aby Odoo automaticky vyžiadal cenovú"
+" ponuku alebo návrh výroby na doplnenie skladu."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2271,7 +2271,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Predpokladané zásoby"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -3110,7 +3110,7 @@ msgstr "Naposledy upravované"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr ""
+msgstr "Posledný dátum, kedy bolo vypočítané množstvo k dispozícií"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -3250,6 +3250,8 @@ msgid ""
 "Log an exception on the picking if this move has to be delayed (due to a "
 "change in the previous move scheduled date)."
 msgstr ""
+"Zaznamenajte výnimku pri výbere, ak musí byť tento presun oneskorený (z "
+"dôvodu zmeny v naplánovanom dátume predchádzajúceho presunu)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -3315,12 +3317,12 @@ msgstr "Názov šarže/sériového čísla"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Šarže / sériové čísla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
 msgid "Lots & Serial Numbers"
-msgstr "Šarže & Sériové čísla"
+msgstr "Šarže & sériové čísla"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3343,7 +3345,7 @@ msgstr "Šarže alebo sériové čísla neboli poskytnuté sledovaným produktom
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr "Šarže / Sériové čísla"
+msgstr "Šarže / sériové čísla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -3372,7 +3374,7 @@ msgstr "Spravovať rôznych vlastníkov skladu"
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr "Spravovať Šarže / Sériové čísla"
+msgstr "Spravovať šarže / sériové čísla"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -3608,7 +3610,7 @@ msgstr "Nový pohyb:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
 msgid "New Quantity on Hand"
-msgstr "Nové množstvo skladom"
+msgstr "Nové množstvo k dispozícií na sklade"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -3777,7 +3779,7 @@ msgstr "Na sklade"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Množstvo k dispozícií na sklade"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4245,6 +4247,12 @@ msgid "Please add some items to move."
 msgstr "Prosím pridajte nejaké položky na presun."
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -4432,7 +4440,7 @@ msgstr "Produktové balenia"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Aktualizovať množstvo produktu "
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
@@ -4617,7 +4625,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, python-format
 msgid "Putaway Rules"
-msgstr ""
+msgstr "Odložené pravidlá"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4627,7 +4635,7 @@ msgstr "Odložiť:"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
 msgid "Putaways Rules"
-msgstr ""
+msgstr "Odložené pravidlá"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -4706,7 +4714,7 @@ msgstr "Viacnásobné množstvo"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Quantity On Hand"
-msgstr "Množstvo skladom"
+msgstr "Množstvo k dispozícií na sklade"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reserved_availability
@@ -4898,7 +4906,7 @@ msgstr "Prijaté množstvo"
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr ""
+msgstr "Prepočítajte množstvo k dispozícií na sklade"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -6072,7 +6080,7 @@ msgstr "Názov skladiska musí byť unikány pre spoločnosť!t"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr ""
+msgstr "Počet generovaných sériových čísel musí byť väčší ako nula."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -6153,6 +6161,8 @@ msgid ""
 "The scheduled date has been automatically updated due to a delay on <a "
 "href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>."
 msgstr ""
+"Naplánovaný dátum bol automaticky aktualizovaný z dôvodu meškania <a "
+"href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6161,6 +6171,8 @@ msgid ""
 "The scheduled date should be updated due to a delay on <a href='#' data-oe-"
 "model='%s' data-oe-id='%s'>%s</a>."
 msgstr ""
+"Plánovaný dátum by sa mal aktualizovať z dôvodu meškania <a href='#' data-"
+"oe-model='%s' data-oe-id='%s'>%s</a>."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6758,7 +6770,7 @@ msgstr "Aktualizovať množstvo produktu"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Update Quantity"
-msgstr ""
+msgstr "Aktualizovať množstvo"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__2
@@ -6770,7 +6782,7 @@ msgstr "Súrne"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_existing_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Použiť existujúce Šarže / Sériové čísla"
+msgstr "Použiť existujúce šarže / sériové čísla"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -7247,7 +7259,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
-msgstr ""
+msgstr "Miesto nemôžete archivovať %s ako to používa váš sklad %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7421,6 +7433,8 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
+"Na sklade máte výrobky, ktoré nemajú sériové číslo. Priradenie šarže / "
+"sériové číslo môžete vykonať vykonaním úpravy zásob."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0

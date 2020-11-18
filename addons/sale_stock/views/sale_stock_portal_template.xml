@@ -21,7 +21,10 @@
                                 <a t-att-href="delivery_report_url">
                                     <span t-esc="i.name"/>
                                 </a>
-                                <div class="small d-lg-inline-block ml-3">Date: <span class="text-muted" t-field="i.date" t-options="{'date_only': True}"/></div>
+                                <div class="small d-lg-inline-block ml-3">Date:
+                                    <span t-if="i.state == 'done'" class="text-muted" t-field="i.date_done" t-options="{'date_only': True}"/>
+                                    <span t-if="i.state != 'done'" class="text-muted" t-field="i.scheduled_date" t-options="{'date_only': True}"/>
+                                </div>
                             </div>
                             <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-truck"/> <b>Shipped</b></span>
                             <span t-if="i.state == 'cancel'" class="small badge badge-danger orders_label_text_align"><i class="fa fa-fw fa-times"/> <b>Cancelled</b></span>

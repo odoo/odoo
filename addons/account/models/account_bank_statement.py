@@ -815,6 +815,7 @@ class AccountBankStatementLine(models.Model):
             aml_dict['payment_id'] = payment and payment.id or False
             aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
+            move.update_lines_tax_exigibility() # Needs to be called manually as lines were created 1 by 1
             move.post()
             #record the move name on the statement line to be able to retrieve it in case of unreconciliation
             self.write({'move_name': move.name})

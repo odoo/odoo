@@ -423,6 +423,7 @@ class SurveyUserInputLine(models.Model):
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
+            vals.pop('answer_score', False)
             vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
             self.create(vals)
 

@@ -393,7 +393,9 @@ var StatementModel = BasicModel.extend({
             args: [ids, excluded_ids],
             context: self.context,
         })
-        .then(self._formatLine.bind(self));
+        .then(function(res){
+            return self._formatLine(res['lines']);
+        })
     },
     /**
      * Reload all data
@@ -493,6 +495,9 @@ var StatementModel = BasicModel.extend({
                var analyticTagIds = [];
                 for (var i=0; i<reconcileModels.length; i++) {
                     var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                    if (reconcileModels[i].has_second_line) {
+                        modelTags = _.union(modelTags, reconcileModels[i].second_analytic_tag_ids || [])
+                    }
                     for (var j=0; j<modelTags.length; j++) {
                         if (analyticTagIds.indexOf(modelTags[j]) === -1) {
                             analyticTagIds.push(modelTags[j]);
@@ -509,6 +514,17 @@ var StatementModel = BasicModel.extend({
                             analyticTagData.push([tagId, self.analyticTags[tagId].display_name])
                         }
                         recModel.analytic_tag_ids = analyticTagData;
+                        if (recModel.has_second_line) {
+                            var secondAnalyticTagData = [];
+                            var modelTags = recModel.second_analytic_tag_ids || [];
+                            for (var j=0; j<modelTags.length; j++) {
+                                var tagId = modelTags[j];
+                                secondAnalyticTagData.push([tagId, self.analyticTags[tagId].display_name])
+                            }
+                            if (secondAnalyticTagData.length > 0){
+                                recModel.second_analytic_tag_ids = secondAnalyticTagData;
+                            }
+                        }
                     }
                     self.reconcileModels = reconcileModels;
                 });
@@ -679,6 +695,16 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
+        if (prop.reconcileModelId){
+            // check for a first line of the same reconciliation model
+            prop = _.find(line.reconciliation_proposition, function(proposition){
+                return proposition.__focus == true &&
+                    proposition.to_check == false &&
+                    proposition.reconcileModelId == prop.reconcileModelId &&
+                    proposition.label == prop.label &&
+                    proposition.id.includes('createLine');
+                }) || prop;
+        }
         if ('to_check' in values && values.to_check === false) {
             // check if we have another line with to_check and if yes don't change value of this proposition
             prop.to_check = line.reconciliation_proposition.some(function(rec_prop, index) {

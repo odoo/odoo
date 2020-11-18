@@ -728,3 +728,72 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
         self.assertAlmostEqual(report_values['lines']['total'], 2.92)
+
+    def test_validate_no_bom_line_with_same_product(self):
+        """
+        Cannot set a BOM line on a BOM with the same product as the BOM itself
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        finished = self.env['product.product'].create({
+            'name': 'Finished',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = finished.product_tmpl_id
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = finished
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+            bom_finished = bom_finished.save()
+
+    def test_validate_no_bom_line_with_same_product_variant(self):
+        """
+        Cannot set a BOM line on a BOM with the same product variant as the BOM itself
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = self.product_7_template
+        bom_finished.product_id = self.product_7_3
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = self.product_7_3
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+            bom_finished = bom_finished.save()
+        
+    def test_validate_bom_line_with_different_product_variant(self):
+        """
+        Can set a BOM line on a BOM with a different product variant as the BOM itself (same product)
+        Usecase for example A black T-shirt made  from a white T-shirt and
+        black color.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = self.product_7_template
+        bom_finished.product_id = self.product_7_3
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = self.product_7_2
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        bom_finished = bom_finished.save()
+
+    def test_validate_bom_line_with_variant_of_bom_product(self):
+        """
+        Can set a BOM line on a BOM with a product variant when the BOM has no variant selected
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = self.product_6.product_tmpl_id
+        # no product_id
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = self.product_7_2
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        bom_finished = bom_finished.save()

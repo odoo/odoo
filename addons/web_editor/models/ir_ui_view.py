@@ -81,9 +81,10 @@ class IrUiView(models.Model):
             'arch': self._pretty_arch(arch),
             'key': '%s_%s' % (self.key, el.get('id')),
             'type': 'qweb',
+            'mode': 'extension',
         }
         vals.update(self._save_oe_structure_hook())
-        self.create(vals)
+        self.env['ir.ui.view'].create(vals)
 
         return True
 

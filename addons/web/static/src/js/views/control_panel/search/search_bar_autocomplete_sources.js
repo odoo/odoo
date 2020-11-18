@@ -213,6 +213,13 @@ var NumberField = Field.extend({
         if (isNaN(val)) { return Promise.resolve(); }
         return this._super.apply(this, arguments);
     },
+
+    /**
+     * @override
+     */
+    _valueFrom: function (facetValue) {
+        return this.parse(facetValue.value);
+    },
 });
 
 var IntegerField = NumberField.extend({

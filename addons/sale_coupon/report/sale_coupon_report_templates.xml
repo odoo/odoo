@@ -11,7 +11,7 @@
                                     Congratulations
                                     <t t-esc="o.partner_id.name"/>,
                                 </h4>
-                                <t t-set="text" t-value="'OFF ON YOUR NEXT ORDER !'"/>
+                                <t t-set="text">OFF ON YOUR NEXT ORDER!</t>
                                 <t t-if="o.program_id.reward_type == 'discount'">
                                     <h1 t-if="o.program_id.discount_type == 'fixed_amount'" class="text-success">
                                         <strong><span t-field="o.program_id.discount_fixed_amount" t-options='{"widget": "monetary", "display_currency": o.program_id.currency_id}'/></strong>
@@ -21,22 +21,24 @@
                                     </h1>
                                     <t t-if="o.program_id.discount_apply_on == 'specific_products'">
                                         <t t-if="len(o.program_id.discount_specific_product_ids) > 1">
-                                            <t t-set="text" t-value="'OFF ON SOME PRODUCTS*'"/>
+                                            <t t-set="text">OFF ON SOME PRODUCTS*</t>
                                             <t t-set="display_specific_products" t-value="True"/>
                                         </t>
                                         <t t-else="">
-                                            <t t-set="text" t-value="'OFF ON %s' % o.program_id.discount_specific_product_ids.name.upper()"/>
+                                            <t t-set="text">OFF ON %s</t>
+                                            <t t-set="text" t-value="text % o.program_id.discount_specific_product_ids.name.upper()"/>
                                         </t>
                                     </t>
                                     <t t-if="o.program_id.discount_apply_on == 'cheapest_product'">
-                                        <t t-set="text" t-value="'%s' % ('OFF ON THE CHEAPEST PRODUCT')"/>
+                                        <t t-set="text">OFF ON THE CHEAPEST PRODUCT</t>
                                     </t>
                                 </t>
                                 <t t-if="o.program_id.reward_type == 'product'">
-                                    <t t-set="text" t-value="'GET %s FREE %s ON YOUR NEXT ORDER !' % (o.program_id.reward_product_quantity, o.program_id.reward_product_id.name.upper())"/>
+                                    <t t-set="text">GET %s FREE %s ON YOUR NEXT ORDER!</t>
+                                    <t t-set="text" t-value="text % (o.program_id.reward_product_quantity, o.program_id.reward_product_id.name.upper())"/>
                                 </t>
                                 <t t-if="o.program_id.reward_type == 'free_shipping'">
-                                    <t t-set="text" t-value="'GET FREE SHIPPING ON YOUR NEXT ORDER !'"/>
+                                    <t t-set="text">GET FREE SHIPPING ON YOUR NEXT ORDER!</t>
                                 </t>
                                 <h3 t-esc="text"/>
                                 <h3 t-if="o.expiration_date">
@@ -83,8 +85,8 @@
     <template id="report_coupon_i18n">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-                <t t-call="sale_coupon.report_coupon" t-lang="o.partner_id.lang"/>
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang or o.env.lang)"/>
+                <t t-call="sale_coupon.report_coupon" t-lang="o.partner_id.lang or o.env.lang"/>
             </t>
         </t>
     </template>

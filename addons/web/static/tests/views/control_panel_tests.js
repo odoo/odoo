@@ -624,6 +624,39 @@ QUnit.module('Views', {
         controlPanel.destroy();
     });
 
+    QUnit.test('load favorite with group_by', async function (assert) {
+        assert.expect(2);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search></search>",
+            data: this.data,
+            intercepts: {
+                load_filters: function (ev) {
+                    ev.data.on_success([
+                        {
+                            user_id: [2,"Mitchell Admin"],
+                            name: 'favorite 1',
+                            id: 5,
+                            context: "{'group_by': ['company_id'], 'test': 'test'}",
+                            sort: "[]",
+                            domain: "[('user_id', '=', uid)]",
+                        }
+                    ]);
+                }
+            }
+        });
+
+        _.each(controlPanel.exportState().filters, function (filter) {
+            if (filter.type === 'favorite') {
+                assert.strictEqual(filter.context, JSON.stringify({'test': 'test'}), 'group_by should not be in context anymore');
+                assert.deepEqual(filter.groupBys, ['company_id'], 'group_by should have been moved from context to groupBys');
+            }
+        });
+
+        controlPanel.destroy();
+    });
+
     QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
         assert.expect(2);
 

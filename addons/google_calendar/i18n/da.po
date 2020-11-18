@@ -143,14 +143,14 @@ msgstr "Vil du gøre dette nu?"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Event disconnection error"
-msgstr ""
+msgstr "Event afbrudt forbindelse fejl"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Event disconnection success"
-msgstr ""
+msgstr "Event afbrudt forbindelse vellykket"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
@@ -160,7 +160,7 @@ msgstr "Google Kalender"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "Google Calendar Event Id"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -182,6 +182,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"Google er faret vild.. den næste synkronisering vil være en fuld synkronisering.\n"
+"\n"
+"%s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar__id
@@ -205,6 +208,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"Sidste kalender ID der er blevet synkroniseret. Hvis den er ændret, fjerner "
+"vi alle links mellem GoogleID og Odoo Google Internal ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
@@ -236,7 +241,7 @@ msgstr "Omdirigering"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr ""
+msgstr "Opdater token"
 
 #. module: google_calendar
 #. openerp-web
@@ -264,16 +269,28 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr ""
+"Kontoen du prøver at synkronisere (%s) er ikke den samme som den, der blev "
+"brugt sidt (%s)!"
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/google_calendar.py:278
+#, python-format
+msgid ""
+"The event \"%s\", %s (ID: %s) cannot be synchronized because of the "
+"following error: %s"
+msgstr ""
+"Begivenheden \"%s\", %s (ID: %s) kan ikke synkroniseres, på grund af "
+"følgende fejl: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr ""
+msgstr "Token gyldighed"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__server_uri
 msgid "URI for tuto"
-msgstr ""
+msgstr "URI til tuto"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token

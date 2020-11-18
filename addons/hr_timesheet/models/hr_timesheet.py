@@ -5,7 +5,7 @@ from lxml import etree
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountAnalyticLine(models.Model):
@@ -30,6 +30,15 @@ class AccountAnalyticLine(models.Model):
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = self.env.company.timesheet_encode_uom_id
+
+    @api.constrains('task_id', 'project_id')
+    def _check_task_project(self):
+        for line in self:
+            if line.task_id and line.project_id and line.task_id.project_id != line.project_id:
+                raise ValidationError(_(
+                    "The project and the task's project are inconsistent. " +
+                    "The selected task must be in the selected project."
+                ))
 
     @api.onchange('project_id')
     def onchange_project_id(self):

@@ -48,9 +48,9 @@ list of filtered posts (by date or tag).
 ============================================================================ -->
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
-        <t t-set="head" t-if="blog">
-            <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
-            <meta t-if="len(active_tag_ids) > 0" name="robots" t-attf-content="#{len(active_tag_ids) > 1 and 'noindex,'} nofollow"/>
+        <t t-set="head">
+            <link t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+            <meta t-if="len(active_tag_ids)" name="robots" t-attf-content="#{len(active_tag_ids) > 1 and 'noindex,'} nofollow"/>
         </t>
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->

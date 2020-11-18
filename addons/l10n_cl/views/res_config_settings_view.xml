@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.chilean.loc</field>
         <field name="model">res.config.settings</field>
@@ -10,11 +9,8 @@
                 <div id="l10n_cl_title" attrs="{'invisible': True}">
                     <h2>Chilean Localization</h2>
                 </div>
-                <div id="l10n_cl_section" class="row mt16 o_settings_container">
-                    <!-- inside empty to add configuration of tags -->
-                </div>
+                <div id="l10n_cl_section" class="row mt16 o_settings_container" groups="account.group_account_manager"/>
             </xpath>
         </field>
     </record>
-
 </odoo>

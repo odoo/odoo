@@ -728,7 +728,7 @@
 <t t-name="FieldRadio.button">
     <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
         <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
-            t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+            t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
         <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
@@ -851,15 +851,18 @@
 </t>
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable"/>
-    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-checked="true"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
     </button>
-    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-checked="false"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
     </button>
-    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
+    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-checked="false"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
     </button>

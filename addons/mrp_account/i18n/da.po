@@ -34,7 +34,7 @@ msgstr "Analysekonto"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr ""
+msgstr "Udregn pris fra stykliste"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -55,12 +55,12 @@ msgstr "Registrerede omkostninger"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr ""
+msgstr "Ekstra omkostning"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr ""
+msgstr "Ekstra omkostning per produceret enhed"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -87,7 +87,7 @@ msgstr "Produktionsordre"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
-msgstr ""
+msgstr "Vis evaluering"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
@@ -97,6 +97,10 @@ msgid ""
 " multiple times and only consider new entries in the work centers time "
 "lines."
 msgstr ""
+"Teknisk felt der automatisk tjekkes når en igangværende produktion posterer "
+"journalpostering for dens omkostninger. På denne måde kan vi registrere en "
+"produktions omkostninger flere gange, og kun tage højde for posteringer i "
+"arbejdscentrenes tidslinjer."
 
 #. module: mrp_account
 #: code:addons/mrp_account/models/product.py:0
@@ -105,6 +109,8 @@ msgid ""
 "The inventory valuation of some products %s is automated. You can only "
 "update their cost from the product form."
 msgstr ""
+"Inventar evalueringen for visse produkter %s er automatiseret. Du kan kun "
+"opdatere deres omkostning fra produkt formularen."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited

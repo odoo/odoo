@@ -3,12 +3,18 @@
 
 import datetime
 import logging
+from psycopg2 import OperationalError
+
 
 from odoo import api, fields, models, tools
 from odoo.addons.iap import InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
 
+EMAIL_PROVIDERS = ['gmail.com', 'hotmail.com', 'yahoo.com', 'qq.com',
+                   'outlook.com', '163.com', 'yahoo.fr', 'live.com',
+                   'hotmail.fr', 'icloud.com', '126.com', 'me.com',
+                   'free.fr', 'ymail.com', 'msn.com', 'mail.com']
 
 class Lead(models.Model):
     _inherit = 'crm.lead'
@@ -42,37 +48,63 @@ class Lead(models.Model):
         leads.iap_enrich(from_cron=True)
 
     def iap_enrich(self, from_cron=False):
-        lead_emails = {}
-        for lead in self:
-            # If lead is lost, active == False, but is anyway removed from the search in the cron.
-            if lead.probability == 100 or lead.iap_enrich_done:
-                continue
-            normalized_email = tools.email_normalize(lead.partner_address_email) or tools.email_normalize(lead.email_from)
-            if normalized_email:
-                lead_emails[lead.id] = normalized_email.split('@')[1]
-            else:
-                lead.message_post_with_view(
-                    'crm_iap_lead_enrich.mail_message_lead_enrich_no_email',
-                    subtype_id=self.env.ref('mail.mt_note').id)
+        # Split self in a list of sub-recordsets or 50 records to prevent timeouts
+        batches = [self[index:index + 50] for index in range(0, len(self), 50)]
+        for leads in batches:
+            lead_emails = {}
+            with self._cr.savepoint():
+                try:
+                    self._cr.execute(
+                        "SELECT 1 FROM {} WHERE id in %(lead_ids)s FOR UPDATE NOWAIT".format(self._table),
+                        {'lead_ids': tuple(leads.ids)}, log_exceptions=False)
+                    for lead in leads:
+                        # If lead is lost, active == False, but is anyway removed from the search in the cron.
+                        if lead.probability == 100 or lead.iap_enrich_done:
+                            continue
 
-        if lead_emails:
-            try:
-                iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
-            except InsufficientCreditError:
-                _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
-                if not from_cron:
-                    data = {
-                        'url': self.env['iap.account'].get_credits_url('reveal'),
-                    }
-                    self[0].message_post_with_view(
-                        'crm_iap_lead_enrich.mail_message_lead_enrich_no_credit',
-                        values=data,
-                        subtype_id=self.env.ref('mail.mt_note').id)
-            except Exception as e:
-                _logger.info('Sent batch %s enrich requests: failed with exception %s', len(lead_emails), e)
-            else:
-                _logger.info('Sent batch %s enrich requests: success', len(lead_emails))
-                self._iap_enrich_from_response(iap_response)
+                        normalized_email = tools.email_normalize(lead.partner_address_email) or tools.email_normalize(lead.email_from)
+                        if not normalized_email:
+                            lead.message_post_with_view(
+                                'crm_iap_lead_enrich.mail_message_lead_enrich_no_email',
+                                subtype_id=self.env.ref('mail.mt_note').id)
+                            continue
+
+                        email_domain = normalized_email.split('@')[1]
+                        # Discard domains of generic email providers as it won't return relevant information
+                        if email_domain in EMAIL_PROVIDERS:
+                            lead.write({'iap_enrich_done': True})
+                            lead.message_post_with_view(
+                                'crm_iap_lead_enrich.mail_message_lead_enrich_notfound',
+                                subtype_id=self.env.ref('mail.mt_note').id)
+                        else:
+                            lead_emails[lead.id] = email_domain
+
+                    if lead_emails:
+                        try:
+                            iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
+                        except InsufficientCreditError:
+                            _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
+                            if not from_cron:
+                                data = {
+                                    'url': self.env['iap.account'].get_credits_url('reveal'),
+                                }
+                                leads[0].message_post_with_view(
+                                    'crm_iap_lead_enrich.mail_message_lead_enrich_no_credit',
+                                    values=data,
+                                    subtype_id=self.env.ref('mail.mt_note').id)
+                            # Since there are no credits left, there is no point to process the other batches
+                            break
+                        except Exception as e:
+                            _logger.info('Sent batch %s enrich requests: failed with exception %s', len(lead_emails), e)
+                        else:
+                            _logger.info('Sent batch %s enrich requests: success', len(lead_emails))
+                            self._iap_enrich_from_response(iap_response)
+                except OperationalError:
+                    _logger.error('A batch of leads could not be enriched :%s', repr(leads))
+                    continue
+            # Commit processed batch to avoid complete rollbacks and therefore losing credits.
+            if not self.env.registry.in_test_mode():
+                self.env.cr.commit()
 
     @api.model
     def _iap_enrich_from_response(self, iap_response):
@@ -83,6 +115,7 @@ class Lead(models.Model):
         for lead in self.search([('id', 'in', list(iap_response.keys()))]):  # handle unlinked data by performing a search
             iap_data = iap_response.get(str(lead.id))
             if not iap_data:
+                lead.write({'iap_enrich_done': True})
                 lead.message_post_with_view('crm_iap_lead_enrich.mail_message_lead_enrich_notfound', subtype_id=self.env.ref('mail.mt_note').id)
                 continue
 

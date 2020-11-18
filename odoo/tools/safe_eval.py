@@ -289,6 +289,7 @@ _BUILTINS = {
     'sum': sum,
     'reduce': functools.reduce,
     'filter': filter,
+    'sorted': sorted,
     'round': round,
     'len': len,
     'repr': repr,

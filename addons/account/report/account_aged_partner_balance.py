@@ -51,7 +51,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         move_state = ['draft', 'posted']
         if target_move == 'posted':
             move_state = ['posted']
-        arg_list = (tuple(move_state), tuple(account_type), date_from, date_from,)
+        arg_list = (tuple(move_state), tuple(account_type), date_from,)
         if 'partner_ids' in ctx:
             if ctx['partner_ids']:
                 partner_clause = 'AND (l.partner_id IN %s)'
@@ -76,16 +76,16 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (account_account.internal_type IN %s)
                 AND (
                         l.reconciled IS NOT TRUE
-                        OR l.id IN(
-                            SELECT credit_move_id FROM account_partial_reconcile where max_date > %s
-                            UNION ALL
-                            SELECT debit_move_id FROM account_partial_reconcile where max_date > %s
+                        OR EXISTS (
+                            SELECT id FROM account_partial_reconcile where max_date > %s
+                            AND (credit_move_id = l.id OR debit_move_id = l.id)
                         )
                     )
                     ''' + partner_clause + '''
                 AND (l.date <= %s)
                 AND l.company_id IN %s
-            ORDER BY UPPER(res_partner.name)'''
+            ORDER BY UPPER(res_partner.name)
+            '''
         arg_list = (self.env.company.id,) + arg_list
         cr.execute(query, arg_list)
 
@@ -100,6 +100,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if not partner_ids:
             return [], [], {}
 
+        lines[False] = []
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []

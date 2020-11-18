@@ -56,7 +56,7 @@ msgstr "${object.company_id.name} Objednávka (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr ""
+msgstr "'Žiadosť o cenovú ponuku - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -140,13 +140,13 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"       Posielame v prílohe požiadavku na ponuku <strong>${object.name}</strong>\n"
+"       V prílohe vám posielame žiadosť o cenovú ponuku <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            s referenciou: ${object.partner_ref}\n"
 "        % endif\n"
 "        od ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"       V prípade akýchkoľvek otázok nás neváhajte kontaktovať.\n"
+"       V prípade akýchkoľvek otázok, nás neváhajte kontaktovať.\n"
 "        <br/><br/>\n"
 "        S pozdravom,\n"
 "    </p>\n"
@@ -194,7 +194,7 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Požiadavka na ponuku </span>\n"
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Požiadavka na cenovú ponuku </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Nákupná objednávka </span>"
 
 #. module: purchase
@@ -280,7 +280,7 @@ msgstr "<strong>Dane</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "<strong>The ordered quantity has been updated.</strong>"
-msgstr "<strong>Objednané množstvo bolo upravené.</strong>"
+msgstr "<strong>Objednané množstvo bolo aktualizované.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2282,8 +2282,8 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
-"Vaša ponuka obsahuje produkty od spoločnosti %s zatiaľ čo vaša Cenová ponuka patrí spoločnosti %s. \n"
-" Zmeňte spoločnosť v Cenovej ponuke alebo odstráňte produkty od iných spoločností (%s)."
+"Vaša cenová ponuka obsahuje produkty od spoločnosti %s zatiaľ čo vaša cenová ponuka patrí spoločnosti %s. \n"
+" Prosím zmeňte spoločnosť v cenovej ponuke alebo odstráňte produkty od iných spoločností (%s)."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0

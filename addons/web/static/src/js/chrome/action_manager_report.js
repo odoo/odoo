@@ -189,6 +189,7 @@ ActionManager.include({
                     return value += activeIDsPath;
                 });
             }
+            reportUrls.html += '?context=' + encodeURIComponent(JSON.stringify(session.user_context));
         } else {
             var serializedOptionsPath = '?options=' + encodeURIComponent(JSON.stringify(action.data));
             serializedOptionsPath += '&context=' + encodeURIComponent(JSON.stringify(action.context));

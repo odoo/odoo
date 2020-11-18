@@ -247,3 +247,11 @@ class One2manyCase(TransactionCase):
         # delete parent, and check that recomputation ends
         parent.unlink()
         parent.flush()
+
+    def test_compute_stored_many2one_one2many(self):
+        container = self.env['test_new_api.compute.container'].create({'name': 'Foo'})
+        self.assertFalse(container.member_ids)
+        member = self.env['test_new_api.compute.member'].create({'name': 'Foo'})
+        # at this point, member.container_id must be computed for member to
+        # appear in container.member_ids
+        self.assertEqual(container.member_ids, member)
