@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Senegal, 2020-08-18
+=======
+Senegal, 2020-11-18
+>>>>>>> 8fb3ac415c8... temp
 
 Optesis SA agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -13,5 +17,8 @@ Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/
 List of contributors:
 
 Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/optesis-ibg
+<<<<<<< HEAD
 Abdel Rahaman TOUKOUROU 44700268+optesis-art@users.noreply.github.com https://github.com/optesis-art
+=======
+>>>>>>> 8fb3ac415c8... temp
 Khalifa KANE 44680721+optesis-khk@users.noreply.github.com https://github.com/optesis-khk
