@@ -414,9 +414,13 @@ class IrModel(models.Model):
     def _add_manual_models(self):
         """ Add extra models to the registry. """
         # clean up registry first
-        custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
-        for name in custom_models:
-            del self.pool[name]
+        for name, Model in list(self.pool.items()):
+            if Model._custom:
+                del self.pool.models[name]
+                # remove the model's name from its parents' _inherit_children
+                for Parent in Model.__bases__:
+                    if hasattr(Parent, 'pool'):
+                        Parent._inherit_children.discard(name)
         # add manual models
         cr = self.env.cr
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
