@@ -24,6 +24,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/digest_data.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',
+        'data/ir_cron_data.xml',
         'views/account_payment_view.xml',
         'wizard/account_automatic_entry_wizard_views.xml',
         'wizard/account_unreconcile_view.xml',

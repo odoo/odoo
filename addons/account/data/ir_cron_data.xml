@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- below cron will mostly be used by localization modules which wants to load XSD files from their government portals. -->
+    <record id="ir_cron_load_xsd_file" model="ir.cron">
+        <field name="name">Load XSD File(s)</field>
+        <field name="model_id" ref="base.model_ir_attachment"/>
+        <!-- Setting highest priority to execute this cron immediately after it is activated. -->
+        <field name="priority" eval="0"/>
+        <field name="state">code</field>
+        <!-- Modules which wants to load XSD will activate this cron with appropriate function parameters. -->
+        <field name="code">model._load_xsd_files(reload_app_list=[])</field>
+        <field name="active" eval="0"/>
+    </record>
+</odoo>
