@@ -94,7 +94,7 @@ class AccountReconcileModelLine(models.Model):
         for record in self:
             if record.amount_type == 'fixed' and record.amount == 0:
                 raise UserError(_('The amount is not a number'))
-            if record.amount_type == 'percentage' and not 0 < record.amount <= 100:
+            if record.amount_type == 'percentage' and not 0 < record.amount:
                 raise UserError(_('The amount is not a percentage'))
             if record.amount_type == 'regex':
                 try:
