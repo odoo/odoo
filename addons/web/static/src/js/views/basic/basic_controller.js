@@ -80,28 +80,69 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *          if there is something to discard or not
      *          rejected otherwise
      */
-    canBeDiscarded: function (recordID) {
+    canBeDiscarded: function (recordID, options) {
         var self = this;
         if (this.discardingDef) {
             // discard dialog is already open
             return this.discardingDef;
         }
         if (!this.isDirty(recordID)) {
-            return Promise.resolve(false);
+            return Promise.resolve({ needDiscard: false });
         }
 
-        var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
+        var message = _t("Would you like to save your changes?");
         this.discardingDef = new Promise(function (resolve, reject) {
+            const confirmCallback = () => {
+                resolve({ needDiscard: true});
+                // enable buttons if user first save which fails because of required field missed
+                // and then confirm discard changes dialog
+                self._enableButtons();
+                self.discardingDef = null;
+            };
+            const cancelCallback = () => {
+                reject();
+                // enable buttons if user first save which fails because of required field missed
+                // and then cancel confirmation dialog
+                self._enableButtons();
+                self.discardingDef = null;
+            };
             var dialog = Dialog.confirm(self, message, {
-                title: _t("Warning"),
-                confirm_callback: () => {
-                    resolve(true);
-                    self.discardingDef = null;
-                },
-                cancel_callback: () => {
-                    reject();
-                    self.discardingDef = null;
-                },
+                title: _t("Unsaved changes"),
+                buttons: [
+                    {
+                        text: _t("Save"),
+                        classes: 'btn-primary',
+                        close: true,
+                        click: () => {
+                            self._disableButtons();
+                            const canBeAbandoned = self.model.canBeAbandoned(recordID);
+                            const prom = options.saveFunction ? options.saveFunction() : self.saveRecord(recordID);
+                            return prom.then(() => {
+                                self._enableButtons();
+                                if (options.onSaved) {
+                                    options.onSaved();
+                                }
+                                resolve({ needDiscard: true, forceAbandon: canBeAbandoned });
+                                self.discardingDef = null;
+                            }, () => {
+                                self._enableButtons();
+                                reject();
+                                self.discardingDef = null;
+                            });
+                        },
+                    },
+                    {
+                        text: _t("Discard"),
+                        close: true,
+                        click: confirmCallback,
+                    },
+                    {
+                        text: _t("Stay Here"),
+                        close: true,
+                        click: cancelCallback,
+                    }
+                ],
+                onForceClose: cancelCallback,
             });
             dialog.on('closed', self.discardingDef, reject);
         });
@@ -382,16 +423,20 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         recordID = recordID || this.handle;
         options = options || {};
-        return this.canBeDiscarded(recordID)
-            .then(function (needDiscard) {
-                if (options.readonlyIfRealDiscard && !needDiscard) {
+        return this.canBeDiscarded(recordID, options)
+            .then(function (result) {
+                if (!result) {
                     return;
                 }
+                if (options.readonlyIfRealDiscard && !result.needDiscard) {
+                    return;
+                }
+                const canBeAbandoned = self.model.canBeAbandoned(recordID);
                 self.model.discardChanges(recordID);
                 if (options.noAbandon) {
                     return;
                 }
-                if (self.model.canBeAbandoned(recordID)) {
+                if (canBeAbandoned || result.forceAbandon) {
                     self._abandonRecord(recordID);
                     return;
                 }

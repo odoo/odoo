@@ -181,7 +181,7 @@ var FormController = BasicController.extend({
             return null;
         }
         return Object.assign(this._super(...arguments), {
-            validate: this.canBeDiscarded.bind(this),
+            validate: this.canBeDiscarded.bind(this, this.handle),
         });
     },
     /**

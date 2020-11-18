@@ -61,6 +61,7 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this.lastFieldChangedEvent = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
         this.isExportEnable = false;
@@ -354,7 +355,7 @@ var ListController = BasicController.extend({
      * @param {string} [recordID] - default to main recordID
      * @returns {Promise}
      */
-    _discardChanges: function (recordID) {
+    _discardChanges: function (recordID, options) {
         if ((recordID || this.handle) === this.handle) {
             recordID = this.renderer.getEditableRecordID();
             if (recordID === null) {
@@ -362,7 +363,7 @@ var ListController = BasicController.extend({
             }
         }
         var self = this;
-        return this._super(recordID).then(function () {
+        return this._super(recordID, options).then(function () {
             self.updateButtons('readonly');
         });
     },
@@ -730,7 +731,27 @@ var ListController = BasicController.extend({
      */
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
-        this._discardChanges();
+        const saveMulti = () => {
+            // lastFieldChangedEvent will have information of last field_changed event
+            // if lastFieldChangedEvent.data.__originalComponent is set, it is the field Component
+            // that triggered field_changed last, otherwise lastFieldChangedEvent.target is the legacy
+            // field Widget
+            const target = this.lastFieldChangedEvent.data.__originalComponent || this.lastFieldChangedEvent.target;
+            this.multipleRecordsSavingPromise =
+                this._saveMultipleRecords(this.lastFieldChangedEvent.data.dataPointID, target.__node, this.lastFieldChangedEvent.data.changes);
+            return this.multipleRecordsSavingPromise;
+        };
+        const onSaved = () => {
+            this.reload();
+        };
+        const recordID = this.lastFieldChangedEvent && this.lastFieldChangedEvent.data.dataPointID;
+        if (recordID && this.renderer.isInMultipleRecordEdition(recordID)) {
+            this._discardChanges(false, { saveFunction: saveMulti, onSaved: onSaved }).then(() => {
+                this.fieldChangedPrevented = false;
+            });
+        } else {
+            this._discardChanges(false, { onSaved: onSaved });
+        }
     },
     /**
      * Used to detect if the discard button is about to be clicked.
@@ -745,11 +766,11 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = true;
         window.addEventListener('mouseup', function (mouseupEvent) {
             var preventedEvent = self.fieldChangedPrevented;
-            self.fieldChangedPrevented = false;
             // If the user starts clicking (mousedown) on the button and stops clicking
             // (mouseup) outside of the button, we want to trigger the original onFieldChanged
             // Event that was prevented in the meantime.
             if (ev.target !== mouseupEvent.target && preventedEvent.constructor.name === 'OdooEvent') {
+                self.fieldChangedPrevented = false;
                 self._onFieldChanged(preventedEvent);
             }
         }, { capture: true, once: true });
@@ -820,6 +841,7 @@ var ListController = BasicController.extend({
     _onFieldChanged: function (ev) {
         ev.stopPropagation();
         const recordId = ev.data.dataPointID;
+        this.lastFieldChangedEvent = ev;
 
         if (this.fieldChangedPrevented) {
             this.fieldChangedPrevented = ev;

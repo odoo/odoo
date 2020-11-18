@@ -222,7 +222,7 @@ QUnit.module('base_settings_tests', {
         await testUtils.dom.click(actionManager.$('button[name="4"]'));
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
-        await testUtils.dom.click($('.modal button:contains(Ok)'));
+        await testUtils.dom.click($('.modal button:contains(Discard)'));
         assert.containsOnce(actionManager, '.o_list_view', "should be open list view");
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
@@ -233,7 +233,7 @@ QUnit.module('base_settings_tests', {
         await testUtils.dom.click(actionManager.$('button[name="4"]'));
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
-        await testUtils.dom.click($('.modal button:contains(Cancel)'));
+        await testUtils.dom.click($('.modal button:contains(Stay Here)'));
         assert.containsOnce(actionManager, '.o_form_view' ,"should be remain on form view");
 
         await testUtils.dom.click(actionManager.$("button[name='execute']"));

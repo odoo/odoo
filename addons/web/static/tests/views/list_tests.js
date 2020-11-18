@@ -10,6 +10,7 @@ var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
 var fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
+const ListController = require('web.ListController');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
@@ -6506,7 +6507,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal:visible').length, 1,
             "a modal to ask for discard should be visible");
 
-        await testUtils.dom.click($('.modal:visible .btn-primary'));
+        await testUtils.dom.click($('.modal:visible .btn-secondary:eq(0)'));
         assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
             "first cell should still contain 'yop'");
 
@@ -7641,10 +7642,178 @@ QUnit.module('Views', {
         $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
         await testUtils.dom.click($discardButton);
 
-        assert.ok($('.modal').text().includes("Warning"), "Modal should ask to discard changes");
-        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-secondary:eq(0)'));
 
         assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "yop");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: clicking on Discard button in multi edition and Save', async function (assert) {
+        assert.expect(6);
+
+        testUtils.mock.patch(ListController, {
+            _saveMultipleRecords() {
+                assert.ok('_saveMultipleRecords called.');
+                return this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            arch: `
+                <tree editable="top" multi_edit="1">
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    assert.ok("write should called");
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        const $discardButton = list.$buttons.find('.o_list_button_discard');
+
+        // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+        await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($discardButton, ['focus']);
+        $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.dom.click($discardButton);
+
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        // Note: there will be two modal, first for confirmation dialog for discard change second
+        // for confimation dialog about number of records get changed, here checking second dialog
+        const modalText = $('.modal-body:eq(1)').text()
+            .split(" ").filter(w => w.trim() !== '').join(" ")
+            .split("\n").join('');
+        assert.strictEqual(modalText,
+            "Are you sure you want to perform the following update on those 2 records ? " +
+            "Field: Foo Update to: oof");
+
+        // click primary button of second confirmation dialog which checks number of record going to write
+        await testUtils.dom.click($('.modal:eq(1) .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "oof");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oof");
+
+        list.destroy();
+        testUtils.mock.unpatch(ListController);
+    });
+
+    QUnit.test('editable list view: click on Discard button in multi edition and Cancel and again click Discard and Save', async function (assert) {
+        assert.expect(7);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top" multi_edit="1">
+                    <field name="foo"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    assert.ok("write should called");
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+        list.$('.o_data_row:first() .o_data_cell:first() input').val("oof");
+
+        const $discardButton = list.$buttons.find('.o_list_button_discard');
+
+        // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+        await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
+        await testUtils.dom.triggerEvents(list.$('.o_data_row:first() .o_data_cell:first() input'),
+            ['change', 'blur', 'focusout']);
+        await testUtils.dom.triggerEvents($discardButton, ['focus']);
+        $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.dom.click($discardButton);
+
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+
+        await testUtils.dom.click($('.modal .btn-secondary:eq(1)')); // Click on Stay Here
+        assert.containsNone($('body'), '.modal', "should not have a modal");
+
+        // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+        await testUtils.dom.triggerEvents($discardButton, ['mousedown']);
+        await testUtils.dom.triggerEvents($discardButton, ['focus']);
+        $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
+        await testUtils.dom.click($discardButton);
+
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+        await testUtils.dom.click($('.modal .btn-primary')); // Click on Save
+
+        // Note: there will be two modal, first for confirmation dialog for discard change second
+        // for confimation dialog about number of records get changed, here checking second dialog
+        const modalText = $('.modal-body:eq(1)').text()
+            .split(" ").filter(w => w.trim() !== '').join(" ")
+            .split("\n").join('');
+        assert.strictEqual(modalText,
+            "Are you sure you want to perform the following update on those 2 records ? " +
+            "Field: Foo Update to: oof");
+
+        // click primary button of second confirmation dialog which checks number of record going to write
+        await testUtils.dom.click($('.modal:eq(1) .btn-primary'));
+        assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "oof");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oof");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: create new record, click on Discard button and Save from confirmation dialog', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            arch: `
+            <tree editable="top">
+                <field name="foo"/>
+            </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.ok("create should called");
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        assert.containsN(list, '.o_data_row', 4, "There should be 4 rows");
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget'), 'some value');
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
+
+        assert.ok($('.modal').text().includes("Unsaved changes"), "Modal should ask to discard changes");
+
+        await testUtils.dom.click($('.modal .btn-primary')); // Click on Save
+        assert.containsNone($('body'), '.modal', "should not have a modal");
+        assert.containsN(list, '.o_data_row', 5, 'There should be 5 rows');
+        assert.strictEqual(list.$('.o_data_row:last() .o_data_cell:first()').text(), "some value");
 
         list.destroy();
     });
@@ -9074,7 +9243,7 @@ QUnit.module('Views', {
         await testUtils.fields.editAndTrigger(list.$('tr.o_selected_row .o_data_cell:first input[name="foo"]'), 'new_value', 'input');
         // discard by pressing ESC
         await testUtils.fields.triggerKeydown(list.$('input[name="foo"]'), 'escape');
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(0)'));
 
         assert.containsOnce(list, 'tbody tr td:contains(yop)');
         assert.containsN(list, 'tr.o_data_row', 3);
@@ -9626,7 +9795,7 @@ QUnit.module('Views', {
 
         assert.hasClass($('body'), 'modal-open',
             'record has been modified, are you sure modal should be opened');
-        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        await testUtils.dom.click($('body .modal button span:contains(Discard)'));
 
         assert.doesNotHaveClass(list.$('tr.o_data_row:eq(1)'), 'o_selected_row',
             'second row should be closed');

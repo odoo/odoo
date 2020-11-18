@@ -3265,7 +3265,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('ask for confirmation when leaving a "dirty" view', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var actionManager = await createActionManager({
             actions: this.actions,
@@ -3285,11 +3285,13 @@ QUnit.module('ActionManager', {
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item:first a'));
 
         assert.strictEqual($('.modal .modal-body').text(),
-            "The record has been modified, your changes will be discarded. Do you want to proceed?",
+            "Would you like to save your changes?",
             "should display a modal dialog to confirm discard action");
+        assert.containsN($('.modal'), '.modal-footer button', 3,
+            "should have 3 buttons");
 
         // cancel
-        await testUtils.dom.click($('.modal .modal-footer button.btn-secondary'));
+        await testUtils.dom.click($('.modal .modal-footer button.btn-secondary:eq(1)'));
 
         assert.containsOnce(actionManager, '.o_form_view',
             "should still be in form view");
@@ -3298,8 +3300,49 @@ QUnit.module('ActionManager', {
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item:first a'));
 
         // confirm discard
-        await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+        await testUtils.dom.click($('.modal .modal-footer button.btn-secondary:eq(0)'));
 
+        assert.containsNone(actionManager, '.o_form_view',
+            "should no longer be in form view");
+        assert.containsOnce(actionManager, '.o_kanban_view',
+            "should be in kanban view");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('ask for confirmation when leaving a "dirty" view and save changes', async function (assert) {
+        assert.expect(5);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.ok("create should called");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.doAction(4);
+
+        // open new record in form view
+        await testUtils.dom.click(actionManager.$('.o-kanban-button-new'));
+
+        await testUtils.fields.editInput(actionManager.$('input[name="foo"]'), 'pinkypie');
+
+        // Click on Discard button
+        await testUtils.dom.click($('.o_control_panel .o_form_button_cancel'));
+
+        assert.strictEqual($('.modal .modal-body').text(),
+            "Would you like to save your changes?",
+            "should display a modal dialog to confirm discard action");
+        assert.containsN($('.modal'), '.modal-footer button', 3,
+            "should have 3 buttons");
+
+        // Click Save in confirm dialog
+        await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+        await testUtils.nextTick();
         assert.containsNone(actionManager, '.o_form_view',
             "should no longer be in form view");
         assert.containsOnce(actionManager, '.o_kanban_view',
@@ -3767,7 +3810,7 @@ QUnit.module('ActionManager', {
         assert.containsOnce($('body'), '.modal'); // confirm discard dialog
 
         // confirm discard changes
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary:eq(0)'));
 
         assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
         assert.strictEqual(actionManager.$('.o_control_panel .breadcrumb-item').text(),

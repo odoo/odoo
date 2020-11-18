@@ -330,7 +330,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'click',
     }, {
         content: "confirm cancel change",
-        trigger: '.modal-footer button:contains(Ok)',
+        trigger: '.modal-footer button:contains(Discard)',
     },
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -503,6 +503,6 @@ odoo.define('web.test.x2many', function (require) {
         run: 'click',
     }, {
         content: "confirm cancel change",
-        trigger: '.modal-footer button:contains(Ok)',
+        trigger: '.modal-footer button:contains(Discard)',
     }]);
 });
