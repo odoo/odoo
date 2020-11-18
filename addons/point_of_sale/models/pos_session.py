@@ -296,30 +296,31 @@ class PosSession(models.Model):
 
     def _validate_session(self):
         self.ensure_one()
-        self.cash_real_transaction = self.cash_register_total_entry_encoding
-        self.cash_real_expected = self.cash_register_balance_end
-        self.cash_real_difference = self.cash_register_difference
-        if self.state == 'closed':
-            raise UserError(_('This session is already closed.'))
-        self._check_if_no_draft_orders()
-        if self.update_stock_at_closing:
-            self._create_picking_at_end_of_session()
-        # Users without any accounting rights won't be able to create the journal entry. If this
-        # case, switch to sudo for creation and posting.
-        sudo = False
-        if (
-            not self.env['account.move'].check_access_rights('create', raise_exception=False)
-            and self.user_has_groups('point_of_sale.group_pos_user')
-        ):
-            sudo = True
-            self.sudo().with_company(self.company_id)._create_account_move()
-        else:
-            self.with_company(self.company_id)._create_account_move()
-        if self.move_id.line_ids:
-            # Set the uninvoiced orders' state to 'done'
-            self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
-        else:
-            self.move_id.unlink()
+        if self.order_ids:
+            self.cash_real_transaction = self.cash_register_total_entry_encoding
+            self.cash_real_expected = self.cash_register_balance_end
+            self.cash_real_difference = self.cash_register_difference
+            if self.state == 'closed':
+                raise UserError(_('This session is already closed.'))
+            self._check_if_no_draft_orders()
+            if self.update_stock_at_closing:
+                self._create_picking_at_end_of_session()
+            # Users without any accounting rights won't be able to create the journal entry. If this
+            # case, switch to sudo for creation and posting.
+            sudo = False
+            if (
+                not self.env['account.move'].check_access_rights('create', raise_exception=False)
+                and self.user_has_groups('point_of_sale.group_pos_user')
+            ):
+                sudo = True
+                self.sudo().with_company(self.company_id)._create_account_move()
+            else:
+                self.with_company(self.company_id)._create_account_move()
+            if self.move_id.line_ids:
+                # Set the uninvoiced orders' state to 'done'
+                self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
+            else:
+                self.move_id.unlink()
         self.write({'state': 'closed'})
         return {
             'type': 'ir.actions.client',
