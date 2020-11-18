@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     service_policy = fields.Selection([
-        ('ordered_timesheet', 'Ordered quantities'),
+        ('ordered_timesheet', 'Prepaid'),
         ('delivered_timesheet', 'Timesheets on tasks'),
         ('delivered_manual', 'Milestones (manually set quantities on order)')
     ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
