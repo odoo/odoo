@@ -45,7 +45,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             return this.config.fiskaly_client_id;
         },
         isCountryGermany() {
-            return this.company.country.code === "DE";
+            return this.config.is_company_country_germany;
         }
     });
 
