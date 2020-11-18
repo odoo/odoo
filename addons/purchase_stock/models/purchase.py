@@ -475,7 +475,11 @@ class PurchaseOrderLine(models.Model):
             line_description += values['product_description_variants']
         supplier = values.get('supplier')
         res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
-        res['name'] = line_description
+        # We need to keep the vendor name set in _prepare_purchase_order_line. To avoid redundancy
+        # in the line name, we add the line_description only if different from the product name.
+        # This way, we shoud not lose any valuable information.
+        if product_id.name != line_description:
+            res['name'] += '\n' + line_description
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
@@ -500,9 +504,26 @@ class PurchaseOrderLine(models.Model):
         if values.get('product_description_variants'):
             description_picking += values['product_description_variants']
         lines = self.filtered(
-            lambda l: l.propagate_cancel == values['propagate_cancel'] and
-            ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True) and
-            (not values.get('product_description_variants') or l.name == description_picking))
+            lambda l: l.propagate_cancel == values['propagate_cancel']
+            and ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True)
+        )
+
+        # In case 'product_description_variants' is in the values, we also filter on the PO line
+        # name. This way, we can merge lines with the same description. To do so, we need the
+        # product name in the context of the PO partner.
+        if lines and values.get('product_description_variants'):
+            partner = self.mapped('order_id.partner_id')[:1]
+            product_lang = product_id.with_context(
+                lang=partner.lang,
+                partner_id=partner.id,
+            )
+            name = product_lang.display_name
+            if product_lang.description_purchase:
+                name += '\n' + product_lang.description_purchase
+            lines = lines.filtered(lambda l: l.name == name + '\n' + description_picking)
+            if lines:
+                return lines[0]
+
         return lines and lines[0] or self.env['purchase.order.line']
 
     def _get_outgoing_incoming_moves(self):
