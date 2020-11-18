@@ -515,4 +515,4 @@ class TestReorderingRule(SavepointCase):
         po_line = self.env["purchase.order.line"].search(
             [("product_id", "=", product.id)])
         self.assertTrue(po_line)
-        self.assertEqual("product TEST", po_line.name)
+        self.assertEqual("[A] product TEST", po_line.name)

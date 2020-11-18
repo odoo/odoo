@@ -213,6 +213,18 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """Change merging po line if same procurement is done depending on custom values."""
         company = self.env.ref('base.main_company')
         company.write({'po_lead': 0.00})
+
+        # The seller has a specific product name and code which must be kept in the PO line
+        self.t_shirt.seller_ids.write({
+            'product_name': 'Vendor Name',
+            'product_code': 'Vendor Code',
+        })
+        partner = self.t_shirt.seller_ids[:1].name
+        t_shirt = self.t_shirt.with_context(
+            lang=partner.lang,
+            partner_id=partner.id,
+        )
+
         # Create procurement order of product_1
         ProcurementGroup = self.env['procurement.group']
         procurement_values = {
@@ -232,7 +244,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
         order_line_description = purchase_order.order_line.product_id._get_description(purchase_order.picking_type_id)
         self.assertEqual(len(purchase_order.order_line), 1, 'wrong number of order line is created')
-        self.assertEqual(purchase_order.order_line.name, order_line_description + "Color (Red)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.name, t_shirt.display_name + "\n" + order_line_description + "Color (Red)", 'wrong description in po lines')
 
         procurement_values['product_description_variants'] = 'Color (Red)'
         order_2_values = procurement_values
@@ -252,8 +264,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             self.t_shirt.name, '/', self.env.company, order_3_values)
         ])
         self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
-        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, order_line_description + "Color (Red)", 'wrong description in po lines')
-        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, order_line_description + "Color (Green)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + order_line_description + "Color (Red)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in po lines')
 
         purchase_order.button_confirm()
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, order_line_description + "Color (Red)", 'wrong description in picking')
