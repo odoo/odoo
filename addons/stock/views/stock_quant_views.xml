@@ -227,10 +227,10 @@
             <search string="Package">
                 <field name="name" string="Package Name"/>
                 <field name="location_id"/>
-                <field name="packaging_id"/>
+                <field name="package_type_id"/>
                 <group  expand='0' string='Group by...'>
                    <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
-                   <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Package Type' name="package_type" domain="[]" context="{'group_by' : 'package_type_id'}"/>
                </group>
             </search>
         </field>
@@ -257,6 +257,7 @@
                     </div>
                     <group>
                         <group id='stock.package_location_group'>
+                            <field name="package_type_id"/>
                             <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
                             <field name="location_id" options="{'no_create': True}"/>
@@ -283,6 +284,7 @@
         <field name="arch" type="xml">
             <tree string="Package" sample="1">
                 <field name="display_name"/>
+                <field name="package_type_id"/>
                 <field name="location_id" options="{'no_create': True}"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>

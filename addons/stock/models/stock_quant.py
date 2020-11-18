@@ -726,8 +726,8 @@ class QuantPackage(models.Model):
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
     quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True,
         domain=['|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0)])
-    packaging_id = fields.Many2one(
-        'product.packaging', 'Package Type', index=True, check_company=True)
+    package_type_id = fields.Many2one(
+        'stock.package.type', 'Package Type', index=True, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_package_info',
         index=True, readonly=True, store=True)

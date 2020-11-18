@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!-- Delivery Carriers -->
-        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
-
-        <record id="action_delivery_packaging_view" model="ir.actions.act_window">
-            <field name="name">Delivery Packages</field>
-            <field name="res_model">product.packaging</field>
-            <field name="domain">[('product_id', '=', False)]</field>
-            <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('delivery.product_packaging_delivery_tree')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('delivery.product_packaging_delivery_form')})]"/>
-        </record>
-
-        <menuitem id="menu_delivery_packagings" name="Delivery Packages" parent="menu_delivery" action="action_delivery_packaging_view" groups="stock.group_tracking_lot"/>
-
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
             <field name="model">delivery.carrier</field>
@@ -175,7 +162,7 @@
             </field>
         </record>
 
-        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" sequence="1"/>
+        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="stock.menu_delivery" sequence="1"/>
         <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale.menu_sales_config" sequence="4"/>
 
         <record id="view_delivery_price_rule_form" model="ir.ui.view">
@@ -278,24 +265,12 @@
             <field name="inherit_id" ref="stock.view_quant_package_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
-                    <field name="packaging_id" domain="[('product_id', '=', False)]"/>
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
                         <field name="shipping_weight"/>
                         <span><field name="weight_uom_name"/></span>
                         <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1"/>)</span>
                     </div>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_quant_package_packaging_tree" model="ir.ui.view">
-            <field name="name">stock.quant.package.packaging.tree</field>
-            <field name="model">stock.quant.package</field>
-            <field name="inherit_id" ref="stock.view_quant_package_tree"/>
-            <field name="arch" type="xml">
-                <field name="display_name" position="after">
-                    <field name="packaging_id"/>
                 </field>
             </field>
         </record>

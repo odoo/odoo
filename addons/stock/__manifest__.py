@@ -76,6 +76,7 @@
         'views/stock_template.xml',
         'views/stock_rule_views.xml',
         'views/stock_package_level_views.xml',
+        'views/stock_package_type_view.xml',
     ],
     'qweb': [
         'static/src/xml/inventory_report.xml',

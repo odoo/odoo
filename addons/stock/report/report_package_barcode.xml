@@ -19,9 +19,9 @@
                         </tr>
                     </table>
                     <div class="row mt32 mb32">
-                        <div t-if="o.packaging_id" class="o_packaging_type col-auto">
+                        <div t-if="o.package_type_id" class="o_packaging_type col-auto">
                             <strong>Package Type:</strong>
-                            <p t-field="o.packaging_id.name"/>
+                            <p t-field="o.package_type_id.name"/>
                         </div>
                     </div>
                     <table class="table table-sm" style="border-bottom: 0px solid white !important;">
@@ -69,8 +69,8 @@
                             <p t-field="o.name"  style="font-size:20px;"></p>
                         </div>
                     </div>
-                    <div class="row o_packaging_type" t-if="o.packaging_id">
-                        <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.packaging_id.name"/></div>
+                    <div class="row o_packaging_type" t-if="o.package_type_id">
+                        <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name"/></div>
                     </div>
                 </div>
             </t>
