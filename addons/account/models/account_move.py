@@ -4371,6 +4371,7 @@ class AccountMoveLine(models.Model):
 
             exchange_move = self.env['account.move'].create(exchange_diff_move_vals)
         else:
+<<<<<<< HEAD
             return None
 
         # Reconcile lines to the newly created exchange difference journal entry by creating more partials.
@@ -4412,6 +4413,39 @@ class AccountMoveLine(models.Model):
         '''
         results = {}
 
+=======
+            field = 'amount_residual'
+        #if all lines share the same currency, use amount_residual_currency to avoid currency rounding error
+        if self[0].currency_id and all([x.amount_currency and x.currency_id == self[0].currency_id for x in self]):
+            field = 'amount_residual_currency'
+        # Reconcile lines
+        ret = self._reconcile_lines(debit_moves, credit_moves, field)
+        return ret
+
+    def _check_reconcile_validity(self):
+        # Empty self can happen if there is no line to check.
+        if not self:
+            return
+
+        #Perform all checks on lines
+        company_ids = set()
+        all_accounts = []
+        for line in self:
+            company_ids.add(line.company_id.id)
+            all_accounts.append(line.account_id)
+            if line.reconciled:
+                raise UserError(_('You are trying to reconcile some entries that are already reconciled.'))
+        if len(company_ids) > 1:
+            raise UserError(_('To reconcile the entries company should be the same for all entries.'))
+        if len(set(all_accounts)) > 1:
+            raise UserError(_('Entries are not from the same account.'))
+        if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
+            raise UserError(_('Account %s (%s) does not allow reconciliation. First change the configuration of this account to allow it.') % (all_accounts[0].name, all_accounts[0].code))
+
+    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
+        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
+        # The calling method might have filtered out reconciled lines.
+>>>>>>> 9b70730ac85... temp
         if not self:
             return results
 
