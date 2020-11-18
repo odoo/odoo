@@ -4341,7 +4341,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
 });
 
-QUnit.test('mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel', async function (assert) {
+QUnit.test('mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel [REQUIRE FOCUS]', async function (assert) {
     assert.expect(1);
 
     this.data['mail.channel'].records.push(
