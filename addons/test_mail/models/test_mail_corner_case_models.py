@@ -42,6 +42,15 @@ class MailTestTrackCompute(models.Model):
     partner_email = fields.Char(related='partner_id.email', store=True, tracking=True)
     partner_phone = fields.Char(related='partner_id.phone', tracking=True)
 
+class MailTestTrackMonetary(models.Model):
+    _name = 'mail.test.track.monetary'
+    _description = 'Test tracking monetary field'
+    _inherit = ['mail.thread']
+
+    company_id = fields.Many2one('res.company')
+    company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
+    revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
+
 
 class MailTestMultiCompany(models.Model):
     """ This model can be used in multi company tests"""
