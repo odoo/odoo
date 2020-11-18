@@ -28,6 +28,14 @@ from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
 
+# Cookie types
+COOKIES_ESSENTIAL = "essential"
+COOKIES_ANALYTIC = "analytic"
+COOKIES_MARKETING = "marketing"
+COOKIES_EXTERNAL = "external"
+
+COOKIES_COOKIE = "cookies_accepted"
+
 
 class RequestUID(object):
     def __init__(self, **kw):
@@ -75,6 +83,24 @@ class SignedIntConverter(werkzeug.routing.NumberConverter):
 class IrHttp(models.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP Routing"
+
+    @classmethod
+    def _chosen_cookie_types(cls, defaults=True):
+        """Return a set of cookie types accepted by the user."""
+        choices_raw = request.httprequest.cookies.get(COOKIES_COOKIE, "")
+        choices_set = set(choices_raw.split("|"))
+        choices_set.discard("")
+        if defaults:
+            choices_set.add(COOKIES_ESSENTIAL)
+        return choices_set
+
+    @classmethod
+    def _forbidden_cookies(cls):
+        """Return a set of cookie names that are forbidden for the given choices."""
+        result = set(request.httprequest.cookies)
+        # Essential cookies are never forbidden
+        result -= {"session_id", "frontend_lang", "cookies_accepted"}
+        return result
 
     @classmethod
     def _get_converters(cls):

@@ -113,6 +113,146 @@
                 </t>
             </field>
         </record>
+
+        <record id="cookies" model="ir.ui.view">
+            <field name="name">Cookies</field>
+            <field name="type">qweb</field>
+            <field name="key">website.cookies</field>
+            <field name="arch" type="xml">
+                <t name="Cookies" t-name="website.cookies">
+                    <t t-call="website.layout">
+                        <div id="wrap">
+                            <div class="oe_structure">
+                                <section class="s_call_to_action bg-200 pt48 pb24">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-9 pb24">
+                                                <h3>
+                                                    <b>We use cookies</b>, just like almost any other website in the known universe.
+                                                </h3>
+                                                <p class="lead">
+                                                    Read below about what cookies do we use and why.
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-3 s_btn text-right pt8 pb24">
+                                                <a href="/web/cookies/choose" class="btn btn-primary btn-lg" data-original-title="" title="">
+                                                    Reset choices
+                                                    <span class="fa fa-1x fa-fw ml-1 fa-rotate-left" style="" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="s_features_grid pt48 pb24">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="s_col_no_bgcolor pb24 col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-lg-12 pb24" data-name="Box">
+                                                        <h2>
+                                                            Essential cookies
+                                                        </h2>
+                                                        <p>
+                                                            These cookies are required for the website to provide you the best experience. These are not used to track you, nor shared with anybody outside this website.
+                                                            <b>You cannot disable these cookies.</b>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-lg-12 pt16 pb16" data-name="Box">
+                                                        <div class="s_features_grid_content">
+                                                            <h4>session_id</h4>
+                                                            <p>
+                                                                Identify you during your usage of this website. Keep track of your preferences, autofill some forms, have a product cart, etc.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 pt16 pb16" data-name="Box">
+                                                        <div class="s_features_grid_content">
+                                                            <h4>
+                                                                frontend_lang
+                                                            </h4>
+                                                            <p>
+                                                                Present the website in your language of choice
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 pt16 pb16" data-name="Box">
+                                                        <div class="s_features_grid_content">
+                                                            <h4>
+                                                                cookies_accepted
+                                                            </h4>
+                                                            <p>
+                                                                Know what other kind of cookies you accepted.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="s_col_no_bgcolor pb24 col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-lg-12 pb24" data-name="Box">
+                                                        <h2>
+                                                            Marketing cookies
+                                                        </h2>
+                                                        <p>
+                                                            These cookies allow us to present you offers better suited to your needs.
+                                                        </p>
+                                                    </div>
+                                                    <div class="pt16 pb16 col-lg-12" data-name="Box">
+                                                        <div class="s_features_grid_content">
+                                                            <h4>
+                                                                odoo_utm_campaign, odoo_utm_source, odoo_utm_medium
+                                                            </h4>
+                                                            <p>
+                                                                These cookies let us know if you landed in our website through through a specific marketing campaign, source or medium. We can react appropriately to know better your interests.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 pt16 pb16" data-name="Box">
+                                                        <div class="s_features_grid_content">
+                                                            <h4>
+                                                                im_livechat_history
+                                                            </h4>
+                                                            <p>
+                                                                This cookie lets us know what pages are you watching while we chat with you.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="s_col_no_bgcolor pb24 col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-lg-12 pb24" data-name="Box">
+                                                        <h2>
+                                                            Analytic cookies
+                                                        </h2>
+                                                        <p>
+                                                            These cookies let us analyze how you use our website.
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-lg-12 pt16 pb16" data-name="Box">
+                                                        <div class="s_features_grid_content">
+                                                            <h4>
+                                                                _ga, _gat, _gat-*, _gid
+                                                            </h4>
+                                                            <p>
+                                                                These come from Google Analytics, so they are
+                                                                <b>3rd party</b>
+                                                                cookies. See
+                                                                <a href="https://support.google.com/analytics/answer/6004245">Google's privacy and cookies policies.</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
     </data>
 
     <data noupdate="1">
@@ -131,6 +271,11 @@
             <field name="url">/aboutus</field>
             <field name="view_id" ref="aboutus"/>
         </record>
+        <record id="cookies_page" model="website.page">
+            <field name="website_published">True</field>
+            <field name="url">/cookies</field>
+            <field name="view_id" ref="cookies"/>
+        </record>
 
         <!-- Default Menu to store module menus for new website -->
         <record id="main_menu" model="website.menu">
@@ -148,6 +293,12 @@
             <field name="url">/contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
+        </record>
+        <record id="menu_cookies" model="website.menu">
+            <field name="name">Cookies</field>
+            <field name="url">/cookies</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">99</field>
         </record>
 
         <record id="default_website" model="website">

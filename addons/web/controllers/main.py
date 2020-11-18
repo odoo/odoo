@@ -47,6 +47,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
+from odoo.addons.base.models.ir_http import COOKIES_COOKIE, COOKIES_ESSENTIAL
 
 _logger = logging.getLogger(__name__)
 
@@ -526,6 +527,31 @@ class Home(http.Controller):
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return http.local_redirect(self._login_redirect(uid), keep_hash=True)
+
+    @http.route(["/web/cookies/choose"], type="http", auth="public")
+    def cookies_choose(self, return_to=None, **kwargs):
+        """Save (or reset) cookie preferences and drop unaccepted ones."""
+        # Produce basic HTTP response
+        if not return_to:
+            return_to = request.httprequest.referrer
+            # FIXME There's no website here
+            # if request.website.domain and not return_to.startswith(request.website.domain):
+            #     return_to = "/cookies"
+        response = werkzeug.utils.redirect(return_to)
+        choices = set(request.httprequest.args.getlist("choices"))
+        if choices:
+            # Save new user choices, which always should include essential cookies
+            choices = list(choices | {COOKIES_ESSENTIAL})
+            choices_str = "|".join(choices)
+            response.set_cookie(COOKIES_COOKIE, choices_str, 60 * 60 * 24 * 365, domain=request.httprequest.host)
+        else:
+            # Reset choices, so user is asked again
+            response.delete_cookie(COOKIES_COOKIE)
+        # Drop all forbidden cookies
+        for cookie in request.env["ir.http"]._forbidden_cookies():
+            response.delete_cookie(cookie, domain=request.httprequest.host)
+        return response
+
 
 class WebClient(http.Controller):
 

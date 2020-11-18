@@ -4,6 +4,7 @@ odoo.define('im_livechat.im_livechat', function (require) {
 require('bus.BusService');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
+var cookie_choices = require('web.cookie_choices');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
@@ -29,17 +30,22 @@ var RATING_TO_EMOJI = {
 
 // History tracking
 var page = window.location.href.replace(/^.*\/\/[^/]+/, '');
-var pageHistory = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
 var urlHistory = [];
-if (pageHistory) {
-    urlHistory = JSON.parse(pageHistory) || [];
-}
-if (!_.contains(urlHistory, page)) {
-    urlHistory.push(page);
-    while (urlHistory.length > HISTORY_LIMIT) {
-        urlHistory.shift();
+if (cookie_choices.acceptedCookies(cookie_choices.MARKETING)) {
+    var pageHistory = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
+    if (pageHistory) {
+        urlHistory = JSON.parse(pageHistory) || [];
     }
-    utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60*60*24); // 1 day cookie
+    if (!_.contains(urlHistory, page)) {
+        urlHistory.push(page);
+        while (urlHistory.length > HISTORY_LIMIT) {
+            urlHistory.shift();
+        }
+        utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60*60*24); // 1 day cookie
+    }
+} else {
+    // Do not track user deleting livechat history cookie
+    utils.set_cookie(LIVECHAT_COOKIE_HISTORY, "[]", -1);
 }
 
 var LivechatButton = Widget.extend({

@@ -7,6 +7,7 @@ import os
 import logging
 import requests
 import werkzeug.utils
+from werkzeug.utils import redirect
 import werkzeug.wrappers
 
 from itertools import islice
@@ -275,6 +276,7 @@ class Website(Home):
         if ext_special_case:  # redirect non html pages to backend to edit
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
         return werkzeug.utils.redirect(url + "?enable_editor=1")
+
 
     @http.route(['/website/snippets'], type='json', auth="user", website=True)
     def snippets(self):

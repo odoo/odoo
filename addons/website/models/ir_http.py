@@ -21,6 +21,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
 
 from odoo.addons.base.models.qweb import QWebException
+from odoo.addons.base.models.ir_http import COOKIES_ANALYTIC, COOKIES_EXTERNAL
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
@@ -309,6 +310,18 @@ class Http(models.AbstractModel):
                     html = env['ir.ui.view'].render_template('website.http_error', values)
 
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+
+    @classmethod
+    def _forbidden_cookies(cls):
+        """Whitelist Google Analytics cookies if accepted."""
+        result = super()._forbidden_cookies()
+        choices = cls._chosen_cookie_types()
+        # Allow Goole Analytics - https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage
+        if {COOKIES_ANALYTIC, COOKIES_EXTERNAL} <= choices:
+            for cookie in result:
+                if cookie.startswith(("_ga", "__utm", "_opt_")):
+                    result.discard(cookie)
+        return result
 
     @classmethod
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',

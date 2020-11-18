@@ -64,6 +64,7 @@
 
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
 
+        <script type="text/javascript" src="/website/static/src/js/cookie_consent.js"/>
         <script type="text/javascript" src="/website/static/src/js/html_editor.test.js"/>
     </xpath>
 </template>
@@ -244,7 +245,7 @@
         </t>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">
+        <script id='tracking_code' t-if="website and website.google_analytics_key and not editable and {'analytic', 'external'} &lt;= request.env['ir.http']._chosen_cookie_types()">
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -303,6 +304,52 @@
         </a>
     </xpath>
 </template>
+
+    <template id="cookies_form" name="Cookies Form">
+        <form id="cookies_form" class="card border-info" action="/web/cookies/choose">
+            <h5 class="card-header">Choose Your Cookies</h5>
+            <div class="card-body">
+                <div class="custom-control custom-checkbox">
+                    <input type="hidden" name="choices" value="essential" />
+                    <input id="cookies-form-essential" type="checkbox" name="choices" value="essential" class="custom-control-input" disabled="" checked="" />
+                    <label for="cookies-form-essential" class="custom-control-label">
+                        Essential (always enabled).
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input id="cookies-form-analytic" type="checkbox" name="choices" value="analytic" class="custom-control-input" />
+                    <label for="cookies-form-analytic" class="custom-control-label">
+                        Analytic.
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input id="cookies-form-marketing" type="checkbox" name="choices" value="marketing" class="custom-control-input" />
+                    <label for="cookies-form-marketing" class="custom-control-label">
+                        Marketing.
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input id="cookies-form-3rdparty" type="checkbox" name="choices" value="3rdparty" class="custom-control-input" />
+                    <label for="cookies-form-3rdparty" class="custom-control-label">
+                        Third party.
+                    </label>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="js_all btn btn-primary">Accept all</button>
+                <button class="js_chosen btn btn-outline-secondary">Accept chosen</button>
+                <a href="/cookies" class="card-link">More details</a>
+            </div>
+        </form>
+    </template>
+
+    <template id="cookie_consent_banner" inherit_id="website.layout" customize_show="True" name="Cookies Banner" priority="50">
+        <xpath expr="//div[@id='wrapwrap']">
+            <div id="cookie_consent_banner" class="col-sm-7 col-md-5 col-lg-3 fixed-bottom ml-auto mb16 o_hidden">
+                <t t-call="website.cookies_form"/>
+            </div>
+        </xpath>
+    </template>
 
 <template id="affix_top_menu" inherit_id="website.layout" customize_show="True" name="Affix Top Menu">
     <xpath expr="//header" position="attributes">
