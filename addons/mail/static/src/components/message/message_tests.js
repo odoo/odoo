@@ -1212,6 +1212,71 @@ QUnit.test('rendering of tracked field with change of value from empty to string
     );
 });
 
+QUnit.test('basic rendering of tracking value (monetary type)', async function (assert) {
+    assert.expect(8);
+
+    await this.start({
+        env: {
+            session: {
+                currencies: { 1: { symbol: '$', position: 'before' } },
+            },
+        },
+    });
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Revenue",
+            currency_id: 1,
+            field_type: "monetary",
+            id: 6,
+            new_value: 500,
+            old_value: 1000,
+        }],
+    });
+
+    await this.createMessageComponent(message);
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValue',
+        "should display a tracking value"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueFieldName',
+        "should display the name of the tracked field"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueFieldName').textContent,
+        "Revenue:",
+        "should display the correct tracked field name (Revenue)",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueOldValue',
+        "should display the old value"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueOldValue').innerHTML,
+        "$ 1000.00",
+        "should display the correct old value with the currency symbol ($ 1000.00)",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueSeparator',
+        "should display the separator"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueNewValue',
+        "should display the new value"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueNewValue').innerHTML,
+        "$ 500.00",
+        "should display the correct new value with the currency symbol ($ 500.00)",
+    );
+});
+
 });
 });
 });
