@@ -267,6 +267,14 @@ Mostly just proxies attributes to the corresponding fields on
 ``ir.actions.report``, but also automatically creates the item in the
 :guilabel:`More` menu of the report's ``model``.
 
+.. note::
+
+    You might expect the ``name`` of the ``report`` tag to become the ``ir.actions.report`` name,
+    but the value is used as ``report_name`` field value.  To specify the ``name`` field in ``ir.actions.report``,
+    you should use the ``string`` attribute of the ``report`` tag.
+
+    The detailed attributes and values supported can be found :ref:`here <reference/reports/report>`.
+
 .. ignored url, act_window and ir_set
 
 CSV data files

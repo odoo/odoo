@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
+var pyUtils = require('web.py_utils');
 var session = require('web.session');
 var time = require('web.time');
 var web_client = require('web.web_client');
@@ -353,6 +354,7 @@ var Dashboard = AbstractAction.extend({
 
     on_dashboard_action: function (ev) {
         ev.preventDefault();
+        var self = this
         var $action = $(ev.currentTarget);
         var additional_context = {};
         if (this.date_range === 'week') {
@@ -362,9 +364,18 @@ var Dashboard = AbstractAction.extend({
         } else if (this.date_range === 'year') {
             additional_context = {search_default_year: true};
         }
-        this.do_action($action.attr('name'), {
-            additional_context: additional_context,
-            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        this._rpc({
+            route: '/web/action/load',
+            params: {
+                'action_id': $action.attr('name'),
+            },
+        })
+        .then(function (action) {
+            action.domain = pyUtils.assembleDomains([action.domain, `[('website_id', '=', ${self.website_id})]`]);
+            return self.do_action(action, {
+                'additional_context': additional_context,
+                'on_reverse_breadcrumb': self.on_reverse_breadcrumb
+            });
         });
     },
 

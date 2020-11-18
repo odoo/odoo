@@ -881,7 +881,7 @@ class Meeting(models.Model):
                 meeting.stop_date = meeting.stop.date()
                 meeting.stop_datetime = False
 
-                meeting.duration = 0.0
+                meeting.duration = self._get_duration(meeting.start, meeting.stop)
             else:
                 meeting.start_date = False
                 meeting.start_datetime = meeting.start

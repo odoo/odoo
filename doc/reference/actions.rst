@@ -344,14 +344,17 @@ not necessary to set ``binding_type`` to ``report``, since
 
 
 ``name`` (mandatory)
-    only useful as a mnemonic/description of the report when looking for one
-    in a list of some sort
+    used as the file name if ``print_report_name`` is not specified.
+    Otherwise, only useful as a mnemonic/description of the report
+    when looking for one in a list of some sort
 ``model`` (mandatory)
     the model your report will be about
 ``report_type`` (default=qweb-pdf)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
 ``report_name`` (mandatory)
-    the name of your report (which will be the name of the PDF output)
+    the name (:term:`external id`) of the qweb template used to render the report
+``print_report_name``
+    python expression defining the name of the report.
 ``groups_id``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report

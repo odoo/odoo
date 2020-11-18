@@ -658,9 +658,16 @@ class GoogleCalendar(models.AbstractModel):
             ('event_id.final_date', '>', fields.Datetime.to_string(self.get_minTime())),
         ])
         for att in my_attendees:
-            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if
-                                other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_')]
-            for other_google_id in other_google_ids:
+            # Get the attendees of the same event with google id set
+            other_attendees = att.event_id.attendee_ids.filtered(lambda other_att: other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_'))
+            if att.partner_id in other_attendees.mapped('partner_id'):
+                # After a contacts merge there may be events
+                # with multiple attendee records of the same partner.
+                # Deleting duplicate attendee to avoid raising error on constraint google_id_uniq
+                att.unlink()
+                continue
+            for other_google_id in other_attendees.mapped('google_internal_event_id'):
+                # Set google id on this attendee
                 if self.get_one_event_synchro(other_google_id):
                     att.write({'google_internal_event_id': other_google_id})
                     break

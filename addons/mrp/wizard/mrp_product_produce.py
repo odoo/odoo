@@ -112,28 +112,29 @@ class MrpProductProduce(models.TransientModel):
             if not line.move_id:
                 # Find move_id that would match
                 if line.raw_product_produce_id:
-                    moves = self.move_raw_ids
+                    moves = line.raw_product_produce_id.move_raw_ids
                 else:
-                    moves = self.move_finished_ids
+                    moves = line.finished_product_produce_id.move_finished_ids
                 move_id = moves.filtered(lambda m: m.product_id == line.product_id and m.state not in ('done', 'cancel'))
                 if not move_id:
                     # create a move to assign it to the line
+                    production = line._get_production()
                     if line.raw_product_produce_id:
                         values = {
-                            'name': self.production_id.name,
-                            'reference': self.production_id.name,
+                            'name': production.name,
+                            'reference': production.name,
                             'product_id': line.product_id.id,
                             'product_uom': line.product_uom_id.id,
-                            'location_id': self.production_id.location_src_id.id,
+                            'location_id': production.location_src_id.id,
                             'location_dest_id': self.product_id.property_stock_production.id,
-                            'raw_material_production_id': self.production_id.id,
-                            'group_id': self.production_id.procurement_group_id.id,
-                            'origin': self.production_id.name,
+                            'raw_material_production_id': production.id,
+                            'group_id': production.procurement_group_id.id,
+                            'origin': production.name,
                             'state': 'confirmed',
-                            'company_id': self.production_id.company_id.id,
+                            'company_id': production.company_id.id,
                         }
                     else:
-                        values = self.production_id._get_finished_move_value(line.product_id.id, 0, line.product_uom_id.id)
+                        values = production._get_finished_move_value(line.product_id.id, 0, line.product_uom_id.id)
                     move_id = self.env['stock.move'].create(values)
                 line.move_id = move_id.id
 
@@ -143,15 +144,15 @@ class MrpProductProduce(models.TransientModel):
         self.invalidate_cache(['move_raw_ids', 'move_finished_ids'])
 
         # Save product produce lines data into stock moves/move lines
-        quantity = self.qty_producing
-        if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
-            raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
+        for wizard in self:
+            quantity = wizard.qty_producing
+            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+                raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
         self._update_finished_move()
         self._update_moves()
-        if self.production_id.state == 'confirmed':
-            self.production_id.write({
-                'date_start': datetime.now(),
-            })
+        self.production_id.filtered(lambda mo: mo.state == 'confirmed').write({
+            'date_start': datetime.now(),
+        })
 
 
 class MrpProductProduceLine(models.TransientModel):
