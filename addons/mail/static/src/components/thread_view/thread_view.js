@@ -19,10 +19,7 @@ class ThreadView extends Component {
     constructor(...args) {
         super(...args);
         useStore((...args) => this._useStoreSelector(...args));
-        useUpdate({
-            func: () => this._update(),
-            priority: 100, // must be executed after composer height adjust
-        });
+        useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to set focus on composer when
          * thread has the focus.
@@ -110,18 +107,7 @@ class ThreadView extends Component {
      * @private
      */
     _update() {
-        const messageList = this._messageListRef.comp;
         this.trigger('o-rendered');
-        /**
-         * Control panel may offset scrolling position of message list due to
-         * height of buttons. To prevent this, control panel re-render is
-         * triggered before message list. Correct way should be to adjust
-         * scroll positions after everything has been rendered, but OWL doesn't
-         * have such an API for the moment.
-         */
-        if (messageList) {
-            messageList.adjustFromComponentHints();
-        }
     }
 
     /**

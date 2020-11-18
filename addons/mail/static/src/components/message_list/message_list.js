@@ -37,10 +37,7 @@ class MessageList extends Component {
             },
         });
         this._getRefs = useRefs();
-        useUpdate({
-            func: () => this._update(),
-            priority: 150, // must be executed after adjust (from thread view)
-        });
+        useUpdate({ func: () => this._update() });
         /**
          * Determine whether the auto-scroll on load is active or not. This
          * is useful to disable some times, such as when mounting message list
@@ -540,6 +537,7 @@ class MessageList extends Component {
      * @private
      */
     _update() {
+        this.adjustFromComponentHints();
         this._checkMostRecentMessageIsVisible();
     }
 
