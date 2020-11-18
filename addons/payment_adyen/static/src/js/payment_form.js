@@ -135,49 +135,59 @@ odoo.define('payment_adyen.payment_form', require => {
             // Overwrite the flow of the select payment option
             this._setPaymentFlow('direct');
 
-            // Get the available payment methods
+            // Get the acquirer state ("enabled" or "test")
             this._rpc({
-                route: '/payment/adyen/payment_methods',
+                route: '/payment/adyen/acquirer_state',
                 params: {
                     'acquirer_id': paymentOptionId,
-                    'partner_id': parseInt(this.txContext.partnerId),
-                    'amount': this.txContext.amount ? parseFloat(this.txContext.amount) : undefined,
-                    'currency_id': this.txContext.currencyId
-                        ? parseInt(this.txContext.currencyId)
-                        : undefined,
                 },
-            }).then(paymentMethodsResult => {
-                // Generate the origin key
+            }).then(acquirerState => {
+                // Get the available payment methods
                 this._rpc({
-                    route: '/payment/adyen/origin_key',
+                    route: '/payment/adyen/payment_methods',
                     params: {
                         'acquirer_id': paymentOptionId,
+                        'partner_id': parseInt(this.txContext.partnerId),
+                        'amount': this.txContext.amount
+                            ? parseFloat(this.txContext.amount)
+                            : undefined,
+                        'currency_id': this.txContext.currencyId
+                            ? parseInt(this.txContext.currencyId)
+                            : undefined,
                     },
-                }).then(originKeyResult => {
-                    // Extract the origin key from the returned object
-                    const originKeyResultKeys = Object.keys(originKeyResult.originKeys);
-                    const originKey = originKeyResult.originKeys[originKeyResultKeys[0]];
+                }).then(paymentMethodsResult => {
+                    // Generate the origin key
+                    this._rpc({
+                        route: '/payment/adyen/origin_key',
+                        params: {
+                            'acquirer_id': paymentOptionId,
+                        },
+                    }).then(originKeyResult => {
+                        // Extract the origin key from the returned object
+                        const originKeyResultKeys = Object.keys(originKeyResult.originKeys);
+                        const originKey = originKeyResult.originKeys[originKeyResultKeys[0]];
 
-                    // Instantiate the drop-in
-                    const configuration = {
-                        paymentMethodsResponse: paymentMethodsResult,
-                        originKey: originKey,
-                        locale: (this._getContext().lang || 'en-US').replace('_', '-'),
-                        environment: 'test', // TODO ANV change to 'live'
-                        openFirstPaymentMethod: true,
-                        openFirstStoredPaymentMethod: false,
-                        showStoredPaymentMethods: false,
-                        showPaymentMethods: true,
-                        showPayButton: false,
-                        onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
-                        onError: this._dropinOnError.bind(this),
-                        onSubmit: this._dropinOnSubmit.bind(this),
-                    };
-                    const checkout = new AdyenCheckout(configuration);
-                    this.adyenDropin = checkout.create('dropin').mount(
-                        `#adyen-dropin-container_${paymentOptionId}`
-                    );
-                    this.adyenDropin.acquirerId = paymentOptionId;
+                        // Instantiate the drop-in
+                        const configuration = {
+                            paymentMethodsResponse: paymentMethodsResult,
+                            originKey: originKey,
+                            locale: (this._getContext().lang || 'en-US').replace('_', '-'),
+                            environment: acquirerState === 'enabled' ? 'live' : 'test',
+                            openFirstPaymentMethod: true,
+                            openFirstStoredPaymentMethod: false,
+                            showStoredPaymentMethods: false,
+                            showPaymentMethods: true,
+                            showPayButton: false,
+                            onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
+                            onError: this._dropinOnError.bind(this),
+                            onSubmit: this._dropinOnSubmit.bind(this),
+                        };
+                        const checkout = new AdyenCheckout(configuration);
+                        this.adyenDropin = checkout.create('dropin').mount(
+                            `#adyen-dropin-container_${paymentOptionId}`
+                        );
+                        this.adyenDropin.acquirerId = paymentOptionId;
+                    });
                 });
             }).guardedCatch((error) => {
                 error.event.preventDefault();

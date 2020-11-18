@@ -2,14 +2,12 @@
 <odoo>
     <template id="assets_frontend" inherit_id="web.assets_frontend">
         <xpath expr="link[last()]" position="after">
-            <!-- TODO replace by live resource URIs: https://docs.adyen.com/checkout/release-notes -->
             <link rel="stylesheet"
                   href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.css"
                   integrity="sha384-6qrXvoxlnBlrflZQ9g5Yf5oZapUSSXctPxacP9oRcEukbEO7lXisuSyMKG8pDX8V"
                   crossorigin="anonymous"/>
         </xpath>
         <xpath expr="script[last()]" position="after">
-            <!-- TODO replace by live resource URIs: https://docs.adyen.com/checkout/release-notes -->
             <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.js"
                     integrity="sha384-/rpftrZptnl7EIuIvqz4PAEehQoysKXmwqUAGyH9lK3WHgcvY0lWj/S5LH7xrbf+"
                     crossorigin="anonymous"/>

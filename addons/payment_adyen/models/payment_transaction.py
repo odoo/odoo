@@ -7,7 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_adyen.models.payment_acquirer import CURRENCY_DECIMALS
+from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             }
             response_content = acquirer._adyen_make_request(
                 base_url=acquirer.adyen_checkout_api_url,
-                endpoint_key='payments',
+                endpoint='/payments',
                 payload=data,
                 method='POST'
             )
@@ -102,7 +102,7 @@ class PaymentTransaction(models.Model):
         """ Find the transaction based on the feedback data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the acquirer
+        :param dict data: The feedback data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
@@ -131,7 +131,7 @@ class PaymentTransaction(models.Model):
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the acquirer
+        :param dict data: The feedback data sent by the provider
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
@@ -157,20 +157,7 @@ class PaymentTransaction(models.Model):
         elif payment_state == 'Authorised':  # `done` tx state
             has_token_data = 'recurring.recurringDetailReference' in data.get('additionalData', {})
             if self.tokenize and has_token_data:
-                # Create the token with the data of the payment method
-                token = self.env['payment.token'].create({
-                    'name': f"XXXXXXXXXXXX{data['additionalData'].get('cardSummary', '????')}",
-                    'partner_id': self.partner_id.id,
-                    'acquirer_id': self.acquirer_id.id,
-                    'acquirer_ref': data['additionalData']['recurring.recurringDetailReference'],
-                    'adyen_shopper_reference': data['additionalData']['recurring.shopperReference'],
-                    'verified': True,  # The payment is authorized, so the payment method is valid
-                })
-                self.token_id = token
-                self.tokenize = False
-                _logger.info(
-                    f"created token with id {token.id} for partner with id {self.partner_id.id}"
-                )
+                self._adyen_tokenize_from_feedback_data(data)
             if self.state != 'done':  # Redundant feedbacks can be sent through the webhook
                 self._set_done()
         elif payment_state == 'Cancelled':  # `cancel` tx state
@@ -182,3 +169,27 @@ class PaymentTransaction(models.Model):
                 self._set_error(
                     "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
                 )
+
+    def _adyen_tokenize_from_feedback_data(self, data):
+        """ Create a new token based on the feedback data.
+
+        Note: self.ensure_one()
+
+        :param dict data: The feedback data sent by the provider
+        :return: None
+        """
+        self.ensure_one()
+
+        token = self.env['payment.token'].create({
+            'name': f"XXXXXXXXXXXX{data['additionalData'].get('cardSummary', '????')}",
+            'partner_id': self.partner_id.id,
+            'acquirer_id': self.acquirer_id.id,
+            'acquirer_ref': data['additionalData']['recurring.recurringDetailReference'],
+            'adyen_shopper_reference': data['additionalData']['recurring.shopperReference'],
+            'verified': True,  # The payment is authorized, so the payment method is valid
+        })
+        self.token_id = token
+        self.tokenize = False
+        _logger.info(
+            f"created token with id {token.id} for partner with id {self.partner_id.id}"
+        )

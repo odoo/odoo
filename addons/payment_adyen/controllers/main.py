@@ -12,15 +12,26 @@ from odoo.http import request
 from odoo.tools.pycompat import to_text
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_adyen.models.payment_acquirer import CURRENCY_DECIMALS
+from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
 
 
 class AdyenController(http.Controller):
 
+    @http.route('/payment/adyen/acquirer_state', type='json', auth='public')
+    def adyen_acquirer_state(self, acquirer_id):
+        """ Query the state of the acquirer.
+
+        :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
+        :return: The state of the acquirer: 'enabled' or 'test'
+        :rtype: str
+        """
+        acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
+        return acquirer_sudo.state
+
     @http.route('/payment/adyen/payment_methods', type='json', auth='public')
-    def payment_methods(self, acquirer_id, amount=None, currency_id=None, partner_id=None):
+    def adyen_payment_methods(self, acquirer_id, amount=None, currency_id=None, partner_id=None):
         """ Query the available payment methods based on the transaction context.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
@@ -36,8 +47,7 @@ class AdyenController(http.Controller):
         converted_amount = amount and currency_code and payment_utils.convert_to_minor_units(
             amount, currency, CURRENCY_DECIMALS.get(currency_code)
         )
-        partner_sudo = partner_id and request.env['res.partner'].browse(partner_id).sudo()
-        partner_country_code = partner_sudo and partner_sudo.country_id.code
+        partner_sudo = partner_id and request.env['res.partner'].sudo().browse(partner_id).exists()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged to make a payment and because the lang is not always set on the partner.
         # Adyen only supports a reduced set of languages but, instead of looking for the closest
@@ -48,21 +58,21 @@ class AdyenController(http.Controller):
         data = {
             'merchantAccount': acquirer_sudo.adyen_merchant_account,
             'amount': converted_amount,
-            'countryCode': partner_country_code,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
+            'countryCode': partner_sudo.country_id.code,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,
             'channel': 'Web',
         }
         response_content = acquirer_sudo._adyen_make_request(
             base_url=acquirer_sudo.adyen_checkout_api_url,
-            endpoint_key='payment_methods',
+            endpoint='/paymentMethods',
             payload=data,
             method='POST'
         )
         return response_content
 
     @http.route('/payment/adyen/origin_key', type='json', auth='public')
-    def origin_key(self, acquirer_id):
+    def adyen_origin_key(self, acquirer_id):
         """ Request an origin key based on the current domain.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
@@ -76,14 +86,14 @@ class AdyenController(http.Controller):
         }
         response_content = acquirer_sudo._adyen_make_request(
             base_url=acquirer_sudo.adyen_checkout_api_url,
-            endpoint_key='origin_keys',
+            endpoint='/originKeys',
             payload=data,
             method='POST'
         )
         return response_content
 
     @http.route('/payment/adyen/payments', type='json', auth='public')
-    def process_payment(
+    def adyen_payments(
         self, acquirer_id, reference, converted_amount, currency_id, partner_id, payment_method,
         access_token, browser_info=None
     ):
@@ -139,7 +149,7 @@ class AdyenController(http.Controller):
         }
         response_content = acquirer_sudo._adyen_make_request(
             base_url=acquirer_sudo.adyen_checkout_api_url,
-            endpoint_key='payments',
+            endpoint='/payments',
             payload=data,
             method='POST'
         )
@@ -155,7 +165,7 @@ class AdyenController(http.Controller):
         return response_content
 
     @http.route('/payment/adyen/payment_details', type='json', auth='public')
-    def payment_details(self, acquirer_id, reference, details, payment_data):
+    def adyen_payment_details(self, acquirer_id, reference, details, payment_data):
         """ Query the status of a transaction that required additional actions and process it.
 
          The additional actions can have been performed both from the inline form or during a
@@ -176,7 +186,7 @@ class AdyenController(http.Controller):
         }
         response_content = acquirer_sudo._adyen_make_request(
             base_url=acquirer_sudo.adyen_checkout_api_url,
-            endpoint_key='payments_details',
+            endpoint='/payments/details',
             payload=data,
             method='POST'
         )
@@ -189,8 +199,8 @@ class AdyenController(http.Controller):
 
         return response_content
 
-    @http.route('/payment/adyen/return', type='http', methods=['GET'], auth='public')
-    def return_from_redirect(self, **data):
+    @http.route('/payment/adyen/return', type='http', auth='public', csrf=False)
+    def adyen_return_from_redirect(self, **data):
         """ Process the data returned by Adyen after redirection.
 
         :param dict data: Feedback data. May include custom params sent to Adyen in the request to
@@ -206,7 +216,7 @@ class AdyenController(http.Controller):
         # special payment methods that are not handled by the drop-in (e.g. Sofort).
         tx_sudo.operation = 'online_redirect'
         # Query and process the result of the additional actions that have been performed
-        self.payment_details(
+        self.adyen_payment_details(
             tx_sudo.acquirer_id.id,
             data['merchantReference'],
             {detail: value for detail, value in data.items() if detail != 'merchantReference'},
@@ -216,7 +226,7 @@ class AdyenController(http.Controller):
         return werkzeug.utils.redirect('/payment/status')
 
     @http.route('/payment/adyen/notification', type='json', auth='public')
-    def notification(self):
+    def adyen_notification(self):
         """ Process the data sent by Adyen to the webhook based on the event code.
 
         See https://docs.adyen.com/development-resources/webhooks/understand-notifications for the

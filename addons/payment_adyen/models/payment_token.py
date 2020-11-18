@@ -33,7 +33,7 @@ class PaymentToken(models.Model):
         try:
             self.acquirer_id._adyen_make_request(
                 base_url=self.acquirer_id.adyen_recurring_api_url,
-                endpoint_key='disable',
+                endpoint='/disable',
                 payload=data,
                 method='POST'
             )

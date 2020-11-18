@@ -11,25 +11,7 @@ import requests
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
-# Endpoints of the Checkout API.
-# See https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v52/overview
-API_ENDPOINTS = {
-    'disable': {'path': '/disable', 'version': 49},
-    'origin_keys': {'path': '/originKeys', 'version': 53},
-    'payments': {'path': '/payments', 'version': 53},
-    'payments_details': {'path': '/payments/details', 'version': 53},
-    'payment_methods': {'path': '/paymentMethods', 'version': 53},
-}
-
-# Adyen-specific mapping of currency codes in ISO 4217 format to the number of decimals.
-# Only currencies for which Adyen does not follow the ISO 4217 norm are listed here.
-# See https://docs.adyen.com/development-resources/currency-codes
-CURRENCY_DECIMALS = {
-    'CLP': 2,
-    'CVE': 0,
-    'IDR': 0,
-    'ISK': 2,
-}
+from odoo.addons.payment_adyen.const import API_ENDPOINT_VERSIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -163,13 +145,13 @@ class PaymentAcquirer(models.Model):
         """
         return f'ODOO_PARTNER_{partner_id}'
 
-    def _adyen_make_request(self, base_url, endpoint_key, payload=None, method='POST'):
+    def _adyen_make_request(self, base_url, endpoint, payload=None, method='POST'):
         """ Make a request to Adyen API at the specified endpoint.
 
         Note: self.ensure_one()
 
         :param str base_url: The base for the request URL. Depends on both the merchant and the API
-        :param str endpoint_key: The identifier of the endpoint to be reached by the request
+        :param str endpoint: The endpoint to be reached by the request
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
         :return The JSON-formatted content of the response
@@ -188,13 +170,13 @@ class PaymentAcquirer(models.Model):
             :return: The final URL
             :rtype: str
             """
-            _base = _base_url.rstrip("/")  # Remove potential trailing slash
-            _endpoint = _endpoint.lstrip("/")  # Remove potential leading slash
+            _base = _base_url.rstrip('/')  # Remove potential trailing slash
+            _endpoint = _endpoint.lstrip('/')  # Remove potential leading slash
             return f'{_base}/V{_version}/{_endpoint}'
 
         self.ensure_one()
 
-        version, endpoint = (API_ENDPOINTS[endpoint_key][k] for k in ('version', 'path'))
+        version = API_ENDPOINT_VERSIONS[endpoint]
         url = _build_url(base_url, version, endpoint)
         headers = {'X-API-Key': self.adyen_api_key}
         try:

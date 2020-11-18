@@ -5,7 +5,7 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 340,
     'summary': 'Payment Acquirer: Adyen Implementation',
-    'version': '1.0',
+    'version': '2.0',
     'description': """Adyen Payment Acquirer""",
     'depends': ['payment'],
     'data': [
