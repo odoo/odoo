@@ -1,9 +1,15 @@
 .s_popup[data-vcss='001']  {
     .modal-content {
         min-height: $font-size-lg * 2;
+        max-height: none;
         border: 0;
         border-radius: 0;
         box-shadow: $modal-content-box-shadow-sm-up;
+    }
+
+    .modal-dialog {
+        height: auto;
+        min-height: 100%;
     }
 
     // Close icon
