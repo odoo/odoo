@@ -119,7 +119,8 @@ class AccountEdiDocument(models.Model):
                         attachments_to_unlink |= old_attachment
 
                 else:
-                    document.error = move_result.get('error') or _("Error when cancelling the journal entry.")
+                    if not move_result.get('intermediate'):
+                        document.error = move_result.get('error') or _("Error when cancelling the journal entry.")
 
             if invoice_ids_to_cancel:
                 invoices = self.env['account.move'].browse(list(invoice_ids_to_cancel))
