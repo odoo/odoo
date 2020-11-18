@@ -4,6 +4,7 @@
 
 @mixin o-mail-notification-list-item-layout {
     display: flex;
+    flex: 0 0 auto; // Without this, Safari shrinks parent regardless of child content
     align-items: center;
     padding: map-get($spacers, 1);
 
