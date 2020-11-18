@@ -662,6 +662,9 @@ class MailCase(MockEmail):
                 self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
                 self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
                 self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
+            elif value_type in ('monetary'):
+                self.assertEqual(tracking.old_value_monetary, old_value)
+                self.assertEqual(tracking.new_value_monetary, new_value)
             else:
                 self.assertEqual(1, 0)
 
