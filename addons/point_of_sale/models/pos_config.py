@@ -362,6 +362,11 @@ class PosConfig(models.Model):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
             raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
+    @api.constrains('payment_method_ids')
+    def _check_payment_method(self):
+        if not self.payment_method_ids:
+            raise ValidationError(_("No payment method is configured for this POS."))
+
     @api.onchange('iface_tipproduct')
     def _onchange_tipproduct(self):
         if self.iface_tipproduct:
@@ -551,6 +556,7 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
+            self._check_payment_method()
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()
