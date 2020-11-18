@@ -57,6 +57,9 @@ async function addFunctionToQueue({ component, func, priority }) {
  * @param {integer} [param0.priority] determines the execution order of the function
  *  among the update function of other components. Lower priority is executed
  *  first. If no priority is given, the function is executed immediately.
+ *  This param is deprecated because desynchronized update is causing issue if
+ *  there is a new render planned in the meantime (models data become obsolete
+ *  in the update method).
  */
 function useUpdate({ func, priority }) {
     const component = Component.current;
