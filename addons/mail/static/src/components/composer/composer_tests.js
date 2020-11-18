@@ -975,7 +975,15 @@ QUnit.test('mention a partner', async function (assert) {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -1007,6 +1015,8 @@ QUnit.test('mention a partner', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1029,7 +1039,15 @@ QUnit.test('mention a partner after some text', async function (assert) {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -1070,6 +1088,8 @@ QUnit.test('mention a partner after some text', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1092,7 +1112,15 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -1124,6 +1152,8 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',

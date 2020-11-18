@@ -50,7 +50,15 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         needaction_partner_ids: [this.data.currentPartnerId],
         res_id: 20,
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     assert.containsOnce(
         document.body,
         '.o_Message',
@@ -108,6 +116,8 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',

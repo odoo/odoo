@@ -202,21 +202,27 @@ class Throttle {
         if (!this._isCoolingDown) {
             return this._invokeFunction(...args);
         }
-        if (this._pendingInvokeDeferred) {
-            this._pendingInvokeDeferred.reject(new ThrottleReinvokedError(this.id));
-        }
-        try {
-            this._pendingInvokeDeferred = makeDeferred();
-            await Promise.race([this._coolingDownDeferred, this._pendingInvokeDeferred]);
-        } catch (error) {
-            if (
-                !(error instanceof _ThrottleFlushedError) ||
-                error.throttleId !== this.id
-            ) {
-                throw error;
+        while (this._isCoolingDown) {
+            if (this._pendingInvokeDeferred) {
+                this._pendingInvokeDeferred.reject(new ThrottleReinvokedError(this.id));
             }
-        } finally {
-            this._pendingInvokeDeferred = undefined;
+            try {
+                this._pendingInvokeDeferred = makeDeferred();
+                if (!this._coolingDownDeferred) {
+                    await this._pendingInvokeDeferred;
+                } else {
+                    await Promise.race([this._coolingDownDeferred, this._pendingInvokeDeferred]);
+                }
+            } catch (error) {
+                if (
+                    !(error instanceof _ThrottleFlushedError) ||
+                    error.throttleId !== this.id
+                ) {
+                    throw error;
+                }
+            } finally {
+                this._pendingInvokeDeferred = undefined;
+            }
         }
         return this._invokeFunction(...args);
     }

@@ -1135,7 +1135,15 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1156,6 +1164,8 @@ QUnit.test('Post a message containing an email address followed by a mention on 
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1184,7 +1194,15 @@ QUnit.test('mention 2 different partners that have the same name', async functio
             name: "TestPartner",
         },
     );
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1204,6 +1222,8 @@ QUnit.test('mention 2 different partners that have the same name', async functio
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
     await afterNextRender(() => {
         ["@", "T", "e"].forEach((char)=>{
@@ -1214,6 +1234,8 @@ QUnit.test('mention 2 different partners that have the same name', async functio
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');
@@ -1236,7 +1258,15 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
         id: 7,
         name: "General good boy",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1255,6 +1285,8 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1280,7 +1312,15 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
         id: 7,
         name: "General & good",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1299,6 +1339,8 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1324,7 +1366,15 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
         id: 7,
         name: "General good",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1343,6 +1393,8 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() => {
         document.querySelector('.o_ComposerSuggestion').click();
     });
@@ -1368,7 +1420,15 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
         id: 7,
         name: "General good",
     });
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
@@ -1387,6 +1447,8 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() => {
         document.querySelector('.o_ComposerSuggestion').click();
     });
@@ -1427,7 +1489,15 @@ QUnit.test('mention 2 different channels that have the same name', async functio
             name: "my channel",
         },
     );
-    await this.start();
+    await this.start({
+        /**
+         * Enables manual control of time in test.
+         *
+         * Mention suggestion RPCs are being throttled, and we need to assert
+         * after throttled RPC have happened.
+         */
+        hasTimeControl: true,
+    });
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
@@ -1447,6 +1517,8 @@ QUnit.test('mention 2 different channels that have the same name', async functio
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[0].click());
     await afterNextRender(() => {
         ["#", "m", "y"].forEach((char)=>{
@@ -1457,6 +1529,8 @@ QUnit.test('mention 2 different channels that have the same name', async functio
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
+    // Wait after all throttled mention suggestion RPCs have successfully ended
+    await afterNextRender(() => this.env.testUtils.advanceTime(10000));
     await afterNextRender(() => document.querySelectorAll('.o_ComposerSuggestion')[1].click());
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
     assert.containsOnce(document.body, '.o_Message_content', 'should have one message after posting it');

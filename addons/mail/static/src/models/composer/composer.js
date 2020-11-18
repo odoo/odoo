@@ -4,6 +4,7 @@ odoo.define('mail/static/src/models/composer/composer.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const mailUtils = require('mail.utils');
 
 const {
@@ -15,6 +16,30 @@ const {
 function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
+
+        /**
+         * @override
+         */
+        _willCreate() {
+            this._throttleUpdateSuggestedChannels = throttle(
+                this.env,
+                (...args) => this.async(() => this._updateSuggestedChannels(...args)),
+                400
+            );
+            this._throttleUpdateSuggestedPartners = throttle(
+                this.env,
+                (...args) => this.async(() => this._updateSuggestedPartners(...args)),
+                400
+            );
+        }
+
+        /**
+         * @override
+         */
+        _willDelete() {
+            this._throttleUpdateSuggestedChannels.clear();
+            this._throttleUpdateSuggestedPartners.clear();
+        }
 
         //----------------------------------------------------------------------
         // Public
@@ -60,7 +85,7 @@ function factory(dependencies) {
                             mainSuggestedRecordsListName: "mainSuggestedPartners",
                             suggestionModelName: "mail.partner",
                         });
-                        this._updateSuggestedPartners(mentionKeyword);
+                        this._throttleUpdateSuggestedPartners(mentionKeyword);
                         break;
                     case ':':
                         this.update({
@@ -84,7 +109,7 @@ function factory(dependencies) {
                             mainSuggestedRecordsListName: "suggestedChannels",
                             suggestionModelName: "mail.thread",
                         });
-                        this._updateSuggestedChannels(mentionKeyword);
+                        this._throttleUpdateSuggestedChannels(mentionKeyword);
                         break;
                 }
             } else {
