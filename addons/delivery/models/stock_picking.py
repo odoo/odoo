@@ -133,13 +133,13 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
         if not res:
             if self.carrier_id:
-                return self._set_delivery_packaging()
+                return self._set_delivery_package_type()
         else:
             return res
 
-    def _set_delivery_packaging(self):
-        """ This method returns an action allowing to set the product packaging and the shipping weight
-         on the stock.quant.package.
+    def _set_delivery_package_type(self):
+        """ This method returns an action allowing to set the package type and the shipping weight
+        on the stock.quant.package.
         """
         self.ensure_one()
         view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
