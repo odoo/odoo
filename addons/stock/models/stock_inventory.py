@@ -393,8 +393,9 @@ class InventoryLine(models.Model):
 
     @api.depends('inventory_date', 'product_id.stock_move_ids', 'theoretical_qty', 'product_uom_id.rounding')
     def _compute_outdated(self):
-        quants = self.inventory_id._get_quantities()
+        quants_by_inventory = {inventory: inventory._get_quantities() for inventory in self.inventory_id}
         for line in self:
+            quants = quants_by_inventory[line.inventory_id]
             if line.state == 'done' or not line.id:
                 line.outdated = False
                 continue
