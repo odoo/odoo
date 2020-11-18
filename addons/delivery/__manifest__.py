@@ -17,7 +17,6 @@ invoices from picking, the system is able to add and compute the shipping line.
     'data': [
         'security/ir.model.access.csv',
         'security/delivery_carrier_security.xml',
-        'views/product_packaging_view.xml',
         'views/product_template_view.xml',
         'views/delivery_view.xml',
         'views/partner_view.xml',
@@ -29,6 +28,7 @@ invoices from picking, the system is able to add and compute the shipping line.
         'views/res_config_settings_views.xml',
         'wizard/choose_delivery_package_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
+        'views/stock_package_type_views.xml',
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,
