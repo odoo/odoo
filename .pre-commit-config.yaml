@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.8.1
+    hooks:
+      - id: eslint
+        verbose: true
+        args:
+          - --color
+          - --fix
+        additional_dependencies:
+          - eslint@7.13.0
+          - babel-eslint@10.1.0

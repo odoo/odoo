@@ -1,0 +1,24 @@
+name: "github"
+
+on:
+  pull_request:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7.x"
+      - name: Install json parser
+        run: |
+          sudo apt-get install jq
+      - name: Get list of changed files
+        run: |
+          api=https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/files
+          files=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' $api | jq '.[] | .filename')
+          echo "FILES=$(echo $files)" >> $GITHUB_ENV
+      - uses: pre-commit/action@v2.0.0
+        with:
+          extra_args: --show-diff-on-failure --color=always --show-diff-on-failure --files ${{ env.FILES }}
