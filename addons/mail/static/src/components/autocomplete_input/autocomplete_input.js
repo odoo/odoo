@@ -11,6 +11,7 @@ class AutocompleteInput extends Component {
         }
 
         let args = {
+            autoFocus: true,
             select: (ev, ui) => this._onAutocompleteSelect(ev, ui),
             source: (req, res) => this._onAutocompleteSource(req, res),
             focus: ev => this._onAutocompleteFocus(ev),
