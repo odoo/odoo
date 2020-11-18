@@ -1,80 +1,104 @@
 odoo.define('account.hierarchy.selection', function (require) {
 "use strict";
 
-    var core = require('web.core');
-    var relational_fields = require('web.relational_fields');
-    var _t = core._t;
-    var registry = require('web.field_registry');
+    const core = require('web.core');
+    const relational_fields = require('web.relational_fields');
+    const _t = core._t;
+    const registry = require('web.field_registry');
+    const FieldSelection = relational_fields.FieldSelection;
+    const qweb = core.qweb;
 
-
-    var FieldSelection = relational_fields.FieldSelection;
-
-    var qweb = core.qweb;
+    const ACCOUNT_TYPE_HIERARCHY = [
+        [_t("Equity"),                      'account.data_account_type_equity', [
+            [_t("Current Year Earnings"),       'account.data_unaffected_earnings'],
+        ]],
+        [_t("Assets"),                      null, [
+            [_t("Current Assets"),              'account.data_account_type_current_assets', [
+                [_t("Bank and Cash"),               'account.data_account_type_liquidity'],
+                [_t("Prepayments"),                 'account.data_account_type_prepayments'],
+                [_t("Receivable"),                  'account.data_account_type_receivable'],
+            ]],
+            [_t("Non Current Assets"),          'account.data_account_type_non_current_assets', [
+                [_t("Fixed Assets"),                'account.data_account_type_fixed_assets'],
+            ]],
+        ]],
+        [_t("Liabilities"),                 null, [
+            [_t("Payable"),                     'account.data_account_type_payable'],
+            [_t("Current Liabilities"),         'account.data_account_type_current_liabilities'],
+            [_t("Non-Current Liabilities"),     'account.data_account_type_non_current_liabilities'],
+            [_t("Credit Card"),                 'account.data_account_type_credit_card'],
+        ]],
+        [_t("Income"),                      null, [
+            [_t("Revenue"),                     'account.data_account_type_revenue'],
+            [_t("Other Income"),                'account.data_account_type_other_income'],
+        ]],
+        [_t("Expense"),                     null, [
+            [_t("Expenses"),                    'account.data_account_type_expenses'],
+            [_t("Depreciation"),                'account.data_account_type_depreciation'],
+            [_t("Cost of Revenue"),             'account.data_account_type_direct_costs'],
+        ]],
+        [_t("Off Balance"),                 'account.data_account_off_sheet'],
+    ];
 
     var HierarchySelection = FieldSelection.extend({
+
+        /**
+         * Build the multi-level account type hierarchy based on ACCOUNT_TYPE_HIERARCHY as a "select" widget.
+         * @private
+         * @param {jQuery} element:                 parent jquery element on which append the newly created <option/>.
+         * @param {Array} hierarchyNode:            A node inside ACCOUNT_TYPE_HIERARCHY as a list.
+         * @param {Integer} level:                  The level inside the travelled hierarchy.
+         */
+        _renderAccountTypeHierarchy: function(element, hierarchyNode, level){
+            var self = this;
+
+            var text = hierarchyNode[0];
+            var xmlId = hierarchyNode[1];
+            var childrenNodes = hierarchyNode[2] || [];
+
+            var label = $('<div/>').html('&nbsp;'.repeat(6 * level) + text).text();
+
+            // Sub-Tree of options.
+            element.append($('<option/>', {
+                text: label,
+                disabled: xmlId == null,
+                value: xmlId == null ? null : JSON.stringify(self.account_types_mapping[xmlId][0]),
+            }));
+            _.each(childrenNodes, function(childNode){
+                self._renderAccountTypeHierarchy(element, childNode, level + 1);
+            });
+        },
+
+        /**
+         * @Override
+         * Shadow completely the rendering to display the account type hierarchy with multiple levels.
+         */
         _renderEdit: function () {
             var self = this;
-            var prom = Promise.resolve()
-            if (!self.hierarchy_groups) {
-                prom = this._rpc({
+
+            var promise = Promise.resolve();
+            if(!self.account_types_mapping){
+                promise = this._rpc({
                     model: 'account.account.type',
-                    method: 'search_read',
-                    kwargs: {
-                        domain: [],
-                        fields: ['id', 'internal_group', 'display_name'],
-                    },
-                }).then(function(arg) {
-                    self.values = _.map(arg, v => [v['id'], v['display_name']])
-                    self.hierarchy_groups = [
-                        {
-                            'name': _t('Balance Sheet'),
-                            'children': [
-                                {'name': _t('Assets'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'asset'), v => v['id'])},
-                                {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability'), v => v['id'])},
-                                {'name': _t('Equity'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'equity'), v => v['id'])},
-                            ],
-                        },
-                        {
-                            'name': _t('Profit & Loss'),
-                            'children': [
-                                {'name': _t('Income'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'income'), v => v['id'])},
-                                {'name': _t('Expense'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'expense'), v => v['id'])},
-                            ],
-                        },
-                        {'name': _t('Other'), 'ids': _.map(_.filter(arg, v => !['asset', 'liability', 'equity', 'income', 'expense'].includes(v['internal_group'])), v => v['id'])},
-                    ]
+                    method: 'js_fetch_account_types_with_xml_ids',
+                }).then(function(account_types_mapping){
+                    self.values = Object.values(account_types_mapping);
+                    self.account_types_mapping = account_types_mapping;
                 });
             }
 
-            Promise.resolve(prom).then(function() {
+            Promise.resolve(promise).then(function() {
+                // Display the hierarchy of codes.
                 self.$el.empty();
-                self._addHierarchy(self.$el, self.hierarchy_groups, 0);
-                var value = self.value;
-                if (self.field.type === 'many2one' && value) {
-                    value = value.data.id;
-                }
-                self.$el.val(JSON.stringify(value));
+                _.each(ACCOUNT_TYPE_HIERARCHY, function(hierarchyNode){
+                    self._renderAccountTypeHierarchy(self.$el, hierarchyNode, 0);
+                });
+
+                // Format displayed value.
+                self.$el.val(JSON.stringify(self._getRawValue()));
             });
         },
-        _addHierarchy: function(el, group, level) {
-            var self = this;
-            _.each(group, function(item) {
-                var optgroup = $('<optgroup/>').attr(({
-                    'label': $('<div/>').html('&nbsp;'.repeat(6 * level) + item['name']).text(),
-                }))
-                _.each(item['ids'], function(id) {
-                    var value = _.find(self.values, v => v[0] == id)
-                    optgroup.append($('<option/>', {
-                        value: JSON.stringify(value[0]),
-                        text: value[1],
-                    }));
-                })
-                el.append(optgroup)
-                if (item['children']) {
-                    self._addHierarchy(el, item['children'], level + 1);
-                }
-            })
-        }
+
     });
     registry.add("account_hierarchy_selection", HierarchySelection);
 });

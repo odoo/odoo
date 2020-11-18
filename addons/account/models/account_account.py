@@ -9,27 +9,46 @@ class AccountAccountType(models.Model):
     _description = "Account Type"
 
     name = fields.Char(string='Account Type', required=True, translate=True)
-    include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward", help="Used in reports to know if we should consider journal items from the beginning of time instead of from the fiscal year only. Account types that should be reset to zero at each new fiscal year (like expenses, revenue..) should not have this option set.")
-    type = fields.Selection([
-        ('other', 'Regular'),
-        ('receivable', 'Receivable'),
-        ('payable', 'Payable'),
-        ('liquidity', 'Liquidity'),
-    ], required=True, default='other',
-        help="The 'Internal Type' is used for features available on "\
-        "different types of accounts: liquidity type is for cash or bank accounts"\
-        ", payable/receivable is for vendor/customer accounts.")
-    internal_group = fields.Selection([
-        ('equity', 'Equity'),
-        ('asset', 'Asset'),
-        ('liability', 'Liability'),
-        ('income', 'Income'),
-        ('expense', 'Expense'),
-        ('off_balance', 'Off Balance'),
-    ], string="Internal Group",
+    include_initial_balance = fields.Boolean(
+        string="Bring Accounts Balance Forward",
+        store=True,
+        compute='_compute_include_initial_balance',
+        help="Used in reports to know if we should consider journal items from the beginning of time instead of from "
+             "the fiscal year only. Account types that should be reset to zero at each new fiscal year (like expenses, "
+             "revenue..) should not have this option set.")
+    type = fields.Selection(
+        selection=[
+            ('other', 'Regular'),
+            ('receivable', 'Receivable'),
+            ('payable', 'Payable'),
+            ('liquidity', 'Liquidity'),
+        ],
+        required=True, default='other',
+        help="The 'Internal Type' is used for features available on different types of accounts: liquidity type is for "
+             "cash or bank accounts, payable/receivable is for vendor/customer accounts.")
+    internal_group = fields.Selection(
+        selection=[
+            ('equity', 'Equity'),
+            ('asset', 'Asset'),
+            ('liability', 'Liability'),
+            ('income', 'Income'),
+            ('expense', 'Expense'),
+            ('off_balance', 'Off Balance'),
+        ],
+        string="Internal Group",
         required=True,
         help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
-    note = fields.Text(string='Description')
+
+    @api.depends('internal_group')
+    def _compute_include_initial_balance(self):
+        for acc_type in self:
+            acc_type.include_initial_balance = bool(acc_type.internal_group not in ('income', 'expense'))
+
+    @api.model
+    def js_fetch_account_types_with_xml_ids(self):
+        acc_types = self.search([])
+        external_ids = acc_types._get_external_ids()
+        return {external_ids[acc_type.id][0]: (acc_type.id, acc_type.display_name) for acc_type in acc_types if external_ids[acc_type.id]}
 
 
 class AccountAccount(models.Model):
