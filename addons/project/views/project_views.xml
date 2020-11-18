@@ -913,7 +913,8 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                    <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
                 </tree>
             </field>
