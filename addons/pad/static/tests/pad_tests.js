@@ -1,11 +1,11 @@
 odoo.define('pad.pad_tests', function (require) {
 "use strict";
 
-var FieldPad = require('pad.pad');
-var FormView = require('web.FormView');
-var testUtils = require('web.test_utils');
+const FieldPad = require('pad.pad');
+const FormView = require('web.FormView');
+const testUtils = require('web.test_utils');
 
-var createView = testUtils.createView;
+const createView = testUtils.createView;
 
 QUnit.module('pad widget', {
     beforeEach: function () {
@@ -38,17 +38,17 @@ QUnit.module('pad widget', {
     QUnit.test('pad widget display help if server not configured', async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="description" widget="pad"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
             res_id: 1,
             mockRPC: function (route, args) {
                 if (args.method === 'pad_is_configured') {
@@ -73,17 +73,17 @@ QUnit.module('pad widget', {
     QUnit.test('pad widget works, basic case', async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="description" widget="pad"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
             res_id: 1,
             mockRPC: function (route, args) {
                 if (route === 'https://pad.odoo.pad/p/test/1?showChat=false&userName=batman') {
@@ -115,19 +115,19 @@ QUnit.module('pad widget', {
     QUnit.test('pad widget works, with existing data', async function (assert) {
         assert.expect(3);
 
-        var contentDef = testUtils.makeTestPromise();
+        const contentDef = testUtils.makeTestPromise();
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="description" widget="pad"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
             res_id: 2,
             mockRPC: function (route, args) {
                 if (_.str.startsWith(route, 'http')) {
@@ -163,17 +163,17 @@ QUnit.module('pad widget', {
     QUnit.test('pad widget is not considered dirty at creation', async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="description" widget="pad"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
             mockRPC: function (route, args) {
                 if (!args.method) {
                     return Promise.resolve(true);
@@ -184,8 +184,8 @@ QUnit.module('pad widget', {
                 name: "batman",
             },
         });
-        var def = form.canBeDiscarded();
-        var defState = 'unresolved';
+        const def = form.canBeDiscarded();
+        let defState = 'unresolved';
         def.then(function () {
             defState = 'resolved';
         });
@@ -202,17 +202,17 @@ QUnit.module('pad widget', {
     QUnit.test('pad widget is not considered dirty at edition', async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="description" widget="pad"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
             res_id: 2,
             mockRPC: function (route, args) {
                 if (!args.method) {
@@ -225,8 +225,8 @@ QUnit.module('pad widget', {
             },
         });
         await testUtils.form.clickEdit(form);
-        var def = form.canBeDiscarded();
-        var defState = 'unresolved';
+        const def = form.canBeDiscarded();
+        let defState = 'unresolved';
         def.then(function () {
             defState = 'resolved';
         });
@@ -243,17 +243,17 @@ QUnit.module('pad widget', {
     QUnit.test('record should be discarded properly even if only pad has changed', async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="description" widget="pad"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
             res_id: 2,
             mockRPC: function (route, args) {
                 if (!args.method) {
@@ -276,18 +276,18 @@ QUnit.module('pad widget', {
     QUnit.test('no pad deadlock on form change modifying pad readonly modifier', async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'task',
             data: this.data,
-            arch:'<form>' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="use_pad" widget="toggle_button"/>' +
-                            '<field name="description" widget="pad" attrs="{\'readonly\': [(\'use_pad\', \'=\', False)]}"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
+            arch: `<form>
+                    <sheet>
+                        <group>
+                            <field name="use_pad" widget="toggle_button"/>
+                            <field name="description" widget="pad" attrs="{'readonly': [('use_pad', '=', False)]}"/>
+                        </group>
+                    </sheet>
+                </form>`,
             res_id: 2,
             mockRPC: function (route, args) {
                 if (!args.method) {
