@@ -16,7 +16,6 @@ class OgoneController(http.Controller):
     _cancel_url = '/payment/ogone/test/cancel'
     _fleckcheckout_url = '/payment/ogone/flexchekout/feedback'
 
-
     @http.route('/payment/ogone/payment_setup', type='json', auth='public')
     def payment_setup(
             self, acquirer_id, amount=None, currency_id=None, partner_id=None, **data
@@ -34,13 +33,12 @@ class OgoneController(http.Controller):
         """
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
         currency = request.env['res.currency'].browse(currency_id)
-        converted_amount = amount
         partner_sudo = partner_id and request.env['res.partner'].browse(partner_id).sudo()
         partner_country_code = partner_sudo and partner_sudo.country_id.code
         lang_code = request.context.get('lang', 'en-US')
         shopper_reference = partner_sudo and f'ODOO_PARTNER_{partner_sudo.id}'
         form_data = {
-            'amount': converted_amount,
+            'amount': amount,
             'currency': currency,
             'countryCode': partner_country_code,
             'partner_lang': lang_code,  # IETF language tag (e.g.: 'fr-BE')
@@ -71,25 +69,20 @@ class OgoneController(http.Controller):
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
+
+        # fixme this in _get_tx_from_feedback_data
         acquirer_id = kwargs.get('acquirer_id')
         reference = kwargs.get('reference')
         ogone_values = kwargs.get('ogone_values')
         partner_id = kwargs.get('partner_id')
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
-        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
-        ogone_values['acquirer_id'] = acquirer_id
-        ogone_values['partner_id'] = partner_id
-        ogone_values['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        result = acquirer_sudo._ogone_handle_alias_feedback(ogone_values)
-        token_id = result.get('token_id')
-        if not token_id and not ogone_values['AliasId']:
-            _logger.error("The Ogone Alias could not be created.")
-            _logger.error(result.get('error_msg'))
-            # The transaction cannot be completed because we don't have a valid Ogone Alias
-            tx_sudo._set_canceled()
-            return {'tx_status': tx_sudo.state}
-        if result.get('token_id'):
-            tx_sudo.update({'token_id': token_id.id})
+        print(kwargs)
+        kwargs['ogone_values']['acquirer_id'] = acquirer_id
+        kwargs['ogone_values']['partner_id'] = partner_id
+        kwargs['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', kwargs)
+        token_id = tx_sudo.token_id
+        if token_id:
             tx_sudo._send_payment_request()
             return {'tx_status': tx_sudo.state, 'html_3ds': tx_sudo.ogone_html_3ds,
                     'ogone_user_error': tx_sudo.ogone_user_error}
@@ -111,7 +104,8 @@ class OgoneController(http.Controller):
         reference = 'ARJ' + ''.join(random.choice(letters) for letter in range(10))
         currency_id = 7
         debug_str = '' if not debug else "&debug=assets"
-        return werkzeug.utils.redirect(f"/website_payment/pay?amount={amount}&currency_id={currency_id}&reference={reference}{debug_str}")
+        return werkzeug.utils.redirect(
+            f"/website_payment/pay?amount={amount}&currency_id={currency_id}&reference={reference}{debug_str}")
 
     @http.route([
         '/payment/ogone/accept', '/payment/ogone/test/accept',
