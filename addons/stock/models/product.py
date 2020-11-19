@@ -484,7 +484,7 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         action = self.env['stock.quant']._get_quants_action(domain)
         action["name"] = _('Update Quantity')
         return action
