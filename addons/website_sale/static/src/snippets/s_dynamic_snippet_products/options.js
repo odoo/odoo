@@ -21,16 +21,11 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     onBuilt: function () {
         this._super.apply(this, arguments);
         this._rpc({
-            model: 'ir.model.data',
-            method: 'search_read',
-            kwargs: {
-                domain: [['module', '=', 'website_sale'], ['model', '=', 'website.snippet.filter']],
-                fields: ['id', 'res_id'],
-            }
+            route: '/website_sale/snippet/options_filters'
         }).then((data) => {
-            if (data) {
-                this.$target.get(0).dataset.filterId = data[0].res_id;
-                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            if (data.length) {
+                this.$target.get(0).dataset.filterId = data[0].id;
+                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].id].limit;
             }
         });
     },
