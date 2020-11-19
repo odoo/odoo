@@ -195,7 +195,7 @@ class User(models.Model):
     @api.depends_context('force_company')
     def _compute_company_employee(self):
         for user in self:
-            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
+            user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', 'in', self.company_ids.ids)], limit=1)
 
     def _search_company_employee(self, operator, value):
         employees = self.env['hr.employee'].search([
