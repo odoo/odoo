@@ -4,7 +4,7 @@
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo.tests.common import users
 from odoo.tools import mute_logger, formataddr
 
@@ -133,13 +133,11 @@ class TestChannelAccessRights(MailCommon):
         with self.assertRaises(AccessError):
             group_private.read(['name'])
 
-        self.env['mail.channel.partner'].create({
-            'partner_id': self.env.user.partner_id.id,
-            'channel_id': group_private.id,
-        })
-        group_private = self.env['mail.channel'].browse(self.group_private.id)
-        self.assertTrue(group_private.is_member)
-        group_private.read(['name', 'channel_last_seen_partner_ids'])
+        with self.assertRaises(AccessError):
+            self.env['mail.channel.partner'].create({
+                'partner_id': self.env.user.partner_id.id,
+                'channel_id': group_private.id,
+            })
 
 
 class TestChannelInternals(MailCommon):
@@ -169,6 +167,15 @@ class TestChannelInternals(MailCommon):
             signature='--\nEvite'
         )
         cls.partner_employee_nomail = cls.user_employee_nomail.partner_id
+
+    @users('employee')
+    def test_channel_form(self):
+        """A user that create a private channel should be able to read it."""
+        channel_form = Form(self.env['mail.channel'].with_user(self.user_employee))
+        channel_form.name = 'Test private channel'
+        channel_form.public = 'private'
+        channel = channel_form.save()
+        self.assertEqual(channel.name, 'Test private channel', 'Must be able to read the created channel')
 
     def test_channel_members(self):
         self.assertEqual(self.test_channel.message_channel_ids, self.test_channel)
