@@ -114,29 +114,38 @@
         </td>
 
         <!-- use latam prices (to include/exclude VAT) -->
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
+            <t t-set="l10n_ar_values" t-value="line._l10n_ar_prices_and_taxes()"/>
+        </t>
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
-            <attribute name="t-field">line.l10n_latam_price_unit</attribute>
+            <attribute name="t-field"></attribute>
+            <attribute name="t-esc">l10n_ar_values['l10n_latam_price_unit']</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </xpath>
         <xpath expr="//span[@id='line_tax_ids']" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids))</attribute>
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), l10n_ar_values['l10n_latam_tax_ids']))</attribute>
         </xpath>
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
-            <attribute name="t-value">current_subtotal + line.l10n_latam_price_subtotal</attribute>
+            <attribute name="t-value">current_subtotal + l10n_ar_values['l10n_latam_price_subtotal']</attribute>
         </t>
         <!-- if b2c we still wants the latam subtotal -->
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" position="attributes">
-            <attribute name="t-value">current_subtotal + line.l10n_latam_price_subtotal</attribute>
+            <attribute name="t-value">current_subtotal + l10n_ar_values['l10n_latam_price_subtotal']</attribute>
         </t>
         <!-- label amount for subtotal column on b2b and b2c -->
         <xpath expr="//th[@name='th_subtotal']/span[@groups='account.group_show_line_subtotals_tax_included']" position="replace">
             <span groups="account.group_show_line_subtotals_tax_included">Amount</span>
         </xpath>
         <span t-field="line.price_subtotal" position="attributes">
-            <attribute name="t-field">line.l10n_latam_price_subtotal</attribute>
+            <attribute name="t-field"></attribute>
+            <attribute name="t-esc">l10n_ar_values['l10n_latam_price_subtotal']</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
         <!-- if b2c we still wants the latam subtotal -->
         <span t-field="line.price_total" position="attributes">
-            <attribute name="t-field">line.l10n_latam_price_subtotal</attribute>
+            <attribute name="t-field"></attribute>
+            <attribute name="t-esc">l10n_ar_values['l10n_latam_price_subtotal']</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 
         <t t-set="tax_totals" position="attributes">
@@ -157,7 +166,7 @@
             <attribute name="t-if">o.tax_totals_json</attribute>
         </xpath>
         <span id="line_tax_ids" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), l10n_ar_values['l10n_latam_tax_ids'].filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
         </span>
 
         <!-- remove payment reference that is not used in Argentina -->
