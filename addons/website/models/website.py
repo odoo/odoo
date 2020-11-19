@@ -160,6 +160,17 @@ class Website(models.Model):
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
+    def _bootstrap_snippet_filters(self):
+        ir_filter = self.env.ref('website.dynamic_snippet_country_filter', raise_if_not_found=False)
+        if ir_filter:
+            self.env['website.snippet.filter'].create({
+                'field_names': 'name,code,image_url:image,phone_code:char',
+                'filter_id': ir_filter.id,
+                'limit': 16,
+                'name': _('Countries'),
+                'website_id': self.id,
+            })
+
     @api.model
     def create(self, vals):
         self._handle_favicon(vals)
@@ -170,6 +181,7 @@ class Website(models.Model):
 
         res = super(Website, self).create(vals)
         res._bootstrap_homepage()
+        res._bootstrap_snippet_filters()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'

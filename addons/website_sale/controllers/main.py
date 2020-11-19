@@ -1257,3 +1257,18 @@ class WebsiteSale(http.Controller):
         if visitor_sudo:
             request.env['website.track'].sudo().search([('visitor_id', '=', visitor_sudo.id), ('product_id', '=', product_id)]).unlink()
         return self._get_products_recently_viewed()
+
+    # --------------------------------------------------------------------------
+    # Website Snippet Filters
+    # --------------------------------------------------------------------------
+
+    @http.route('/website_sale/snippet/options_filters', type='json', auth='user', website=True)
+    def get_dynamic_snippet_filters(self):
+        domain = expression.AND([
+            request.website.website_domain(),
+            ['|', ('filter_id.model_id', '=', 'product.product'), ('action_server_id.model_id.model', '=', 'product.product')]
+        ])
+        filters = request.env['website.snippet.filter'].sudo().search_read(
+            domain, ['id']
+        )
+        return filters
