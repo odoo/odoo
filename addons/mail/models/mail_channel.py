@@ -10,6 +10,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import ormcache, formataddr
+from odoo.exceptions import AccessError
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
@@ -31,6 +32,26 @@ class ChannelPartner(models.Model):
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
+
+    @api.model
+    def create(self, vals):
+        """Similar access rule as the access rule of the mail channel.
+
+        It can not be implemented in XML, because when the record will be created, the
+        partner will be added in the channel and the security rule will always authorize
+        the creation.
+        """
+        if 'channel_id' in vals and not self.env.is_admin():
+            channel_id = self.env['mail.channel'].browse(vals['channel_id'])
+            if not channel_id._can_invite(vals.get('partner_id')):
+                raise AccessError(_('This user can not be added in this channel'))
+        return super(ChannelPartner, self).create(vals)
+
+    def write(self, vals):
+        if not self.env.is_admin():
+            if {'channel_id', 'partner_id', 'partner_email'} & set(vals):
+                raise AccessError(_('You can not write on this field'))
+        return super(ChannelPartner, self).write(vals)
 
 
 class Moderation(models.Model):
@@ -67,9 +88,6 @@ class Channel(models.Model):
             res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
         return res
 
-    def _default_channel_last_seen_partner_ids(self):
-        return [(0, 0, {"partner_id": self.env.user.partner_id.id})]
-
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return base64.b64encode(open(image_path, 'rb').read())
@@ -86,7 +104,7 @@ class Channel(models.Model):
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     # depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`
-    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'], default=_default_channel_last_seen_partner_ids)
+    channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'])
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners', depends=['channel_last_seen_partner_ids'])
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
@@ -211,10 +229,29 @@ class Channel(models.Model):
             defaults = self.default_get(['image_128'])
             vals['image_128'] = defaults['image_128']
 
+        current_partner = self.env.user.partner_id.id
+        # always add current user to new channel, go through
+        # channel_last_seen_partner_ids otherwise in v14 the channel is not
+        # visible for the user (because is_pinned is false and taken in account)
+        if 'channel_partner_ids' in vals:
+            vals['channel_partner_ids'] = [
+                entry
+                for entry in vals['channel_partner_ids']
+                if entry[0] != 4 or entry[1] != current_partner
+            ]
+        membership = vals.setdefault('channel_last_seen_partner_ids', [])
+        if all(entry[0] != 0 or entry[2].get('partner_id') != current_partner for entry in membership):
+            membership.append((0, False, {'partner_id': current_partner}))
+
+        visibility_default = self._fields['public'].default(self)
+        visibility = vals.pop('public', visibility_default)
+        vals['public'] = 'public'
         # Create channel and alias
         channel = super(Channel, self.with_context(
             mail_create_nolog=True, mail_create_nosubscribe=True)
         ).create(vals)
+        if visibility != 'public':
+            channel.sudo().public = visibility
 
         if vals.get('group_ids'):
             channel._subscribe_users()
@@ -374,7 +411,7 @@ class Channel(models.Model):
         if moderation_status == 'rejected':
             return self.env['mail.message']
 
-        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
+        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
 
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(message_type=message_type, moderation_status=moderation_status, **kwargs)
 
@@ -450,7 +487,7 @@ class Channel(models.Model):
         return True
 
     def _update_moderation_email(self, emails, status):
-        """ This method adds emails into either white or black of the channel list of emails 
+        """ This method adds emails into either white or black of the channel list of emails
             according to status. If an email in emails is already moderated, the method updates the email status.
             :param emails: list of email addresses to put in white or black list of channel.
             :param status: value is 'allow' or 'ban'. Emails are put in white list if 'allow', in black list if 'ban'.
@@ -843,6 +880,22 @@ class Channel(models.Model):
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
 
+    def _can_invite(self, partner_id):
+        """Return True if the current user can invite the partner to the channel."""
+        self.ensure_one()
+        sudo_self = self.sudo()
+        if sudo_self.public == 'public':
+            return True
+        if sudo_self.public == 'private':
+            return self.is_member
+
+        # get the user related to the invited partner
+        partner = self.env['res.partner'].browse(partner_id).exists()
+        invited_user_id = partner.user_ids[:1]
+        if invited_user_id:
+            return (self.env.user | invited_user_id) <= sudo_self.group_public_id.users
+        return False
+
     @api.model
     def channel_set_custom_name(self, channel_id, name=False):
         domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.id', '=', channel_id)]
@@ -937,7 +990,6 @@ class Channel(models.Model):
             'name': name,
             'public': privacy,
             'email_send': False,
-            'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
