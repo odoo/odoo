@@ -25,6 +25,7 @@ class Message(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'
+    _delete = 'soft'
 
     @api.model
     def default_get(self, fields):

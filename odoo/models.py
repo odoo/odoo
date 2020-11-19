@@ -239,7 +239,7 @@ IdType = (int, str, NewId)
 PREFETCH_MAX = 1000
 
 # special columns automatically created by the ORM
-LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
+LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date', 'unlink_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 # valid SQL aggregation functions
@@ -363,6 +363,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     as attribute.
     """
 
+    _delete = 'hard'
+
     _depends = {}
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
@@ -455,6 +457,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'res.users', string='Last Updated by', automatic=True, readonly=True))
             add('write_date', fields.Datetime(
                 string='Last Updated on', automatic=True, readonly=True))
+            if (self._delete == 'soft'):
+                add('unlink_date', fields.Datetime(
+                    string='deleted on', automatic=False, readonly=False))
             last_modified_name = 'compute_concurrency_field_with_access'
         else:
             last_modified_name = 'compute_concurrency_field'
@@ -3444,7 +3449,10 @@ Fields:
                 # Delete the records' properties.
                 Property.search([('res_id', 'in', refs)]).unlink()
 
-                query = "DELETE FROM %s WHERE id IN %%s" % self._table
+                if (self._delete == 'hard'):
+                    query = "DELETE FROM %s WHERE id IN %%s" % self._table
+                elif (self._delete == 'soft'):
+                    query = "UPDATE %s SET unlink_date = NOW() WHERE id IN %%s" % self._table
                 cr.execute(query, (sub_ids,))
 
                 # Removing the ir_model_data reference if the record being deleted
@@ -4219,6 +4227,9 @@ Fields:
             # operators too
             if not any(item[0] == self._active_name for item in domain):
                 domain = [(self._active_name, '=', 1)] + domain
+
+        if self._delete == 'soft':
+            domain = [('unlink_date', '=', False)] + domain
 
         if domain:
             return expression.expression(domain, self).query
