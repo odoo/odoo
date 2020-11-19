@@ -1528,7 +1528,7 @@ var ChatManager =  AbstractService.extend({
         if ((chatSession.channel_type === "channel") && (chatSession.state === "open")) {
             this._addChannel(chatSession, {autoswitch: false});
             if (!chatSession.is_minimized && chatSession.info !== 'creation') {
-                web_client.do_notify(_t("Invitation"), _t("You have been invited to: ") + chatSession.name);
+                web_client.do_notify(_t("Invitation"), _.str.sprintf(_t("You have been invited to: %s"), _.escape(chatSession.name)));
             }
         }
         // partner specific change (open a detached window for example)
@@ -1616,9 +1616,9 @@ var ChatManager =  AbstractService.extend({
             if (channel) {
                 var msg;
                 if (_.contains(['public', 'private'], channel.type)) {
-                    msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
+                    msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), _.escape(channel.name));
                 } else {
-                    msg = _.str.sprintf(_t('You unpinned your conversation with <b>%s</b>.'), channel.name);
+                    msg = _.str.sprintf(_t('You unpinned your conversation with <b>%s</b>.'), _.escape(channel.name));
                 }
                 this._removeChannel(channel);
                 this.chatBus.trigger("unsubscribe_from_channel", data.id);
