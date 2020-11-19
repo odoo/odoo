@@ -107,8 +107,7 @@ class TestComposerForm(TestMailComposer):
     @users('employee')
     def test_mail_composer_mass(self):
         composer_form = Form(self.env['mail.compose.message'].with_context(self._get_web_context(self.test_records, add_web=True)))
-        # TDE FIXME: currently failing
-        # self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
+        self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
         # record name not displayed currently in view
         # self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertFalse(composer_form.no_auto_thread)
