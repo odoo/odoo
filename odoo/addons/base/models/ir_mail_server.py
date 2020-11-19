@@ -15,6 +15,7 @@ import sys
 import threading
 
 import html2text
+import idna
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -131,7 +132,7 @@ class IrMailServer(models.Model):
             except UserError as e:
                 # let UserErrors (messages) bubble up
                 raise e
-            except UnicodeError as e:
+            except (UnicodeError, idna.core.InvalidCodepoint) as e:
                 raise UserError(_("Invalid server name !\n %s", ustr(e)))
             except (gaierror, timeout) as e:
                 raise UserError(_("No response received. Check server address and port number.\n %s", ustr(e)))
@@ -234,12 +235,9 @@ class IrMailServer(models.Model):
 
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
-            # The user/password must be converted to bytestrings in order to be usable for
-            # certain hashing schemes, like HMAC.
-            # See also bug #597143 and python issue #5285
-            smtp_user = pycompat.to_text(ustr(smtp_user))
-            smtp_password = pycompat.to_text(ustr(smtp_password))
-            connection.login(smtp_user, smtp_password)
+            local, at, domain = smtp_user.rpartition('@')
+            domain = idna.encode(domain).decode('ascii')
+            connection.login(f"{local}{at}{domain}", smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
