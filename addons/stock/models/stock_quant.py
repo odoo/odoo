@@ -45,8 +45,9 @@ class StockQuant(models.Model):
         if not self._is_inventory_mode():
             return
         domain = [('type', '=', 'product')]
-        if self.env.context.get('product_tmpl_id'):
-            domain = expression.AND([domain, [('product_tmpl_id', '=', self.env.context['product_tmpl_id'])]])
+        if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
+            products = self.env.context.get('product_tmpl_id', []) + [self.env.context.get('product_tmpl_id', 0)]
+            domain = expression.AND([domain, [('product_tmpl_id', 'in', products)]])
         return domain
 
     product_id = fields.Many2one(
