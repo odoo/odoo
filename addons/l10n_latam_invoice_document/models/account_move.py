@@ -2,9 +2,6 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-import json
-import re
-from odoo.tools.misc import formatLang
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -44,8 +41,6 @@ class AccountMove(models.Model):
             create_column(self.env.cr, "account_move", "l10n_latam_document_type_id", "int4")
         return super()._auto_init()
 
-    l10n_latam_amount_untaxed = fields.Monetary(compute='_compute_l10n_latam_amount_and_taxes')
-    l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
         'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index=True,
@@ -130,31 +125,6 @@ class AccountMove(models.Model):
 
         return super(AccountMove, self)._get_starting_sequence()
 
-    def _compute_l10n_latam_amount_and_taxes(self):
-        recs_invoice = self.filtered(lambda x: x.is_invoice())
-        for invoice in recs_invoice:
-            tax_lines = invoice.line_ids.filtered('tax_line_id')
-            currencies = invoice.line_ids.filtered(lambda x: x.currency_id == invoice.currency_id).mapped('currency_id')
-            included_taxes = invoice.l10n_latam_document_type_id and \
-                invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
-            if not included_taxes:
-                l10n_latam_amount_untaxed = invoice.amount_untaxed
-                not_included_invoice_taxes = tax_lines
-            else:
-                included_invoice_taxes = tax_lines.filtered(lambda x: x.tax_line_id in included_taxes)
-                not_included_invoice_taxes = tax_lines - included_invoice_taxes
-                if invoice.is_inbound():
-                    sign = -1
-                else:
-                    sign = 1
-                amount = 'amount_currency' if len(currencies) == 1 else 'balance'
-                l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped(amount))
-            invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
-            invoice.l10n_latam_tax_ids = not_included_invoice_taxes
-        remaining = self - recs_invoice
-        remaining.l10n_latam_amount_untaxed = False
-        remaining.l10n_latam_tax_ids = [(5, 0)]
-
     def _post(self, soft=True):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
             if rec.move_type in ('in_receipt', 'out_receipt'):
@@ -226,20 +196,6 @@ class AccountMove(models.Model):
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
-    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
-        # Overridden from account in order to exclude some taxes from the totals' computation.
-        # TODO CLEANME: we'd better get rid of those l10n_latam_tax_ids fields.
-        report_or_portal_view = 'commit_assetsbundle' in self.env.context \
-                                or not self.env.context.get('params', {}).get('view_type') == 'form'
-
-        if report_or_portal_view and self.l10n_latam_document_type_id:
-            # Under such circumstances, we want to hide some taxes, and only
-            # display the ones in l10n_latam_tax_ids fields
-            tax_line_id_filter = lambda aml, tax: tax in aml.move_id.l10n_latam_tax_ids.tax_line_id
-            tax_ids_filter = lambda aml, tax: tax in aml.l10n_latam_tax_ids
-
-        return super()._prepare_tax_lines_data_for_totals_from_invoice(tax_line_id_filter, tax_ids_filter)
-
     @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
     def _check_unique_vendor_number(self):
         """ The constraint _check_unique_sequence_number is valid for customer bills but not valid for us on vendor
@@ -259,9 +215,3 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
-
-    def _get_tax_totals_for_latam_invoice_report(self):
-        self.ensure_one()
-        tax_totals = json.loads(self.tax_totals_json)
-        tax_totals['amount_untaxed'] = self.l10n_latam_amount_untaxed
-        return tax_totals
