@@ -265,19 +265,33 @@ function factory(dependencies) {
             if (this.subjectContent) {
                 postData.subject = this.subjectContent;
             }
-            let messageId;
-            if (thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(body);
-                Object.assign(postData, {
-                    subtype_xmlid: 'mail.mt_comment',
-                });
-                if (command) {
-                    messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
-                        channelId: thread.id,
-                        command: command.name,
-                        postData,
-                    }));
+            try {
+                let messageId;
+                this.update({ isPostingMessage: true });
+                if (thread.model === 'mail.channel') {
+                    const command = this._getCommandFromText(body);
+                    Object.assign(postData, {
+                        subtype_xmlid: 'mail.mt_comment',
+                    });
+                    if (command) {
+                        messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                            channelId: thread.id,
+                            command: command.name,
+                            postData,
+                        }));
+                    } else {
+                        messageId = await this.async(() =>
+                            this.env.models['mail.thread'].performRpcMessagePost({
+                                postData,
+                                threadId: thread.id,
+                                threadModel: thread.model,
+                            })
+                        );
+                    }
                 } else {
+                    Object.assign(postData, {
+                        subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
+                    });
                     messageId = await this.async(() =>
                         this.env.models['mail.thread'].performRpcMessagePost({
                             postData,
@@ -285,42 +299,33 @@ function factory(dependencies) {
                             threadModel: thread.model,
                         })
                     );
+                    const [messageData] = await this.async(() => this.env.services.rpc({
+                        model: 'mail.message',
+                        method: 'message_format',
+                        args: [[messageId]],
+                    }, { shadow: true }));
+                    this.env.models['mail.message'].insert(Object.assign(
+                        {},
+                        this.env.models['mail.message'].convertData(messageData),
+                        {
+                            originThread: [['insert', {
+                                id: thread.id,
+                                model: thread.model,
+                            }]],
+                        })
+                    );
+                    thread.loadNewMessages();
                 }
-            } else {
-                Object.assign(postData, {
-                    subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                });
-                messageId = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcMessagePost({
-                        postData,
-                        threadId: thread.id,
-                        threadModel: thread.model,
-                    })
-                );
-                const [messageData] = await this.async(() => this.env.services.rpc({
-                    model: 'mail.message',
-                    method: 'message_format',
-                    args: [[messageId]],
-                }, { shadow: true }));
-                this.env.models['mail.message'].insert(Object.assign(
-                    {},
-                    this.env.models['mail.message'].convertData(messageData),
-                    {
-                        originThread: [['insert', {
-                            id: thread.id,
-                            model: thread.model,
-                        }]],
-                    })
-                );
-                thread.loadNewMessages();
+                for (const threadView of this.thread.threadViews) {
+                    // Reset auto scroll to be able to see the newly posted message.
+                    threadView.update({ hasAutoScrollOnMessageReceived: true });
+                }
+                thread.refreshFollowers();
+                thread.fetchAndUpdateSuggestedRecipients();
+                this._reset();
+            } finally {
+                this.update({ isPostingMessage: false });
             }
-            for (const threadView of this.thread.threadViews) {
-                // Reset auto scroll to be able to see the newly posted message.
-                threadView.update({ hasAutoScrollOnMessageReceived: true });
-            }
-            thread.refreshFollowers();
-            thread.fetchAndUpdateSuggestedRecipients();
-            this._reset();
         }
 
         /**
@@ -449,7 +454,7 @@ function factory(dependencies) {
             if (!this.textInputContent && this.attachments.length === 0) {
                 return false;
             }
-            return !this.hasUploadingAttachment;
+            return !this.hasUploadingAttachment && !this.isPostingMessage;
         }
 
         /**
@@ -874,6 +879,7 @@ function factory(dependencies) {
             dependencies: [
                 'attachments',
                 'hasUploadingAttachment',
+                'isPostingMessage',
                 'textInputContent',
             ],
             default: false,
@@ -947,6 +953,10 @@ function factory(dependencies) {
         isLog: attr({
             default: false,
         }),
+        /**
+         * Determines whether a post_message request is currently pending.
+         */
+        isPostingMessage: attr(),
         mainSuggestedRecordsList: attr({
             compute: '_computeMainSuggestedRecordsList',
             dependencies: [
