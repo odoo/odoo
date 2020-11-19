@@ -143,6 +143,7 @@
                             <field name="product_tracking" invisible="1"/>
                             <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
+                            <field name="forecasted_issue" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row no-gutters d-flex">
@@ -159,6 +160,8 @@
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <span class='text-bf'>To Produce</span>
+                                <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}"/>
+                                <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger"/>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">

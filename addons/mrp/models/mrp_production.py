@@ -255,6 +255,7 @@ class MrpProduction(models.Model):
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_components_availability')
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
+    forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
 
     @api.depends('product_id', 'bom_id', 'company_id')
     def _compute_allowed_product_ids(self):
@@ -516,6 +517,18 @@ class MrpProduction(models.Model):
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
     ]
 
+    @api.depends('product_uom_qty', 'date_planned_start')
+    def _compute_forecasted_issue(self):
+        for order in self:
+            warehouse = order.location_dest_id.get_warehouse()
+            order.forecasted_issue = False
+            if order.product_id:
+                virtual_available = order.product_id.with_context(warehouse=warehouse.id, to_date=order.date_planned_start).virtual_available
+                if order.state == 'draft':
+                    virtual_available += order.product_uom_qty
+                if virtual_available < 0:
+                    order.forecasted_issue = True
+
     @api.model
     def _search_delay_alert_date(self, operator, value):
         late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
@@ -776,6 +789,19 @@ class MrpProduction(models.Model):
         self.ensure_one()
         self.is_locked = not self.is_locked
         return True
+
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = self.product_id.action_product_forecast_report()
+        action['context'] = {
+            'active_id': self.product_id.id,
+            'active_model': 'product.product',
+            'move_to_match_ids': self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).ids
+        }
+        warehouse = self.picking_type_id.warehouse_id
+        if warehouse:
+            action['context']['warehouse'] = warehouse.id
+        return action
 
     def _create_workorder(self):
         for production in self:
