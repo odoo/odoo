@@ -488,7 +488,8 @@ var ListController = BasicController.extend({
                             keepWidths: true,
                             selectedRecords: [],
                         });
-                        this._updateSelectionBox();
+                        // trigger selection_cahnged which will update selection box as well as update control panel
+                        this.trigger_up('selection_changed', { selection: [] });
                         this.renderer.focusCell(recordId, node);
                         resolve(!Object.keys(changes).length);
                     })
