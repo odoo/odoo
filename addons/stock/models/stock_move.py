@@ -417,6 +417,8 @@ class StockMove(models.Model):
                 outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
             elif move.picking_type_id.code in self._consuming_picking_types():
                 move.forecast_availability = move.reserved_availability
+            elif move.picking_type_id.code == 'incoming':
+                move._get_forecast_availability_incoming()
 
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
             if not warehouse:  # No prediction possible if no warehouse.
@@ -660,8 +662,18 @@ class StockMove(models.Model):
     def action_product_forecast_report(self):
         self.ensure_one()
         action = self.product_id.action_product_forecast_report()
-        warehouse = self.location_id.get_warehouse()
-        action['context'] = {'warehouse': warehouse.id, } if warehouse else {}
+        action['context'] = {
+            'active_id': self.product_id.id,
+            'active_model': 'product.product',
+            'move_to_match_ids': self.ids,
+        }
+        if self.picking_type_id.code == 'outgoing':
+            warehouse = self.location_id.get_warehouse()
+        else:
+            warehouse = self.location_dest_id.get_warehouse()
+
+        if warehouse:
+            action['context']['warehouse'] = warehouse.id
         return action
 
     def _do_unreserve(self):
@@ -863,6 +875,13 @@ class StockMove(models.Model):
                 return 'assigned'
             else:
                 return moves_todo[-1:].state or 'draft'
+
+    def _get_forecast_availability_incoming(self):
+        self.ensure_one()
+        warehouse = self.location_dest_id.get_warehouse()
+        self.forecast_availability = self.product_id.with_context(warehouse=warehouse.id, to_date=self.date).virtual_available
+        if self.state == 'draft':
+            self.forecast_availability += self.product_uom_qty
 
     @api.onchange('product_id', 'picking_type_id')
     def _onchange_product_id(self):
