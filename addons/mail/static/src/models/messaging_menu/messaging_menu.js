@@ -68,7 +68,8 @@ function factory(dependencies) {
             const inboxMailbox = this.env.messaging.inbox;
             const unreadChannels = this.env.models['mail.thread'].all(thread =>
                 thread.localMessageUnreadCounter > 0 &&
-                thread.model === 'mail.channel'
+                thread.model === 'mail.channel' &&
+                thread.isPinned
             );
             let counter = unreadChannels.length;
             if (inboxMailbox) {
