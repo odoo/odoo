@@ -208,13 +208,16 @@ def log_ormcache_stats(sig=None, frame=None):
         # set logger prefix to dbname
         me.dbname = dbname
         entries = Counter(k[:2] for k in reg._Registry__cache.d)
+        mem = defaultdict(int)
+        for key, values in reg._Registry__cache.d.items():
+            mem[key[:2]] += values.__sizeof__()
         # show entries sorted by model name, method name
         for key in sorted(entries, key=lambda key: (key[0], key[1].__name__)):
             model, method = key
             stat = STAT[(dbname, model, method)]
             _logger.info(
-                "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-                entries[key], stat.hit, stat.miss, stat.err, stat.ratio, model, method.__name__,
+                "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, %6d mem, for %s.%s",
+                entries[key], stat.hit, stat.miss, stat.err, stat.ratio, mem[key], model, method.__name__,
             )
 
     me.dbname = me_dbname
