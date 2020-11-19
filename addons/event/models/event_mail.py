@@ -157,7 +157,8 @@ class EventMailScheduler(models.Model):
         for scheduler in schedulers:
             try:
                 with self.env.cr.savepoint():
-                    scheduler.execute()
+                    # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
+                    self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
                 self.invalidate_cache()
