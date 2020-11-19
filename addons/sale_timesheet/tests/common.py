@@ -111,7 +111,6 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'allow_timesheets': True,
             'allow_billable': False,
             'partner_id': False,
-            'subtask_project_id': cls.project_subtask.id,
         })
 
         # Create service products

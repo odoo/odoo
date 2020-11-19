@@ -208,7 +208,7 @@ class ProjectTaskRecurrence(models.Model):
         create_values = {
             field: value[0] if isinstance(value, tuple) else value for field, value in task_values.items()
         }
-        create_values['stage_id'] = task.project_id.type_ids[0].id if task.project_id.type_ids else task.stage_id
+        create_values['stage_id'] = task.project_id.type_ids[0].id if task.project_id.type_ids else task.stage_id.id
         create_values['user_id'] = False
         return create_values
 

@@ -3,7 +3,6 @@
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import tagged
 
-
 @tagged('post_install', '-at_install')
 class TestProjectBilling(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
@@ -85,7 +84,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         cls.project_employee_rate.write({
             'sale_order_id': cls.sale_order_1.id,
             'partner_id': cls.sale_order_1.partner_id.id,
-            'subtask_project_id': cls.project_subtask.id,
         })
         cls.project_employee_rate_manager = cls.env['project.sale.line.employee.map'].create({
             'project_id': cls.project_employee_rate.id,
@@ -265,7 +263,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         self.assertEqual(self.project_employee_rate_manager.project_id, timesheet1.project_id, "The timesheet should be linked to the project of the map entry")
 
         # create a subtask
-        subtask = Task.with_context(default_project_id=self.project_employee_rate.subtask_project_id.id).create({
+        subtask = Task.with_context(default_project_id=self.project_subtask.id).create({
             'name': 'first subtask task',
             'parent_id': task.id,
         })
@@ -342,9 +340,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         Task = self.env['project.task'].with_context(tracking_disable=True)
         Timesheet = self.env['account.analytic.line']
 
-        # set subtask project on task rate project
-        self.project_task_rate.write({'subtask_project_id': self.project_subtask.id})
-
         # create a task
         task = Task.with_context(default_project_id=self.project_task_rate.id).create({
             'name': 'first task',
@@ -366,7 +361,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         self.assertEqual(task.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the task since the pricing type of the project is task rate.")
 
         # create a subtask
-        subtask = Task.with_context(default_project_id=self.project_task_rate.subtask_project_id.id).create({
+        subtask = Task.with_context(default_project_id=self.project_subtask.id).create({
             'name': 'first subtask task',
             'parent_id': task.id,
         })
