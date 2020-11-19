@@ -108,12 +108,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @return {undefined}
          */
         _displayInlineForm: function (radio) {
-            // Hide all inline forms
-            this.$('[name="o_payment_inline_form"]').addClass('d-none');
-            this._hideError();
-
-            // Reset the payment flow to let acquirers overwrite it
-            this._setPaymentFlow();
+            this._hideInlineForms(); // Collapse previously opened inline forms
+            this._hideError(); // The error is only relevant until it is hidden with its inline form
+            this._setPaymentFlow(); // Reset the payment flow to let acquirers overwrite it
 
             // Extract contextual values from the radio button
             const provider = this._getProviderFromRadio(radio);
@@ -225,6 +222,14 @@ odoo.define('payment.payment_form_mixin', require => {
          * @return {jQuery} The removed error
          */
         _hideError: () => this.$('div[name="o_payment_error"]').remove(),
+
+        /**
+         * Collapse all inline forms.
+         *
+         * @private
+         * @return {undefined}.
+         */
+        _hideInlineForms: () => this.$('[name="o_payment_inline_form"]').addClass('d-none'),
 
         /**
          * Hide the "Save my payment details" label and checkbox, and the submit button.

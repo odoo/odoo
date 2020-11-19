@@ -193,6 +193,8 @@ odoo.define('payment.manage_form', require => {
             const paymentOptionId = this._getPaymentOptionIdFromRadio(checkedRadio);
             const flow = this._getPaymentFlowFromRadio(checkedRadio);
 
+            // Save the payment method
+            this._hideError(); // Don't keep the error displayed if the user is going through 3DS2
             this._disableButton(true);
             if (flow !== 'token') { // Creation of a new token
                 this.txContext.tokenizationRequested = true;
