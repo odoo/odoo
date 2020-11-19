@@ -110,7 +110,7 @@
                             <td/>
                             <td/>
                         </tr>
-                        <tr t-foreach="docs['lines']" t-as="line">
+                        <tr t-foreach="docs['lines']" t-as="line" t-attf-class="#{line['is_matched'] and 'o_grid_match'}">
                             <td t-attf-class="#{line['is_late'] and 'o_grid_warning'}">
                                 <a t-if="line['document_in']"
                                     t-attf-href="#" t-esc="line['document_in'].name"

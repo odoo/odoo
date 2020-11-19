@@ -110,6 +110,11 @@ class ReplenishmentReport(models.AbstractModel):
         timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
+
+        move_to_match_ids = self.env.context.get('move_to_match_ids') or []
+        move_in_id = move_in.id if move_in else None
+        move_out_id = move_out.id if move_out else None
+
         return {
             'document_in': move_in._get_source_document() if move_in else False,
             'document_out': move_out._get_source_document() if move_out else False,
@@ -126,6 +131,7 @@ class ReplenishmentReport(models.AbstractModel):
             'move_out': move_out,
             'move_in': move_in,
             'reservation': reservation,
+            'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
         }
 
     def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):

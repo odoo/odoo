@@ -151,3 +151,30 @@ class TestSaleStockReports(TestReportsCommon):
         # Checks the forecast report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
         self.assertEqual(len(lines), 0, "Must have no line")
+
+    def test_report_forecast_3_report_line_corresponding_to_mo_highlighted(self):
+        """ When accessing the report from a MO, checks if the correct MO is highlighted in the report
+        """
+        product_banana = self.env['product.product'].create({
+            'name': 'Banana',
+            'type': 'product',
+        })
+
+        # We create 2 identical MO
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_banana
+        mo_form.product_qty = 10
+        mo_1 = mo_form.save()
+        mo_1.button_plan()
+        mo_2 = mo_1.copy()
+        mo_2.button_plan()
+
+        # Check for both MO if the highlight (is_matched) corresponds to the correct MO
+        for mo in [mo_1, mo_2]:
+            context = mo.action_product_forecast_report()['context']
+            _, _, lines = self.get_report_forecast(product_template_ids=product_banana.product_tmpl_id.ids, context=context)
+            for line in lines:
+                if line['document_in'] == mo:
+                    self.assertTrue(line['is_matched'], "The corresponding MO line should be matched in the forecast report.")
+                else:
+                    self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the MO shoud not be matched.")
