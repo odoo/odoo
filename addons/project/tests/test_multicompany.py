@@ -5,7 +5,6 @@ from contextlib import contextmanager
 from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import AccessError, UserError
 
-
 class TestMultiCompanyCommon(TransactionCase):
 
     @classmethod
@@ -116,7 +115,6 @@ class TestMultiCompanyCommon(TransactionCase):
             # back
             context = dict(self.env.context, allowed_company_ids=old_companies)
             self.env = self.env(context=context)
-
 
 class TestMultiCompanyProject(TestMultiCompanyCommon):
 
@@ -252,13 +250,9 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
                 # create subtask, set parent; the onchange will set the correct company and subtask project
-                with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+                with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_parent_id': self.task_1.id, 'default_project_id': self.project_company_b.id})) as task_form:
                     task_form.name = 'Test Subtask in company B'
-                    task_form.parent_id = self.task_1
-                    task_form.project_id = self.project_company_b
-
                 task = task_form.save()
-
                 self.assertEqual(task.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
 
                 # set parent on existing orphan task; the onchange will set the correct company and subtask project
@@ -272,7 +266,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
     def test_cross_subtask_project(self):
         # set up default subtask project
-        self.project_company_a.write({'allow_subtasks': True, 'subtask_project_id': self.project_company_b.id})
+        self.project_company_a.write({'allow_subtasks': True})
 
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
@@ -282,8 +276,8 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
                 task = task_form.save()
 
-                self.assertEqual(task.project_id, self.task_1.project_id.subtask_project_id, "The default project of a subtask should be the default subtask project of the project from the mother task")
-                self.assertEqual(task.company_id, task.project_id.subtask_project_id.company_id, "The company of the orphan subtask should be the one from its project.")
+                self.assertEqual(task.project_id, self.task_1.project_id, "The default project of a subtask should be the default subtask project of the project from the mother task")
+                self.assertEqual(task.company_id, task.project_id.company_id, "The company of the orphan subtask should be the one from its project.")
                 self.assertEqual(self.task_1.child_ids.ids, [task.id])
 
         with self.sudo('employee-a'):
