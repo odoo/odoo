@@ -214,7 +214,7 @@ odoo.define('payment_adyen.payment_form', require => {
                 return this._super(...arguments);
             }
 
-            // Process the payment accordingly to the flow
+            // Process the payment according to the flow
             if (flow === 'direct') {
                 this.adyenDropin.submit();
             } else if (flow === 'token') {

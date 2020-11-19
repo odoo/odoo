@@ -98,6 +98,7 @@ odoo.define('payment.payment_form_mixin', require => {
                 $inlineForm.append(errorHtml).find('div[name="o_payment_error"]')[0]
                     .scrollIntoView({behavior: 'smooth', block: 'center'});
             }
+            this._enableButton(); // Enable button back after it was disabled before processing
         },
 
         /**

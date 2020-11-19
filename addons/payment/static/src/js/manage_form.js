@@ -195,14 +195,13 @@ odoo.define('payment.manage_form', require => {
 
             // Save the payment method
             this._hideError(); // Don't keep the error displayed if the user is going through 3DS2
-            this._disableButton(true);
+            this._disableButton(true); // Disable until it is needed again
             if (flow !== 'token') { // Creation of a new token
                 this.txContext.tokenizationRequested = true;
                 this._processPayment(provider, paymentOptionId, flow);
             } else if (this.txContext.allowTokenSelection) { // Assignation of a token to a record
                 this._assignToken(paymentOptionId);
             }
-            this._enableButton();
         },
 
         /**
