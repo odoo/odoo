@@ -512,7 +512,10 @@ class AccountMove(models.Model):
                     'exclude_from_invoice_tab': True,
                 }))
 
-        OrmUtils(self).write(to_write)
+        if self != self._origin:
+            self.update(to_write)
+        else:
+            self.write(to_write)
 
     def update_lines_tax_exigibility(self):
         if all(account.user_type_id.type not in {'payable', 'receivable'} for account in self.line_ids.account_id):
@@ -642,7 +645,10 @@ class AccountMove(models.Model):
 
         _apply_cash_rounding(self, diff_balance, diff_amount_currency, existing_cash_rounding_line)
 
-        OrmUtils(self).write(to_write)
+        if self != self._origin:
+            self.update(to_write)
+        else:
+            self.write(to_write)
 
     def _recompute_payment_terms_lines(self):
         ''' Compute the dynamic payment term lines of the journal entry.'''
@@ -764,7 +770,10 @@ class AccountMove(models.Model):
             for line in existing_terms_lines:
                 to_write['line_ids'].append((2, line.id))
 
-        OrmUtils(self).write(to_write)
+        if self != self._origin:
+            self.update(to_write)
+        else:
+            self.write(to_write)
 
     def _recompute_rate_changed(self):
         self.ensure_one()
@@ -781,7 +790,10 @@ class AccountMove(models.Model):
                 'currency_id': currency.id,
             }))
 
-        OrmUtils(self).write(to_write)
+        if self != self._origin:
+            self.update(to_write)
+        else:
+            self.write(to_write)
 
     def _recompute_payment_reference_has_changed(self):
         self.ensure_one()
@@ -789,7 +801,10 @@ class AccountMove(models.Model):
         payment_term_lines = self.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
         to_write = {'line_ids': [(1, line.id, {'name': self.payment_reference or ''}) for line in payment_term_lines]}
 
-        OrmUtils(self).write(to_write)
+        if self != self._origin:
+            self.update(to_write)
+        else:
+            self.write(to_write)
 
     def _recompute_partner_has_changed(self):
         self.ensure_one()
@@ -812,7 +827,10 @@ class AccountMove(models.Model):
         payment_term_lines = self.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
         to_write = {'line_ids': [(1, line.id, {'account_id': new_account.id}) for line in payment_term_lines]}
 
-        OrmUtils(self).write(to_write)
+        if self != self._origin:
+            self.update(to_write)
+        else:
+            self.write(to_write)
 
     def _recompute_dynamic_lines(self, snapshot0):
         ''' Recompute all lines that depend of others.
@@ -849,20 +867,24 @@ class AccountMove(models.Model):
                 base_line_changed |= bool(sub_snapshot['tax_ids'])
             accounting_balance_changed = True
 
-        for sub_snapshot in line_ids_changed['added']:
-            if sub_snapshot['tax_repartition_line_id']:
+        for record in line_ids_changed['added']:
+            if record.tax_repartition_line_id:
                 # A tax line has been added.
                 tax_line_changed = True
             else:
                 # A base line affecting taxes has been added.
-                base_line_changed |= bool(sub_snapshot['tax_ids'])
+                base_line_changed |= bool(record.tax_ids)
             accounting_balance_changed = True
 
         for sub_snapshot in line_ids_changed['edited']:
-            if sub_snapshot['tax_repartition_line_id']:
+            record = sub_snapshot['<record>']
+            if record.tax_repartition_line_id:
                 # A tax line has been edited.
                 tax_line_changed = sub_snapshot.any_has_changed(affecting_tax_fields)
-            else:
+            elif sub_snapshot.any_has_changed(['tax_ids']):
+                # Taxes of a base line changed.
+                base_line_changed = True
+            elif record.tax_ids:
                 # A base line affecting taxes has been edited.
                 base_line_changed |= sub_snapshot.any_has_changed(affecting_tax_fields)
             accounting_balance_changed |= sub_snapshot.any_has_changed(['balance', 'amount_currency'])
@@ -989,14 +1011,17 @@ class AccountMove(models.Model):
     @api.depends('invoice_date')
     def _compute_date(self):
         for move in self:
-            move.date = move.invoice_date or fields.Date.context_today(move)
+            if move.is_invoice(include_receipts=True):
+                move.date = move.invoice_date or fields.Date.context_today(move)
+            else:
+                move.date = move.date or fields.Date.context_today(move)
 
     @api.depends('move_type')
     def _compute_invoice_date(self):
         for move in self:
             if move.invoice_date:
                 move.invoice_date = move.invoice_date
-            elif move.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
+            elif move.is_purchase_document(include_receipts=True):
                 move.invoice_date = fields.Date.context_today(move)
             else:
                 move.invoice_date = False
