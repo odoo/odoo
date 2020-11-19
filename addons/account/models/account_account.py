@@ -224,7 +224,10 @@ class AccountAccount(models.Model):
         raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_opening_debit_credit(self):
-        if not self:
+        self.opening_debit = 0
+        self.opening_credit = 0
+        self.opening_balance = 0
+        if not self.ids:
             return
         self.env.cr.execute("""
             SELECT line.account_id,
