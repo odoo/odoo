@@ -33,10 +33,12 @@ class StockQuant(models.Model):
         ]
         if self.env.context.get('active_model') == 'product.product':
             domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
-        if self.env.context.get('active_model') == 'product.template':
+        elif self.env.context.get('active_model') == 'product.template':
             product_template = self.env['product.template'].browse(self.env.context.get('active_id'))
             if product_template.exists():
                 domain.insert(0, "('product_id', 'in', %s)" % product_template.product_variant_ids.ids)
+        else:
+            domain.insert(0, "('product_id', '=', product_id)")
         return '[' + ', '.join(domain) + ']'
 
     def _domain_product_id(self):
