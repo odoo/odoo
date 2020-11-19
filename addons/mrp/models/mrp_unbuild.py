@@ -208,7 +208,12 @@ class MrpUnbuild(models.Model):
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
         consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
-
+        if self.mo_id:
+            unbuild_msg = _(
+                "%s %s unbuilt in", self.product_qty, self.product_uom_id.name) + " <a href=# data-oe-model=mrp.unbuild data-oe-id=%d>%s</a>" % (self.id, self.display_name)
+            self.mo_id.message_post(
+                body=unbuild_msg,
+                subtype_id=self.env.ref('mail.mt_note').id)
         return self.write({'state': 'done'})
 
     def _generate_consume_moves(self):
