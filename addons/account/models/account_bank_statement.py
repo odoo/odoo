@@ -352,6 +352,13 @@ class AccountBankStatement(models.Model):
             if any(st_line.journal_id != statement.journal_id for st_line in statement.line_ids):
                 raise ValidationError(_('The journal of a bank statement line must always be the same as the bank statement one.'))
 
+    def _constrains_date_sequence(self):
+        # Multiple import methods set the name to things that are not sequences:
+        # i.e. Statement from {date1} to {date2}
+        # It makes this constraint not applicable, and it is less needed on bank statements as it
+        # is only an indication and not some thing legal.
+        return
+
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
