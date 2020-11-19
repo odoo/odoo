@@ -79,6 +79,8 @@ class ReturnPicking(models.TransientModel):
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
         quantity = stock_move.product_qty
         for move in stock_move.move_dest_ids:
+            if move.origin_returned_move_id and move.origin_returned_move_id != stock_move:
+                continue
             if move.state in ('partially_available', 'assigned'):
                 quantity -= sum(move.move_line_ids.mapped('product_qty'))
             elif move.state in ('done'):
