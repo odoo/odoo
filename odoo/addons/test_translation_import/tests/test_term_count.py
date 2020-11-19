@@ -176,7 +176,7 @@ class TestTermCount(common.TransactionCase):
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'tlh')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")
 
-        self.env.context = dict(self.env.context, lang="tlh")
+        self.env = self.env(context=dict(self.env.context, lang="tlh"))
         self.assertEqual(_("Klingon"), "tlhIngan", "The code translation was not applied")
 
     def test_lazy_translation(self):
