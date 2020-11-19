@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+FLEXCHECKOUT_ERROR = {'NCError': "Token",
+                      'NCErrorCN': "Card holder name",
+                      'NCErrorCVC': "Card Verification Code (CVC)",
+                      'NCErrorCardNo': "The card number",
+                      'NCErrorED': "Expiracy Date"
+                      }
+
 OGONE_ERROR_MAP = {
     '0020001001': "Authorization failed, please retry",
     '0020001002': "Authorization failed, please retry",
@@ -486,12 +493,12 @@ def retryable(error):
         '30001010', '30001011', '30001015',
         '30001057', '30001058',
         '30001998', '30001999',
-        #'30611001',     # amount exceeds card limit
+        # '30611001',     # amount exceeds card limit
         '30961001',
         '40001001', '40001002', '40001003', '40001004', '40001005',
         '40001006', '40001007', '40001008', '40001009', '40001010',
         '40001012',
         '40001018', '40001019', '40001020',
         '40001134', '40001135', '40001136', '40001137',
-        #'50001174',      # cardholder name too long
+        # '50001174',      # cardholder name too long
     ]

@@ -69,38 +69,14 @@ class OgoneController(http.Controller):
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
-        # OLD fixme
+
         acquirer_id = data.get('acquirer_id')
-        ogone_values = data.get('ogone_values')
         partner_id = data.get('partner_id')
-        acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
-
-        # tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', data.get('reference'))])
-        # ogone_values['acquirer_id'] = acquirer_id
-        # ogone_values['partner_id'] = partner_id
-        # ogone_values['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        # result = acquirer_sudo._ogone_handle_alias_feedback(ogone_values)
-
-        # -----------------------------------------------------------
-
-        # fixme this in _get_tx_from_feedback_data
-        acquirer_id = data.get('acquirer_id')
-        # reference = data.get('reference')
-        # ogone_values = data.get('ogone_values')
-        partner_id = data.get('partner_id')
-        # acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
         data['ogone_values']['acquirer_id'] = acquirer_id
         data['ogone_values']['partner_id'] = partner_id
         data['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        # NEW arj fixme
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', data)
-
-
-
-
-
-        token_id = tx_sudo.token_id
-        if token_id:
+        if tx_sudo.token_id:
             tx_sudo._send_payment_request()
             return {'tx_status': tx_sudo.state, 'html_3ds': tx_sudo.ogone_html_3ds,
                     'ogone_user_error': tx_sudo.ogone_user_error}
