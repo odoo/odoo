@@ -178,9 +178,11 @@ MailManager.include({
      *
      * @private
      * @param {Object} channelData
+     * @param {string} channelData.channel_type
      * @param {integer} channelData.id
      * @param {string} [channelData.info]
      * @param {boolean} channelData.is_minimized
+     * @param {string} channelData.name server name of channel
      * @param {string} channelData.state
      */
     _handlePartnerChannelNotification: function (channelData) {
@@ -196,7 +198,7 @@ MailManager.include({
             ) {
                 this.do_notify(
                     _t("Invitation"),
-                    _t("You have been invited to: ") + channelData.name);
+                    _.str.sprintf(_t("You have been invited to: %s"), _.escape(channelData.name)));
             }
         }
         var channel = this.getChannel(channelData.id);
@@ -441,12 +443,12 @@ MailManager.include({
             if (_.contains(['public', 'private'], channel.getType())) {
                 message = _.str.sprintf(
                     _t("You unsubscribed from <b>%s</b>."),
-                    channel.getName()
+                    _.escape(channel.getName())
                 );
             } else {
                 message = _.str.sprintf(
                     _t("You unpinned your conversation with <b>%s</b>."),
-                    channel.getName()
+                    _.escape(channel.getName())
                 );
             }
             this._removeChannel(channel);
