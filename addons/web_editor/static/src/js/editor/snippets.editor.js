@@ -1261,6 +1261,13 @@ var SnippetsMenu = Widget.extend({
     _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
         var self = this;
 
+        // If a modal is open, the drop zones must be created only in this modal
+        const $openModal = self.getEditableArea().find('.modal:visible');
+        if ($openModal.length) {
+            $selectorSiblings = $openModal.find($selectorSiblings);
+            $selectorChildren = $openModal.find($selectorChildren);
+        }
+
         // Check if the drop zone should be horizontal or vertical
         function setDropZoneDirection($elem, $parent, $sibling) {
             var vertical = false;
