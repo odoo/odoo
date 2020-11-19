@@ -83,12 +83,14 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this._editorAutoStart = (context.editable && window.location.search.indexOf('enable_editor') >= 0);
         this._mustEditTranslations = context.edit_translations;
 
+        var url = new URL(window.location.href)
         if (this._mustEditTranslations) {
-            var url = window.location.href.replace(/([?&])&*edit_translations[^&#]*&?/, '\$1');
+            url.searchParams.delete('edit_translations')
             window.history.replaceState({}, null, url);
             this._startTranslateMode();
         } else {
-            var url = window.location.href.replace(/([?&])&*enable_editor[^&#]*&?/, '\$1');
+            url.searchParams.delete('enable_editor')
+            url.searchParams.delete('with_loader')
             window.history.replaceState({}, null, url);
         }
     },
@@ -147,6 +149,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         this.wysiwyg = await this._createWysiwyg();
         await this.wysiwyg.attachTo($('#wrapwrap'));
+        const $loader = $('div.o_theme_install_loader_container');
+        if ($loader) {
+            $loader.remove();
+        }
 
         var res = await new Promise((resolve, reject) => {
             this.trigger_up('widgets_start_request', {
