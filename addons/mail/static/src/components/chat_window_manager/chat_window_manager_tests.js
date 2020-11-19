@@ -378,6 +378,48 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     );
 });
 
+QUnit.test('new message autocomplete should automatically select first result', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 131, name: "Partner 131" });
+    this.data['res.users'].records.push({ partner_id: 131 });
+    const imSearchDef = makeDeferred();
+    await this.start({
+        async mockRPC(route, args) {
+            const res = await this._super(...arguments);
+            if (args.method === 'im_search') {
+                imSearchDef.resolve();
+            }
+            return res;
+        },
+    });
+
+    // open "new message" chat window
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_toggler`).click()
+    );
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_newMessageButton`).click()
+    );
+
+    // search for a user in "new message" autocomplete
+    document.execCommand('insertText', false, "131");
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keydown'));
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    // Wait for search RPC to be resolved. The following await lines are
+    // necessary because autocomplete is an external lib therefore it is not
+    // possible to use `afterNextRender`.
+    await imSearchDef;
+    await nextAnimationFrame();
+    assert.hasClass(
+        document.querySelector('.ui-autocomplete .ui-menu-item a'),
+        'ui-state-active',
+        "first autocomplete result should be automatically selected",
+    );
+});
+
 QUnit.test('chat window: basic rendering', async function (assert) {
     assert.expect(11);
 
