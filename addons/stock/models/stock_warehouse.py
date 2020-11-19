@@ -503,6 +503,7 @@ class Warehouse(models.Model):
                 },
                 'rules_values': {
                     'active': True,
+                    'propagate_carrier': True
                 }
             },
             'crossdock_route_id': {
@@ -942,6 +943,7 @@ class Warehouse(models.Model):
                 'default_location_dest_id': False,
                 'sequence': max_sequence + 5,
                 'sequence_code': 'OUT',
+                'print_label': True,
                 'company_id': self.company_id.id,
             }, 'pack_type_id': {
                 'name': _('Pack'),

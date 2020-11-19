@@ -385,9 +385,11 @@
                 <xpath expr="//field[@name='backorder_id']" position="after">
                     <field name="carrier_tracking_ref" optional="hide"/>
                     <field name="carrier_id" optional="hide"/>
+                    <field name="destination_country_code" optional="hide" string="Destination"/>
                     <field name="weight" optional="hide"/>
                     <field name="shipping_weight" optional="hide"/>
                 </xpath>
             </field>
         </record>
+
 </odoo>

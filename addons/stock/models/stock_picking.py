@@ -58,6 +58,9 @@ class PickingType(models.Model):
     use_existing_lots = fields.Boolean(
         'Use Existing Lots/Serial Numbers', default=True,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
+    print_label = fields.Boolean(
+        'Print Label',
+        help="If this checkbox is ticked, label will be print in this operation.")
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
@@ -175,15 +178,19 @@ class PickingType(models.Model):
         if self.code == 'incoming':
             self.default_location_src_id = self.env.ref('stock.stock_location_suppliers').id
             self.default_location_dest_id = stock_location.id
+            self.print_label = False
         elif self.code == 'outgoing':
             self.default_location_src_id = stock_location.id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
-        elif self.code == 'internal' and not self.user_has_groups('stock.group_stock_multi_locations'):
-            return {
-                'warning': {
-                    'message': _('You need to activate storage locations to be able to do internal operation types.')
+            self.print_label = True
+        elif self.code == 'internal':
+            self.print_label = False
+            if not self.user_has_groups('stock.group_stock_multi_locations'):
+                return {
+                    'warning': {
+                        'message': _('You need to activate storage locations to be able to do internal operation types.')
+                    }
                 }
-            }
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
