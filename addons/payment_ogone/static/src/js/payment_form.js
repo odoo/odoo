@@ -41,7 +41,6 @@ odoo.define('payment_ogone.payment_form', require => {
             // Ogone form. It also contains a "submit" button se we hide also the "Pay button" to avoid confusing the client.
 
             this._hideInputs();
-
             if (this.startedIframe) {
                 // The iframe is already initialized, no need to restart it
                 return this._super(...arguments);
@@ -71,7 +70,8 @@ odoo.define('payment_ogone.payment_form', require => {
             }).then(paymentMethodsResult => {
                 let iframe = document.getElementById('ogone-iframe-container_' + paymentMethodsResult['acquirer_id']);
                 iframe.firstElementChild.src = paymentMethodsResult['ogone_iframe_url'];
-                self.startedIframe = true;
+                // arj todo uncomment me !!
+                // self.startedIframe = true;
             }).guardedCatch((error) => {
                 error.event.preventDefault();
                 this._displayError(

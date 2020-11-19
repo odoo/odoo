@@ -63,7 +63,6 @@ class PaymentTxOgone(models.Model):
             error_msg = _('Ogone: received data with missing reference (%s) (%s) or shasign (%s)') % (reference, alias, shasign)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
-        # find tx -> @TDENOTE use pay_id ?
         tx = self.search([('reference', '=', reference)])
         if not tx or len(tx) > 1:
             error_msg = _('Ogone: received data for reference %s', reference)
@@ -79,7 +78,8 @@ class PaymentTxOgone(models.Model):
         shasign_check = tx.acquirer_id._ogone_generate_shasign('out', ogone_values)
         if shasign_check.upper() != shasign.upper():
             error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
-            raise ValidationError(error_msg)
+            _logger.error(error_msg)
+            raise ValidationError("Ogone: Could not verify the transaction %s" % reference)
 
         if shasign_check.upper() != ogone_values.get('SHASign'):
             error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (

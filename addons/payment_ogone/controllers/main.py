@@ -64,23 +64,22 @@ class OgoneController(http.Controller):
         return request.render("payment_ogone.ogone_feedback", kwargs)
 
     @http.route(['/payment/ogone/payments'], type='json', auth='public', csrf=False)
-    def ogone_process_payments(self, **kwargs):
+    def ogone_process_payments(self, **data):
         """ Make a payment request and handle the response.
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
 
         # fixme this in _get_tx_from_feedback_data
-        acquirer_id = kwargs.get('acquirer_id')
-        reference = kwargs.get('reference')
-        ogone_values = kwargs.get('ogone_values')
-        partner_id = kwargs.get('partner_id')
-        acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
-        print(kwargs)
-        kwargs['ogone_values']['acquirer_id'] = acquirer_id
-        kwargs['ogone_values']['partner_id'] = partner_id
-        kwargs['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', kwargs)
+        acquirer_id = data.get('acquirer_id')
+        # reference = data.get('reference')
+        # ogone_values = data.get('ogone_values')
+        partner_id = data.get('partner_id')
+        # acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
+        data['ogone_values']['acquirer_id'] = acquirer_id
+        data['ogone_values']['partner_id'] = partner_id
+        data['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', data)
         token_id = tx_sudo.token_id
         if token_id:
             tx_sudo._send_payment_request()
