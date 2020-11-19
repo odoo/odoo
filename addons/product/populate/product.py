@@ -24,7 +24,7 @@ class ProductCategory(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
-    _populate_sizes = {"small": 150, "medium": 5000, "large": 60000}
+    _populate_sizes = {"small": 500, "medium": 5000, "large": 60000}
 
     def _populate_factories(self):
 

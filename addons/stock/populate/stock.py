@@ -138,7 +138,7 @@ class Location(models.Model):
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'
 
-    _populate_sizes = {'small': 150, 'medium': 5_000, 'large': 60_000}
+    _populate_sizes = {'small': 1, 'medium': 5_000, 'large': 60_000}
     _populate_dependencies = ['product.product', 'product.supplierinfo', 'stock.location']
 
     def _populate_factories(self):
@@ -214,7 +214,7 @@ class StockWarehouseOrderpoint(models.Model):
 class Inventory(models.Model):
     _inherit = 'stock.inventory'
 
-    _populate_sizes = {'small': 5, 'medium': 10, 'large': 20}
+    _populate_sizes = {'small': 50, 'medium': 10, 'large': 20}
     _populate_dependencies = ['stock.location']
 
     def _populate(self, size):
@@ -266,7 +266,7 @@ class Inventory(models.Model):
 class InventoryLine(models.Model):
     _inherit = 'stock.inventory.line'
 
-    _populate_sizes = {'small': 500, 'medium': 5_000, 'large': 20_000}
+    _populate_sizes = {'small': 5000, 'medium': 5_000, 'large': 20_000}
     _populate_dependencies = ['stock.inventory']
 
     def _populate(self, size):
@@ -302,7 +302,7 @@ class InventoryLine(models.Model):
         create_missing_lots()
 
         # (Un)comment to test a DB with a current stock.
-        # validate_inventory_sample(0.8)
+        validate_inventory_sample(1.0)
 
         return inventory_lines
 
@@ -386,7 +386,7 @@ class PickingType(models.Model):
 
         return [
             ('company_id', populate.iterate(company_ids)),
-            ('code', populate.iterate(['incoming', 'outgoing', 'internal'], [0.3, 0.3, 0.4])),
+            ('code', populate.iterate(['incoming', 'outgoing'], [0.3, 0.3])),  # Always incoming outgoing for test forecasted
             ('name', populate.compute(get_name)),
             ('sequence_code', populate.constant("PT{counter}")),
             ('_compute_default_locations', _compute_default_locations),
@@ -474,7 +474,7 @@ class Picking(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    _populate_sizes = {'small': 1_000, 'medium': 20_000, 'large': 1_000_000}
+    _populate_sizes = {'small': 30_000, 'medium': 20_000, 'large': 1_000_000}
     _populate_dependencies = ['stock.picking']
 
     def _populate(self, size):
@@ -489,7 +489,7 @@ class StockMove(models.Model):
             picking_to_confirm.action_confirm()
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal confirmed moves, e.g. for testing of forecasted report
-        # confirm_pickings(0.8)
+        confirm_pickings(0.8)
 
         return moves.exists()  # Confirm picking can unlink some moves
 
