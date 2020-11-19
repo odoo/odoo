@@ -195,7 +195,9 @@ function factory(dependencies) {
             }
             const wasCacheRefreshRequested = this.isCacheRefreshRequested;
             // mark hint as processed
-            this.update({ isCacheRefreshRequested: false });
+            if (this.isCacheRefreshRequested) {
+                this.update({ isCacheRefreshRequested: false });
+            }
             if (this.thread.isTemporary) {
                 // temporary threads don't exist on the server
                 return false;
