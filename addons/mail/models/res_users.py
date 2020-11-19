@@ -116,7 +116,9 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
             public channels are mailing list (e-mail based) and so users should always receive
             updates from public channels until they manually un-subscribe themselves.
         """
-        self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public').write({
+        # sudo is required to avoid write access error when archiving a user that is a member of
+        # a channel that the current user does not have write access
+        self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public').sudo().write({
             'channel_partner_ids': [(3, pid) for pid in self.mapped('partner_id').ids]
         })
 
