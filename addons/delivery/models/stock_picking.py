@@ -89,6 +89,7 @@ class StockPicking(models.Model):
         help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
+    destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -124,9 +125,8 @@ class StockPicking(models.Model):
 
     def _send_confirmation_email(self):
         for pick in self:
-            if pick.carrier_id:
-                if pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming':
-                    pick.send_to_shipper()
+            if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
+                pick.send_to_shipper()
         return super(StockPicking, self)._send_confirmation_email()
 
     def _pre_put_in_pack_hook(self, move_line_ids):
@@ -172,7 +172,8 @@ class StockPicking(models.Model):
             res['exact_price'] = 0.0
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
-            self.carrier_tracking_ref = res['tracking_number']
+            pickings = self.sale_id.picking_ids or self
+            pickings.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _(
             "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s",
