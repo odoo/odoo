@@ -43,6 +43,7 @@
                                 <field name="sequence_id" groups="base.group_no_one"/>
                                 <field name="sequence_code"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
+                                <field name="print_label" attrs="{'invisible': [('code', '!=', 'internal')]}"/>
                                 <label for="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}"/>
                                 <div class="o_row" attrs="{'invisible': [('code', '=', 'incoming')]}">
                                     <field name="reservation_method" widget="radio"/>
