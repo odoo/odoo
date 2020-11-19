@@ -275,7 +275,12 @@ class PosSession(models.Model):
                 raise UserError(_('This session is already closed.'))
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
             if not session.config_id.cash_control:
+<<<<<<< HEAD
                 return session.action_pos_session_close(balancing_account, amount_to_balance)
+=======
+                session.action_pos_session_close()
+        return True
+>>>>>>> e158eb87707... temp
 
     def _check_pos_session_balance(self):
         for session in self:
