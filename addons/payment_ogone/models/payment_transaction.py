@@ -45,10 +45,52 @@ class PaymentTxOgone(models.Model):
         return super()._compute_reference(provider, prefix, separator, **kwargs)
 
     # --------------------------------------------------
-    # FORM RELATED METHODS
+    # BUSINESS METHODS
     # --------------------------------------------------
 
+    def _flexcheckout_data_verification(self, ogone_values, shasign, reference):
+        """
+        TODO
+        :param ogone_values:
+        :return:
+        """
+        self.ensure_one()
+        # verify shasign
+        print(ogone_values)
+        shasign_check = self.acquirer_id._ogone_generate_shasign('out', ogone_values)
+        print('YU', shasign)
+        print('ME', shasign_check.upper())
+        if shasign_check.upper() != shasign.upper():
+            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
+            shasign, shasign_check, ogone_values)
+            _logger.error(error_msg)
+            raise ValidationError("Ogone: Could not verify the transaction %s" % reference)
 
+        if shasign_check.upper() != ogone_values.get('SHASign'):
+            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
+                ogone_values.get('SHASIGN'), shasign_check, ogone_values)
+            _logger.info(error_msg)
+            raise ValidationError(error_msg)
+        if not all(key in ogone_values for key in ['referencePrefix', 'acquirer_id', 'partner_id']):
+            raise ValidationError(_("Missing values from Ogone feedback"))
+        # check for errors before using values
+        # arj fixme: check these because some of them are already checked in the flex api I think
+        # arj fixme dict error type: message pour faire un truc malin
+        if int(ogone_values.get('NCError')):
+            self._set_canceled()
+            raise ValidationError(_("Ogone could not validate the token creation"))
+        elif int(ogone_values.get('NCErrorCN')):
+            self._set_canceled()
+            raise ValidationError(_("Ogone could not validate the Card holder name"))
+        elif int(ogone_values.get('NCErrorCVC')):
+            self._set_canceled()
+            raise ValidationError(_("Ogone could not validate the Card Verification Code (CVC)"))
+        elif int(ogone_values.get('NCErrorCardNo')):
+            self._set_canceled()
+            raise ValidationError(_("Ogone could not validate the card number"))
+        elif int(ogone_values.get('NCErrorED')):
+            self._set_canceled()
+            raise ValidationError(_("Ogone could not validate the Expiracy Date"))
 
 
     @api.model
@@ -57,12 +99,14 @@ class PaymentTxOgone(models.Model):
         transaction record. Create a payment token if an alias is returned."""
         if provider != 'ogone':
             return super()._get_tx_from_feedback_data(provider, data)
-        print(" !!! _get_tx_from_feedback_data", data)
-        reference, shasign, alias = data.get('reference'), data['ogone_values'].get('SHASign'), data['ogone_values'].get('AliasId')
+        # print(" !!! _get_tx_from_feedback_data", data)
+        ogone_values = data['ogone_values']
+        reference, shasign, alias = data.get('reference'), ogone_values.get('SHASign'), ogone_values.get('Alias.AliasId')
         if not reference or not alias or not shasign:
             error_msg = _('Ogone: received data with missing reference (%s) (%s) or shasign (%s)') % (reference, alias, shasign)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
+
         tx = self.search([('reference', '=', reference)])
         if not tx or len(tx) > 1:
             error_msg = _('Ogone: received data for reference %s', reference)
@@ -72,39 +116,10 @@ class PaymentTxOgone(models.Model):
                 error_msg += _('; multiple order found')
             _logger.info(error_msg)
             raise ValidationError(error_msg)
+        tx._flexcheckout_data_verification(ogone_values, shasign, reference)
 
-        ogone_values = data.get('ogone_values')
-        # verify shasign
-        shasign_check = tx.acquirer_id._ogone_generate_shasign('out', ogone_values)
-        if shasign_check.upper() != shasign.upper():
-            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
-            _logger.error(error_msg)
-            raise ValidationError("Ogone: Could not verify the transaction %s" % reference)
 
-        if shasign_check.upper() != ogone_values.get('SHASign'):
-            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
-            ogone_values.get('SHASIGN'), shasign_check, ogone_values)
-            _logger.info(error_msg)
-            raise ValidationError(error_msg)
-        if not all(key in ogone_values for key in ['referencePrefix', 'acquirer_id', 'partner_id']):
-            raise ValidationError(_("Missing values from Ogone feedback"))
-        # check for errors before using values
-        # arj fixme: check these because some of them are already checked in the flex api I think
-        if int(ogone_values.get('NCError')):
-            tx._set_canceled()
-            raise ValidationError(_("Ogone could not validate the token creation"))
-        elif int(ogone_values.get('NCErrorCN')):
-            tx._set_canceled()
-            raise ValidationError(_("Ogone could not validate the Card holder name"))
-        elif int(ogone_values.get('NCErrorCVC')):
-            tx._set_canceled()
-            raise ValidationError(_("Ogone could not validate the Card Verification Code (CVC)"))
-        elif int(ogone_values.get('NCErrorCardNo')):
-            tx._set_canceled()
-            raise ValidationError(_("Ogone could not validate the card number"))
-        elif int(ogone_values.get('NCErrorED')):
-            tx._set_canceled()
-            raise ValidationError(_("Ogone could not validate the Expiracy Date"))
+
         if all(key in ogone_values for key in ['CardNumber', 'CardHolderName', 'AliasId', 'partner_id', 'acquirer_id']):
             cc_number = ogone_values.get('CardNumber')
             cc_holder_name = ogone_values.get('CardHolderName')
@@ -123,13 +138,6 @@ class PaymentTxOgone(models.Model):
             token_id = self.env['payment.token'].create(token_vals)
             tx.write({'token_id': token_id})
         return tx
-
-
-    # def _process_feedback_data(self, data):
-    #     if self.provider != 'ogone':
-    #         return super()._process_feedback_data(data)
-    #     print(" !!! _process_feedback_data", data)
-
 
     # --------------------------------------------------
     # Ogone API RELATED METHODS

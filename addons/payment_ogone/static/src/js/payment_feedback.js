@@ -56,24 +56,25 @@ odoo.define('payment_ogone.payment_feedback', function (require) {
 
             const paymentOptionId = data.paymentOptionId !== undefined ? parseInt(data.paymentOptionId) : null;
 //            const partnerId = data.partnerId !== undefined ? parseInt(data.partnerId) : null;
-//            const orderId = data['Alias.OrderId'] !== undefined ? parseFloat(data['Alias.OrderId']) : null;
             const acquirerId = data.acquirerId !== undefined ? parseFloat(data.acquirerId) : null;
 //            const isValidation = data.isValidation !== undefined ? true: false;
             const ogoneValues = {
-                AliasId: data['Alias.AliasId'],
-                NCError: data['Alias.NCError'],
-                NCErrorCN: data['Alias.NCErrorCN'],
-                NCErrorCVC: data['Alias.NCErrorCVC'],
-                NCErrorCardNo: data['Alias.NCErrorCardNo'],
-                NCErrorED: data['Alias.NCErrorED'],
-                Status: data['Alias.Status'],
+                'Alias.AliasId': data['Alias.AliasId'],
+                'Alias.NCError': data['Alias.NCError'],
+                'Alias.NCErrorCN': data['Alias.NCErrorCN'],
+                'Alias.NCErrorCVC': data['Alias.NCErrorCVC'],
+                'Alias.NCErrorCardNo': data['Alias.NCErrorCardNo'],
+                'Alias.NCErrorED': data['Alias.NCErrorED'],
+                'Alias.OrderId': data['Alias.OrderId'],
+                'Alias.Status': data['Alias.Status'],
+                'Alias.StorePermanently': data['Alias.StorePermanently'],
+                'Card.Bin': data['Card.Bin'],
+                'Card.Brand': data['Card.Brand'],
+                'Card.CardHolderName': data['Card.CardHolderName'],
+                'Card.CardNumber': data['Card.CardNumber'],
+                'Card.Cvc': data['Card.Cvc'],
+                'Card.ExpiryDate': data['Card.ExpiryDate'],
                 SHASign: data.SHASign,
-                StorePermanently: data['Alias.StorePermanently'],
-                Bin: data['Card.Bin'],
-                CardHolderName: data['Card.CardHolderName'],
-                CardNumber: data['Card.CardNumber'],
-                Cvc: data['Card.Cvc'],
-                ExpiryDate: data['Card.ExpiryDate'],
                 referencePrefix: data['referencePrefix'],
                 // 3ds2 parameters
                 browserColorDepth: screen.colorDepth,
@@ -83,7 +84,6 @@ odoo.define('payment_ogone.payment_feedback', function (require) {
                 browserScreenWidth: screen.width,
                 browserTimeZone: new Date().getTimezoneOffset(),
                 browserUserAgent: navigator.userAgent,
-                CN: data['Card.CardHolderName'],
             };
             const self = this;
             return this._rpc({

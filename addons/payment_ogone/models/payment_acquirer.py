@@ -165,11 +165,14 @@ class PaymentAcquirer(models.Model):
                                     'CARD.CARDHOLDERNAME',
                                     'CARD.CARDNUMBER',
                                     'CARD.CVC',
-                                    'CARD.EXPIRYDATE']
+                                    'CARD.EXPIRYDATE'
+                                     ]
                 keys += flexcheckout_out
                 return key.upper() in keys
 
         items = sorted((k.upper(), v) for k, v in values.items())
+        kept_keys = ''.join('%s=%s \n' % (k, v) for k, v in items if v and filter_key(k.upper()))
+        print(kept_keys)
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k.upper()))
         sign = sign.encode("utf-8")
         shasign = sha256(sign).hexdigest()
@@ -250,48 +253,52 @@ class PaymentAcquirer(models.Model):
         full_checkout_url = base_url + '?' + url_parameters
         return full_checkout_url
 
-    # def _ogone_handle_alias_feedback(self, ogone_values):
-    #     values = dict()
-    #     shasign_check = self._ogone_generate_shasign('out', ogone_values)
-    #     if shasign_check.upper() != ogone_values.get('SHASign'):
-    #         error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
-    #         ogone_values.get('SHASIGN'), shasign_check, ogone_values)
-    #         _logger.info(error_msg)
-    #         values.update({'error_msg': error_msg})
-    #     if not all(key in ogone_values for key in ['referencePrefix', 'acquirer_id', 'partner_id']):
-    #         values.update({'error_msg': _("Missing values from Ogone feedback")})
-    #     # check for errors before using values
-    #     # arj fixme: check these because some of them are already checked in the flex api I think
-    #     if int(ogone_values.get('NCError')):
-    #         values.update({'NCError': ogone_values.get('NCError'),
-    #                        'error_msg': _("Ogone could not validate the transaction")})
-    #     elif int(ogone_values.get('NCErrorCN')):
-    #         values.update({'NCErrorCN': ogone_values.get('NCErrorCN'),
-    #                        'error_msg': _("Ogone could not validate the Card holder name ")})
-    #     elif int(ogone_values.get('NCErrorCVC')):
-    #         values.update({'NCErrorCVC': ogone_values.get('NCErrorCVC'),
-    #                        'error_msg': _("Ogone could not validate the Card Verification Code (CVC)")})
-    #     elif int(ogone_values.get('NCErrorCardNo')):
-    #         values.update({'NCErrorCardNo': ogone_values.get('NCErrorCardNo'),
-    #                        'error_msg': _("Ogone could not validate the card number")})
-    #     elif int(ogone_values.get('NCErrorED')):
-    #         values.update({'NCErrorED': ogone_values.get('NCErrorED'),
-    #                        'error_msg': _("Ogone could not validate the Expiracy Date")})
-    #     if all(key in ogone_values for key in ['CardNumber', 'CardHolderName', 'AliasId', 'partner_id', 'acquirer_id']):
-    #         cc_number = ogone_values.get('CardNumber')
-    #         cc_holder_name = ogone_values.get('CardHolderName')
-    #         alias = ogone_values.get('AliasId')
-    #         partner_id = ogone_values.get('partner_id')
-    #         acquirer_id = ogone_values.get('acquirer_id')
-    #         token_vals = {
-    #             'acquirer_id': acquirer_id,
-    #             'acquirer_ref': alias,
-    #             'partner_id': partner_id,
-    #             'name': '%s - %s' % (cc_number[-4:], cc_holder_name),
-    #             'verified': False
-    #         }
-    #         if ogone_values.get('StorePermanently') == 'N':
-    #             token_vals.update({'active': False})
-    #         token_id = self.env['payment.token'].create(token_vals)
-    #         values.update({'token_id': token_id})
-    #     return values
+    def _ogone_handle_alias_feedback(self, ogone_values):
+        values = dict()
+        shasign_check = self._ogone_generate_shasign('out', ogone_values)
+        print(ogone_values)
+        print("old")
+        print(ogone_values.get('SHASign'))
+        print(shasign_check.upper())
+        if shasign_check.upper() != ogone_values.get('SHASign'):
+            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
+            ogone_values.get('SHASIGN'), shasign_check, ogone_values)
+            _logger.info(error_msg)
+            values.update({'error_msg': error_msg})
+        # if not all(key in ogone_values for key in ['referencePrefix', 'acquirer_id', 'partner_id']):
+        #     values.update({'error_msg': _("Missing values from Ogone feedback")})
+        # # check for errors before using values
+        # # arj fixme: check these because some of them are already checked in the flex api I think
+        # if int(ogone_values.get('NCError')):
+        #     values.update({'NCError': ogone_values.get('NCError'),
+        #                    'error_msg': _("Ogone could not validate the transaction")})
+        # elif int(ogone_values.get('NCErrorCN')):
+        #     values.update({'NCErrorCN': ogone_values.get('NCErrorCN'),
+        #                    'error_msg': _("Ogone could not validate the Card holder name ")})
+        # elif int(ogone_values.get('NCErrorCVC')):
+        #     values.update({'NCErrorCVC': ogone_values.get('NCErrorCVC'),
+        #                    'error_msg': _("Ogone could not validate the Card Verification Code (CVC)")})
+        # elif int(ogone_values.get('NCErrorCardNo')):
+        #     values.update({'NCErrorCardNo': ogone_values.get('NCErrorCardNo'),
+        #                    'error_msg': _("Ogone could not validate the card number")})
+        # elif int(ogone_values.get('NCErrorED')):
+        #     values.update({'NCErrorED': ogone_values.get('NCErrorED'),
+        #                    'error_msg': _("Ogone could not validate the Expiracy Date")})
+        # if all(key in ogone_values for key in ['CardNumber', 'CardHolderName', 'AliasId', 'partner_id', 'acquirer_id']):
+        #     cc_number = ogone_values.get('CardNumber')
+        #     cc_holder_name = ogone_values.get('CardHolderName')
+        #     alias = ogone_values.get('AliasId')
+        #     partner_id = ogone_values.get('partner_id')
+        #     acquirer_id = ogone_values.get('acquirer_id')
+        #     token_vals = {
+        #         'acquirer_id': acquirer_id,
+        #         'acquirer_ref': alias,
+        #         'partner_id': partner_id,
+        #         'name': '%s - %s' % (cc_number[-4:], cc_holder_name),
+        #         'verified': False
+        #     }
+        #     if ogone_values.get('StorePermanently') == 'N':
+        #         token_vals.update({'active': False})
+        #     token_id = self.env['payment.token'].create(token_vals)
+        #     values.update({'token_id': token_id})
+        return values
