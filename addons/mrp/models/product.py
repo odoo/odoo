@@ -209,3 +209,18 @@ class ProductProduct(models.Model):
         action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
         return action
+
+    def action_open_quants(self):
+        bom_kits = {}
+        for product in self:
+            bom = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            if bom:
+                bom_kits[product] = bom
+        components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
+        for product in bom_kits:
+            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
+        res = super(ProductProduct, components).action_open_quants()
+        if bom_kits:
+            res['context']['single_product'] = False
+        return res

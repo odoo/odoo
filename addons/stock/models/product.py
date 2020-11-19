@@ -482,7 +482,7 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         return self.env['stock.quant']._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
