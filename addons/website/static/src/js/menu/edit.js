@@ -41,7 +41,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             },
         });
         this._editorAutoStart = (context.editable && window.location.search.indexOf('enable_editor') >= 0);
-        var url = window.location.href.replace(/([?&])&*enable_editor[^&#]*&?/, '\$1');
+
+        var url = new URL(window.location.href)
+        url.searchParams.delete('enable_editor')
+        url.searchParams.delete('with_loader')
         window.history.replaceState({}, null, url);
     },
     /**
@@ -94,6 +97,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by summernote
         }
         this.editModeEnable = true;
+
         await new EditorMenu(this).prependTo(document.body);
         this._addEditorMessages();
         var res = await new Promise(function (resolve, reject) {
@@ -103,9 +107,16 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 onFailure: reject,
             });
         });
+
+        const $loader = $('div.o_theme_install_loader_container');
+        if ($loader) {
+            $loader.remove();
+        }
+
         // Trigger a mousedown on the main edition area to focus it,
         // which is required for Summernote to activate.
         this.$editorMessageElements.mousedown();
+
         return res;
     },
     /**
