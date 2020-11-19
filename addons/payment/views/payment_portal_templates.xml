@@ -102,12 +102,12 @@
                                         <h3>The SEPA QR Code informations are not set correctly.</h3>
                                     </div>
                                 </div>
-                                <div>
-                                    <a role="button" t-attf-class="btn btn-#{status} float-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
-                                </div>
-                                <div class="col-md-6 offset-md-6 text-muted mt16"><!-- FIXME should be in a row... -->
+                                <div class="col-md-9 offset-md-3 text-muted mt16 pl-md-2 pl-0"><!-- FIXME should be in a row... -->
                                     <span t-field="tx.acquirer_id.image_128" t-att-title="tx.acquirer_id.name" role="img" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
                                     <span>Processed by <t t-esc="tx.acquirer_id.name"/>.</span>
+                                </div>
+                                <div>
+                                    <a role="button" t-attf-class="btn btn-#{status} float-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
                                 </div>
                             </div>
                         </div>

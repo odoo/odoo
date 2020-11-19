@@ -1146,6 +1146,10 @@ table.table_desc tr td {
 
 // Navbar Dropdown Menu
 header {
+    &#top {
+        z-index: $zindex-fixed;
+    }
+
     // In mobile there is no need to limit the height...
     @include media-breakpoint-up(lg) {
         .navbar .dropdown-menu {

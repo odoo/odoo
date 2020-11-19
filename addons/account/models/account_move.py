@@ -1332,7 +1332,8 @@ class AccountMove(models.Model):
         partials = pay_term_line_ids.mapped('matched_debit_ids') + pay_term_line_ids.mapped('matched_credit_ids')
         for partial in partials:
             counterpart_lines = partial.debit_move_id + partial.credit_move_id
-            counterpart_line = counterpart_lines.filtered(lambda line: line not in self.line_ids)
+            # In case we are in an onchange, line_ids is a NewId, not an integer. By using line_ids.ids we get the correct integer value.
+            counterpart_line = counterpart_lines.filtered(lambda line: line.id not in self.line_ids.ids)
 
             if foreign_currency and partial.currency_id == foreign_currency:
                 amount = partial.amount_currency
@@ -2264,10 +2265,11 @@ class AccountMove(models.Model):
 
         for move in self:
             if not move.partner_id: continue
+            partners = (move.partner_id | move.partner_id.commercial_partner_id)
             if move.type.startswith('out_'):
-                move.partner_id._increase_rank('customer_rank')
+                partners._increase_rank('customer_rank')
             elif move.type.startswith('in_'):
-                move.partner_id._increase_rank('supplier_rank')
+                partners._increase_rank('supplier_rank')
             else:
                 continue
 
@@ -3826,6 +3828,10 @@ class AccountMoveLine(models.Model):
         return ret
 
     def _check_reconcile_validity(self):
+        # Empty self can happen if there is no line to check.
+        if not self:
+            return
+
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []

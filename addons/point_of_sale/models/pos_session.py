@@ -247,6 +247,8 @@ class PosSession(models.Model):
     def action_pos_session_closing_control(self):
         self._check_pos_session_balance()
         for session in self:
+            if session.state == 'closed':
+                raise UserError(_('This session is already closed.'))
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
             if not session.config_id.cash_control:
                 session.action_pos_session_close()
@@ -282,6 +284,8 @@ class PosSession(models.Model):
 
     def _validate_session(self):
         self.ensure_one()
+        if self.state == 'closed':
+             raise UserError(_('This session is already closed.'))
         self._check_if_no_draft_orders()
         # Users without any accounting rights won't be able to create the journal entry. If this
         # case, switch to sudo for creation and posting.
@@ -435,7 +439,8 @@ class PosSession(models.Model):
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
 
                 # Increasing current partner's customer_rank
-                order.partner_id._increase_rank('customer_rank')
+                partners = (order.partner_id | order.partner_id.commercial_partner_id)
+                partners._increase_rank('customer_rank')
 
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 

@@ -894,6 +894,12 @@ class AccountJournal(models.Model):
                 alias_name, safe_alias_name)
             alias_name = safe_alias_name
 
+        # Remove the following that is likely to be found in a company name:
+        # - Dot at the start of the string
+        # - Dot at the end of the string
+        # - Dot followed by another dot
+        alias_name = re.sub(r"(^\.|\.$|\.\.)", '', alias_name)
+
         return {
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
