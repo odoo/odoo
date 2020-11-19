@@ -503,7 +503,7 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         ctx = dict(self.env.context)
         ctx.update({'no_at_date': True, 'search_default_on_hand': True})
         return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
