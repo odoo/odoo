@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
@@ -191,40 +191,13 @@ class TestChannelFeatures(TestMailCommon):
             self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
 
-    @mute_logger('odoo.models.unlink')
-    def test_channel_auto_unsubscribe_archived_or_deleted_users(self):
-        """Archiving / deleting a user should automatically unsubscribe related partner from private channels"""
-        test_channel_private = self.env['mail.channel'].with_context(self._test_context).create({
-            'name': 'Winden caves',
-            'description': 'Channel to travel through time',
-            'public': 'private',
-        })
-        test_channel_group = self.env['mail.channel'].with_context(self._test_context).create({
-            'name': 'Sic Mundus',
-            'public': 'groups',
-            'group_public_id': self.env.ref('base.group_user').id})
-
-        test_user = self.env['res.users'].create({
-            "login": "adam",
-            "name": "Jonas",
-        })
-        test_partner = test_user.partner_id
-
-        self._join_channel(self.test_channel, self.user_employee.partner_id | test_partner)
-        self._join_channel(test_channel_private, self.user_employee.partner_id | test_partner)
-        self._join_channel(test_channel_group, self.user_employee.partner_id | test_partner)
-
-        # Unsubscribe archived user from the private channels, but not from public channels
-        self.user_employee.active = False
-        self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
-        self.assertEqual(test_channel_group.channel_partner_ids, test_partner)
-        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
-
-        # Unsubscribe deleted user from the private channels, but not from public channels
-        test_user.unlink()
-        self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
-        self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
-        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+    def test_channel_creation(self):
+        """A user that create a private channel should be able to read it."""
+        channel_form = Form(self.env['mail.channel'].with_user(self.user_employee))
+        channel_form.name = 'Test private channel'
+        channel_form.public = 'private'
+        channel = channel_form.save()
+        self.assertEqual(channel.name, 'Test private channel', 'Must be able to read the created channel')
 
     def test_channel_get(self):
         current_user = self.env['res.users'].create({
