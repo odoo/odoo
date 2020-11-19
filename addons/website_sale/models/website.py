@@ -384,6 +384,18 @@ class Website(models.Model):
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
 
+    def _bootstrap_snippet_filters(self):
+        super(Website, self)._bootstrap_snippet_filters()
+        action = self.env.ref('website_sale.dynamic_snippet_products_action', raise_if_not_found=False)
+        if action:
+            self.env['website.snippet.filter'].create({
+                'action_server_id': action.id,
+                'field_names': 'display_name,description_sale,image_512,list_price',
+                'limit': 16,
+                'name': _('Products'),
+                'website_id': self.id,
+            })
+
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'
