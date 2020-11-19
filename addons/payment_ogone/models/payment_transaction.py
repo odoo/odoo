@@ -87,7 +87,7 @@ class PaymentTxOgone(models.Model):
         if provider != 'ogone':
             return super()._get_tx_from_feedback_data(provider, data)
         ogone_values = data['ogone_values']
-        reference, shasign, alias = data.get('reference'), ogone_values.get('SHASign'), ogone_values.get('Alias.AliasId')
+        reference, pay_id, shasign, alias = data.get('reference'), ogone_values.get('Alias.OrderId'), ogone_values.get('SHASign'), ogone_values.get('Alias.AliasId')
         if not reference or not alias or not shasign:
             error_msg = _('Ogone: received data with missing reference (%s) (%s) or shasign (%s)') % (reference, alias, shasign)
             _logger.info(error_msg)
@@ -103,10 +103,11 @@ class PaymentTxOgone(models.Model):
             _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx._flexcheckout_data_verification(ogone_values, shasign, reference)
-        if all(key in ogone_values for key in ['CardNumber', 'CardHolderName', 'AliasId', 'partner_id', 'acquirer_id']):
-            cc_number = ogone_values.get('CardNumber')
-            cc_holder_name = ogone_values.get('CardHolderName')
-            alias = ogone_values.get('AliasId')
+        if all(key in ogone_values for key in ['Card.CardNumber', 'Card.CardHolderName', 'Alias.AliasId',
+                                               'partner_id', 'acquirer_id']):
+            cc_number = ogone_values.get('Card.CardNumber')
+            cc_holder_name = ogone_values.get('Card.CardHolderName')
+            alias = ogone_values.get('Alias.AliasId')
             partner_id = ogone_values.get('partner_id')
             acquirer_id = ogone_values.get('acquirer_id')
             token_vals = {
@@ -116,7 +117,7 @@ class PaymentTxOgone(models.Model):
                 'name': '%s - %s' % (cc_number[-4:], cc_holder_name),
                 'verified': False
             }
-            if ogone_values.get('StorePermanently') == 'N':
+            if ogone_values.get('Alias.StorePermanently') == 'N':
                 token_vals.update({'active': False})
             token_id = self.env['payment.token'].create(token_vals)
             tx.write({'token_id': token_id})

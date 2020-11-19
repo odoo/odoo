@@ -59,7 +59,6 @@ class OgoneController(http.Controller):
                 First after the FlexcheckoutAPI has created the Alias
                 Secondly Once the send_payment_request has had the 3DS verification.
         """
-        print("FEEDBACK ", kwargs)
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(kwargs))  # debug
         return request.render("payment_ogone.ogone_feedback", kwargs)
 
