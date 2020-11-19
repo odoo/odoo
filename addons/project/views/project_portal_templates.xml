@@ -54,7 +54,7 @@
                         </td>
                         <td class="text-right">
                             <a t-attf-href="/my/tasks?{{keep_query(filterby=project.id)}}">
-                                <t t-esc="project.task_count" />
+                                <t t-esc="project.task_count_with_subtasks" />
                                 <t t-esc="project.label_tasks" />
                             </a>
                         </td>
@@ -79,7 +79,7 @@
                         <span class="float-right">
                             <a role="button" t-attf-href="/my/tasks?filterby=#{project.id}" class="btn btn-sm btn-secondary">
                                 <span class="fa fa-tasks" role="img" aria-label="Tasks" title="Tasks"/>
-                                <span t-esc="project.task_count" />
+                                <span t-esc="project.task_count_with_subtasks" />
                                 <span t-field="project.label_tasks" />
                             </a>
                         </span>

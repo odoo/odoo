@@ -907,7 +907,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     auto: true,
 }, {
     mobile: true,
-    trigger: ".o_kanban_record .o_kanban_record_title :contains('the_flow.service')",
+    trigger: ".o_kanban_record:has(.o_kanban_record_title :contains('the_flow.service'))",
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Task')",
     content: _t("Select the the_flow.vendor"),
     position: "bottom",

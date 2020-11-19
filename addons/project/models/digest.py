@@ -20,7 +20,8 @@ class Digest(models.Model):
                 ('stage_id.fold', '=', False),
                 ('create_date', '>=', start),
                 ('create_date', '<', end),
-                ('company_id', '=', company.id)
+                ('company_id', '=', company.id),
+                ('display_project_id', '!=', False),
             ])
 
     def _compute_kpis_actions(self, company, user):

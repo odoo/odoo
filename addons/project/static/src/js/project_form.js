@@ -94,9 +94,8 @@ odoo.define('project.ProjectFormView', function (require) {
                 }),
             }).open();
         }
-
     });
-    
+
     const ProjectFormView = FormView.extend({
         config: _.extend({}, FormView.prototype.config, {
             Controller: ProjectFormController,

@@ -138,6 +138,7 @@ class TestProjectFlow(TestProjectCommon):
             'name': 'Task Child with project',
             'parent_id': parent_task.id,
             'project_id': self.project_goats.id,
+            'display_project_id': self.project_goats.id,
             'planned_hours': 3,
         })
 
@@ -146,6 +147,7 @@ class TestProjectFlow(TestProjectCommon):
             'name': 'Task Child without project',
             'parent_id': parent_task.id,
             'project_id': self.project_pigs.id,
+            'display_project_id': self.project_pigs.id,
             'planned_hours': 5,
         })
 
