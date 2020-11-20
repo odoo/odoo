@@ -4072,12 +4072,12 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     );
 });
 
-QUnit.test('receive new channel message: out of odoo focus (notification, channel)', async function (assert) {
+QUnit.test('receive new chat message: out of odoo focus (notification, channel)', async function (assert) {
     assert.expect(4);
 
     // channel expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.channel'].records.push({ id: 20, channel_type: 'chat' });
     const bus = new Bus();
     bus.on('set_title_part', null, payload => {
         assert.step('set_title_part');
@@ -4111,7 +4111,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
     assert.verifySteps(['set_title_part']);
 });
 
-QUnit.test('receive new channel message: out of odoo focus (notification, chat)', async function (assert) {
+QUnit.test('receive new chat message: out of odoo focus (notification, chat)', async function (assert) {
     assert.expect(4);
 
     // chat expected to be found in the sidebar with the proper channel_type
@@ -4150,15 +4150,15 @@ QUnit.test('receive new channel message: out of odoo focus (notification, chat)'
     assert.verifySteps(['set_title_part']);
 });
 
-QUnit.test('receive new channel messages: out of odoo focus (tab title)', async function (assert) {
+QUnit.test('receive new chat messages: out of odoo focus (tab title)', async function (assert) {
     assert.expect(12);
 
     let step = 0;
     // channel and chat expected to be found in the sidebar
     // with random unique id and name that will be referenced in the test
     this.data['mail.channel'].records.push(
-        { id: 20, name: "General" },
-        { channel_type: 'chat', id: 10, public: 'private' }
+        { channel_type: 'chat', id: 20, public: 'private' },
+        { channel_type: 'chat', id: 10, public: 'private' },
     );
     const bus = new Bus();
     bus.on('set_title_part', null, payload => {
@@ -4188,7 +4188,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
         },
     });
 
-    // simulate receiving a new message in general with odoo focused
+    // simulate receiving a new message in chat 20 with odoo focused
     await afterNextRender(() => {
         const messageData1 = {
             channel_ids: [20],
@@ -4201,7 +4201,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     });
     assert.verifySteps(['set_title_part']);
 
-    // simulate receiving a new message in chat with odoo focused
+    // simulate receiving a new message in chat 10 with odoo focused
     await afterNextRender(() => {
         const messageData2 = {
             channel_ids: [10],
@@ -4214,7 +4214,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
     });
     assert.verifySteps(['set_title_part']);
 
-    // simulate receiving another new message in chat with odoo focused
+    // simulate receiving another new message in chat 10 with odoo focused
     await afterNextRender(() => {
         const messageData3 = {
             channel_ids: [10],
@@ -4222,7 +4222,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
             model: 'mail.channel',
             res_id: 10,
         };
-        const notifications3 = [[['my-db', 'mail.channel', 20], messageData3]];
+        const notifications3 = [[['my-db', 'mail.channel', 10], messageData3]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications3);
     });
     assert.verifySteps(['set_title_part']);

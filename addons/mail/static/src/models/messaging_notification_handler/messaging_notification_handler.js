@@ -247,9 +247,9 @@ function factory(dependencies) {
                 channel.correspondent === this.env.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
-                // Notify if out of focus
                 const isOdooFocused = this.env.services['bus_service'].isOdooFocused();
-                if (!isOdooFocused) {
+                // Notify if out of focus
+                if (!isOdooFocused && channel.isChatChannel) {
                     this._notifyNewChannelMessageWhileOutOfFocus({
                         channel,
                         message,
