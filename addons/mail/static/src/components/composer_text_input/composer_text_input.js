@@ -87,8 +87,9 @@ class ComposerTextInput extends Component {
     saveStateInStore() {
         this.composer.update({
             textInputContent: this._getContent(),
-            textInputCursorStart: this._getSelectionStart(),
             textInputCursorEnd: this._getSelectionEnd(),
+            textInputCursorStart: this._getSelectionStart(),
+            textInputSelectionDirection: this._textareaRef.el.selectionDirection,
         });
     }
 
@@ -149,7 +150,8 @@ class ComposerTextInput extends Component {
         this._textareaRef.el.value = this.composer.textInputContent;
         this._textareaRef.el.setSelectionRange(
             this.composer.textInputCursorStart,
-            this.composer.textInputCursorEnd
+            this.composer.textInputCursorEnd,
+            this.composer.textInputSelectionDirection,
         );
         this._updateHeight();
     }
