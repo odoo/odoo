@@ -936,26 +936,6 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'button[data-name=action_configure_bank_journal]',
-    content: _t('Configure Bank Journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: '.js_configure_manually',
-    content: _t('Enter manual data for bank account'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=acc_number]",
-    content: _t("Enter an account number"),
-    position: "right",
-    run: "text 867656544",
-}, {
-    trigger: ".modal-footer .btn-primary",
-    content: _t('Save'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
     trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
