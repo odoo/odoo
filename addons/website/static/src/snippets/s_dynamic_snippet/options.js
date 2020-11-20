@@ -34,6 +34,7 @@ const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
         this._super.apply(this, arguments);
         if (params.attributeName === 'filterId' && previewMode === false) {
             this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[parseInt(widgetValue)].limit;
+            this.updateChangesInWysiwyg();
         }
     },
 
