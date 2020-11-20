@@ -969,12 +969,6 @@ class Task(models.Model):
             default['recurrence_id'] = self.recurrence_id.copy().id
         return super(Task, self).copy(default)
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        for task in self:
-            if not task._check_recursion():
-                raise ValidationError(_('Error! You cannot create a recursive hierarchy of tasks.'))
-
     @api.model
     def get_empty_list_help(self, help):
         tname = _("task")
