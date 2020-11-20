@@ -18,9 +18,10 @@ class StockReturnPicking(models.TransientModel):
         new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
         new_picking = self.env['stock.picking'].browse([new_picking_id])
         for move in new_picking.move_lines:
-            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
-            if return_picking_line and return_picking_line.to_refund:
-                move.to_refund = True
+            return_picking_lines = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            for return_picking_line in return_picking_lines:
+                if return_picking_line and return_picking_line.to_refund:
+                    move.to_refund = True
         return new_picking_id, pick_type_id
 
 
