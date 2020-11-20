@@ -78,11 +78,7 @@ class OgoneController(http.Controller):
                 data['ogone_values'].get('SHASign'), shasign_check, data['ogone_values'])
             _logger.info(error_msg)
             return {'ogone_user_error': _("The transaction signature could not be verified")}
-        partner_id = data.get('partner_id')
-        data['ogone_values']['acquirer_id'] = acquirer_id
-        data['ogone_values']['partner_id'] = partner_id
         data['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        data['type'] = 'flexcheckout'
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', data['ogone_values'])
         if tx_sudo.token_id:
             tx_sudo._send_payment_request()

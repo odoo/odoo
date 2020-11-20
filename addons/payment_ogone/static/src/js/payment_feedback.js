@@ -83,18 +83,19 @@ odoo.define('payment_ogone.payment_feedback', function (require) {
                 browserTimeZone: new Date().getTimezoneOffset(),
                 browserUserAgent: navigator.userAgent,
                 type: 'flexcheckout',
+                acquirer_id: acquirerId,
             };
             const self = this;
             return this._rpc({
                 route: this.txContext.initTxRoute,
                 params: this._prepareInitTxParams('ogone', paymentOptionId, data.flow),
             }).then(processingValues => {
+                ogoneValues['reference'] = processingValues.reference;
+                ogoneValues['partner_id'] = processingValues.partner_id;
                 return this._rpc({
                     route: '/payment/ogone/payments',
                     params: {
                         'acquirer_id': acquirerId,
-                        'reference': processingValues.reference,
-                        'partner_id': processingValues.partner_id,
                         'ogone_values': ogoneValues,
                     },
                 });

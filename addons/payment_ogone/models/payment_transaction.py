@@ -90,9 +90,9 @@ class PaymentTxOgone(models.Model):
             data = {re.sub(r'.*\.', '', key.upper()): val for key, val in data.items()}
             data['ALIAS'] = data['ALIASID']
             data['CARDNO'] = data['CARDHOLDERNAME']
-            # pay_id is not present when returning from fheckcheckout because we just created an alias.
+            # pay_id is not present when returning from fleckcheckout because we just created an alias.
             # Therefore, this field is not blocking
-            reference = 42
+            reference = data.get('REFERENCE')
             pay_id = True
         else:
             # type is directlink
@@ -100,7 +100,6 @@ class PaymentTxOgone(models.Model):
             reference = data.get('ORDERID')
 
         alias = data.get('ALIAS')
-        reference = data.get('ORDERID')
         data_present = alias and reference and pay_id
         if not data_present:
             error_msg = _('Ogone: received data with missing values (%s) (%s)') % (reference, alias)
