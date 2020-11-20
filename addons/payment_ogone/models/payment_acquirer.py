@@ -150,6 +150,7 @@ class PaymentAcquirer(models.Model):
                     'TRXDATE',
                     'VC',
                 ]
+                # Source https://epayments-support.ingenico.com/en/integration/all-sales-channels/flexcheckout/guide#flexcheckout_integration_guides_sha_out
                 flexcheckout_out = ['ALIAS.ALIASID',
                                     'ALIAS.NCERROR',
                                     'ALIAS.NCERRORCARDNO',
@@ -166,12 +167,11 @@ class PaymentAcquirer(models.Model):
                                     'CARD.CARDNUMBER',
                                     'CARD.CVC',
                                     'CARD.EXPIRYDATE'
-                                     ]
+                                    ]
                 keys += flexcheckout_out
                 return key.upper() in keys
 
         items = sorted((k.upper(), v) for k, v in values.items())
-        kept_keys = ''.join('%s=%s \n' % (k, v) for k, v in items if v and filter_key(k.upper()))
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k.upper()))
         sign = sign.encode("utf-8")
         shasign = sha256(sign).hexdigest()
@@ -251,3 +251,7 @@ class PaymentAcquirer(models.Model):
         base_url = self._ogone_get_urls()['ogone_flexcheckout_url']
         full_checkout_url = base_url + '?' + url_parameters
         return full_checkout_url
+
+    @api.model
+    def _ogone_clean_data_keys(self):
+        return {}

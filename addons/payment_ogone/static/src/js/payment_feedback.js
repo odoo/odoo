@@ -55,9 +55,7 @@ odoo.define('payment_ogone.payment_feedback', function (require) {
             };
 
             const paymentOptionId = data.paymentOptionId !== undefined ? parseInt(data.paymentOptionId) : null;
-//            const partnerId = data.partnerId !== undefined ? parseInt(data.partnerId) : null;
             const acquirerId = data.acquirerId !== undefined ? parseFloat(data.acquirerId) : null;
-//            const isValidation = data.isValidation !== undefined ? true: false;
             const ogoneValues = {
                 'Alias.AliasId': data['Alias.AliasId'],
                 'Alias.NCError': data['Alias.NCError'],
@@ -84,6 +82,7 @@ odoo.define('payment_ogone.payment_feedback', function (require) {
                 browserScreenWidth: screen.width,
                 browserTimeZone: new Date().getTimezoneOffset(),
                 browserUserAgent: navigator.userAgent,
+                type: 'flexcheckout',
             };
             const self = this;
             return this._rpc({

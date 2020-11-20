@@ -5,6 +5,7 @@ import datetime
 import logging
 import time
 from pprint import pformat
+import re
 
 import requests
 from lxml import etree, objectify
@@ -47,49 +48,60 @@ class PaymentTxOgone(models.Model):
     # BUSINESS METHODS
     # --------------------------------------------------
 
-    def _flexcheckout_data_verification(self, ogone_values, shasign, reference):
+    def _errors_verification(self, data):
         """
         Check that the incoming data coming from the FlexCheckout API are correct.
-        :param ogone_values: GET parameters of the feedback URL
-        :param shasign: shasign incoming value to be compared with our localy generated value
-        :param reference: transaction reference for logging/user error purpose
+        :param data: GET parameters of the feedback URL
         :return: None
         """
-
-        self.ensure_one()
-        # verify shasign to validate incoming data
-        shasign_check = self.acquirer_id._ogone_generate_shasign('out', ogone_values)
-        if shasign_check.upper() != shasign.upper():
-            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
-            shasign, shasign_check, ogone_values)
-            _logger.error(error_msg)
-            raise ValidationError("Ogone: Could not verify the transaction %s" % reference)
-
-        if shasign_check.upper() != ogone_values.get('SHASign'):
-            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
-                ogone_values.get('SHASIGN'), shasign_check, ogone_values)
-            _logger.info(error_msg)
-            raise ValidationError(error_msg)
-        if not all(key in ogone_values for key in ['referencePrefix', 'acquirer_id', 'partner_id']):
-            raise ValidationError(_("Missing values from Ogone feedback"))
+        # if not all(key in ogone_values for key in ['referencePrefix', 'acquirer_id', 'partner_id']):
+        #     raise ValidationError(_("Missing values from Ogone feedback"))
         # check for errors before using values
-        errors = {k: int(v) for k, v in ogone_values.items() if k.startswith('NCError') and int(v)}
+        errors = {k: int(v) for k, v in data.items() if k.startswith('NCError') and int(v)}
         if errors:
             self._set_canceled()
             error_fields = ", ".join([ogone.FLEXCHECKOUT_ERROR[key] for key in errors.keys()])
-            error_msg = _(f"The folowing parameters could not be validated: {error_fields}.")
+            error_msg = _(f"The folowing parameters could not be validated by Ogone: {error_fields}.")
             raise ValidationError(_(error_msg))
 
     @api.model
     def _get_tx_from_feedback_data(self, provider, data):
-        """ Given a data dict coming from ogone, verify it and find the related
-        transaction record. Create a payment token if an alias is returned."""
+        """
+        Given a data dict coming from ogone, verify it and find the related
+        transaction record. Create a payment token if an alias is returned.
+
+        This method is called from two different API: Flexcheckout for token (Alias) creation on Ingenico servers
+        and from the DirectLink API when a 3DSV1 verification occurs (with redirection).
+        Unfortunately, these two API don't share the same keywords and conventions.
+
+        At this point, the data signature has been validated and we can homogenize the data.
+        :param str provider: The provider of the acquirer that handled the transaction
+        :param dict data: The feedback data sent by the acquirer
+        :return: The transaction if found
+        :rtype: recordset of `payment.transaction`
+        """
         if provider != 'ogone':
             return super()._get_tx_from_feedback_data(provider, data)
-        ogone_values = data['ogone_values']
-        reference, pay_id, shasign, alias = data.get('reference'), ogone_values.get('Alias.OrderId'), ogone_values.get('SHASign'), ogone_values.get('Alias.AliasId')
-        if not reference or not alias or not shasign:
-            error_msg = _('Ogone: received data with missing reference (%s) (%s) or shasign (%s)') % (reference, alias, shasign)
+        if data.get('type') == 'flexcheckout':
+            # clean dict keys for coherence with directlink API.
+            # Pass keys to uppercase and remove prefix line "CARD."; "ALIAS." etc
+            # Thanks to Ogone, the dict keys are different from one API to another but the correct keys are needed
+            # to check the signature...
+            data = {re.sub(r'.*\.', '', key.upper()): val for key, val in data.items()}
+            data['ALIAS'] = data['ALIASID']
+            data['CARDNO'] = data['CARDHOLDERNAME']
+            # pay_id is not present when returning from fheckcheckout because we just created an alias.
+            # Therefore, this field is not blocking
+            pay_id = True
+        else:
+            # type is directlink
+            pay_id = data.get('PAYID')
+
+        alias = data.get('ALIAS')
+        reference = data.get('ORDERID')
+        data_present = alias and reference and pay_id
+        if not data_present:
+            error_msg = _('Ogone: received data with missing values (%s) (%s)') % (reference, alias)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
@@ -102,26 +114,38 @@ class PaymentTxOgone(models.Model):
                 error_msg += _(': multiple order found')
             _logger.info(error_msg)
             raise ValidationError(error_msg)
-        tx._flexcheckout_data_verification(ogone_values, shasign, reference)
-        if all(key in ogone_values for key in ['Card.CardNumber', 'Card.CardHolderName', 'Alias.AliasId',
-                                               'partner_id', 'acquirer_id']):
-            cc_number = ogone_values.get('Card.CardNumber')
-            cc_holder_name = ogone_values.get('Card.CardHolderName')
-            alias = ogone_values.get('Alias.AliasId')
-            partner_id = ogone_values.get('partner_id')
-            acquirer_id = ogone_values.get('acquirer_id')
+        return tx
+
+    def _process_feedback_data(self, data):
+        """ Update the transaction state and the acquirer reference based on the feedback data.
+        For an acquirer to handle transaction post-processing, it must overwrite this method and
+        process the feedback data.
+
+        Note: self.ensure_one()
+
+        :param dict data: The feedback data sent by the acquirer
+        :return: None
+        """
+        if self.provider_id != 'ogone':
+            return super()._process_feedback_data(data)
+        self.ensure_one()
+        self._errors_verification(data)
+        if all(key in data for key in ['CARDNUMBER', 'CARDHOLDERNAME',
+                                       'partner_id', 'acquirer_id']):
+            # We are coming back from the flexkcheckout API
+            # arj fixme: use generic function that generate the XXXXXXXXX
             token_vals = {
-                'acquirer_id': acquirer_id,
-                'acquirer_ref': alias,
-                'partner_id': partner_id,
-                'name': '%s - %s' % (cc_number[-4:], cc_holder_name),
+                'acquirer_id': self.acqurier_id.id,
+                'acquirer_ref': data['ALIAS'],
+                'partner_id': self.partner_id,
+                'name': '%s - %s' % (data.get('CARDNUMBER')[-4:], data.get('CARDHOLDERNAME')),
                 'verified': False
             }
-            if ogone_values.get('Alias.StorePermanently') == 'N':
+            if data.get('STOREPERMANENTLY') == 'N':
+                # The token shall not be reused, we archive it to avoid listing it
                 token_vals.update({'active': False})
             token_id = self.env['payment.token'].create(token_vals)
-            tx.write({'token_id': token_id})
-        return tx
+            self.write({'token_id': token_id})
 
     # --------------------------------------------------
     # Ogone API RELATED METHODS

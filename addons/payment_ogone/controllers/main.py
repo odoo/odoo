@@ -70,17 +70,50 @@ class OgoneController(http.Controller):
         """
 
         acquirer_id = data.get('acquirer_id')
+        acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
+        shasign_check = acquirer_sudo._ogone_generate_shasign('out', data['ogone_values'])
+        if shasign_check.upper() != data['ogone_values'].get('SHASign'):
+            # The data could not be verificated
+            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
+                data['ogone_values'].get('SHASign'), shasign_check, data['ogone_values'])
+            _logger.info(error_msg)
+            return {'ogone_user_error': _("The transaction signature could not be verified")}
         partner_id = data.get('partner_id')
         data['ogone_values']['acquirer_id'] = acquirer_id
         data['ogone_values']['partner_id'] = partner_id
         data['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', data)
+        data['type'] = 'flexcheckout'
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', data['ogone_values'])
         if tx_sudo.token_id:
             tx_sudo._send_payment_request()
             return {'tx_status': tx_sudo.state, 'html_3ds': tx_sudo.ogone_html_3ds,
                     'ogone_user_error': tx_sudo.ogone_user_error}
+
+
+
+
+    @http.route([
+        '/payment/ogone/accept', '/payment/ogone/test/accept',
+        '/payment/ogone/decline', '/payment/ogone/test/decline',
+        '/payment/ogone/exception', '/payment/ogone/test/exception',
+        '/payment/ogone/cancel', '/payment/ogone/test/cancel',
+    ], type='http', auth='public', csrf=False, method=['GET', 'POST'])
+    def ogone_transaction_feedback(self, **post):
+        """ Handle redirection from Ingenico (GET) and s2s notification (POST/GET) """
+        _logger.info('Ogone: entering s2s feedback with post data %s', pprint.pformat(post))
+        post['type'] = 'directlink'
+        acquirer_sudo = request.env['payment.acquirer'].sudo().search(['name', '=', 'ogone'])
+        shasign_check = acquirer_sudo._ogone_generate_shasign('out', post)
+        if shasign_check.upper() == post.get('SHASIGN'):
+            # The data matches, we can handle them
+            request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', post)
+            # arj fixme: do something here ?
         else:
-            return {'status': _("The transaction could not be performed")}
+            error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (
+                post.get('SHASIGN'), shasign_check, post)
+            _logger.info(error_msg)
+        return werkzeug.utils.redirect("/payment/ogone/flexchekout/final")
+
 
     # ARJ FIXME: REMOVE LATER
     @http.route('/payment/ogone/test/<state>/<int:debug>', type='http', auth='public', website=True)
@@ -100,16 +133,3 @@ class OgoneController(http.Controller):
         return werkzeug.utils.redirect(
             f"/website_payment/pay?amount={amount}&currency_id={currency_id}&reference={reference}{debug_str}")
 
-    @http.route([
-        '/payment/ogone/accept', '/payment/ogone/test/accept',
-        '/payment/ogone/decline', '/payment/ogone/test/decline',
-        '/payment/ogone/exception', '/payment/ogone/test/exception',
-        '/payment/ogone/cancel', '/payment/ogone/test/cancel',
-    ], type='http', auth='public', csrf=False, method=['GET', 'POST'])
-    def ogone_transaction_feedback(self, **post):
-        """ Handle redirection from Ingenico (GET) and s2s notification (POST/GET) """
-        # arj fixme: We could avoid this redirect and hanle everything here with our template
-        # arj fixme: by adding a route to /payment/ogone/flexchekout/feedback
-        _logger.info('Ogone: entering s2s feedback with post data %s', pprint.pformat(post))
-        request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', post)
-        return werkzeug.utils.redirect("/payment/ogone/flexchekout/final")
