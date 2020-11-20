@@ -316,6 +316,10 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_notrack'):
             self._prepare_tracking(self._fields)
 
+        # update followers (unsubscribe)
+        if self._fields.get('user_id') and values.get('user_id'):
+            self.message_unsubscribe(partner_ids=self.user_id.partner_id.ids)
+
         # Perform write
         result = super(MailThread, self).write(values)
 
