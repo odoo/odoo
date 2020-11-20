@@ -95,6 +95,7 @@ class AccountJournal(models.Model):
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
                              ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_liabilities').id)
+    restrict_mode_hash_table_visible = fields.Boolean(compute='_compute_restrict_mode_hash_table_visible')
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -201,6 +202,19 @@ class AccountJournal(models.Model):
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
+
+    @api.depends('type', 'payment_debit_account_id', 'payment_credit_account_id')
+    def _compute_restrict_mode_hash_table_visible(self):
+        for journal in self:
+            if journal.type == 'cash':
+                cur_assets_id = self.env.ref('account.data_account_type_current_assets').id
+                journal.restrict_mode_hash_table_visible = \
+                    journal.payment_credit_account_id.user_type_id.id == cur_assets_id and \
+                    journal.payment_debit_account_id.user_type_id.id == cur_assets_id
+            elif journal.type == 'bank':
+                journal.restrict_mode_hash_table_visible = False
+            else:
+                journal.restrict_mode_hash_table_visible = True
 
     @api.depends('type')
     def _compute_default_account_type(self):

@@ -102,7 +102,8 @@
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
-                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
+                                        <field name="restrict_mode_hash_table_visible" invisible="1"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" attrs="{'invisible': [('restrict_mode_hash_table_visible', '=', False)]}"/>
                                     </group>
                                     <!-- email alias -->
                                     <group class="oe_read_only" name="group_alias_ro" string="Create Invoices upon Emails" attrs="{'invisible': ['|', ('type', 'not in',  ('sale' ,'purchase')), ('alias_domain', '=', False)]}">
