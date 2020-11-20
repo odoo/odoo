@@ -956,7 +956,8 @@ class Field(MetaField('DummyField', (object,), {})):
             #       not stored and not computed -> default
             #
             #   on a new record w/ origin:
-            #       stored -> fetch from origin (computation done above)
+            #       stored and not (computed and readonly) -> fetch from origin
+            #       stored and computed and readonly -> compute
             #       not stored and computed -> compute
             #       not stored and not computed -> default
             #
@@ -982,7 +983,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     ]))
                 value = env.cache.get(record, self)
 
-            elif self.store and record._origin:
+            elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
                 value = self.convert_to_cache(record._origin[self.name], record)
                 env.cache.set(record, self, value)
