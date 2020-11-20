@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from collections import defaultdict
+from collections import defaultdict, deque
 from datetime import datetime
 from itertools import groupby
 from operator import itemgetter
@@ -427,21 +427,82 @@ class StockMove(models.Model):
         for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
             if not warehouse:  # No prediction possible if no warehouse.
                 continue
-            product_variant_ids = moves.product_id.ids
             wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
                 [('id', 'child_of', warehouse.view_location_id.id)],
                 ['id'],
             )]
-            forecast_lines = self.env['report.stock.report_product_product_replenishment']\
-                ._get_report_lines(None, product_variant_ids, wh_location_ids)
-            for move in moves:
-                lines = [l for l in forecast_lines if l["move_out"] == move._origin and l["replenishment_filled"] is True]
-                if lines:
-                    move.forecast_availability = sum(m['quantity'] for m in lines)
-                    move_ins_lines = list(filter(lambda report_line: report_line['move_in'], lines))
-                    if move_ins_lines:
-                        expected_date = max(m['move_in'].date for m in move_ins_lines)
-                        move.forecast_expected_date = expected_date
+            forecast_info = moves._get_forecast_availability(wh_location_ids)
+            for move in moves._origin:
+                move.forecast_availability = forecast_info[move][0]
+                move.forecast_expected_date = forecast_info[move][1]
+
+    def _get_forecast_availability(self, in_locations_ids):
+        """ Get forcasted information (sum_qty_expected, max_date_expected) of self for in_locations_ids as the in locations.
+        It differ from _get_report_lines because it computes only the necessary information and return a
+        dict by move, which is making faster to use and compute.
+
+        :param qty: ids list/tuple of locations to consider as interne
+        :return: a defaultdict of moves in self, values are tuple(sum_qty_expected, max_date_expected)
+        :rtype: defaultdict
+        """
+        product_ids = self.product_id
+        in_domain, out_domain = self.env['report.stock.report_product_product_replenishment']._move_confirmed_domain(
+            None, product_ids.ids, in_locations_ids
+        )
+        outs = self.env['stock.move'].search(out_domain, order='priority desc, date, id')
+        outs_per_product = defaultdict(list)
+        for out in outs:
+            outs_per_product[out.product_id.id].append(out)
+        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        ins_per_product = defaultdict(deque)  # Use deque for a efficient FIFO
+        for in_ in ins:
+            if not float_is_zero(in_.product_qty, precision_rounding=in_.product_id.uom_id.rounding):
+                ins_per_product[in_.product_id.id].append([in_.product_qty, in_])
+
+        currents = {c['id']: c['qty_available'] for c in product_ids.with_context(location=in_locations_ids).read(['qty_available'])}
+
+        ids_in_self = set(self._ids)
+        result = defaultdict(lambda: (0.0, False))
+        for product in product_ids:
+            for out in outs_per_product[product.id]:
+                if out.state not in ('partially_available', 'assigned'):
+                    continue
+                # Reconcile with reserved stock.
+                current = currents[out.product_id.id]
+                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                currents[product.id] -= reserved
+                if out.id in ids_in_self:
+                    result[out] = (result[out][0] + reserved, False)
+
+            for out in outs_per_product[product.id]:
+                # Reconcile with the current stock.
+                current = currents[out.product_id.id]
+                reserved = 0.0
+                if out.state in ('partially_available', 'assigned'):
+                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                demand = out.product_qty - reserved
+                if float_is_zero(demand, precision_rounding=product.uom_id.rounding):
+                    continue
+                taken_from_stock = min(demand, current)
+                if not float_is_zero(taken_from_stock, precision_rounding=product.uom_id.rounding):
+                    currents[product.id] -= taken_from_stock
+                    demand -= taken_from_stock
+                    if out.id in ids_in_self:
+                        result[out] = (result[out][0] + taken_from_stock, False)
+                # Reconcile with the ins.
+                # The while loop will finish because it will pop from ins_per_product or decrease the demand until zero
+                while ins_per_product[out.product_id.id] and not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
+                    in_ = ins_per_product[out.product_id.id][0]  # access first in deque is O(1)
+                    taken_from_in = min(demand, in_[0])
+                    demand -= taken_from_in
+                    in_[0] -= taken_from_in
+                    if out.id in ids_in_self:
+                        result[out] = (result[out][0] + taken_from_in, max(d for d in [in_[1].date, result[out][1]] if d))
+                    # Remove Exhausted in_move from the list (the last because of reversed)
+                    if float_is_zero(in_[0], precision_rounding=product.uom_id.rounding):
+                        ins_per_product[out.product_id.id].pop()
+
+        return result
 
     def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
