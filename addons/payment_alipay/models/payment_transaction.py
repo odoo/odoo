@@ -3,13 +3,12 @@
 
 import logging
 
-from hashlib import md5  # TODO ARJ unused import
 from werkzeug import urls
 
-from odoo import api, fields, models, _  # TODO ARJ unused import with fields
+from odoo import api, models, _
 from odoo.tools.float_utils import float_compare
 from odoo.addons.payment_alipay.controllers.main import AlipayController
-from odoo.addons.payment.models.payment_acquirer import ValidationError  # TODO ARJ this is old stuff; import from odoo.exceptions now
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -17,101 +16,85 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    # TODO ARJ CRUD methods come first -> create, write, _alipay_check_configuration
-    def _check_alipay_configuration(self, vals):
-        acquirer_id = int(vals.get('acquirer_id'))  # TODO ARJ do int(vals.get('...', 0)) to have the CRUD method raise a ValidationError instead of yours raising a TypeError if a val is missing  # TODO ARJ same below
-        acquirer = self.env['payment.acquirer'].sudo().browse(acquirer_id)  # TODO ARJ sudo shoudln't be needed here  # TODO ARJ .exists()
-        if acquirer and acquirer.provider == 'alipay' and acquirer.alipay_payment_method == 'express_checkout':  # TODO ARJ bool(acquirer) was useless here and won't be necessary anymore
-            currency_id = int(vals.get('currency_id'))
-            if currency_id:
-                currency = self.env['res.currency'].sudo().browse(currency_id)
-                if currency and currency.name != 'CNY':  # TODO ARJ same as for acquirer
-                    _logger.info("Only CNY currency is allowed for Alipay Express Checkout")
-                    # TODO ARJ triple quotes shouldn't be mixed with \n and are bad practice in general for translatable strings
-                    raise ValidationError(_("""
-                        Only transactions in Chinese Yuan (CNY) are allowed for Alipay Express Checkout.\n
-                        If you wish to use another currency than CNY for your transactions, switch your
-                        configuration to a Cross-border account on the Alipay payment acquirer in Odoo.
-                    """))
-        return True  # TODO ARJ this doesn't hurt but it's never evaluated. A check that returns None or raise is fine
+    # === CRUD METHODS ===#
+    @api.model
+    def create(self, vals):
+        res = super(PaymentTransaction, self).create(vals)
+        res._check_alipay_configuration()
+        return res
 
     def write(self, vals):
         if vals.get('currency_id') or vals.get('acquirer_id'):
-            for payment in self:  # TODO ARJ for tx in self
-                check_vals = {
-                    'acquirer_id': vals.get('acquirer_id', payment.acquirer_id.id),
-                    'currency_id': vals.get('currency_id', payment.currency_id.id)
-                }
-                payment._check_alipay_configuration(check_vals)
-        return super(PaymentTransaction, self).write(vals)
+            res = super(PaymentTransaction, self).write(vals)
+            for tx in self:
+                tx._check_alipay_configuration()
+        return res
 
-    @api.model
-    def create(self, vals):
-        self._check_alipay_configuration(vals)  # TODO ARJ this method wouldn't need so many if's if it was called after the CRUD method
-        return super(PaymentTransaction, self).create(vals)
+    def _check_alipay_configuration(self):
+        if self.acquirer_id and self.acquirer_id.provider == 'alipay' and self.acquirer_id.alipay_payment_method == 'express_checkout':
+            if self.currency_id.name != 'CNY':
+                _logger.info("Only CNY currency is allowed for Alipay Express Checkout")
+                raise ValidationError("Alipay" + _(
+                    "Only transactions in Chinese Yuan (CNY) are allowed for Alipay Express Checkout."
+                    "If you wish to use another currency than CNY for your transactions, switch your configuration to a " 
+                    "Cross-border account on the Alipay payment acquirer in Odoo."))
 
-    # --------------------------------------------------
-    # FORM RELATED METHODS
-    # --------------------------------------------------
+    # === BUSINESS METHODS ===#
 
     @api.model
     def _get_tx_from_feedback_data(self, provider, data):
         if provider != 'alipay':
             return super()._get_tx_from_feedback_data(data, provider)
-        reference, txn_id, sign = data.get('reference'), data.get('trade_no'), data.get('sign')
+        # verify signature
+        alipay_provider = self.env['payment.acquirer'].search([('provider', '=', 'alipay')], limit=1)
+        sign_check = alipay_provider._alipay_build_sign(data)
+        txn_id, sign = data.get('trade_no'), data.get('sign')
+        reference = data.get('reference') or data.get('out_trade_no')
+        if sign != sign_check:
+            _logger.info('Alipay: invalid sign, received %s, computed (%s), for data (%s)' % (sign, sign_check, data))
+            raise ValidationError('Alipay: ' + _('invalid sign: received %(sign)s, computed %(sc)s, for data %(data)s',
+                                                 sign=sign, sc=sign_check, data=data))
+
         if not reference or not txn_id:
             _logger.info('Alipay: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id))
-            raise ValidationError(_('Alipay: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id))  # TODO ARJ _('%s...%s') % (x, y) is deprecated, use _('%(x)s...%(y)s', x=x, y=y)
+            raise ValidationError("Alipay: " +_('received data with missing reference %(r)s or txn_id %(t)s',
+                                                r=reference, t=txn_id))
 
-        txs = self.env['payment.transaction'].search([('reference', '=', reference)])
-        if not txs or len(txs) > 1:  # TODO ARJ len(tx) != 1
-            error_msg = _('Alipay: received data for reference %s') % (reference)  # TODO same as above
-            logger_msg = 'Alipay: received data for reference %s' % (reference)
-            if not txs:  # TODO ARJ this can be simplified a lot (both code and translation wise) by logging something like "len(tx)" txs matched blabla, see adyen
-                error_msg += _('; no order found')
-                logger_msg += '; no order found'
-            else:
-                error_msg += _('; multiple order found')
-                logger_msg += '; multiple order found'
-            _logger.info(logger_msg)
-            raise ValidationError(error_msg)
+        tx = self.env['payment.transaction'].search([('reference', '=', reference)])
+        if not tx or len(tx) > 1:
+            raise ValidationError(
+                "Alipay: " + _(
+                    "received data with reference %(ref)s matching %(num_tx)d transaction(s)",
+                    ref=reference, num_tx=len(tx)
+                )
+            )
+        return tx
 
-        # verify sign  # TODO ARJ we should do this before anything
-        sign_check = txs.acquirer_id._build_sign(data)
-        if sign != sign_check:
-            _logger.info('Alipay: invalid sign, received %s, computed %s, for data %s' % (sign, sign_check, data))
-            raise ValidationError(_('Alipay: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data))
-
-        return txs
-
-    # TODO ARJ in general, prefer ValidationError("Alipay" + _(...)) so that we're sure than the provider is mentionned, and it reduces the number of strings to translate
     def _process_feedback_data(self, data):
         if self.provider != 'alipay':
             return super()._process_feedback_data(data)
-        if self.state in ['done']:
-            _logger.info('Alipay: trying to validate an already validated tx (ref %s)', self.reference)
-            return True
 
+        if self.state == 'done':
+            _logger.info('Alipay: trying to validate an already validated tx (ref %s)' % self.reference)
+            return True
         if float_compare(float(data.get('total_fee', '0.0')), (self.amount + self.fees), 2) != 0:
             # mc_gross is amount + fees
-            raise ValidationError(_("The paid amount does not match the total + fees."))
+            raise ValidationError("Alipay" + _("The paid amount does not match the total + fees."))
         if self.acquirer_id.alipay_payment_method == 'standard_checkout':
             if data.get('currency') != self.currency_id.name:
-                raise ValidationError(_("The currency returned by Alipay does not match the transaction currency."))
-        else:
-            if data.get('seller_email') != self.acquirer_id.alipay_seller_email:
-                raise ValidationError(_("The seller email does not match the configured Alipay account."))
+                raise ValidationError("Alipay" + _("The currency returned by Alipay %(rc)s does not match the transaction currency %(tc)s.",
+                                                   rc=data.get('currency'), tc=self.currency_id.name))
+        elif data.get('seller_email') != self.acquirer_id.alipay_seller_email:
+            raise ValidationError("Alipay" + _("The seller email does not match the configured Alipay account."))
 
         status = data.get('trade_status')
         if status in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
-            _logger.info('Validated Alipay payment for tx %s: set as done' % self.reference)
             self._set_done()
         elif status == 'TRADE_CLOSED':
-            _logger.info('Received notification for Alipay payment %s: set as Canceled' % self.reference)  # TODO ARJ not necessarily a notif, or is it?
+            _logger.info('Received transaction data for Alipay payment %s: set as Canceled' % self.reference)
             self._set_canceled()
         else:
-            error = 'Received unrecognized status for Alipay payment %s: %s, set as error' % (self.reference, status)  # TODO ARJ those %s could be named
-            _logger.info(error)
+            _logger.info(f'Received unrecognized status for Alipay payment {self.reference}: {status}, set as error')
             self._set_error("Alipay: " + _(
                 "received data with invalid transaction status: %(tx_status)s", tx_status=status
             ))
@@ -142,7 +125,7 @@ class PaymentTransaction(models.Model):
                 'payment_type': 1,
                 'seller_email': self.acquirer_id.alipay_seller_email,
             })
-        sign = self.acquirer_id._build_sign(alipay_tx_values)
+        sign = self.acquirer_id._alipay_build_sign(alipay_tx_values)
         alipay_tx_values.update({
             'sign_type': 'MD5',
             'sign': sign,
