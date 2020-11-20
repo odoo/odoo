@@ -913,7 +913,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         dummy_50_perc_tax.unlink()
 
         # close session (should not fail here)
-        pos_session.action_pos_session_closing_control()
+        # We don't call `action_pos_session_closing_control` to force the failed
+        # closing which will return the action because the internal rollback call messes
+        # with the rollback of the test runner. So instead, we directly call the method
+        # that returns the action by specifying the imbalance amount.
+        action = pos_session._close_session_action(5.0)
+        wizard = self.env['pos.close.session.wizard'].browse(action['res_id'])
+        wizard.with_context(action['context']).close_session()
 
         # check the difference line
         diff_line = pos_session.move_id.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
