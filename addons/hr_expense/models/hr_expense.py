@@ -194,8 +194,12 @@ class HrExpense(models.Model):
 
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
-        if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.'))
+        for expense in self:
+            if expense.product_id and expense.product_uom_id.category_id != expense.product_id.uom_id.category_id:
+                raise UserError(_(
+                    'Selected Unit of Measure for expense %(expense)s does not belong to the same category as the Unit of Measure of product %(product)s.',
+                    expense=expense.name, product=expense.product_id.name,
+                ))
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
         ''' Create the expenses from files.

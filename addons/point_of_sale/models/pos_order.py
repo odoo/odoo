@@ -928,7 +928,7 @@ class AccountCashRounding(models.Model):
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):
-        open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+        open_session = self.env['pos.session'].search([('config_id.rounding_method', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
         if open_session:
             raise ValidationError(
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

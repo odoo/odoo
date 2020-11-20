@@ -55,7 +55,6 @@ class ProductCategory(models.Model):
     def _check_category_recursion(self):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive categories.'))
-        return True
 
     @api.model
     def name_create(self, name):
