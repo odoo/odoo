@@ -92,10 +92,12 @@ class PaymentTxOgone(models.Model):
             data['CARDNO'] = data['CARDHOLDERNAME']
             # pay_id is not present when returning from fheckcheckout because we just created an alias.
             # Therefore, this field is not blocking
+            reference = 42
             pay_id = True
         else:
             # type is directlink
             pay_id = data.get('PAYID')
+            reference = data.get('ORDERID')
 
         alias = data.get('ALIAS')
         reference = data.get('ORDERID')
