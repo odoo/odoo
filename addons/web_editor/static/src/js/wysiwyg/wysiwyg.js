@@ -715,10 +715,12 @@ var Wysiwyg = Widget.extend({
         const node = nodes[0];
         let $baseNode;
 
-        if (nodes.length === 1){
+        if (nodes.length === 1) {
             if (node instanceof JWEditorLib.FontAwesomeNode || node instanceof JWEditorLib.OdooVideoNode) {
-                const $originalDomNode = this.editorHelpers.getDomNodes(node).filter(dom => dom.nodeType === Node.ELEMENT_NODE);
-                $baseNode = $($originalDomNode).clone();
+                const originalDomNode = this.editorHelpers.getDomNodes(node).filter(dom => dom.nodeType === Node.ELEMENT_NODE);
+                $baseNode = $(originalDomNode).clone();
+            } else if (node instanceof JWEditorLib.ImageNode) {
+                $baseNode = $(this.editorHelpers.getDomNodes(node).filter(dom => dom.nodeType === Node.ELEMENT_NODE));
             }
             if (node instanceof JWEditorLib.FontAwesomeNode) {
                 params.htmlClass = [...$baseNode[0].classList].filter((className) => {
@@ -733,8 +735,13 @@ var Wysiwyg = Widget.extend({
         let mediaDialog = new weWidgets.MediaDialog(this, params, $baseNode);
         mediaDialog.open();
         mediaDialog.on('save', this, async (element) => {
-            if (params.htmlClass) element.className += " " + params.htmlClass;
-            return this.editor.execCommand('insertMedia', { element: element });
+            // If we're not _replacing_ a media (done by media dialog), insert it.
+            if (!$baseNode || $baseNode.length !== 1 || !$(element).is($baseNode[0].nodeName)) {
+                if (params.htmlClass) {
+                    element.className += " " + params.htmlClass;
+                }
+                await this.editor.execCommand('insertMedia', { element: element });
+            }
         });
     },
     async saveContent(context = this.editor) {

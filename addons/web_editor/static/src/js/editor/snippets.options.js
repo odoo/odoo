@@ -3398,7 +3398,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._rerenderXML();
         this._getImg().dataset.resizeWidth = this.optimizedWidth;
         await this._applyOptions();
-        await this.updateUI();
     },
     /**
      * Returns the image that is currently being modified.
@@ -3481,6 +3480,8 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     async _onImageChanged(ev) {
         this.trigger_up('snippet_edition_request', {exec: async () => {
             await this._autoOptimizeImage();
+            await this.updateChangesInWysiwyg();
+            await this.updateUI();
             this.trigger_up('cover_update');
         }});
     },
