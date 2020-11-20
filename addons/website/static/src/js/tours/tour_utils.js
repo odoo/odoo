@@ -161,7 +161,7 @@ function clickOnSave(position = "bottom") {
 function clickOnText(snippet, element, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} ${element}`,
-        content: _t("Even if this title is cool, you can change it. <b>Click on a text</b> to start editing it."),
+        content: _t("<b>Click on a text</b> to start editing it."),
         position: position,
         run: "text",
         consumeEvent: "input",
@@ -231,7 +231,7 @@ function prepend_trigger(steps, prepend_text='') {
 
 function registerThemeHomepageTour(name, steps) {
     tour.register(name, {
-        url: "/",
+        url: "/?enable_editor=1",
         sequence: 1010,
         saveAs: "homepage",
     }, prepend_trigger(
