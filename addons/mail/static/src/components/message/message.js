@@ -531,6 +531,7 @@ class Message extends Component {
     _onClickOriginThread(ev) {
         // avoid following dummy href
         ev.preventDefault();
+        this.message.markAsRead();
         this.message.originThread.open();
     }
 
