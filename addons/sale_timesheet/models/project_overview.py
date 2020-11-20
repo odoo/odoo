@@ -27,6 +27,17 @@ class Project(models.Model):
 
         return values
 
+    def _plan_get_employee_ids(self):
+        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
+        user_ids = [user_id['user_id'][0] for user_id in user_ids]
+        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
+        # flatten the list of list
+        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
+
+        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
+        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
+        return employee_ids
+
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
@@ -112,15 +123,8 @@ class Project(models.Model):
         #
         # Time Repartition (per employee per billable types)
         #
-        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
-        user_ids = [user_id['user_id'][0] for user_id in user_ids]
-        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
-        # flatten the list of list
-        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-
-        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
-        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
-
+        employee_ids = self._plan_get_employee_ids()
+        employee_ids = list(set(employee_ids))
         # Retrieve the employees for which the current user can see theirs timesheets
         employee_domain = expression.AND([[('company_id', 'in', self.env.companies.ids)], self.env['account.analytic.line']._domain_employee_id()])
         employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(employee_domain)
