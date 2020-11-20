@@ -4,7 +4,7 @@
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests import common
+from odoo.tests import common, Form
 from odoo import Command
 
 def strip_prefix(prefix, names):
@@ -752,3 +752,39 @@ class TestComputeOnchange(common.TransactionCase):
             with form.child_ids.edit(2) as line:
                 line.cost = 30
             self.assertEqual(form.cost, 61)
+
+    def test_onchange_editable_compute_one2many(self):
+        # create a record with a computed editable field ('edit') on lines
+        record = self.env['test_new_api.compute_editable'].create({'line_ids': [(0, 0, {'value': 7})]})
+        record.flush()
+        line = record.line_ids
+        self.assertRecordValues(line, [{'value': 7, 'edit': 7, 'count': 0}])
+
+        # retrieve the onchange spec for calling 'onchange'
+        spec = Form(record)._view['onchange']
+
+        # The onchange on 'line_ids' should increment 'count' and keep the value
+        # of 'edit' (this field should not be recomputed), whatever the order of
+        # the fields in the dictionary.  This ensures that the value set by the
+        # user on a computed editable field on a line is not lost.
+        line_ids = [
+            Command.update(line.id, {'value': 8, 'edit': 9, 'count': 0}),
+            Command.create({'value': 8, 'edit': 9, 'count': 0}),
+        ]
+        result = record.onchange({'line_ids': line_ids}, 'line_ids', spec)
+        expected = {'value': {
+            'line_ids': [
+                Command.clear(),
+                Command.update(line.id, {'value': 8, 'edit': 9, 'count': 8}),
+                Command.create({'value': 8, 'edit': 9, 'count': 8}),
+            ],
+        }}
+        self.assertEqual(result, expected)
+
+        # change dict order in lines, and try again
+        line_ids = [
+            (op, id_, dict(reversed(list(vals.items()))))
+            for op, id_, vals in line_ids
+        ]
+        result = record.onchange({'line_ids': line_ids}, 'line_ids', spec)
+        self.assertEqual(result, expected)
