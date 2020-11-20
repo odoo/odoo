@@ -36,8 +36,8 @@
                             <field name="company_id" invisible="1"/>
                             <field name="project_id" invisible="1"/>
                             <field name="employee_id" options="{'no_create': True}"/>
-                            <field name="timesheet_product_id" attrs="{'column_invisible': [('parent.sale_order_id', '!=', False)]}"/>
-                            <field name="sale_line_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.sale_order_id', '=', False)]}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
+                            <field name="timesheet_product_id" attrs="{'column_invisible': [('parent.sale_order_id', '!=', False)]}" invisible="1"/>
+                            <field name="sale_line_id" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
                             <field name="price_unit" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('parent.sale_order_id', '!=', False)]}"/>
                             <field name="currency_id" invisible="1"/>
                         </tree>
