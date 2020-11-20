@@ -29,6 +29,11 @@
     height: $o-we-sidebar-top-height;
     background-color: $o-we-sidebar-tabs-bg;
 
+    .o_we_external_history_buttons, .ml-auto {
+        flex: 1 1 auto;
+        display: flex;
+    }
+
     .btn-group, .btn {
         height: 100%;
     }
@@ -39,7 +44,9 @@
         font-size: $o-we-font-size;
         font-family: $o-we-font-family;
         font-weight: 400;
+        flex: 1 1 auto;
         line-height: 1;
+        padding: 0;
 
         &.btn-primary {
             @include button-variant($o-brand-primary, $o-brand-primary);
