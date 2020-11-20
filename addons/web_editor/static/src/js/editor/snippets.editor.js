@@ -674,9 +674,14 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
+
+        // If a modal is open, the scroll target must be that modal
+        const $openModal = self.$editable.find('.modal:visible');
+        self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : self.$scrollingElement;
+
         // Trigger a scroll on the draggable element so that jQuery updates
         // the position of the drop zones.
-        this.$scrollingElement.on('scroll.scrolling_element', function () {
+        self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
             self.$el.trigger('scroll');
         });
     },
@@ -739,7 +744,7 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_stop', {
             $snippet: this.$target,
         });
-        this.$scrollingElement.off('scroll.scrolling_element');
+        this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
     },
     /**
      * @private
@@ -2007,9 +2012,13 @@ var SnippetsMenu = Widget.extend({
                         },
                     });
 
+                    // If a modal is open, the scroll target must be that modal
+                    const $openModal = self.getEditableArea().find('.modal:visible');
+                    self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : $scrollingElement;
+
                     // Trigger a scroll on the draggable element so that jQuery updates
                     // the position of the drop zones.
-                    $scrollingElement.on('scroll.scrolling_element', function () {
+                    self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
                         self.$el.trigger('scroll');
                     });
 
@@ -2018,7 +2027,7 @@ var SnippetsMenu = Widget.extend({
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
-                    $scrollingElement.off('scroll.scrolling_element');
+                    self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
