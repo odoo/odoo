@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 
 
-class TestSMSPost(TestMailFullCommon, TestRecipients):
+class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
     """ TODO
 
       * add tests for new mail.message and mail.thread fields;
@@ -233,7 +233,7 @@ class TestSMSPost(TestMailFullCommon, TestRecipients):
         self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
 
-class TestSMSPostException(TestMailFullCommon, TestRecipients):
+class TestSMSPostException(TestMailFullCommon, TestMailFullRecipients):
 
     @classmethod
     def setUpClass(cls):

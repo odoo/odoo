@@ -13,11 +13,11 @@ class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
         super(TestMailFullCommon, cls).setUpClass()
 
 
-class TestRecipients(common.TestRecipients):
+class TestMailFullRecipients(common.TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestRecipients, cls).setUpClass()
+        super(TestMailFullRecipients, cls).setUpClass()
         cls.partner_numbers = [
             phone_validation.phone_format(partner.mobile, partner.country_id.code, partner.country_id.phone_code, force_format='E164')
             for partner in (cls.partner_1 | cls.partner_2)
