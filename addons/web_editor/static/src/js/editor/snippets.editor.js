@@ -2214,7 +2214,7 @@ var SnippetsMenu = Widget.extend({
             }).parent().addClass('o_default_snippet_text');
     },
     /**
-     * Changes the content of the left panel and selects a tab.
+     * Changes the content of the right panel and selects a tab.
      *
      * @private
      * @param {htmlString | Element | Text | Array | jQuery} [content]
