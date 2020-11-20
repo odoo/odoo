@@ -8886,6 +8886,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 applyPreStyle: {
                     handler: this.applyPreStyle,
                 },
+                insertParagraphBreak: {
+                    selector: [PreNode],
+                    handler: this.insertParagraphBreak,
+                },
             };
             this.loadables = {
                 parsers: [PreXmlDomParser],
@@ -8924,6 +8928,31 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const pre = new PreNode();
                 pre.modifiers = node.modifiers.clone();
                 node.replaceWith(pre);
+            }
+        }
+        /**
+         * Insert a new paragraph after the pre, or a line break within it.
+         *
+         * @param params
+         */
+        async insertParagraphBreak(params) {
+            const range = params.context.range;
+            if (!range.isCollapsed()) {
+                range.empty();
+            }
+            if (range.end.nextSibling()) {
+                // Insert paragraph break within a pre inserts a line break instead.
+                await params.context.execCommand('insertLineBreak');
+            }
+            else {
+                // Insert paragraph break at the end of a pre inserts a new
+                // paragraph after it.
+                const blockquote = range.targetedNodes(PreNode)[0];
+                const duplicate = blockquote.splitAt(range.start);
+                const DefaultContainer = this.editor.configuration.defaults.Container;
+                const newContainer = new DefaultContainer();
+                duplicate.replaceWith(newContainer);
+                range.modifiers = undefined;
             }
         }
     }
@@ -9064,6 +9093,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const duplicate = heading.splitAt(range.start);
             const newContainer = new ParagraphNode();
             duplicate.replaceWith(newContainer);
+            range.modifiers = undefined;
         }
         //--------------------------------------------------------------------------
         // Private
@@ -9262,6 +9292,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
                                 for (const child of parsedChild) {
                                     const attributes = itemModifiers.get(Attributes);
                                     attributes.remove('value');
+                                    if (attributes.style.get('list-style') === 'none') {
+                                        attributes.style.remove('list-style');
+                                    }
                                     child.modifiers.set(new ListItemAttributes(attributes));
                                 }
                             }
@@ -9685,6 +9718,17 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const targetedNodes = range.targetedNodes();
             const ancestors = targetedNodes.map(node => node.closest(ListNode));
             const targetedLists = ancestors.filter(list => !!list);
+            for (const list of targetedLists) {
+                // Some list-style either override the list type or are incompatible
+                // with some list types. Remove the list-style attributes so that
+                // the default style of the selected list applies correctly.
+                for (const node of list.children()) {
+                    const attr = node.modifiers.find(ListItemAttributes);
+                    if (attr) {
+                        attr.style.remove('list-style');
+                    }
+                }
+            }
             if (targetedLists.length === targetedNodes.length &&
                 targetedLists.every(list => list.listType === type)) {
                 // Unlist the targeted nodes from all its list ancestors.
@@ -11869,6 +11913,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 applyBlockquoteStyle: {
                     handler: this.applyBlockquoteStyle,
                 },
+                insertParagraphBreak: {
+                    selector: [BlockquoteNode],
+                    handler: this.insertParagraphBreak,
+                },
             };
             this.loadables = {
                 parsers: [BlockquoteXmlDomParser],
@@ -11908,6 +11956,32 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const blockquote = new BlockquoteNode();
                 blockquote.modifiers = node.modifiers.clone();
                 node.replaceWith(blockquote);
+            }
+        }
+        /**
+         * Insert a new paragraph after the blockquote, or a line break within it.
+         *
+         * @param params
+         */
+        async insertParagraphBreak(params) {
+            const range = params.context.range;
+            if (!range.isCollapsed()) {
+                range.empty();
+            }
+            if (range.end.nextSibling()) {
+                // Insert paragraph break within a blockquote inserts a line break
+                // instead.
+                await params.context.execCommand('insertLineBreak');
+            }
+            else {
+                // Insert paragraph break at the end of a blockquote inserts a new
+                // paragraph after it.
+                const blockquote = range.targetedNodes(BlockquoteNode)[0];
+                const duplicate = blockquote.splitAt(range.start);
+                const DefaultContainer = this.editor.configuration.defaults.Container;
+                const newContainer = new DefaultContainer();
+                duplicate.replaceWith(newContainer);
+                range.modifiers = undefined;
             }
         }
     }
@@ -12484,6 +12558,26 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     TablePickerCellDomObjectRenderer.id = DomObjectRenderingEngine.id;
 
+    class ActionableGroupNode extends ContainerNode {
+        constructor(params) {
+            super(params);
+            this.groupName = params === null || params === void 0 ? void 0 : params.name;
+            this.label = params === null || params === void 0 ? void 0 : params.label;
+            if (params === null || params === void 0 ? void 0 : params.visible) {
+                this.visible = params.visible;
+            }
+        }
+        visible(editor) {
+            // The group is visible if at least one children in visible.
+            for (const actionable of this.descendants(ActionableNode)) {
+                if (actionable.visible(editor)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     class Table extends JWPlugin {
         constructor(editor, config) {
             super(editor, config);
@@ -12526,8 +12620,67 @@ odoo.define('web_editor.jabberwock', (function(require) {
                             return [table];
                         },
                     },
+                    {
+                        id: 'TableOptionsButton',
+                        async render() {
+                            const group = new ActionableGroupNode({
+                                name: 'tableOptions',
+                                label: 'Table options',
+                                visible: function isInTable(editor) {
+                                    return !!(editor.selection.anchor.ancestor(TableNode) &&
+                                        editor.selection.focus.ancestor(TableNode));
+                                },
+                            });
+                            group.append(new ActionableNode({
+                                name: 'addRowAboveButton',
+                                label: 'Insert row above',
+                                commandId: 'addRowAbove',
+                            }));
+                            group.append(new ActionableNode({
+                                name: 'addRowBelowButton',
+                                label: 'Insert row bellow',
+                                commandId: 'addRowBelow',
+                            }));
+                            group.append(new ActionableNode({
+                                name: 'addColumnBeforeButton',
+                                label: 'Insert column before',
+                                commandId: 'addColumnBefore',
+                            }));
+                            group.append(new ActionableNode({
+                                name: 'addColumnAfterButton',
+                                label: 'Insert column after',
+                                commandId: 'addColumnAfter',
+                            }));
+                            group.append(new SeparatorNode());
+                            group.append(new ActionableNode({
+                                name: 'deleteRowButton',
+                                label: 'Delete row',
+                                commandId: 'deleteRow',
+                            }));
+                            group.append(new ActionableNode({
+                                name: 'deleteColumnButton',
+                                label: 'Delete column',
+                                commandId: 'deleteColumn',
+                            }));
+                            group.append(new ActionableNode({
+                                name: 'deleteColumnButton',
+                                label: 'Delete column',
+                                commandId: 'deleteColumn',
+                            }));
+                            group.append(new SeparatorNode());
+                            group.append(new ActionableNode({
+                                name: 'deleteTableButton',
+                                label: 'Delete Table',
+                                commandId: 'deleteTable',
+                            }));
+                            return [group];
+                        },
+                    },
                 ],
-                componentZones: [['TableButton', ['actionables']]],
+                componentZones: [
+                    ['TableButton', ['actionables']],
+                    ['TableOptionsButton', ['actionables']],
+                ],
             };
             this.commands = {
                 insertTable: {
@@ -12973,6 +13126,43 @@ odoo.define('web_editor.jabberwock', (function(require) {
         return button;
     }
 
+    class ZoneNode extends ContainerNode {
+        constructor(params) {
+            super(params);
+            this.editable = false;
+            this.breakable = false;
+            this.managedZones = makeVersionable(params.managedZones);
+        }
+        get name() {
+            return super.name + ': ' + this.managedZones.join();
+        }
+        hide(child) {
+            if (!this.hidden) {
+                this.hidden = makeVersionable({});
+            }
+            this.hidden[child.id] = true;
+            return;
+        }
+        show(child) {
+            var _a;
+            const id = child.id;
+            if ((_a = this.hidden) === null || _a === void 0 ? void 0 : _a[id]) {
+                this.hidden[id] = false;
+            }
+            const parentZone = this.ancestor(ZoneNode);
+            if (parentZone) {
+                parentZone.show(this);
+            }
+        }
+        _removeAtIndex(index) {
+            const child = this.childVNodes[index];
+            super._removeAtIndex(index);
+            if (this.hidden) {
+                delete this.hidden[child.id];
+            }
+        }
+    }
+
     class Color extends JWPlugin {
         hasColor(color, node) {
             var _a;
@@ -13007,7 +13197,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 range.modifiers.get(Attributes).style = new CssStyle(Object.assign(Object.assign({}, currentCacheObject), { [this.styleName]: color }));
             }
             else {
-                let selectedNodes = range.selectedNodes();
+                let selectedNodes = range.selectedNodes(node => !(node instanceof ZoneNode));
                 selectedNodes = selectedNodes.filter(node => !selectedNodes.includes(node.parent));
                 // Color the highest ancestor.
                 for (const node of selectedNodes) {
@@ -13242,43 +13432,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     },
                 ],
             };
-        }
-    }
-
-    class ZoneNode extends ContainerNode {
-        constructor(params) {
-            super(params);
-            this.editable = false;
-            this.breakable = false;
-            this.managedZones = makeVersionable(params.managedZones);
-        }
-        get name() {
-            return super.name + ': ' + this.managedZones.join();
-        }
-        hide(child) {
-            if (!this.hidden) {
-                this.hidden = makeVersionable({});
-            }
-            this.hidden[child.id] = true;
-            return;
-        }
-        show(child) {
-            var _a;
-            const id = child.id;
-            if ((_a = this.hidden) === null || _a === void 0 ? void 0 : _a[id]) {
-                this.hidden[id] = false;
-            }
-            const parentZone = this.ancestor(ZoneNode);
-            if (parentZone) {
-                parentZone.show(this);
-            }
-        }
-        _removeAtIndex(index) {
-            const child = this.childVNodes[index];
-            super._removeAtIndex(index);
-            if (this.hidden) {
-                delete this.hidden[child.id];
-            }
         }
     }
 
@@ -16253,13 +16406,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     ActionableDomObjectRenderer.id = DomObjectRenderingEngine.id;
 
-    class ActionableGroupNode extends ContainerNode {
-        constructor(params) {
-            super(params);
-            this.groupName = params === null || params === void 0 ? void 0 : params.name;
-        }
-    }
-
     class ActionableGroupDomObjectRenderer extends NodeRenderer {
         constructor(engine) {
             super(engine);
@@ -16286,7 +16432,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const objectSelect = {
                 tag: 'JW-SELECT',
                 children: [
-                    { tag: 'JW-BUTTON', children: [{ text: '\u00A0' }] },
+                    { tag: 'JW-BUTTON', children: [{ text: group.label || '\u00A0' }] },
                     { tag: 'JW-GROUP', children: group.children() },
                 ],
                 attach: (el) => {
@@ -16324,15 +16470,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Update option rendering after the command if the value of visible
          * changed.
          *
-         * @param actionable
-         * @param element
          */
         _updateActionableGroups() {
-            for (const [actionable, element] of this.actionableGroupNodes) {
+            for (const [groupNode, element] of this.actionableGroupNodes) {
                 const editor = this.engine.editor;
-                const invisible = actionable
-                    .descendants(ActionableNode)
-                    .every(n => n.visible && !n.visible(editor));
+                const invisible = !groupNode.visible(editor);
                 const domInvisible = element.style.display === 'none';
                 if (invisible !== domInvisible) {
                     if (invisible) {
@@ -18308,13 +18450,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const deleteHardLineAction = {
                     type: 'deleteHardLine',
                     direction: direction,
-                    domSelection: {
-                        anchorNode: characterMapping.previous.nodes[characterMapping.index],
-                        anchorOffset: characterMapping.previous.offsets[characterMapping.index],
-                        focusNode: characterMapping.previous.nodes[characterMapping.index + characterMapping.remove.length - 1],
-                        focusOffset: characterMapping.previous.offsets[characterMapping.index + characterMapping.remove.length - 1] + 1,
-                        direction: direction,
-                    },
+                    text: characterMapping.remove,
                 };
                 return deleteHardLineAction;
             }
@@ -19182,6 +19318,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
                 case 'insertParagraphBreak':
                     return ['insertParagraphBreak', {}];
+                case 'deleteHardLine': // deleteHardline can be simply handled by deleteWord.
                 case 'deleteWord': {
                     const params = {
                         direction: action.direction,
@@ -19286,7 +19423,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                                 label: 'History redo',
                                 commandId: 'redo',
                                 enabled: this.canRedo.bind(this),
-                                modifiers: [new Attributes({ class: 'fa fa-redo fa-fw' })],
+                                modifiers: [new Attributes({ class: 'fa fa-rotate-right fa-fw' })],
                             });
                             return [button];
                         },
@@ -21858,141 +21995,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     OdooParallaxSpanXmlDomParser.id = XmlDomParsingEngine.id;
 
-    function getBoundingClientRect(elem) {
-        const box = elem.getBoundingClientRect();
-        return {
-            left: box.left + window.pageXOffset,
-            right: box.right + window.pageXOffset,
-            top: box.top + window.pageYOffset,
-            bottom: box.bottom + window.pageYOffset,
-            width: box.width,
-            height: box.height,
-        };
-    }
-    const POSITIONABLE_TAG_NAME = 'jw-positionable';
-    const POSITIONED_TAG_NAME = 'jw-positionned';
-    class Positionable {
-        constructor(options) {
-            this._relativeElement = options.relativeElement;
-            this._positionedElement = options.positionedElement;
-            if (options.container) {
-                this._container = options.container;
-            }
-            else {
-                this._container = document.querySelector(POSITIONABLE_TAG_NAME);
-                if (!this._container) {
-                    this._container = document.createElement(POSITIONABLE_TAG_NAME);
-                    this._container.style.display = 'block';
-                    this._container.style.position = 'relative';
-                }
-                document.body.prepend(this._container);
-            }
-            this._positionedElementContainer = document.createElement(POSITIONED_TAG_NAME);
-            this._positionedElementContainer.style.position = 'absolute';
-            this._positionedElementContainer.style['z-index'] = '10000';
-            this._positionedElementContainer.appendChild(this._positionedElement);
-            this._container.appendChild(this._positionedElementContainer);
-            this._onScroll = this._onScroll.bind(this);
-            this.bind();
-            setTimeout(this.resetPositionedElement.bind(this), 0);
-        }
-        resetPositionedElement() {
-            const coords1 = getBoundingClientRect(this._relativeElement);
-            const coords2 = getBoundingClientRect(this._positionedElement);
-            // right top position
-            const x = coords1.right - coords2.width;
-            const y = coords1.top - coords2.height;
-            this._positionedElementContainer.style.left = x + 'px';
-            this._positionedElementContainer.style.top = y + 'px';
-        }
-        bind() {
-            document.body.addEventListener('scroll', this._onScroll, true);
-        }
-        unbind() {
-            document.body.removeEventListener('scroll', this._onScroll, true);
-        }
-        destroy() {
-            this.unbind();
-            this._positionedElementContainer.remove();
-            if (this._container.classList.contains(POSITIONABLE_TAG_NAME) &&
-                this._container.parentElement === document.body) {
-                this._container.remove();
-            }
-        }
-        _onScroll() {
-            this.resetPositionedElement();
-        }
-    }
-
-    class OdooTableDomObjectRenderer extends TableDomObjectRenderer {
-        constructor() {
-            super(...arguments);
-            this.predicate = TableNode;
-        }
-        async render(node, worker) {
-            const table = await this.super.render(node, worker);
-            // TODO: add a condition to be in a rendering that does not show UI.
-            if (table && 'tag' in table) {
-                const savedAttach = table.attach;
-                const savedDetach = table.detach;
-                const dopdown = document.createElement('div');
-                dopdown.classList.add('dropdown', 'oe_absolute_dropdown');
-                dopdown.innerHTML = `
-                <a href="#" role="button" data-toggle="dropdown" class="dropdown-toggle " aria-expanded="false">Table</a>
-                <div role="menu" class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" data-command-id="deleteRow">Delete row</a>
-                    <a class="dropdown-item" data-command-id="deleteColumn">Delete column</a>
-                    <hr/>
-                    <a class="dropdown-item" data-command-id="addRowAbove">Insert row above</a>
-                    <a class="dropdown-item" data-command-id="addRowBelow">Insert row bellow</a>
-                    <a class="dropdown-item" data-command-id="addColumnBefore">Insert column before</a>
-                    <a class="dropdown-item" data-command-id="addColumnAfter">Insert column after</a>
-                    <hr/>
-                    <a class="dropdown-item" data-command-id="deleteTable">Delete Table</a>
-                </div>
-            `;
-                const links = dopdown.querySelectorAll('.dropdown-menu a');
-                for (const link of links) {
-                    link.addEventListener('click', () => {
-                        this.engine.editor.execCommand(link.dataset.commandId);
-                    });
-                }
-                let positionable;
-                let commitHandler;
-                table.attach = (el) => {
-                    if (savedAttach) {
-                        savedAttach(el);
-                    }
-                    positionable = new Positionable({
-                        relativeElement: el,
-                        positionedElement: dopdown,
-                    });
-                    commitHandler = () => {
-                        if (this.engine.editor.selection.range.start.ancestors().includes(node)) {
-                            dopdown.style.display = 'block';
-                            positionable.bind();
-                            positionable.resetPositionedElement();
-                        }
-                        else {
-                            dopdown.style.display = 'none';
-                            positionable.unbind();
-                        }
-                    };
-                    commitHandler();
-                    this.engine.editor.dispatcher.registerCommandHook('@commit', commitHandler);
-                };
-                table.detach = (el) => {
-                    if (savedDetach) {
-                        savedDetach(el);
-                    }
-                    positionable.destroy();
-                    this.engine.editor.dispatcher.removeCommandHook('@commit', commitHandler);
-                };
-            }
-            return table;
-        }
-    }
-
     class LinkFormatDomObjectModifierRenderer extends FormatDomObjectModifierRenderer {
         constructor() {
             super(...arguments);
@@ -22153,7 +22155,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 renderers: [
                     OdooImageDomObjectRenderer,
                     OdooFontAwesomeDomObjectRenderer,
-                    OdooTableDomObjectRenderer,
                     LinkFormatDomObjectModifierRenderer,
                 ],
                 components: [
@@ -23281,12 +23282,43 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     IframeContainerDomObjectRenderer.id = DomObjectRenderingEngine.id;
 
+    class IframeDomObjectRenderer extends NodeRenderer {
+        constructor() {
+            super(...arguments);
+            this.predicate = IframeNode;
+        }
+        async render(iframeNode, worker) {
+            let onload;
+            const object = {
+                tag: 'iframe',
+                attach: (iframe) => {
+                    onload = () => {
+                        // Bubbles up the load-iframe event.
+                        const customEvent = new CustomEvent('load-iframe', {
+                            bubbles: true,
+                            composed: true,
+                            cancelable: true,
+                        });
+                        iframe.dispatchEvent(customEvent);
+                    };
+                    iframe.addEventListener('load', onload);
+                },
+                detach: (iframe) => {
+                    iframe.removeEventListener('load', onload);
+                },
+            };
+            this.engine.renderAttributes(Attributes, iframeNode, object, worker);
+            return object;
+        }
+    }
+    IframeDomObjectRenderer.id = DomObjectRenderingEngine.id;
+
     class Iframe extends JWPlugin {
         constructor() {
             super(...arguments);
             this.loadables = {
                 parsers: [IframeXmlDomParser, IframeHtmlDomParser],
-                renderers: [IframeContainerDomObjectRenderer],
+                renderers: [IframeContainerDomObjectRenderer, IframeDomObjectRenderer],
             };
         }
     }
@@ -23823,7 +23855,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
         ],
         list: ['UnorderedListButton', 'ChecklistButton'],
         link: ['OdooLinkToggleButton'],
-        table: ['TableButton'],
+        table: ['TableButton', 'TableOptionsButton'],
         media: ['OdooMediaButton'],
     };
     class OdooWebsiteEditor extends JWEditor {
