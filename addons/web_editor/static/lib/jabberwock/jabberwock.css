@@ -29,6 +29,7 @@ ul.checklist > li.checked:after {
 
 table.table-picker {
     position: absolute;
+    z-index: 1;
     background-color: white;
     border: 1px solid black;
     -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,.4);
@@ -136,6 +137,21 @@ jw-editor {
 
 jw-toolbar input {
     color: #C6C6C6;
+}
+
+.jw-odoo-field:hover {
+  outline: 1px #875A7B solid;
+}
+.jw-odoo-field.jw-focus, .js-odoo-field-parent-selected {
+  outline: 1px #875A7B solid;
+}
+.jw-odoo-field-invalid {
+  outline: 1px red solid !important;
+}
+.jw-odoo-field-empty {
+  display: inline-block;
+  background-color: #875A7B;
+  width: 5px;
 }
 
 #jw-device-preview {
