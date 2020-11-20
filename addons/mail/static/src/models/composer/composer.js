@@ -45,6 +45,9 @@ function factory(dependencies) {
         }
 
         detectSuggestionDelimiter() {
+            if (this.textInputCursorStart !== this.textInputCursorEnd) {
+                return;
+            }
             const lastInputChar = this.textInputContent.substring(this.textInputCursorStart - 1, this.textInputCursorStart);
             const suggestionDelimiters = ['@', ':', '#', '/'];
             if (suggestionDelimiters.includes(lastInputChar) && !this.hasSuggestions) {
@@ -1042,6 +1045,9 @@ function factory(dependencies) {
         }),
         textInputCursorStart: attr({
             default: 0,
+        }),
+        textInputSelectionDirection: attr({
+            default: "none",
         }),
         thread: one2one('mail.thread', {
             inverse: 'composer',
