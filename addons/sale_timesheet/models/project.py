@@ -25,12 +25,12 @@ class Project(models.Model):
         return self.env.ref('sale_timesheet.time_product', False)
 
     bill_type = fields.Selection([
-        ('customer_task', 'Invoice tasks separately to different customers'),
-        ('customer_project', 'Invoice all tasks to a single customer')
-    ], string="Customer Type", default="customer_task",
+        ('customer_task', 'Different customers'),
+        ('customer_project', 'A unique customer')
+    ], string="Invoice Tasks to", default="customer_task",
         help='When billing tasks individually, a Sales Order will be created from each task. It is perfect if you would like to bill different services to different customers at different rates. \n When billing the whole project, a Sales Order will be created from the project instead. This option is better if you would like to bill all the tasks of a given project to a specific customer either at a fixed rate, or at an employee rate.')
     pricing_type = fields.Selection([
-        ('fixed_rate', 'Fixed rate'),
+        ('fixed_rate', 'Project rate'),
         ('employee_rate', 'Employee rate')
     ], string="Pricing", default="fixed_rate",
         help='The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
