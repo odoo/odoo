@@ -79,12 +79,17 @@ class OgoneController(http.Controller):
             _logger.info(error_msg)
             return {'ogone_user_error': _("The transaction signature could not be verified")}
         data['ogone_values']['BROWSERACCEPTHEADER'] = request.httprequest.headers.environ['HTTP_ACCEPT']
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('ogone', data['ogone_values'])
+        PaymentTransaction = request.env['payment.transaction'].sudo()
+        ogone_data = PaymentTransaction._clean_ogone_keys(data['ogone_values'])
+        tx_sudo = PaymentTransaction._handle_feedback_data('ogone', ogone_data)
         if tx_sudo.token_id:
             tx_sudo._send_payment_request()
             return {'tx_status': tx_sudo.state, 'html_3ds': tx_sudo.ogone_html_3ds,
                     'ogone_user_error': tx_sudo.ogone_user_error}
 
+        else:
+            return {'ogone_user_error': _("The payment token could not be created.")}
+            # arj todo: log something here
 
 
 
@@ -98,11 +103,13 @@ class OgoneController(http.Controller):
         """ Handle redirection from Ingenico (GET) and s2s notification (POST/GET) """
         _logger.info('Ogone: entering s2s feedback with post data %s', pprint.pformat(post))
         post['type'] = 'directlink'
-        acquirer_sudo = request.env['payment.acquirer'].sudo().search(['name', '=', 'ogone'])
-        shasign_check = acquirer_sudo._ogone_generate_shasign('out', post)
+        PaymentTransaction = request.env['payment.transaction'].sudo()
+        ogone_data = PaymentTransaction._clean_ogone_keys(post)
+        acquirer_sudo = request.env['payment.acquirer'].sudo().search([('provider', '=', 'ogone')])
+        shasign_check = acquirer_sudo._ogone_generate_shasign('out', ogone_data)
         if shasign_check.upper() == post.get('SHASIGN'):
             # The data matches, we can handle them
-            request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', post)
+            PaymentTransaction._handle_feedback_data('ogone', ogone_data)
             # arj fixme: do something here ?
         else:
             error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (

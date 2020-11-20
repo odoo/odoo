@@ -48,6 +48,14 @@ class PaymentTxOgone(models.Model):
     # BUSINESS METHODS
     # --------------------------------------------------
 
+    @api.model
+    def _clean_ogone_keys(self, data):
+        # clean dict keys for coherence with directlink API.
+        # Pass keys to uppercase and remove prefix line "CARD."; "ALIAS." etc
+        # Thanks to Ogone, the dict keys are different from one API to another but the correct keys are needed
+        # to check the signature...
+        return {re.sub(r'.*\.', '', key.upper()): val for key, val in data.items()}
+
     def _errors_verification(self, data):
         """
         Check that the incoming data coming from the FlexCheckout API are correct.
@@ -82,14 +90,8 @@ class PaymentTxOgone(models.Model):
         """
         if provider != 'ogone':
             return super()._get_tx_from_feedback_data(provider, data)
-        if data.get('type') == 'flexcheckout':
-            # clean dict keys for coherence with directlink API.
-            # Pass keys to uppercase and remove prefix line "CARD."; "ALIAS." etc
-            # Thanks to Ogone, the dict keys are different from one API to another but the correct keys are needed
-            # to check the signature...
-            data = {re.sub(r'.*\.', '', key.upper()): val for key, val in data.items()}
+        if data.get('TYPE') == 'flexcheckout':
             data['ALIAS'] = data['ALIASID']
-            data['CARDNO'] = data['CARDHOLDERNAME']
             # pay_id is not present when returning from fleckcheckout because we just created an alias.
             # Therefore, this field is not blocking
             reference = data.get('REFERENCE')
@@ -127,18 +129,16 @@ class PaymentTxOgone(models.Model):
         :param dict data: The feedback data sent by the acquirer
         :return: None
         """
-        if self.provider_id != 'ogone':
-            return super()._process_feedback_data(data)
         self.ensure_one()
+        if self.provider != 'ogone':
+            return super()._process_feedback_data(data)
         self._errors_verification(data)
-        if all(key in data for key in ['CARDNUMBER', 'CARDHOLDERNAME',
-                                       'partner_id', 'acquirer_id']):
-            # We are coming back from the flexkcheckout API
-            # arj fixme: use generic function that generate the XXXXXXXXX
+        if all(key in data for key in ['CARDNUMBER', 'CARDHOLDERNAME']):
+            # We are coming back from the flexkcheckout APIXX
             token_vals = {
-                'acquirer_id': self.acqurier_id.id,
+                'acquirer_id': self.acquirer_id.id,
                 'acquirer_ref': data['ALIAS'],
-                'partner_id': self.partner_id,
+                'partner_id': self.partner_id.id,
                 'name': '%s - %s' % (data.get('CARDNUMBER')[-4:], data.get('CARDHOLDERNAME')),
                 'verified': False
             }
