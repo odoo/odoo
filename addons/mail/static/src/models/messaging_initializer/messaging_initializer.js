@@ -210,17 +210,17 @@ function factory(dependencies) {
          * @private
          * @param {Object} mailFailuresData
          */
-        _initMailFailures(mailFailuresData) {
-            const messages = this.env.models['mail.message'].insert(mailFailuresData.map(
-                messageData => this.env.models['mail.message'].convertData(messageData)
-            ));
-            for (const message of messages) {
+        async _initMailFailures(mailFailuresData) {
+            await executeGracefully(mailFailuresData.map(messageData => () => {
+                const message = this.env.models['mail.message'].insert(
+                    this.env.models['mail.message'].convertData(messageData)
+                );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
                     message.update({ author: [['link', this.messaging.currentPartner]] });
                 }
-            }
+            }));
             this.messaging.notificationGroupManager.computeGroups();
             // manually force recompute of counter (after computing the groups)
             this.messaging.messagingMenu.update();
