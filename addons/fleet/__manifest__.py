@@ -38,6 +38,7 @@ Main Features
         'views/fleet_board_view.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
+        'views/assets.xml',
         'data/fleet_cars_data.xml',
         'data/fleet_data.xml',
         'data/mail_data.xml',
