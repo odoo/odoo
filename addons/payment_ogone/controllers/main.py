@@ -121,6 +121,8 @@ class OgoneController(http.Controller):
     # ARJ FIXME: REMOVE LATER
     @http.route('/payment/ogone/test/<state>/<int:debug>', type='http', auth='public', website=True)
     def ogone_test(self, state, debug):
+        # http://arj-odoo.agayon.be/payment/ogone/test/uncertain/0
+        # http://arj-odoo.agayon.be/payment/ogone/test/fail/0
         import random
         import string
         if state == 'success':
@@ -134,5 +136,5 @@ class OgoneController(http.Controller):
         currency_id = 7
         debug_str = '' if not debug else "&debug=assets"
         return werkzeug.utils.redirect(
-            f"/website_payment/pay?amount={amount}&currency_id={currency_id}&reference={reference}{debug_str}")
+            f"/payment/pay?amount={amount}&currency_id={currency_id}&reference={reference}{debug_str}")
 
