@@ -131,7 +131,20 @@ class AccountAnalyticLine(models.Model):
             thus there is no meaning of showing invoice with ordered quantity.
         """
         domain = super(AccountAnalyticLine, self)._timesheet_get_portal_domain()
-        return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable'])]])
+        return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable', 'billable_fixed'])]])
+
+    @api.model
+    def _timesheet_get_sale_domain(self, order_lines_ids, invoice_ids):
+        return [
+            '|',
+            '&',
+            ('timesheet_invoice_id', 'in', invoice_ids.ids),
+            # TODO : Master: Check if non_billable should be removed ?
+            ('timesheet_invoice_type', 'in', ['billable_time', 'non_billable']),
+            '&',
+            ('timesheet_invoice_type', '=', 'billable_fixed'),
+            ('so_line', 'in', order_lines_ids.ids)
+        ]
 
     def _get_timesheets_to_merge(self):
         res = super(AccountAnalyticLine, self)._get_timesheets_to_merge()
