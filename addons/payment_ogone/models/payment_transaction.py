@@ -132,9 +132,11 @@ class PaymentTxOgone(models.Model):
         self.ensure_one()
         if self.provider != 'ogone':
             return super()._process_feedback_data(data)
+        if self.state not in ['draft', 'pending']:
+            _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
         self._errors_verification(data)
-        if all(key in data for key in ['CARDNUMBER', 'CARDHOLDERNAME']):
-            # We are coming back from the flexkcheckout APIXX
+        # First calse: # We are coming back from the flexkcheckout API
+        if all(key in data for key in ['CARDNUMBER', 'CARDHOLDERNAME']) and data.get('TYPE') == 'flexcheckout':
             token_vals = {
                 'acquirer_id': self.acquirer_id.id,
                 'acquirer_ref': data['ALIAS'],
@@ -147,6 +149,26 @@ class PaymentTxOgone(models.Model):
                 token_vals.update({'active': False})
             token_id = self.env['payment.token'].create(token_vals)
             self.write({'token_id': token_id})
+        # Second case: we are coming back from the Direct link API with 3DS redirection
+        else:
+            status = int(data.get('STATUS', '0'))
+            if status in self._ogone_valid_tx_status:
+                self.write({'acquirer_reference': data.get('PAYID')})
+                if self.token_id:
+                    self.token_id.verified = True
+                    self._set_done()
+            elif status in self._ogone_cancel_tx_status:
+                self._set_canceled()
+            elif status in self._ogone_pending_tx_status or status in self._ogone_wait_tx_status:
+                self._set_pending()
+            else:
+                error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
+                    'error_str': data.get('NCERRORPLUS'),
+                    'error_code': data.get('NCERROR'),
+                    'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERROR')),
+                }
+                _logger.info(error)
+                self._set_canceled()
 
     # --------------------------------------------------
     # Ogone API RELATED METHODS
