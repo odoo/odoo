@@ -110,7 +110,7 @@
                 <xpath expr="//header" position='inside'>
                     <field name="allow_billable" invisible="1"/>
                     <field name="display_create_order" invisible="1"/>
-                    <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>
+                    <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='email_cc']" position="after">
                     <field name="analytic_account_id" groups="base.group_no_one"/>
@@ -133,7 +133,7 @@
                  <xpath expr="//field[@name='partner_phone']" position="after">
                     <field name="bill_type" invisible="1"/>
                     <field name="pricing_type" invisible="1"/>
-                    <field name="timesheet_product_id" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), '&amp;', ('partner_id', '=', False), ('bill_type', '=', 'customer_project'), ('sale_order_id', '!=', False), '&amp;', ('pricing_type', '!=', 'fixed_rate'), ('bill_type', '!=', 'customer_task')]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}" placeholder="Leave empty if non-billable"/>
+                    <field name="timesheet_product_id" invisible="1"/>
                     <field name="non_allow_billable" attrs="{'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('pricing_type', '!=', 'employee_rate'), ('bill_type', '=', 'customer_task')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">

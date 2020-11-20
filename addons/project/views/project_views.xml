@@ -656,27 +656,26 @@
                     </div>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
-                            <field name="partner_id" class="o_task_customer_field"/>
-                            <field name="partner_email" widget="email" attrs="{'invisible': [('partner_id', '=', False)]}"/>
-                            <field name="partner_phone" widget="phone" attrs="{'invisible': [('partner_id', '=', False)]}"/>
-                            <field name="legend_blocked" invisible="1"/>
-                            <field name="legend_normal" invisible="1"/>
-                            <field name="legend_done" invisible="1"/>
-                        </group>
-                        <group>
                             <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
+                            <field name="user_id"
+                                class="o_task_user_field"
+                                domain="[('share', '=', False)]"/>
                             <field
                                 name="parent_id"
                                 domain="[('parent_id', '=', False)]"
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
-                            <field name="user_id"
-                                class="o_task_user_field"
-                                domain="[('share', '=', False)]"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="recurring_task" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        </group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="partner_id" class="o_task_customer_field"/>
+                            <field name="partner_phone" widget="phone" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                            <field name="legend_blocked" invisible="1"/>
+                            <field name="legend_normal" invisible="1"/>
+                            <field name="legend_done" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
