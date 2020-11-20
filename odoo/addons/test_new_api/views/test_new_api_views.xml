@@ -341,5 +341,31 @@
                 </form>
             </field>
         </record>
+
+        <!-- compute_editable view -->
+        <record id="compute_editable_form" model="ir.ui.view">
+            <field name="name">test_new_api.compute_editable.form</field>
+            <field name="model">test_new_api.compute_editable</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="line_ids" mode="tree">
+                            <tree editable="bottom">
+                                <field name="value"/>
+                                <field name="edit"/>
+                                <field name="count"/>
+                            </tree>
+                            <form>
+                                <!-- this view makes sure that field "same" is not considered -->
+                                <field name="value"/>
+                                <field name="edit"/>
+                                <field name="count"/>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

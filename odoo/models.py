@@ -6148,7 +6148,7 @@ Fields:
         # store changed values in cache; also trigger recomputations based on
         # subfields (e.g., line.a has been modified, line.b is computed stored
         # and depends on line.a, but line.b is not in the form view)
-        record._update_cache(changed_values, validate=True)
+        record._update_cache(changed_values, validate=False)
 
         # update snapshot0 with changed values
         for name in names:
