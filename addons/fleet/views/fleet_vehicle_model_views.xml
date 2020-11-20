@@ -141,27 +141,33 @@
         <field name="name">fleet.vehicle.model.brandkanban</field>
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban default_order="name">
                 <field name="id"/>
                 <field name="name" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
-                            <a type="open" href="#" class="o_kanban_image oe_kanban_action">
-                                <img alt="Open" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="img-fluid" style="width:100px;"/>
-                            </a>
+                            <div class="o_dropdown_kanban dropdown">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="open" class="dropdown-item">Properties</a>
+                                </div>
+                            </div>
+                            <div class="o_kanban_image">
+                                <img alt="img" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="o_image_64_max" height="52"/>
+                            </div>
                             <div class="oe_kanban_details">
                                 <h4 class="oe_partner_heading">
                                     <a type="open" class="o_kanban_record_title">
                                         <field name="name"/>
                                     </a>
                                 </h4>
-                            </div>
-                            <div class="o_kanban_button">
-                                <a type="object" name="action_brand_model" class="oe_kanban_action oe_kanban_action_a">
-                                    <field name="model_count"/>
-                                MODELS
-                                </a>
+                                <div>
+                                    <a type="object" name="action_brand_model" class="oe_kanban_fleet_model"/>
+                                    <field name="model_count"/> MODELS
+                                </div>
                             </div>
                         </div>
                     </t>

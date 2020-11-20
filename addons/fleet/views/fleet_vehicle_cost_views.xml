@@ -107,7 +107,8 @@
                                 </strong>
                             </div>
                             <div>
-                                <field name="start_date"/> - <field name="expiration_date"/>
+                                <t t-if="new Date(record.expiration_date.raw_value) &lt; (new Date())" t-set="expiration_class" t-value="'oe_kanban_text_red'"/>
+                                <span t-att-class="expiration_class"><field name="start_date"/> - <field name="expiration_date"/></span>
                             </div>
                             <div>
                                 <field name="insurer_id" widget="res_partner_many2one"/>
@@ -222,8 +223,8 @@
                             <field name="purchaser_id"/>
                             <label for="odometer"/>
                             <div class="o_row">
-                                <field name="odometer"/>
-                                <field name="odometer_unit"/>
+                                <field name="odometer" class="oe_inline"/>
+                                <field name="odometer_unit" class="pl-1 pl-sm-0"/>
                             </div>
                         </group>
                     </group>
@@ -281,8 +282,10 @@
                                     <div class="o_kanban_record_headings pl-2 pr-2">
                                         <div class="text-truncate o_kanban_record_title">
                                             <strong>
-                                                <span class="float-right"><field name="date"/></span>
                                                 <field name="vehicle_id"/>
+                                                <span t-attf-class="float-right badge #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'badge-danger' : 'badge-success'}">
+                                                    <field name="state"/>
+                                                </span>
                                             </strong>
                                         </div>
                                         <div class="text-truncate">
@@ -292,6 +295,7 @@
                                 </div>
                                 <div class="text-truncate">
                                     <field name="purchaser_id"/>
+                                    <span class="float-right"><field name="date"/></span>
                                 </div>
                                 <div class="text-truncate">
                                     <field name="vendor_id"/>
