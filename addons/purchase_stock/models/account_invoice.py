@@ -116,7 +116,7 @@ class AccountMove(models.Model):
 
 
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                if line.tax_ids:
+                if line.tax_ids and line.quantity:
                     # We do not want to round the price unit since :
                     # - It does not follow the currency precision
                     # - It may include a discount
