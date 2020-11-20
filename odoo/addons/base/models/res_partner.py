@@ -47,7 +47,7 @@ class FormatAddressMixin(models.AbstractModel):
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.company.country_id.address_view_id
+        address_view_id = self.env.company.country_id.address_view_id.sudo()
         if address_view_id and not self._context.get('no_address_format') and (not address_view_id.model or address_view_id.model == self._name):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
