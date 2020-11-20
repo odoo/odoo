@@ -396,6 +396,7 @@ class Import(models.TransientModel):
             return ['boolean']
 
         # If all values can be cast to float, type is either float or monetary
+        results = []
         try:
             thousand_separator = decimal_separator = False
             for val in preview_values:
@@ -428,11 +429,11 @@ class Import(models.TransientModel):
             if thousand_separator and not options.get('float_decimal_separator'):
                 options['float_thousand_separator'] = thousand_separator
                 options['float_decimal_separator'] = decimal_separator
-            return ['float', 'monetary']
+            results = ['float', 'monetary']
         except ValueError:
             pass
 
-        results = self._try_match_date_time(preview_values, options)
+        results += self._try_match_date_time(preview_values, options)
         if results:
             return results
 
