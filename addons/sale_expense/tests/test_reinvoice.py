@@ -95,17 +95,17 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             # Expense lines:
             {
                 'qty_delivered': 1.0,
-                'product_uom_qty': 0.0,
+                'product_uom_qty': 1.0,
                 'is_expense': True,
             },
             {
                 'qty_delivered': 3.0,
-                'product_uom_qty': 0.0,
+                'product_uom_qty': 1.0,
                 'is_expense': True,
             },
             {
                 'qty_delivered': 1.0,
-                'product_uom_qty': 0.0,
+                'product_uom_qty': 1.0,
                 'is_expense': True,
             },
         ])
