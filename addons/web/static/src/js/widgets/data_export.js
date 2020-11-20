@@ -118,6 +118,7 @@ var DataExport = Dialog.extend({
         let exportedFields = this.defaultExportFields.map(field => ({
             name: field,
             label: this.record.fields[field].string,
+            store: this.record.fields[field].store,
         }));
         this._exportData(exportedFields, 'xlsx', false);
     },
