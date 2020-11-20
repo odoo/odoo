@@ -25,10 +25,11 @@
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
                         attrs="{'invisible': [('edi_web_services_to_process', '=', '')]}">
-                         <div>The invoice will be sent asynchronously to :
-                            <field name="edi_web_services_to_process" class="oe_inline"/>
-                         </div>
-                         <button name="action_process_edi_web_services" type="object" class="oe_link" string="Send now" /> 
+                        <div>The invoice will be sent asynchronously to :
+                        <field name="edi_web_services_to_process" class="oe_inline"/>
+                        </div>
+                        <button name="action_process_edi_web_services" type="object" class="oe_link" string="Send now" attrs="{'invisible': [('edi_error_count', '!=', 0)]}"/>
+                        <button name="action_process_edi_web_services" type="object" class="oe_link" string="Retry" attrs="{'invisible': [('edi_error_count', '=', 0)]}"/>
                     </div>
                     <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': [('edi_error_count', '=', 0)]}">
