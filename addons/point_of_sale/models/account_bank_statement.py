@@ -24,6 +24,19 @@ class AccountBankStatement(models.Model):
                 raise UserError(_("You cannot delete a bank statement linked to Point of Sale session."))
         return super( AccountBankStatement, self).unlink()
 
+    @api.depends('date', 'journal_id')
+    def _get_previous_statement(self):
+        if 'previous_pos_session_id' not in self.env.context:
+            return super(AccountBankStatement, self)._get_previous_statement()
+        for st in self:
+            if self.env.context['previous_pos_session_id']:
+                domain = [('date', '<=', st.date), ('journal_id', '=', st.journal_id.id), ('pos_session_id', '=', self.env.context['previous_pos_session_id'])]
+                previous_statement = self.search(domain, limit=1)
+                st.previous_statement_id = previous_statement.id
+            else:
+                st.previous_statement_id = False
+
+
 class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 

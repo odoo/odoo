@@ -206,6 +206,8 @@ class PosSession(models.Model):
                 'user_id': self.env.user.id,
                 'name': pos_name,
             }
+            last_session = self.env['pos.session'].search([('config_id', '=', config_id)], limit=1) if pos_config.cash_control else False
+            ctx['previous_pos_session_id'] = last_session.id if last_session else False
             statement_ids |= statement_ids.with_context(ctx).create(st_values)
 
         update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
