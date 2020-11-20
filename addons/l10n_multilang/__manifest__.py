@@ -13,4 +13,5 @@
           templates to target objects.
     """,
     'depends': ['account'],
+    'auto_install': True,
 }
