@@ -44,11 +44,11 @@ class PaymentAcquirer(models.Model):
     def _compute_fees(self, amount, currency_id, country_id):
         """ Compute alipay fees.
 
-            :param float amount: the amount to pay
-            :param integer country_id: an ID of a res.country, or None. This is
-                                       the customer's country, to be compared to
-                                       the acquirer company country.
-            :return float fees: computed fees
+        :param float amount: The amount to pay for the transaction
+        :param int currency_id: The currency of the transaction, as a `res.currency` id
+        :param int country_id|None: The customer country, as a `res.country` id
+        :return: The computed fees
+        :rtype: float
         """
         fees = 0.0
         if self.fees_active:
@@ -66,7 +66,7 @@ class PaymentAcquirer(models.Model):
         # Rearrange parameters in the data set alphabetically
         data_to_sign = sorted(val.items())
         # Exclude parameters that should not be signed
-        data_to_sign = ["{}={}".format(k, v) for k, v in data_to_sign if k not in ['sign', 'sign_type', 'reference']]
+        data_to_sign = [f"{k}={v}" for k, v in data_to_sign if k not in ['sign', 'sign_type', 'reference']]
         # And connect rearranged parameters with &
         data_string = '&'.join(data_to_sign)
         data_string += self.alipay_md5_signature_key

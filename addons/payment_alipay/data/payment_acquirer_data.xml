@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="payment.payment_acquirer_alipay" model="payment.acquirer">
-        <field name="name">Alipay</field>
         <field name="provider">alipay</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="redirect_template_view_id" ref="alipay_redirect_template"/>
-         <field name="support_authorization">False</field>
+        <field name="support_authorization">False</field>
         <field name="support_fees_computation">True</field>
         <field name="support_tokenization">False</field>
     </record>

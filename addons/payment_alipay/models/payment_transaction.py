@@ -13,6 +13,7 @@ from odoo.addons.payment.models.payment_acquirer import ValidationError
 
 _logger = logging.getLogger(__name__)
 
+
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
@@ -81,7 +82,6 @@ class PaymentTransaction(models.Model):
 
         return txs
 
-
     def _process_feedback_data(self, data):
         if self.provider != 'alipay':
             return super()._process_feedback_data(data)
@@ -110,9 +110,8 @@ class PaymentTransaction(models.Model):
             error = 'Received unrecognized status for Alipay payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
             self._set_error("Alipay: " + _(
-                    "received data with invalid transaction status: %(tx_status)s",
-                    tx_status=status
-                ))
+                "received data with invalid transaction status: %(tx_status)s", tx_status=status
+            ))
 
     def _get_specific_processing_values(self, processing_values):
         if self.acquirer_id.provider != 'alipay':
@@ -135,7 +134,6 @@ class PaymentTransaction(models.Model):
                 'currency': self.currency_id.name,
             })
         else:
-
             alipay_tx_values.update({
                 'service': 'create_direct_pay_by_user',
                 'payment_type': 1,
