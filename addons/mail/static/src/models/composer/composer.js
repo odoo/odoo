@@ -12,6 +12,8 @@ const {
     parseAndTransform,
 } = require('mail.utils');
 
+const MENTION_THROTTLE = 200;
+
 function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
@@ -663,6 +665,34 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @param {string} model
+         * @param {string} method
+         * @param {Object} kwargs
+         * @return {Promise}
+         */
+        _mentionFetchThrottled(model, method, kwargs) {
+            var self = this;
+            // Delays the execution of the RPC to prevent unnecessary RPCs when the user is still typing
+            return new Promise(function (resolve, reject) {
+                clearTimeout(self.mentionFetchTimer);
+                if (self.mentionFetchCurrent) {
+                    self.mentionFetchCurrent();
+                    self.mentionFetchCurrent = false;;
+                }
+                self.mentionFetchTimer = setTimeout(function () {
+                    console.log(':mentionKeyword='+kwargs.search);
+                    return self.env.services.rpc(
+                        {model: model, method: method, kwargs: kwargs},
+                        { shadow: true },
+                    )
+                    .then(resolve);
+                }, MENTION_THROTTLE);
+                self.mentionFetchCurrent = reject;
+            });
+        }
+
+        /**
+         * @private
          * @param {string} mentionKeyword
          */
         _updateSuggestedCannedResponses(mentionKeyword) {
@@ -689,17 +719,12 @@ function factory(dependencies) {
          * @param {string} mentionKeyword
          */
         async _updateSuggestedChannels(mentionKeyword) {
-            const mentions = await this.async(() => this.env.services.rpc(
-                {
-                    model: 'mail.channel',
-                    method: 'get_mention_suggestions',
-                    kwargs: {
-                        limit: 8,
-                        search: mentionKeyword,
-                    },
-                },
-                { shadow: true }
-            ));
+            const mentions = await this._mentionFetchThrottled(
+                'mail.channel',
+                'get_mention_suggestions',
+                {limit: 8, search: mentionKeyword},
+            );
+
 
             this.update({
                 suggestedChannels: [[
@@ -754,17 +779,11 @@ function factory(dependencies) {
          * @param {string} mentionKeyword
          */
         async _updateSuggestedPartners(mentionKeyword) {
-            const mentions = await this.async(() => this.env.services.rpc(
-                {
-                    model: 'res.partner',
-                    method: 'get_mention_suggestions',
-                    kwargs: {
-                        limit: 8,
-                        search: mentionKeyword,
-                    },
-                },
-                { shadow: true }
-            ));
+            const mentions = await this._mentionFetchThrottled(
+                'res.partner',
+                'get_mention_suggestions',
+                {limit: 8, search: mentionKeyword},
+            );
 
             const mainSuggestedPartners = mentions[0];
             const extraSuggestedPartners = mentions[1];
