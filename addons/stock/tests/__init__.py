@@ -17,3 +17,4 @@ from . import test_packing_neg
 from . import test_proc_rule
 from . import test_wise_operator
 from . import test_report
+from . import test_report_stock_quantity
