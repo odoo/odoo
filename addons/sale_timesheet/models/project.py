@@ -40,7 +40,7 @@ class Project(models.Model):
     allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
-        'product.product', string='Timesheet Product', 
+        'product.product', string='Timesheet Product',
         domain="""[
             ('type', '=', 'service'),
             ('invoice_policy', '=', 'delivery'),
@@ -232,29 +232,13 @@ class ProjectTask(models.Model):
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
-        if self._get_timesheet() and self.allow_timesheets:
-            if self.sale_line_id:
-                if self.sale_line_id.product_id.service_policy == 'delivered_timesheet' and self._origin.sale_line_id.product_id.service_policy == 'delivered_timesheet':
-                    message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
-                else:
-                    message = _("All timesheet hours will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
-            else:
-                message = _("All timesheet hours that are not yet invoiced will be removed from the selected Sales Order Item on save. Discard to avoid the change.")
-
-            return {'warning': {
-                'title': _("Warning"),
-                'message': message
-            }}
+        # TODO: remove me in master
+        return
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
-        if self._origin.allow_timesheets and self._get_timesheet():
-            message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Project on save. Discard to avoid the change.")
-
-            return {'warning': {
-                'title': _("Warning"),
-                'message': message
-            }}
+        # TODO: remove me in master
+        return
 
     @api.depends('analytic_account_id.active')
     def _compute_analytic_account_active(self):
