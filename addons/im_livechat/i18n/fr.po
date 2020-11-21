@@ -10,20 +10,26 @@
 # gdp Odoo <gdp@odoo.com>, 2020
 # Celia Tydgat <cty@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
-# Priscilla (prs) Odoo <prs@odoo.com>, 2020
-# Jonathan Quique <jqu@odoo.com>, 2020
+# guillaume bauer <guillaume.bauer@syentys.fr>, 2020
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
+# Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Martin Trigaux, 2020
+# Guilhaume Bordiau <github@guilhaume.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# guillaume bauer <guillaume.bauer@syentys.fr>, 2020
+# Nathan Grognet <ngr@odoo.com>, 2020
+# omaodoo <oma@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-17 10:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: guillaume bauer <guillaume.bauer@syentys.fr>, 2020\n"
+"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +63,27 @@ msgid "% of Happiness"
 msgstr ""
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "%s and %s are typing..."
+msgstr "%s et %s écrivent..."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "%s is typing..."
+msgstr "%s est en train d'écrire..."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "%s, %s and more are typing..."
+msgstr "%s, %s et d'autres sont en train d'écrire..."
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
 msgid ""
 "* 'Display the button' displays the chat button on the pages.\n"
@@ -71,6 +98,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid ", on the"
 msgstr ", sur le "
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "-------- Show older messages --------"
+msgstr "-------- Montrer les anciens messages --------"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -143,6 +177,13 @@ msgid "Are you inside the matrix?"
 msgstr "Êtes-vous dans la matrice?"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Ask something ..."
+msgstr "Demander quelquechose"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
@@ -185,6 +226,21 @@ msgid "Average time to give the first answer to the visitor"
 msgstr "Temps moyen pour donner une première réponse au visiteur"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Bad"
+msgstr "Mauvais"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Bounced"
+msgstr "Rejeté"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Button Background Color"
 msgstr ""
@@ -193,6 +249,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
 msgid "Button Text Color"
 msgstr ""
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Canceled"
+msgstr "Annulé"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
@@ -208,6 +272,14 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr "<i/>"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Changed"
+msgstr "Changé"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -258,6 +330,36 @@ msgid "Chat Input Placeholder"
 msgstr "Placeholder pour la boîte de discussion"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Chat with one of our collaborators"
+msgstr "Discutez en ligne avec un de nos collaborateurs"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Close"
+msgstr "Fermer"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Close chat window"
+msgstr "Fermer la fenêtre de chat"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Close conversation"
+msgstr "Fermer la conversation"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
@@ -279,6 +381,13 @@ msgstr "Contact"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
 msgstr "Conversation"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Conversation Sent"
+msgstr "Conversation envoyée"
 
 #. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
@@ -418,6 +527,21 @@ msgstr ""
 "automatique » pour que ce paramètre soit pris en compte."
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Did we correctly answer your question ?"
+msgstr "Avons-nous correctement répondu à votre question? "
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_digest_digest
 msgid "Digest"
 msgstr "Récapitulatif"
@@ -447,10 +571,45 @@ msgid "Display the button"
 msgstr "Afficher le boutton"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Document not downloadable"
+msgstr "Document non téléchargeable"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Download"
+msgstr "Télécharger"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__duration
 msgid "Duration of the conversation (in seconds)"
 msgstr "Durée de la conversation (en secondes)"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Explain your note"
+msgstr "Expliquez votre note"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -472,6 +631,13 @@ msgstr ""
 "Donne l'ordre pour trouver une règle correspondante. Si 2 règles "
 "correspondent à l'adresse/pays donnée, celle avec la séquence la plus petite"
 " sera choisie."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Good"
+msgstr "Bon"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -508,6 +674,13 @@ msgid "Hour of start Date of session"
 msgstr "Heure de la date départ de la session"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "How may I help you?"
+msgstr "Comment puis-je vous aider ?"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "How to use the Website Live Chat widget?"
 msgstr "Comment utiliser le widget de Live Chat sur le site web?"
@@ -527,9 +700,27 @@ msgid "ID"
 msgstr "ID"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Idle"
+msgstr "Inactif"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_128
+#, python-format
 msgid "Image"
 msgstr "Image"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Invalid email address"
+msgstr "Adresse e-mail non-valide"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_active
@@ -637,7 +828,12 @@ msgid "LiveChat Channel Search"
 msgstr "Rechercher un canal de Live Chat"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/components/discuss/discuss.js:0
+#: code:addons/im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
+#: code:addons/im_livechat/static/src/components/thread_icon/thread_icon.xml:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#, python-format
 msgid "Livechat"
 msgstr "Live Chat"
 
@@ -721,6 +917,43 @@ msgid "Livechat session is active until visitor leave the conversation."
 msgstr ""
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Loading"
+msgstr "En cours de chargement..."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Loading older messages..."
+msgstr "Chargement des messages plus anciens..."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Mark as Read"
+msgstr "Marquer comme lu"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Mark as Todo"
+msgstr "Marquer \"À faire\""
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Mark as todo"
+msgstr "Marquer \"À faire\""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
 msgid "Matching order"
 msgstr "Commande correspondante"
@@ -741,6 +974,29 @@ msgid "Neutral face"
 msgstr "Tête neutre"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "New messages"
+msgstr "Nouveaux messages"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Next"
+msgstr "Suivant"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "No available collaborator, please try again later."
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
 msgid "No customer ratings on live chat session yet"
 msgstr "Pas encore d'évaluations de clients sur la session Live Chat"
@@ -755,6 +1011,13 @@ msgstr "Pas de données"
 #, python-format
 msgid "No history found"
 msgstr "Aucun historique trouvé"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Note by"
+msgstr "Note écrite par"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
@@ -778,14 +1041,42 @@ msgid "Number of message in the conversation"
 msgstr "Nombre de messages dans la conversation"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "OK"
+msgstr "OK"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Odoo"
 msgstr "Odoo"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Offline"
+msgstr "Hors ligne"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Online"
+msgstr "En ligne"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Online Chat Name"
 msgstr "Nom du chat en ligne"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Oops! Something went wrong."
+msgstr "Oops ! Un problème est survenu."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -839,14 +1130,60 @@ msgid "Options"
 msgstr "Options"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "PDF file"
+msgstr "Fichier PDF "
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
 msgstr "Pourcentage d'évaluations contentes"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Please check your internet connection."
+msgstr "Merci de vérifier votre connexion Internet."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Please wait"
+msgstr "Patientez s'il-vous-plait"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Please wait..."
+msgstr "Veuillez patienter..."
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Powered by"
 msgstr "Fourni par"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Previous"
+msgstr "Précedent"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Print"
+msgstr "Imprimer"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
@@ -887,6 +1224,13 @@ msgid "Rating count"
 msgstr "Nombre d'évaluations"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Rating: %s"
+msgstr "Evaluation: %s"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Bad"
 msgstr "Évaluation : mauvais"
@@ -912,9 +1256,38 @@ msgid "Ratings for livechat channel"
 msgstr "Évaluations pour le canal de Live Chat"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Ready"
+msgstr "Prêt"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
 msgid "Reason of the rating"
 msgstr "Raison de l'évaluation"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Receive a copy of this conversation"
+msgstr "Recevoir une copie de cette conversation"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Received by Everyone"
+msgstr "Reçu par tous"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Received by:"
+msgstr "Reçu par :"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -925,14 +1298,38 @@ msgstr ""
 "sera appliquée."
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Reply"
+msgstr "Répondre"
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
 msgstr "Rapport"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Reset Zoom"
+msgstr "Réinitialiser le zoom"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Reset to default colors"
 msgstr ""
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Rotate"
+msgstr "Tourner"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
@@ -954,6 +1351,13 @@ msgstr "Taux de satisfaction"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
 msgstr "Sauvegardez votre Canal pour générer votre widget de configuration."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Say something"
+msgstr "Dites quelquechose"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
@@ -978,6 +1382,28 @@ msgid "See 15 last visited pages"
 msgstr "Voir les 15 dernières pages visitées"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Seen by Everyone"
+msgstr "Vu par tous"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Seen by:"
+msgstr "Vu par:"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Sent"
+msgstr "Envoyé"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Session Date"
@@ -994,6 +1420,14 @@ msgstr "Formulaire de session"
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Session Statistics"
 msgstr "Statistiques de session"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Session expired... Please refresh and try again."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
@@ -1049,6 +1483,13 @@ msgstr "Texte du bouton"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Text that prompts the user to initiate the chat."
 msgstr "Texte qui invite l'utilisateur à discuter. "
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Thank you for your feedback"
+msgstr "Merci pour votre avis"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1143,9 +1584,23 @@ msgid "Title Color"
 msgstr ""
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
 msgstr "Sessions traitées"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Try again"
+msgstr "Réessayer"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1167,6 +1622,28 @@ msgid "UUID"
 msgstr "UUID"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Undefined"
+msgstr "Indéfini"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Uploaded"
+msgstr "Téléchargé"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Uploading"
+msgstr "Téléchargement en cours..."
+
+#. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid ""
 "Use canned responses to define templates of messages in the livechat app. To"
@@ -1181,14 +1658,52 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "User is idle"
+msgstr "L'utilisateur est inactif"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "User is offline"
+msgstr "L'utilisateur est en hors ligne"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "User is online"
+msgstr "L'utilisateur est en ligne"
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
 msgid "Users"
 msgstr "Utilisateurs"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Video"
+msgstr "Vidéo"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Viewer"
+msgstr "Viseur"
+
+#. module: im_livechat
+#. openerp-web
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/mail_channel.py:0
 #: code:addons/im_livechat/models/mail_channel.py:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Visitor"
 msgstr "Visiteur"
@@ -1255,6 +1770,13 @@ msgid "Widget"
 msgstr "Widget"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "Yesterday"
+msgstr "Hier"
+
+#. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
@@ -1269,6 +1791,22 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid "Your chatter history is empty"
 msgstr "Votre historique de chat est vide"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Zoom In"
+msgstr "Agrandir"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "Zoom Out"
+msgstr "Réduire"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -1286,15 +1824,57 @@ msgid "e.g. YourWebsite.com"
 msgstr "ex: VotreSiteWeb.com"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "from"
+msgstr "de"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "mail@example.com"
+msgstr "mail@example.com"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
+#, python-format
+msgid "on"
+msgstr "le"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
 "ou copiez cet URL et envoyez la par email à vos clients ou fournisseurs:"
 
 #. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "read less"
+msgstr "lire moins"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "read more"
+msgstr "plus d'information"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr "secondes"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
+#, python-format
+msgid "unnamed"
+msgstr "sans nom"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template

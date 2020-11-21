@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:11+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -2828,6 +2828,11 @@ msgid "Only apply rounding on cash"
 msgstr "Yalnızca nakit üzerinde yuvarlamayı uygula"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Only on cash methods"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
@@ -4770,17 +4775,17 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"The payment methods and the point of sale must belong to the same company."
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_payment.py:0
 #, python-format
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"The payment methods and the point of sale must belong to the same company."
 msgstr ""
 
 #. module: point_of_sale
@@ -5077,6 +5082,13 @@ msgstr ""
 "Sıralama Odoo tarafından otomatik olarak oluşturulmaktadır ancak "
 "siparişlerinizin referans numaralarını özelleştirmek için "
 "değiştirebilirsiniz."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "This session is already closed."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5675,6 +5687,13 @@ msgid ""
 "                the point of sale interface."
 msgstr ""
 "Satış Noktasında satışını yapacağınız her şey için bir ürün tanımlamalısınız"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"You must have at least one payment method configured to launch a session."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0

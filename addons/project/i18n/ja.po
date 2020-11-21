@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-16 14:19+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -598,6 +598,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
 msgstr ""
 
 #. module: project
@@ -1194,9 +1199,9 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited internal users: employees may only see the followed project and tasks.\n"
+"- All internal users: employees may see all project and tasks.\n"
+"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
 
@@ -1304,7 +1309,7 @@ msgstr "表示名"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "アクセス権がありません。ユーザーのダイジェストメールでこのデータをスキップしてください"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1516,7 +1521,7 @@ msgstr "フォロワー (パートナー)"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "例えばフォントの素晴らしいアイコンFA-タスク"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -1689,7 +1694,7 @@ msgstr "チェックされている場合は、新しいメッセージに注意
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "チェックした場合、一部のメッセージが配信エラーが発生しています。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2040,8 +2045,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
-"acquired project, assign them and use the %s and %s to define if the project"
-" is ready for the next step. %s"
+"acquired projects, assign them and use the %s and %s to define if the "
+"project is ready for the next step. %s"
 msgstr ""
 
 #. module: project
@@ -2996,7 +3001,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS配信エラー"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -3713,7 +3718,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "記録上の例外アクティビティのタイプ。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -4000,11 +4005,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
-msgid "project.project"
 msgstr ""
 
 #. module: project

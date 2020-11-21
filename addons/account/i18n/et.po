@@ -17,15 +17,16 @@
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
 # Indrek Linnas <indrek@estpos.ee>, 2020
-# Triine Aavik <triine@avalah.ee>, 2020
+# Toomas Ant <toomas.ant@gmail.com>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
+# Triine Aavik <triine@avalah.ee>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -63,7 +64,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr ""
+msgstr "# Sobitatud väljavõtted"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -363,6 +364,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Statement</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Statements</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Väljavõte</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Väljavõtted</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -533,7 +536,7 @@ msgstr "<span name=\"button_import_placeholder\"/> väljavõtted"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">New</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Uus</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -561,6 +564,7 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
+"<span title=\"Outstanding Payments/Receipts\">Tasumata maksed/arved</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -605,12 +609,12 @@ msgstr "<span>Allah.%</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr "Arve kuupäev"
+msgstr "<span>Arve kuupäev</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
-msgstr ""
+msgstr "<span>Arve number</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -635,7 +639,7 @@ msgstr "<span>Toimingud</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>Esialgne summa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1018,12 +1022,12 @@ msgstr "Sama detailsusega kontogrupid ei saa omavahel kattuda"
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 msgid "Account Holder"
-msgstr "Konto valdaja"
+msgstr "Konto omanik"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Konto valdaja nimi"
+msgstr "Konto omaniku nimi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -1750,6 +1754,7 @@ msgid ""
 "All the account entries lines must be processed in order to validate the "
 "statement."
 msgstr ""
+"Väljavõtte kinnitamiseks peavad kõik konto kannete read olema töödeldud."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
@@ -2273,7 +2278,7 @@ msgstr "Automaatne täitmine"
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr "Varasema arve automaatne täitmine."
+msgstr "Automaatne täitmine eelmise arve alusel."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -2452,7 +2457,7 @@ msgstr "Pangaväljavõte"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Bank Statement %s.pdf"
-msgstr ""
+msgstr "Pangaväljavõte %s.pdf"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
@@ -2489,7 +2494,7 @@ msgstr "Pangaväljavõtted"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Bank Suspense Account"
-msgstr ""
+msgstr "Panga vahekonto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -3441,11 +3446,6 @@ msgid "Confirm"
 msgstr "Kinnitage"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
-msgid "Confirmed"
-msgstr "Kinnitatud"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 msgid ""
 "Confirming this will create automatically a journal entry with the "
@@ -3751,7 +3751,7 @@ msgstr "Loo esimene raha ümardus"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr ""
+msgstr "Loo oma esimene arve."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -4137,7 +4137,7 @@ msgstr "Kohanda"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr ""
+msgstr "Arve väljanägemise kohendamine."
 
 #. module: account
 #. openerp-web
@@ -5814,7 +5814,7 @@ msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error
 #: model:ir.model.fields,help:account.field_account_payment__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
+msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__nocreate
@@ -5870,7 +5870,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__to_check
 msgid ""
 "If this checkbox is ticked, it means that the user was not sure of all the "
-"related informations at the time of the creation of the move and that the "
+"related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
 
@@ -6052,7 +6052,7 @@ msgstr "Sissetulev"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "Sissetulevate maksete meetodid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -6091,7 +6091,7 @@ msgstr "Toote malli tulukonto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
+msgstr "Laekuvad maksed"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_debit_account_id
@@ -6330,7 +6330,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Invoice Layout"
-msgstr ""
+msgstr "Arve kujundus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6553,7 +6553,7 @@ msgstr "on vähem kui"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr ""
+msgstr "On seotud pangaväljavõttega"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -6765,7 +6765,7 @@ msgstr "Andmiku nimi"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr ""
+msgstr "Andmiku vahekonto"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -7399,12 +7399,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
-msgid "Manually create a write-off on clicked button"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
-msgid "Manually create a write-off on clicked button."
+msgid "Manually create a write-off on clicked button"
 msgstr ""
 
 #. module: account
@@ -7462,12 +7458,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
-msgid "Match existing invoices/bills"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
-msgid "Match existing invoices/bills."
+msgid "Match existing invoices/bills"
 msgstr ""
 
 #. module: account
@@ -7490,7 +7482,7 @@ msgstr "Sobitatud andmike kanderead"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Statements"
-msgstr ""
+msgstr "Seotud väljavõtted"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -7582,7 +7574,7 @@ msgstr "Sõnumid"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Methods"
-msgstr ""
+msgstr "Meetodid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -7739,8 +7731,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "New Transactions"
-msgstr "Lisa tehinguid"
+msgid "New Transaction"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -7962,7 +7954,7 @@ msgstr "November"
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
-msgid "Now, we'll create a your first invoice."
+msgid "Now, we'll create your first invoice."
 msgstr ""
 
 #. module: account
@@ -8062,6 +8054,7 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoice(s)."
 msgstr ""
+"Odoo lubab sobitada väljavõtte rea sellega seotud müügi- või ostuarve(te)ga."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -8069,6 +8062,7 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo lubab sobitada väljavõtte rea sellega seotud müügi- või ostuarvetega."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -8142,7 +8136,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only Validated statements can be reset to new."
-msgstr ""
+msgstr "Ainult valideeritud väljavõtteid saab lähtestada uueks."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -8161,7 +8155,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only new statements can be posted."
-msgstr ""
+msgstr "Ainult uusi väljavõtteid saab postitada."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
@@ -8182,7 +8176,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only validated statements can be reset to new."
-msgstr ""
+msgstr "Ainult valideeritud väljavõtteid saab lähtestada uueks."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
@@ -8382,12 +8376,12 @@ msgstr "Väljuv"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
 msgid "Outbound Payment Methods"
-msgstr ""
+msgstr "Väljatulevate maksete meetodid"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outgoing Payments"
-msgstr ""
+msgstr "Väljuvad maksed"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -8415,12 +8409,12 @@ msgstr "Väljundkonto varude hindamiseks"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr ""
+msgstr "Tasumata maksed"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr ""
+msgstr "Tasumata maksete konto"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -8726,7 +8720,7 @@ msgstr "Maksekviitung:"
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
 msgid "Payment Reference"
-msgstr "Makse viide"
+msgstr "Arve number/viide"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_state
@@ -8832,7 +8826,7 @@ msgstr "Maksed"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payments Configuration"
-msgstr ""
+msgstr "Maksete konfiguraator"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -8956,16 +8950,16 @@ msgstr ""
 "Enne jätkamist paigalda palun kontoplaan või loo muude kannete andmik."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:0
-#, python-format
-msgid "Please set a strictly positive rounding value."
 msgstr ""
 
 #. module: account
@@ -9448,7 +9442,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_ids
 msgid "Reconciled Statements"
-msgstr ""
+msgstr "Sobitatud väljavõtted"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -9545,7 +9539,7 @@ msgstr "Lisa makse"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid "Register a bank statement"
-msgstr ""
+msgstr "Lisa pangaväljavõte"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -10551,7 +10545,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
-msgstr ""
+msgstr "Näita sobitamata pangaväljavõtte rida"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10757,7 +10751,7 @@ msgstr "Väljevõte"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed."
-msgstr ""
+msgstr "Väljavõte %s on kinnitatud."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -10783,7 +10777,7 @@ msgstr "Väljavõtted"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_ids
 msgid "Statements matched to this payment"
-msgstr ""
+msgstr "Selle maksega seotud väljavõtted"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -10873,7 +10867,7 @@ msgstr "Alltüüp"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
-msgid "Suggest a write-off."
+msgid "Suggest a write-off"
 msgstr ""
 
 #. module: account
@@ -10897,7 +10891,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr ""
+msgstr "Vahekonto"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -10940,7 +10934,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.cash_box_out_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Take Money In/Out"
-msgstr ""
+msgstr "Raha sisse/välja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__target_move
@@ -11777,7 +11771,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The amount of a statement line can't be equal to zero."
-msgstr ""
+msgstr "Väljavõtterea summa ei saa olla võrdne nulliga."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -11884,8 +11878,15 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The date (%(date)s) doesn't match the sequence number (%(sequence)s).\n"
+"You might want to remove the sequence before proceeding with the change of the date."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment_term.py:0
-#, python-format, python-format
+#, python-format
 msgid "The day of the month used for this term must be strictly positive."
 msgstr ""
 
@@ -12626,7 +12627,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__to_check
 msgid ""
 "This matching rule is used when the user is not certain of all the "
-"informations of the counterpart."
+"information of the counterpart."
 msgstr ""
 
 #. module: account
@@ -12862,13 +12863,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_transaction_type
 msgid "Transaction Type"
-msgstr ""
+msgstr "Tehingu tüüp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_transaction_type_param
 msgid "Transaction Type Parameter"
-msgstr ""
+msgstr "Tehingu tüübi parameeter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -13369,7 +13370,7 @@ msgstr "Tarnija maksetingimused"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr ""
+msgstr "Tarnija maksed"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13592,7 +13593,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "You can only create statement line in open bank statements."
-msgstr ""
+msgstr "Väljavõtte rea saab luua ainult avatud pangaväljavõtetes."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14084,7 +14085,6 @@ msgstr "Sihtnumber kuni"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
 msgstr ""
@@ -14236,7 +14236,7 @@ msgstr "kuni"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr ""
+msgstr "kontrolli üle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm

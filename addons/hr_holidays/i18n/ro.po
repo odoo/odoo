@@ -3,16 +3,16 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Martin Trigaux, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-17 10:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
 "Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
@@ -175,18 +175,6 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #, python-format
 msgid "(Expire on"
 msgstr "(Expiră la"
-
-#. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0_5
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0_5
-msgid "0:30 AM"
-msgstr "0:30 AM"
-
-#. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12_5
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12_5
-msgid "0:30 PM"
-msgstr "0:30 PM"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__10
@@ -2267,6 +2255,14 @@ msgid "On leave"
 msgstr "În concediu"
 
 #. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
+#: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
+#, python-format
+msgid "Online"
+msgstr "Activ"
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can approve/refuse its own requests."
@@ -2332,6 +2328,21 @@ msgstr "Opțiuni"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
 msgid "Other"
 msgstr "Altul"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
+#: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
+#, python-format
+msgid "Out of office"
+msgstr "În afara biroului"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/components/thread_view/thread_view.js:0
+#, python-format
+msgid "Out of office until %s."
+msgstr ""
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
@@ -3178,6 +3189,20 @@ msgstr "Contor mesaje necitite"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__user_id
 msgid "User"
 msgstr "Operator"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
+#, python-format
+msgid "User is online"
+msgstr "Utilizatorul este online"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
+#, python-format
+msgid "User is out of office"
+msgstr "Utilizatorul este în afara biroului"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users

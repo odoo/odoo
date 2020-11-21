@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-16 14:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -439,6 +439,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
@@ -511,6 +512,11 @@ msgid ""
 "Indicates if a blacklisted sanitized phone number is a phone number. Helps "
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
+msgid "Indicates if the SMS composer targets a single specific recipient"
 msgstr ""
 
 #. module: sms
@@ -713,6 +719,18 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will recieve the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
+msgid "Number of records found when searching with the value in Active Domain"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
 msgid "Number of unread messages"
 msgstr ""
@@ -851,6 +869,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle__message_has_sms_error
@@ -1145,27 +1164,6 @@ msgstr ""
 msgid ""
 "UX field allowing to edit the recipient number. If changed it will be stored"
 " onto the recipient."
-msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
-msgid ""
-"UX field allowing to know we are sending an SMS to a single specific "
-"recipient"
-msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
-msgid ""
-"UX field computing the number of recipients in mass mode based on given "
-"active domain"
-msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
-msgid ""
-"UX field computing the number of recipients in mass mode without active "
-"domain"
 msgstr ""
 
 #. module: sms

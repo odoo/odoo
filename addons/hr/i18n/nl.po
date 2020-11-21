@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-17 10:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -93,6 +93,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Aanwezig\" title=\"Aanwezig\" name=\"presence_present\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -101,6 +103,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"Te bepalen\" title=\"Te bepalen\" name=\"presence_to_define\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -109,6 +113,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Afwezig\" title=\"Afwezig\" name=\"presence_absent\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -117,6 +123,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Aanwezig maar niet actief\" title=\"Aanwezig maar niet actief\" name=\"presence_absent_active\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -163,6 +171,9 @@ msgid ""
 "                                    Not Connected\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Niet verbonden\n"
+"                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -177,12 +188,12 @@ msgstr "<span class=\"o_stat_text\">Aanwezig sinds</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
-msgstr ""
+msgstr "<span>Km</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<strong><span>Reporting</span></strong>"
-msgstr ""
+msgstr "<strong><span>Reportage</span></strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2005,7 +2016,7 @@ msgstr "Huidig"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr ""
+msgstr "Aanwezig maar niet actief"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -2431,7 +2442,7 @@ msgstr "Te definiëren"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr ""
+msgstr "Te bepalen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2680,10 +2691,15 @@ msgstr "Werkuren"
 #, python-format
 msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
-" to update other informations."
+" to update other information."
 msgstr ""
-"U mag alleen uw voorkeuren wijzigen. Neem contact op met een HR manager om "
-"andere informatie bij te werken."
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/models/employee/employee.js:0
+#, python-format
+msgid "You can only chat with employees that have a dedicated user."
+msgstr ""
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0

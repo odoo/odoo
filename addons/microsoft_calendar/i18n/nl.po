@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +67,8 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
+"Een beheerder moet Outlook-synchronisatie configureren voordat u deze kunt "
+"gebruiken!"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -133,7 +136,7 @@ msgstr "Verwijderen van beide"
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_microsoft
 msgid "Delete from the current Microsoft Calendar account"
-msgstr ""
+msgstr "Verwijderen uit het huidige Microsoft Agenda-account."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
@@ -198,12 +201,12 @@ msgstr "Laat onaangeraakt"
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_account_reset
 msgid "Microsoft Calendar Account Reset"
-msgstr ""
+msgstr "Microsoft Agenda-account opnieuw instellen."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_id
 msgid "Microsoft Calendar Event Id"
-msgstr ""
+msgstr "Id voor Microsoft Agenda-evenement."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__microsoft_id
@@ -213,7 +216,7 @@ msgstr "Microsoft agenda Id"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__microsoft_id
 msgid "Microsoft Calendar Recurrence Id"
-msgstr ""
+msgstr "Herhaling-ID voor Microsoft-agenda."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_id
@@ -233,7 +236,7 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_recurrence_master_id
 msgid "Microsoft Recurrence Master Id"
-msgstr ""
+msgstr "Hoofd-ID voor Microsoft-terugkeerpatroon"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -264,7 +267,7 @@ msgstr "Melding"
 #: model:ir.cron,cron_name:microsoft_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:microsoft_calendar.ir_cron_sync_all_cals
 msgid "Outlook: synchronization"
-msgstr ""
+msgstr "Outlook: synchronisatie"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -276,12 +279,12 @@ msgstr "Doorverwijzing"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Reset Account"
-msgstr ""
+msgstr "Account opnieuw instellen"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
 msgid "Reset Outlook Calendar Account"
-msgstr ""
+msgstr "Reset Outlook Agenda-account"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
@@ -310,17 +313,17 @@ msgstr "Gesynchroniseerd met Outlook"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
-msgstr ""
+msgstr "Synchroniseer een record met Microsoft Agenda."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr ""
+msgstr "Synchroniseer alle bestaande evenementen."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr ""
+msgstr "Synchroniseer alleen nieuwe evenementen."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -337,12 +340,14 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Outlook Calendar service is not configured."
-msgstr ""
+msgstr "Het account voor de Outlook-agendaservice is niet geconfigureerd."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
+"Dit heeft alleen gevolgen voor evenementen waarvan de gebruiker de eigenaar "
+"is."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
@@ -352,7 +357,7 @@ msgstr "Gebruiker"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
-msgstr ""
+msgstr "Bestaande gebeurtenissen van de gebruiker."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_users
@@ -376,3 +381,5 @@ msgstr ""
 msgid ""
 "You will be redirected to Outlook to authorize the access to your calendar."
 msgstr ""
+"U wordt doorgestuurd naar Outlook om de toegang tot uw agenda te "
+"autoriseren."

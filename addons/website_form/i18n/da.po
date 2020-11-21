@@ -3,23 +3,23 @@
 # 	* website_form
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
 # Jesper Carstensen <jc@danodoo.dk>, 2020
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
+# Martin Trigaux, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-17 06:08+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -28,6 +28,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s' er ikke en gyldig dato"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' er ikke en valid dato/klokkeslæt"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -42,11 +56,13 @@ msgid ""
 "<span class=\"fa fa-check-circle\"/>\n"
 "                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>Din besked er blevet <b>sendt</b></span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Email Til</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -54,11 +70,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Email</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Telefonnummer</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -66,11 +84,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Emne</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Din Virksomhed</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -84,22 +104,29 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Dit Spørgsmål</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field after this one"
-msgstr ""
+msgstr "tilføj et nyt felt efter denne"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field at the end"
-msgstr ""
+msgstr "Tilføj et nyt felt til slut"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Tilladt at bruge i formularer"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "An error has occured, the form has not been sent."
+msgstr "Der er opstået en fejl, formularen er ikke blevet sendt."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
@@ -114,7 +141,7 @@ msgstr "Blacklist i webformularer"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Button Position"
-msgstr ""
+msgstr "Knap Position"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -129,7 +156,7 @@ msgstr "Afkrydsningsfelt"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Custom field"
-msgstr ""
+msgstr "Tilpasset felt"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -218,7 +245,7 @@ msgstr "Skjult"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hide"
-msgstr ""
+msgstr "Skjul"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -237,32 +264,32 @@ msgstr "ID"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "In the meantime we invite you to visit our"
-msgstr ""
+msgstr "I mellemtiden inviterer vi dig til at besøge vores"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Aligned"
-msgstr ""
+msgstr "Input Justeret"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Placeholder"
-msgstr ""
+msgstr "Input Pladsholder"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Type"
-msgstr ""
+msgstr "Input Type"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Label Name"
-msgstr ""
+msgstr "Mærkat Navn"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Label Position"
-msgstr ""
+msgstr "Mærkat Position"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -272,7 +299,7 @@ msgstr "Label til formular"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "Mærkat Bredde"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
@@ -294,12 +321,12 @@ msgstr "Lang tekst"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Mark Text"
-msgstr ""
+msgstr "Marker Tekst"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Marked Fields"
-msgstr ""
+msgstr "Markeret Felter"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -343,7 +370,31 @@ msgstr "Nummer"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "On Success"
-msgstr ""
+msgstr "Ved Succes"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 1"
+msgstr "Mulighed 1"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 2"
+msgstr "Mulighed 2"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 3"
+msgstr "Mulighed 3"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -361,7 +412,14 @@ msgstr "Anden information:"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Our team will message you back as soon as possible."
-msgstr ""
+msgstr "Vores hold vil svare dig så hurtigt som muligt."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "Please fill in the form correctly."
+msgstr "Udfyld venligst formularen korrekt."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -400,7 +458,7 @@ msgstr "Udvælgelse"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Separate email addresses with a comma."
-msgstr ""
+msgstr "Separer email adresser med et komma."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -410,7 +468,7 @@ msgstr "Vis Besked"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show reCaptcha Policy"
-msgstr ""
+msgstr "Vis reCaptcha Police"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
@@ -438,12 +496,12 @@ msgstr "Succes"
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "Mistænkelig aktivitet registreret af Google reCaptcha."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -455,7 +513,7 @@ msgstr "Tekst"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Thank You For Your Feedback"
-msgstr ""
+msgstr "Tak For Din Tilbagemelding"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -474,7 +532,7 @@ msgstr "Din formular er afsendt."
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "The form's specified model does not exist"
-msgstr ""
+msgstr "Formularens specificerede model eksisterer ikke"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -534,9 +592,37 @@ msgid "Website Forms"
 msgstr "Formularer"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate a model field."
+msgstr "Du kan ikke duplikere et model felt."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate the submit button of the form."
+msgstr "Du kan ikke kopiere indgiv knappen fra formularen."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove a field that is required by the model itself."
+msgstr "Du kan ikke fjerne et felt der er påkrævet af selve modellen."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove the submit button of the form"
+msgstr "Du kan ikke fjerne indgiv knappen fra formularen."
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "rows"
-msgstr ""
+msgstr "rækker"
 
 #. module: website_form
 #. openerp-web

@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-17 06:08+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -21,6 +21,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s' - невірна дата "
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' - невірні дата і час"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -91,6 +105,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Дозволено використовувати у формах"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "An error has occured, the form has not been sent."
+msgstr "Сталася помилка, форма не була відправлена."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
@@ -337,6 +358,30 @@ msgid "On Success"
 msgstr ""
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 1"
+msgstr "Опція 1"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 2"
+msgstr "Опція 2"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 3"
+msgstr "Опція 3"
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Optional"
 msgstr "Необов'язково"
@@ -353,6 +398,13 @@ msgstr "Інша інформація:"
 #, python-format
 msgid "Our team will message you back as soon as possible."
 msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "Please fill in the form correctly."
+msgstr "Будь ласка, заповніть форму вірно."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -521,6 +573,34 @@ msgstr "Ключ форми веб-сайту"
 #: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
 msgid "Website Forms"
 msgstr "Форми веб-сайту"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate a model field."
+msgstr "Ви не можете дублювати поле моделі."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate the submit button of the form."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove a field that is required by the model itself."
+msgstr "Ви не можете видалити поле, яке вимагає сама модель."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove the submit button of the form"
+msgstr ""
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options

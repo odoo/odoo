@@ -3138,7 +3138,7 @@ msgstr "Planlagt dato"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
-msgstr ""
+msgstr "Planlagt på samme tid som andre arbejdsordre for %s"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -3197,6 +3197,8 @@ msgid ""
 "Prevent manufacturing users from modifying quantities to consume, unless a "
 "manager has unlocked the document"
 msgstr ""
+"Forhindre produktions brugere fra at redigere mængde til forbrug, medmindre "
+"en leder har låst op for dokumentet"
 
 #. module: mrp
 #. openerp-web
@@ -4786,6 +4788,8 @@ msgstr "Venter på en anden arbejdsordre"
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
+"Planlagt til før den foregående arbejdsordre, planlagt fra %(start)s til "
+"%(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -5221,6 +5225,15 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Du forbrigte en anden mængde en forventet for følgende produkter.\n"
+"                        <b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"                            Vær venlig at bekræfte at dette blev gjort med vilje.\n"
+"                        </b>\n"
+"                        <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"                            Vær venlig at gennemgå dit komponent forbrug og spørg en leder om at validere \n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">denne produktionsordre</span>\n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">disse produktionsordre</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0
@@ -5229,6 +5242,8 @@ msgid ""
 "You have already processed %(quantity)s. Please input a quantity higher than"
 " %(minimum)s "
 msgstr ""
+"Du har allerede behandlet %(quantity)s. Angiv venligst en mængde højere end "
+"%(minimum)s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -5237,6 +5252,9 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr ""
+"Du har ikke registreret <i>producerede</i> kvantiteter endnu. Ved at klikke "
+"på <i>anvend</i> vil Odoo producere alle færdige produkter og forbruge alle "
+"komponenter."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5282,12 +5300,12 @@ msgstr "Du skal angive et lot for det færdige produkt."
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
-msgstr ""
+msgstr "Du skal angive et Lot/Serienummer for produkter:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than initial demand"
-msgstr ""
+msgstr "Du behandlede mindre end først efterspurgt"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -5307,12 +5325,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "and build finished products using"
-msgstr ""
+msgstr "og byg færdige produkter med"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "bills of materials"
-msgstr ""
+msgstr "styklister"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -5322,7 +5340,7 @@ msgstr "annulleret"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "components"
-msgstr ""
+msgstr "komponenter"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
