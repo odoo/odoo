@@ -28,8 +28,10 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
                 fields: ['id', 'res_id'],
             }
         }).then((data) => {
-            this.$target.get(0).dataset.filterId = data[0].res_id;
-            this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            if (data) {
+                this.$target.get(0).dataset.filterId = data[0].res_id;
+                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            }
         });
     },
 
