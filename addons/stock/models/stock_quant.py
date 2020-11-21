@@ -223,7 +223,7 @@ class StockQuant(models.Model):
                     })
                     break
             except OperationalError as e:
-                if e.pgcode == '55P03':  # could not obtain the lock
+                if e.pgcode == '55P03' or e.pgcode == '40001':  # could not obtain the lock or serialization failure
                     continue
                 else:
                     raise
