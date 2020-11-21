@@ -12,12 +12,12 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Yedigen, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
+# Levent Karakaş <levent@mektup.at>, 2020
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # Metin Akın <aknmetin@gmail.com>, 2020
@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -3524,11 +3524,6 @@ msgid "Confirm"
 msgstr "Onayla"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
-msgid "Confirmed"
-msgstr "Doğrulanmış"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 msgid ""
 "Confirming this will create automatically a journal entry with the "
@@ -5987,12 +5982,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__to_check
 msgid ""
 "If this checkbox is ticked, it means that the user was not sure of all the "
-"related informations at the time of the creation of the move and that the "
+"related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
-"Bu onay kutusu işaretliyse, kaydın yaratılması sırasında kullanıcının ilgili"
-" tüm bilgilerden emin olmadığı ve kaydın tekrar kontrol edilmesi gerektiği "
-"anlamına gelir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -7545,13 +7537,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
 msgid "Manually create a write-off on clicked button"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
-msgid "Manually create a write-off on clicked button."
-msgstr "Manuel olarak bir borç silme işlemi oluşturmak için butonu tıklayın."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -7608,13 +7596,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Match existing invoices/bills"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
-msgid "Match existing invoices/bills."
-msgstr "Mevcut müşteri/tedarikçi faturalarını eşleştirin."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -7887,8 +7871,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "New Transactions"
-msgstr "Yeni İşlem"
+msgid "New Transaction"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -8115,7 +8099,7 @@ msgstr "Kasım"
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
-msgid "Now, we'll create a your first invoice."
+msgid "Now, we'll create your first invoice."
 msgstr ""
 
 #. module: account
@@ -9120,16 +9104,16 @@ msgstr ""
 "yevmiye kaydı oluşturun."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:0
-#, python-format
-msgid "Please set a strictly positive rounding value."
 msgstr ""
 
 #. module: account
@@ -11067,8 +11051,8 @@ msgstr "Alt-Tür"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
-msgid "Suggest a write-off."
-msgstr "Borç silme önerin."
+msgid "Suggest a write-off"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -12121,8 +12105,15 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The date (%(date)s) doesn't match the sequence number (%(sequence)s).\n"
+"You might want to remove the sequence before proceeding with the change of the date."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment_term.py:0
-#, python-format, python-format
+#, python-format
 msgid "The day of the month used for this term must be strictly positive."
 msgstr "Bu süre için kullanılan ayın günü kesinlikle pozitif olmalıdır."
 
@@ -12911,10 +12902,8 @@ msgstr "Bu yevmiye katı modda değil."
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__to_check
 msgid ""
 "This matching rule is used when the user is not certain of all the "
-"informations of the counterpart."
+"information of the counterpart."
 msgstr ""
-"Bu eşleşme kuralı, kullanıcı karşı tarafın tüm bilgilerinden emin "
-"olmadığında kullanılır."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14417,7 +14406,6 @@ msgstr "PK Bitiş"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

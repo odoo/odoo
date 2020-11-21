@@ -12,7 +12,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
@@ -247,13 +247,13 @@ msgstr "Standard journal"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "Standard Delingsmetode"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Standard Delingsmetode anvendt for Landede Omkostninger"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -592,7 +592,7 @@ msgstr "Vær venlig at konfigurere udgifts konto for produkt: %s."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "Vær venlig at definere %s hvorpå de ekstra omkostninger bør anvendes."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -779,3 +779,6 @@ msgid ""
 "applied for products with automated inventory valuation and FIFO or average "
 "costing method."
 msgstr ""
+"Du kan ikke anvende landede omkostninger på de valgte %s. Landede "
+"omkostninger kan kun anvendes på produkter med automatiseret inventar "
+"vurdering og FIFO eller gennemsnitlig omkostningsmetode."

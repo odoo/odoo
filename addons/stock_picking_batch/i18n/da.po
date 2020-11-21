@@ -9,7 +9,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
@@ -75,7 +75,7 @@ msgstr "Aktivitets Type Ikon"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr ""
+msgstr "Tilføj pluk til"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -401,6 +401,8 @@ msgstr "Person ansvarlig for denne parti overførsel"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
+"Vær venlig at tilføje 'Færdig' kvantiteter til parti plukket for at oprette "
+"en ny pakke."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -453,6 +455,10 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
+"Planlagt dato for overførsler til behandling.\n"
+"            - Hvis manuelt angivet vil den planlagte dato for alle overførsler i partier blive opdateret automatisk til denne dato.\n"
+"            - Hvis ikke manuelt ændret og overførsler er tilføjet/fjernet/opdateret så vil dette være deres tidligst planlagte dato\n"
+"              men denne planlagte dato vil ikke bilve angivet for alle overførsler i partiet."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -523,12 +529,12 @@ msgstr "Lager pakke destination"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
-msgstr ""
+msgstr "Lagerbevægelse linjer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
 msgid "Stock moves"
-msgstr ""
+msgstr "Lagerbevægelser"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -552,6 +558,9 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
+"De følgende overførsler kan ikke tilføjes til parti overførsel %s. Vær venlig at tjekke deres tilstande og operationstyper, hvis de ikke er umiddelbare overførsler eller hvis de ikke allerede er en del af et andet parti overførsel.\n"
+"\n"
+"Uforligeligheder: %s"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -570,7 +579,7 @@ msgstr ""
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
-msgstr ""
+msgstr "De valgte pluk bør tilhøre en unik virksomhed."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -639,20 +648,20 @@ msgstr "Website kommunikations historik"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You can only delete draft batch transfers."
-msgstr ""
+msgstr "Du kan kun slette kladde parti overførsler."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr ""
+msgstr "Du skal angive nogle pluk til parti."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr ""
+msgstr "en ny parti overførsel"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "en eksisterende parti overførsel"

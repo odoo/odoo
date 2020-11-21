@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-16 14:19+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
@@ -607,6 +607,11 @@ msgstr "Toți utilizatorii interni"
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
 msgstr "Toate sarcinile"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
@@ -1226,16 +1231,11 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited internal users: employees may only see the followed project and tasks.\n"
+"- All internal users: employees may see all project and tasks.\n"
+"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
-"Defineste vizibilitatea sarcinilor proiectului:\n"
-"- Angajați invitați: angajații pot vedea proiectul și sarcinile următoare. \n"
-"- Toți angajații: angajații pot vedea toate proiectele și sarcinile.\n"
-"- Utilizatorii portalului și toți angajații: angajații pot vedea totul. Utilizatorii portalului pot vedea proiectul și sarcinile urmărite de.\n"
-" ei sau de cineva al companiei lor."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2112,12 +2112,9 @@ msgstr "Atașamente Principale"
 #, python-format
 msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
-"acquired project, assign them and use the %s and %s to define if the project"
-" is ready for the next step. %s"
+"acquired projects, assign them and use the %s and %s to define if the "
+"project is ready for the next step. %s"
 msgstr ""
-"Gestionați ciclul de viață al proiectului dvs. utilizând vizualizarea "
-"kanban. Adăugați un proiect nou achiziționat, atribuiți-l, utilizați-l %s și"
-" %s pentru a defini dacă proiectul este pregătit pentru următorul pas. %s"
 
 #. module: project
 #. openerp-web
@@ -4142,11 +4139,6 @@ msgstr "pentru proiect:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
 msgstr "in etapa:"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
-msgid "project.project"
-msgstr "project.project"
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -286,7 +286,7 @@ msgstr "<span>Nuova</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span>Orders</span>"
-msgstr ""
+msgstr "<span>Ordini</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -2458,7 +2458,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr "Gestisci operazioni dell'ordine di produzione"
+msgstr "Gestione operazioni ordine di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -2750,7 +2750,7 @@ msgstr "Nessun ordine residuo"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
-msgstr ""
+msgstr "Nessuna distinta base trovata. Creane una!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2851,7 +2851,7 @@ msgstr "Numero di errori"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
 msgid "Number of generated MO"
-msgstr ""
+msgstr "Numero di OdP generati"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -4036,7 +4036,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr "Regola di magazzino"
+msgstr "Regola di giacenza"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
@@ -4229,9 +4229,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
-"La data di fine produzione pianificata dell'ordine di lavoro non può essere "
-"antecedente alla data di inizio pianificata, correggerla per poter salvare "
-"l'ordine di lavoro."
+"La data di fine pianificata dell'ordine di lavoro non può essere antecedente"
+" la data di inizio, correggerla per salvare l'ordine di lavoro."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4796,6 +4795,8 @@ msgstr "In attesa di altro OdL"
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
+"In attesa dell'ordine di lavoro precedente, pianificato dal %(start)s al "
+"%(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse

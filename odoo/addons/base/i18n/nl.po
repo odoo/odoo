@@ -10,19 +10,19 @@
 # Melroy van den Berg <webmaster1989@gmail.com>, 2020
 # Maxim Vandenbroucke <mxv@odoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
-# Martin Trigaux, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Yip132 <yannick.renders@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Martin Trigaux, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-16 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -107,6 +107,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Oostenrijkse rekeningschema's (Einheitskontenrahmen 2010).\n"
+"================================================== ========\n"
+"\n"
+"* Definieert het volgende rekeningschema:\n"
+"* Oostenrijks algemeen rekeningschema 2010\n"
+"* Definieert sjablonen voor btw op verkopen en aankopen\n"
+"* Definieert belastingsjablonen\n"
+"* Definieert fiscale posities voor de Oostenrijkse fiscale wetgeving\n"
+"* Definieert belastingrapporten U1 / U30"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -221,6 +232,87 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Lokalisatiemodule voor Denemarken\n"
+"===============================\n"
+"\n"
+"Dit is de module om het ** boekhoudschema voor Denemarken ** te beheren. Dekt zowel eenmanszaken als I / S, IVS, ApS en A / S\n"
+"\n"
+"** Modulet opsætter: **\n"
+"\n"
+"- ** Dansk kontoplan **\n"
+"\n"
+"- Dansk moeders\n"
+"- 25% moeders\n"
+"- Resturationsmoms 6,25%\n"
+"- Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"- EU (Virksomhed)\n"
+"- EU (privaat)\n"
+"- 3. lande\n"
+"\n"
+"- Finans raporter\n"
+"- Resultaattopgørelse\n"
+"- Balans\n"
+"- Momsafregning\n"
+"- Afregning\n"
+"- Rubrik A, B en C\n"
+"\n"
+"- ** Angelsaksische regnskabsmetode **\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"** Variabel **\n"
+"\n"
+"** Salgsmoms: ** Salgmoms 25%\n"
+"\n"
+"** Salgskonto: ** 1010 Salg af vare, m / moms\n"
+"\n"
+"** Købsmoms: ** Købsmoms 25%\n"
+"\n"
+"** Købskonto: ** 2010 Direkte omkostninger vare, m / moms\n"
+"\n"
+".\n"
+"\n"
+"** Ydelse **\n"
+"\n"
+"** Salgsmoms: ** Salgmoms 25%, ydelser\n"
+"\n"
+"** Salgskonto: ** 1011 Salg af ydelser, m / moeders\n"
+"\n"
+"** Købsmoms: ** Købsmoms 25%, ydelser\n"
+"\n"
+"** Købskonto: ** 2011 Direkte omkostninger ydelser, m / moms\n"
+"\n"
+".\n"
+"\n"
+"** Vare med omvendt betalingspligt **\n"
+"\n"
+"** Salgsmoms: ** Salg omvendt betalingspligt\n"
+"\n"
+"** Salgskonto: ** 1012 Salg af vare, u / moeders\n"
+"\n"
+"** Købsmoms: ** Køb omvendt betalingspligt\n"
+"\n"
+"** Købskonto: ** 2012 Direkte omkostninger vare, u / moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"** Restauratie **\n"
+"\n"
+"** Købsmoms: ** Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"** Købskonto: ** 4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -619,6 +711,11 @@ msgid ""
 "        MTD-VAT API to HMRC.\n"
 "    "
 msgstr ""
+"\n"
+"Boekhoudkundige rapporten voor VK\n"
+"\n"
+"Maakt het mogelijk om het belastingrapport te verzenden via de\n"
+"MTD-VAT API naar HMRC."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -726,6 +823,8 @@ msgid ""
 "        Bridge module between sale_intrastat and l10n_be_intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"Brugmodule tussen sale_intrastat en l10n_be_intrastat."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -846,6 +945,11 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Definieer standaard inkoopdagboek voor het magazijn,\n"
+"u helpen bij het kiezen van het juiste inkoopboek op de inkooporder wanneer\n"
+"u verandert de picking bewerkingen.\n"
+"handig wanneer u de meerdere GSTIN-eenheden instelt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -866,6 +970,11 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Definieer standaard verkoopdagboek voor het magazijn,\n"
+"u helpen bij het kiezen van het juiste verkoopboek op de verkooporder wanneer\n"
+"je verandert het magazijn.\n"
+"handig wanneer u de meerdere GSTIN-eenheden instelt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -874,6 +983,8 @@ msgid ""
 "        Disallowed Expenses Data for Belgium\n"
 "    "
 msgstr ""
+"\n"
+"Gegevens over niet-toegestane kosten voor België"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -902,6 +1013,28 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"E-Faktur Menu (Indonesië)\n"
+"Formaat: 010.000-16.00000001\n"
+"* 2 (dua) cijferige pertama adalah Kode Transaksi\n"
+"* 1 (satu) cijfer berikutnya adalah Kode Status\n"
+"* 3 (tiga) cijferige berikutnya adalah Kode Cabang\n"
+"* 2 (dua) cijferige pertama adalah Tahun Penerbitan\n"
+"* 8 (delapan) cijferige berikutnya adalah Nomor Urut\n"
+"\n"
+"Om klantfacturen als e-Faktur te kunnen exporteren,\n"
+"je moet de nummersreeksen invoeren die je hebt gekregen\n"
+"door de overheid in Boekhouding> Klanten> e-Faktur\n"
+"\n"
+"Wanneer u een factuur valideert, waarbij de partner de ID PKP heeft\n"
+"aangevinkt, wordt er een fiscaal nummer aan die factuur toegewezen.\n"
+"Daarna kunt u de nog te exporteren facturen filteren in het\n"
+"facturenlijst en klik op Actie> Download e-Faktur om te downloaden\n"
+"de csv en upload deze naar de site van de overheid.\n"
+"\n"
+"U kunt een reeds verzonden factuur vervangen door een andere door aan te geven\n"
+"de vervangen factuur en de nieuwe en u kunt een factuur resetten\n"
+"u hebt nog niet naar de regering gestuurd om haar nummer te hergebruiken."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -927,6 +1060,8 @@ msgid ""
 "        Enterprise digest data\n"
 "    "
 msgstr ""
+"\n"
+"Enterprise-overzichtsgegevens"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -935,13 +1070,9 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
-"\n"
-"        Genereer betaalopdrachten volgens de SEPA normering met pain.001 berichten. Ondersteunde pain versies (landen) zijn pain.001.001.03 (algemeen), pain.001.001.03.ch.02 (Zwitserland) and pain.001.003.03 (Duitsland). Het gegenereerde XML bestand kan vervolgens worden geupload naar de bank.\n"
-"\n"
-"        Deze module volgt de richtlijnen zoals bepaald door de Europese Raad voor Betalingen. Voor meer informatie over de SEPA standaarden : http://www.iso20022.org/ en http://www.europeanpaymentscouncil.eu/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1021,6 +1152,8 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 "    "
 msgstr ""
+"\n"
+"Deze brug-module wordt automatisch geïnstalleerd wanneer de modules stock_barcode en mrp_subcontracting zijn geïnstalleerd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -1039,6 +1172,8 @@ msgid ""
 "        This module adds support for SEPA Credit Transfer QR-code generation.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt ondersteuning toe voor het genereren van SEPA Credit Transfer QR-codes."
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -1048,6 +1183,9 @@ msgid ""
 "        RFQ from an approval purchase request.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt aan de goedkeuringsworkflow de mogelijkheid toe om\n"
+"RFQ van een goedkeuringsaanvraag."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -1128,6 +1266,35 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module maakt het genereren van SEPA Direct Debit (SDD) -compatibele XML-bestanden (consistent\n"
+"met pain.008.001.02 specificatie) om naar uw bank te sturen om\n"
+"verzamel een reeks betalingen.\n"
+"\n"
+"Om begrijpelijk te zijn voor deze betaalmethode, moet een klant eerst\n"
+"heeft een machtiging aan het bedrijf teruggegeven, waarbij hij toestemming gaf voor het gebruik van automatische incasso.\n"
+"Deze toestemming moet in Odoo zijn gecodeerd als een 'klantenmandaat'.\n"
+"\n"
+"U moet ook aan de volgende vereisten voldoen om goed te kunnen werken\n"
+"genereer een SDD-bestand:\n"
+"- Uw bedrijfsaccount moet zijn ingesteld op een geldig IBAN-nummer\n"
+"- Uw bedrijf moet een crediteur-ID hebben gekregen (dit kan in het menu 'instellingen' van de boekhoudmodule)\n"
+"- Uw bedrijf moet een dagboek hebben gedefinieerd om SDD-betalingen te ontvangen (nogmaals, in 'instellingen' van de boekhoudmodule)\n"
+"- Elke klant waarvoor u een betaling genereert, moet een geldig IBAN-rekeningnummer hebben.\n"
+"\n"
+"Odoo zal u laten weten of aan een van deze vereisten niet wordt voldaan.\n"
+"\n"
+"Elke factuur die wordt gevalideerd voor een klant met een mandaat, is\n"
+"automatisch ingesteld op 'betaald' staat, en er wordt een betaling gegenereerd. Een\n"
+"optie in het dashboard zal u dan alle gegenereerde betalingen laten zien\n"
+"via SDD en om een ​​XML-verzamelingsbestand voor hen te genereren, door ze te groeperen als\n"
+"je ziet het goed.\n"
+"\n"
+"Er is ook een speciale betaalmethode 'SEPA Direct Debit' beschikbaar\n"
+"openstaande facturen, bij het selecteren van een bankrekening in de wizard 'betaling registreren'.\n"
+"Gebruik het om een ​​SDD-betaling voor de facturen te genereren als u een machtiging hebt toegevoegd\n"
+"voor de eigenaar na validatie. U krijgt een foutmelding als u\n"
+"probeer deze methode te gebruiken op een factuur waarvoor geen machtiging kan worden gebruikt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1136,6 +1303,8 @@ msgid ""
 "        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module implementeert reCaptchaV3 zodat u botspam op uw openbare modules kunt voorkomen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -1385,6 +1554,23 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"Beheer kortingen in taxclouds-berekeningen.\n"
+"Zie https://taxcloud.com/support/discounts of\n"
+"https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"Samenvatting: alle door de verkoper verstrekte kortingen moeten worden toegepast op de verkoopprijs voordat de omzetbelasting wordt berekend.\n"
+"Verkopers moeten hun methodologie aan klanten bekendmaken in een beleid voor het aanvragen van kortingen.\n"
+"\n"
+"Het algoritme is als volgt:\n"
+"- lijnspecifieke kortingen worden eerst toegepast op de lijnen waarop ze zouden moeten gelden.\n"
+"Dit betekent productspecifieke kortingen of kortingen op de goedkoopste lijn.\n"
+"- Vervolgens worden globale kortingen zoveel mogelijk gelijkmatig over de betaalde lijnen toegepast.\n"
+"Als er een rest is, wordt deze opeenvolgend toegepast, in de volgorde van de regels,\n"
+"totdat er geen korting meer is of er geen korting meer is.\n"
+"\n"
+"Houd er rekening mee dat op kortingsregels (met een negatieve prijs) geen belastingen worden toegepast,\n"
+"maar het aantal van deze regels zal worden afgetrokken van de regels waarop ze van toepassing zijn tijdens de belastingberekening."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1398,6 +1584,13 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"Beheer kortingen met leveringen in taxclouds-berekeningen.\n"
+"Deze module volgt dezelfde logica als \"Account Taxcloud - Verkoop (coupon)\".\n"
+"Daar vindt u meer informatie over hoe kortingsberekeningen worden gemaakt voor TaxCloud.\n"
+"\n"
+"Er is een extra optie voor korting (gratis verzending) op leveringen.\n"
+"Bij levering van verkoopcoupons is de kortingsberekening niet van toepassing op leveringsregels."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1418,6 +1611,10 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"Noors SAF-T is een standaard bestandsformaat voor het exporteren van verschillende soorten boekhoudkundige transactiegegevens met behulp van het XML-formaat.\n"
+"De eerste versie van de SAF-T Financial is beperkt tot het grootboekniveau inclusief klant- en leverancierstransacties.\n"
+"Noodzakelijke stamgegevens zijn ook inbegrepen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -1463,6 +1660,11 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
+"\n"
+"Deze module is voor alle Ierse KMO's die hun boekhouding snel willen opzetten. De module biedt:\n"
+"\n"
+"- een rekeningschema aangepast aan Ierland\n"
+"- BTW-tarieven en structuur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_saft
@@ -1505,6 +1707,23 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Voeg btw-boekrapport toe dat wettelijk verplicht is in Argentinië en dat de btw-detailinformatie bevat van verkopen of aankopen die in een bepaalde periode zijn gedaan.\n"
+"* Voeg een btw-overzichtsrapport toe dat wordt gebruikt om facturering te analyseren\n"
+"* Voeg Digital VAT Book-functionaliteit toe waarmee we TXT-bestanden kunnen genereren om in AFIP te importeren. Degenen die we implementeren zijn:\n"
+"\n"
+"* LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"* LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"* LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"* LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"* LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Officiële documentatie AFIP\n"
+"\n"
+"* Digitaal btw-boek - recordontwerp https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - recordontwerp (hetzelfde als het digitale btw-boek): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - specificatie (geeft meer informatie over het opmaken van de nummers en de vulling van de numerieke / alfanumerieke velden): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones .doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -1655,6 +1874,102 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA-overboeking\n"
+"===================\n"
+"\n"
+"Met deze module kunnen betalingsbatches worden gegenereerd als ABA (Australian\n"
+"Bankers Association) tekstbestanden. Het gegenereerde 'aba'-bestand kan worden geüpload\n"
+"voor veel Australische banken.\n"
+"\n"
+"Opstelling\n"
+"-----\n"
+"\n"
+"- * Account> Configuratie> facturering> Dagboeken *\n"
+"\n"
+"Maak indien nodig een nieuw dagboek aan of kies een bestaand dagboek met ** Type **\n"
+"ingesteld op * \"Bank\" *.\n"
+"\n"
+"Zorg ervoor dat bij ** Geavanceerde instellingen ** ABA-kredietoverdracht is aangevinkt.\n"
+"\n"
+"Voer op het tabblad ** Bankrekening ** het ** rekeningnummer ** in.\n"
+"\n"
+"Zorg ervoor dat op hetzelfde tabblad de ABA-overdrachtsinformatie is ingesteld.\n"
+"\n"
+"** BSB ** - Vereist, 6 cijfers, en wordt automatisch opgemaakt.\n"
+"\n"
+"** Code financiële instelling ** - Vereist (verstrekt door bank of kan worden gevonden\n"
+"op Google). Het zijn drie hoofdletters van 3 tekens.\n"
+"\n"
+"** Gebruikersnaam opgeven ** - Bij sommige banken is dit een vrije vorm, bij sommige banken\n"
+"kan het ABA-bestand weigeren als de opgegeven gebruikersnaam niet is zoals verwacht. Het\n"
+"mag niet langer zijn dan 26 tekens.\n"
+"\n"
+"** APCA-identificatienummer ** - Gebruikersidentificatienummer is bank\n"
+"toegewezen. Het is 6 cijfers.\n"
+"\n"
+"** Inclusief zelfbalancerende transactie ** - Sommige instellingen vereisen dat de\n"
+"de laatste is een zelfbalancerende transactie die als verificatie wordt gebruikt.\n"
+"\n"
+"- * Boekhouding> Configuratie> Betalingen> Bankrekeningen *\n"
+"\n"
+"Account wordt in de lijst weergegeven als de journaalnaam.\n"
+"\n"
+"Bij het bewerken wordt het ** accountnummer ** weergegeven. Dit is belangrijk omdat het wordt gebruikt door\n"
+"het ABA-proces.\n"
+"\n"
+"** Bank ** is optioneel.\n"
+"\n"
+"- * Contacten> Configuratie> Bankrekeningen> Bankrekeningen *\n"
+"\n"
+"Betalende rekening wordt in de lijst weergegeven als het rekeningnummer.\n"
+"\n"
+"** Naam rekeninghouder ** - Kan hier worden ingevoerd, indien vereist. Over het algemeen niet\n"
+"gevalideerd door de banken op ABA-bestandsoverdrachten, maar kan worden weergegeven bij de begunstigde\n"
+"bankafschrift tegen de betaling.\n"
+"\n"
+"- Bankrekeningen van leveranciers kunnen op dezelfde plaats worden opgezet, maar dat is het wel\n"
+"over het algemeen gemakkelijker om ze in te stellen vanaf de partner van voor de verkoper.\n"
+"\n"
+"- * Boekhouding> Leveranciers> Leveranciers *\n"
+"\n"
+"Klik op het tabblad ** Boekhouding ** op * \"Accountgegevens bekijken\" * van waaruit een\n"
+"de bankrekening van de leverancier kan worden gemaakt of bewerkt.\n"
+"\n"
+"** Accountnummer ** - Vereist, moet minder dan 9 cijfers bevatten.\n"
+"\n"
+"** BSB ** - Vereist, 6 cijfers, en wordt automatisch opgemaakt.\n"
+"\n"
+"** Naam rekeninghouder ** - Optioneel.\n"
+"\n"
+"Gebruik\n"
+"---\n"
+"\n"
+"- Maak op de normale manier een leveranciersbetaling aan.\n"
+"\n"
+"Zorg ervoor dat de ** Leverancier ** er een is met een geldige ABA-betaalrekening.\n"
+"\n"
+"Kies het juiste ** Betalingsdagboek ** dat is ingesteld voor ABA-betalingen.\n"
+"\n"
+"Selecteer het keuzerondje ** ABA-kredietoverdracht **.\n"
+"\n"
+"Als de leverancier meerdere bankrekeningnummers heeft, moet u mogelijk het\n"
+"correct ** Bankrekening van de ontvanger **. Of als u een leveranciersrekening betaalt, kan dat ook\n"
+"de juiste bankrekening nodig die eraan is gekoppeld.\n"
+"\n"
+"Voer het betalingsbedrag in, enz.\n"
+"\n"
+"- * Verkopers> Betalingen *\n"
+"\n"
+"Nadat de betaling (en) zijn bevestigd, verschijnen deze in de betalingslijst.\n"
+"\n"
+"Gebruik filters of sorteer om de betalingen te selecteren die u wilt opnemen. Onder\n"
+"* Acties * kiezen * Batchbetaling aanmaken *.\n"
+"\n"
+"- * Leveranciers> Batchbetalingen *\n"
+"\n"
+"Bij het valideren van een batchbetaling wordt het ABA-bestand gegenereerd. Het kan\n"
+"worden geregenereerd. Dit bestand kan vervolgens naar de bank worden geüpload.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -1772,6 +2087,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Boekhoudkundige rapporten voor Finland\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -1844,6 +2164,16 @@ msgid ""
 "For Vendor Bill support, Default Vendor Specific OCR and validation for OCR are added.\n"
 "    "
 msgstr ""
+"\n"
+"Voeg gestructureerde communicatie toe aan klantfacturen en leveranciersfacturen.\n"
+"-------------------------------------------------- ----------------\n"
+"\n"
+"Het gebruik van gestructureerde OCR-communicatie vereenvoudigt de afstemming tussen facturen en betalingen.\n"
+"\n"
+"Voor ondersteuning bij klantfacturering voor OCR-niveau 1 tot 4. Het OCR-nummer kan gebaseerd zijn op partner of\n"
+"de factuur.\n"
+"\n"
+"Voor ondersteuning van leveranciersfacturen zijn standaard leverancierspecifieke OCR en validatie voor OCR toegevoegd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -1863,6 +2193,8 @@ msgid ""
 "Add a dynamic report about recruitment.\n"
 "    "
 msgstr ""
+"\n"
+"Voeg een dynamisch rapport toe over werving & selectie."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
@@ -1906,6 +2238,45 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Voeg een nieuw model toe met de naam 'Identificatietype' dat de btw-veldfunctionaliteit in de partner uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (btw), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd ziet u nu in het partnerformulier twee velden:\n"
+"\n"
+"* Identificatie type\n"
+"* Identificatie Nummer\n"
+"\n"
+"Dit gedrag is een algemene vereiste voor sommige Latijns-Amerikaanse landen, zoals Argentinië en Chili. Als uw lokalisatie deze vereisten heeft, moet u van deze module afhankelijk zijn en in uw lokalisatiemodule de identificatietypen definiëren die in uw land worden gebruikt. Over het algemeen worden dit soort identificaties gedefinieerd door de overheidsinstanties die de fiscale operaties reguleren. Bijvoorbeeld:\n"
+"\n"
+"* AFIP in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL (btw voor natuurlijke persoon) en nog eens 80 geldige identificatietypen.\n"
+"\n"
+"Elke identificatie bevat deze informatie:\n"
+"\n"
+"* naam: korte naam van de identificatie\n"
+"* beschrijving: kan dezelfde korte naam of een lange naam zijn\n"
+"* country_id: het land waar deze identificatie thuishoort\n"
+"* is_vat: identificeer dit record als de overeenkomstige btw voor het specifieke land.\n"
+"* volgorde: laten we de identificatietypen sorteren op basis van degene die het meest worden gebruikt.\n"
+"* actief: we kunnen identificaties activeren / deactiveren om het onze klanten gemakkelijker te maken\n"
+"\n"
+"Om deze module compatibel te maken voor omgevingen met meerdere bedrijven waar we bedrijven hebben die deze vereiste niet nodig / ondersteunen, hebben we generieke identificatietypen en generieke regels toegevoegd om de contactgegevens te beheren en deze transparant te maken voor de gebruiker wanneer alleen de BTW zoals we voorheen kenden.\n"
+"\n"
+"Generieke identificaties:\n"
+"\n"
+"* BTW: Het fiscale belastingnummer of BTW-nummer wordt standaard geselecteerd als identificatietype, zodat de gebruiker alleen het gerelateerde BTW-nummer hoeft toe te voegen.\n"
+"* Paspoort\n"
+"* Buitenlands identiteitsbewijs (buitenlands nationaal document)\n"
+"\n"
+"Regels bij het aanmaken van een nieuwe partner: We zien alleen de identificatietypen die zinvol zijn, rekening houdend met deze regels:\n"
+"\n"
+"* Als de partner geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van de partner (als de partner geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
+"\n"
+"* Als de partner een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van de partner.\n"
+"\n"
+"Bij het aanmaken van een nieuw bedrijf, wordt op de gerelateerde partner altijd het gerelateerde land is_vat-identificatietype ingesteld.\n"
+"\n"
+"Alle gedefinieerde identificatietypen kunnen worden bekeken en geactiveerd / gedeactiveerd in het menu \"Contacten / Configuratie / Identificatietype\".\n"
+"\n"
+"Deze module is compatibel met de base_vat-module om btw-nummers te kunnen valideren voor elk land dat al dan niet de mogelijkheid heeft om meerdere identificatietypen te beheren.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -2297,6 +2668,8 @@ msgid ""
 "\n"
 "Allows using IoT devices, such as scales and printers, for delivery operations.\n"
 msgstr ""
+"\n"
+"Maakt het gebruik van IoT-apparaten, zoals weegschalen en printers, mogelijk voor bezorgactiviteiten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -2411,6 +2784,13 @@ msgid ""
 "\n"
 "The `pdfminer.six` Python library has to be installed in order to index PDF files\n"
 msgstr ""
+"\n"
+"Bijlagenlijst en documentindexering\n"
+"========================================\n"
+"* Toon bijlage bovenaan de formulieren\n"
+"* Documentindexering: odt, pdf, xlsx, docx\n"
+"\n"
+"De Python-bibliotheek `pdfminer.six` moet worden geïnstalleerd om pdf-bestanden te kunnen indexeren\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au
@@ -2465,6 +2845,29 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
+"\n"
+"Australische boekhoudmodule\n"
+"============================\n"
+"\n"
+"Taxable Payments Annual Reports (TPAR) voor Australië\n"
+"\n"
+"Het jaarverslag belastbare betalingen (TPAR) maakt het mogelijk:\n"
+"\n"
+"• betalingen aan aannemers (of onderaannemers) voor diensten, of\n"
+"• Subsidies van overheidsinstanties aan ABN-houders\n"
+"\n"
+"te rapporteren indien vereist onder het Taxable Payments Reporting System (TPRS) en de Taxable Government Subsidies en betalingen rapportagemaatregel.\n"
+"\n"
+"De TPAR moet elk jaar op 28 augustus worden betaald.\n"
+"\n"
+"Er kunnen sancties van toepassing zijn als u uw TPAR niet op tijd indient.\n"
+"\n"
+"Raadpleeg voor meer informatie over wie verplicht is om een ​​jaarverslag belastbare betalingen in te dienen\n"
+"https://softwaredevelopers.ato.gov.au/tprs\n"
+"\n"
+"Het jaarverslag moet uiterlijk op 28 augustus na afloop van het boekjaar aan de commissaris worden bezorgd. Rapporten kunnen vaker worden verzonden voor degenen die dat willen.\n"
+"\n"
+"Het rapport gebruikt de belastingtags `` Service '' en `` Ingehouden belasting '' om geschikte journaalposten te vinden. Deze worden ingesteld aan de hand van de fiscale posities en het juiste type product (Services)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2502,6 +2905,10 @@ msgid ""
 "This is meant to be used with localization specific modules.\n"
 "    "
 msgstr ""
+"\n"
+"Basismodule voor SAF-T-rapportage\n"
+"===============================\n"
+"Dit is bedoeld om te worden gebruikt met lokalisatiespecifieke modules."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -2543,6 +2950,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Basismodule voor de Braziliaanse lokalisatie\n"
+"============================================\n"
+"\n"
+"Deze module bestaat uit:\n"
+"\n"
+"- Generiek Braziliaans rekeningschema\n"
+"- Braziliaanse belastingen zoals:\n"
+"\n"
+"- IPI\n"
+"- ICMS\n"
+"- PIS\n"
+"- COFINS\n"
+"- ISS\n"
+"- IR\n"
+"- IRPJ\n"
+"- CSLL\n"
+"\n"
+"Het veld tax_discount is ook toegevoegd aan account.tax.template en\n"
+"account.tax-objecten om de juiste berekening van sommige Braziliaanse btw-heffingen mogelijk te maken\n"
+"zoals ICMS. De wizard om een ​​account aan te maken is uitgebreid naar\n"
+"propageer die nieuwe gegevens correct.\n"
+"\n"
+"Het is echter belangrijk op te merken dat deze module veel implementaties mist\n"
+"gebruik Odoo correct in Brazilië. Die implementaties (zoals de elektronische\n"
+"fiscale facturering die al operationeel is) worden gebracht door meer dan 15\n"
+"aanvullende modules van het Braziliaanse Launchpad-lokalisatieproject\n"
+"https://launchpad.net/openerp.pt-br-localiz en hun afhankelijkheden in het\n"
+"extra addons branch. Die modules zijn erop gericht niet te breken met het opmerkelijke\n"
+"Odoo modulariteit, daarom zijn ze talrijk maar klein. Een van de\n"
+"redenen om die modules apart te houden, is die Braziliaanse lokalisatie\n"
+"leiders moeten behendigheid over rechten plegen om de lokalisatie als bedrijven te voltooien\n"
+"de overige wettelijke vereisten financieren (zoals binnenkort fiscale grootboeken,\n"
+"boekhoudkundige SPED, fiscale SPED en PAF ECF die nog steeds ontbreken in september\n"
+"2011). Die modules zijn ook strikt gelicentieerd onder AGPL V3 en tegenwoordig niet\n"
+"komen met eventuele aanvullende betaalde toestemming voor online gebruik van 'privémodules'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2622,6 +3065,24 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Belgische geregistreerde kassa\n"
+"================================\n"
+"\n"
+"Deze module maakt van de POS-module een gecertificeerde Belgische kassa.\n"
+"\n"
+"Meer informatie:\n"
+"* http://www.systemedecaisseenregistreuse.be/\n"
+"* http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Juridisch\n"
+"-----\n"
+"** Het gebruik van pos_blackbox_be-bronnen is alleen gecertificeerd op het SaaS-platform van odoo.com\n"
+"voor versie 13.0. ** Neem contact op met Odoo SA alvorens de module pos_blackbox_be te installeren.\n"
+"\n"
+"Een versluierde en gecertificeerde versie van de pos_blackbox_be kan worden verstrekt op\n"
+"aanvragen voor on-premise installaties.\n"
+"Geen enkele gewijzigde versie is gecertificeerd en ondersteund door Odoo SA."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2648,6 +3109,9 @@ msgid ""
 "inclusion of rating directly within the customer portal discuss widget.\n"
 "        "
 msgstr ""
+"\n"
+"Brug-module die beoordelingsmogelijkheden toevoegt op de portal. Het omvat met name\n"
+"opname van beoordeling rechtstreeks in de discussiewidget van het klantenportaal."
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_account
@@ -2658,6 +3122,11 @@ msgid ""
 "button on Accounting's reports allowing to save the report into the\n"
 "Documents app in the desired format(s).\n"
 msgstr ""
+"\n"
+"Brugmodule tussen de boekhoud- en documenten-apps. Het maakt mogelijk\n"
+"de aanmaakfacturen uit de Documenten-module, en voegt een\n"
+"knop op de boekhoudkundige rapporten waarmee u het rapport kunt opslaan in het\n"
+"Documenten-app in de gewenste indeling (en).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -2758,7 +3227,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -2880,6 +3349,11 @@ msgid ""
 "Better plan your future schedules by considering time effectively spent on old plannings\n"
 "\n"
 msgstr ""
+"\n"
+"Vergelijk urenstaten en planningen\n"
+"================================\n"
+"\n"
+"Plan uw toekomstige planningen beter door rekening te houden met de tijd die effectief aan oude planningen wordt besteed\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -3265,6 +3739,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI Chileense lokalisatie\n"
+"========================\n"
+"Met deze code kan het DTE-document voor Chileense facturering worden gegenereerd.\n"
+"- DTE-indeling (Electronic Taxable Document) in XML\n"
+"- Directe communicatie met SII (Servicio de Impuestos Internos) om facturen en andere belastingdocumenten met betrekking tot verkoop te verzenden.\n"
+"- Communicatie met klanten om verkoop-DTE's te verzenden.\n"
+"- Communicatie met leveranciers (verkopers) om DTE's van hen te accepteren.\n"
+"- Directe communicatie met SII die de aanvaarding of afwijzing van leveranciersrekeningen of andere DTE's informeert.\n"
+"\n"
+"Om de barcode op de factuur te kunnen zien, heeft u de pdf417gen-bibliotheek nodig."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -3345,12 +3830,6 @@ msgid ""
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
 "\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
 "References\n"
 "++++++++++\n"
 "- Directive 2008/8/EC\n"
@@ -3358,54 +3837,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"EU Mini One Stop Shop (MOSS) BTW voor telecommunicatie, uitzendingen en elektronische diensten\n"
-"=============================================================================================\n"
-"\n"
-"Vanaf 1 januari 2015 moeten telecommunicatie, uitzendingen\n"
-"en elektronische diensten verkocht binnen de Europese Unie\n"
-"altijd belast worden in het land van herkomst van de klant. Om\n"
-"de toepassing van deze EU-richtlijn te vereenvoudigen, biedt\n"
-"het Mini One Stop Shop (MOSS) registratieschema aan bedrijven\n"
-"de mogelijkheid een unieke btw-aangifte op te maken.\n"
-"\n"
-"Deze module helpt u bij het aanmaken van de vereiste EU\n"
-"fiscale posities en BTW om zo de vereiste BTW\n"
-"automatisch toe te passen en op te slaan.\n"
-"\n"
-"Deze module installeert een wizard die u helpt bij het instellen\n"
-"van fiscale posities en BTW voor elektronische diensten\n"
-"verkocht binnen de Europese Unie.\n"
-"\n"
-"Met deze wizard kunt u het volgende selecteren:\n"
-" - de EU landen aan welke u deze diensten verkoopt\n"
-" - uw nationaal btw-tarief voor diensten, te mappen naar de tarieven\n"
-"   van het land van bestemming\n"
-" - optioneel: een voorbeeld van fiscale positie, om aan een\n"
-"   bestaande rekening te mappen. Dit zou uw bestaande\n"
-"   B2C Intra-EU fiscale positie moeten zijn. (Standaard geen\n"
-"   mapping naar een rekening)\n"
-" - optioneel: een rekening voor het innen van de bedragen\n"
-"   uit BTW (uw rekening voor nationale diensten-btw\n"
-"   wordt standaard gebruikt)\n"
-"\n"
-"Het maakt de desbetreffende fiscale posities en BTW\n"
-"aan, automatisch toegepast op EU-verkopen aan consumenten\n"
-"in de geselecteerde landen.\n"
-"De wizard kan meermaals doorlopen worden om landen toe te voegen.\n"
-"\n"
-"De wizard maakt een gescheiden BTW schema aan voor het innen\n"
-"van btw-bedragen voor de MOSS-aangifte, dus het opvragen van de\n"
-"MOSS-gegevens wordt op deze manier eenvoudig.\n"
-"Zoek naar een BTW schema met de naam \"EU MOSS BTW schema\"\n"
-"in het menu BTW rapportage (Algemene financiële rapportage).\n"
-"\n"
-"Verwijzingen\n"
-"++++++++++++\n"
-"- EU-richtlijn 2008/8/EC\n"
-"- Uitvoeringsverordening (EU) No 1042/2013\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -3424,6 +3855,9 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"Elektronische boekhoudrapporten voor Luxemburg\n"
+"============================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -3438,6 +3872,14 @@ msgid ""
 "governements, etc.)\n"
 "    "
 msgstr ""
+"\n"
+"Elektronische gegevensuitwisseling\n"
+"==========================================\n"
+"EDI is de elektronische uitwisseling van bedrijfsinformatie in een gestandaardiseerd formaat.\n"
+"\n"
+"Dit is de basismodule voor het importeren en exporteren van facturen in verschillende EDI-formaten, en de\n"
+"de overdracht van genoemde documenten aan verschillende partijen die bij de uitwisseling betrokken zijn (ander bedrijf,\n"
+"regeringen, etc.)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -3445,6 +3887,8 @@ msgid ""
 "\n"
 "Employee 281.10 and 281.45 forms will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"De formulieren 281.10 en 281.45 van de werknemer worden automatisch geïntegreerd in de Document-app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_contract
@@ -3523,6 +3967,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Beheer van buitendiensten\n"
+"=========================\n"
+"Deze module voegt de functies toe die nodig zijn voor een modern Field Service-beheer.\n"
+"Het installeert de volgende apps:\n"
+"- Project\n"
+"- Urenstaat\n"
+"\n"
+"Voegt de volgende opties toe:\n"
+"- rapportages over taken\n"
+"- FSM-app met aangepaste weergave voor medewerkers op locatie\n"
+"- producten toevoegen aan taken"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_accountant
@@ -3661,6 +4117,73 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"Dagboeken  kunnen aanmaken in Odoo om elektronische klantenfacturen aan te maken en vervolgens te rapporteren aan AFIP (via webservices).\n"
+"De beschikbare opties zijn:\n"
+"\n"
+"* Elektronische factuur - webservice\n"
+"* Voucher exporteren - webservice\n"
+"* Elektronische fiscale borgstelling - webservice\n"
+"\n"
+"Als u in de elektronische tijdschriften een factuur valideert, wordt deze gevalideerd in zowel Odoo als AFIP. Deze validatie is\n"
+"gemaakt op het moment en we ontvangen en \"goedgekeurd / goedgekeurd met observatie / afgewezen\" staat van AFIP. Als de factuur heeft\n"
+"afgewezen door AFIP wordt niet in het systeem geplaatst en er wordt een pop-upbericht weergegeven met zowel de foutdetails (redenen voor afwijzing)\n"
+"we krijgen een HINT over wat het probleem zou kunnen zijn.\n"
+"\n"
+"Voor audit- en probleemoplossingsdoeleinden voegen we ook een menu \"Consulitfactuur in AFIP\" toe waarmee we eerder facturen kunnen raadplegen\n"
+"verzonden naar AFIP en laatste nummer gebruikt als ondersteuning voor mogelijke problemen met de synchronisatie van de sequenties tussen Odoo en AFIP.\n"
+"\n"
+"OPMERKING: Vanuit de formulierweergave van het Journal zijn we in staat om een ​​synchronisatie tussen de odoo-reeksen naar elk van de documenttypen in\n"
+"met de laatste nummers geregistreerd in AFIP.\n"
+"\n"
+"Van leveranciersfacturen hebben we een functionaliteit toegevoegd die kan worden geconfigureerd in de boekhoudinstellingen om te kunnen verifiëren\n"
+"leveranciersrekeningen in AFIP om te controleren of de leveranciersrekeningen echt zijn (meer informatie vindt u in de beschrijving van de instelling).\n"
+"\n"
+"Configuratie:\n"
+"\n"
+"1. Ga naar Accountinstellingen> Argentijnse lokalisatie\n"
+"\n"
+"1.1. Configureer de AFIP-webservicemodus:\n"
+"\n"
+"* Testomgeving om demo-certificaten te gebruiken die zullen worden gebruikt om de instantie te testen en om NOT te maken\n"
+"echte facturen aan AFIP. is alleen om te testen. Omdat demo-instaces al vooraf zijn gedefinieerd, hoeft u deze niet te configureren\n"
+"it (gewoonlijk in AFIP genoemd als homologatieomgeving).\n"
+"* Productieomgeving om echte certificaten en wettelijke facturen aan AFIP te genereren,\n"
+"\n"
+"1.2. Configureer uw AFIP-certificaat: als u zich in een demo-instantie bevindt, is deze standaard ingesteld. als jij\n"
+"in productie zijn, hoeft u alleen maar te gaan om uw AFIP-certificaat te uploaden\n"
+"\n"
+"1.3. Optioneel kunt u aangeven of u leveranciersrekeningen in AFIP wilt kunnen verifiëren.\n"
+"\n"
+"2. Maak verkoopdagboeken die elk van uw AFIP POS (beschikbaar in AFIP Portal) vertegenwoordigen die u wilt gebruiken in Odoo.\n"
+"\n"
+"2.1. Het veld Documenten gebruiken is standaard ingesteld, wijzig dit niet\n"
+"2.2. Stel AFIP POS-systeem in voor een van de elektronische.\n"
+"\n"
+"* Elektronische factuur - webservice '\n"
+"* Elektronische fiscale obligatie - webservice '\n"
+"* Voucher exporteren - Webservice '\n"
+"\n"
+"2.3. Stel het AFIP POS-nummer en AFIP POS-adres in, rekening houdend met wat u in uw AFIP-portaal hebt geconfigureerd.\n"
+"\n"
+"OPMERKING: U kunt de knop \"Beschikbare AFIP POS controleren\" in het formulier van het tijdschrift gebruiken om te bevestigen dat u de tijdschriften moet maken.\n"
+"\n"
+"Ga voor meer informatie over Argentijnse elektronische facturering naar http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"De webservices die worden geïmplementeerd, zijn de meest voorkomende:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (elektronische factuur)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (elektronische exportfactuur - hetzelfde als exportvoucher)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Verificatie van facturen)\n"
+"\n"
+"Ga voor informatie over ontwikkeling naar http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -3879,6 +4402,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -4018,6 +4542,11 @@ msgid ""
 "The wizard used is similar as the one for the credit note.\n"
 "    "
 msgstr ""
+"\n"
+"In veel landen wordt een debetnota gebruikt als verhoging van de bedragen van een bestaande factuur\n"
+"of in sommige specifieke gevallen om een creditnota te annuleren.\n"
+"Het is als een gewone factuur, maar we moeten de link met de originele factuur bijhouden.\n"
+"De gebruikte wizard is vergelijkbaar met die voor de creditnota."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -4042,6 +4571,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Bevat de volgende gegevens voor de Chinese lokalisatie\n"
+"========================================================\n"
+"\n"
+"Account Type/科目类型\n"
+"\n"
+"State Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -4435,6 +4983,11 @@ msgid ""
 "This application allows you to integrate time off in payslips.\n"
 "    "
 msgstr ""
+"\n"
+"Beheer verlof in loonstroken\n"
+"============================\n"
+"\n"
+"Met deze applicatie kun je vrije tijd integreren in loonstroken."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -4819,6 +5372,8 @@ msgid ""
 "\n"
 "Module holding mail improvements for website. It holds the follow widget.\n"
 msgstr ""
+"\n"
+"Module met e-mailverbeteringen voor website. Het bevat de volgwidget.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_followup
@@ -5911,9 +6466,9 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
 
@@ -6537,9 +7092,10 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
 
@@ -6828,6 +7384,11 @@ msgid ""
 "This shortcut allows you to generate a rental order based on the selected case.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt een snelkoppeling toe aan een of meerdere kanscases in het CRM.\n"
+"==================================================== =========================\n"
+"\n"
+"Met deze snelkoppeling kunt u een huuropdracht genereren op basis van het geselecteerde geval."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -6961,8 +7522,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Deze module voegt de mogelijkheid toe om als werknemer aan te melden in de kassa met een barcode, pincode of beide.\n"
-"De kassa vereist nog steeds een gebruiker maar kan een ongelimiteerd aantal werknemers bevatten."
+"Deze module voegt de mogelijkheid toe om als werknemer (en niet gebruikers) aan te melden in de kassa met een barcode, pincode of beide.\n"
+"De kassa vereist nog steeds een gebruiker maar kan een onbeperkt aantal werknemers bevatten."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr_l10n_be
@@ -7039,7 +7600,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -7055,23 +7616,6 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
-"checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
-"\n"
-"Supported formats\n"
-"-----------------\n"
-"This module supports the three most common check formats and will work out of the box with the linked checks from checkdepot.net.\n"
-"\n"
-"View all checks at: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
-"\n"
-"You can choose between:\n"
-"\n"
-"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
-"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
-"- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -7601,6 +8145,8 @@ msgid ""
 "\n"
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Verlof-documenten worden automatisch geïntegreerd in de Document-app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -7784,6 +8330,8 @@ msgid ""
 "\n"
 "Use receipt printers connected to an IoT Box to print orders in the kitchen or at the bar.\n"
 msgstr ""
+"\n"
+"Gebruik bonprinters die zijn aangesloten op een IoT Box om bestellingen in de keuken of aan de bar af te drukken.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -8004,12 +8552,20 @@ msgid ""
 "Other SIPS providers may be compatible, though this is\n"
 "not guaranteed."
 msgstr ""
+"\n"
+"Worldline SIPS Payment Acquirer voor online betalingen\n"
+"\n"
+"Implementeert de Worldline SIPS API voor betalingsverwerkers.\n"
+"Andere SIPS-providers zijn mogelijk compatibel, hoewel dit het geval is\n"
+"niet gegarandeerd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
+"Voegt een stat-knop toe aan de leadformulierweergave om toegang te krijgen "
+"tot hun livechat-sessies."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_inter_company_rules
@@ -8018,6 +8574,9 @@ msgid ""
 "\n"
 "    Supported documents are SO, PO.\n"
 msgstr ""
+"Module voor synchronisatie van documenten tussen verschillende bedrijven. Hiermee kunt u bijvoorbeeld automatisch een verkooporder laten aanmaken wanneer een inkooporder wordt gevalideerd met een ander bedrijf van het systeem als leverancier, en omgekeerd.\n"
+"\n"
+"Ondersteunde documenten zijn SO, PO.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_inter_company_rules
@@ -8414,10 +8973,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
-"<code>Waarschuwing</code>: Waarschuwingsfout te gebruiken met <code>roep "
-"op</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9292,11 +9850,6 @@ msgid "Access to unauthorized or invalid companies."
 msgstr "Toegang tot ongeautoriseerde of ongeldige bedrijven."
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Rekening"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr "Automatische boekingen"
@@ -9704,7 +10257,7 @@ msgstr "Voeg voltooide cursussen toe aan het CV van uw medewerkers"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
 msgid "Add crm UTM info on social"
-msgstr ""
+msgstr "Voeg crm UTM-info toe op social media"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
@@ -9721,7 +10274,7 @@ msgstr "Voeg richting toe"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Add directional information (not used for digital)"
-msgstr ""
+msgstr "Directionele informatie toevoegen (niet gebruikt voor digitaal)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_extended
@@ -9753,7 +10306,7 @@ msgstr "Voeg livechat ondersteuning toe voor OdooBot"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
 msgid "Add sale UTM info on social"
-msgstr ""
+msgstr "Verkoop UTM-info op social media toevoegen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
@@ -9774,22 +10327,6 @@ msgstr "Voeg varianten toe aan verkooporder via een rasterinvoer."
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Add views and tweaks on event"
 msgstr "Voeg weergaven en tweaks toe aan het evenement"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_31
-msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr "Addison Olson is een machtige vertegenwoordiger bij Deco Addict."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_31
-msgid ""
-"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
-"Addison Olson werkt sinds <b>10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10003,7 +10540,7 @@ msgstr "Adyen betaalprovider"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_adyen_platforms
 msgid "Adyen for Platforms"
-msgstr ""
+msgstr "Adyen for Platforms"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -10126,7 +10663,7 @@ msgstr "Toestaan dat bezoekers zich aansluiten bij openbare e-mailkanalen"
 #. module: base
 #: model:ir.module.module,summary:base.module_odoo_referral
 msgid "Allow you to refer your friends to Odoo and get rewards"
-msgstr ""
+msgstr "Sta toe dat u uw vrienden naar Odoo verwijst en beloningen ontvangt"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -10514,7 +11051,7 @@ msgstr "Argentijnse boekhoudrapporten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_edi
 msgid "Argentinian Electronic Invoicing"
-msgstr ""
+msgstr "Argentijnse elektronische facturering"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__params
@@ -10531,16 +11068,6 @@ msgstr "Armenië"
 #: model:res.country,name:base.aw
 msgid "Aruba"
 msgstr "Aruba"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "As a team, we are happy to contribute to this event."
-msgstr "Als team dragen wij graag bij aan dit evenement."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -10607,7 +11134,7 @@ msgstr "Aanwezigheid"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
 msgid "Attendances Barcode in Mobile"
-msgstr ""
+msgstr "Opkomst barcodes in mobiel"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_mobile
@@ -10771,15 +11298,6 @@ msgstr "Avatar"
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Azerbeidzjan"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_12
-msgid ""
-"Azure Interior brings honesty and seriousness to wood industry while helping"
-" customers deal with trees, flowers and fungi."
-msgstr ""
-"Azure Interior brengt eerlijkheid en ernst in de houtindustrie en helpt "
-"klanten om met bomen, bloemen en schimmels om te gaan."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -11121,6 +11639,16 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belgische Intrastatverklaring"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Belgische geregistreerde kassa"
@@ -11292,17 +11820,6 @@ msgid "Bouvet Island"
 msgstr "Bouveteiland"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_15
-msgid ""
-"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years."
-msgstr ""
-"Brandon werkt sinds <b>10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar."
-
-#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazilië"
@@ -11451,8 +11968,8 @@ msgstr "Door"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
-msgstr "Standaard gebruikt de widget de veld informatie"
+msgid "By default the widget uses the field information"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -11632,6 +12149,12 @@ msgid ""
 msgstr ""
 "Kan geen nieuwe '%s' records maken op basis van alleen hun naam. Maak deze "
 "records handmatig en probeer opnieuw te importeren."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -12011,17 +12534,6 @@ msgid "Collect payments from your customers through SEPA direct debit."
 msgstr "Incasseer betalingen van uw klanten middels SEPA auto incasso."
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_28
-msgid ""
-"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years."
-msgstr ""
-"Colleen Diaz werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar."
-
-#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr "Colombia"
@@ -12079,16 +12591,6 @@ msgstr "Kolomreferentie naar het item in de co-model tabel"
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
 msgstr "Kolomreferentie naar het item in de model tabel"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Come see us live, we hope to meet you !"
-msgstr "Kom ons live bekijken, we hopen je te ontmoeten!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -12359,12 +12861,12 @@ msgstr "Configuratie wizard"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
 msgid "Configure a Twitter Wall on your Event"
-msgstr ""
+msgstr "Configureer een Twitter Wall op uw evenement"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr ""
+msgstr "Configureer de commissies van resellers op abonnementsverkoop"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -12723,7 +13225,6 @@ msgstr "Maak contextuele actie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
-#: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
 msgstr "Aanmaakdatum"
 
@@ -13032,6 +13533,7 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:base.field_res_partner_category__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title__create_date
+#: model:ir.model.fields,field_description:base.field_res_users__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_date
@@ -13477,15 +13979,6 @@ msgid "Decimal Separator"
 msgstr "Decimaal scheidingsteken"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_2
-msgid ""
-"Deco Addict brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-"Deco Addict brengt eerlijkheid en ernst in de houtindustrie en helpt klanten"
-" om met bomen, bloemen en schimmels om te gaan."
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
 msgstr "Ontdubbelen contacten"
@@ -13797,16 +14290,6 @@ msgstr "Niet toegestane declaraties"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
 msgstr "Negeren"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Discover more"
-msgstr "Ontdek meer"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -14207,22 +14690,6 @@ msgid "Done!"
 msgstr "Gereed!"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_3
-msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr "Douglas Fletcher is een machtige functionele adviseur bij Deco Addict"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_3
-msgid ""
-"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
-"Douglas Fletcher werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar."
-
-#. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
 msgstr "Dr."
@@ -14383,9 +14850,9 @@ msgid ""
 "partner is a customer without access or with a limited access created for "
 "sharing data."
 msgstr ""
-"Of klant (geen gebruiker), of gedeelde gebruiker. Geef aan of de huidige "
-"relatie een klant is zonder toegang of met gelimiteerde toegang aangemaakt "
-"voor het delen van data."
+"Ofwel een klant (geen gebruiker), ofwel een gedeelde gebruiker. Aangegeven "
+"dat de huidige relatie een klant is zonder toegang of met een beperkte "
+"toegang gecreëerd voor het delen van gegevens."
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -15616,6 +16083,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
 msgstr "Markeren"
@@ -15650,22 +16122,6 @@ msgstr "Vloot van documenten"
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
 msgstr "Getal"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_4
-msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr "Floyd Steward is een machtige analist bij Deco Addict."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_4
-msgid ""
-"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
-"Floyd Steward werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -15974,15 +16430,6 @@ msgid "Gauge Widget for Kanban"
 msgstr "Meterwidget voor Kanban"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_3
-msgid ""
-"Gemini Furniture brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
-msgstr ""
-"Gemini Furniture brengt eerlijkheid en ernst in de houtindustrie en helpt "
-"klanten om met bomen, bloemen en schimmels om te gaan."
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "Algemeen"
@@ -16210,19 +16657,6 @@ msgid "Google reCAPTCHA integration"
 msgstr ""
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_18
-msgid ""
-"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years.\n"
-"                Famous Senior Consultant."
-msgstr ""
-"Gordon Owens werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar.\n"
-"Beroemde Senior Consultant."
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
@@ -16419,16 +16853,6 @@ msgid "Handle lunch orders of your employees"
 msgstr "Verwerk lunchbestellingen van uw werknemers"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Happy to be Sponsor"
-msgstr "Blij om sponsor te zijn"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "Hardware Driver voor  ESC/POS Printers en kassalade's"
@@ -16546,39 +16970,14 @@ msgstr ""
 "adviseren wij om alleen de module facturatie te installeren."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_sales_sales
-msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr "Helpt u offertes, verkooporders en facturen te beheren."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_attendances
-msgid "Helps you manage the attendances."
-msgstr "Helpt u bij het beheren van aanwezigheid."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_services_timesheets
-msgid "Helps you manage the timesheets."
-msgstr "Helpt u bij het beheren van urenstaten"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
 msgstr "Helpt u gebruikers beheren."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_marketing_events
-msgid "Helps you manage your Events."
-msgstr "Helpt u bij het beheren van evenementen."
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
 msgid "Helps you manage your appraisals."
 msgstr "Helpt u bij het beheren van beoordelingen"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_approvals
-msgid "Helps you manage your approvals."
-msgstr "Helpt u bij het beheren van goedkeuringen."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
@@ -16591,11 +16990,6 @@ msgid "Helps you manage your employees."
 msgstr "Helpt u bij het beheren van werknemers."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_expenses
-msgid "Helps you manage your expenses."
-msgstr "Helpt u bij het beheren van declaraties."
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
 msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
@@ -16605,67 +16999,9 @@ msgstr ""
 "leveringen, ontvangsten, etc."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
-msgid ""
-"Helps you manage your manufacturing processes and generate reports on those "
-"processes."
-msgstr ""
-"Helpt uw productieprocessen te beheren en genereert overzichten van die "
-"processen."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_marketing_email_marketing
-msgid ""
-"Helps you manage your mass mailing to design\n"
-"professional emails and reuse templates."
-msgstr ""
-"Helpt u uw bulk mailingen te beheren voor ontwerp\n"
-"en om professionele e-mails en sjablonen te hergebruiken."
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
 msgid "Helps you manage your payrolls."
 msgstr "Helpt u bij het beheren van loonstroken."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_services_project
-msgid ""
-"Helps you manage your projects and tasks by tracking them, generating "
-"plannings, etc..."
-msgstr ""
-"Helpt uw projecten en taken te beheren door ze te volgen, planningen te "
-"genereren, etc..."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_inventory_purchase
-msgid ""
-"Helps you manage your purchase-related processes such as requests for "
-"quotations, supplier bills, etc..."
-msgstr ""
-"Helpt de inkoop-gerelateerde processen te beheren zoals aanvragen van "
-"offertes,  leveranciersfacturen, enz..."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_manufacturing_quality
-msgid "Helps you manage your quality alerts and quality checks."
-msgstr "Helpt u bij het beheren van kwaliteit waarschuwingen en controles"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_recruitment
-msgid "Helps you manage your recruitments."
-msgstr "Helpt u bij de werving & selectie."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_marketing_surveys
-msgid "Helps you manage your survey for review of different-different users."
-msgstr ""
-"Helpt u uw enquetes te beheren om te controleren van verschillende "
-"gebruikers."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_time_off
-msgid "Helps you manage your time off."
-msgstr "Helpt u met het beheren van uw verlof."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -18203,6 +18539,8 @@ msgid ""
 "Label tag must contain a \"for\". To match label style without corresponding"
 " field or button, use 'class=\"o_form_label\"'."
 msgstr ""
+"Label-tag moet een \"voor\" bevatten. Gebruik 'class = \"o_form_label\"' om "
+"de labelstijl zonder bijbehorend veld of knop te matchen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -18217,7 +18555,7 @@ msgstr "Logistieke kosten op productieorder"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
 msgid "Landed Costs on Manufacturing Order"
-msgstr ""
+msgstr "Logistieke kosten op productieorder"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__landscape
@@ -18869,11 +19207,6 @@ msgid "Localization"
 msgstr "Lokalisatie"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "Log"
@@ -18993,7 +19326,7 @@ msgstr "MRP functionaliteiten voor kwaliteitscontrole met IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
 msgid "MTO Sale <-> Purchase"
-msgstr ""
+msgstr "MTO Verkoop <-> Inkoop"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -19233,7 +19566,7 @@ msgstr "Beheer een forum met FAQ en Q&A"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr ""
+msgstr "Beheer de boekhouding met wagenparken"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -19308,6 +19641,8 @@ msgid ""
 "Manage industries to better classify partners for tracking and analysis "
 "purposes."
 msgstr ""
+"Beheer bedrijfstakken om relates beter te classificeren voor tracking- en "
+"analysedoeleinden."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -19400,7 +19735,6 @@ msgstr "Beheer uw voorraad en logistieke activiteiten"
 #: model:ir.module.category,name:base.module_category_manufacturing_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
 msgstr "Productie"
 
@@ -19451,7 +19785,6 @@ msgstr "Marges in verkooporders"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Marketing"
 msgstr "Marketing"
 
@@ -20049,6 +20382,10 @@ msgid ""
 "                            the uninstallation procedure on a duplicate database to guarantee that\n"
 "                            it works and then doing it on your production database."
 msgstr ""
+"Het verwijderen van modules is niet altijd consistent en kan soms tot problemen leiden.\n"
+"Het kan gebeuren dat sommige gegevens worden verwijderd, de database kan in een onstabiele staat worden achtergelaten,\n"
+"de server kan crashen, enz. Hoewel dit zeldzaam is, raden we aan om \n"
+"de verwijderingsprocedure te testen op een kopie-database om te garanderen dat het goed gaat en het vervolgens op uw productiedatabase uit te voeren."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
@@ -20278,6 +20615,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "Nederlandse Intrastat declaratie"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr "Nieuwe API sleutel"
@@ -20363,30 +20705,6 @@ msgstr "Nicaragua"
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Nice work! Your configuration is done."
 msgstr "Goed werk! Uw configuratie is klaar."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_16
-msgid ""
-"Nicole is <b>author of several books</b>, including Amazon best seller\n"
-"                \"How Azure and Odoo will change the business world!\"."
-msgstr ""
-"Nicole is <b>auteur van verschillende boeken</b>, waaronder de bestseller van Amazon\n"
-"\"Hoe Azure en Odoo de zakenwereld zullen veranderen!\"."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_16
-msgid ""
-"Nicole works in IT sector <b>since 20 years</b>. She\n"
-"                develops software to help develop websites.  She sold her\n"
-"                first company at 30 years old and manage to grow Azure Interior\n"
-"                from 1 to 55 employees mostly by reselling services on\n"
-"                Odoo."
-msgstr ""
-"Nicole werkt <b>sinds 20 jaar</b> in de IT-sector. Ze\n"
-"ontwikkelt software om websites te helpen ontwikkelen. Ze heeft haar verkocht\n"
-"eerste bedrijf op 30-jarige leeftijd en erin slagen om Azure Interior te laten groeien\n"
-"van 1 tot 55 medewerkers meestal door diensten door te verkopen\n"
-"Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -20540,7 +20858,7 @@ msgstr "Noord-Korea"
 #. module: base
 #: model:res.country,name:base.mk
 msgid "North Macedonia"
-msgstr ""
+msgstr "Noord-Macedonië"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -20560,7 +20878,7 @@ msgstr "Noorwegen - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_saft
 msgid "Norwegian Standard Audit File for Tax"
-msgstr ""
+msgstr "Noors standaard audit bestand voor belastingen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstalled
@@ -20636,6 +20954,11 @@ msgstr "Aantal bijgewerkte modules"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "Aantal record regels die toegepast worden voor de huidige gebruiker"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -21752,7 +22075,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -21802,96 +22125,6 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
-"Odoo Kassa\n"
-"-----------------------------\n"
-"\n"
-"Odoo's <a href=\"https://www.odoo.com/page/point-of-sale\">kassa</a>\n"
-"introduceert een eenvoudige interface zonder installatie die moet worden uitgevoerd online en offline op moderne hardware.\n"
-"\n"
-"De volledige integratie met de voorraad en boekhouding geeft u echt\n"
-"real-time inzichten van alle winkels zonder gedoe met het  integreren van verschillende applicaties.\n"
-"\n"
-"Werk met de hardware die u al hebt\n"
-"---------------------------------------\n"
-"\n"
-"### In uw webbrowser\n"
-"\n"
-"Odoo's POS is een webapplicatie die op elk apparaat kan worden weergegeven dat kan worden weergegeven\n"
-"websites met weinig tot geen installatie vereist.\n"
-"\n"
-"### Touchscreen of toetsenbord?\n"
-"\n"
-"DE kassa werkt perfect op elk type aanraakapparaat, of het nu\n"
-"het zijn multi-touch tablets zoals een iPad of een resistief touchscreen zonder toetsenbordterminals.\n"
-"\n"
-"### Weegschalen en printers\n"
-"\n"
-"Barcodescanners en printers worden direct ondersteund zonder installatie\n"
-"verplicht. Weegschalen, geldkisten en andere randapparatuur kunnen worden gebruikt met de proxy API.\n"
-"\n"
-"Online en offline\n"
-"------------------\n"
-"\n"
-"### Odoo's POS blijft betrouwbaar, zelfs als uw verbinding dat niet is\n"
-"\n"
-"Implementeer nieuwe winkels met alleen een internetverbinding: ** geen installatie, geen specifieke hardware vereist **. Het werkt met elke ** iPad, tablet-pc, laptop ** of industriële POS-machine.\n"
-"\n"
-"Hoewel een internetverbinding vereist is om de kassa te starten, zal deze \n"
-"operationeel blijven, zelfs na een volledige onderbreking.\n"
-"\n"
-"\n"
-"Een supereenvoudige  gebruikersinterface\n"
-"----------------------------\n"
-"\n"
-"### Eenvoudig en mooi\n"
-"\n"
-"Zeg vaarwel tegen lelijke, verouderde POS-software en geniet van de Odoo-webinterface\n"
-"ontworpen voor moderne retailers.\n"
-"\n"
-"### Ontworpen voor productiviteit\n"
-"\n"
-"Of het nu voor een restaurant of een winkel is, u kunt de meerdere orders activeren parallel om uw klanten niet te laten wachten.\n"
-"\n"
-"### Razendsnel zoeken\n"
-"\n"
-"Scan producten, blader door hiërarchische categorieën of krijg snelle informatieover producten met het explosieven snelle filter over al uw producten.\n"
-"\n"
-"Geïntegreerd voorraadbeheer\n"
-"-------------------------------\n"
-"\n"
-"Consolideer al uw verkoopteams in realtime: winkels, e-commerce, verkoop\n"
-"teams. Krijg realtime controle over de voorraad en nauwkeurige te beheren voorspelling voor het aanvullen van de voorraad\n"
-"\n"
-"Een volledig magazijnbeheersysteem binnen handbereik: krijg informatie over beschikbaarheid van producten, inkoopaanvragen, etc.\n"
-"\n"
-"Klantenservice in de winkel leveren\n"
-"----------------------------------\n"
-"\n"
-"Geef uw shopper een sterke ervaring door de klant in de winkel te integreren. Voer reparaties uit, volg garantie, volg klantclaims, plan\n"
-"bezorgorders, etc.\n"
-"\n"
-"Integratie van facturering en boekhouding\n"
-"----------------------------------\n"
-"\n"
-"Produceer klantfacturen in slechts een paar klikken. Beheer verkoop en contant geld in real-time en gebruik Odoo's krachtige rapportage om slimmere beslissingen te nemen om te verbeteren de efficiëntie van uw winkel.\n"
-"\n"
-"Geen gedoe meer met het moeten integreren van software: ontvang al uw verkopen en voorraadverplaatstingen automatisch geboekt in uw boekhouding\n"
-"\n"
-".Uniforme gegevens bij alle winkels\n"
-"------------------------------\n"
-"\n"
-"Ontvang nieuwe producten, prijsstrategieën en promoties automatisch toegepast op geselecteerde winkels. Werk op een uniform klantenbestand. Geen complexe interface is vereist om een ​​wereldwijde strategie uit te voeren onder al uw winkels.\n"
-"\n"
-"Met Odoo als backend hebt u een systeem dat perfect geschikt is gebleken\n"
-"kleine winkels of grote multinationals.\n"
-"\n"
-"Ken uw klanten - in de winkel en daarbuiten\n"
-"--------------------------------------\n"
-"\n"
-"Succesvolle merken integreren al hun klantrelaties in al hun kanalen om een ​​nauwkeurig klantprofiel te ontwikkelen en te communiceren met klanten als\n"
-"ze nemen koopbeslissingen, in de winkel of online.\n"
-"\n"
-"Met Odoo krijgt u een 360 ° klantbeeld, inclusief verkoop via verschillende kanalen, interactiegeschiedenis, profielen en meer.\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -22538,6 +22771,8 @@ msgid ""
 "Once the delivery is validated, update the cost on the SO to have an exact "
 "margin computation."
 msgstr ""
+"Zodra de levering is gevalideerd, werkt u de kosten op de SO bij om een "
+"exacte margeberekening te hebben."
 
 #. module: base
 #: code:addons/models.py:0
@@ -23712,6 +23947,11 @@ msgid "Portugal - Accounting"
 msgstr "Portugal - Boekhouding"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
 msgid "PostgreSQL constraint definition"
 msgstr "PostgreSQL constraint definitie"
@@ -23868,7 +24108,6 @@ msgstr "Productmatrix"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Productivity"
 msgstr "Productiviteit"
 
@@ -24228,7 +24467,7 @@ msgstr "Kwaliteit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_picking_batch
 msgid "Quality - Batch Transfer"
-msgstr ""
+msgstr "Kwaliteit - Batchtransfer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
@@ -24446,15 +24685,6 @@ msgstr "Leesrechten"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
 msgstr "Alleen lezen"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_4
-msgid ""
-"Ready Mat brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-"Ready Mat brengt eerlijkheid en ernst in de houtindustrie en helpt klanten "
-"om met bomen, bloemen en schimmels om te gaan."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -24687,8 +24917,8 @@ msgstr "Verwijder van het 'Afdrukken' menu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "Verwijder de contextuele actie behorende bij dit rapport"
+msgid "Remove the contextual action related to this report"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -24788,7 +25018,7 @@ msgstr "Rapportages"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
 msgid "Reporting for Argentinian Localization"
-msgstr ""
+msgstr "Rapportage voor Argentijnse lokalisatie"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report
@@ -25126,7 +25356,7 @@ msgstr "Saint Vincent en de Grenadines"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
 msgid "Salary Configurator"
-msgstr ""
+msgstr "Salaris Configurator"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
@@ -25345,7 +25575,7 @@ msgstr "Plan en volg onsite werkzamheden, factureer tijd en materiaal"
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm
 msgid "Schedule and track onsite operations, time and material"
-msgstr ""
+msgstr "Plan en volg werkzaamheden, tijd en materiaal op locatie"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_calendar
@@ -25797,7 +26027,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
 #: model:res.partner.category,name:base.res_partner_category_11
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr "Diensten"
 
@@ -26384,8 +26613,8 @@ msgstr "Loonstroken werknemer opslaan in de documenten app"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
-msgstr "Bewaar verlofdocumenten van werknemers in de Document-app"
+msgid "Store employee's time off documents in the Document app"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -26966,15 +27195,6 @@ msgstr ""
 "U kunt dit veld gebruiken voor snelzoeken."
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_10
-msgid ""
-"The Jackson Group brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
-msgstr ""
-"De Jackson Group brengt eerlijkheid en ernst in de houtindustrie en helpt "
-"klanten om met bomen, bloemen en schimmels om te gaan."
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
 msgid "The Lang Code displayed in the URL"
 msgstr "De taalcode die wordt weergegeven in de URL"
@@ -27217,6 +27437,8 @@ msgid ""
 "The m2o field %s is required but declares its ondelete policy as being 'set "
 "null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
+"Het m2o-veld %s is verplicht, maar geeft aan dat het beleid voor ondelete is"
+" ingesteld op 'null'. Alleen 'beperken' en 'cascade' hebben zin."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
@@ -27294,7 +27516,7 @@ msgstr "De volgende stap is afhankelijk van het bestandsformaat:"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The ondelete policy %r is not valid for field %r"
-msgstr ""
+msgstr "Het ondelete-beleid %r is niet geldig voor veld %r"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -27396,6 +27618,8 @@ msgid ""
 "The server has closed the connection unexpectedly. Check configuration served on this port number.\n"
 " %s"
 msgstr ""
+"De server heeft de verbinding onverwachts verbroken. Controleer de configuratie op dit poortnummer.\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -27707,6 +27931,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Deze module bevat tests met betrekking tot mail. Die zijn\n"
+"aanwezig in een aparte module omdat het modellen bevat die alleen worden gebruikt om te presteren\n"
+"test onafhankelijk van functionele aspecten van andere modellen. Bovendien de meeste\n"
+"modules die zijn gebouwd op mail (sms, snailmail, mail_enterprise) worden ingesteld als afhankelijkheden\n"
+"om de hele e-mailcodebase te testen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -27748,6 +27977,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Deze module bevat tests met betrekking tot webcohort. Die zijn\n"
+"aanwezig in een aparte module omdat het modellen bevat die alleen worden gebruikt om te presteren\n"
+"test onafhankelijk van functionele aspecten van andere modellen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -27839,16 +28071,6 @@ msgid ""
 msgstr ""
 "Deze beperking is te wijten aan de volgende regels:\n"
 "%s"
-
-#. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"Deze transactie is niet uitgevoerd omdat een andere transactie al dezelfde "
-"no-gap-reeks gebruikt. Probeer het later opnieuw."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -28024,19 +28246,6 @@ msgstr "Tokelau"
 #: model:res.country,name:base.to
 msgid "Tonga"
 msgstr "Tonga"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_17
-msgid ""
-"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years.\n"
-"                Famous Managing Partner."
-msgstr ""
-"Toni Rhodes werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
-"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
-"IT-budget met bijna de helft in de afgelopen 2 jaar.\n"
-"Beroemde Managing Partner."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -28437,7 +28646,7 @@ msgstr "USt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_utm
 msgid "UTM Deduplication"
-msgstr ""
+msgstr "UTM-ontdubbeling"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_utm
@@ -28457,12 +28666,12 @@ msgstr "UTM en bulkmailing op verkooporders"
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
 msgid "UTM and post on sale orders"
-msgstr ""
+msgstr "UTM en post op verkooporders"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_crm
 msgid "UTM and posts on crm"
-msgstr ""
+msgstr "UTM en post op crm"
 
 #. module: base
 #: model:res.country,name:base.ug
@@ -29142,6 +29351,11 @@ msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -29366,29 +29580,6 @@ msgid "Water supply"
 msgstr "Watertoelevering"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_18
-msgid ""
-"We are a technology consulting & strategic advisory firm that creates value "
-"enhancing solutions through the use of advanced software for our clients "
-"worldwide. At Lumber Inc we bring operational experience combined..."
-msgstr ""
-"Wij zijn een technologisch advies- en strategisch adviesbureau dat "
-"waardeverhogende oplossingen creëert door het gebruik van geavanceerde "
-"software voor onze klanten wereldwijd. Bij Lumber Inc brengen we "
-"operationele ervaring gecombineerd ..."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_18
-msgid ""
-"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
-" <br> <br>\n"
-"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
-msgstr ""
-"Wij zijn een technologisch advies- en strategisch adviesbureau dat waardeverhogende oplossingen creëert door het gebruik van geavanceerde software voor onze klanten wereldwijd.\n"
-"<br> <br>\n"
-"Bij Lumber Inc brengen we operationele ervaring gecombineerd met technologisch inzicht. We begrijpen dat alle software die bedrijfsactiviteiten ondersteunt, zo moet worden ontworpen dat het de uitvoering van kritieke operationele processen vergemakkelijkt en dient als hulpmiddel voor de gebruikers en niet als barrière. Onze benadering is eerst gericht op het proces, ervoor zorgen dat het bijdraagt aan de doelstellingen van het bedrijf, we optimaliseren het en ontwerpen de softwareoplossingen om het zo goed mogelijk te ondersteunen."
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "Web"
 msgstr "Web"
@@ -29450,11 +29641,6 @@ msgid "Web-only translations"
 msgstr "Web-only vertalingen"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -29474,6 +29660,11 @@ msgstr "Website - Verkopen"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "Website enterprise"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -29576,7 +29767,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise_iap_lead_website
 msgid "Website Visits Lead Generation Enterprise"
-msgstr ""
+msgstr "Website bezoekt Lead Generation Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
@@ -29601,7 +29792,7 @@ msgstr "Westelijke Sahara"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "What's this key for?"
-msgstr ""
+msgstr "Waar is deze sleutel voor?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -29733,15 +29924,6 @@ msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_1
-msgid ""
-"Wood Corner brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-"Wood Corner brengt eerlijkheid en ernst in de houtindustrie en helpt klanten"
-" om met bomen, bloemen en schimmels om te gaan."
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
 msgstr "Werk boekingen"
@@ -29749,7 +29931,7 @@ msgstr "Werk boekingen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
 msgid "Work Entries - Contract"
-msgstr ""
+msgstr "Werkinvoer - Contract"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -30140,16 +30322,6 @@ msgstr "account_ponto"
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
 msgstr "account_qr_code_sepa"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr "boekhouding, Litouwen"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
-msgstr "Boekhoudkundige rapporten Litouwen"
 
 #. module: base
 #: code:addons/models.py:0

@@ -11,15 +11,15 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
 # JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
-# Martin Trigaux, 2020
 # Jesper Carstensen <info@danodoo.dk>, 2020
+# Martin Trigaux, 2020
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
+# lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-16 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -1085,7 +1085,7 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
 "\n"
@@ -3284,7 +3284,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -3917,12 +3917,6 @@ msgid ""
 "automatically applicable for EU sales with a customer\n"
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
-"\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
 "\n"
 "References\n"
 "++++++++++\n"
@@ -4622,6 +4616,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -6759,18 +6754,17 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
 "\n"
 "Schweizisk lokalisering\n"
 "=====================\n"
 "Tilføjet et QR-IBAN felt på bank konto.\n"
-"Hvis dette felt er tomt, men bank konto nummeret selv er et gyldigt QR-IBAN nummer, vil det i stedet blive brugt som et QR-IBAN som før.\n"
-"Men hvis du udfylder det nye QR-IBAN felt, vil det blive brugt som QR-IBAN. Dette bør hjælpe afstemninger eftersom\n"
-"på bankudtog, anvendes det gamle IBAN stadigt."
+"Hvis dette felt er tomt, men bank konto nummeret selv er et gyldigt QR-IBAN nummer, vil det stadig bruge det som et QR-IBAN.\n"
+"Men det nye QR-IBAN felt er udfyldt, vil værdien blive brugt som QR-IBAN. Dette bør hjælpe afstemninger på kontoudtog, hvor der stadig anvendes det gamle IBAN."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7416,9 +7410,10 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
 "\n"
@@ -7426,9 +7421,9 @@ msgstr ""
 "================================================================================\n"
 "\n"
 "Dette modul indeholder:\n"
-" - Generisk Isrealisk kontodiagrammer\n"
-" - Isrealiske moms\n"
-" "
+" - Generisk Isrealsk kontodiagrammer\n"
+" - Isrealske moms\n"
+" - Skattepositioner for Pælestina"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -7951,7 +7946,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -9402,8 +9397,10 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
-msgstr "<code>Advarsel</code>: Advarselsflag til brug med <code>flag</code>"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
+msgstr ""
+"<code>BrugerFejl</code>: Advarsel Undtagelse at bruge med <code>raise</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -10261,11 +10258,6 @@ msgid "Access to unauthorized or invalid companies."
 msgstr "Adgang til uautoriserede og ugyldige virksomheder."
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Konto"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr "Automatisk kontooverførsler"
@@ -10742,22 +10734,6 @@ msgstr "Tilføj varianter til salgsordre via gitter indgang."
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Add views and tweaks on event"
 msgstr "Tilføj visninger og tweaks på begivenhed"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_31
-msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr "Addison Olson er en mægtig salgsrepræsentant ved Deco Addict."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_31
-msgid ""
-"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
-"Addison Olson har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"   for at sælge musefælder. Med det trick skar han\n"
-"   næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11557,16 +11533,6 @@ msgid "Aruba"
 msgstr "Aruba"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "As a team, we are happy to contribute to this event."
-msgstr "Som et hold, er vi glade for at bidrage til denne begivenhed."
-
-#. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
 msgstr "Bedøm dine ansatte"
@@ -11799,15 +11765,6 @@ msgstr "Avatar"
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Aserbajdsjan"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_12
-msgid ""
-"Azure Interior brings honesty and seriousness to wood industry while helping"
-" customers deal with trees, flowers and fungi."
-msgstr ""
-"Azure Interior bringer oprigtighed og seriøsitet til træ industrien, imens "
-"den hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -12148,6 +12105,16 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belgisk Intrastat erklæring"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr "Belgisk Lønningsliste - Posteret Medarbejder"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr "Belgisk Lønningsliste - Variable Omsætning"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Belgisk registreret kasseapparat"
@@ -12319,17 +12286,6 @@ msgid "Bouvet Island"
 msgstr "Bouvetøen"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_15
-msgid ""
-"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years."
-msgstr ""
-"Åge har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"               for at sælge musefælder. Med det trick skar han\n"
-"               næsten halvdelen af IT budgettet indenfor de sidste 2 år."
-
-#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brasilien"
@@ -12478,8 +12434,8 @@ msgstr "Af"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
-msgstr "Widget'et bruger per standard felt informationerne"
+msgid "By default the widget uses the field information"
+msgstr "Per standard anvender widget'en felt informationen"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -12658,6 +12614,14 @@ msgid ""
 msgstr ""
 "Kan ikke oprette ny '%s' posteringer udelukkende fra deres navn. Opret "
 "venligst disse posteringer manuelt, og prøv at importere dem igen."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+"Kan ikke deaktivere et sprog som på nuværende tidspunkt anvendes af "
+"kontakter."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -13035,17 +12999,6 @@ msgstr ""
 "Modtag betalinger fra dine kunder med et klik gennem SEPA direct debit."
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_28
-msgid ""
-"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years."
-msgstr ""
-"Svend har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"                 for at sælge musefælder. Med det trick skar han\n"
-"                 næsten halvdelen af IT budgettet indenfor de sidste 2 år."
-
-#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr "Colombia"
@@ -13103,16 +13056,6 @@ msgstr "Kolonne der refererer til posteringen i comodel tabellen"
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
 msgstr "Kolonne som refererer til posteringen i model tabellen"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Come see us live, we hope to meet you !"
-msgstr "Kom og se os live, vi ser frem til at møde dig !"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -13746,7 +13689,6 @@ msgstr "Opret kontekstuel handling"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
-#: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
 msgstr "Oprettelsesdato"
 
@@ -14053,6 +13995,7 @@ msgstr "Oprettet af"
 #: model:ir.model.fields,field_description:base.field_res_partner_category__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title__create_date
+#: model:ir.model.fields,field_description:base.field_res_users__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_date
@@ -14498,15 +14441,6 @@ msgid "Decimal Separator"
 msgstr "Decimal separator"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_2
-msgid ""
-"Deco Addict brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-"Deco Addict bringer oprigtighed og seriøsitet til træ industrien, imens den "
-"hjælper kunder med at håndtere træer, blomster, og svampe."
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
 msgstr "Håndtér dobbeltoprettede kontakter"
@@ -14816,16 +14750,6 @@ msgstr "Ikke tilladte udgifter for Flåder"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
 msgstr "Kassér"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Discover more"
-msgstr "Opdag mere"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -15221,22 +15145,6 @@ msgstr "Udført"
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Done!"
 msgstr "Færdig!"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_3
-msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr "Dennis er en mægtig funktionel rådgiver hos Deco Addict"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_3
-msgid ""
-"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
-"Dennis har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"         for at sælge musefælder. Med det trick skar han\n"
-"         næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -16642,6 +16550,11 @@ msgstr ""
 "3. Prøve balancens 13. Måneds rapport skal oprettes med datoer for hele året, for at oprette rapporten for det finansielle år.\n"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr "Fiks kasseapparat betalings guide med 'betaling' modul"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
 msgstr "Anmeld"
@@ -16676,22 +16589,6 @@ msgstr "Flåde fra dokumenter"
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
 msgstr "Kommatal"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_4
-msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr "Flemming er en mægtig analytiker hos Deco Addict."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_4
-msgid ""
-"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
-"Flemming har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"       for at sælge musefælder. Med det trick skar han\n"
-"       næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -16998,15 +16895,6 @@ msgid "Gauge Widget for Kanban"
 msgstr "Måle widget for kanban"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_3
-msgid ""
-"Gemini Furniture brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
-msgstr ""
-"Gemini Furniture bringer oprigtighed og seriøsitet til træ industrien, imens"
-" den hjælper kunder med at håndtere træer, blomster, og svampe."
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "Generel"
@@ -17235,18 +17123,6 @@ msgid "Google reCAPTCHA integration"
 msgstr "Google reCAPTCHA integration"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_18
-msgid ""
-"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years.\n"
-"                Famous Senior Consultant."
-msgstr ""
-"Georg har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"              for at sælge musefælder. Med det trick skar han\n"
-"              næsten halvdelen af IT budgettet indenfor de sidste 2 år."
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
@@ -17442,16 +17318,6 @@ msgid "Handle lunch orders of your employees"
 msgstr "Håndtér ansattes frokost bestillinger"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Happy to be Sponsor"
-msgstr "Stolt Sponsor"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "Hardware driver til ESC/POS printere og kasseapparater"
@@ -17570,39 +17436,14 @@ msgstr ""
 "bogholder, foreslår vi at du installerer kun fakturering."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_sales_sales
-msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr "Hjælper dig med at håndtere dine tilbud, salgordrer og fakturering."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_attendances
-msgid "Helps you manage the attendances."
-msgstr "Hjælper dig med at administrere tilstedeværelse."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_services_timesheets
-msgid "Helps you manage the timesheets."
-msgstr "Hjælper dig med at administrere timesedlerne."
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
 msgstr "Hjælper dig med administrere brugere."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_marketing_events
-msgid "Helps you manage your Events."
-msgstr "Hjælper dig til at organisere dine arrangementer"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
 msgid "Helps you manage your appraisals."
 msgstr "Hjælper dig med at håndtere dine vurderinger."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_approvals
-msgid "Helps you manage your approvals."
-msgstr "Hjælper dig med at håndtere dine godkendelser."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
@@ -17615,11 +17456,6 @@ msgid "Helps you manage your employees."
 msgstr "Hjælper dig med at administrere dine medarbejdere."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_expenses
-msgid "Helps you manage your expenses."
-msgstr "Hjælper dig med at administrere dine udgifter."
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
 msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
@@ -17629,68 +17465,9 @@ msgstr ""
 "levering ordrer receptioner, etc."
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
-msgid ""
-"Helps you manage your manufacturing processes and generate reports on those "
-"processes."
-msgstr ""
-"Hjælper dig med at styre dine produktionsprocesser og generere rapporter om "
-"disse processer."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_marketing_email_marketing
-msgid ""
-"Helps you manage your mass mailing to design\n"
-"professional emails and reuse templates."
-msgstr ""
-"Hjælper dig med at designe professionelle emails samt genbruge skabeloner "
-"til dine masse emails"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
 msgid "Helps you manage your payrolls."
 msgstr "Hjælper dig med at administrere dine lønninger."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_services_project
-msgid ""
-"Helps you manage your projects and tasks by tracking them, generating "
-"plannings, etc..."
-msgstr ""
-"Hjælper dig med at styre dine projekter og opgaver ved at spore dem, lave "
-"planlægning, osv. .."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_inventory_purchase
-msgid ""
-"Helps you manage your purchase-related processes such as requests for "
-"quotations, supplier bills, etc..."
-msgstr ""
-"Hjælper dig med at administrere dine købs-relaterede processer, så sum "
-"anmodning om tilbud, leverandørregninger, osv..."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_manufacturing_quality
-msgid "Helps you manage your quality alerts and quality checks."
-msgstr ""
-"Hjælper dig med at administrere dine kvalitets alarmer og kvalitets check."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_recruitment
-msgid "Helps you manage your recruitments."
-msgstr "Hjælper dig med at administrere dine ansættelser."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_marketing_surveys
-msgid "Helps you manage your survey for review of different-different users."
-msgstr ""
-"Hjælper dig med at administrere din undersøgelse til gennemgang af "
-"forskellig-forskellig brugere."
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_time_off
-msgid "Helps you manage your time off."
-msgstr "Hjælper dig med at administrere fri tid."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -19887,11 +19664,6 @@ msgid "Localization"
 msgstr "Lokalisering"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr "Lokaliseringer"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "Log"
@@ -20408,7 +20180,6 @@ msgstr "Administrer dine lager- og logistik aktiviteter"
 #: model:ir.module.category,name:base.module_category_manufacturing_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
 msgstr "Produktion"
 
@@ -20459,7 +20230,6 @@ msgstr "Dækningsbidrag på salgsordrer"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Marketing"
 msgstr "Markedsføring"
 
@@ -21353,6 +21123,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "Hollands Intrastat deklaration"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr "Hollandsk Intrastat Deklaration Rapporter"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr "Ny API Nøgle"
@@ -21438,29 +21213,6 @@ msgstr "Nicaragua"
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Nice work! Your configuration is done."
 msgstr "Godt arbejde! Din opsætning er færdig."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_16
-msgid ""
-"Nicole is <b>author of several books</b>, including Amazon best seller\n"
-"                \"How Azure and Odoo will change the business world!\"."
-msgstr ""
-"Nikoline er <b>forfatter til flere bøger</b>, inklusiv Amazon best-seller\n"
-"               \"Hvordan Azure og Odoo vil ændre forretningsverdenen!\"."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_16
-msgid ""
-"Nicole works in IT sector <b>since 20 years</b>. She\n"
-"                develops software to help develop websites.  She sold her\n"
-"                first company at 30 years old and manage to grow Azure Interior\n"
-"                from 1 to 55 employees mostly by reselling services on\n"
-"                Odoo."
-msgstr ""
-"Nikoline har arbejdet i IT sektoren <b>de sidste 20 år</b>. Hun\n"
-"              udvikler software til at hjælpe med at udvikle hjemmesider. Hun solgte hendes\n"
-"             første virksomhed som 30-årig, og præsterede at vokse Azure Interior\n"
-"            fra 1 til 55 ansatte, mest ved at videresælge tjenester på Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -21709,6 +21461,11 @@ msgstr "Antallet af opdaterede moduler"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "antal af datasæt regler der gælder for nuværende bruger"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr "N° Tahiti"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -22874,7 +22631,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -25031,6 +24788,11 @@ msgid "Portugal - Accounting"
 msgstr "Portugal - Regnskab"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr "Posteret Medarbejder"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
 msgid "PostgreSQL constraint definition"
 msgstr "PostgreSQL begrænsning definition"
@@ -25186,7 +24948,6 @@ msgstr "Produkt matriks"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Productivity"
 msgstr "Produktivitet"
 
@@ -25824,15 +25585,6 @@ msgid "Readonly"
 msgstr "Skrivebeskyttet"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_4
-msgid ""
-"Ready Mat brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-"Ready Mat bringer oprigtighed og seriøsitet til træindustrien, samtidig med "
-"den hjælper kunder med at håndterer træer, blomster, og svampe."
-
-#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
 msgid "Real Estate"
 msgstr "Ejendom"
@@ -26062,8 +25814,8 @@ msgstr "Fjern fra 'Print' menuen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "Fjern den kontekstrelaterede handling ved denne rapport"
+msgid "Remove the contextual action related to this report"
+msgstr "Fjern den kontekstuelle handling relateret til denne rapport"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -27173,7 +26925,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
 #: model:res.partner.category,name:base.res_partner_category_11
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr "Serviceydelser"
 
@@ -27759,8 +27510,8 @@ msgstr "Butiksansatte lønningssedler i Dokument applikationen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
-msgstr "Butiksansattes fritid dokumenter i Dokument applikationen."
+msgid "Store employee's time off documents in the Document app"
+msgstr "Gem medarbejders orlogs dokumenter i Dokument applikationen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -28340,15 +28091,6 @@ msgid ""
 msgstr ""
 "ISO-landekoden med to tegn. \n"
 "Dette felt kan bruges til hurtig søgning."
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_10
-msgid ""
-"The Jackson Group brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
-msgstr ""
-"The Jackson Group bringer oprigtighed og seriøsitet til træindustrien, imens"
-" de hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -29250,16 +28992,6 @@ msgstr ""
 "  %s"
 
 #. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"Denne transaktion blev ikke gennemført, eftersom en anden transaktion "
-"allerede anvender den samme no-gap sekvens. Prøv venligst igen senere."
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Tusind-separator"
@@ -29431,18 +29163,6 @@ msgstr "Tokelau"
 #: model:res.country,name:base.to
 msgid "Tonga"
 msgstr "Tonga"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_17
-msgid ""
-"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years.\n"
-"                Famous Managing Partner."
-msgstr ""
-"Troels har arbejdet i IT sektoren <b>de sidste 10 år</b>. Han er kendt\n"
-"              for at sælge musefælder. Med det trick skar han\n"
-"              næsten halvdelen af IT budgettet indenfor de sidste 2 år."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -30542,6 +30262,11 @@ msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr "Variable Omsætning"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -30766,29 +30491,6 @@ msgid "Water supply"
 msgstr "Vandforsyning"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_18
-msgid ""
-"We are a technology consulting & strategic advisory firm that creates value "
-"enhancing solutions through the use of advanced software for our clients "
-"worldwide. At Lumber Inc we bring operational experience combined..."
-msgstr ""
-"Vi er en teknologi konsultations og strategisk rådgivnings virksomhed der "
-"laver værdi-forøgende løsninger gennem brugen af avanceret software for "
-"vores klienter over hele kloden. Hos Lumber Inc bringer vi praktisk erfaring"
-" kombineret..."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_18
-msgid ""
-"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
-" <br> <br>\n"
-"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
-msgstr ""
-"Vi er et teknologi konsultations & strategisk rådgivnings firma der laver værdi-løftende løsninger gennem brugen af avanceret software for vores klienter over hele kloden. \n"
-"<br><br>\n"
-"Hos Lumber Inc bringer vi praktisk erfaring koblet teknologisk snilde. Vi forstår at ethvert software der understøtter forretningsdrift skal designes på en måde der muliggør udførslen af kritiske drift processer, og fungerer som et værktøj til brugerne, fremfor en barriere. Vores tilgang er fokuseret på processen først og fremmest, som sikrer at det bidrager til virksomhedens mål. Vi optimerer den derefter, og designer de software løsninger der bedst understøtter den."
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "Web"
 msgstr "Web"
@@ -30850,11 +30552,6 @@ msgid "Web-only translations"
 msgstr "Web-kun oversættelser"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr "Hjemmeside Begivenhed CRM Spørgsmål"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -30874,6 +30571,11 @@ msgstr "Hjemmeside - Salgsadministration"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "Hjemmeside virksomhed"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr "Hjemmeside Begivenhed CRM Spørgsmål"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -31127,15 +30829,6 @@ msgstr ""
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmlopdf fejlede (fejlkode: %s). Besked: %s"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_1
-msgid ""
-"Wood Corner brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-"Wood Corner bringer oprigtighed og seriøsitet til træindustrien, imens den "
-"hjælper kunder med at håndtere træer, blomster, og svampe."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
@@ -31535,16 +31228,6 @@ msgstr "account_ponto"
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
 msgstr "account_qr_code_sepa"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr "regnskab, Litauen"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
-msgstr "regnskab, rapport, Litauen"
 
 #. module: base
 #: code:addons/models.py:0
