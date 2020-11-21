@@ -79,6 +79,7 @@ Sidebar.include({
                 }
             });
         _.each(attachments,function (a) {
+            a.name = _.escape(a.name);
             a.label = a.name;
             if (a.type === "binary") {
                 a.url = '/web/content/'  + a.id + '?download=true';
