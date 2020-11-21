@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.tools.translate import _
 
 
@@ -43,6 +44,19 @@ class Notification(models.Model):
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_email_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, is_read, email_status, mail_message_id)')
 
+    @api.model
+    def create(self, vals):
+        msg = self.env['mail.message'].browse(vals['mail_message_id'])
+        msg.check_access_rights('read')
+        msg.check_access_rule('read')
+        return super(Notification, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if ('mail_message_id' in vals or 'res_partner_id' in vals) and not self.env.user._is_admin():
+            raise AccessError(_("Can not update the message or recipient of a notification."))
+        return super(Notification, self).write(vals)
+
     @api.multi
     def format_failure_reason(self):
         self.ensure_one()
@@ -50,5 +64,3 @@ class Notification(models.Model):
             return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
         else:
             return _("Unknown error") + ": %s" % (self.failure_reason or '')
-
-
