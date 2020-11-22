@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-16 14:19+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
@@ -600,6 +600,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
 msgstr ""
 
 #. module: project
@@ -1204,16 +1209,11 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited internal users: employees may only see the followed project and tasks.\n"
+"- All internal users: employees may see all project and tasks.\n"
+"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
-"Definuje viditeľnosť úloh projektu:\n"
-"- Pozvaní zamestnanci: zamestnanci môžu vidieť iba sledovaný projekt a úlohy.\n"
-"- Všetci zamestnanci: zamestnanci môžu vidieť všetky projekty a úlohy.\n"
-"- Používatelia portálu a všetci zamestnanci: zamestnanci môžu vidieť všetko. Používatelia portálu môžu vidieť projekt a úlohy, ktoré nasledujú.\n"
-"nimi alebo niekým z ich spoločnosti."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1540,7 +1540,7 @@ msgstr "Úžasná ikona fronty napr. fa-tasks"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "Navždy"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__fri
@@ -2074,8 +2074,8 @@ msgstr "Hlavné prílohy"
 #, python-format
 msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
-"acquired project, assign them and use the %s and %s to define if the project"
-" is ready for the next step. %s"
+"acquired projects, assign them and use the %s and %s to define if the "
+"project is ready for the next step. %s"
 msgstr ""
 
 #. module: project
@@ -2889,7 +2889,7 @@ msgstr "Opakovanie"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "Aktualizácia opakovania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -3040,7 +3040,7 @@ msgstr "Obnoviť"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
 msgid "Ribbon message"
-msgstr ""
+msgstr "Stuha správa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
@@ -4074,11 +4074,6 @@ msgstr "pre projekt:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
-msgid "project.project"
 msgstr ""
 
 #. module: project

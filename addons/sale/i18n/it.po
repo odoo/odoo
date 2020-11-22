@@ -8,7 +8,6 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # pfaodoo <pfa@odoo.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
-# Alberto Carollo <baba75@gmail.com>, 2020
 # efraimbiffi <eab@odoo.com>, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
@@ -651,8 +650,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
-"Un avviso può essere associato ad un prodotto o ad un cliente (Vendite)"
+msgstr "Impostazione di avviso su prodotto o su cliente (vendita)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -777,7 +775,7 @@ msgstr "Consente di inviare una fattura pro-forma ai clienti."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Consente di inviare una fattura pro-forma."
+msgstr "Consente di inviare una fattura proforma."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -910,7 +908,7 @@ msgstr "Basato su riferimento documento"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__block
 msgid "Blocking Message"
-msgstr "Messaggio bloccante"
+msgstr "Messaggio di blocco"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1859,8 +1857,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"Se la vendita è chiusa, non puoi più modificarla. Tuttavia, sarai sempre in "
-"grado di spedire o fatturare."
+"Se la vendita è bloccata, non può più essere modificata. Tuttavia, sarà "
+"ancora possibile fatturare o consegnare."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2105,7 +2103,7 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
-"È vietato modificare i campi seguenti in un ordine bloccato:\n"
+"In un ordine bloccato è vietato modificare i seguenti campi:\n"
 "%s"
 
 #. module: sale
@@ -3463,7 +3461,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "Selezionando l'opzione \"Avviso\" l'utente viene notificato con un "
-"messaggio. Selezionando \"Messaggio bloccante\" viene inviata un'eccezione "
+"messaggio. Selezionando \"Messaggio di blocco\" viene inviata un'eccezione "
 "con il messaggio e viene bloccato il flusso. Scrivere il messaggio nel campo"
 " successivo."
 
@@ -3486,7 +3484,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Invia Fattura PRO-FORMA"
+msgstr "Invia fattura PROFORMA"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

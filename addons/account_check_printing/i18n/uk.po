@@ -97,7 +97,7 @@ msgstr "Верхнє поле чеку"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "Номери чеків можуть містити лише цифри"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -114,7 +114,7 @@ msgstr "Роздрукувати чек"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Перевірки"
+msgstr "Чеки"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -151,12 +151,12 @@ msgstr "Контакт"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "Створив"
+msgstr "Створено"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
@@ -216,7 +216,7 @@ msgstr "Запис у журналі"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -293,7 +293,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "Переважний метод оплати"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -303,6 +303,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"Переважний метод оплати під час оплати цьому постачальнику. Він "
+"використовується для фільтру рахунків постачальників за переважним методом "
+"оплати в загальному. Використовуйте випадки: створювати банківські файли для"
+" групових з'єднань, перевіряйте запуски."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -345,7 +349,7 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Виберіть формат, відповідний паперу чеку, який ви будете друкувати на чеках.\n"
+"Виберіть формат, відповідний паперовому чеку, який ви будете друкувати.\n"
 "Щоб вимкнути функцію друку, виберіть \"Нічого\"."
 
 #. module: account_check_printing
@@ -365,6 +369,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"Щось пішло не так із шаблоном чеків, оберіть інший шаблон у налаштуваннях "
+"Виставлення рахунків/Бухобліку та спробуйте знову."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -382,6 +388,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"Наступні номери вже використовуються:\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -421,6 +429,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Ця функція дозволяє вам друкувати мітки дати на чеках як CPA.\n"
+"Вимкніть її, якщо ви попередньо надрукували чеки включно з міткою дати."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -436,7 +446,7 @@ msgstr "Скасувати позначку надіслано"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "Порожній чек"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -445,3 +455,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Вам необхідно обрати шаблон чеку. Для цього перейдіть у налаштування "
+"Виставлення рахунків/Бухобліку, знайдіть 'Шаблони чеків' та встановіть його."

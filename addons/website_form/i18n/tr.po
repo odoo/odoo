@@ -4,23 +4,24 @@
 # 
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2020
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Martin Trigaux, 2020
 # Levent Karakaş <levent@mektup.at>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
+# ANIL TAN SAĞIR <anils@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-17 06:08+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
 "Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -29,6 +30,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s' doğru bir tarih değildir"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' geçerli bir tarih saat biçimi değildir"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -99,6 +114,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Forumlarda kullanmaya izinli"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "An error has occured, the form has not been sent."
+msgstr "Hata oluştu, form gönderilmedi."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
@@ -345,6 +367,30 @@ msgid "On Success"
 msgstr ""
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 1"
+msgstr "Seçenek 1"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 2"
+msgstr "Seçenek 2"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 3"
+msgstr "Seçenek 3"
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Optional"
 msgstr "İsteğe bağlı"
@@ -361,6 +407,13 @@ msgstr "Diğer bilgiler:"
 #, python-format
 msgid "Our team will message you back as soon as possible."
 msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "Please fill in the form correctly."
+msgstr "Lütfen formu eksiksiz doldurunuz."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -530,6 +583,34 @@ msgstr "Web Sitesi Formu Anahtarı"
 #: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
 msgid "Website Forms"
 msgstr "Website Formları"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate a model field."
+msgstr "Bir model alanını çoğaltamazsınız."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate the submit button of the form."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove a field that is required by the model itself."
+msgstr "Modelin gerektirdiği bir alanı kaldıramazsınız."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove the submit button of the form"
+msgstr ""
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options

@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-16 14:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -95,6 +95,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Ingen datasæt</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -429,7 +431,7 @@ msgstr "Har SMS fejl"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "Har Uregistreret Konto"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
@@ -470,6 +472,7 @@ msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
@@ -553,6 +556,11 @@ msgid ""
 msgstr "Indikere om et blokeret renset telefonnummer er en telefon"
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
+msgid "Indicates if the SMS composer targets a single specific recipient"
+msgstr "Indikerer om SMS skriveren sigter efter én enkelt, specifik modtager"
+
+#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
 msgid "Insufficient Credit"
@@ -561,13 +569,13 @@ msgstr "Utilstrækkelig point"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Invalid phone number"
-msgstr ""
+msgstr "Ugyldigt telefonnummer"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "Ugyldig modtager nummer. Vær venlig at opdatere den."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -577,7 +585,7 @@ msgstr "Er følger"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "Er gyldig"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -731,7 +739,7 @@ msgstr "Nummer"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "Nummer Felt"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -752,6 +760,20 @@ msgstr "Antal meddelser der kræver handling"
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Antal beskeder med leveringsfejl"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will recieve the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Antal af modtagere som vil modtage SMS'en hvis den sendes i masse-tilstand, "
+"uden at anvende Aktiv Domæne værdien"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
+msgid "Number of records found when searching with the value in Active Domain"
+msgstr "Antal datasæt fundet under søgning med værdien i Aktiv Domæne"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
@@ -836,7 +858,7 @@ msgstr "Modtager"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "Modtager Nummer"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -896,6 +918,7 @@ msgstr "SMS-API"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle__message_has_sms_error
@@ -1095,7 +1118,7 @@ msgstr "Server fejl"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "Opsæt en konto"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1114,7 +1137,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "Enlig Tilstand"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1129,7 +1152,7 @@ msgstr "Sms skabelon"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "Gemt Modtager Nummer"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
@@ -1205,31 +1228,8 @@ msgid ""
 "UX field allowing to edit the recipient number. If changed it will be stored"
 " onto the recipient."
 msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
-msgid ""
-"UX field allowing to know we are sending an SMS to a single specific "
-"recipient"
-msgstr ""
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
-msgid ""
-"UX field computing the number of recipients in mass mode based on given "
-"active domain"
-msgstr ""
-"UX felt der udregner antallet af modtagere i masse tilstand, baseret på "
-"given aktivt domæne"
-
-#. module: sms
-#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
-msgid ""
-"UX field computing the number of recipients in mass mode without active "
-"domain"
-msgstr ""
-"UX felt der udregner antallet af modtagere i masse tilstand, uden aktivt "
-"domæne"
+"UX felt der gør det muligt at redigere modtager nummeret. Vil gemmes under "
+"modtageren ved ændring."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
@@ -1245,7 +1245,7 @@ msgstr "Ulæste beskedtæller"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_acc
 msgid "Unregistered Account"
-msgstr ""
+msgstr "Uregistreret Konto"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1319,6 +1319,7 @@ msgstr "Du har ikke adgang til beskeden og/eller det relateret dokument."
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr ""
+"Din SMS Tekstbesked skal inkludere mindst ét tegn der ikke er et mellemrum"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

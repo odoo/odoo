@@ -40,6 +40,8 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"Per generare il foglio ore delle ferie %s sono richiesti il progetto interno"
+" e il lavoro. Se il foglio ore non è necessario, lasciarli vuoti."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -56,6 +58,8 @@ msgstr "Impostazioni di configurazione"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
+"Valore predefinito del progetto per il foglio ore generato dalla tipologia "
+"di ferie."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
@@ -135,6 +139,7 @@ msgstr "Lavoro per foglio ore"
 #, python-format
 msgid "The Internal Project of a company should be in that company."
 msgstr ""
+"Il progetto interno di un'azienda deve appartenere all'azienda stessa."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -142,6 +147,7 @@ msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
 msgstr ""
+"Il progetto conterrà il foglio ore generato dalla conferma delle ferie."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -174,5 +180,5 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
-"Impossibile eliminare una riga di foglio ore associata a un permesso. "
-"Eliminare invece il permesso."
+"Impossibile eliminare righe del foglio ore collegate a un permesso, "
+"annullare invece il permesso."

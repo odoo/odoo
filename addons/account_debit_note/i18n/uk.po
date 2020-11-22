@@ -23,17 +23,17 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Дебіторські повернення</span>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "Add Debit Note"
-msgstr ""
+msgstr "Додати дебіторське повернення"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr ""
+msgstr "Додати помічника дебіторського повернення"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -43,29 +43,29 @@ msgstr "Скасувати"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr ""
+msgstr "Копіювати рядки"
 
 #. module: account_debit_note
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Create Debit Note"
-msgstr ""
+msgstr "Створити дебіторське повернення"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
 msgid "Created by"
-msgstr "Створив"
+msgstr "Створено"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
-msgstr ""
+msgstr "Дата дебіторського повернення"
 
 #. module: account_debit_note
 #: code:addons/account_debit_note/models/account_move.py:0
@@ -92,7 +92,7 @@ msgstr "ID"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr ""
+msgstr "Якщо порожньо, для повернення використовується журнал запису."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -100,6 +100,8 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"У випадку, якщо вам буде необхідно корегувати кожен рядок, їх варто "
+"скопіювати. Ми не будемо копіювати їх для дебіторських повернень зі сторно. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -109,13 +111,13 @@ msgstr "Запис у журналі"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr ""
+msgstr "Тип журналу"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note____last_update
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
@@ -142,14 +144,14 @@ msgstr "Тип переміщення"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
-msgstr ""
+msgstr "Кількість дебіторських повернень"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr ""
+msgstr "Дебітований оригінал рахунку"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -161,13 +163,13 @@ msgstr "Причина"
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr ""
+msgstr "Створено дебіторське повернення для цього рахунку"
 
 #. module: account_debit_note
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from:"
-msgstr ""
+msgstr "Це дебіторське повернення було створено з:"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
@@ -178,4 +180,4 @@ msgstr "Використовуйте спеціальний журнал"
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
-msgstr ""
+msgstr "Ви можете дебітувати лише опубліковані переміщення."

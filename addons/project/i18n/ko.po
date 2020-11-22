@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-16 14:19+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Linkup <link-up@naver.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -592,6 +592,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
 msgstr ""
 
 #. module: project
@@ -1194,16 +1199,11 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited internal users: employees may only see the followed project and tasks.\n"
+"- All internal users: employees may see all project and tasks.\n"
+"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
-"프로젝트 작업에 대한 표시 여부를 정의합니다. :\n"
-"- 초청된 직원 : 직원들은 초청된 프로젝트와 작업만 볼 수 있습니다.\n"
-"- 전 직원 : 모든 프로젝트와 작업을 볼 수 있습니다.\n"
-"- 포털 사용자 및 모든 직원 : 직원들이 모든 것을 볼 수 있습니다. 포털 사용자는 그들 혹은 그들 회사의 누군가에 의해서\n"
-"초청되면 프로젝트 및 작업을 볼 수 있습니다."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2050,8 +2050,8 @@ msgstr "주요 첨부 파일"
 #, python-format
 msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
-"acquired project, assign them and use the %s and %s to define if the project"
-" is ready for the next step. %s"
+"acquired projects, assign them and use the %s and %s to define if the "
+"project is ready for the next step. %s"
 msgstr ""
 
 #. module: project
@@ -4019,11 +4019,6 @@ msgstr "프로젝트의 경우 :"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
-msgid "project.project"
 msgstr ""
 
 #. module: project

@@ -12,9 +12,9 @@
 # Hau Dao <hau@quartile.co>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Takuya Sawada <takuya@tuntunkun.com>, 2020
+# Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Martin Trigaux, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Noma Yuki, 2020
 # 
@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-16 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -1064,15 +1064,9 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
-"\n"
-"        pain.001メッセージのために、SEPA基準で推奨されている支払い注文を生成する必要があります。サポートされているpainバージョン（国）は、pain.001.001.03（一般）、pain.001.001.03.ch.02（スイス）、pain.001.003.03（ドイツ）です。生成されたXMLファイルは銀行にアップロードできます。\n"
-"\n"
-"        このモジュールは、EuropeanPaymentCouncilによって発行された実装ガイドラインに従います。\n"
-"        SEPA標準の詳細: http://www.iso20022.org/ と http://www.europeanpaymentscouncil.eu/\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -3145,7 +3139,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -3163,33 +3157,6 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
-"\n"
-"ベネズエラの勘定科目表。\n"
-"===============================\n"
-"\n"
-"ベネズエラには法律による勘定科目表がありません、\n"
-"ただし、Odooで提案されているデフォルトは、ベネズエラで受け入れられているいくつかのベストプラクティスに準拠している必要があり,この慣行に準拠しています。\n"
-"\n"
-"This module has been tested as base for more of 1000 companies, because\n"
-"it is based in a mixtures of most common software in the Venezuelan\n"
-"market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
-"\n"
-"This module doesn't pretend be the total localization for Venezuela,\n"
-"but it will help you to start really quickly with Odoo in this country.\n"
-"\n"
-"This module give you.\n"
-"---------------------\n"
-"\n"
-"- Basic taxes for Venezuela.\n"
-"- Have basic data to run tests with community localization.\n"
-"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
-"\n"
-"We recomend use of account_anglo_saxon if you want valued your\n"
-"stocks as Venezuela does with out invoices.\n"
-"\n"
-"If you install this module, and select Custom chart a basic chart will be proposed,\n"
-"but you will need set manually account defaults for taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3647,12 +3614,6 @@ msgid ""
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
 "\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
 "References\n"
 "++++++++++\n"
 "- Directive 2008/8/EC\n"
@@ -3660,54 +3621,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"EUミニ電気通信、放送、電子サービスのためのワン・ストップ・ショップ（MOSS）付加価値税（VAT）\n"
-"=============================================================================================\n"
-"\n"
-"As of January 1rst, 2015, telecommunications, broadcasting\n"
-"and electronic services sold within the European Union\n"
-"have to be always taxed in the country where the customer\n"
-"belongs. In order to simplify the application of this EU\n"
-"directive, the Mini One Stop Shop (MOSS) registration scheme\n"
-"allows businesses to make a unique tax declaration.\n"
-"\n"
-"This module makes it possible by helping with the creation\n"
-"of the required EU fiscal positions and taxes in order to\n"
-"automatically apply and record the required taxes.\n"
-"\n"
-"This module installs a wizard to help setup fiscal positions\n"
-"and taxes for selling electronic services inside EU.\n"
-"\n"
-"The wizard lets you select:\n"
-" - the EU countries to which you are selling these\n"
-"   services\n"
-" - your national VAT tax for services, to be mapped\n"
-"   to the target country's tax\n"
-" - optionally: a template fiscal position, in order\n"
-"   to copy the account mapping. Should be your\n"
-"   existing B2C Intra-EU fiscal position. (defaults\n"
-"   to no account mapping)\n"
-" - optionally: an account to use for collecting the\n"
-"   tax amounts (defaults to the account used by your\n"
-"   national VAT tax for services)\n"
-"\n"
-"It creates the corresponding fiscal positions and taxes,\n"
-"automatically applicable for EU sales with a customer\n"
-"in the selected countries.\n"
-"The wizard can be run again for adding more countries.\n"
-"\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
-"\n"
-"References\n"
-"++++++++++\n"
-"- Directive 2008/8/EC\n"
-"- Council Implementing Regulation (EU) No 1042/2013\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -4140,6 +4053,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -5624,9 +5538,9 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
 
@@ -6153,9 +6067,10 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
 
@@ -6584,7 +6499,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -7786,8 +7701,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
-msgstr "<code>Warning</code>: <code>raise</code>とともに使われる警告例外"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -7900,7 +7816,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr ""
+msgstr "<span aria-label=\"Close\">&amp;回;</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -7958,6 +7874,8 @@ msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -8536,11 +8454,6 @@ msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "勘定科目"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr ""
@@ -9015,19 +8928,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Add views and tweaks on event"
-msgstr ""
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_31
-msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr ""
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_31
-msgid ""
-"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
 msgstr ""
 
 #. module: base
@@ -9747,16 +9647,6 @@ msgid "Aruba"
 msgstr "アルバ"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "As a team, we are happy to contribute to this event."
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
 msgstr ""
@@ -9983,13 +9873,6 @@ msgid "Azerbaijan"
 msgstr "アゼルバイジャン"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_12
-msgid ""
-"Azure Interior brings honesty and seriousness to wood industry while helping"
-" customers deal with trees, flowers and fungi."
-msgstr ""
-
-#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
 msgid "B MINING AND QUARRYING"
 msgstr ""
@@ -10117,7 +10000,7 @@ msgstr "銀行口座"
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
+msgstr "銀行口座タイプ:ノーマルまたはIBAN。銀行口座番号から推測されます。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__bank_ids
@@ -10324,6 +10207,16 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belgian Intrastat Declaration"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr ""
@@ -10495,14 +10388,6 @@ msgid "Bouvet Island"
 msgstr "ブーベ島"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_15
-msgid ""
-"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "ブラジル"
@@ -10650,7 +10535,7 @@ msgstr "By"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
+msgid "By default the widget uses the field information"
 msgstr ""
 
 #. module: base
@@ -10824,6 +10709,12 @@ msgstr ""
 msgid ""
 "Cannot create new '%s' records from their name alone. Please create those "
 "records manually and try importing again."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
 msgstr ""
 
 #. module: base
@@ -11192,14 +11083,6 @@ msgid "Collect payments from your customers through SEPA direct debit."
 msgstr ""
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_28
-msgid ""
-"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr "コロンビア"
@@ -11257,16 +11140,6 @@ msgstr "colmodel テーブル内のレコードを参照する列"
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
 msgstr "モデルテーブル内のレコードを参照する列"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Come see us live, we hope to meet you !"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -11896,7 +11769,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
-#: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
 msgstr "作成日"
 
@@ -12198,6 +12070,7 @@ msgstr "作成者"
 #: model:ir.model.fields,field_description:base.field_res_partner_category__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title__create_date
+#: model:ir.model.fields,field_description:base.field_res_users__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_date
@@ -12477,12 +12350,12 @@ msgstr "ダッシュボード"
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
 #: model:ir.module.module,shortdesc:base.module_data_cleaning
 msgid "Data Cleaning"
-msgstr ""
+msgstr "データクリーニング"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge
 msgid "Data Cleaning (merge)"
-msgstr ""
+msgstr "データクリーニング(マージ)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_convert
@@ -12629,13 +12502,6 @@ msgstr "小数精度"
 #: model:ir.model.fields,field_description:base.field_res_lang__decimal_point
 msgid "Decimal Separator"
 msgstr "小数区切り"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_2
-msgid ""
-"Deco Addict brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -12942,16 +12808,6 @@ msgstr "Fleetsの許可されていない費用"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
 msgstr "破棄"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Discover more"
-msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -13332,19 +13188,6 @@ msgstr "完了"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Done!"
-msgstr ""
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_3
-msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr ""
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_3
-msgid ""
-"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
 msgstr ""
 
 #. module: base
@@ -14641,6 +14484,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
 msgstr ""
@@ -14675,19 +14523,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
 msgstr "浮動小数点数"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_address_4
-msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr ""
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_4
-msgid ""
-"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -14986,13 +14821,6 @@ msgid "Gauge Widget for Kanban"
 msgstr "かんばん用ゲージウィジェット"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_3
-msgid ""
-"Gemini Furniture brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "一般"
@@ -15211,19 +15039,6 @@ msgid "Google reCAPTCHA integration"
 msgstr "Google reCAPTCHA連動"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_18
-msgid ""
-"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years.\n"
-"                Famous Senior Consultant."
-msgstr ""
-"Gordon Owensは、IT領域で<b>10年</b>働いています。\n"
-"                彼はネズミ捕りを販売することで知られています。\n"
-"                彼はその手腕で過去2年間でIT予算をほぼ半分にしました。\n"
-"                有名なシニアコンサルタントです。"
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
@@ -15417,16 +15232,6 @@ msgid "Handle lunch orders of your employees"
 msgstr "従業員のランチ注文を処理する"
 
 #. module: base
-#: model_terms:res.partner,website_description:base.res_partner_1
-#: model_terms:res.partner,website_description:base.res_partner_10
-#: model_terms:res.partner,website_description:base.res_partner_12
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_3
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid "Happy to be Sponsor"
-msgstr "スポンサーになりたい"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "ESC/POSプリンタおよびキャッシュドロア用ハードウエアドライバ"
@@ -15540,39 +15345,14 @@ msgid ""
 msgstr "会計処理に必要な手助けをします。あなたが会計士でないなら請求書処理のみをインストールすることをお勧めします。"
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_sales_sales
-msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr "見積書、販売注文書、請求書の処理に役立ちます。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_attendances
-msgid "Helps you manage the attendances."
-msgstr "勤怠を管理するのに役立ちます。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_services_timesheets
-msgid "Helps you manage the timesheets."
-msgstr "タイムシートを管理するのに役立ちます。"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
 msgstr "ユーザ管理に役立ちます。"
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_marketing_events
-msgid "Helps you manage your Events."
-msgstr "イベントを管理するのに役立ちます。"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
 msgid "Helps you manage your appraisals."
 msgstr "査定を管理するのに役立ちます。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_approvals
-msgid "Helps you manage your approvals."
-msgstr "承認の管理に役立ちます。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
@@ -15585,11 +15365,6 @@ msgid "Helps you manage your employees."
 msgstr "従業員を管理するのに役立ちます。"
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_expenses
-msgid "Helps you manage your expenses."
-msgstr "支払いを管理するのに有用です。"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
 msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
@@ -15597,59 +15372,9 @@ msgid ""
 msgstr "在庫表と主な在庫操作の管理を手助けします：配達オーダー、受け取りなど"
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
-msgid ""
-"Helps you manage your manufacturing processes and generate reports on those "
-"processes."
-msgstr "製造プロセスを管理し、それらのプロセスのレポート作成を手助けします。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_marketing_email_marketing
-msgid ""
-"Helps you manage your mass mailing to design\n"
-"professional emails and reuse templates."
-msgstr ""
-"大量のメーリングを管理してプロユースのeメールと\n"
-"再利用出来るテンプレートを設計するのに役立ちます"
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
 msgid "Helps you manage your payrolls."
 msgstr "給与を管理するのに有用です"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_services_project
-msgid ""
-"Helps you manage your projects and tasks by tracking them, generating "
-"plannings, etc..."
-msgstr "プロジェクトやタスクを追跡，計画生成などすることにより、あなたのプロジェクトとタスクの管理を補助します。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_inventory_purchase
-msgid ""
-"Helps you manage your purchase-related processes such as requests for "
-"quotations, supplier bills, etc..."
-msgstr "購入に関連するプロセスを管理するのに役立ちます。見積、サプライヤ関連等"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_manufacturing_quality
-msgid "Helps you manage your quality alerts and quality checks."
-msgstr "品質アラートと品質チェックの管理に役立ちます"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_recruitment
-msgid "Helps you manage your recruitments."
-msgstr "採用活動を管理するのに役立ちます。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_marketing_surveys
-msgid "Helps you manage your survey for review of different-different users."
-msgstr "別のユーザのレビュー用の調査を管理するのに役立ちます。"
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_time_off
-msgid "Helps you manage your time off."
-msgstr "休暇管理をサポート。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -17008,7 +16733,7 @@ msgstr "ジャストインタイムスケジューリング"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "完了"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -17784,11 +17509,6 @@ msgid "Localization"
 msgstr "ローカライズ"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "ログ"
@@ -18264,7 +17984,6 @@ msgstr "在庫と物流を管理する"
 #: model:ir.module.category,name:base.module_category_manufacturing_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
 msgstr "製造"
 
@@ -18315,7 +18034,6 @@ msgstr "販売オーダマージン"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Marketing"
 msgstr "マーケティング"
 
@@ -19139,6 +18857,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "オランダの州内宣言"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr "新しいAPIキー"
@@ -19222,23 +18945,6 @@ msgstr "ニカラグア"
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Nice work! Your configuration is done."
 msgstr "よくできました！環境設定は済んでいます。"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_16
-msgid ""
-"Nicole is <b>author of several books</b>, including Amazon best seller\n"
-"                \"How Azure and Odoo will change the business world!\"."
-msgstr ""
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_16
-msgid ""
-"Nicole works in IT sector <b>since 20 years</b>. She\n"
-"                develops software to help develop websites.  She sold her\n"
-"                first company at 30 years old and manage to grow Azure Interior\n"
-"                from 1 to 55 employees mostly by reselling services on\n"
-"                Odoo."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -19479,6 +19185,11 @@ msgstr "複数のモジュールが更新されました。"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "現在のユーザーに適用されるレコードルールの数"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -20200,7 +19911,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -21795,6 +21506,11 @@ msgid "Portugal - Accounting"
 msgstr "ポルトガル- 会計"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
 msgid "PostgreSQL constraint definition"
 msgstr "PostgreSQLの制約定義"
@@ -21948,7 +21664,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Productivity"
 msgstr "生産性"
 
@@ -22524,13 +22239,6 @@ msgid "Readonly"
 msgstr "読出のみ"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_4
-msgid ""
-"Ready Mat brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
-
-#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
 msgid "Real Estate"
 msgstr "不動産"
@@ -22757,8 +22465,8 @@ msgstr "印刷メニューから削除"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "このレポートに紐づくコンテキストアクションを削除します"
+msgid "Remove the contextual action related to this report"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -22811,7 +22519,7 @@ msgstr "報告"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "レポートアクション"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -23860,7 +23568,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
 #: model:res.partner.category,name:base.res_partner_category_11
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr "サービス"
 
@@ -24438,7 +24145,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
+msgid "Store employee's time off documents in the Document app"
 msgstr ""
 
 #. module: base
@@ -25017,13 +24724,6 @@ msgid ""
 msgstr ""
 "ISOの国別コードは2文字です。\n"
 "これを使ってクイックサーチできます。"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_10
-msgid ""
-"The Jackson Group brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
-msgstr "ジャクソングループは、顧客が木、花、菌類を扱うのをお手伝いしながら、木材産業で誠実に真剣に向き合っています。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -25828,14 +25528,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "千単位区切り"
@@ -26005,15 +25697,6 @@ msgstr "トケラウ"
 #: model:res.country,name:base.to
 msgid "Tonga"
 msgstr "トンガ"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_address_17
-msgid ""
-"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
-"                notably for selling mouse traps. With that trick he cut\n"
-"                IT budget by almost half within the last 2 years.\n"
-"                Famous Managing Partner."
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -27089,6 +26772,11 @@ msgid "Vanuatu"
 msgstr "バヌアツ"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -27310,27 +26998,6 @@ msgid "Water supply"
 msgstr "水道"
 
 #. module: base
-#: model:res.partner,website_short_description:base.res_partner_18
-msgid ""
-"We are a technology consulting & strategic advisory firm that creates value "
-"enhancing solutions through the use of advanced software for our clients "
-"worldwide. At Lumber Inc we bring operational experience combined..."
-msgstr ""
-"私たちは、世界中のクライアントのために高度なソフトウェアを使用して価値を高めるソリューションを作成する技術コンサルティングおよび戦略的アドバイザリー会社です。"
-" Lumber Incであれば、運用経験が統合できます..."
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_18
-msgid ""
-"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
-" <br> <br>\n"
-"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
-msgstr ""
-"私たちは、世界中のクライアントのために高度なソフトウェアを使用して価値を高めるソリューションを作成する技術コンサルティングおよび戦略的アドバイザリー会社です。\n"
-"<br><br>\n"
-"Lumber Incでは、運用経験と技術的洞察力を組み合わせています。業務をサポートするソフトウェアは、重要な運用プロセスの実行を容易にし、障壁ではなくユーザーにとってのツールとして機能するように設計する必要があることを理解しています。私たちのアプローチは、最初にプロセスに焦点を当て、それが会社の目標に貢献することを保証し、次にそれを最適化し、それを最もよくサポートするソフトウェアソリューションを設計します。"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "Web"
 msgstr "ウェブ"
@@ -27392,11 +27059,6 @@ msgid "Web-only translations"
 msgstr "ウェブ関連翻訳"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr "WebサイトイベントのCRMの質問"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -27416,6 +27078,11 @@ msgstr "Website - 販売管理"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "Website企業"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -27657,13 +27324,6 @@ msgstr ""
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdfが失敗しました(エラーコード: %s)。 メッセージ：%s"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_1
-msgid ""
-"Wood Corner brings honesty and seriousness to wood industry while helping "
-"customers deal with trees, flowers and fungi."
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
@@ -28035,16 +27695,6 @@ msgid "account_qr_code_sepa"
 msgstr "account_qr_code_sepa"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr "会計,リトアニア"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
-msgstr "会計,レポート,リトアニア"
-
-#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
@@ -28244,8 +27894,8 @@ msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
 msgstr ""
-"正常にインストールされました。\n"
-"ユーザーは自分の好みで好きな言語を選ぶことができます。"
+"がインストールされました。\n"
+"ユーザの個人設定で言語が選択できるようになっています。"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0

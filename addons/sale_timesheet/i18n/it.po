@@ -6,7 +6,6 @@
 # Martin Trigaux, 2020
 # David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Paolo Valier, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
@@ -101,7 +100,7 @@ msgid ""
 "                                                                Non Billable Tasks\n"
 "                                                            </span>"
 msgstr ""
-"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Comprende i tempi registrati per un lavoro che non è collegato ad alcun ordine di vendita.\">\n"
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Include i tempi registrati per un lavoro non collegato ad alcun ordine di vendita.\">\n"
 "                                                                Lavori non fatturabili\n"
 "                                                            </span>"
 
@@ -260,7 +259,7 @@ msgstr "Almeno una riga deve essere compilata."
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Before"
-msgstr "Prima"
+msgstr "Precedenti"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
@@ -278,20 +277,20 @@ msgstr "Tipo fatturazione"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed at a Fixed Price"
-msgstr ""
+msgstr "Fatturate a prezzo fisso"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "Fatturate a prezzo fisso"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Fatturate su fogli ore"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -309,7 +308,7 @@ msgstr "Bloccata"
 #. module: sale_timesheet
 #: model:project.task,legend_done:sale_timesheet.project_task_4
 msgid "Buzz or set as done"
-msgstr "Suona o imposta a completato"
+msgstr "Chiama o imposta a completato"
 
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
@@ -882,7 +881,7 @@ msgstr "Obiettivi (impostazione manuale quantità su ordine)"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "My Projects"
-msgstr "Miei progetti"
+msgstr "I miei progetti"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_4
@@ -1140,13 +1139,13 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Recorded Hours and Profitability"
-msgstr ""
+msgstr "Ore registrate e redditività"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Remaining"
-msgstr "rimasti"
+msgstr "Residue"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1242,6 +1241,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"Selezionare un progetto fatturabile nel quale sia possibile creare lavori. "
+"L'opzione deve essere impostata per ciascuna azienda."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
@@ -1250,11 +1251,16 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Selezionare un progetto fatturabile come schema del nuovo progetto creato "
+"durante la vendita del prodotto corrente. Le fasi e i lavori vengono "
+"duplicati."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
+"Selezionare un progetto non fatturabile nel quale possano essere creati "
+"lavori."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1287,13 +1293,13 @@ msgstr "Politica di fatturazione del servizio"
 #: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Servizio su foglio ore"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Sold"
-msgstr "Venduto"
+msgstr "Vendute"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
@@ -1315,7 +1321,7 @@ msgstr "Lavoro"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Ricorrenza lavoro"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__task_id
@@ -1464,7 +1470,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Time by people"
-msgstr "Tempi per persona"
+msgstr "Tempo per persona"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -1738,4 +1744,4 @@ msgstr "ore"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "in Overtime"
-msgstr ""
+msgstr "con straordinari"
