@@ -27,8 +27,24 @@ class CompanyLDAP(models.Model):
              "Leave empty to connect anonymously.")
     ldap_password = fields.Char(string='LDAP password',
         help="The password of the user account on the LDAP server that is used to query the directory.")
-    ldap_filter = fields.Char(string='LDAP filter', required=True)
-    ldap_base = fields.Char(string='LDAP base', required=True)
+    ldap_filter = fields.Char(string='LDAP filter', required=True, help="""\
+    Filter used to look up user accounts in the LDAP database. It is an\
+    arbitrary LDAP filter in string representation. Any `%s` placeholder\
+    will be replaced by the login (identifier) provided by the user, the filter\
+    should contain at least one such placeholder.
+
+    The filter must result in exactly one (1) result, otherwise the login will\
+    be considered invalid.
+
+    Example (actual attributes depend on LDAP server and setup):
+
+        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))
+
+    or
+
+        (|(mail=%s)(uid=%s))
+    """)
+    ldap_base = fields.Char(string='LDAP base', required=True, help="DN of the user search scope: all descendants of this base will be searched for users.")
     user = fields.Many2one('res.users', string='Template User',
         help="User to copy when creating new users")
     create_user = fields.Boolean(default=True,
@@ -79,19 +95,20 @@ class CompanyLDAP(models.Model):
         return connection
 
     def _get_entry(self, conf, login):
-        filter, dn, entry = False, False, False
-        try:
-            filter = filter_format(conf['ldap_filter'], (login,))
-        except TypeError:
-            _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
-        if filter:
-            results = self._query(conf, tools.ustr(filter))
+        filter_tmpl = conf['ldap_filter']
+        placeholders = filter_tmpl.count('%s')
+        if not placeholders:
+            _logger.warning("LDAP filter %r contains no placeholder ('%%s').", filter_tmpl)
 
-            # Get rid of (None, attrs) for searchResultReference replies
-            results = [i for i in results if i[0]]
-            if len(results) == 1:
-                entry = results[0]
-                dn = results[0][0]
+        formatted_filter = filter_format(filter_tmpl, [login] * placeholders)
+        results = self._query(conf, formatted_filter)
+
+        # Get rid of results (dn, attrs) without a dn
+        results = [entry for entry in results if entry[0]]
+
+        dn, entry = False, False
+        if len(results) == 1:
+            dn, _ = entry = results[0]
         return dn, entry
 
     def _authenticate(self, conf, login, password):
