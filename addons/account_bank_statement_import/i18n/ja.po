@@ -254,7 +254,7 @@ msgstr "デフォルト借方勘定"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "銀行取引明細書を登録する方法を定義"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
@@ -432,6 +432,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Manual：Odoo以外の現金、小切手、またはその他の方法で支払いを受けます。\n"
+"電子：オンラインで購入またはサブスクライブするときに顧客が保存したカード（支払いトークン）でトランザクションを要求することにより、支払い取得者を通じて自動的に支払いを受け取ります。\n"
+"バッチ預金：銀行に提出するバッチ預金を生成することにより、一度に複数の顧客小切手を含包します。Odooで銀行取引明細書をエンコードするときは、トランザクションをバッチデポジットと照合することをお勧めします。設定からこのオプションを有効にします。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
@@ -440,6 +443,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"手動：Odoo以外の現金またはその他の方法で請求書を支払います。\n"
+"小切手：小切手で請求書を支払い、Odooから印刷します。\n"
+"SEPAクレジット転送：銀行に提出するSEPAクレジット転送ファイルから請求書を支払います。設定からこのオプションを有効にします。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
@@ -475,6 +481,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"顧客の請求書ジャーナルのために'Sale'を選択してください\n"
+"ベンダーの請求書ジャーナルのための'Purchase'を選択します。\n"
+"得意先または仕入先の支払に使用されている雑誌のために'Cash'または''を選択します。\n"
+"その他の操作雑誌のために'一般'を選択します。"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -489,7 +499,7 @@ msgstr "付番"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "削除せずにジャーナルを非表示にするにはfalseにアクティブに設定します。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
@@ -578,21 +588,21 @@ msgstr "タイプ"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "ダッシュボードビューで注文ジャーナルに使用"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr ""
+msgstr "レジの期末残高がシステムの計算値と異なる場合に損失を登録するために使用されます"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr ""
+msgstr "レジの期末残高がシステムの計算と異なる場合に利益を登録するために使用されます"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
@@ -605,7 +615,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "この台帳は、ダッシュボード上に表示するかどうか"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228

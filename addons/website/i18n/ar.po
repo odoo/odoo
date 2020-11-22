@@ -1895,6 +1895,11 @@ msgid "Email support"
 msgstr "دعم البريد الإلكتروني"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Enable billing on your Google Project"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
@@ -4460,15 +4465,6 @@ msgid "Used when multiple websites have the same domain."
 msgstr "يستخدم عند استخدام عدة مواقع لنفس النطاق."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"User-agent: *\n"
-"خريطة الموقع:"
-
-#. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "المستخدمون"
@@ -4849,6 +4845,12 @@ msgid ""
 " engines."
 msgstr ""
 "لقد قمت بإخفاء هذه الصفحة من نتائج البحث. لن تقوم محركات البحث بفهرستها."
+
+#. module: website
+#: code:addons/website/models/website.py:162
+#, python-format
+msgid "You must keep at least one website."
+msgstr ""
 
 #. module: website
 #. openerp-web

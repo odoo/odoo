@@ -14,6 +14,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,10 @@ msgid ""
 "request leaves and allocations;\tNo allocation: no allocation by default, "
 "users can freely request leaves;"
 msgstr ""
+"\tFast af HR: Allokeret af HR og kan ikke omgås; brugere kan anmode om "
+"orlog;\tFast af HR + allokeringsanmodning: Allokeret af HR og brugere kan "
+"anmode om orlog og allokeringer;\tIngen allokering: Ingen allokering per "
+"standard, bruger kan frit anmode om orlog;"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:265
@@ -91,7 +96,7 @@ msgstr "%s : %.2f dag(e)"
 #: code:addons/hr_holidays/models/hr_leave.py:466
 #, python-format
 msgid "%s : %.2f hour(s)"
-msgstr ""
+msgstr "%s : %.2f time(r)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:440
@@ -103,7 +108,7 @@ msgstr "%s på %s : %.2f dag(e)"
 #: code:addons/hr_holidays/models/hr_leave.py:481
 #, python-format
 msgid "%s on %s : %.2f hour(s)"
-msgstr ""
+msgstr "%s på %s : %.2f time(r)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -406,17 +411,17 @@ msgstr "<span class=\"ml8\">Timer</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "<span class=\"ml8\">of leaves every</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">af orlog hver</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Dage Allokeret</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Leaves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Gruppe Orlog</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -432,12 +437,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">fra</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">til</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -494,7 +499,7 @@ msgstr "Fraværende idag"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual
 msgid "Accrual"
-msgstr ""
+msgstr "Periodisering"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -506,7 +511,7 @@ msgstr "Periodisering tildelinger"
 #: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
 #: model:ir.cron,name:hr_holidays.hr_leave_allocation_cron_accrual
 msgid "Accrual Leave: Updates the number of leaves"
-msgstr ""
+msgstr "Periodisering Orlog: Opdaterer antallet af orlog"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -528,7 +533,7 @@ msgstr "Aktive periodiseringer"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Active Leaves"
-msgstr ""
+msgstr "Aktive Orlog"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -566,6 +571,8 @@ msgid ""
 "Adding validity to types of leaves so that it cannot be selected outside "
 "this time period"
 msgstr ""
+"Tilføjer validitet til typerne af orlog so det ikke kan vælges udenfor denne"
+" periode"
 
 #. module: hr_holidays
 #: selection:hr.leave,request_date_from_period:0
@@ -605,7 +612,7 @@ msgstr "Tildeling godkendelse"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_leave_allocation_approved
 msgid "Allocation Approved"
-msgstr ""
+msgstr "Allokering Godkendt"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
@@ -617,7 +624,7 @@ msgstr "Tildelingstilstand"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_leave_allocation_refused
 msgid "Allocation Refused"
-msgstr ""
+msgstr "Allokering Afvist"
 
 #. module: hr_holidays
 #: selection:hr.leave.report,type:0
@@ -640,7 +647,7 @@ msgstr "Tildeling anden godkend"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:302
 #, python-format
 msgid "Allocation of %s : %.2f %s to %s"
-msgstr ""
+msgstr "Allokering af %s : %.2f %s til %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -656,7 +663,7 @@ msgstr "Tildelinger"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 msgid "Allocations Requests"
-msgstr ""
+msgstr "Allokeringsanmodninger"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -882,13 +889,13 @@ msgstr "Bekræftet"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new leave allocation"
-msgstr ""
+msgstr "Opret en ny orlog allokering"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new leave allocation request"
-msgstr ""
+msgstr "Opret en ny orlog allokeringsanmodning"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -1022,7 +1029,7 @@ msgstr "Vis navn"
 #. module: hr_holidays
 #: selection:hr.leave.type,validation_type:0
 msgid "Double Validation"
-msgstr ""
+msgstr "Dobbelt Godkendelse"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -1074,7 +1081,7 @@ msgstr "Rediger tildeling"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Edit Leave"
-msgstr ""
+msgstr "Rediger Orlog"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -1090,7 +1097,7 @@ msgstr "Ansat"
 #. module: hr_holidays
 #: selection:hr.leave.type,validation_type:0
 msgid "Employee Manager"
-msgstr ""
+msgstr "Medarbejder Leder"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__category_id
@@ -1144,6 +1151,8 @@ msgid ""
 "Filters only on allocations that belong to an leave type that is 'active' "
 "(active field is True)"
 msgstr ""
+"Filtrere kun på allokeringer som tilhører en orlogstype der er 'aktiv' "
+"(aktiv feltet er Sandt)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1152,6 +1161,8 @@ msgid ""
 "Filters only on requests that belong to an leave type that is 'active' "
 "(active field is True)"
 msgstr ""
+"Filtrere kun på anmodninger der tilhører en orlogstype der er 'aktiv' (aktiv"
+" felt er Sandt)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -1162,12 +1173,12 @@ msgstr "Første godkendelse"
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
 msgid "Fixed by HR"
-msgstr ""
+msgstr "Fast af HR"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
 msgid "Fixed by HR + allocation request"
-msgstr ""
+msgstr "Fast af HR + allokeringsanmodning"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_follower_ids
@@ -1227,7 +1238,7 @@ msgstr "Sortér efter"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
 msgid "Group Leaves"
-msgstr ""
+msgstr "Gruppe Orlog"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
@@ -1282,7 +1293,7 @@ msgstr "Timer"
 #. module: hr_holidays
 #: selection:hr.leave.type,validation_type:0
 msgid "Human Resource officer"
-msgstr ""
+msgstr "HR ansvarlig"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__id
@@ -1423,7 +1434,7 @@ msgstr "Anmodninger om ferier"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_report
 msgid "Leave Summary / Report"
-msgstr ""
+msgstr "Orlog Opsummering / Rapport"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_type
@@ -1487,6 +1498,8 @@ msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
+"Orlogsanmodnings tilstand skal være \"Afvist\" eller \"Til Godkendelse\" for"
+" at kunne blive nulstillet til kladde."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:383
@@ -1534,7 +1547,7 @@ msgstr "Ferieanalyse"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 msgid "Leaves Approval"
-msgstr ""
+msgstr "Orlog Godkendelse"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_leave_approved
@@ -1549,19 +1562,19 @@ msgstr "Tilbageværende ferier"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_leave_refused
 msgid "Leaves Refused"
-msgstr ""
+msgstr "Orlog Afvist"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_payroll
 #: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
 msgid "Leaves Requests"
-msgstr ""
+msgstr "Orlog Anmodninger"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Leaves Second Approve"
-msgstr ""
+msgstr "Orlog Anden Godkendelse"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -1578,7 +1591,7 @@ msgstr "Ferie opsummering"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Leaves Taken:"
-msgstr ""
+msgstr "Orlog Taget:"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
@@ -1596,7 +1609,7 @@ msgstr "Ferier for dine team medlemmer"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll_to_report
 msgid "Leaves to report"
-msgstr ""
+msgstr "Orlog at rapportere"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1606,7 +1619,7 @@ msgstr "Ferier."
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2019"
-msgstr ""
+msgstr "Lovlige Orlog 2019"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1675,7 +1688,7 @@ msgstr "Ledere"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Leaves:"
-msgstr ""
+msgstr "Maksimale Orlog:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
@@ -1807,7 +1820,7 @@ msgstr "Næste aktivitetstype"
 #. module: hr_holidays
 #: selection:hr.leave.type,allocation_type:0
 msgid "No allocation"
-msgstr ""
+msgstr "Ingen allokering"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction_counter
@@ -1832,12 +1845,12 @@ msgstr "Antal ferier"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid ""
 "Number of days of the leave request according to your working schedule."
-msgstr ""
+msgstr "Antal af dage for orlogsanmodningen ifølge dit arbejdsskema."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
 msgid "Number of days of the leave request. Used for interface."
-msgstr ""
+msgstr "Antal dage for orlogsanmodningen. Brugt til brugerflade."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -1851,6 +1864,8 @@ msgid ""
 "Number of hours of the leave request according to your working schedule. "
 "Used for interface."
 msgstr ""
+"Antal af timer for orlogsanmodningen ifølge dit arbejdsskema. Brugt til "
+"brugerflade."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -1904,13 +1919,16 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"Når du har registreret din orlogsanmodning, vil den blive sendt\n"
+"                til en leder for at blive godkendt. Vær sikker på, at angive den korrekte orlogstype (helbredelse, lovligt orlog, sygdom) og det nøjagtige\n"
+"               antal dage for din orlog."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:709
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:495
 #, python-format
 msgid "Only a Leave Manager can approve its own requests."
-msgstr ""
+msgstr "Kun en Orlogsleder kan godkende deres egne anmodninger."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:698
@@ -1925,6 +1943,8 @@ msgstr "Kun en orlogs leder kan nulstille andres orlog."
 #, python-format
 msgid "Only a Leave Officer or Manager can approve or refuse leave requests."
 msgstr ""
+"Kun en Orlogs- Ansvarlig eller Leder kan godkende eller afvise "
+"orlogsanmodninger."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:718
@@ -1932,6 +1952,7 @@ msgstr ""
 #, python-format
 msgid "Only an Leave Manager can apply the second approval on leave requests."
 msgstr ""
+"Kun en Orlogsleder kan angive den anden godkendelse på orlogsanmodninger."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1962,7 +1983,7 @@ msgstr "Oversigt"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla
 msgid "Paid Time Off 2019"
-msgstr ""
+msgstr "Betalt Fri 2019"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -1973,7 +1994,7 @@ msgstr "Overordnet"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
 msgid "Parental Leaves"
-msgstr ""
+msgstr "Forældreorlog"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll
@@ -2052,7 +2073,7 @@ msgstr "Resterende ferier"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_dept
 msgid "Report by Department"
-msgstr ""
+msgstr "Rapport per Afdeling"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__payslip_status
@@ -2106,7 +2127,7 @@ msgstr "Nulstil til kladde"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Leaves Detail"
-msgstr ""
+msgstr "Ressource Orlog Detalje"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -2215,7 +2236,7 @@ msgstr "Opsummering"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
 msgid "Take Leaves in"
-msgstr ""
+msgstr "Tag Orlog ind"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave:0 sql_constraint:hr.leave.allocation:0
@@ -2244,6 +2265,8 @@ msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please also check the leaves waiting for validation."
 msgstr ""
+"antallet af tilbageværende orlog er ikke tilstrækkelig for denne orlogstype.\n"
+"Vær venlig også at tjekke orlog der afventer godkendelse."
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave.allocation:0
@@ -2264,12 +2287,17 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"Status er sat til 'At indsende', når en anmodning om fri oprettes.\n"
+"Status er 'At godkende', når en anmodning om fri godkendes af bruger.\n"
+"Status er 'Afvist', når en anmodning om fri afvises af leder.\n"
+"Status er 'Godkendt', når en anmodning om fri godkendes af leder."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
 msgid ""
 "The type with the smallest sequence is the default value in leave request"
 msgstr ""
+"Typen med den mindste sekvens, er standard værdien i orlogsanmodninger"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -2294,6 +2322,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Denne farve vil blive brugt i orlogsopsummeringen fundet under Rapportering "
+"> Orlog per Afdeling."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__valid
@@ -2305,12 +2335,16 @@ msgstr "Dette indikerer om det stadig er muligt, at bruge denne type orlog"
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
 msgstr ""
+"Denne værdi angives ud fra summen af alle orlogsanmodninger med en negativ "
+"værdi."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
+"Denne værdi angives ud fra summen af alle orlogsanmodninger med en positiv "
+"værdi."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2374,6 +2408,9 @@ msgid ""
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
 msgstr ""
+"Samlet antal lovlig orlog allokeret til denne medarbejder, ændre denne værdi"
+" for at oprette tildeling/orlogsanmodning. Samlet antal baseret på samtlige "
+"orlogstyper, uden en overordnet grænse."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2388,6 +2425,8 @@ msgid ""
 "UX field allowing to see and modify the allocation duration, computed in "
 "days."
 msgstr ""
+"UX felt der gør det muligt at se og redigere allokerings varigheden, "
+"udregnet i dage."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -2395,6 +2434,8 @@ msgid ""
 "UX field allowing to see and modify the allocation duration, computed in "
 "hours."
 msgstr ""
+"UX felt der gør det muligt at se og redigere allokerings varigheden, "
+"udregnet i timer."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__unit_per_interval
@@ -2453,7 +2494,7 @@ msgstr "Validering"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validation_type
 msgid "Validation By"
-msgstr ""
+msgstr "Godkendelse Af"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2474,7 +2515,7 @@ msgstr "Violet"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Leaves"
-msgstr ""
+msgstr "Virtuel Tilbageværende Orlog"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -2514,6 +2555,8 @@ msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
 msgstr ""
+"Når valgt, kræver Allokeringen/Orlogsanmodningerne for denne type en anden "
+"godkendelse for at blive godkendt."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
@@ -2532,7 +2575,7 @@ msgstr "År"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:326
 #, python-format
 msgid "You can allocate %s only between %s and %s"
-msgstr ""
+msgstr "Du kan allokere %s kun mellem %s og %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:397
@@ -2544,19 +2587,19 @@ msgstr "Du kan ikke have 2 orlog som overlapper den samme dag."
 #: code:addons/hr_holidays/models/hr_leave.py:520
 #, python-format
 msgid "You can take %s from %s"
-msgstr ""
+msgstr "Du kan tage %s fra %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:515
 #, python-format
 msgid "You can take %s only between %s and %s"
-msgstr ""
+msgstr "Du kan tage %s kun mellem %s og %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:525
 #, python-format
 msgid "You can take %s until %s"
-msgstr ""
+msgstr "Du kan tage %s indtil %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:576
@@ -2569,7 +2612,7 @@ msgstr "Du kan ikke slette en ferie der er i %s tilstand."
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one department."
-msgstr ""
+msgstr "Du skal vælge mindst én afdeling."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:714
