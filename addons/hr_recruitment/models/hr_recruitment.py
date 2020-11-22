@@ -512,7 +512,8 @@ class Applicant(models.Model):
                 ], order='sequence asc', limit=1).id
         for applicant in self:
             applicant.write(
-                {'stage_id': default_stage[applicant.job_id.id], 'refuse_reason_id': False})
+                {'stage_id': applicant.job_id.id in default_stage and default_stage[applicant.job_id.id],
+                 'refuse_reason_id': False})
 
     def toggle_active(self):
         res = super(Applicant, self).toggle_active()
