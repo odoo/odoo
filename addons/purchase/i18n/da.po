@@ -17,6 +17,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,6 +150,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            How to import"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Hvordan man importere"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -458,6 +461,10 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"Per standard kan leverandørpriser angives manuelt i produkt detalje "
+"formularen. Hvis din leverandør giver dig prisliste filer, gør denne "
+"indstilling det muligt for dig nemt at importere dem ind i systemet fra "
+"'Indkøb > Leverandør Prislister' menuen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -911,6 +918,8 @@ msgid ""
 "Load the vendor bill based on selected purchase order. Several PO can be "
 "selected."
 msgstr ""
+"Indlæs leverandørregningen baseret på valgte købsordre. Flere Købsordre kan "
+"vælges."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1073,7 +1082,7 @@ msgstr "Næste aktivitetstype"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "No Bill to Receive"
-msgstr ""
+msgstr "Ingen Regning at Modtage"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1092,6 +1101,8 @@ msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
 msgstr ""
+"Ikke-gemt relateret felt der tillader at portal bruger ser billedet af "
+"produktet de har bestilt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1399,7 +1410,7 @@ msgstr "Antal indkøbsordrer"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr ""
+msgstr "Købsordre Finansposition"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1503,7 +1514,7 @@ msgstr "Indkøbt"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchased Last 365 Days"
-msgstr ""
+msgstr "Købt Sidste 365 Dage"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -1604,7 +1615,7 @@ msgstr "Registrer en ny leverandørregning"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Record a vendor bill related to this purchase"
-msgstr ""
+msgstr "Registrer en leverandørregning relateret til dette indkøb"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
@@ -1876,6 +1887,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
 msgstr ""
+"Dette ændrer den planlagte dato for alle ordrelinjer til en given dato"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -2028,6 +2040,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Brug denne menu til at kontrollere faktura som modtages fra dine \n"
+"            leverandører. Angiv købsordren ved registrering af en ny regning\n"
+"            og Odoo vil udfylde regningen automatisk i henhold til ordren\n"
+"            og modtaget mængder."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2171,6 +2187,8 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "                whether it's a physical product, a consumable or services."
 msgstr ""
+"Du skal definere et produkt for alt du køber,\n"
+"              uanset om det er et fysisk produkt, en forbrugsvare, eller tjenester."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2178,3 +2196,5 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
 msgstr ""
+"Du skal definere et produkt hvor alt du køber,\n"
+"            uanset om det er et fysisk produkt, en forbrugsvare, eller en tjeneste."

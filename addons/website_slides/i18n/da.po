@@ -15,6 +15,7 @@
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,6 +116,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej<br/><br/>\n"
+"        ${user.name} delte ${object.slide_type} <strong>${object.name}</strong> med dig!\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Vis <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -135,11 +151,26 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej<br/><br/>\n"
+"        En ny ${object.slide_type} <strong>${object.name}</strong> er blevet udgivet på ${object.channel_id.name} den ${format_tz(object.write_date, tz=user.tz)}\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Vis <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-align-justify\"/> Transcript"
-msgstr ""
+msgstr "<i class=\"fa fa-align-justify\"/> Udskrift"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.home
@@ -165,7 +196,7 @@ msgstr "<i class=\"fa fa-cloud-upload\"/> Upload"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-code\"/> Embedded Views"
-msgstr ""
+msgstr "<i class=\"fa fa-code\"/> Indlejrede Visninger"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -175,7 +206,7 @@ msgstr "<i class=\"fa fa-comments-o\"/> Bemærkninger"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-download fa-2x\" role=\"img\" aria-label=\"Download\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-download fa-2x\" role=\"img\" aria-label=\"Hent ned\"/> "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -190,6 +221,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Bemærk\" "
+"title=\"Bemærk\"/> Dette"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -207,6 +240,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                                        The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                        Social Delings modulet vil blive låst op når en moderator tillader din udgivelse."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -235,7 +270,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
-msgstr ""
+msgstr "<i class=\"fa fa-thumbs-down\"/> Synes ikke om"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -247,7 +282,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
-msgstr ""
+msgstr "<i class=\"fa fa-thumbs-up\"/> Synes om"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:107
@@ -314,13 +349,15 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"form-text\">Send presentation through email</span>"
-msgstr ""
+msgstr "<span class=\"form-text\">Send præsentation via email</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
 "<span class=\"form-text\">Use permanent link to share in social media</span>"
 msgstr ""
+"<span class=\"form-text\">Brug permanent link til deling på sociale "
+"medier</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -415,7 +452,7 @@ msgstr "Kun godkendte brugere"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
-msgstr ""
+msgstr "Fantastisk Timeseddel af Odoo"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
@@ -474,7 +511,7 @@ msgstr "Kanal"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Channel #{slide.channel_id.name}"
-msgstr ""
+msgstr "Kanal #{slide.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
@@ -493,6 +530,8 @@ msgstr "Kanal indstillinger"
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
 msgstr ""
+"Kanal indeholder den givne titel, vær venlig at ændre før du Gemmer eller "
+"Udgiver."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -502,7 +541,7 @@ msgstr "Kanal synlighed"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
 msgid "Channel without promoted slide"
-msgstr ""
+msgstr "Kanal uden promoveret dias"
 
 #. module: website_slides
 #: model:ir.actions.act_url,name:website_slides.action_open_channels
@@ -557,12 +596,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
 msgid "Create a channel"
-msgstr ""
+msgstr "Opret en kanal"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_ir_slide_category
 msgid "Create a new category"
-msgstr ""
+msgstr "Opret en ny kategori"
 
 #. module: website_slides
 #. openerp-web
@@ -595,6 +634,8 @@ msgid ""
 "Default channel for slides, all public users can access content of this "
 "channel."
 msgstr ""
+"Standard kanal for dias, alle offentlige brugere kan tilgå indholdet i denne"
+" kanal."
 
 #. module: website_slides
 #. openerp-web
@@ -628,11 +669,16 @@ msgid ""
 "\n"
 "Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
 msgstr ""
+"Opdag hvordan du kan integrere MRP, PLM, Kvalitet og Vedligeholdelse i én enkelt applikation, for at maksimere effektiviteten på dine produktionsoperationer.\n"
+"\n"
+"Læs mere om funktionerne på: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Opdag Odoo MRP: https://www.odoo.com/page/manufacturing"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_1
 msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
+msgstr "Opdag CRM'et salgsfolk elsker https://www.odoo.com/page/crm"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_2
@@ -641,6 +687,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
+"Opdag alt-i-et forretnings administrations software løsningen der passer til enhver forretningsstørrelse og brugstilfælde.\n"
+"\n"
+"Lær mere på https://odoo.com"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
@@ -696,6 +745,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
+"Download Fantastisk Timeseddel af Odoo og opdag hvor nemt det kan være at sporer tid og administrere medarbejdere!\n"
+"\n"
+"Chrom: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
@@ -735,7 +788,7 @@ msgstr "Indlejret dias visningsantal"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Embeds"
-msgstr ""
+msgstr "Indlejre"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_private
@@ -756,22 +809,22 @@ msgstr "Alle"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Featured Presentation"
-msgstr ""
+msgstr "Fremhævet Præsentation"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_1
 msgid "Featured Presentations"
-msgstr ""
+msgstr "Fremhævede Præsentationer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
-msgstr ""
+msgstr "Fremhævet Dias"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Featuring Policy"
-msgstr ""
+msgstr "Fremhævet Politik"
 
 #. module: website_slides
 #. openerp-web
@@ -823,7 +876,7 @@ msgstr "Google Drive API Nøgle"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
 msgid "Graph of Slides"
-msgstr ""
+msgstr "Graf over Dias"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -986,7 +1039,7 @@ msgstr "Besked leveringsfejl"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
 msgid "Message to display when not accessible due to access rights"
-msgstr ""
+msgstr "Besked at vise når den er utilgængelig grundet adgangsrettigheder"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
@@ -1031,7 +1084,7 @@ msgstr "Nyt ${object.slide_type} udgivet på ${object.channel_id.name}"
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:39
 #, python-format
 msgid "New slide"
-msgstr ""
+msgstr "Nyt dias"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -1046,7 +1099,7 @@ msgstr "Næste dias"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "No Featured Presentation"
-msgstr ""
+msgstr "Ingen Fremhævede Præsentationer"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
@@ -1136,7 +1189,7 @@ msgstr "Odoo CRM"
 #: model:slide.category,name:website_slides.category_2
 #: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
-msgstr ""
+msgstr "Odoo Dage"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
@@ -1146,7 +1199,7 @@ msgstr "Odoo lager"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
 msgid "Odoo MRP"
-msgstr ""
+msgstr "Odoo MRP"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
@@ -1168,7 +1221,7 @@ msgstr "Odoo Sign Demonstration"
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:40
 #, python-format
 msgid "On which channel do you want to add a slide?"
-msgstr ""
+msgstr "På hvilken kanal vil du tilføje et dias?"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
@@ -1178,7 +1231,7 @@ msgstr "Open Days 2014 Infografik"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_11
 msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr ""
+msgstr "OpenSource CMS, en præstationssammenligning - Mantavya Gajjar"
 
 #. module: website_slides
 #. openerp-web
@@ -1255,13 +1308,13 @@ msgstr "Privat kanal"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Promote this #{slide.slide_type}"
-msgstr ""
+msgstr "Promover denne #{slide.slide_type}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
 #: model_terms:ir.ui.view,arch_db:website_slides.home
 msgid "Promoted slide"
-msgstr ""
+msgstr "Promoveret dias"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1286,7 +1339,7 @@ msgstr "Udgivet"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "Published Template"
-msgstr ""
+msgstr "Udgivet Skabelon"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1310,6 +1363,8 @@ msgid ""
 "Review your channel settings to promote your most viewed or recent published"
 " presentation"
 msgstr ""
+"Gennemgå din kanalindstillinger for at promovere din mest sete eller seneste"
+" udgivet præsentation"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
@@ -1339,12 +1394,12 @@ msgstr "Søg"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Search Slides"
-msgstr ""
+msgstr "Søg Dias"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Search in #{channel.name}"
-msgstr ""
+msgstr "Søg i #{channel.name}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1382,7 +1437,7 @@ msgstr "Del link"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Share count"
-msgstr ""
+msgstr "Antal Delinger"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
@@ -1448,7 +1503,7 @@ msgstr "Diasbillede"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
 msgid "Slide to Promote"
-msgstr ""
+msgstr "Dias til Promovering"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
@@ -1478,6 +1533,9 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
+"Stop med manuelt at printe og scanne. Flyt til en elektronisk signatur med Odoo Sign!\n"
+"\n"
+"Opdag mere på https://www.odoo.com/page/sign"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
@@ -1577,7 +1635,7 @@ msgstr "Totale antal visninger"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__index_content
 msgid "Transcript"
-msgstr ""
+msgstr "Udskrift"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
@@ -1594,7 +1652,7 @@ msgstr "Ikke kategoriseret"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.home
 msgid "Uncategorized presentation"
-msgstr ""
+msgstr "Ukategoriseret præsentation"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:551
@@ -1652,12 +1710,12 @@ msgstr "Uploader præsentation..."
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.channel_private
 msgid "Used to publish internal slides of company."
-msgstr ""
+msgstr "Brugt til at udgive virksomheds interne dias."
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.channel_partial
 msgid "Used to publish slides in partner network privately."
-msgstr ""
+msgstr "Brugt til udgive dias privat i partner netværk."
 
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
@@ -1703,6 +1761,9 @@ msgid ""
 "\n"
 "Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
 msgstr ""
+"Varehus administrations software til det 21. århundrede.\n"
+"\n"
+"Opdag Odoo Inventar: https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
@@ -1827,7 +1888,7 @@ msgstr "resultater fundet for de angivne kriterier"
 #: model_terms:ir.ui.view,arch_db:website_slides.related_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "slide.name"
-msgstr ""
+msgstr "slide.name"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1837,7 +1898,7 @@ msgstr "suggest_slide.name"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to send this"
-msgstr ""
+msgstr "for at sende dette"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
