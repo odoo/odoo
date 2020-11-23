@@ -10,6 +10,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        
+        cls.currency_data_3 = cls.setup_multi_currency_data({
+            'name': "Umbrella",
+            'symbol': '☂',
+            'currency_unit_label': "Umbrella",
+            'currency_subunit_label': "Broken Umbrella",
+        }, rate2017=0.01)
 
         cls.payment_debit_account_id = cls.company_data['default_journal_bank'].payment_debit_account_id.copy()
         cls.payment_credit_account_id = cls.company_data['default_journal_bank'].payment_credit_account_id.copy()
@@ -51,7 +58,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
         })
-        cls.out_invoice_1.action_post()
         cls.out_invoice_2 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'date': '2017-01-01',
@@ -60,7 +66,21 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
         })
-        (cls.out_invoice_1 + cls.out_invoice_2).action_post()
+        cls.out_invoice_3 = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': cls.partner_a.id,
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 12.01})],
+        })
+        cls.out_invoice_4 = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': cls.partner_a.id,
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 11.99})],
+        })
+        (cls.out_invoice_1 + cls.out_invoice_2 + cls.out_invoice_3 + cls.out_invoice_4).action_post()
 
         # Vendor bills, in_invoice_1 + in_invoice_2 are sharing the same batch but not in_invoice_3.
         cls.in_invoice_1 = cls.env['account.move'].create({
@@ -504,3 +524,250 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             self.env['account.payment.register']\
                 .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
                 .create({})
+
+    def test_register_payment_multi_currency_rounding_issue_positive_delta(self):
+        ''' When registering a payment using a different currency than the invoice one, the invoice must be fully paid
+        at the end whatever the currency rate.
+        '''
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_3.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.12,
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 12.01,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.12,
+                'reconciled': True,
+            },
+            # Liquidity line:
+            {
+                'debit': 12.01,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.12,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_payment_multi_currency_rounding_issue_negative_delta(self):
+        ''' When registering a payment using a different currency than the invoice one, the invoice must be fully paid
+        at the end whatever the currency rate.
+        '''
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_4.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.12,
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 11.99,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.12,
+                'reconciled': True,
+            },
+            # Liquidity line:
+            {
+                'debit': 11.99,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.12,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_payment_multi_currency_rounding_issue_writeoff_lower_amount_keep_open(self):
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_3.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.08,
+                'payment_difference_handling': 'open',
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 8.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.08,
+                'reconciled': True,
+            },
+            # Liquidity line:
+            {
+                'debit': 8.0,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.08,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_payment_multi_currency_rounding_issue_writeoff_lower_amount_reconcile_positive_delta(self):
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_3.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.08,
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                'writeoff_label': 'writeoff',
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 12.01,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.12,
+                'reconciled': True,
+            },
+            # Write-off line:
+            {
+                'debit': 4.0,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.04,
+                'reconciled': False,
+            },
+            # Liquidity line:
+            {
+                'debit': 8.01,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.08,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_payment_multi_currency_rounding_issue_writeoff_lower_amount_reconcile_negative_delta(self):
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_4.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.08,
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                'writeoff_label': 'writeoff',
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 11.99,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.12,
+                'reconciled': True,
+            },
+            # Write-off line:
+            {
+                'debit': 4.0,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.04,
+                'reconciled': False,
+            },
+            # Liquidity line:
+            {
+                'debit': 7.99,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.08,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_payment_multi_currency_rounding_issue_writeoff_higher_amount_reconcile_positive_delta(self):
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_3.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.16,
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                'writeoff_label': 'writeoff',
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 12.01,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.12,
+                'reconciled': True,
+            },
+            # Write-off line:
+            {
+                'debit': 0.0,
+                'credit': 4.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.04,
+                'reconciled': False,
+            },
+            # Liquidity line:
+            {
+                'debit': 16.01,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.16,
+                'reconciled': False,
+            },
+        ])
+
+    def test_register_payment_multi_currency_rounding_issue_writeoff_higher_amount_reconcile_negative_delta(self):
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=self.out_invoice_4.ids)\
+            .create({
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount': 0.16,
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.company_data['default_account_revenue'].id,
+                'writeoff_label': 'writeoff',
+            })\
+            ._create_payments()
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            # Receivable line:
+            {
+                'debit': 0.0,
+                'credit': 11.99,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.12,
+                'reconciled': True,
+            },
+            # Write-off line:
+            {
+                'debit': 0.0,
+                'credit': 4.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': -0.04,
+                'reconciled': False,
+            },
+            # Liquidity line:
+            {
+                'debit': 15.99,
+                'credit': 0.0,
+                'currency_id': self.currency_data_3['currency'].id,
+                'amount_currency': 0.16,
+                'reconciled': False,
+            },
+        ])
