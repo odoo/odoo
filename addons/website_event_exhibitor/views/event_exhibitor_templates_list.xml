@@ -89,12 +89,12 @@
         <li class="nav-item dropdown mr-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-folder-open"/>
-                By Sponsorship
+                By Level
             </a>
             <div class="dropdown-menu">
                 <a t-att-href="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', sponsorships=''))"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_sponsorships else ''}">
-                    All Sponsorships
+                    All Levels
                 </a>
                 <t t-foreach="sponsor_types" t-as="sponsor_type">
                     <a t-att-href="'/event/%s/exhibitors?%s' % (
@@ -174,7 +174,8 @@
                                 <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
                                     Register
                                 </t>
-                                <t t-else="">Connect</t>
+                                <t t-elif="sponsor.exhibitor_type == 'online'">Connect</t>
+                                <t t-else="">More info</t>
                             </a>
                         </div>
                         <img class="position-absolute mr-2 mt-2"

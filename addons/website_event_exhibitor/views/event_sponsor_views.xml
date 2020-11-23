@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <odoo>
 <data>
-    <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
+    <!-- EVENTS/CONFIGURATION/EVENT Sponsor Levels -->
     <record id="event_sponsor_type_view_form" model="ir.ui.view">
-        <field name="name">Sponsor Types</field>
+        <field name="name">Sponsor Levels</field>
         <field name="model">event.sponsor.type</field>
         <field name="arch" type="xml">
-            <form string="Event Sponsor Types">
+            <form string="Event Sponsor Levels">
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -19,10 +19,10 @@
     </record>
 
     <record id="event_sponsor_type_view_tree" model="ir.ui.view">
-        <field name="name">Sponsor Types</field>
+        <field name="name">Sponsor Levels</field>
         <field name="model">event.sponsor.type</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" string="Event Sponsor Type">
+            <tree editable="bottom" string="Event Sponsor Level">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="display_ribbon_style"/>
@@ -31,7 +31,7 @@
     </record>
 
     <record id="event_sponsor_type_action" model="ir.actions.act_window">
-        <field name="name">Sponsor Types</field>
+        <field name="name">Sponsor Levels</field>
         <field name="res_model">event.sponsor.type</field>
     </record>
 
@@ -47,10 +47,11 @@
                 <field name="phone"/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <separator/>
-                <filter string="Exhibitor" name="filter_is_exhibitor" domain="[('is_exhibitor', '=', True)]"/>
+                <filter string="Exhibitors" name="filter_is_exhibitor" domain="[('exhibitor_type', 'in', ['exhibitor', 'online'])]"/>
+                <filter string="Online" name="filter_is_exhibitor" domain="[('exhibitor_type', '=', 'online')]"/>
                 <group string="Group By" expand="0">
                     <filter string="Event" name="group_by_event_id" domain="[]" context="{'group_by': 'event_id'}"/>
-                    <filter string="Sponsorship" name="group_by_sponsor_type_id" domain="[]" context="{'group_by': 'sponsor_type_id'}"/>
+                    <filter string="Level" name="group_by_sponsor_type_id" domain="[]" context="{'group_by': 'sponsor_type_id'}"/>
                 </group>
             </search>
         </field>
@@ -64,7 +65,8 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
-                        <field name="is_published" widget="website_redirect_button"/>
+                        <field name="is_published" widget="website_redirect_button"
+                            attrs="{'invisible': [('exhibitor_type', '=', 'sponsor')]}"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="active" invisible="1"/>
@@ -79,18 +81,18 @@
                     </div>
                     <group>
                         <group>
-                            <field name="event_id"/>
                             <field name="partner_id" string="Partner"/>
                             <field name="email" widget="email" string="Email"
                                 placeholder="e.g. : open.wood.decoration@example.com"/>
-                            <field name="url" widget="url" string="Website"
-                                placeholder=">e.g. : https://www.odoo.com"/>
-                        </group>
-                        <group>
-                            <field name="sponsor_type_id"/>
-                            <field name="is_exhibitor"/>
                             <field name="phone" widget="phone" string="Phone" options="{'enable_sms': True}"/>
                             <field name="mobile" widget="phone" string="Mobile" options="{'enable_sms': True}"/>
+                            <field name="url" widget="url" string="Website"
+                                placeholder="e.g. : https://www.odoo.com"/>
+                        </group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="sponsor_type_id"/>
+                            <field name="exhibitor_type" required="1"/>
                             <label for="hour_from" string="Opening Hours"/>
                             <div class="o_row">
                                 <field name="hour_from" widget="float_time" nolabel="1" class="oe_inline"/>
@@ -101,17 +103,19 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Description">
+                        <page string="Description"
+                             attrs="{'invisible': [('exhibitor_type', '=', 'sponsor')]}">
                             <group>
                                 <field name="website_description" nolabel="1"/>
                             </group>
                         </page>
-                        <page string="Exhibitor" attrs="{'invisible': [('is_exhibitor', '=', False)]}">
+                        <page string="Online"
+                            attrs="{'invisible': [('exhibitor_type', '!=', 'online')]}">
                             <group>
                                 <group>
-                                    <field name="room_name" attrs="{'required': [('is_exhibitor', '=', True)]}" string="Jitsi Name"/>
+                                    <field name="room_name" attrs="{'required': [('exhibitor_type', '=', 'online')]}" string="Jitsi Name"/>
                                     <field name="room_lang_id"/>
-                                    <field name="room_max_capacity" attrs="{'required': [('is_exhibitor', '=', True)]}"/>
+                                    <field name="room_max_capacity" attrs="{'required': [('exhibitor_type', '=', 'online')]}"/>
                                     <field name="chat_room_id" groups="base.group_no_one"/>
                                 </group>
                             </group>
@@ -131,7 +135,7 @@
         <field name="name">event.sponsor.view.tree</field>
         <field name="model">event.sponsor</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1">
+            <tree multi_edit="1" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="name"/>
@@ -141,7 +145,7 @@
                 <field name="url" string="Website"/>
                 <field name="sponsor_type_id"/>
                 <field name="is_published" optional="show"/>
-                <field name="is_exhibitor"/>
+                <field name="exhibitor_type"/>
             </tree>
         </field>
     </record>
@@ -150,7 +154,7 @@
         <field name="name">event.sponsor.view.kanban</field>
         <field name="model">event.sponsor</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <field name="id"/>
                 <field name="url"/>
                 <field name="partner_email"/>
@@ -160,9 +164,10 @@
                         <div class="oe_kanban_global_click overflow-hidden">
                             <div class="row my-auto">
                                 <img t-att-src="kanban_image('event.sponsor', 'image_128', record.id.raw_value)" alt="Sponsor image" class="col-4"/>
-                                <div class="col-8">
+                                <div class="col-8 d-flex flex-column">
                                     <h1 class="o_kanban_record_title"><field name="name"/></h1>
-                                    <div>Level: <field name="sponsor_type_id"/></div>
+                                    <strong>Level: <field name="sponsor_type_id"/></strong>
+                                    <span class="text-muted"><field name="exhibitor_type"/></span>
                                     <span class="o_text_overflow" t-esc="record.partner_email.value"/>
                                     <span class="o_text_overflow" t-esc="record.url.value"/>
                                 </div>
@@ -182,8 +187,8 @@
 <p class="o_view_nocontent_smiling_face">
     Create a Sponsor / Exhibitor
 </p><p>
-    Sponsors might be advertised on your event pages footer.<br />
-    Exhibitors might have a dedicated page with chat room for people to connect with them.
+    Sponsors are advertised on your event pages.<br />
+    Exhibitors have a dedicated page a with chat room for people to connect with them.
 </p>
         </field>
     </record>
@@ -197,8 +202,8 @@
 <p class="o_view_nocontent_smiling_face">
     Create a Sponsor / Exhibitor
 </p><p>
-    Sponsors might be advertised on your event pages footer.<br />
-    Exhibitors might have a dedicated page with chat room for people to connect with them.
+    Sponsors are advertised on your event pages.<br />
+    Exhibitors have a dedicated page a with chat room for people to connect with them.
 </p>
         </field>
     </record>
