@@ -543,13 +543,11 @@
                                 type="object"
                                 string="Send &amp; Print"
                                 attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
-                                class="oe_highlight"
-                                groups="account.group_account_invoice"/>
+                                class="oe_highlight"/>
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
-                                groups="account.group_account_invoice"/>
+                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
