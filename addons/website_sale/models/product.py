@@ -12,6 +12,7 @@ from odoo.osv import expression
 class ProductRibbon(models.Model):
     _name = "product.ribbon"
     _description = 'Product ribbon'
+    _rec_name = 'html'
 
     html = fields.Char(string='Ribbon html', required=True)
     bg_color = fields.Char(string='Ribbon background color', required=False)
