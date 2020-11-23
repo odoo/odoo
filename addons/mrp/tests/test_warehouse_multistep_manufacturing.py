@@ -150,11 +150,14 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'location_id': self.warehouse.wh_output_stock_loc_id.id,
             'location_dest_id': self.customer_location,
             'procure_method': 'make_to_order',
+            'origin': 'SOURCEDOCUMENT',
             'state': 'draft',
         })
         picking_customer.action_confirm()
         production_order = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         self.assertTrue(production_order)
+        self.assertEqual(production_order.origin, 'SOURCEDOCUMENT', 'The MO origin should be the SO name')
+        self.assertNotEqual(production_order.name, 'SOURCEDOCUMENT', 'The MO name should not be the origin of the move')
 
         picking_stock_preprod = self.env['stock.move'].search([
             ('product_id', '=', self.raw_product.id),
@@ -173,6 +176,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertTrue(picking_stock_postprod)
         self.assertEqual(picking_stock_preprod.state, 'confirmed')
         self.assertEqual(picking_stock_postprod.state, 'waiting')
+        self.assertEqual(picking_stock_preprod.origin, production_order.name, 'The pre-prod origin should be the MO name')
+        self.assertEqual(picking_stock_postprod.origin, 'SOURCEDOCUMENT', 'The post-prod origin should be the SO name')
 
         picking_stock_preprod.action_assign()
         picking_stock_preprod.move_line_ids.qty_done = 4
