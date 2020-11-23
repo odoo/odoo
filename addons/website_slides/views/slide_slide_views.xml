@@ -151,7 +151,9 @@
             <field name="mode">primary</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="channel_id" position="replace"/>
+                <field name="channel_id" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                </field>
             </field>
         </record>
 
