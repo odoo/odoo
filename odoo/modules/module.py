@@ -320,23 +320,22 @@ def load_information_from_description_file(module, mod_path=None):
                 with tools.file_open(readme_path[0]) as fd:
                     info['description'] = fd.read()
 
-        # auto_install is set to `False` if disabled, and a set of
-        # auto_install dependencies otherwise. That way, we can set
-        # auto_install: [] to always auto_install a module regardless of its
-        # dependencies
-        auto_install = info.get('auto_install', info.get('active', False))
-        if isinstance(auto_install, collections.abc.Iterable):
-            info['auto_install'] = set(auto_install)
+
+        # auto_install is either `False` (by default) in which case the module
+        # is opt-in, either a list of dependencies in which case the module is
+        # automatically installed if all dependencies are (special case: [] to
+        # always install the module), either `True` to auto-install the module
+        # in case all dependencies declared in `depends` are installed.
+        if isinstance(info['auto_install'], collections.abc.Iterable):
+            info['auto_install'] = set(info['auto_install'])
             non_dependencies = info['auto_install'].difference(info['depends'])
             assert not non_dependencies,\
                 "auto_install triggers must be dependencies, found " \
                 "non-dependencies [%s] for module %s" % (
                     ', '.join(non_dependencies), module
                 )
-        elif auto_install:
+        elif info['auto_install']:
             info['auto_install'] = set(info['depends'])
-        else:
-            info['auto_install'] = False
 
         info['version'] = adapt_version(info['version'])
         return info
