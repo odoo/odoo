@@ -610,7 +610,7 @@ var Chatter = Widget.extend({
      */
     _onReloadAttachmentBox: function () {
         if (this.reloadOnUploadAttachment) {
-            this.trigger_up('reload');
+            this.trigger_up('reload', { keepChanges: true });
         }
         this._reloadAttachmentBox();
     },
