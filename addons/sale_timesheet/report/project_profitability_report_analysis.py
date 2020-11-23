@@ -37,6 +37,37 @@ class ProfitabilityAnalysis(models.Model):
                                   help="All revenues that are not from timesheets and that are linked to the analytic account of the project.")
     margin = fields.Float("Margin", digits=(16, 2), readonly=True, group_operator="sum")
 
+    _depends = {
+        'sale.order.line': [
+            'order_id',
+            'invoice_status',
+            'price_reduce',
+            'product_id',
+            'qty_invoiced',
+            'untaxed_amount_invoiced',
+            'untaxed_amount_to_invoice',
+            'currency_id',
+            'company_id',
+            'is_downpayment',
+            'project_id',
+            'task_id',
+            'qty_delivered_method',
+        ],
+        'sale.order': [
+            'date_order',
+            'user_id',
+            'partner_id',
+            'currency_id',
+            'analytic_account_id',
+            'order_line',
+            'invoice_status',
+            'amount_untaxed',
+            'currency_rate',
+            'company_id',
+            'project_id',
+        ],
+    }
+
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         query = """

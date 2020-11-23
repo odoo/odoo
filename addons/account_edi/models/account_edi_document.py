@@ -142,7 +142,7 @@ class AccountEdiDocument(models.Model):
 
             for documents in batches:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint(flush=False):
                         # Locks the documents in DB. Avoid sending an invoice twice (the documents can be processed by the CRON but also manually).
                         self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
 
@@ -165,7 +165,7 @@ class AccountEdiDocument(models.Model):
 
             for documents in batches:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint(flush=False):
                         self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
 
                         if state == 'to_send':
