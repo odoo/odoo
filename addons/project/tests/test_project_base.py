@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
-class TestProjectCommon(SavepointCase):
+class TestProjectCommon(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

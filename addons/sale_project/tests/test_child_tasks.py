@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details
 
-from odoo.tests.common import SavepointCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-class TestNestedTaskUpdate(SavepointCase):
+class TestNestedTaskUpdate(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

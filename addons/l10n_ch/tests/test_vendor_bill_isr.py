@@ -13,7 +13,7 @@ ISR_REFERENCE_NO_ZEROS = "1 23456 78903"
 ISR_REFERENCE_BAD = "11 11111 11111 11111 11111 11111"
 
 
-class TestVendorBillISR(common.SavepointCase):
+class TestVendorBillISR(common.TransactionCase):
     """Check we can encode Vendor bills with ISR references
 
     The ISR is a structured reference with a checksum.

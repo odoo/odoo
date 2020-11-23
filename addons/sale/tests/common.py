@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.base.tests.common import SavepointCase
+from odoo.addons.base.tests.common import TransactionCase
 
 
-class TestSaleCommonBase(SavepointCase):
+class TestSaleCommonBase(TransactionCase):
     ''' Setup with sale test configuration. '''
 
     @classmethod

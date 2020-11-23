@@ -27,6 +27,7 @@ import threading
 import time
 import unittest
 import difflib
+import warnings
 import werkzeug.urls
 from contextlib import contextmanager
 from datetime import datetime, date
@@ -635,8 +636,14 @@ class TransactionCase(BaseCase):
         self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
 
 
-# kept for backward compatibility
-SavepointCase = TransactionCase
+class SavepointCase(TransactionCase):
+    @classmethod
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        warnings.warn(
+            "Deprecated class SavepointCase has been merged into TransactionCase",
+            DeprecationWarning, stacklevel=2,
+        )
 
 
 class SingleTransactionCase(BaseCase):
@@ -1433,7 +1440,14 @@ class HttpCase(TransactionCase):
 
 
 # kept for backward compatibility
-HttpSavepointCase = HttpCase
+class HttpSavepointCase(HttpCase):
+    @classmethod
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        warnings.warn(
+            "Deprecated class HttpSavepointCase has been merged into HttpCase",
+            DeprecationWarning, stacklevel=2,
+        )
 
 
 def users(*logins):

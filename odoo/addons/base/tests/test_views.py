@@ -2373,7 +2373,7 @@ class TestViews(ViewCase):
             self.assertIn(expected_message, message)
 
 
-class TestViewTranslations(common.SavepointCase):
+class TestViewTranslations(common.TransactionCase):
     # these tests are essentially the same as in test_translate.py, but they use
     # the computed field 'arch' instead of the translated field 'arch_db'
 

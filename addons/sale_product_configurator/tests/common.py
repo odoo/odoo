@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.modules.module import get_module_resource
 
 
-class TestProductConfiguratorCommon(SavepointCase):
+class TestProductConfiguratorCommon(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

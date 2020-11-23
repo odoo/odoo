@@ -3,7 +3,7 @@
 from odoo.tests import common, new_test_user
 
 
-class TestFleet(common.SavepointCase):
+class TestFleet(common.TransactionCase):
 
     def test_manager_create_vehicle(self):
         manager = new_test_user(self.env, "test fleet manager", groups="fleet.fleet_group_manager,base.group_partner_manager")
