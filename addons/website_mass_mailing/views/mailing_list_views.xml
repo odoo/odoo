@@ -10,9 +10,11 @@
                     <page string="Toast Content" name="toast_content">
                         <field name="toast_content" nolabel="1"/>
                     </page>
-                    <page string="Website popups" name="website_popups">
+                    <page string="Website popups" name="website_popups" attrs="{'invisible': [('website_popup_ids', '=', [])]}">
                         <field name="website_popup_ids">
-                            <tree>
+                            <tree create="0">
+                                <field name="write_date"/>
+                                <field name="create_date"/>
                                 <field name="website_id"/>
                             </tree>
                         </field>
