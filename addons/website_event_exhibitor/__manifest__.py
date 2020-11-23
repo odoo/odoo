@@ -6,7 +6,7 @@
     'name': 'Event Exhibitors',
     'category': 'Marketing/Events',
     'sequence': 1004,
-    'version': '1.0',
+    'version': '1.1',
     'summary': 'Event: manage sponsors and exhibitors',
     'website': 'https://www.odoo.com/page/events',
     'description': "",

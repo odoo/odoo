@@ -17,7 +17,7 @@ class ExhibitorController(WebsiteEventController):
     def _get_event_sponsors_base_domain(self, event):
         search_domain_base = [
             ('event_id', '=', event.id),
-            ('is_exhibitor', '=', True),
+            ('exhibitor_type', 'in', ['exhibitor', 'online']),
         ]
         if not request.env.user.has_group('event.group_event_user'):
             search_domain_base = expression.AND([search_domain_base, [('is_published', '=', True)]])

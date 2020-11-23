@@ -6,10 +6,10 @@ from odoo import fields, models
 
 class SponsorType(models.Model):
     _name = "event.sponsor.type"
-    _description = 'Event Sponsor Type'
+    _description = 'Event Sponsor Level'
     _order = "sequence"
 
-    name = fields.Char('Sponsor Type', required=True, translate=True)
+    name = fields.Char('Sponsor Level', required=True, translate=True)
     sequence = fields.Integer('Sequence')
     display_ribbon_style = fields.Selection([
         ('no_ribbon', 'No Ribbon'),
