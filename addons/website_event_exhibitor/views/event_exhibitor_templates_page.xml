@@ -53,7 +53,7 @@
             </div>
         </t>
         <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
-        <div t-if="sponsor.event_id.is_ongoing and sponsor.chat_room_id" class="d-flex flex-column">
+        <div t-if="sponsor.exhibitor_type == 'online' and sponsor.event_id.is_ongoing and sponsor.chat_room_id" class="d-flex flex-column">
             <t t-if="not sponsor.is_in_opening_hours">
                 <div class="col-12 alert alert-warning rounded-0 text-center" role="alert">
                     <span>Oops! This room is currently closed</span><br />

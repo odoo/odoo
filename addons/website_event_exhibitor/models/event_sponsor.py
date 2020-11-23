@@ -26,19 +26,21 @@ class Sponsor(models.Model):
     ]
 
     event_id = fields.Many2one('event.event', 'Event', required=True)
-    sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
+    sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Level', required=True)
     url = fields.Char('Sponsor Website', compute='_compute_url', readonly=False, store=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean(default=True)
     # description
     subtitle = fields.Char('Slogan', help='Catchy marketing sentence for promote')
-    is_exhibitor = fields.Boolean("Exhibitor's Chat")
+    exhibitor_type = fields.Selection(
+        [('sponsor', 'Sponsor'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
+        string="Sponsor Type", default="sponsor")
     website_description = fields.Html(
         'Description', compute='_compute_website_description',
         sanitize_attributes=False, sanitize_form=True, translate=html_translate,
         readonly=False, store=True)
     # contact information
-    partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
+    partner_id = fields.Many2one('res.partner', 'Partner', required=True)
     partner_name = fields.Char('Name', related='partner_id.name')
     partner_email = fields.Char('Email', related='partner_id.email')
     partner_phone = fields.Char('Phone', related='partner_id.phone')
@@ -116,20 +118,19 @@ class Sponsor(models.Model):
             if not sponsor[fname]:
                 sponsor[fname] = sponsor.partner_id[fname]
 
-
-    @api.onchange('is_exhibitor')
-    def _onchange_is_exhibitor(self):
+    @api.onchange('exhibitor_type')
+    def _onchange_exhibitor_type(self):
         """ Keep an explicit onchange to allow configuration of room names, even
         if this field is normally a related on chat_room_id.name. It is not a real
         computed field, an onchange used in form view is sufficient. """
         for sponsor in self:
-            if sponsor.is_exhibitor and not sponsor.room_name:
+            if sponsor.exhibitor_type == 'online' and not sponsor.room_name:
                 if sponsor.name:
                     room_name = "odoo-exhibitor-%s" % sponsor.name
                 else:
                     room_name = self.env['chat.room']._default_name(objname='exhibitor')
                 sponsor.room_name = self._jitsi_sanitize_name(room_name)
-            if sponsor.is_exhibitor and not sponsor.room_max_capacity:
+            if sponsor.exhibitor_type == 'online' and not sponsor.room_max_capacity:
                 sponsor.room_max_capacity = '8'
 
     @api.depends('partner_id')
