@@ -163,7 +163,8 @@ class GoogleSync(models.AbstractModel):
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
             odoo_record = self.browse(gevent.odoo_id(self.env))
-            if updated >= pytz.utc.localize(odoo_record.write_date):
+            # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
+            if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.write(vals)
                 synced_records |= odoo_record
