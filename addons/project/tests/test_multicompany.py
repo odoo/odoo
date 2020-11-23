@@ -2,11 +2,11 @@
 
 from contextlib import contextmanager
 
-from odoo.tests.common import SavepointCase, Form
+from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import AccessError, UserError
 
 
-class TestMultiCompanyCommon(SavepointCase):
+class TestMultiCompanyCommon(TransactionCase):
 
     @classmethod
     def setUpMultiCompany(cls):

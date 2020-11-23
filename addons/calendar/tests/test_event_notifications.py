@@ -6,11 +6,11 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.tests.common import SavepointCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 from odoo.addons.mail.tests.common import MailCase
 
 
-class TestEventNotifications(SavepointCase, MailCase):
+class TestEventNotifications(TransactionCase, MailCase):
 
     @classmethod
     def setUpClass(cls):

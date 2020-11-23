@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from odoo.tests.common import SavepointCase, Form
+from odoo.tests.common import TransactionCase, Form
 
 
-class TestMultiCompany(SavepointCase):
+class TestMultiCompany(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMultiCompany, cls).setUpClass()

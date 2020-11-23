@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
 class TestMailCommon(MailCommon):
@@ -23,7 +23,7 @@ class TestMailMultiCompanyCommon(MailCommon):
         })
 
 
-class TestRecipients(SavepointCase):
+class TestRecipients(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

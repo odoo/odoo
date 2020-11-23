@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo.tests.common import SavepointCase, Form
+from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import ValidationError
 from odoo import fields
 
@@ -10,7 +10,7 @@ from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 from unittest.mock import patch
 
-class TestProjectrecurrence(SavepointCase):
+class TestProjectrecurrence(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestProjectrecurrence, cls).setUpClass()

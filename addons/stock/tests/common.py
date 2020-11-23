@@ -3,7 +3,7 @@
 from odoo.tests import common
 
 
-class TestStockCommon(common.SavepointCase):
+class TestStockCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestStockCommon, cls).setUpClass()

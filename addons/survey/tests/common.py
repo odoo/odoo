@@ -10,7 +10,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
-class SurveyCase(common.SavepointCase):
+class SurveyCase(common.TransactionCase):
     def setUp(self):
         super(SurveyCase, self).setUp()
 

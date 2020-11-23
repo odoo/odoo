@@ -3,10 +3,10 @@
 
 from datetime import datetime
 
-from odoo.tests.common import SavepointCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-class TestEventNotifications(SavepointCase):
+class TestEventNotifications(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

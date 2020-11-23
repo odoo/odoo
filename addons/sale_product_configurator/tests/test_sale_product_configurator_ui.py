@@ -6,7 +6,7 @@ from .common import TestProductConfiguratorCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpSavepointCase, TestProductConfiguratorCommon):
+class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
 
     def setUp(self):
         super(TestUi, self).setUp()

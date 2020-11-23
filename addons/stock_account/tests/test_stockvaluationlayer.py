@@ -5,10 +5,10 @@
 
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests import Form, tagged
-from odoo.tests.common import SavepointCase, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-class TestStockValuationCommon(SavepointCase):
+class TestStockValuationCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationCommon, cls).setUpClass()

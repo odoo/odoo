@@ -3,10 +3,10 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
-class TestReportsCommon(SavepointCase):
+class TestReportsCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
