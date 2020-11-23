@@ -14624,7 +14624,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const newAttributes = domObject.attributes || {};
                 const oldAttributes = (old === null || old === void 0 ? void 0 : old.object.attributes) || {};
                 for (const name in oldAttributes) {
-                    if (!newAttributes[name]) {
+                    if (typeof newAttributes[name] === 'undefined') {
                         hasChanged = true;
                         if (name === 'style') {
                             for (const key in oldAttributes[name]) {
