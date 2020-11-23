@@ -118,7 +118,7 @@ class AccountEdiDocument(models.Model):
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
 
-                elif not move_result.get('success'):
+                elif not move_result.get('success'): # This allows intermediate steps in the cancelling process
                     document.error = move_result.get('error') or _("Error when cancelling the journal entry.")
 
             if invoice_ids_to_cancel:
