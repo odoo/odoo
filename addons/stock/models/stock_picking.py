@@ -528,7 +528,7 @@ class Picking(models.Model):
 
     def _compute_has_packages(self):
         for picking in self:
-            picking.has_packages = picking.move_line_ids.filtered(lambda ml: ml.result_package_id)
+            picking.has_packages = bool(self.env['stock.move.line'].search_count([('picking_id', '=', picking.id), ('result_package_id', '!=', False)]))
 
     @api.depends('immediate_transfer', 'state')
     def _compute_show_check_availability(self):
