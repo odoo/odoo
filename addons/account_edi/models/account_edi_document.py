@@ -102,7 +102,7 @@ class AccountEdiDocument(models.Model):
             for document in documents:
                 move = document.move_id
                 move_result = edi_result.get(move, {})
-                if move_result.get('success'):
+                if move_result.get('success') == True:
                     old_attachment = document.attachment_id
                     document.write({
                         'state': 'cancelled',
@@ -118,9 +118,8 @@ class AccountEdiDocument(models.Model):
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
 
-                else:
-                    if not move_result.get('intermediate'):
-                        document.error = move_result.get('error') or _("Error when cancelling the journal entry.")
+                elif not move_result.get('success'):
+                    document.error = move_result.get('error') or _("Error when cancelling the journal entry.")
 
             if invoice_ids_to_cancel:
                 invoices = self.env['account.move'].browse(list(invoice_ids_to_cancel))
