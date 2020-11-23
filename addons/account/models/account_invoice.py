@@ -1316,11 +1316,22 @@ class AccountInvoice(models.Model):
     def tax_line_move_line_get(self):
         self.ensure_one()
         res = []
+<<<<<<< HEAD
         # loop the invoice.tax.line in reversal sequence
         for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
             if tax_line.amount_total:
                 analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
                 res.append({
+=======
+        # keep track of taxes already processed
+        # loop the invoice.tax.line in reversal sequence
+        for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
+            tax = tax_line.tax_id
+
+            analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
+            if tax_line.amount_total:
+                tax_line_vals = {
+>>>>>>> 8f9c2f9adda... temp
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
@@ -1332,11 +1343,28 @@ class AccountInvoice(models.Model):
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
+<<<<<<< HEAD
                     'tax_ids': tax_line.tax_ids and [(6, 0, tax_line.tax_ids.ids)] or False, # We don't pass an empty recordset here, as it would reset the tax_exibility of the line, due to the condition in account.move.line's create
                     'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
                     'tag_ids': [(6, 0, tax_line.tag_ids.ids)],
                     'tax_base_amount': tax_line.base,
                 })
+=======
+                }
+
+                if tax.include_base_amount:
+                    affected_taxes = []
+                    for invoice_line in tax_line.invoice_id.invoice_line_ids:
+                        if tax in invoice_line.invoice_line_tax_ids:
+                            following_taxes = invoice_line.invoice_line_tax_ids.filtered(lambda x: x.sequence > tax.sequence
+                                                                                                   or (x.sequence == tax.sequence and x.id > tax.id))
+                            affected_taxes += following_taxes.ids
+                            affected_taxes += following_taxes.mapped('children_tax_ids.id')
+
+                    tax_line_vals['tax_ids'] = [(6, 0, affected_taxes)]
+
+                res.append(tax_line_vals)
+>>>>>>> 8f9c2f9adda... temp
         return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):
