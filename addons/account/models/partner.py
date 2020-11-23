@@ -6,7 +6,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from psycopg2 import sql, DatabaseError
 
@@ -187,6 +187,11 @@ class AccountFiscalPosition(models.Model):
             fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
         return fp.id if fp else False
+
+    def unlink(self):
+        if self.env['account.move'].search([('fiscal_position_id', 'in', self.ids)], limit=1):
+            raise UserError(_('You cannot perform this action on an fiscal position that already applied on invoice.'
+                              '\nPlease remove or replace it from invoice manually then delete.'))
 
 
 class AccountFiscalPositionTax(models.Model):
