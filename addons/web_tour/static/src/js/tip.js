@@ -519,12 +519,18 @@ var Tip = Widget.extend({
     /**
      * On touch devices, closes the tip when clicked.
      *
+     * Also stop propagation to avoid undesired behavior, such as the kanban
+     * quick create closing when the user clicks on the tooltip.
+     *
      * @private
+     * @param {MouseEvent} ev
      */
-    _onTipClicked: function () {
+    _onTipClicked: function (ev) {
         if (config.device.touch && this.tip_opened) {
             this._to_bubble_mode();
         }
+
+        ev.stopPropagation();
     },
     /**
      * @private
