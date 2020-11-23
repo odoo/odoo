@@ -28,7 +28,7 @@ class HolidaysAllocation(models.Model):
 
     def _default_holiday_status_id(self):
         if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-            domain = [('valid', '=', True)]
+            domain = [('valid', '=', True), ('allocation_type', '!=', 'no')]
         else:
             domain = [('valid', '=', True), ('allocation_type', '=', 'fixed_allocation')]
         return self.env['hr.leave.type'].search(domain, limit=1)
@@ -61,7 +61,7 @@ class HolidaysAllocation(models.Model):
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_from_employee_id', store=True, string="Time Off Type", required=True, readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
-        domain=_holiday_status_id_domain)
+        domain=_holiday_status_id_domain, default=_default_holiday_status_id)
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})

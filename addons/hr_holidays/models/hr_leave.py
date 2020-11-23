@@ -74,7 +74,7 @@ class HolidaysRequest(models.Model):
         defaults = self._default_get_request_parameters(defaults)
 
         if 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
-            lt = self.env['hr.leave.type'].search([('valid', '=', True)], limit=1)
+            lt = self.env['hr.leave.type'].search([('valid', '=', True), ('allocation_type', 'in', ['no', 'fixed_allocation'])], limit=1)
 
             if lt:
                 defaults['holiday_status_id'] = lt.id

@@ -20,12 +20,13 @@ _logger = logging.getLogger(__name__)
 class HolidaysType(models.Model):
     _name = "hr.leave.type"
     _description = "Time Off Type"
+    _order = 'sequence'
 
     @api.model
     def _model_sorting_key(self, leave_type):
         remaining = leave_type.virtual_remaining_leaves > 0
         taken = leave_type.leaves_taken > 0
-        return leave_type.allocation_type == 'fixed' and remaining, leave_type.allocation_type == 'fixed_allocation' and remaining, taken
+        return -1*leave_type.sequence, leave_type.allocation_type == 'fixed' and remaining, leave_type.allocation_type == 'fixed_allocation' and remaining, taken
 
     name = fields.Char('Time Off Type', required=True, translate=True)
     code = fields.Char('Code')
