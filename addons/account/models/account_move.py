@@ -197,6 +197,8 @@ class AccountMove(models.Model):
         comodel_name='account.bank.statement.line',
         string="Statement Line", copy=False, check_company=True)
 
+    analytic_account_lines_ids = fields.One2many('account.analytic.line', compute='_compute_analytic_account_lines_ids', readonly=False)
+
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
         compute='_compute_amount')
@@ -1039,6 +1041,11 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('line_ids.analytic_line_ids')
+    def _compute_analytic_account_lines_ids(self):
+        for move in self:
+            move.analytic_account_lines_ids = move.line_ids.analytic_line_ids
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):

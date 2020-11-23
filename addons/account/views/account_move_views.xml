@@ -1114,6 +1114,17 @@
                                 <!-- Internal note -->
                                 <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
                             </page>
+                            <page id="analytic_account_lines" groups="analytic.group_analytic_tags" string ="Analytic Account Lines"
+                                attrs="{'invisible':['|',('state','=','draft'),('analytic_account_lines_ids','=',[])]}">
+                                <field name="analytic_account_lines_ids">
+                                    <tree create="false" delete="false" edit="true">
+                                        <field name="date"/>
+                                        <field name="name"/>
+                                        <field name="account_id"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <!-- Attachment preview -->
