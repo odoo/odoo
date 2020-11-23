@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Éloi Rivard azmeuk@gmail.com https://github.com/azmeuk
+Éloi Rivard azmeuk@gmail.com eloi.rivard@aquilenet.fr https://github.com/azmeuk
