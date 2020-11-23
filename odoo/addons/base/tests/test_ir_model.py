@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase, SavepointCase, tagged
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 
@@ -172,7 +172,7 @@ class TestXMLID(TransactionCase):
             model._load_records(data_list)
 
 
-class TestIrModel(SavepointCase):
+class TestIrModel(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
-class TestEventCommon(common.SavepointCase):
+class TestEventCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
