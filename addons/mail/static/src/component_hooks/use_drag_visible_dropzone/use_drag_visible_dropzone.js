@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js', function (require) {
 'use strict';
 
-const { useRef, useState, onMounted, onWillUnmount } = owl.hooks;
+const { useState, onMounted, onWillUnmount } = owl.hooks;
 
 /**
  * This hook handle the visibility of the dropzone based on drag & drop events.
@@ -18,7 +18,6 @@ function useDragVisibleDropZone() {
      * value accessible from `.value`
      */
     const isVisible = useState({ value: false });
-    const dropzoneRef = useRef('dropzone');
 
     /**
      * Counts how many drag enter/leave happened globally. This is the only
@@ -31,12 +30,20 @@ function useDragVisibleDropZone() {
         document.addEventListener('dragenter', _onDragenterListener, true);
         document.addEventListener('dragleave', _onDragleaveListener, true);
         document.addEventListener('drop', _onDropListener, true);
+
+        // Thoses Events prevent the browser to open or download the file if
+        // it's dropped outside of the dropzone
+        window.addEventListener('dragover', ev => ev.preventDefault());
+        window.addEventListener('drop', ev => ev.preventDefault());
     });
 
     onWillUnmount(() => {
         document.removeEventListener('dragenter', _onDragenterListener, true);
         document.removeEventListener('dragleave', _onDragleaveListener, true);
         document.removeEventListener('drop', _onDropListener, true);
+
+        window.removeEventListener('dragover', ev => ev.preventDefault());
+        window.removeEventListener('drop', ev => ev.preventDefault());
     });
 
     //--------------------------------------------------------------------------
