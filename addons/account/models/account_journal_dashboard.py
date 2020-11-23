@@ -431,7 +431,7 @@ class account_journal(models.Model):
     def to_check_ids(self):
         self.ensure_one()
         domain = self.env['account.move.line']._get_suspense_moves_domain()
-        domain.append(('journal_id', '=', self.id))
+        domain += [('journal_id', '=', self.id),('statement_line_id.is_reconciled', '=', False)]
         statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
         return statement_line_ids
 
