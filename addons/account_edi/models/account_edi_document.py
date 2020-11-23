@@ -158,6 +158,8 @@ class AccountEdiDocument(models.Model):
                         _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
                     else:
                         raise e
+                else:
+                    self.env.cr.commit()
 
         # ==== Process payments ====
         for key, batches in payments:
@@ -180,6 +182,8 @@ class AccountEdiDocument(models.Model):
                         _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
                     else:
                         raise e
+                else:
+                    self.env.cr.commit()
 
     def _process_documents_no_web_services(self):
         """ Post and cancel all the documents that don't need a web service.
