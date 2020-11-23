@@ -30,7 +30,33 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      * @param {function} [callback] if given callback will be called when user clicks on notification
      */
     sendNotification: function (title, content, callback) {
-        if (window.Notification && Notification.permission === "granted") {
+        var self = this;
+        if (window.Notification && Notification.permission === "default") {
+            Notification.requestPermission().then(function(perm) {
+                if (perm === "granted") {
+                    if (self.isMasterTab()) {
+                        try {
+                            self._sendNativeNotification(title, content, callback);
+                        } catch (error) {
+                            // Notification without Serviceworker in Chrome Android doesn't works anymore
+                            // So we fallback to do_notify() in this case
+                            // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
+                            if (error.message.indexOf('ServiceWorkerRegistration') > -1) {
+                                self.do_notify(title, content);
+                                self._beep();
+                            } else {
+                                throw error;
+                            }
+                        }
+                    }
+                } else {
+                    self.do_notify(title, content);
+                    if (self.isMasterTab()) {
+                        self._beep();
+                    }
+                }
+            });
+        } else if (window.Notification && Notification.permission === "granted") {
             if (this.isMasterTab()) {
                 try {
                     this._sendNativeNotification(title, content, callback);
