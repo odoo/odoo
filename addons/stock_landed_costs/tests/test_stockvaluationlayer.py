@@ -7,8 +7,13 @@ from odoo.tests import Form, tagged
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 
 
+<<<<<<< HEAD
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
+=======
+@tagged('post_install', '-at_install')
+class TestStockValuationLCCommon(TestStockValuationCommon, StockAccountTestCommon):
+>>>>>>> 5a28be6e560... temp
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -89,6 +94,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             })
             in_move.write({'picking_id': picking.id})
 
+<<<<<<< HEAD
         in_move._action_confirm()
         in_move._action_assign()
         in_move.move_line_ids.qty_done = quantity
@@ -136,6 +142,9 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
 
 @tagged('-at_install', 'post_install')
+=======
+@tagged('post_install', '-at_install')
+>>>>>>> 5a28be6e560... temp
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
     def setUp(self):
         super(TestStockValuationLCFIFO, self).setUp()
@@ -251,7 +260,11 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
 
 
+<<<<<<< HEAD
 @tagged('-at_install', 'post_install')
+=======
+@tagged('post_install', '-at_install')
+>>>>>>> 5a28be6e560... temp
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
     def setUp(self):
         super(TestStockValuationLCAVCO, self).setUp()
@@ -294,7 +307,11 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
+<<<<<<< HEAD
 @tagged('-at_install', 'post_install')
+=======
+@tagged('post_install', '-at_install')
+>>>>>>> 5a28be6e560... temp
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
