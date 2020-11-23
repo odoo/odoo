@@ -25,6 +25,5 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
      'demo': [
          'demo/demo_company.xml',
      ],
-    "active": False,
     'post_init_hook': '_preserve_tag_on_taxes',
 }
