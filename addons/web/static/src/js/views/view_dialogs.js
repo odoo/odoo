@@ -362,6 +362,7 @@ var SelectCreateDialog = ViewDialog.extend({
             _.extend(viewOptions, {
                 hasSelectors: !this.options.disable_multiple_selection,
                 readonly: true,
+                multiEdit: false,
 
             }, this.options.list_view_options);
             selectCreateController = select_create_controllers_registry.SelectCreateListController;
