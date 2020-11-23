@@ -4765,6 +4765,45 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('open new record even with warning message', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        warning: {
+                            title: "Warning",
+                            message: "Any warning."
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input').val(), 'blip', 'input should contain record value');
+        form.$('input').first().val("tralala").trigger('input');
+        assert.strictEqual(form.$('input').val(), 'tralala', 'input should contain new value');
+
+        form.reload({ currentId: false });
+        assert.strictEqual(form.$('input').val(), 'My little Foo Value',
+            'input should contain default value after reload');
+
+        form.destroy();
+    });
+
     QUnit.test('render stat button with string inline', function (assert) {
         assert.expect(1);
 
