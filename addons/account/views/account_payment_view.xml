@@ -209,7 +209,7 @@
                                 <field name="partner_id" context="{'default_is_company': True}"
                                        attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="destination_account_id"
-                                       options="{'no_create': True}"
+                                       options="{'no_create': True}" required="1"
                                        attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="is_internal_transfer"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
