@@ -1,8 +1,10 @@
 odoo.define('web_tour.tour_manager_tests', async function (require) {
     "use strict";
 
+    const KanbanView = require('web.KanbanView');
     const TourManager = require('web_tour.TourManager');
     const testUtils = require('web.test_utils');
+    const createView = testUtils.createView;
 
     const ajax = require('web.ajax');
     const { qweb } = require('web.core');
@@ -145,6 +147,58 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
 
             assert.containsNone(document.body, '.o_tooltip:visible');
 
+            tourManager.destroy();
+        });
+
+        QUnit.test("kanban quick create VS tour tooltips", async function (assert) {
+            assert.expect(3);
+
+            const kanban = await createView({
+                View: KanbanView,
+                model: 'partner',
+                data: {
+                    partner: {
+                        fields: {
+                            foo: {string: "Foo", type: "char"},
+                            bar: {string: "Bar", type: "boolean"},
+                        },
+                        records: [
+                            {id: 1, bar: true, foo: "yop"},
+                        ]
+                    }
+                },
+                arch: `<kanban>
+                        <field name="bar"/>
+                        <templates><t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t></templates>
+                        </kanban>`,
+                groupBy: ['bar'],
+            });
+
+            // click to add an element
+            await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+            assert.containsOnce(kanban, '.o_kanban_quick_create',
+                "should have open the quick create widget");
+
+            // create tour manager targeting the kanban quick create in its steps
+            const tourManager = await createTourManager({
+                observe: true,
+                template: kanban.$el.html(),
+                tours: [{
+                    name: "Tour",
+                    options: { rainbowMan: false },
+                    steps: [{ trigger: "input[name='display_name']" }],
+                }],
+            });
+
+            assert.containsOnce(document.body, '.o_tooltip:visible');
+
+            await testUtils.dom.click($('.o_tooltip:visible'));
+            assert.containsOnce(kanban, '.o_kanban_quick_create',
+                "the quick create should not have been destroyed when tooltip is clicked");
+
+            kanban.destroy();
             tourManager.destroy();
         });
     });
