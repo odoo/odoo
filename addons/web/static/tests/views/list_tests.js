@@ -6597,6 +6597,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('multi edit in select create dialog should be disabled', async function (assert) {
+        assert.expect(3);
+
+        for (let i = 4; i <= 10; i++) {
+            this.data.bar.records.push({ id: i, display_name: "Value" + i });
+        }
+
+        const form = await createView({
+            arch: `
+            <form>
+                <field name="m2m" widget="many2many_tags"/>
+            </form>`,
+            archs: {
+                'bar,false,list': '<tree multi_edit="1"><field name="display_name"/></tree>',
+                'bar,false,search': '<search></search>',
+            },
+            data: this.data,
+            model: 'foo',
+            View: FormView,
+        });
+
+        await testUtils.fields.many2one.clickOpenDropdown("m2m");
+        await testUtils.fields.many2one.clickItem("m2m", "Search More");
+        assert.containsOnce(document.body, '.modal .o_list_view', "should have open the modal");
+
+        // select all records
+        await testUtils.dom.click($('.o_list_view thead .o_list_record_selector input'));
+        await testUtils.dom.click($('.o_data_row:first .o_data_cell:eq(0)'));
+        assert.containsNone(document.body, '.modal .o_list_view',
+            "should not have modal, clicking on records should select record instead of editing in dialog");
+        assert.containsN(form, '.o_field_many2manytags[name="m2m"] .badge', 1,
+            "many2many tag should now contain 1 record selected");
+
+        form.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
