@@ -73,6 +73,22 @@
                     % endif
                 %endif
             </div>
+            % if format_date(object.event_id.start) != format_date(object.event_id.stop):
+                % if object.event_id.allday:
+                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
+                        &#8594; ${object.event_id.get_interval('end_day', tz=object.partner_id.tz) or ''}
+                    </div>
+                % else
+                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                        &#8594; ${object.event_id.get_interval('end_day', tz=object.partner_id.tz) or ''}
+                        ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                    </div>
+                % endif
+            % elif not object.event_id.allday:
+                <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                    &#8594; ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                </div>
+            % endif
         </td>
         <td width="20px;"/>
         <td style="padding-top: 5px;">
@@ -105,24 +121,52 @@
                     </li>
                 % endif
                 <li>Attendees
-                <ul>
+                <ul style="padding-left: 15px;">
                 % for attendee in object.event_id.attendee_ids:
-                    <li>
-                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};"> </div>
+                    <div>
+                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background-color: ${colors[attendee.state] or 'white'};"> </div>
                         % if attendee.common_name != object.common_name:
-                            <span style="margin-left:5px">${attendee.common_name}</span>
+                            <span>${attendee.common_name}
+                            % if object.event_id.user_id.id in attendee.partner_id.user_ids.ids:
+                                <span style="text-decoration: none; color: #999999;">(Organizer)</span>
+                            % endif
+                            </span>
                         % else:
-                            <span style="margin-left:5px">You</span>
+                            <span>You</span>
                         % endif
-                    </li>
+                    </div>
                 % endfor
                 </ul></li>
+                % if object.event_id.location:
+                    <li>Location: ${object.event_id.location}
+                        (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
+                    </li>
+                % endif
                 % if object.event_id.videocall_location:
-                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                    <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                % endif
+                % if object.event_id.description :
+                    <li>Description: ${object.event_id.description}</li>
+                % endif
+                % if recurrent:
+                    <li>When: ${object.recurrence_id.name}</li>
                 % endif
             </ul>
         </td>
     </tr></table>
+
+    <div style="text-align: center; margin: 16px 0px 16px 0px;">
+        % set target = 'recurrence' if recurrent else 'meeting'
+        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+            Accept</a>
+        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #875A7B; text-decoration: none; border: 1px solid #875A7B; border-radius: 3px">
+            Decline</a>
+        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #875A7B; text-decoration: none; border: 1px solid #875A7B; border-radius: 3px">
+            View</a>
+    </div>
     <br/>
     Thank you,
     % if object.event_id.user_id.signature:
@@ -206,6 +250,22 @@
                     % endif
                 %endif
             </div>
+            % if format_date(object.event_id.start) != format_date(object.event_id.stop):
+                % if object.event_id.allday:
+                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
+                        &#8594; ${object.event_id.get_interval('end_day', tz=object.partner_id.tz) or ''}
+                    </div>
+                % else
+                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                        &#8594; ${object.event_id.get_interval('end_day', tz=object.partner_id.tz) or ''}
+                        ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                    </div>
+                % endif
+            % elif not object.event_id.allday:
+                <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                    &#8594; ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                </div>
+            % endif
         </td>
         <td width="20px;"/>
         <td style="padding-top: 5px;">
@@ -235,24 +295,52 @@
                     </li>
                 % endif
                 <li>Attendees
-                <ul>
+                <ul style="padding-left: 15px;">
                 % for attendee in object.event_id.attendee_ids:
-                    <li>
-                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: ${colors[attendee.state] or 'white'};"> </div>
+                    <div>
+                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background-color: ${colors[attendee.state] or 'white'};"> </div>
                         % if attendee.common_name != object.common_name:
-                            <span style="margin-left:5px">${attendee.common_name}</span>
+                            <span>${attendee.common_name}
+                            % if object.event_id.user_id.id in attendee.partner_id.user_ids.ids:
+                                <span style="text-decoration: none; color: #999999;">(Organizer)</span>
+                            % endif
+                            </span>
                         % else:
-                            <span style="margin-left:5px">You</span>
+                            <span>You</span>
                         % endif
-                    </li>
+                    </div>
                 % endfor
                 </ul></li>
+                % if object.event_id.location:
+                    <li>Location: ${object.event_id.location}
+                        (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
+                    </li>
+                % endif
                 % if object.event_id.videocall_location:
-                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                    <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                % endif
+                % if object.event_id.description :
+                    <li>Description: ${object.event_id.description}</li>
+                % endif
+                % if recurrent:
+                    <li>When: ${object.recurrence_id.name}</li>
                 % endif
             </ul>
         </td>
     </tr></table>
+
+    <div style="text-align: center; margin: 16px 0px 16px 0px;">
+        % set target = 'recurrence' if recurrent else 'meeting'
+        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+            Accept</a>
+        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #875A7B; text-decoration: none; border: 1px solid #875A7B; border-radius: 3px">
+            Decline</a>
+        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #875A7B; text-decoration: none; border: 1px solid #875A7B; border-radius: 3px">
+            View</a>
+    </div>
     <br/>
     Thank you,
     % if object.event_id.user_id.signature:
@@ -316,11 +404,47 @@
                     % endif
                 %endif
             </div>
+            % if format_date(object.event_id.start) != format_date(object.event_id.stop):
+                % if object.event_id.allday:
+                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
+                        &#8594; ${object.event_id.get_interval('end_day', tz=object.partner_id.tz) or ''}
+                    </div>
+                % else
+                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                        &#8594; ${object.event_id.get_interval('end_day', tz=object.partner_id.tz) or ''}
+                        ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                    </div>
+                % endif
+            % elif not object.event_id.allday:
+                <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                    &#8594; ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                </div>
+            % endif
         </td>
         <td width="20px;"/>
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
-            <ul>
+            <ul style="padding-left: 15px;">
+                % if not object.event_id.allday and object.event_id.duration
+                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
+                % endif
+                <li>Attendees
+                <ul style="padding-left: 15px;">
+                % for attendee in object.event_id.attendee_ids:
+                    <div>
+                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background-color: ${colors[attendee.state] or 'white'};"> </div>
+                        % if attendee.common_name != object.common_name:
+                            <span>${attendee.common_name}
+                            % if object.event_id.user_id.id in attendee.partner_id.user_ids.ids:
+                                <span style="text-decoration: none; color: #999999;">(Organizer)</span>
+                            % endif
+                            </span>
+                        % else:
+                            <span>You</span>
+                        % endif
+                    </div>
+                % endfor
+                </ul></li>
                 % if object.event_id.location:
                     <li>Location: ${object.event_id.location}
                         (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
@@ -329,6 +453,17 @@
                 % if recurrent:
                     <li>When: ${object.recurrence_id.name}</li>
                 % endif
+            % elif not object.event_id.allday:
+                <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; background-color: #875A7B;'>
+                    &#8594; ${object.event_id.get_interval('end_time', tz=object.partner_id.tz) or ''}
+                </div>
+            % endif
+        </td>
+        <td width="20px;"/>
+        % endif
+        <td style="padding-top: 5px;">
+            <p><strong>Details of the event</strong></p>
+            <ul style="padding-left: 15px;">
                 % if not object.event_id.allday and object.event_id.duration
                     <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
                 % endif
@@ -345,24 +480,52 @@
                     </li>
                 % endif
                 <li>Attendees
-                <ul>
+                <ul style="padding-left: 15px;">
                 % for attendee in object.event_id.attendee_ids:
-                    <li>
-                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};"> </div>
+                    <div>
+                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background-color: ${colors[attendee.state] or 'white'};"> </div>
                         % if attendee.common_name != object.common_name:
-                            <span style="margin-left:5px">${attendee.common_name}</span>
+                            <span>${attendee.common_name}
+                            % if object.event_id.user_id.id in attendee.partner_id.user_ids.ids:
+                                <span style="text-decoration: none; color: #999999;">(Organizer)</span>
+                            % endif
+                            </span>
                         % else:
-                            <span style="margin-left:5px">You</span>
+                            <span>You</span>
                         % endif
-                    </li>
+                    </div>
                 % endfor
                 </ul></li>
+                % if object.event_id.location:
+                    <li>Location: ${object.event_id.location}
+                        (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
+                    </li>
+                % endif
                 % if object.event_id.videocall_location:
-                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                    <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                % endif
+                % if object.event_id.description :
+                    <li>Description: ${object.event_id.description}</li>
+                % endif
+                % if recurrent:
+                    <li>When: ${object.recurrence_id.name}</li>
                 % endif
             </ul>
         </td>
     </tr></table>
+
+    <div style="text-align: center; margin: 16px 0px 16px 0px;">
+        % set target = 'recurrence' if recurrent else 'meeting'
+        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+            Accept</a>
+        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #875A7B; text-decoration: none; border: 1px solid #875A7B; border-radius: 3px">
+            Decline</a>
+        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
+            style="padding: 5px 10px; color: #875A7B; text-decoration: none; border: 1px solid #875A7B; border-radius: 3px">
+            View</a>
+    </div>
     <br/>
     Thank you,
     % if object.event_id.user_id.signature:

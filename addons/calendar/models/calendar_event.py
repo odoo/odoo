@@ -481,15 +481,20 @@ class Meeting(models.Model):
             (current_attendees - previous_attendees)._send_mail_to_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
             )
-        if 'start' in values:
+        if 'start' in values or 'allday' in values or 'duration' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
-            if start_date and start_date >= fields.Datetime.now():
+            if (start_date and start_date >= fields.Datetime.now()) or values.get('allday') is False or values.get('duration'):
                 (current_attendees & previous_attendees).with_context(
                     calendar_template_ignore_recurrence=not update_recurrence
                 )._send_mail_to_attendees(
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False)
                 )
+            if 'location' in values or 'description' in values:
+                (current_attendees & previous_attendees).with_context(
+                    location=bool(values.get('location', False)),
+                    description=bool(values.get('description', False))
+                )._send_mail_to_attendees('calendar.calendar_template_meeting_change_location_description', ignore_recurrence=not update_recurrence)
 
         return True
 

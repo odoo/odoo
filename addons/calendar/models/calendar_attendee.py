@@ -132,7 +132,8 @@ class Attendee(models.Model):
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
-                    force_send=force_send)
+                    force_send=force_send,
+                    record_name=attendee.event_id.name)
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """
