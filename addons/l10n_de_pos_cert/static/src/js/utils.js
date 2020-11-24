@@ -24,7 +24,7 @@ odoo.define('l10n_de_pos_cert.utils', function(require) {
      */
 
     function convertFromEpoch(seconds) {
-        return new Date(seconds * 1000).toISOString().substring(0,19);
+        return new Date(seconds * 1000).toISOString().substring(0,19).replace('T',' ');
     };
 
     return { uuidv4, convertFromEpoch };

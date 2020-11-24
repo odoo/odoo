@@ -115,12 +115,10 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 if (this.txLastRevision) {
                     json['last_revision'] = this.txLastRevision;
                 }
-                if (this.isTransactionFinished()) {
-                    json['tss_info'] = {};
-                    for (var key in this.tssInformation) {
-                        if (key !== 'erstBestellung') {
-                            json['tss_info'][key] = this.tssInformation[key].value;
-                        }
+                json['tss_info'] = {};
+                for (var key in this.tssInformation) {
+                    if (key !== 'erstBestellung') {
+                        json['tss_info'][key] = this.tssInformation[key].value;
                     }
                 }
             }
@@ -140,7 +138,9 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                     for (var key in json.tss_info) {
                         this.tssInformation[key].value = json.tss_info[key];
                     }
-                    this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+                    if (this.get_orderlines().length > 0) {
+                        this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+                    }
                 }
             }
         },
@@ -238,6 +238,22 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             }
             return amountPerPaymentTypeArray;
         },
+        _updateTimeStart(seconds) {
+            this.tssInformation.time_start.value = convertFromEpoch(seconds);
+        },
+        _updateTssInfo(data) {
+            this.tssInformation.transaction_number.value = data.number;
+            this._updateTimeStart(data.time_start);
+            this.tssInformation.time_end.value = convertFromEpoch(data.time_end);
+            this.tssInformation.certificate_serial.value = data.certificate_serial;
+            this.tssInformation.timestamp_format.value = data.log.timestamp_format;
+            this.tssInformation.signature_value.value = data.signature.value;
+            this.tssInformation.signature_algorithm.value = data.signature.algorithm;
+            this.tssInformation.signature_public_key.value = data.signature.public_key;
+            this.tssInformation.client_serial_number.value = data.client_serial_number;
+            this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+            this.transactionFinished();
+        },
         async finishShortTransaction() {
             if (!this.pos.getApiToken()) {
                 await this._authenticate();
@@ -265,17 +281,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 data: JSON.stringify(data),
                 contentType: 'application/json'
             }).then((data) => {
-                this.tssInformation.transaction_number.value = data.number;
-                this.tssInformation.time_start.value = convertFromEpoch(data.time_start);
-                this.tssInformation.time_end.value = convertFromEpoch(data.time_end);
-                this.tssInformation.certificate_serial.value = data.certificate_serial;
-                this.tssInformation.timestamp_format.value = data.log.timestamp_format;
-                this.tssInformation.signature_value.value = data.signature.value;
-                this.tssInformation.signature_algorithm.value = data.signature.algorithm;
-                this.tssInformation.signature_public_key.value = data.signature.public_key;
-                this.tssInformation.client_serial_number.value = data.client_serial_number;
-                this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
-                this.transactionFinished();
+                this._updateTssInfo(data);
             }).catch(async (error) => {
                 if (error.status === 401) {  // Need to update the token
                     await this._authenticate();

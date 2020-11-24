@@ -8,8 +8,8 @@ class PosOrder(models.Model):
 
     fiskaly_transaction_uuid = fields.Char(string="Transaction ID", readonly=True, copy=False)
     fiskaly_transaction_number = fields.Integer(string="Transaction number", readonly=True, copy=False)
-    fiskaly_time_start = fields.Char(string="Beginning", readonly=True, copy=False)
-    fiskaly_time_end = fields.Char(string="End", readonly=True, copy=False)
+    fiskaly_time_start = fields.Datetime(string="Beginning", readonly=True, copy=False)
+    fiskaly_time_end = fields.Datetime(string="End", readonly=True, copy=False)
     fiskaly_certificate_serial = fields.Char(string="Certificate serial", readonly=True, copy=False)
     fiskaly_timestamp_format = fields.Char(string="Timestamp format", readonly=True, copy=False)
     fiskaly_signature_value = fields.Char(string="Signature value", readonly=True, copy=False)
@@ -24,7 +24,8 @@ class PosOrder(models.Model):
             fields['fiskaly_transaction_uuid'] = ui_order['fiskaly_uuid']
             if 'tss_info' in ui_order:
                 for key, value in ui_order['tss_info'].items():
-                    fields['fiskaly_'+key] = value
+                    if value:
+                        fields['fiskaly_'+key] = value
         return fields
 
     def _export_for_ui(self, order):

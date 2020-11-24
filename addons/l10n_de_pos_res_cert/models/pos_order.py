@@ -21,6 +21,13 @@ class PosOrder(models.Model):
         return False if not config else config.is_company_country_germany and config.floor_ids
 
     @api.model
+    def _order_fields(self, ui_order):
+        fields = super(PosOrder, self)._order_fields(ui_order)
+        if self._check_config_germany_floor(session_id=ui_order['pos_session_id']) and 'fiskaly_time_start' not in fields:
+            fields['fiskaly_time_start'] = ui_order['creation_date'].replace('T', ' ')[:19]
+        return fields
+
+    @api.model
     def _process_create_from_ui(self, order_ids, ui_order, draft, existing_order):
         """
         The original method only append the id of the orders but in order to be flexible and to not change the
@@ -62,21 +69,22 @@ class PosOrder(models.Model):
         """
         differences = []
         new_line_dict = self._merge_order_lines(list(map(lambda line: line[2], ui_order['lines'])))
-        old_lines = existing_order.lines.read(['qty', 'product_id', 'full_product_name', 'price_subtotal_incl'])
+        old_lines = existing_order.lines.read(['qty', 'product_id', 'full_product_name', 'price_subtotal_incl',
+                                               'price_unit', 'discount'])
         for line in old_lines:
             line['product_id'] = line['product_id'][0]
         old_line_dict = self._merge_order_lines(old_lines)
 
-        for new_line_product_id, new_line in new_line_dict.items():
-            if new_line_product_id not in old_line_dict:
+        for new_line_key, new_line in new_line_dict.items():
+            if new_line_key not in old_line_dict:
                 differences.append(new_line)
-            elif old_line_dict[new_line_product_id]['quantity'] != new_line['quantity']:
+            elif old_line_dict[new_line_key]['quantity'] != new_line['quantity']:
                 # we could copy the dict but since it's not going to be used anymore we can just modify it
-                new_line['quantity'] -= old_line_dict[new_line_product_id]['quantity']
+                new_line['quantity'] -= old_line_dict[new_line_key]['quantity']
                 differences.append(new_line)
 
-        for old_line_product_id, old_line in old_line_dict.items():
-            if old_line_product_id not in new_line_dict:
+        for old_line_key, old_line in old_line_dict.items():
+            if old_line_key not in new_line_dict:
                 old_line['quantity'] = -old_line['quantity']
                 differences.append(old_line)
 
@@ -85,22 +93,48 @@ class PosOrder(models.Model):
     @api.model
     def _merge_order_lines(self, order_lines):
         """
-        It is possible to have multiple lines regarding the same product. This method will merge those lines into one
-        and create a dictionary with the required information by id
+        It is possible to have multiple lines regarding the same product with the same unit price.
+        This method will merge those lines into one. The lines with the same product but with different price or
+        discount will be considered different.
+        This method create a dictionary with the required information by triplet (id, price, discount).
+        (note: the 'price_per_unit' is the full price of the product (vat + discount))
         :param order_lines: The list of lines in a dictionary format
-        :return: {int: {'quantity': float, 'text': string, 'price_per_unit': float} }
+        :return: {(id[int], price[int], discount[int]): {'quantity': float, 'text': string, 'price_per_unit': float} }
         """
         line_dict = {}
         for line in order_lines:
-            product_id = line['product_id']
             line_qty = line['qty']
-            if product_id not in line_dict:
-                line_dict[product_id] = {
+            line_key = (line['product_id'], line['price_unit'], line['discount'])
+            if line_key not in line_dict:
+                unit_price = str(float(line['price_subtotal_incl'] / line_qty))
+                if len(unit_price.split('.')[1]) < 2:
+                    unit_price += '0'
+                line_dict[line_key] = {
                     'quantity': line_qty,
                     'text': line['full_product_name'],
-                    'price_per_unit': round(line['price_subtotal_incl'] / line_qty, 2)
+                    'price_per_unit': unit_price
                 }
             else:
-                line_dict[product_id]['quantity'] += line_qty
+                line_dict[line_key]['quantity'] += line_qty
         return line_dict
 
+    def _get_fields_for_draft_order(self):
+        field_list = super(PosOrder, self)._get_fields_for_draft_order()
+        if self.env.company.country_id == self.env.ref('base.de'):
+            field_list.append('fiskaly_transaction_uuid')
+            field_list.append('fiskaly_time_start')
+        return field_list
+
+    @api.model
+    def get_table_draft_orders(self, table_id):
+        table_orders = super(PosOrder, self).get_table_draft_orders(table_id)
+        if self.env.company.country_id == self.env.ref('base.de'):
+            for order in table_orders:
+                order['fiskaly_uuid'] = order['fiskaly_transaction_uuid']
+                order['tss_info'] = {}
+                order['tss_info']['time_start'] = order['fiskaly_time_start']
+
+                del order['fiskaly_transaction_uuid']
+                del order['fiskaly_time_start']
+
+        return table_orders
