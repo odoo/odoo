@@ -18,13 +18,13 @@ class SaleOrder(models.Model):
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
 
-    @api.depends('order_line.product_id.project_id')
+    @api.depends('order_line')
     def _compute_tasks_ids(self):
         for order in self:
             order.tasks_ids = self.env['project.task'].search(['|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
 
-    @api.depends('order_line.product_id.service_tracking')
+    @api.depends('order_line.product_id')
     def _compute_visible_project(self):
         """ Users should be able to select a project_id on the SO if at least one SO line has a product with its service tracking
         configured as 'task_in_project' """
