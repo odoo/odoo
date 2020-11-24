@@ -877,3 +877,71 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.assertFalse(iline.tax_ids)
 
         self.pos_config.current_session_id.action_pos_session_closing_control()
+<<<<<<< HEAD
+=======
+
+    def test_order_with_deleted_tax(self):
+        # create tax
+        dummy_50_perc_tax = self.env['account.tax'].create({
+            'name': 'Tax 50%',
+            'amount_type': 'percent',
+            'amount': 50.0,
+            'price_include': 0
+        })
+
+        # set tax to product
+        product5 = self.env['product.product'].create({
+            'name': 'product5',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'taxes_id': dummy_50_perc_tax.ids
+        })
+
+        # sell product thru pos
+        self.pos_config.open_session_cb()
+        pos_session = self.pos_config.current_session_id
+        untax, atax = self.compute_tax(product5, 10.0)
+        product5_order = {'data':
+          {'amount_paid': untax + atax,
+           'amount_return': 0,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'id': 42,
+              'pack_lot_ids': [],
+              'price_unit': 10.0,
+              'product_id': product5.id,
+              'price_subtotal': 10.0,
+              'price_subtotal_incl': 15.0,
+              'qty': 1,
+              'tax_ids': [(6, 0, product5.taxes_id.ids)]}]],
+           'name': 'Order 12345-123-1234',
+           'partner_id': False,
+           'pos_session_id': pos_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0,
+             0,
+             {'amount': untax + atax,
+              'name': fields.Datetime.now(),
+              'payment_method_id': self.cash_payment_method.id}]],
+           'uid': '12345-123-1234',
+           'user_id': self.env.uid},
+          'id': '12345-123-1234',
+          'to_invoice': False}
+        self.PosOrder.create_from_ui([product5_order])
+
+        # delete tax
+        dummy_50_perc_tax.unlink()
+
+        # close session (should not fail here)
+        pos_session.action_pos_session_closing_control()
+
+        # check the difference line
+        diff_line = pos_session.move_id.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
+        self.assertAlmostEqual(diff_line.credit, 5.0, msg="Missing amount of 5.0")
+>>>>>>> 36fd1b2596f... temp
