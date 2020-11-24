@@ -2240,6 +2240,43 @@ QUnit.test('Textual representations of shift previous/next operations are correc
     );
 });
 
+QUnit.test('chat window should open when receiving a new DM', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        is_pinned: false,
+        members: [this.data.currentPartnerId, 11],
+        uuid: 'channel11uuid',
+    });
+    this.data['res.partner'].records.push({
+        id: 11,
+    });
+    this.data['res.users'].records.push({
+        id: 11,
+        partner_id: 11,
+    });
+    await this.start();
+
+    // simulate receiving the first message on channel 11
+    await afterNextRender(() => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 11,
+            },
+            message_content: "new message",
+            uuid: 'channel11uuid',
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "a chat window should be open now that current user received a new message"
+    );
+});
+
 });
 });
 });
