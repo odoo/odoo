@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_plm = fields.Boolean("Product Lifecycle Management (PLM)")
     module_mrp_workorder = fields.Boolean("Work Orders")
     module_quality_control = fields.Boolean("Quality")
-    module_quality_worksheet = fields.Boolean("Quality Worksheet")
+    module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     module_mrp_subcontracting = fields.Boolean("Subcontracting")
     group_mrp_routings = fields.Boolean("MRP Work Orders",
         implied_group='mrp.group_mrp_routings')

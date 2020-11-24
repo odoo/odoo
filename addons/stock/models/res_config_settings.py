@@ -34,6 +34,8 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS Connector")
     module_delivery_bpost = fields.Boolean("bpost Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
+    module_quality_control = fields.Boolean("Quality")
+    module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
 
