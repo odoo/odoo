@@ -771,4 +771,4 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             ('ref', 'like', pos_session.name), ('journal_id', '=', pos_session.config_id.journal_id.id)
         ])
         diff_line = pos_session_move.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
-        self.assertAlmostEqual(diff_line.credit, 5.0, "Missing amount of 5.0")
+        self.assertAlmostEqual(diff_line.credit, 5.0, msg="Missing amount of 5.0")
