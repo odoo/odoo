@@ -47,6 +47,27 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="quality_control">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_quality_control" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_quality_control"/>
+                                    <a href="https://www.odoo.com/documentation/user/14.0/quality.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Add quality checks to your transfer operations
+                                    </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
+                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="module_quality_control_worksheet"/>
+                                            <div class="text-muted">
+                                                Create customizable worksheets for your quality checks
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Barcode</h2>
                         <div class="row mt16 o_settings_container" name="barcode_setting_container">
