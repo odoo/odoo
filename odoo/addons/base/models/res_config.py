@@ -559,6 +559,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         """
         self = self.with_context(active_test=False)
         classified = self._get_classified_fields()
+        current_settings = self.default_get(list(self.fields_get()))
 
         # default values fields
         IrDefault = self.env['ir.default'].sudo()
@@ -570,10 +571,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     value = self[name].ids
             else:
                 value = self[name]
-            IrDefault.set(model, field, value)
+            if name not in current_settings or value != current_settings[name]:
+                IrDefault.set(model, field, value)
 
         # group fields: modify group / implied groups
-        current_settings = self.default_get(list(self.fields_get()))
         with self.env.norecompute():
             for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
                 groups = groups.sudo()
@@ -590,6 +591,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
+            current_value = current_settings[name]
+            if not field.relational and value == current_value:
+                # pre-check before the value is formatted
+                # because the values in current_settings are
+                # in field format, not in str/False parameter format
+                continue
             if field.type == 'char':
                 # storing developer keys as ir.config_parameter may lead to nasty
                 # bugs when users leave spaces around them
@@ -599,6 +606,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
                 value = value.id
+
+            if current_value == value:
+                continue
             IrConfigParameter.set_param(icp, value)
 
     def execute(self):
