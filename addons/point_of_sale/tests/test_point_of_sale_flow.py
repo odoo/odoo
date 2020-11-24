@@ -917,4 +917,4 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # check the difference line
         diff_line = pos_session.move_id.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
-        self.assertAlmostEqual(diff_line.credit, 5.0, "Missing amount of 5.0")
+        self.assertAlmostEqual(diff_line.credit, 5.0, msg="Missing amount of 5.0")
