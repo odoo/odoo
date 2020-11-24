@@ -611,6 +611,39 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view: buttons handler is called once on double click', async function (assert) {
+        assert.expect(2);
+
+        const executeActionDef = testUtils.makeTestPromise();
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+            <tree>
+                <field name="foo" />
+                <button name="x" type="object" class="do_something" string="Do Something"/>
+            </tree>`,
+            intercepts: {
+                async execute_action(ev) {
+                    assert.step('execute_action');
+                    const { on_success } = ev.data;
+                    await executeActionDef;
+                    on_success();
+                }
+            },
+        });
+
+        await testUtils.dom.click(list.$('tbody .o_list_button:first > button'));
+        await testUtils.dom.click(list.$('tbody .o_list_button:first > button'));
+
+        executeActionDef.resolve();
+        await testUtils.nextTick();
+        assert.verifySteps(['execute_action']);
+
+        list.destroy();
+    });
+
     QUnit.test('list view: action button executes action on click: correct parameters', async function (assert) {
         assert.expect(4);
 
