@@ -600,12 +600,15 @@ var ListRenderer = BasicRenderer.extend({
 
         if (record.res_id) {
             // TODO this should be moved to a handler
-            $button.on("click", function (e) {
-                e.stopPropagation();
+            const debouncedClick = _.debounce(() => {
                 self.trigger_up('button_clicked', {
                     attrs: node.attrs,
                     record: record,
                 });
+            }, 500, true);
+            $button.on("click", (e) => {
+                e.stopPropagation();
+                debouncedClick();
             });
         } else {
             if (node.attrs.options.warn) {
