@@ -14,17 +14,10 @@ class TestAccountEdi(AccountEdiTestCommon):
         self.assertEqual(len(invoice.edi_document_ids), 1)
 
     def test_prepare_jobs(self):
-        def create_edi_document(edi_format, state, move=None, move_type=None):
-            move = move or self.init_invoice(move_type or 'out_invoice')
-            return self.env['account.edi.document'].create({
-                'edi_format_id': edi_format.id,
-                'move_id': move.id,
-                'state': state
-            })
 
         edi_docs = self.env['account.edi.document']
-        edi_docs |= create_edi_document(self.edi_format, 'to_send')
-        edi_docs |= create_edi_document(self.edi_format, 'to_send')
+        edi_docs |= self.create_edi_document(self.edi_format, 'to_send')
+        edi_docs |= self.create_edi_document(self.edi_format, 'to_send')
 
         to_process = edi_docs._prepare_jobs()
         self.assertEqual(len(to_process), 2)
@@ -38,8 +31,8 @@ class TestAccountEdi(AccountEdiTestCommon):
             'code': 'test_batch_edi_2',
         })
 
-        edi_docs |= create_edi_document(other_edi, 'to_send')
-        edi_docs |= create_edi_document(other_edi, 'to_send')
+        edi_docs |= self.create_edi_document(other_edi, 'to_send')
+        edi_docs |= self.create_edi_document(other_edi, 'to_send')
 
         with patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._support_batching', return_value=True):
             to_process = edi_docs._prepare_jobs()
