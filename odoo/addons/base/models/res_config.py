@@ -641,6 +641,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         lm = len('module_')
         for name, module in classified['module']:
             if int(self[name]):
+                if module.state == "installed":
+                    continue
                 to_install.append((name[lm:], module))
             else:
                 if module and module.state in ('installed', 'to upgrade'):
