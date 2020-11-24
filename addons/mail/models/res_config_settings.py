@@ -11,9 +11,10 @@ class ResConfigSettings(models.TransientModel):
     the alias domain. """
     _inherit = 'res.config.settings'
 
-    fail_counter = fields.Integer('Fail Mail', readonly=True)
-    alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
-                               "the Odoo server, enter the domain name here.", config_parameter='mail.catchall.domain')
+    fail_counter = fields.Integer('Fail Mail', compute="_compute_fail_counter")
+    alias_domain = fields.Char(
+        'Alias Domain', config_parameter='mail.catchall.domain',
+        help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.")
     restrict_template_rendering = fields.Boolean(
         'Restrict Template Rendering',
         config_parameter='mail.restrict.template.rendering',
@@ -33,20 +34,10 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='mail.twilio_account_token',
     )
 
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
+    def _compute_fail_counter(self):
+        previous_date = fields.Datetime.now() - datetime.timedelta(days=30)
 
-        previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
-
-        res.update(
-            fail_counter=self.env['mail.mail'].sudo().search_count([
-                ('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                ('state', '=', 'exception')]),
-        )
-
-        return res
-
-    def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].set_param("mail.catchall.domain", self.alias_domain or '')
+        self.fail_counter = self.env['mail.mail'].sudo().search_count([
+            ('date', '>=', previous_date),
+            ('state', '=', 'exception'),
+        ])
