@@ -140,9 +140,6 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             config.website_language_count = len(config.language_ids)
 
-    def set_values(self):
-        super(ResConfigSettings, self).set_values()
-
     def open_template_user(self):
         action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
         action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
