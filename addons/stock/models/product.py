@@ -741,7 +741,7 @@ class ProductTemplate(models.Model):
         if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
             return self.action_open_quants()
         else:
-            default_product_id = len(self.product_variant_ids) == 1 and self.product_variant_id.id
+            default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
             action = self.env.ref('stock.action_change_product_quantity').read()[0]
             action['context'] = dict(
                 self.env.context,
