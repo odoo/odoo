@@ -5543,8 +5543,10 @@ Fields:
             return len(item) == 1 and item.id in self._ids
         elif isinstance(item, str):
             return item in self._fields
+        elif isinstance(item, BaseModel):
+            raise TypeError(f"cannot compare different models: '{self._name}()' and '{item._name}()'")
         else:
-            raise TypeError("Mixing apples and oranges: %s in %s" % (item, self))
+            raise TypeError(f"unsupported operand type(s) for \"in\": '{self._name}()' and '{type(item)}'")
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets. """
@@ -5556,27 +5558,36 @@ Fields:
         """
         ids = list(self._ids)
         for arg in args:
-            if not (isinstance(arg, BaseModel) and arg._name == self._name):
-                raise TypeError("Mixing apples and oranges: %s.concat(%s)" % (self, arg))
-            ids.extend(arg._ids)
+            if isinstance(arg, BaseModel) and arg._name == self._name:
+                ids.extend(arg._ids)
+            elif isinstance(arg, BaseModel):
+                raise TypeError(f"cannot concat different models: '{self._name}()' and '{arg._name}()'")
+            else:
+                raise TypeError(f"unsupported operand type(s) for \"concat\": '{self._name}()' and '{type(arg)}'")
         return self.browse(ids)
 
     def __sub__(self, other):
         """ Return the recordset of all the records in ``self`` that are not in
             ``other``. Note that recordset order is preserved.
         """
-        if not isinstance(other, BaseModel) or self._name != other._name:
-            raise TypeError("Mixing apples and oranges: %s - %s" % (self, other))
-        other_ids = set(other._ids)
+        if isinstance(other, BaseModel) and self._name == other._name:
+            other_ids = set(other._ids)
+        elif isinstance(other, BaseModel):
+            raise TypeError(f"cannot substract different models: '{self._name}()' and '{other._name}()'")
+        else:
+            raise TypeError(f"unsupported operand type(s) for \"-\": '{self._name}()' and '{type(other)}'")
         return self.browse([id for id in self._ids if id not in other_ids])
 
     def __and__(self, other):
         """ Return the intersection of two recordsets.
             Note that first occurrence order is preserved.
         """
-        if not isinstance(other, BaseModel) or self._name != other._name:
-            raise TypeError("Mixing apples and oranges: %s & %s" % (self, other))
-        other_ids = set(other._ids)
+        if isinstance(other, BaseModel) and self._name == other._name:
+            other_ids = set(other._ids)
+        elif isinstance(other, BaseModel):
+            raise TypeError(f"cannot add different models: '{self._name}()' and '{other._name}()'")
+        else:
+            raise TypeError(f"unsupported operand type(s) for \"+\": '{self._name}()' and '{type(other)}'")
         return self.browse(OrderedSet(id for id in self._ids if id in other_ids))
 
     def __or__(self, other):
@@ -5591,9 +5602,12 @@ Fields:
         """
         ids = list(self._ids)
         for arg in args:
-            if not (isinstance(arg, BaseModel) and arg._name == self._name):
-                raise TypeError("Mixing apples and oranges: %s.union(%s)" % (self, arg))
-            ids.extend(arg._ids)
+            if isinstance(arg, BaseModel) and self._name == arg._name:
+                ids.extend(arg._ids)
+            elif isinstance(arg, BaseModel):
+                raise TypeError(f"cannot union different models: '{self._name}()' and '{arg._name}()'")
+            else:
+                raise TypeError(f"unsupported operand type(s) for \"union\": '{self._name}()' and '{type(arg)}'")
         return self.browse(OrderedSet(ids))
 
     def __eq__(self, other):
@@ -5601,8 +5615,8 @@ Fields:
         if not isinstance(other, BaseModel):
             if other:
                 filename, lineno = frame_codeinfo(currentframe(), 1)
-                _logger.warning("Comparing apples and oranges: %r == %r (%s:%s)",
-                                self, other, filename, lineno)
+                _logger.warning("unsupported operand type(s) for \"==\": '%s()' == '%r' (%s:%s)",
+                                self._name, other, filename, lineno)
             return NotImplemented
         return self._name == other._name and set(self._ids) == set(other._ids)
 
