@@ -128,11 +128,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id')
     def _compute_product_updatable(self):
+        super()._compute_product_updatable()
         for line in self:
-            if line.product_id.type == 'service' and line.state == 'sale':
+            if line.is_service and line.state == 'sale':
                 line.product_updatable = False
-            else:
-                super(SaleOrderLine, line)._compute_product_updatable()
 
     @api.model_create_multi
     def create(self, vals_list):
