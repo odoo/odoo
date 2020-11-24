@@ -35,7 +35,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
@@ -817,6 +817,10 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
+            # Non-stored float fields may not be displayed properly because of float representation
+            # => we force 2 digits
+            if not field.get('store') and isinstance(aggregated_value, float):
+                aggregated_value = float_repr(aggregated_value, 2)
             self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
