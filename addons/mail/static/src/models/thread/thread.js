@@ -1889,10 +1889,13 @@ function factory(dependencies) {
         messagesAsServerChannel: many2many('mail.message', {
             inverse: 'serverChannels',
         }),
+        /**
+         * Contains the message fetched/seen indicators for all messages of this thread.
+         * FIXME This field should be readonly once task-2336946 is done.
+         */
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
             isCausal: true,
-            readonly: true,
         }),
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
@@ -2029,10 +2032,13 @@ function factory(dependencies) {
             compute: '_computeOverdueActivities',
             dependencies: ['activitiesState'],
         }),
+        /**
+         * Contains the seen information for all members of the thread.
+         * FIXME This field should be readonly once task-2336946 is done.
+         */
         partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
             inverse: 'thread',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * Determine if there is a pending seen message change, which is a change
