@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
-    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
+    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_count', groups="project.group_project_user")
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
     project_id = fields.Many2one(
@@ -18,11 +18,15 @@ class SaleOrder(models.Model):
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
 
-    @api.depends('order_line.product_id.project_id')
+    @api.depends('order_line')
+    def _compute_tasks_count(self):
+        for order in self:
+            order.tasks_count = self.env['project.task'].search_count(['|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
+    
+    @api.depends('order_line')
     def _compute_tasks_ids(self):
         for order in self:
             order.tasks_ids = self.env['project.task'].search(['|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
-            order.tasks_count = len(order.tasks_ids)
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
