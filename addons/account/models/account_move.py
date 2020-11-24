@@ -152,7 +152,7 @@ class AccountMove(models.Model):
         ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry", change_default=True)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
-    to_check = fields.Boolean(string='To Check', default=False,
+    to_check = fields.Boolean(string='To Check', default=False, tracking=True,
         help='If this checkbox is ticked, it means that the user was not sure of all the related information at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
@@ -2556,6 +2556,10 @@ class AccountMove(models.Model):
             'res_id': new_wizard.id,
             'views': [[view_id, 'form']],
         }
+
+    def button_set_checked(self):
+        for move in self:
+            move.to_check = False
 
     def button_draft(self):
         AccountMoveLine = self.env['account.move.line']
