@@ -176,10 +176,11 @@ class PurchaseOrder(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
+            company_id = vals.get("company_id", self.env.company.id)
             seq_date = None
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
-            vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
+            vals['name'] = self.env['ir.sequence'].with_context(force_company=company_id).next_by_code('purchase.order', sequence_date=seq_date) or '/'
         return super(PurchaseOrder, self).create(vals)
 
     def write(self, vals):
