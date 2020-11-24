@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_edi.view_move_form_inherit" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(account_edi.action_open_edi_documents)d']" position="after">
+                    <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
+                </xpath>
+                <xpath expr="//button[@name='button_cancel_posted_moves']" position="after">
+                    <field name="edi_show_cancel_button" invisible="1"/>
+                    <button name="button_abandon_cancel_posted_posted_moves" 
+                            string="Call off EDI Cancellation"
+                            groups="account.group_account_invoice"
+                            attrs="{'invisible' : [('edi_show_cancel_button', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
