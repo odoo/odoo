@@ -359,6 +359,19 @@ class FetchmailServer(models.Model):
 class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _inherit = "ir.mail_server"
+    def _get_test_email_addresses(self):
+        self.ensure_one()
+        company = self.env["res.company"].search([("l10n_it_mail_pec_server_id", "=", self.id)], limit=1)
+        if not company:
+            # it's not a PEC server
+            return super()._get_test_email_addresses()
+        email_from = self.smtp_user
+        if not email_from:
+            raise UserError(_('Please configure Username for this Server PEC'))
+        email_to = company.l10n_it_address_recipient_fatturapa
+        if not email_to:
+            raise UserError(_('Please configure Government PEC-mail	in company settings'))
+        return email_from, email_to
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                 attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
