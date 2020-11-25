@@ -20,8 +20,8 @@ Allows to contact directly the employee in case of unjustified absence.
     'data': [
         'data/ir_actions_server.xml',
         'views/hr_employee_views.xml',
+        'data/mail_template_data.xml',
         'data/sms_data.xml',
-        'data/mail_data.xml',
     ],
     'demo': [],
     'installable': True,

@@ -31,7 +31,7 @@ The following topics are covered by this module:
         'report/repair_reports.xml',
         'report/repair_templates_repair_order.xml',
         'data/ir_sequence_data.xml',
-        'data/repair_data.xml',
+        'data/mail_template_data.xml',
     ],
     'demo': ['data/repair_demo.xml'],
     'test': [],

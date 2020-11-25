@@ -184,21 +184,4 @@
         </div>
     </t>
 </template>
-
-<template id="production_message">
-    <t t-if="move.move_id.raw_material_production_id">
-        <t t-set="message">Consumed</t>
-    </t>
-    <t t-if="move.move_id.production_id">
-        <t t-set="message">Produced</t>
-    </t>
-    <strong><t t-esc="message"/> quantity has been updated.</strong>
-</template>
-
-<template id="track_production_move_template">
-    <div>
-        <t t-call="mrp.production_message"/>
-        <t t-call="stock.message_body"/>
-    </div>
-</template>
 </odoo>

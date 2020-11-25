@@ -3,7 +3,7 @@
 
 {
     'name': 'CRM',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Sales/CRM',
     'sequence': 15,
     'summary': 'Track leads and close opportunities',
@@ -57,6 +57,7 @@
     ],
     'demo': [
         'data/crm_team_demo.xml',
+        'data/mail_template_demo.xml',
         'data/mail_activity_demo.xml',
         'data/crm_lead_demo.xml',
     ],

@@ -10,7 +10,7 @@
     "description": "",
     "depends": ["coupon", "point_of_sale"],
     "data": [
-        "data/coupon_email_data.xml",
+        "data/mail_template_data.xml",
         'data/default_barcode_patterns.xml',
         "security/ir.model.access.csv",
         "views/coupon_views.xml",
