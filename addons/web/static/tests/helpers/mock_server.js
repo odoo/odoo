@@ -1209,12 +1209,18 @@ var MockServer = Class.extend({
      */
     _mockNameGet: function (model, args) {
         var ids = args[0];
+        if (!args.length) {
+            throw new Error("name_get: expected one argument");
+        }
+        else if (!ids) {
+            return []
+        }
         if (!_.isArray(ids)) {
             ids = [ids];
         }
         var records = this.data[model].records;
         var names = _.map(ids, function (id) {
-            return [id, _.findWhere(records, {id: id}).display_name];
+            return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, "False"];
         });
         return names;
     },
