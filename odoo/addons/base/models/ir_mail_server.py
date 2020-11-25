@@ -102,16 +102,21 @@ class IrMailServer(models.Model):
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
 
+    def _get_test_email_addresses(self):
+        self.ensure_one()
+        email_from = self.env.user.email
+        if not email_from:
+            raise UserError(_('Please configure an email on the current user to simulate '
+                              'sending an email message via this outgoing server'))
+        return email_from, 'noreply@odoo.com'
+
     def test_smtp_connection(self):
         for server in self:
             smtp = False
             try:
                 smtp = self.connect(mail_server_id=server.id)
                 # simulate sending an email from current user's address - without sending it!
-                email_from, email_to = self.env.user.email, 'noreply@odoo.com'
-                if not email_from:
-                    raise UserError(_('Please configure an email on the current user to simulate '
-                                      'sending an email message via this outgoing server'))
+                email_from, email_to = server._get_test_email_addresses()
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
