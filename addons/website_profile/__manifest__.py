@@ -12,7 +12,7 @@
         'gamification'
     ],
     'data': [
-        'data/profile_data.xml',
+        'data/mail_template_data.xml',
         'views/gamification_badge_views.xml',
         'views/website_profile.xml',
         'security/ir.model.access.csv',

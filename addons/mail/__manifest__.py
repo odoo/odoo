@@ -2,7 +2,7 @@
 
 {
     'name': 'Discuss',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
@@ -29,7 +29,10 @@
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
-        'data/mail_data.xml',
+        'data/ir_config_parameter_data.xml',
+        'data/res_partner_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'data/mail_templates.xml',
         'data/mail_channel_data.xml',
         'data/mail_activity_data.xml',
         'data/ir_cron_data.xml',
