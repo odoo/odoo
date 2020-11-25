@@ -632,8 +632,10 @@ class Field(MetaField('DummyField', (object,), {})):
                 try:
                     field = Model._fields[fname]
                 except KeyError:
-                    msg = "Field %s cannot find dependency %r on model %r."
-                    raise ValueError(msg % (self, fname, model_name))
+                    raise ValueError(
+                        f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
+                        f"Dependency field '{fname}' not found in model {model_name}."
+                    )
                 if field is self and index:
                     self.recursive = True
 
