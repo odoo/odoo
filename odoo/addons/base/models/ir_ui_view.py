@@ -1887,10 +1887,10 @@ class ResetViewArchWizard(models.TransientModel):
                 diff_to = view.view_id.arch_prev
                 diff_to_name = _("Previous Arch")
             elif view.reset_mode == 'other_view':
-                diff_to = view.compare_view_id.arch
+                diff_to = view.compare_view_id.with_context(lang=None).arch
                 diff_to_name = get_table_name(view.compare_view_id)
             elif view.reset_mode == 'hard' and view.view_id.arch_fs:
-                diff_to = view.view_id.with_context(read_arch_from_file=True).arch
+                diff_to = view.view_id.with_context(read_arch_from_file=True, lang=None).arch
                 diff_to_name = _("File Arch")
 
             view.arch_to_compare = diff_to
@@ -1899,11 +1899,12 @@ class ResetViewArchWizard(models.TransientModel):
                 view.arch_diff = False
                 view.has_diff = False
             else:
+                view_arch = view.view_id.with_context(lang=None).arch
                 view.arch_diff = get_diff(
-                    (view.view_id.arch, get_table_name(view.view_id) if view.reset_mode == 'other_view' else _("Current Arch")),
+                    (view_arch, get_table_name(view.view_id) if view.reset_mode == 'other_view' else _("Current Arch")),
                     (diff_to, diff_to_name),
                 )
-                view.has_diff = view.view_id.arch != diff_to
+                view.has_diff = view_arch != diff_to
 
     def reset_view_button(self):
         self.ensure_one()
