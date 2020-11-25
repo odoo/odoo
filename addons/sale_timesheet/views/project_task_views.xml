@@ -26,7 +26,7 @@
                             <field name="pricing_type" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('bill_type', '!=', 'customer_project')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
                             <field name="timesheet_product_id" string="Service" attrs="{'invisible': ['|', '|', ('allow_timesheets', '=', False), ('sale_order_id', '!=', False), ('bill_type', '!=', 'customer_task')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
                             <field name="sale_order_id" attrs="{'invisible': [('bill_type', '!=', 'customer_project')], 'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
-                            <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': ['|', '|', ('sale_order_id', '=', False), ('bill_type', '!=', 'customer_project'), ('pricing_type', '!=', 'employee_rate')]}" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+                            <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': ['|', ('sale_order_id', '=', False), ('bill_type', '!=', 'customer_project')]}" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
                         </group>
                     </group>
                     <field name="sale_line_employee_ids" attrs="{'invisible': ['|', ('bill_type', '!=', 'customer_project'), ('pricing_type', '!=', 'employee_rate')]}">
