@@ -119,7 +119,9 @@
         t-att-data-toggle="meeting_room_data_toggle"
         t-att-data-target="meeting_room_data_target">
         <div class="text-decoration-none w-100 h-100 p-3">
-            <div class="o_wevent_meeting_room_corner_ribbon" t-if="meeting_room.room_is_full">Full</div>
+            <div class="o_wevent_meeting_room_corner_ribbon" t-if="meeting_room.room_is_full">
+                <div>Full</div>
+            </div>
             <div class="d-flex flex-column">
                 <div class="d-flex flex-row justify-content-between">
                     <h4 class="text-break mw-75 text-uppercase" t-esc="meeting_room.name"/>
@@ -128,8 +130,8 @@
                             <button class="btn py-0" data-toggle="dropdown"><h3 class="m-0">&#8942;</h3></button>
                             <div class="dropdown-menu">
                                 <div class="dropdown-item font-weight-bold disabled">Room Manager</div>
-                                <button class="dropdown-item btn btn-danger o_wevent_meeting_room_duplicate" type="button">Duplicate</button>
-                                <button class="dropdown-item btn btn-danger o_wevent_meeting_room_delete" type="button">Close</button>
+                                <button class="dropdown-item btn btn-light o_wevent_meeting_room_duplicate" type="button">Duplicate</button>
+                                <button class="dropdown-item btn btn-light o_wevent_meeting_room_delete" type="button">Close</button>
                             </div>
                         </div>
                         <button t-attf-class="o_wevent_meeting_room_is_pinned float-right btn #{'o_wevent_meeting_room_pinned' if meeting_room.is_pinned else ''}">

@@ -42,18 +42,30 @@
     }
 }
 
+.o_wevent_meeting_room_card {
+    overflow: visible;
+}
+
 .o_wevent_meeting_room_corner_ribbon {
-    width: 200px;
-    background: #e43;
-    top: 25px;
-    left: -50px;
-    text-align: center;
-    line-height: 50px;
-    letter-spacing: 1px;
-    color: #f0f0f0;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     position: absolute;
-    opacity: 0.6;
+    top: 0;
+    left: 0;
+
+    div {
+        width: 200px;
+        margin-top: 25px;
+        margin-left: -50px;
+        line-height: 50px;
+        background: #e43;
+        text-align: center;
+        letter-spacing: 1px;
+        color: #f0f0f0;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        z-index: 1;
+        opacity: 0.6;
+    }
 }
