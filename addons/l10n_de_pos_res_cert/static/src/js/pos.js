@@ -79,6 +79,17 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
                 // Return a Promise with rejected value for errors that are not handled here
                 return Promise.reject(error);
             });
+        },
+        exportOrderLinesAsJson() {
+            const orderLines = [];
+            this.orderlines.each(_.bind( function(item) {
+                return orderLines.push([0, 0, item.export_as_JSON()]);
+            }, this));
+
+            return {
+                server_id: this.server_id ? this.server_id : false,
+                lines: orderLines
+            }
         }
     });
 });

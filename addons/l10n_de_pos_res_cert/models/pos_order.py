@@ -33,7 +33,8 @@ class PosOrder(models.Model):
         The original method only append the id of the orders but in order to be flexible and to not change the
         base code too much, we append a dictionary to add the line differences for each id
         """
-        if self._check_config_germany_floor(session_id=ui_order['data']['pos_session_id']):
+        # No point in computing the difference if it's to validate the payment of the order
+        if draft and self._check_config_germany_floor(session_id=ui_order['data']['pos_session_id']):
             differences = self.line_differences(existing_order, ui_order['data'])
             order_id = self._process_order(ui_order, draft, existing_order)
             order_ids.append({'id': order_id, 'differences': differences})
@@ -46,7 +47,7 @@ class PosOrder(models.Model):
         order_ids should be a list of int but in this module, it can be a list of dict {'id': int, 'differences': list}
         """
         # second condition is to double check just in case
-        if not isinstance(order_ids[0], int) and self._check_config_germany_floor(order_id=order_ids[0]['id']):
+        if len(order_ids) > 0 and not isinstance(order_ids[0], int) and self._check_config_germany_floor(order_id=order_ids[0]['id']):
             ids = list(map(lambda order: order['id'], order_ids))
             res = super(PosOrder, self)._create_from_ui_search_read(ids)
 
@@ -69,8 +70,10 @@ class PosOrder(models.Model):
         """
         differences = []
         new_line_dict = self._merge_order_lines(list(map(lambda line: line[2], ui_order['lines'])))
-        old_lines = existing_order.lines.read(['qty', 'product_id', 'full_product_name', 'price_subtotal_incl',
-                                               'price_unit', 'discount'])
+        old_lines = []
+        if existing_order:
+            old_lines = existing_order.lines.read(['qty', 'product_id', 'full_product_name', 'price_subtotal_incl',
+                                                   'price_unit', 'discount'])
         for line in old_lines:
             line['product_id'] = line['product_id'][0]
         old_line_dict = self._merge_order_lines(old_lines)
@@ -138,3 +141,14 @@ class PosOrder(models.Model):
                 del order['fiskaly_time_start']
 
         return table_orders
+
+    @api.model
+    def retrieve_line_difference(self, ui_order):
+        existing_order = None
+        if ui_order.get('server_id'):
+            existing_order = self.env['pos.order'].browse(ui_order['server_id'])
+        differences = self.line_differences(existing_order, ui_order)
+
+        return {
+            'differences': differences
+        }
