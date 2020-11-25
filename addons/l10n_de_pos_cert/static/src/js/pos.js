@@ -100,7 +100,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         // @Override
         export_for_printing() {
             const receipt = _super_order.export_for_printing.apply(this, arguments);
-            if (this.pos.isCountryGermany()) {
+            if (this.pos.isCountryGermany() && this.isTransactionFinished()) {
                 receipt['tss'] = {};
                 $.extend(true, receipt['tss'], this.tssInformation);
             }
