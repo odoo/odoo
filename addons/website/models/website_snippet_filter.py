@@ -59,7 +59,7 @@ class WebsiteSnippetFilter(models.Model):
         content = View._render_template(template_key, dict(records=records)).decode('utf-8')
         return [ET.tostring(el) for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
-    def _prepare_values(self, limit=None, search_domain=[]):
+    def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
         self.ensure_one()
         limit = limit and min(limit, self.limit) or self.limit
@@ -69,7 +69,7 @@ class WebsiteSnippetFilter(models.Model):
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
-                domain = expression.AND([domain, search_domain]),
+                domain = expression.AND([domain, search_domain])
 
             records = self.env[filter_sudo.model_id].search(
                 domain,
