@@ -210,7 +210,7 @@
                                 </t>
                             </div>
                             <span class="h5 mb0">
-                                <a t-if="track.is_published or user_event_manager"
+                                <a t-if="track.is_published or is_event_user"
                                     class="mr-2"
                                     t-att-href="track.website_url">
                                     <span t-field="track.name"/>
@@ -218,7 +218,7 @@
                                 <t t-else="">
                                     <span class="mr-2" t-field="track.name"/>
                                 </t>
-                                <span t-if="not track.is_published and user_event_manager"
+                                <span t-if="not track.is_published and is_event_user"
                                     class="badge badge-danger o_wevent_online_badge_unpublished">
                                     Unpublished
                                 </span>

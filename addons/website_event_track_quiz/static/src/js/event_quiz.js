@@ -41,7 +41,7 @@ var Quiz = publicWidget.Widget.extend({
             completed: false,
             isMember: false,
             progressBar: false,
-            isManager: false
+            isEventUser: false
         });
         this.quiz = quizData || false;
         if (this.quiz) {

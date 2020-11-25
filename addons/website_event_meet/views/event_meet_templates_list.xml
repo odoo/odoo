@@ -95,7 +95,7 @@
     </div>
 
     <!-- Action to do when clicking on the card -->
-    <t t-if="event.is_ongoing or is_event_manager">
+    <t t-if="event.is_ongoing or is_event_user">
         <!--During the event or if event manager-->
         <t t-set="meeting_room_href" t-value="'/event/' + slug(event) + '/meeting_room/' + slug(meeting_room)"/>
     </t>
@@ -110,10 +110,10 @@
         <t t-set="meeting_room_data_target" t-value="'#o_join_later_modal_%i' % meeting_room.id"/>
     </t>
 
-    <a t-if="is_event_manager or not meeting_room.room_is_full"
+    <a t-if="is_event_user or not meeting_room.room_is_full"
         t-att-data-meeting-room-id="meeting_room.id"
         t-att-data-open-room="opened"
-        t-att-data-is-event-manager="int(is_event_manager)"
+        t-att-data-is-event-manager="int(is_event_user)"
         t-attf-class="card o_wevent_meeting_room_card w-100 my-2 bg-light d-block text-decoration-none"
         t-att-href="meeting_room_href"
         t-att-data-toggle="meeting_room_data_toggle"
@@ -123,7 +123,7 @@
             <div class="d-flex flex-column">
                 <div class="d-flex flex-row justify-content-between">
                     <h4 class="text-break mw-75 text-uppercase" t-esc="meeting_room.name"/>
-                    <div t-if="is_event_manager" class="w-25">
+                    <div t-if="is_event_user" class="w-25">
                         <div class="dropdown float-right dropleft">
                             <button class="btn py-0" data-toggle="dropdown"><h3 class="m-0">&#8942;</h3></button>
                             <div class="dropdown-menu">
@@ -163,7 +163,7 @@
             <p>Want to create your own discussion room ?</p>
             <a href="#" role="button"
                 class="btn btn-primary o_wevent_create_room_button"
-                t-if="event.is_ongoing or event.start_today or is_event_manager"
+                t-if="event.is_ongoing or event.start_today or is_event_user"
                 t-att-data-event-id="event.id"
                 t-att-data-default-lang-code="default_lang_code">
                 <span>Create a Room</span>
