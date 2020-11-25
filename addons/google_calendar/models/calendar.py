@@ -155,7 +155,6 @@ class Meeting(models.Model):
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
         } for alarm in self.alarm_ids]
-        attendee_ids = self.attendee_ids.filtered(lambda a: a.partner_id != self.env.user.partner_id)
         values = {
             'id': self.google_id,
             'start': start,
@@ -165,7 +164,7 @@ class Meeting(models.Model):
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
-            'attendees': [{'email': attendee.email, 'responseStatus': attendee.state} for attendee in attendee_ids],
+            'attendees': [{'email': attendee.email, 'responseStatus': attendee.state} for attendee in self.attendee_ids],
             'extendedProperties': {
                 'shared': {
                     '%s_odoo_id' % self.env.cr.dbname: self.id,
