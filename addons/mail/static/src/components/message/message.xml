@@ -82,10 +82,10 @@
                             <t t-if="threadView and message.originThread and message.originThread !== threadView.thread">
                                 <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': props.isSelected }">
                                     <t t-if="message.originThread.model === 'mail.channel'">
-                                        (from <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread">#<t t-esc="message.originThread.name"/></a>)
+                                        (from <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread">#<t t-esc="message.originThread.name"/></a>)
                                     </t>
                                     <t t-else="">
-                                        on <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread"><t t-esc="message.originThread.name"/></a>
+                                        on <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread"><t t-esc="message.originThread.name"/></a>
                                     </t>
                                 </div>
                             </t>
