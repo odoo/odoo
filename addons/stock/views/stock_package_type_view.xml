@@ -30,6 +30,16 @@
                         <field name="barcode"/>
                     </group>
                 </group>
+                <group name="storage_categories" groups="stock.group_stock_storage_categories">
+                    <group>
+                        <field name="storage_category_capacity_ids" context="{'default_package_type_id': id}">
+                            <tree editable="bottom">
+                                <field name="storage_category_id"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
             </sheet>
         </form>
     </field>
@@ -46,7 +56,7 @@
             <field name="width"/>
             <field name="packaging_length"/>
             <field name="max_weight"/>
-            <field name="barcode" invisible="1"/>
+            <field name="barcode" optional="hide"/>
         </tree>
     </field>
 </record>

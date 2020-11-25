@@ -301,7 +301,12 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_record_top mb0">
-                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div class="col-6">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                                <div class="col-6">
+                                    <field name="package_type_id"/>
+                                </div>
                             </div>
                         </div>
                     </t>

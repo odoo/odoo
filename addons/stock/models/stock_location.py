@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from collections import defaultdict, OrderedDict
 from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from collections import OrderedDict
+from odoo.tools.float_utils import float_compare
 
 
 class Location(models.Model):
@@ -68,9 +68,32 @@ class Location(models.Model):
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
     warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
+    storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category')
+    outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id', help='Technical: used to compute weight.')
+    incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id', help='Technical: used to compute weight.')
+    net_weight = fields.Float('Net Weight', compute="_compute_weight")
+    forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !'),
                         ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
+
+    @api.depends('outgoing_move_line_ids.product_qty', 'incoming_move_line_ids.product_qty',
+                 'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
+                 'outgoing_move_line_ids.product_id.weight', 'outgoing_move_line_ids.product_id.weight',
+                 'quant_ids.quantity', 'quant_ids.product_id.weight')
+    def _compute_weight(self):
+        for location in self:
+            location.net_weight = 0
+            quants = location.quant_ids.filtered(lambda q: q.product_id.type != 'service')
+            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
+            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
+            for quant in quants:
+                location.net_weight += quant.product_id.weight * quant.quantity
+            location.forecast_weight = location.net_weight
+            for line in incoming_move_lines:
+                location.forecast_weight += line.product_id.weight * line.product_qty
+            for line in outgoing_move_lines:
+                location.forecast_weight -= line.product_id.weight * line.product_qty
 
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
@@ -171,27 +194,97 @@ class Location(models.Model):
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product):
-        ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
-        putaway_location = self.env['stock.location']
-        # Looking for a putaway about the product.
-        putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.product_id == product)
-        if putaway_rules:
-            putaway_location = putaway_rules[0].location_out_id
-        # If not product putaway found, we're looking with category so.
-        else:
-            categ = product.categ_id
-            while categ:
-                putaway_rules = self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
-                if putaway_rules:
-                    putaway_location = putaway_rules[0].location_out_id
-                    break
-                categ = categ.parent_id
-        return putaway_location
+    def _get_putaway_strategy(self, product, quantity=0, package=None):
+        """Returns the location where the product has to be put, if any compliant
+        putaway strategy is found. Otherwise returns self.
+        The quantity should be in the default UOM of the product, it is used when
+        no package is specified.
+        """
+        package_type = package and package.package_type_id or self.env['stock.package.type']
+
+        putaway_rules = self.env['stock.putaway.rule']
+        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        categ = product.categ_id
+        while categ:
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            categ = categ.parent_id
+        if package_type:
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+
+        # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
+        qty_by_location = defaultdict(lambda: 0)
+        locations = self.env['stock.location'].search([('id', 'child_of', self.id), ('usage', '=', 'internal')])
+        if locations.storage_category_id:
+            move_line_data = self.env['stock.move.line'].read_group([
+                ('product_id', '=', product.id),
+                ('location_dest_id', 'in', locations.ids),
+                ('state', 'not in', ['draft', 'done', 'cancel'])
+            ], ['location_dest_id', 'product_id', 'product_qty:sum'], ['location_dest_id'])
+            quant_data = self.env['stock.quant'].read_group([
+                ('product_id', '=', product.id),
+                ('location_id', 'in', locations.ids),
+            ], ['location_id', 'product_id', 'quantity:sum'], ['location_id'])
+
+            for values in move_line_data:
+                qty_by_location[values['location_dest_id'][0]] = values['product_qty']
+            for values in quant_data:
+                qty_by_location[values['location_id'][0]] += values['quantity']
+
+        return putaway_rules._get_putaway_location(product, quantity, package, qty_by_location) or self
 
     def should_bypass_reservation(self):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
+
+    def _check_can_be_used(self, product, quantity=0, package=None, location_qty=0):
+        """Check if product/package can be stored in the location. Quantity
+        should in the default uom of product, it's only used when no package is
+        specified."""
+        self.ensure_one()
+        if package and package.package_type_id:
+            return self._check_package_storage(product, package)
+        return self._check_product_storage(product, quantity, location_qty)
+
+    def _check_product_storage(self, product, quantity, location_qty):
+        """Check if a number of product can be stored in the location. Quantity
+        should in the default uom of product."""
+        self.ensure_one()
+        if self.storage_category_id:
+            # check weight
+            if self.storage_category_id.max_weight < self.forecast_weight + product.weight * quantity:
+                return False
+            # check if only allow new product when empty
+            if self.storage_category_id.allow_new_product == "empty" and any(float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0 for q in self.quant_ids):
+                return False
+            # check if only allow same product
+            if self.storage_category_id.allow_new_product == "same" and self.quant_ids and self.quant_ids.product_id != product:
+                return False
+            # check if enough space
+            product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
+            if product_capacity and quantity + location_qty > product_capacity.quantity:
+                return False
+        return True
+
+    def _check_package_storage(self, product, package):
+        """Check if the given package can be stored in the location."""
+        self.ensure_one()
+        if self.storage_category_id:
+            # check weight
+            if self.storage_category_id.max_weight < self.forecast_weight + package.package_type_id.max_weight:
+                return False
+            # check if only allow new product when empty
+            if self.storage_category_id.allow_new_product == "empty" and any(float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0 for q in self.quant_ids):
+                return False
+            # check if only allow same product
+            if self.storage_category_id.allow_new_product == "same" and self.quant_ids and self.quant_ids.product_id != product:
+                return False
+            # check if enough space
+            package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
+            if package_capacity:
+                package_number = len(self.quant_ids.package_id.filtered(lambda q: q.package_type_id == package.package_type_id))
+                if package_number >= package_capacity.quantity:
+                    return False
+        return True
 
 
 class Route(models.Model):
