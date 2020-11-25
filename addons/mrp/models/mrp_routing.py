@@ -23,7 +23,7 @@ class MrpRoutingWorkcenter(models.Model):
         'res.company', 'Company', default=lambda self: self.env.company)
     worksheet_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Work Sheet", default="pdf",
+        string="Work Sheet", default="text",
         help="Defines if you want to use a PDF or a Google Slide as work sheet."
     )
     note = fields.Text('Description', help="Text worksheet description")
