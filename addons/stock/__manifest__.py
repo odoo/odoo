@@ -15,6 +15,7 @@
         'data/stock_demo.xml',
         'data/stock_demo2.xml',
         'data/stock_orderpoint_demo.xml',
+        'data/stock_storage_category_demo.xml',
     ],
     'data': [
         'security/stock_security.xml',
@@ -71,6 +72,7 @@
         'views/stock_move_line_views.xml',
         'views/stock_move_views.xml',
         'views/stock_orderpoint_views.xml',
+        'views/stock_storage_category_views.xml',
         'views/res_config_settings_views.xml',
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
