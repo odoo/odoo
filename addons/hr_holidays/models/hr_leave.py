@@ -549,12 +549,6 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
-    @api.constrains('date_from', 'date_to')
-    def _check_number_of_days(self):
-        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
-        if leaves:
-            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
-
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
         for holiday in self.filtered('employee_id'):
@@ -985,6 +979,10 @@ class HolidaysRequest(models.Model):
 
     def action_validate(self):
         current_employee = self.env.user.employee_id
+        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
+        if leaves:
+            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
+
         if any(holiday.state not in ['confirm', 'validate1'] and holiday.validation_type != 'no_validation' for holiday in self):
             raise UserError(_('Time off request must be confirmed in order to approve it.'))
 
