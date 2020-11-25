@@ -866,22 +866,19 @@ var SnippetEditor = Widget.extend({
         // If one option name is given, we suppose it should be handle by the
         // first parent editor which can do it
         if (ev.data.optionName) {
-            const cond = await notifyForEachMatchedOption(ev.data.optionName);
-            if (cond) {
-                ev.stopPropagation();
-            }
+            await notifyForEachMatchedOption(ev.data.optionName, ev);
         }
 
-        async function notifyForEachMatchedOption(name) {
-            var regex = new RegExp('^' + name + '\\d+$');
-            var hasOption = false;
+        async function notifyForEachMatchedOption(name, eventToStop) {
+            const regex = new RegExp('^' + name + '\\d+$');
             for (const key in self.snippetOptionInstances) {
                 if (key === name || regex.test(key)) {
+                    if (eventToStop) {
+                        eventToStop.stopPropagation();
+                    }
                     await self.snippetOptionInstances[key].notify(ev.data.name, ev.data.data);
-                    hasOption = true;
                 }
             }
-            return hasOption;
         }
         ev.data.resolve && ev.data.resolve();
     },
