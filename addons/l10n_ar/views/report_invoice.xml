@@ -236,7 +236,7 @@
                     <br/><strong>Currency: </strong><span t-esc="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
                     <br/><strong>Exchange rate: </strong> <span t-field="o.l10n_ar_currency_rate"/>
                 </t>
-                <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211']">
+                <t t-if="o.l10n_latam_document_type_id.code in ['201', '202', '206', '207', '211', '212']">
                     <br/><strong>CBU for payment: </strong><span t-esc="o.invoice_partner_bank_id.acc_number or '' if o.invoice_partner_bank_id.acc_type == 'cbu' else ''"/>
                 </t>
 
@@ -409,7 +409,7 @@
                     <br/><strong>Currency: </strong><span t-esc="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
                     <br/><strong>Exchange rate: </strong> <span t-field="o.l10n_ar_currency_rate"/>
                 </t>
-                <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211']">
+                <t t-if="o.l10n_latam_document_type_id.code in ['201', '202', '206', '207', '211', '212']">
                     <br/><strong>CBU for payment: </strong><span t-esc="o.invoice_partner_bank_id.acc_number or '' if o.invoice_partner_bank_id.acc_type == 'cbu' else ''"/>
                 </t>
 
