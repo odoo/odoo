@@ -107,7 +107,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group name="delivery_details">
-                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
+                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
                                 <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
