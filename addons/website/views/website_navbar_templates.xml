@@ -103,85 +103,87 @@
                         <div id="o_new_content_menu_choices" class="o_hidden">
                             <div class="container pt32 pb32">
                                 <div class="row">
-                                    <div groups="website.group_website_designer" class="col-md-4 mb8 o_new_content_element">
+                                    <t t-set="is_system" t-value="env.user.has_group('base.group_system')"/>
+                                    <t t-set="is_designer" t-value="env.user.has_group('website.group_website_designer')"/>
+
+                                    <div t-if='is_designer' class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_page" aria-label="New page" title="New page">
                                             <i class="fa fa-file-o"/>
                                             <p>Page</p>
                                         </a>
                                     </div>
-                                    <t>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_blog')"/>
-                                        <div name="module_website_blog" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element">
-                                            <a href="#" data-action="new_blog_post">
-                                                <i class="fa fa-rss"/>
-                                                <p>Blog Post</p>
-                                            </a>
-                                        </div>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_event')"/>
-                                        <div name="module_website_event" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element">
-                                            <a href="#" data-action="new_event">
-                                                <i class="fa fa-ticket"/>
-                                                <p>Event</p>
-                                            </a>
-                                        </div>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_forum')"/>
-                                        <div name="module_website_forum" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
-                                            <a href="#" data-url="/forum" data-action="new_forum">
-                                                <i class="fa fa-comment"/>
-                                                <p>Forum</p>
-                                            </a>
-                                        </div>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_hr_recruitment')"/>
-                                        <div name="module_website_hr_recruitment" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element">
+
+                                    <t t-set="mod" t-value="env.ref('base.module_website_blog')"/>
+                                    <div name="module_website_blog" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_blog_post">
+                                            <i class="fa fa-rss"/>
+                                            <p>Blog Post</p>
+                                        </a>
+                                    </div>
+                                    <t t-set="mod" t-value="env.ref('base.module_website_event')"/>
+                                    <div name="module_website_event" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_event">
+                                            <i class="fa fa-ticket"/>
+                                            <p>Event</p>
+                                        </a>
+                                    </div>
+                                    <t t-set="mod" t-value="env.ref('base.module_website_forum')"/>
+                                    <div name="module_website_forum" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
+                                        <a href="#" data-url="/forum" data-action="new_forum">
+                                            <i class="fa fa-comment"/>
+                                            <p>Forum</p>
+                                        </a>
+                                    </div>
+                                    <t t-set="mod" t-value="env.ref('base.module_website_hr_recruitment')"/>
+                                    <div name="module_website_hr_recruitment" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element">
                                             <a href="#">
                                                 <i class="fa fa-briefcase"/>
                                                 <p>Job Offer</p>
                                             </a>
-                                        </div>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_sale')"/>
-                                        <div name="module_website_sale" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element">
-                                            <a href="#" data-action="new_product">
-                                                <i class="fa fa-shopping-cart"/>
-                                                <p>Product</p>
-                                            </a>
-                                        </div>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_slides')"/>
-                                        <div name="module_website_slides" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element">
-                                            <a href="#" data-action="new_slide_channel">
-                                                <i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');
-                                                    background-repeat: no-repeat; background-position: center;"/>
-                                                <p>Course</p>
-                                            </a>
-                                        </div>
-                                        <t t-set="mod" t-value="env.ref('base.module_website_livechat')"/>
-                                        <div name="module_website_livechat" groups="base.group_system"
-                                             t-att-data-module-id="mod.id"
-                                             t-att-data-module-shortdesc="mod.shortdesc"
-                                             class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
-                                            <a href="#" data-url="/livechat" data-action="new_channel">
-                                                <i class="fa fa-comments"/>
-                                                <p>Livechat Widget</p>
-                                            </a>
-                                        </div>
-                                    </t>
+                                    </div>
+                                    <t t-set="mod" t-value="env.ref('base.module_website_sale')"/>
+                                    <div name="module_website_sale" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_product">
+                                            <i class="fa fa-shopping-cart"/>
+                                            <p>Product</p>
+                                        </a>
+                                    </div>
+                                    <t t-set="mod" t-value="env.ref('base.module_website_slides')"/>
+                                    <div name="module_website_slides" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_slide_channel">
+                                            <i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');
+                                                background-repeat: no-repeat; background-position: center;"/>
+                                            <p>Course</p>
+                                        </a>
+                                    </div>
+                                    <t t-set="mod" t-value="env.ref('base.module_website_livechat')"/>
+                                    <div name="module_website_livechat" t-if='is_system'
+                                         t-att-data-module-id="mod.id"
+                                         t-att-data-module-shortdesc="mod.shortdesc"
+                                         class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
+                                        <a href="#" data-url="/livechat" data-action="new_channel">
+                                            <i class="fa fa-comments"/>
+                                            <p>Livechat Widget</p>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
