@@ -4,7 +4,6 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
     const PaymentScreen = require('point_of_sale.PaymentScreen');
     const Registries = require('point_of_sale.Registries');
 
-    const _super_paymentscreen = PaymentScreen.prototype;
 
     const PosDePaymentScreen = PaymentScreen => class extends PaymentScreen {
         //@Override
@@ -53,12 +52,12 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
                 }
                 this.validateOrderFree = true;
             } else {
-                await _super_paymentscreen.validateOrder.apply(this, arguments);
+                await super.validateOrder(...arguments);
             }
         }
     };
 
     Registries.Component.extend(PaymentScreen, PosDePaymentScreen);
 
-    return PaymentScreen;
+    return PosDePaymentScreen;
 });

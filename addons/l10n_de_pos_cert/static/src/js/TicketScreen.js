@@ -4,8 +4,6 @@ odoo.define('l10n_de_pos_cert.TicketScreen', function(require) {
     const TicketScreen = require('point_of_sale.TicketScreen');
     const Registries = require('point_of_sale.Registries');
 
-    const _super_ticketscreen = TicketScreen.prototype;
-
     const PosDeTicketScreen = TicketScreen => class extends TicketScreen {
         // @Override
         async _canDeleteOrder(order) {
@@ -28,7 +26,7 @@ odoo.define('l10n_de_pos_cert.TicketScreen', function(require) {
                     });
                 }
             } else {
-                return _super_ticketscreen._canDeleteOrder.apply(this, arguments);
+                return super._canDeleteOrder(...arguments);
             }
         }
     };

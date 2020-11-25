@@ -5,13 +5,11 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { TaxError } = require('l10n_de_pos_cert.errors');
 
-    const _super_productscreen = ProductScreen.prototype;
-
     const PosDeProductScreen = ProductScreen => class extends ProductScreen {
         //@Override
         async _clickProduct(event) {
             if (this.env.pos.isCountryGermany()) {
-                _super_productscreen._clickProduct.apply(this, arguments).catch(async (error) => {
+                super._clickProduct(...arguments).catch(async (error) => {
                     if (error instanceof TaxError) {
                         await this._showTaxError()
                     } else {
@@ -19,14 +17,14 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
                     }
                 });
             } else {
-                _super_productscreen._clickProduct.apply(this, arguments)
+                super._clickProduct(...arguments)
             }
         }
         //@Override
         _barcodeProductAction(code) {
             if (this.env.pos.isCountryGermany()) {
                 try {
-                    _super_productscreen._barcodeProductAction.apply(this, arguments);
+                    super._barcodeProductAction(...arguments);
                 } catch(error) {
                     if (error instanceof TaxError) {
                         this._showTaxError()
@@ -35,7 +33,7 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
                     }
                 }
             } else {
-                _super_productscreen._barcodeProductAction.apply(this, arguments);
+                super._barcodeProductAction(...arguments);
             }
         }
         async _showTaxError() {
