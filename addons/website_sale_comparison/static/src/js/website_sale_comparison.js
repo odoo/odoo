@@ -105,7 +105,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 $elem.closest('form').find('.product_template_id').val(),
                 false
             ).then(function (productId) {
-                productId = parseInt(productId, 10);
+                productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
                 if (!productId) {
                     return;
                 }
