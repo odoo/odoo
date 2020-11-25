@@ -505,6 +505,7 @@ class AccountBankStatementLine(models.Model):
         string='Statement', index=True, required=True, ondelete='cascade',
         check_company=True)
     statement_name = fields.Char(
+        string='Statement Name',
         related='statement_id.name', store=True, readonly=True, index=True)
 
     sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
