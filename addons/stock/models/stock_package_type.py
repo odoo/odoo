@@ -24,6 +24,7 @@ class PackageType(models.Model):
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', default=_get_default_weight_uom)
     length_uom_name = fields.Char(string='Length unit of measure label', compute='_compute_length_uom_name', default=_get_default_length_uom)
     company_id = fields.Many2one('res.company', 'Company', index=True)
+    storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'package_type_id', 'Storage Category Capacity', copy=True)
 
     _sql_constraints = [
         ('positive_height', 'CHECK(height>=0)', 'Height must be positive'),
@@ -37,5 +38,10 @@ class PackageType(models.Model):
             package_type.length_uom_name = self.env['product.template']._get_length_uom_name_from_ir_config_parameter()
 
     def _compute_weight_uom_name(self):
-        for packaging in self:
-            packaging.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+        for package_type in self:
+            package_type.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        default.update(name=_("%s (copy)") % self.name)
+        return super().copy(default)

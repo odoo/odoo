@@ -96,6 +96,7 @@ class Product(models.Model):
     reordering_max_qty = fields.Float(
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
+    storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'product_id', 'Storage Category Capacity')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
@@ -486,6 +487,18 @@ class Product(models.Model):
         ]
         return self.env['product.template']._get_action_view_related_putaway_rules(domain)
 
+    def action_view_storage_category_capacity(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_storage_category_capacity")
+        action['context'] = {
+            'hide_package_type': True,
+        }
+        if len(self) == 1:
+            action['context'].update({
+                'default_product_id': self.id,
+            })
+        action['domain'] = [('product_id', 'in', self.ids)]
+        return action
+
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
@@ -811,6 +824,22 @@ class ProductTemplate(models.Model):
             raise UserError(_("Available quantity should be set to zero before changing type"))
         return super(ProductTemplate, self).write(vals)
 
+    def copy(self, default=None):
+        res = super().copy(default=default)
+        # Since we don't copy product variants directly, we need to match the newly
+        # created product variants with the old one, and copy the storage category
+        # capacity from them.
+        new_product_dict = {}
+        for product in res.product_variant_ids:
+            product_attribute_value = product.product_template_attribute_value_ids.product_attribute_value_id
+            new_product_dict[product_attribute_value] = product.id
+        storage_category_capacity_vals = []
+        for storage_category_capacity in self.product_variant_ids.storage_category_capacity_ids:
+            product_attribute_value = storage_category_capacity.product_id.product_template_attribute_value_ids.product_attribute_value_id
+            storage_category_capacity_vals.append(storage_category_capacity.copy_data({'product_id': new_product_dict[product_attribute_value]})[0])
+        self.env['stock.storage.category.capacity'].create(storage_category_capacity_vals)
+        return res
+
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         return self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
@@ -842,6 +871,10 @@ class ProductTemplate(models.Model):
                 ('category_id', '=', self.categ_id.id),
         ]
         return self._get_action_view_related_putaway_rules(domain)
+
+    def action_view_storage_category_capacity(self):
+        self.ensure_one()
+        return self.product_variant_ids.action_view_storage_category_capacity()
 
     def action_view_orderpoints(self):
         return self.product_variant_ids.action_view_orderpoints()

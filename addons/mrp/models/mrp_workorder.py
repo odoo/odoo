@@ -766,7 +766,8 @@ class MrpWorkorder(models.Model):
                 move_line.product_uom_qty += self.qty_producing
                 move_line.qty_done += self.qty_producing
             else:
-                location_dest_id = production_move.location_dest_id._get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
+                quantity = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
+                putaway_location = production_move.location_dest_id._get_putaway_strategy(self.product_id, quantity)
                 move_line.create({
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
@@ -775,7 +776,7 @@ class MrpWorkorder(models.Model):
                     'product_uom_id': self.product_uom_id.id,
                     'qty_done': self.qty_producing,
                     'location_id': production_move.location_id.id,
-                    'location_dest_id': location_dest_id,
+                    'location_dest_id': putaway_location.id,
                 })
         else:
             rounding = production_move.product_uom.rounding

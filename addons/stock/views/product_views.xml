@@ -287,6 +287,12 @@
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
                             attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{'invisible_handle': True, 'single_product': True}"/>
+                        <button type="object" string="Storage Capacities"
+                            name="action_view_storage_category_capacity"
+                            groups="stock.group_stock_storage_categories"
+                            attrs="{'invisible':[('type', '=', 'service')]}"
+                            class="oe_stat_button"
+                            icon="fa-cubes"/>
                     </div>
                     <xpath expr="//button[@name='%(action_open_routes)d']" position="attributes">
                         <attribute name="context">
@@ -388,6 +394,12 @@
                                 'invisible_handle': True,
                                 'single_product': product_variant_count == 1,
                             }"/>
+                        <button type="object" string="Storage Capacities"
+                            name="action_view_storage_category_capacity"
+                            groups="stock.group_stock_storage_categories"
+                            attrs="{'invisible':[('type', '=', 'service')]}"
+                            class="oe_stat_button"
+                            icon="fa-cubes"/>
                     </div>
 
                     <!-- change attrs of fields added in view_template_property_form

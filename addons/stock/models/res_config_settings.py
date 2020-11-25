@@ -39,11 +39,13 @@ class ResConfigSettings(models.TransientModel):
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
+    group_stock_storage_categories = fields.Boolean('Storage Categories', implied_group='stock.group_stock_storage_categories')
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
         if not self.group_stock_multi_locations:
             self.group_stock_adv_location = False
+            self.group_stock_storage_categories = False
 
     @api.onchange('group_stock_production_lot')
     def _onchange_group_stock_production_lot(self):
@@ -61,6 +63,20 @@ class ResConfigSettings(models.TransientModel):
         base_user = self.env.ref('base.group_user')
         if not self.group_stock_multi_locations and location_grp in base_user.implied_ids and warehouse_grp in base_user.implied_ids:
             raise UserError(_("You can't desactivate the multi-location if you have more than once warehouse by company"))
+
+        # Deactivate putaway rules with storage category when not in storage category
+        # group. Otherwise, active them.
+        storage_cate_grp = self.env.ref('stock.group_stock_storage_categories')
+        PutawayRule = self.env['stock.putaway.rule']
+        if self.group_stock_storage_categories and storage_cate_grp not in base_user.implied_ids:
+            putaway_rules = PutawayRule.search([
+                ('active', '=', False),
+                ('storage_category_id', '!=', False)
+            ])
+            putaway_rules.write({'active': True})
+        elif not self.group_stock_storage_categories and storage_cate_grp in base_user.implied_ids:
+            putaway_rules = PutawayRule.search([('storage_category_id', '!=', False)])
+            putaway_rules.write({'active': False})
 
         res = super(ResConfigSettings, self).set_values()
 
@@ -89,4 +105,5 @@ class ResConfigSettings(models.TransientModel):
                 ('show_operations', '=', False)
             ])
             picking_types.sudo().write({'show_operations': True})
+
         return res
