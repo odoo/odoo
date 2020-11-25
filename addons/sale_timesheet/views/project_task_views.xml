@@ -79,11 +79,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='allow_timesheets']" position="after">
                 <field name="allow_billable"/>
-                <field name="warning_employee_rate"/>
+                <field name="warning_employee_rate" invisible="1"/>
             </xpath>
             <xpath expr="//div[hasclass('o_primary')]//span" position="inside">
-                <t t-if="record.warning_employee_rate.raw_value">
-                    <i class="ml-2 fa fa-exclamation-triangle text-danger small" role="img" title="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable." aria-label="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable."/>
+                <t t-if="1 == 0">
+                   <i class="ml-2 fa fa-exclamation-triangle text-danger small" role="img" title="Some of the employees who are recording time on this project are not linked to any Sales Order Item. This means that their time will be considered as non-billable." aria-label="Some of the employees who are recording time on this project are not linked to any ales Order Item. This means that their time will be considered as non-billable."/>
                 </t>
             </xpath>
             <xpath expr="//a[@name='action_view_account_analytic_line']" position="attributes">
