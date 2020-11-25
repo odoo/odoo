@@ -270,6 +270,51 @@ class AdvancedFollowersTest(TestMailCommon):
             all_defaults)
 
 
+class AdvancedResponsibleNotifiedTest(TestMailCommon):
+    def setUp(self):
+        super(AdvancedResponsibleNotifiedTest, self).setUp()
+
+        # patch registry to simulate a ready environment so that _message_auto_subscribe_notify
+        # will be executed with the associated notification
+        old = self.env.registry.ready
+        self.env.registry.ready = True
+        self.addCleanup(setattr, self.env.registry, 'ready', old)
+
+    def test_auto_subscribe_notify_email(self):
+        """ Responsible is notified when assigned """
+        partner = self.env['res.partner'].create({"name": "demo1", "email": "demo1@test.com"})
+        notified_user = self.env['res.users'].create({
+            'login': 'demo1',
+            'partner_id': partner.id,
+            'notification_type': 'email',
+        })
+
+        # TODO master: add a 'state' selection field on 'mail.test.track' with a 'done' value to have a complete test
+        # check that 'default_state' context does not collide with mail.mail default values
+        sub = self.env['mail.test.track'].with_user(self.user_employee).with_context({
+            'default_state': 'done',
+            'mail_notify_force_send': False
+        }).create({
+            'name': 'Test',
+            'user_id': notified_user.id,
+        })
+
+        self.assertEqual(sub.message_partner_ids, (self.user_employee.partner_id | notified_user.partner_id))
+        # fetch created "You have been assigned to 'Test'" mail.message
+        mail_message = self.env['mail.message'].search([
+            ('model', '=', 'mail.test.track'),
+            ('res_id', '=', sub.id),
+            ('partner_ids', 'in', partner.id),
+        ])
+        self.assertEqual(1, len(mail_message))
+
+        # verify that a mail.mail is attached to it with the correct state ('outgoing')
+        mail_notification = mail_message.notification_ids
+        self.assertEqual(1, len(mail_notification))
+        self.assertTrue(bool(mail_notification.mail_id))
+        self.assertEqual('outgoing', mail_notification.mail_id.state)
+
+
 @tagged('post_install', '-at_install')
 class DuplicateNotificationTest(TestMailCommon):
     def test_no_duplicate_notification(self):
