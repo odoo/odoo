@@ -487,7 +487,7 @@ class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _inherits = {'account.move': 'move_id'}
     _description = "Bank Statement Line"
-    _order = "date desc, sequence desc, id desc"
+    _order = "date desc, statement_name desc, sequence desc, id desc"
     _check_company_auto = True
 
     # FIXME: Fields having the same name in both tables are confusing (partner_id & state). We don't change it because:
@@ -504,6 +504,8 @@ class AccountBankStatementLine(models.Model):
         comodel_name='account.bank.statement',
         string='Statement', index=True, required=True, ondelete='cascade',
         check_company=True)
+    statement_name = fields.Char(
+        related='statement_id.name', store=True, readonly=True, index=True)
 
     sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
     account_number = fields.Char(string='Bank Account Number', help="Technical field used to store the bank account number before its creation, upon the line's processing")
