@@ -39,16 +39,6 @@ class MessageList extends Component {
         this._getRefs = useRefs();
         useUpdate({ func: () => this._update() });
         /**
-         * Determine whether the auto-scroll on load is active or not. This
-         * is useful to disable some times, such as when mounting message list
-         * in ASC order: the initial scroll position is at the top of the
-         * conversation, and most of the time the expected initial scroll
-         * position should be at the bottom of the thread. During this time,
-         * the programmatical scrolling should not trigger auto-load messages
-         * on scroll.
-         */
-        this._isAutoLoadOnScrollActive = true;
-        /**
          * Reference of the "load more" item. Useful to trigger load more
          * on scroll when it becomes visible.
          */
@@ -57,7 +47,12 @@ class MessageList extends Component {
          * Snapshot computed during willPatch, which is used by patched.
          */
         this._willPatchSnapshot = undefined;
+        this._onScrollCheckAutoScroll = _.throttle(this._onScrollCheckAutoScroll.bind(this), 100);
         this._onScrollThrottled = _.throttle(this._onScrollThrottled.bind(this), 100);
+    }
+
+    mounted() {
+        this._addOnScrollAutoScrollHandler();
     }
 
     willPatch() {
@@ -69,6 +64,10 @@ class MessageList extends Component {
             scrollHeight: this.el.scrollHeight,
             scrollTop: this.el.scrollTop,
         };
+    }
+
+    willUnmount() {
+        this._removeOnScrollAutoScrollHandler();
     }
 
     //--------------------------------------------------------------------------
@@ -246,10 +245,13 @@ class MessageList extends Component {
      * @param {integer} value
      */
     async setScrollTop(value) {
-        this._isAutoLoadOnScrollActive = false;
+        // disable auto-scroll check for programmatic scroll
+        this._removeOnScrollAutoScrollHandler();
         this.el.scrollTop = value;
+        // restore auto-scroll check after timeout to ensure the browser
+        // triggered the scroll event before restoring the handler
         await new Promise(resolve => setTimeout(resolve, 0));
-        this._isAutoLoadOnScrollActive = true;
+        this._addOnScrollAutoScrollHandler();
     }
 
     /**
@@ -315,6 +317,15 @@ class MessageList extends Component {
     //--------------------------------------------------------------------------
 
     /**
+     * Adds the scroll handler that determines the state of auto-scroll.
+     */
+    _addOnScrollAutoScrollHandler() {
+        if (this.el) {
+            this.el.addEventListener('scroll', this._onScrollCheckAutoScroll);
+        }
+    }
+
+    /**
      * @private
      * @param {Object} hint
      */
@@ -328,7 +339,7 @@ class MessageList extends Component {
             if (this.threadView.threadCacheInitialScrollPosition !== undefined) {
                 if (this.props.hasScrollAdjust) {
                     if (this.el.scrollHeight === this.threadView.threadCacheInitialScrollHeight) {
-                        this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+                        this.setScrollTop(this.threadView.threadCacheInitialScrollPosition);
                         isProcessed = true;
                     }
                 } else {
@@ -385,16 +396,13 @@ class MessageList extends Component {
      * @private
      * @param {Object} hint
      */
-    async _adjustFromMessageReceived(hint) {
+    _adjustFromMessageReceived(hint) {
         const threadCache = this.threadView.threadCache;
         if (!threadCache.isLoaded) {
             return;
         }
         const { message } = hint.data;
         if (!threadCache.messages.includes(message)) {
-            return;
-        }
-        if (!this.messageRefFromId(message.id)) {
             return;
         }
         if (!this.props.hasScrollAdjust) {
@@ -405,14 +413,7 @@ class MessageList extends Component {
             this.threadView.markComponentHintProcessed(hint);
             return;
         }
-        if (
-            this.threadView.lastVisibleMessage &&
-            (message.id < this.threadView.lastVisibleMessage.id)
-        ) {
-            this.threadView.markComponentHintProcessed(hint);
-            return;
-        }
-        await this._scrollToMessage(message.id);
+        this._scrollToMostRecentMessage();
         this.threadView.markComponentHintProcessed(hint);
     }
 
@@ -427,7 +428,7 @@ class MessageList extends Component {
         }
         const { scrollHeight, scrollTop } = this._willPatchSnapshot;
         if (this.props.order === 'asc' && this.props.hasScrollAdjust) {
-            this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
+            this.setScrollTop(this.el.scrollHeight - scrollHeight + scrollTop);
         }
         this.threadView.markComponentHintProcessed(hint);
     }
@@ -442,7 +443,7 @@ class MessageList extends Component {
             this.props.hasScrollAdjust
         ) {
             if (this.el.scrollHeight === this.threadView.threadCacheInitialScrollHeight) {
-                this.el.scrollTop = this.threadView.threadCacheInitialScrollPosition;
+                this.setScrollTop(this.threadView.threadCacheInitialScrollPosition);
                 return true;
             } else {
                 return false;
@@ -494,43 +495,20 @@ class MessageList extends Component {
     }
 
     /**
-     * @private
-     * @returns {Promise}
+     * Removes the scroll handler that determines the state of auto-scroll.
      */
-    async _scrollToMostRecentMessage() {
-        if (!this.mostRecentMessageRef) {
-            return;
+    _removeOnScrollAutoScrollHandler() {
+        if (this.el) {
+            this.el.removeEventListener('scroll', this._onScrollCheckAutoScroll);
         }
-        this._isAutoLoadOnScrollActive = false;
-        await this.mostRecentMessageRef.scrollIntoView();
-        if (!this.el) {
-            this._isAutoLoadOnScrollActive = true;
-            return;
-        }
-        this.el.scrollTop = this.props.order === 'asc'
-            ? this.el.scrollTop + 15
-            : this.el.scrollTop - 15;
-        this._isAutoLoadOnScrollActive = true;
     }
 
     /**
-     * @param {integer} messageId
+     * @private
+     * @returns {Promise}
      */
-    async _scrollToMessage(messageId) {
-        const messageRef = this.messageRefFromId(messageId);
-        if (!messageRef) {
-            return;
-        }
-        this._isAutoLoadOnScrollActive = false;
-        await messageRef.scrollIntoView();
-        if (!this.el) {
-            this._isAutoLoadOnScrollActive = true;
-            return;
-        }
-        this.el.scrollTop = this.props.order === 'asc'
-            ? this.el.scrollTop + 15
-            : this.el.scrollTop - 15;
-        this._isAutoLoadOnScrollActive = true;
+    _scrollToMostRecentMessage() {
+        this.setScrollTop(this.props.order === 'asc' ? this.el.scrollHeight - this.el.clientHeight : 0);
     }
 
     /**
@@ -571,6 +549,34 @@ class MessageList extends Component {
     }
 
     /**
+     * Checks whether the auto-scroll feature should be enable or disabled.
+     *
+     * @private
+     * @param {ScrollEvent} ev
+     */
+    _onScrollCheckAutoScroll(ev) {
+        if (!this.el) {
+            // could be unmounted in the meantime (due to throttled behavior)
+            return;
+        }
+        if (!this.threadView || !this.threadView.threadViewer) {
+            return;
+        }
+        const scrollTop = this.el.scrollTop;
+        // Margin to compensate for inaccurate scrolling to bottom.
+        const margin = 4;
+        // Automatically scroll to new received messages only when the list is
+        // currently fully scrolled.
+        const hasAutoScrollOnMessageReceived = (this.props.order === 'asc')
+            ? scrollTop >= this.el.scrollHeight - this.el.clientHeight - margin
+            : scrollTop <= margin;
+        this.threadView.update({ hasAutoScrollOnMessageReceived });
+    }
+
+    /**
+     * Saves the current scroll position, saves whether the most recent message
+     * is visible, and checks whether more messages have to be loaded.
+     *
      * @private
      * @param {ScrollEvent} ev
      */
@@ -587,19 +593,8 @@ class MessageList extends Component {
             scrollTop,
             threadViewer: this.threadView.threadViewer,
         });
-        // Margin to compensate for inaccurate scrolling to bottom.
-        const margin = 4;
-        // Automatically scroll to new received messages only when the list is
-        // currently fully scrolled.
-        const hasAutoScrollOnMessageReceived = (this.props.order === 'asc')
-            ? scrollTop >= this.el.scrollHeight - this.el.clientHeight - margin
-            : scrollTop <= margin;
-        this.threadView.update({ hasAutoScrollOnMessageReceived });
         this.threadView.threadViewer.saveThreadCacheScrollHeightAsInitial(this.el.scrollHeight);
         this.threadView.threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop);
-        if (!this._isAutoLoadOnScrollActive) {
-            return;
-        }
         if (this._isLoadMoreVisible()) {
             this._loadMore();
         }

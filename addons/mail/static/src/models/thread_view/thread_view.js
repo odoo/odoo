@@ -143,6 +143,8 @@ function factory(dependencies) {
          * @private
          */
         _onThreadCacheChanged() {
+            // clear obsolete hints
+            this.update({ componentHintList: [] });
             this.addComponentHint('change-of-thread-cache');
             if (this.threadCache) {
                 this.threadCache.update({ isCacheRefreshRequested: true });
@@ -236,7 +238,9 @@ function factory(dependencies) {
          * a new message. Detection of new message is done through the component
          * hint `message-received`.
          */
-        hasAutoScrollOnMessageReceived: attr(),
+        hasAutoScrollOnMessageReceived: attr({
+            default: true,
+        }),
         /**
          * Last message in the context of the currently displayed thread cache.
          */
