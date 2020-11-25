@@ -49,7 +49,8 @@
                         t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
                 </span>
                 <br/>
-                <span>Join us there to meet <b t-esc="sponsor.partner_name"/> !</span>
+                <span t-if="is_event_user">Attendees will be able to join to meet <b t-esc="sponsor.partner_name"/> .</span>
+                <span t-else="">Join us there to meet <b t-esc="sponsor.partner_name"/> !</span>
             </div>
         </t>
         <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
