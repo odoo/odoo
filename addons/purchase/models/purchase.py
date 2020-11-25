@@ -1080,7 +1080,7 @@ class PurchaseOrderLine(models.Model):
             'name': '%s: %s' % (self.order_id.name, self.name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
-            'quantity': self.qty_to_invoice,
+            'quantity': self.product_id.uom_po_id._compute_quantity(self.qty_to_invoice, self.product_uom),
             'price_unit': self.price_unit,
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'analytic_account_id': self.account_analytic_id.id,
