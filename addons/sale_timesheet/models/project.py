@@ -217,6 +217,7 @@ class ProjectTask(models.Model):
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
         help='Select a Service product with which you would like to bill your time spent on this task.')
 
+    # TODO: [XBO] remove me in master
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
 
     @api.depends(

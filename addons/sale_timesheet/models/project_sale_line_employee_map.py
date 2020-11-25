@@ -19,7 +19,7 @@ class ProjectProductEmployeeMap(models.Model):
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
-    price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=False)
+    price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_price_unit', store=True, readonly=False)
 
     _sql_constraints = [
