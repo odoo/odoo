@@ -47,11 +47,13 @@
                                 </t>
                             </button>
                             <t t-if="chatter.hasFollowers and chatter.thread">
-                                <FollowButton
-                                    class="o_ChatterTopbar_button o_ChatterTopbar_followButton"
-                                    isDisabled="chatter.isDisabled"
-                                    threadLocalId="chatter.thread.localId"
-                                />
+                                <t t-if="chatter.thread.channel_type !== 'chat'">
+                                    <FollowButton
+                                        class="o_ChatterTopbar_button o_ChatterTopbar_followButton"
+                                        isDisabled="chatter.isDisabled"
+                                        threadLocalId="chatter.thread.localId"
+                                    />
+                                </t>
                                 <FollowerListMenu
                                     class="o_ChatterTopbar_button o_ChatterTopbar_followerListMenu"
                                     isDisabled="chatter.isDisabled"
