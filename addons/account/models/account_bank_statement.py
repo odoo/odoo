@@ -487,7 +487,7 @@ class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _inherits = {'account.move': 'move_id'}
     _description = "Bank Statement Line"
-    _order = "statement_id desc, date, sequence, id desc"
+    _order = "date desc, sequence desc, id desc"
     _check_company_auto = True
 
     # FIXME: Fields having the same name in both tables are confusing (partner_id & state). We don't change it because:
