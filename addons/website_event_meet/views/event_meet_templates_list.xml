@@ -55,7 +55,7 @@
 </template>
 
 <template id="meeting_room_card" name="Meeting Room Card">
-    <div class="modal o_join_later_modal" t-attf-id="o_join_later_modal_#{meeting_room.id}" tabindex="-1" role="dialog" style="height: 400px; top:calc(50% - 200px);">
+    <div class="modal o_join_later_modal fixed-top" t-attf-id="o_join_later_modal_#{meeting_room.id}" tabindex="-1" role="dialog" style="top: 0">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="mt-4 col-12 alert alert-warning text-center" role="alert">
