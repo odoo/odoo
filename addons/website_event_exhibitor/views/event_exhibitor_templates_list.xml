@@ -154,13 +154,9 @@
         itemscope="itemscope" itemtype="http://schema.org/Event">
         <div class="h-100 row no-gutters">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
-            <header t-att-class="'overflow-hidden col-12 rounded-top position-static %s' % ('bg-secondary' if not sponsor_image_url else '')">
-
-                <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                    <i class="fa fa-ban mr-2"/>Unpublished
-                </small>
-
-                <div t-att-data-sponsor-url="sponsor.website_url" class="o_wesponsor_js_connect"
+            <header t-att-class="'overflow-hidden col-12 rounded-top %s' % ('bg-secondary' if not sponsor_image_url else '')">
+                <div class="d-block h-100 w-100 o_wesponsor_js_connect"
+                     t-att-data-sponsor-url="sponsor.website_url"
                      t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
                      t-att-data-is-participating="event.is_participating"
                      t-att-data-sponsor-id="sponsor.id"
@@ -169,6 +165,9 @@
                      t-att-data-user-event-manager="user_event_manager">
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
+                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
+                            <i class="fa fa-ban mr-2"/>Unpublished
+                        </small>
                         <div class="o_wesponsor_connect_button">
                             <a href="#" class="btn btn-primary h3">
                                 <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
@@ -186,6 +185,9 @@
                     </div>
                     <div t-else="" class="o_wesponsor_gradient card-img-top position-relative"
                         style="padding-top: 50%">
+                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
+                            <i class="fa fa-ban mr-2"/>Unpublished
+                        </small>
                         <div class="o_wesponsor_connect_button">
                             <a href="#" class="btn btn-primary h3">
                                 <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
@@ -197,8 +199,8 @@
                     </div>
                 </div>
             </header>
-            <div class="col-12">
-                <main class="card-body h-100">
+            <div class="col-12 h-100">
+                <main class="card-body">
                     <!-- Title -->
                     <h5 class="card-title mt-0 mb-0 text-truncate d-flex align-items-top">
                         <span t-field="sponsor.name" itemprop="name"/>
