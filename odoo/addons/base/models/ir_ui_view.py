@@ -1442,13 +1442,13 @@ class ResetViewArchWizard(models.TransientModel):
             if soft:
                 arch_to_compare = view.view_id.arch_prev
             elif not soft and view.view_id.arch_fs:
-                arch_to_compare = view.view_id.with_context(read_arch_from_file=True).arch
+                arch_to_compare = view.view_id.with_context(read_arch_from_file=True, lang=None).arch
 
             diff = False
             if arch_to_compare:
                 diff = HtmlDiff(tabsize=2).make_table(
                     arch_to_compare.splitlines(),
-                    view.view_id.arch.splitlines(),
+                    view.view_id.with_context(lang=None).arch.splitlines(),
                     _("Previous Arch") if soft else _("File Arch"),
                     _("Current Arch"),
                     context=True,  # Show only diff lines, not all the code
