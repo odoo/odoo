@@ -104,6 +104,7 @@ class ProductProduct(models.Model):
         domain = [
             ('product_id', 'in', self.ids),
             ('company_id', '=', company_id),
+            ('quantity', '!=', 0),
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
