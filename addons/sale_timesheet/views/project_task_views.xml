@@ -20,16 +20,14 @@
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': [('allow_billable', '=', False)]}">
                     <group>
-                        <field name="display_create_order" invisible="1"/>
-                        <field name="bill_type" widget="radio"/>
-                        <field name="pricing_type" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('bill_type', '!=', 'customer_project')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
-                        <div class="o_td_label"  attrs="{'invisible': ['|', '|', ('allow_timesheets', '=', False), ('sale_order_id', '!=', False), '&amp;', ('pricing_type', '!=', 'fixed_rate'), ('bill_type', '!=', 'customer_task')]}">
-                            <label for="timesheet_product_id" string="Default Service" attrs="{'invisible': [('bill_type', '!=', 'customer_task')]}"/>
-                            <label for="timesheet_product_id" string="Service" attrs="{'invisible': [('bill_type', '=', 'customer_task')]}"/>
-                        </div>
-                        <field name="timesheet_product_id" nolabel="1" attrs="{'invisible': ['|', '|', ('allow_timesheets', '=', False), ('sale_order_id', '!=', False), '&amp;', ('pricing_type', '!=', 'fixed_rate'), ('bill_type', '!=', 'customer_task')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
-                        <field name="sale_order_id" invisible="1"/>
-                        <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': ['|', '|', ('sale_order_id', '=', False), ('bill_type', '!=', 'customer_project'), ('pricing_type', '!=', 'fixed_rate')], 'readonly': [('sale_order_id', '=', False)]}" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+                        <group>
+                            <field name="display_create_order" invisible="1"/>
+                            <field name="bill_type" widget="radio"/>
+                            <field name="pricing_type" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('bill_type', '!=', 'customer_project')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
+                            <field name="timesheet_product_id" string="Service" attrs="{'invisible': ['|', '|', ('allow_timesheets', '=', False), ('sale_order_id', '!=', False), ('bill_type', '!=', 'customer_task')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+                            <field name="sale_order_id" attrs="{'invisible': [('bill_type', '!=', 'customer_project')], 'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+                            <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': ['|', '|', ('sale_order_id', '=', False), ('bill_type', '!=', 'customer_project'), ('pricing_type', '!=', 'employee_rate')]}" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+                        </group>
                     </group>
                     <field name="sale_line_employee_ids" attrs="{'invisible': ['|', ('bill_type', '!=', 'customer_project'), ('pricing_type', '!=', 'employee_rate')]}">
                         <tree editable="top">
@@ -37,8 +35,8 @@
                             <field name="project_id" invisible="1"/>
                             <field name="employee_id" options="{'no_create': True}"/>
                             <field name="timesheet_product_id" attrs="{'column_invisible': [('parent.sale_order_id', '!=', False)]}" invisible="1"/>
-                            <field name="sale_line_id" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
-                            <field name="price_unit" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('parent.sale_order_id', '!=', False)]}"/>
+                            <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
+                            <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/>
                         </tree>
                     </field>
@@ -134,12 +132,12 @@
                     <field name="bill_type" invisible="1"/>
                     <field name="pricing_type" invisible="1"/>
                     <field name="timesheet_product_id" invisible="1"/>
-                    <field name="non_allow_billable" attrs="{'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('pricing_type', '!=', 'employee_rate'), ('bill_type', '=', 'customer_task')]}"/>
+                    <field name="non_allow_billable" attrs="{'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('pricing_type', '!=', 'employee_rate'), ('bill_type', '=', 'customer_task')]}" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <field name="timesheet_invoice_id" invisible="1"/>
                     <field name="so_line" readonly="1" attrs="{'column_invisible': [('parent.has_multi_sol', '=', False), '|', ('parent.is_project_map_empty', '=', True), ('parent.pricing_type', '!=', 'employee_rate')]}" optional="hide"/>
-                    <field name="non_allow_billable" attrs="{'column_invisible': ['|', '|', ('parent.allow_billable', '=', False), '&amp;', '&amp;', '|', ('parent.bill_type', '!=', 'customer_project'), ('parent.pricing_type', '!=', 'employee_rate'), ('parent.timesheet_product_id', '=', False), ('parent.sale_line_id', '=', False), '&amp;', '&amp;', ('parent.bill_type', '=', 'customer_project'), ('parent.pricing_type', '=', 'employee_rate'), ('parent.non_allow_billable', '=', True)]}" optional="hide"/>
+                    <field name="non_allow_billable" attrs="{'column_invisible': ['|', '&amp;', '&amp;', '|', ('parent.bill_type', '!=', 'customer_project'), ('parent.pricing_type', '!=', 'employee_rate'), ('parent.timesheet_product_id', '=', False), ('parent.sale_line_id', '=', False), '&amp;', ('parent.bill_type', '=', 'customer_project'), ('parent.pricing_type', '=', 'employee_rate')]}" optional="hide"/>
                 </xpath>
             </field>
         </record>
@@ -153,7 +151,6 @@
                     <attribute name="attrs">
                         {'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False)]}
                     </attribute>
-                    <attribute name="placeholder">Leave empty if non-billable</attribute>
                 </xpath>
             </field>
         </record>
