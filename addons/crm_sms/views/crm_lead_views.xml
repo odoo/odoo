@@ -27,15 +27,15 @@
         <field name="binding_view_types">form</field>
     </record>
 
-    <record id="crm_lead_view_list_activities" model="ir.ui.view">
-        <field name="name">crm.lead.view.list.activities.inherit.sms</field>
+    <record id="crm_case_tree_view_oppor" model="ir.ui.view">
+        <field name="name">crm.lead.tree.opportunity.inherit.sms</field>
         <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_lead_view_list_activities"/>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="%(crm_sms.crm_lead_act_window_sms_composer_single)d" type="action" string="SMS" />
             </xpath>
-            <xpath expr="//button[@name='%(crm.action_lead_mass_mail)d']" position="after">
+            <xpath expr="//button[@name='%(crm.action_lead_mail_compose)d']" position="after">
                 <button name="%(crm_sms.crm_lead_act_window_sms_composer_multi)d" type="action" string="SMS" icon="fa-comments" />
             </xpath>
         </field>
