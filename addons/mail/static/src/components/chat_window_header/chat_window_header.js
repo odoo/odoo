@@ -56,6 +56,9 @@ class ChatWindowHeader extends Component {
      */
     _onClickClose(ev) {
         ev.stopPropagation();
+        if (!this.chatWindow) {
+            return;
+        }
         this.chatWindow.close();
     }
 
