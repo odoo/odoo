@@ -267,6 +267,7 @@ class StockRule(models.Model):
 
         procurement_date_planned = min(dates)
         schedule_date = (procurement_date_planned - relativedelta(days=company_id.po_lead))
+        supplier_delay = max([int(value['supplier'].delay) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from
@@ -274,7 +275,7 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].name
-        purchase_date = schedule_date - relativedelta(days=int(values['supplier'].delay))
+        purchase_date = schedule_date - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
 
