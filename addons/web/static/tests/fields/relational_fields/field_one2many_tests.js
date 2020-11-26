@@ -6511,7 +6511,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('one2many: onchange that returns unknow field in list, but not in form', async function (assert) {
+        QUnit.test('one2many: onchange that returns unknown field in list, but not in form', async function (assert) {
             assert.expect(5);
 
             this.data.partner.onchanges = {
@@ -6559,6 +6559,79 @@ QUnit.module('fields', {}, function () {
                 "m2mtags should contain one tag");
             assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .o_badge_text').text(),
                 'gold', "tag name should have been correctly loaded");
+
+            form.destroy();
+        });
+
+        QUnit.test('multi level of nested x2manys, onchange and rawChanges', async function (assert) {
+            assert.expect(8);
+
+            this.data.partner.records[0].p = [1];
+            this.data.partner.onchanges = {
+                name: function () { },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="name"/>
+                        <field name="p">
+                            <tree><field name="display_name"/></tree>
+                            <form>
+                                <field name="display_name"/>
+                                <field name="p">
+                                    <tree><field name="display_name"/></tree>
+                                    <form><field name="display_name"/></form>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === 'write') {
+                        assert.deepEqual(args.args[1].p[0][2], {
+                            p: [[1, 1, { display_name: 'new name' }]],
+                        });
+                    }
+                    return this._super(...arguments);
+                },
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, '.o_data_row', "the one2many should contain one row");
+
+            // open the o2m record in readonly first
+            await testUtils.dom.click(form.$('.o_data_row td:first'));
+            assert.containsOnce(document.body, ".modal .o_form_readonly");
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // switch to edit mode and open it again
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$('.o_data_row td:first'));
+
+            assert.containsOnce(document.body, ".modal .o_form_editable");
+            assert.containsOnce(document.body, '.modal .o_data_row', "the one2many should contain one row");
+
+            // open the o2m again, in the dialog
+            await testUtils.dom.click($('.modal .o_data_row td:first'));
+
+            assert.containsN(document.body, ".modal .o_form_editable", 2);
+
+            // edit the name and click save modal that is on top
+            await testUtils.fields.editInput($('.modal:nth(1) .o_field_widget[name=display_name]'), 'new name');
+            await testUtils.dom.click($('.modal:nth(1) .modal-footer .btn-primary'));
+
+            assert.containsOnce(document.body, ".modal .o_form_editable");
+
+            // click save on the other modal
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+            assert.containsNone(document.body, ".modal");
+
+            // save the main record
+            await testUtils.form.clickSave(form);
 
             form.destroy();
         });
