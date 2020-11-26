@@ -398,9 +398,8 @@ class Lead(models.Model):
     @api.depends('email_from', 'phone', 'partner_id')
     def _compute_ribbon_message(self):
         for lead in self:
-            partner_formatted_phone = lead.partner_id.phone and self.phone_format(lead.partner_id.phone)
             will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
-            will_write_phone = lead.partner_id and lead.phone != partner_formatted_phone
+            will_write_phone = lead.partner_id and lead.phone != lead.partner_id.phone
 
             if will_write_email and will_write_phone:
                 lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
