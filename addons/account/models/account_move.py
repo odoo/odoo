@@ -4,7 +4,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
-from .orm_utils import OrmUtils
 
 from datetime import date, timedelta
 from collections import defaultdict
@@ -1814,10 +1813,7 @@ class AccountMove(models.Model):
 
         # Track some fields before/after writing.
         snapshots0 = []
-
-        vals_list = []
         for move in self:
-            vals_list.append(OrmUtils(move).cleanup_write_values(vals))
             snapshots0.append(move.sudo()._create_snapshot(fields=move._get_snapshot_technical_tracked_fields()))
 
         # ===================================================================================================
@@ -1825,7 +1821,7 @@ class AccountMove(models.Model):
         # ===================================================================================================
 
         if not self._context.get('write_recursion'):
-            for move, vals in zip(self.with_context(write_recursion=True), vals_list):
+            for move in self.with_context(write_recursion=True):
 
                 # Check restrict mode.
                 if move.restrict_mode_hash_table and (move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
@@ -1842,21 +1838,15 @@ class AccountMove(models.Model):
         # Write: Writing is done in batch if possible.
         # ===================================================================================================
 
-        if vals_list and all(vals == vals_list[0] for vals in vals_list):
-            self_ctx = self.with_context(check_move_validity=False, skip_account_move_synchronization=True)
-            res = super(AccountMove, self_ctx).write(vals_list[0])
-        else:
-            res = True
-            for move, vals in zip(self, vals_list):
-                move_ctx = self.with_context(check_move_validity=False, skip_account_move_synchronization=True)
-                res |= super(AccountMove, move_ctx).write(vals)
+        self_ctx = self.with_context(check_move_validity=False, skip_account_move_synchronization=True)
+        res = super(AccountMove, self_ctx).write(vals)
 
         # ===================================================================================================
         # After write
         # ===================================================================================================
 
         if not self._context.get('write_recursion'):
-            for move, vals, snapshot0 in zip(self.with_context(write_recursion=True), vals_list, snapshots0):
+            for move, snapshot0 in zip(self.with_context(write_recursion=True), snapshots0):
 
                 # Compute 'tax_exigible' field on journal items.
                 if 'line_ids' in vals:
@@ -3889,10 +3879,8 @@ class AccountMoveLine(models.Model):
         ))
 
         # Track some fields before/after writing.
-        vals_list = []
         snapshots0 = []
         for line in self:
-            vals_list.append(OrmUtils(line).cleanup_write_values(vals))
             snapshots0.append(line._create_snapshot(fields=all_protected_fields))
 
         # ===================================================================================================
@@ -3956,19 +3944,14 @@ class AccountMoveLine(models.Model):
         # Write: Writing is done in batch if possible.
         # ===================================================================================================
 
-        if vals_list and all(cleaned_vals == vals_list[0] for cleaned_vals in vals_list):
-            res = super().write(vals_list[0])
-        else:
-            res = True
-            for move, cleaned_vals in zip(self, vals_list):
-                res |= super().write(cleaned_vals)
+        res = super().write(vals)
 
         # ===================================================================================================
         # After write
         # ===================================================================================================
 
         if not self._context.get('write_recursion'):
-            for line, cleaned_vals, snapshot0 in zip(self.with_context(write_recursion=True), vals_list, snapshots0):
+            for line, snapshot0 in zip(self.with_context(write_recursion=True), snapshots0):
                 move = line.move_id
 
                 # Check hash.
