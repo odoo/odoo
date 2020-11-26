@@ -38,7 +38,11 @@
 
         if (DiscussWidget) {
             DiscussWidget.include({
-                on_attach_callback: async function () {
+                /**
+                 * Overriding a method that is called every time the discuss
+                 * component is updated.
+                 */
+                _updateControlPanel: async function () {
                     await this._super(...arguments);
                     viewUpdateCount++;
                 },
