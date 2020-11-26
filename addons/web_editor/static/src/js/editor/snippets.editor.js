@@ -392,8 +392,6 @@ var SnippetEditor = Widget.extend({
                     editor = $parent.data('snippet-editor');
                 }
                 if (isEmptyAndRemovable($parent, editor)) {
-                    // TODO maybe this should be part of the actual Promise being
-                    // returned by the function ?
                     await new Promise((resolve)=> {
                         setTimeout(() => editor.removeSnippet().then(resolve));
                     });
