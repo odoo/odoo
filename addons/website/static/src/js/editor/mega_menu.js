@@ -69,8 +69,8 @@ snippetsEditor.SnippetsMenu.include({
      */
     toggleMegaMenuSnippets: function (show) {
         setTimeout(() => this._enableLastEditor());
-
-        $('#snippet_mega_menu').toggleClass('d-none', !show);
+        this._showMegaMenuSnippets = show;
+        this._filterSnippets();
     },
 
     //--------------------------------------------------------------------------
@@ -87,6 +87,15 @@ snippetsEditor.SnippetsMenu.include({
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
     },
-});
 
+    /**
+     * @override
+     */
+    _filterSnippets() {
+        this._super(...arguments);
+        if (!this._showMegaMenuSnippets) {
+            this.el.querySelector('#snippet_mega_menu').classList.add('d-none');
+        }
+    },
+});
 });
