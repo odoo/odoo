@@ -167,12 +167,12 @@
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
                     <field name="matching_number" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
-                    <field name="currency_id" readonly="1" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                 </tree>
@@ -202,11 +202,11 @@
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
                     <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
+                    <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
                     <field name="matching_number" string="Matching" optional="show"/>
-                    <field name="currency_id" readonly="1" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
