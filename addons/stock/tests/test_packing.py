@@ -759,7 +759,6 @@ class TestPacking(TestPackingCommon):
             with picking_form.package_level_ids_details.edit(0) as package_level:
                 package_level.is_done = True
         action = picking.button_validate()
-        print(action)
 
         self.assertEqual(action, True, 'Should not open wizard')
 
