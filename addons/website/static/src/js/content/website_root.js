@@ -304,20 +304,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
                         _t("Published with success."),
                 });
             }
-        })
-        .guardedCatch(function (err, data) {
-            data = data || {statusText: err.message.message};
-            return new Dialog(self, {
-                title: data.data ? data.data.arguments[0] : "",
-                $content: $('<div/>', {
-                    html: (data.data ? data.data.arguments[1] : data.statusText)
-                        + '<br/>'
-                        + _.str.sprintf(
-                            _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#model=' + $data.data('object') + '&id=' + $data.data('id')
-                        ),
-                }),
-            }).open();
         });
     },
     /**
