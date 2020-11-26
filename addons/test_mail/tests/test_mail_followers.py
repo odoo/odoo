@@ -273,15 +273,10 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
             follower_por.subtype_ids, self.sub_comment | self.sub_track_1,
             'AutoSubscribe: comment (generic checked), Track (with child relation) 1 as Umbrella AutoSub (default) was checked'
         )
-        # TDE FIXME: internal subtypes are not propagated currently
         self.assertEqual(
-            follower_adm.subtype_ids, self.sub_comment | self.sub_track_2,
-            'AutoSubscribe: comment (generic checked), Track (with child relation) 2) as Umbrella AutoSub 2 was checked; missing Generic internal subtype (generic checked)'
+            follower_adm.subtype_ids, self.sub_comment | self.sub_track_2 | self.sub_generic_int_nodef,
+            'AutoSubscribe: comment (generic checked), Track (with child relation) 2) as Umbrella AutoSub 2 was checked, Generic internal subtype (generic checked)'
         )
-        # self.assertEqual(
-        #     follower_adm.subtype_ids, self.sub_comment | self.sub_track_2 | self.sub_generic_int_nodef,
-        #     'AutoSubscribe: comment (generic checked), Track (with child relation) 2) as Umbrella AutoSub 2 was checked, Generic internal subtype (generic checked)'
-        # )
         self.assertEqual(
             follower_emp.subtype_ids, self.sub_comment | self.sub_track_def | self.sub_generic_int_def,
             'AutoSubscribe: only default one as no subscription on parent'
@@ -307,15 +302,10 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         follower_emp = sub2.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id)
         defaults = self.sub_comment | self.sub_track_def | self.sub_generic_int_def
         parents = self.sub_generic_int_nodef | self.sub_track_2
-        # TDE FIXME
         self.assertEqual(
-            follower_emp.subtype_ids, defaults,
-            'AutoSubscribe: at create auto subscribe from parent is skipped for creator'
+            follower_emp.subtype_ids, defaults + parents,
+            'AutoSubscribe: at create auto subscribe as creator + from parent take both subtypes'
         )
-        # self.assertEqual(
-        #     follower_emp.subtype_ids, defaults + parents,
-        #     'AutoSubscribe: at create auto subscribe as creator + from parent take both subtypes'
-        # )
 
 
 @tagged('post_install', '-at_install')
