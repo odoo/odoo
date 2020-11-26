@@ -771,6 +771,7 @@ class Lead(models.Model):
     def _get_rainbowman_message(self):
         message = False
         if self.user_id and self.team_id and self.expected_revenue:
+            self.flush()  # flush fields to make sure DB is up to date
             query = """
                 SELECT
                     SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
