@@ -6,10 +6,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.mail.tests.common import MockEmail
 from odoo.tools import mute_logger
 
 
-class TestMailSchedule(TestEventCommon):
+class TestMailSchedule(TestEventCommon, MockEmail):
     @classmethod
     def setUpClass(cls):
         super(TestMailSchedule, cls).setUpClass()
@@ -33,22 +34,20 @@ class TestMailSchedule(TestEventCommon):
                     'template_id': cls.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
             ]
         })
-
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
-    def test_event_mail_schedule(self):
-        """ Test mail scheduling for events """
-        # create some registrations
-        self.env['event.registration'].with_user(self.user_eventuser).create({
-            'event_id': self.test_event.id,
+        cls.env['event.registration'].with_user(cls.user_eventuser).create({
+            'event_id': cls.test_event.id,
             'name': 'Reg0',
             'email': 'reg0@example.com',
         })
-        self.env['event.registration'].with_user(self.user_eventuser).create({
-            'event_id': self.test_event.id,
+        cls.env['event.registration'].with_user(cls.user_eventuser).create({
+            'event_id': cls.test_event.id,
             'name': 'Reg1',
             'email': 'reg1@example.com',
         })
 
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    def test_event_mail_schedule(self):
+        """ Test mail scheduling for events """
         # check subscription scheduler
         schedulers = self.env['event.mail'].search([('event_id', '=', self.test_event.id), ('interval_type', '=', 'after_sub')])
         self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
@@ -77,6 +76,22 @@ class TestMailSchedule(TestEventCommon):
         mails = self.env['mail.mail'].sudo().search([('subject', 'ilike', 'TestEventMail'), ('date', '>=', self.now)], order='date DESC', limit=3)
         self.assertEqual(len(mails), 3, 'event: wrong number of reminders in outgoing mail queue')
 
+        with self.mock_mail_gateway():
+            self.env['mail.mail'].process_email_queue()
+
+        self.assertSentEmail(
+            '"YourCompany" <info@yourcompany.com>',
+            ['"Reg0" <reg0@example.com>'],
+            subject='Your registration at TestEventMail',
+            body_content='for attendee Reg0',
+        )
+        self.assertSentEmail(
+            '"YourCompany" <info@yourcompany.com>',
+            ['"Reg1" <reg1@example.com>'],
+            subject='Your registration at TestEventMail',
+            body_content='for attendee Reg1',
+        )
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_mail_schedule_trigger_stage(self):
         """Test mail scheduling for events."""
@@ -88,6 +103,7 @@ class TestMailSchedule(TestEventCommon):
             'interval_unit': 'days',
             'interval_type': 'stage_update',
             'trigger_stage_id': stage_trigger.id,
+            'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder'),
         })
 
         self.assertEqual(test_event_mail.trigger_stage_date, False)
@@ -102,3 +118,27 @@ class TestMailSchedule(TestEventCommon):
         self.test_event.stage_id = self.env['event.stage'].search([('name', '=', 'Booked')])
         self.test_event.stage_id = stage_trigger
         self.assertAlmostEqual(test_event_mail.trigger_stage_date, self.now - relativedelta(days=1), delta=relativedelta(minutes=1))
+
+        # remove other emails sent during the registration creation
+        self.env['mail.mail'].sudo().search([('subject', 'ilike', 'TestEventMail')]).unlink()
+        test_event_mail.execute()
+
+        # change the scheduled date to send the emails
+        mails = self.env['mail.mail'].sudo().search([('subject', 'ilike', 'TestEventMail')])
+        mails.scheduled_date = False
+
+        with self.mock_mail_gateway():
+            self.env['mail.mail'].process_email_queue()
+
+        self.assertSentEmail(
+            '"YourCompany" <info@yourcompany.com>',
+            ['"Reg0" <reg0@example.com>'],
+            subject='TestEventMail: tomorrow',
+            body_content='Hello Reg0',
+        )
+        self.assertSentEmail(
+            '"YourCompany" <info@yourcompany.com>',
+            ['"Reg1" <reg1@example.com>'],
+            subject='TestEventMail: tomorrow',
+            body_content='Hello Reg1',
+        )
