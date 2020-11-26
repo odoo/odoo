@@ -475,12 +475,11 @@ class Meeting(models.Model):
                 added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
             # commands 0 and 1 not supported
 
-        if removed_partner_ids:
-            attendees_to_unlink = self.env['calendar.attendee'].search([
-                ('event_id', 'in', self.ids),
-                ('partner_id', 'in', removed_partner_ids),
-            ])
-            attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
+        attendees_to_unlink = self.env['calendar.attendee'].search([
+            ('event_id', 'in', self.ids),
+            ('partner_id', 'in', removed_partner_ids),
+        ])
+        attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
         attendee_commands += [
             [0, 0, dict(partner_id=partner_id)]
@@ -700,9 +699,8 @@ class Meeting(models.Model):
                                 activity_vals['user_id'] = user_id
                             values['activity_ids'] = [(0, 0, activity_vals)]
 
-        self_partner_id = [(4, self.env.user.partner_id.id)]
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', self_partner_id)))
+            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
             for vals in vals_list
         ]
         recurrence_fields = self._get_recurrent_fields()
