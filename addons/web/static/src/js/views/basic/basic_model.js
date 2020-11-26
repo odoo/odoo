@@ -231,7 +231,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise} resolved when the fieldInfo have been set on the given
      *   datapoint and all its children, and all rawChanges have been applied
      */
-    addFieldsInfo: function (dataPointID, viewInfo) {
+    addFieldsInfo: async function (dataPointID, viewInfo) {
         var dataPoint = this.localData[dataPointID];
         dataPoint.fields = _.extend({}, dataPoint.fields, viewInfo.fields);
         // complete the given fieldInfo with the fields of the main view, so
@@ -245,7 +245,9 @@ var BasicModel = AbstractModel.extend({
         // so we might have stored changes for them (e.g. coming from onchange
         // RPCs), that we haven't been able to process earlier (because those
         // fields were unknown at that time). So we now try to process them.
-        return this.applyRawChanges(dataPointID, viewInfo.viewType).then(() => {
+        if (dataPoint.type === 'record') {
+            await this.applyRawChanges(dataPointID, viewInfo.viewType);
+        }
             const proms = [];
             const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
             // recursively apply the new field info on sub datapoints
@@ -278,8 +280,6 @@ var BasicModel = AbstractModel.extend({
                 });
             }
             return Promise.all(proms);
-        });
-
     },
     /**
      * Onchange RPCs may return values for fields that are not in the current
