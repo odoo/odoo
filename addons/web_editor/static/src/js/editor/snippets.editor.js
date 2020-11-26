@@ -2141,8 +2141,7 @@ var SnippetsMenu = Widget.extend({
                                 return editor.buildSnippet();
                             });
 
-                            const jwEditor = self.wysiwyg.editor;
-                            const vNodes = await self._insertSnippet($snippetToInsert);
+                            await self._insertSnippet($snippetToInsert);
 
                             self._disableUndroppableSnippets();
 
