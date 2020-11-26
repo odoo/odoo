@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
-from odoo.tests.common import users
+from odoo.addons.phone_validation.tools.phone_validation import phone_format
+from odoo.tests.common import Form, users
 
 
 class TestCRMLead(TestCrmCommon):
@@ -154,6 +155,57 @@ class TestCRMLead(TestCrmCommon):
 
         # resetting lead values also resets partner
         lead.email_from, lead.phone = False, False
+        self.assertFalse(partner.email)
+        self.assertFalse(partner.email_normalized)
+        self.assertFalse(partner.phone)
+
+    @users('user_sales_manager')
+    def test_crm_lead_partner_sync_email_phone(self):
+        """ Specifically test synchronize between a lead and its partner about
+        phone and email fields. Phone especially has some corner cases due to
+        automatic formatting (notably with onchange in form view). """
+        lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
+        lead_form = Form(lead)
+
+        # reset partner phone to a local number
+        partner_phone, partner_email = '202 555 0999', partner.email
+        partner_phone_formatted = phone_format(partner_phone, 'US', '1')
+        partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
+        self.assertEqual(partner_phone_formatted, '+1 202-555-0999')
+        self.assertEqual(partner_phone_sanitized, '+12025550999')
+        partner.phone = partner_phone
+
+        # email & phone must be automatically set on the lead
+        lead_form.partner_id = partner
+        self.assertEqual(lead_form.email_from, partner_email)
+        self.assertEqual(lead_form.phone, partner_phone_formatted)
+        self.assertFalse(lead_form.ribbon_message)
+
+        lead_form.save()
+        self.assertEqual(partner.phone, partner_phone)
+        self.assertEqual(lead.phone, partner_phone_formatted)
+        self.assertEqual(lead.phone_sanitized, partner_phone_sanitized)
+
+        # writing on the lead field must change the partner field
+        new_email = '"John Zoidberg" <john.zoidberg@test.example.com>'
+        new_email_normalized = 'john.zoidberg@test.example.com'
+        lead_form.email_from = new_email
+        self.assertIn('the customer email will', lead_form.ribbon_message)
+        new_phone = '+1 202 555 7799'
+        new_phone_formatted = phone_format(new_phone, 'US', '1')
+        lead_form.phone = new_phone
+        self.assertEqual(lead_form.phone, new_phone_formatted)
+        self.assertIn('the customer email and phone number will', lead_form.ribbon_message)
+
+        lead_form.save()
+        self.assertEqual(partner.email, new_email)
+        self.assertEqual(partner.email_normalized, new_email_normalized)
+        self.assertEqual(partner.phone, new_phone_formatted)
+
+        # resetting lead values also resets partner
+        lead_form.email_from, lead_form.phone = False, False
+        self.assertIn('the customer email and phone number will', lead_form.ribbon_message)
+        lead_form.save()
         self.assertFalse(partner.email)
         self.assertFalse(partner.email_normalized)
         self.assertFalse(partner.phone)
