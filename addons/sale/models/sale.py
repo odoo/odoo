@@ -1370,7 +1370,7 @@ class SaleOrderLine(models.Model):
                     # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
                     price_subtotal = line.tax_id.compute_all(
                         price_subtotal,
-                        currency_id=line.order_id.currency_id,
+                        currency=line.order_id.currency_id,
                         quantity=line.product_uom_qty,
                         product=line.product_id,
                         partner=line.order_id.partner_shipping_id)['total_excluded']
