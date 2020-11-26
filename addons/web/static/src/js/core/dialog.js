@@ -309,6 +309,7 @@ var Dialog = Widget.extend({
             });
             $button.on('click', function (e) {
                 var def;
+                $button.find('button').attr('disabled', true);
                 if (buttonData.click) {
                     def = buttonData.click.call(self, e);
                 }
