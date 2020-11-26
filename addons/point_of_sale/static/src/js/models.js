@@ -312,6 +312,13 @@ exports.PosModel = Backbone.Model.extend({
             }
        },
     },{
+      model: 'stock.picking.type',
+      fields: ['use_create_lots', 'use_existing_lots'],
+      domain: function(self){ return [['id', '=', self.config.picking_type_id[0]]]; },
+      loaded: function(self, picking_type) {
+          self.picking_type = picking_type[0];
+      },
+    },{
         model:  'res.users',
         fields: ['name','company_id', 'id', 'groups_id', 'lang'],
         domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
@@ -1868,7 +1875,7 @@ exports.Orderline = Backbone.Model.extend({
         }else if(!utils.float_is_zero(price - order_line_price - orderline.get_price_extra(),
                     this.pos.currency.decimals)){
             return false;
-        }else if(this.product.tracking == 'lot') {
+        }else if(this.product.tracking == 'lot' && (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)) {
             return false;
         }else if (this.description !== orderline.description) {
             return false;
