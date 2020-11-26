@@ -118,9 +118,15 @@ class Project(models.Model):
             })
         return res
 
+    def _get_not_billed_timesheets(self):
+        return self.mapped('timesheet_ids').filtered(
+            lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
+
     def _update_timesheets_sale_line_id(self):
-        for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.task_ids._get_timesheet()):
-            timesheet_ids = project.task_ids._get_timesheet()
+        for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
+            timesheet_ids = project._get_not_billed_timesheets()
+            if not timesheet_ids:
+                continue
             for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
                 sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
                 timesheet_ids.filtered(lambda t: t.employee_id == employee_id).so_line = sale_line_id
