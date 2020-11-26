@@ -25,13 +25,12 @@ odoo.define('l10n_de_pos_cert.TicketScreen', function(require) {
                         return Promise.reject();
                     });
                 }
-            } else {
-                return super._canDeleteOrder(...arguments);
             }
+            return super._canDeleteOrder(...arguments);
         }
     };
 
     Registries.Component.extend(TicketScreen, PosDeTicketScreen);
 
-    return PosDeTicketScreen;
+    return TicketScreen;
 });

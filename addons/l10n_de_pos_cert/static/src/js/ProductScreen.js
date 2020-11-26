@@ -48,6 +48,6 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
 
     Registries.Component.extend(ProductScreen, PosDeProductScreen);
 
-    return PosDeProductScreen;
+    return ProductScreen;
 });
 

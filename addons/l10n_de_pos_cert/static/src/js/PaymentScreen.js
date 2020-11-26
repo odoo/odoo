@@ -59,5 +59,5 @@ odoo.define('l10n_de_pos_cert.PaymentScreen', function(require) {
 
     Registries.Component.extend(PaymentScreen, PosDePaymentScreen);
 
-    return PosDePaymentScreen;
+    return PaymentScreen;
 });

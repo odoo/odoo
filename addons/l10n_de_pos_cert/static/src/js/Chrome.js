@@ -47,4 +47,6 @@ odoo.define('l10n_de_pos_cert.Chrome', function(require) {
     };
 
     Registries.Component.extend(Chrome, PoSDeChrome);
+
+    return Chrome;
 });
