@@ -110,7 +110,19 @@ class Composer extends Component {
         // emoji popover is outside but should be considered inside
         const emojisPopover = this._emojisPopoverRef.comp;
         if (emojisPopover && emojisPopover.contains(node)) {
+            this.hasTextInputFocus = false;
             return true;
+        }
+        if (this.env.device.isMobile) {
+            const emojiButton = node.matches(".o_Composer_buttonEmojis, .fa-smile-o");
+            if (!this.hasTextInputFocus && this.composer.hasFocus) {
+                this.hasTextInputFocus = true;
+            }
+            if (emojiButton && this.hasTextInputFocus) {
+                this._textInputRef.comp.focus();
+            } else if (!emojiButton && this.hasTextInputFocus && !this.composer.hasFocus) {
+                this.hasTextInputFocus = false;
+            }
         }
         return this.el.contains(node);
     }
@@ -139,6 +151,7 @@ class Composer extends Component {
             this.el.scrollIntoView();
         }
         this._textInputRef.comp.focus();
+        this.hasTextInputFocus = this.composer.hasFocus;
     }
 
     /**
