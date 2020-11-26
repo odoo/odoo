@@ -670,7 +670,6 @@ class QuantPackage(models.Model):
         help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
         Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
 
-
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
         for package in self:
@@ -684,17 +683,6 @@ class QuantPackage(models.Model):
             package.location_id = values['location_id']
             package.company_id = values.get('company_id')
             package.owner_id = values['owner_id']
-
-    def name_get(self):
-        return list(self._compute_complete_name().items())
-
-    def _compute_complete_name(self):
-        """ Forms complete name of location from parent location to child location. """
-        res = {}
-        for package in self:
-            name = package.name
-            res[package.id] = name
-        return res
 
     def _search_owner(self, operator, value):
         if value:
