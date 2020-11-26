@@ -20,7 +20,7 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: 'div[name="product_id"] input, div[name="product_template_id"] input',
     run: function (actions) {
-        actions.text('Event');
+        actions.text('Event Registration');
     }
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Event")',
