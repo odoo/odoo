@@ -86,7 +86,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             }
 
             // Gather lot information if required.
-            if (['serial', 'lot'].includes(product.tracking)) {
+            if (['serial', 'lot'].includes(product.tracking) && (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots)) {
                 const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
                 if (isAllowOnlyOneLot) {
                     packLotLinesToEdit = [];
