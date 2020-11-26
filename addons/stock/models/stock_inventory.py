@@ -283,7 +283,7 @@ class InventoryLine(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         domain=lambda self: self._domain_product_id(),
-        index=True, required=True)
+        index=True, required=True, ondelete='cascade')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         required=True, readonly=True)
