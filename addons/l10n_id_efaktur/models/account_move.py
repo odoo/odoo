@@ -280,7 +280,7 @@ class AccountMove(models.Model):
     def _generate_efaktur(self, delimiter):
         if self.filtered(lambda x: not x.l10n_id_kode_transaksi):
             raise UserError(_('Some documents don\'t have a transaction code'))
-        if self.filtered(lambda x: x.type != 'out_invoice'):
+        if self.filtered(lambda x: x.move_type != 'out_invoice'):
             raise UserError(_('Some documents are not Customer Invoices'))
 
         output_head = self._generate_efaktur_invoice(delimiter)
