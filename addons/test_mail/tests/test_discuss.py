@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails
+from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails, mail_new_test_user
 from odoo.tools import mute_logger
 
 
@@ -130,3 +130,25 @@ class TestDiscuss(BaseFunctionalTest, TestRecipients, MockEmails):
             (False, 'cc1@example.com', 'CC Email'),
             (False, 'cc2@example.com', 'CC Email'),
         ], 'cc should be in suggestions')
+
+    def test_inbox_message_fetch_needaction(self):
+        user1 = mail_new_test_user(self.env, login='user1', groups='base.group_user', name='User 1')
+        user1.notification_type = 'inbox'
+        user2 = mail_new_test_user(self.env, login='user2', groups='base.group_user', name='User 2')
+        user2.notification_type = 'inbox'
+        message1 = self.test_record.with_user(self.user_admin).message_post(body='Message 1', partner_ids=[user1.partner_id.id, user2.partner_id.id])
+        message2 = self.test_record.with_user(self.user_admin).message_post(body='Message 2', partner_ids=[user1.partner_id.id, user2.partner_id.id])
+
+        # both notified users should have the 2 messages in Inbox initially
+        messages = self.env['mail.message'].with_user(user1).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 2)
+        messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 2)
+
+        # first user is marking one message as done: the other message is still Inbox, while the other user still has the 2 messages in Inbox
+        message1.with_user(user1).set_message_done()
+        messages = self.env['mail.message'].with_user(user1).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].get('id'), message2.id)
+        messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 2)
