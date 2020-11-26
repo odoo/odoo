@@ -123,6 +123,8 @@ class AccountAnalyticLine(models.Model):
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
+                if task.sale_line_id or project.sale_line_id:
+                    return task.sale_line_id or project.sale_line_id
         return self.env['sale.order.line']
 
     def _timesheet_get_portal_domain(self):
