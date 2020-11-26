@@ -278,8 +278,7 @@
                 <field name="categ_ids"/>
                 <field name="user_id"/>
                 <field name="show_as"/>
-                <!-- TODO clean this filter and context key -->
-                <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
+                <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', 'in', [uid])]"/>
                 <separator/>
                 <filter string="Date" name="filter_start_date" date="start_date"/>
                 <separator/>
