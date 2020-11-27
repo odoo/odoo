@@ -85,7 +85,7 @@
                                 </thead>
                                 <tbody>
                                     <t t-foreach="o.move_ids_without_package" t-as="move">
-                                        <!-- In case you come accross duplicated lines, ask NIM or LAP -->
+                                        <!-- In case you come across duplicated lines, ask NIM or LAP -->
                                         <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml">
                                             <tr>
                                                 <td>

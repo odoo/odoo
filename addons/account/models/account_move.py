@@ -1815,7 +1815,7 @@ class AccountMove(models.Model):
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it has been posted once.'))
             if (move.name and move.name != '/' and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
-                raise UserError(_('You cannot edit the journal of an account move if it has already a sequence number assigned.'))
+                raise UserError(_('You cannot edit the journal of an account move if it already has a sequence number assigned.'))
 
             # You can't change the date of a move being inside a locked period.
             if 'date' in vals and move.date != vals['date']:
