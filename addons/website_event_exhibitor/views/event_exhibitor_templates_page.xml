@@ -148,9 +148,9 @@
             </div>
             <ul id="collapse_exhibitor_aside" class="list-unstyled collapse d-lg-block mb-0">
                 <li t-foreach="sponsors_other" t-as="sponsor_other">
-                    <a class="d-flex w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
+                    <a class="row no-gutters px-2 pt-2 pb-1 text-decoration-none"
                         t-att-href="sponsor_other.website_url">
-                        <div class="d-flex flex-column align-items-center">
+                        <div class="col-3 d-flex flex-column align-items-center">
                             <img t-if="sponsor_other.partner_id.country_id"
                             class="mr-2 mb-1 o_wesponsor_aside_logo"
                             t-att-src="sponsor_other.partner_id.country_id.image_url"
@@ -161,12 +161,11 @@
                             <span t-else="" class="badge badge-light mr-2"
                                 t-esc="sponsor_other.sponsor_type_id.name"/>
                         </div>
-                        <div class="flex-grow-1 overflow-auto">
+                        <div class="col flex-grow-1 overflow-auto">
                             <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
                                 <span class="d-inline-block text-truncate" t-esc="sponsor_other.name"/>
 
                             </span>
-
                             <small class="text-muted" t-esc="sponsor_other.subtitle"/>
                         </div>
                     </a>
