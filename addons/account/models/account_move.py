@@ -1232,7 +1232,7 @@ class AccountMove(models.Model):
             currencies = set()
 
             for line in move.line_ids:
-                if line.currency_id:
+                if line.currency_id and line in move._get_lines_onchange_currency():
                     currencies.add(line.currency_id)
 
                 if move.is_invoice(include_receipts=True):
