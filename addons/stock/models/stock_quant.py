@@ -213,14 +213,19 @@ class StockQuant(models.Model):
         else:
             in_date = fields.Datetime.now()
 
+        def process_quant(quant):
+            quant.write({
+                'quantity': quant.quantity + quantity,
+                'in_date': in_date,
+            })
         for quant in quants:
+            if self.env.context.get("retry_on_concurent_update"):
+                process_quant(quant)
+                break
             try:
                 with self._cr.savepoint():
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
-                    quant.write({
-                        'quantity': quant.quantity + quantity,
-                        'in_date': in_date,
-                    })
+                    process_quant(quant)
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
