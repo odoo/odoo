@@ -4342,6 +4342,7 @@ var BasicModel = AbstractModel.extend({
                     fieldsInfo: element.fieldsInfo,
                     fields: element.fields,
                     viewType: element.viewType,
+                    allowWarning: true,
                 };
                 return this._makeDefaultRecord(element.model, params);
             }
