@@ -93,7 +93,7 @@ QUnit.test('create', async function (assert) {
     assert.ok(attachment);
     assert.strictEqual(attachment.filename, "test.txt");
     assert.strictEqual(attachment.id, 750);
-    assert.notOk(attachment.isTemporary);
+    assert.notOk(attachment.isUploading);
     assert.strictEqual(attachment.mimetype, 'text/plain');
     assert.strictEqual(attachment.name, "test.txt");
     const channel = this.env.models['mail.thread'].find(thread =>

@@ -39,13 +39,12 @@ class Attachment extends Component {
     }
 
     /**
-     * Return the url of the attachment. Temporary attachments, a.k.a. uploading
-     * attachments, do not have an url.
+     * Return the url of the attachment. Uploading attachments do not have an url.
      *
      * @returns {string}
      */
     get attachmentUrl() {
-        if (this.attachment.isTemporary) {
+        if (this.attachment.isUploading) {
             return '';
         }
         return this.env.session.url('/web/content', {

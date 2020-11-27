@@ -36,7 +36,7 @@ class FileUploader extends Component {
      */
     async uploadFiles(files) {
         await this._unlinkExistingAttachments(files);
-        this._createTemporaryAttachments(files);
+        this._createUploadingAttachments(files);
         await this._performUpload(files);
         this._fileInputRef.el.value = '';
     }
@@ -81,11 +81,11 @@ class FileUploader extends Component {
      * @private
      * @param {FileList|Array} files
      */
-    _createTemporaryAttachments(files) {
+    _createUploadingAttachments(files) {
         for (const file of files) {
             this._createAttachment({
                 filename: file.name,
-                isTemporary: true,
+                isUploading: true,
                 name: file.name
             });
         }
@@ -98,7 +98,7 @@ class FileUploader extends Component {
     async _performUpload(files) {
         for (const file of files) {
             const uploadingAttachment = this.env.models['mail.attachment'].find(attachment =>
-                attachment.isTemporary &&
+                attachment.isUploading &&
                 attachment.filename === file.name
             );
             if (!uploadingAttachment) {
@@ -158,12 +158,12 @@ class FileUploader extends Component {
                     type: 'danger',
                     message: owl.utils.escape(error),
                 });
-                const relatedTemporaryAttachments = this.env.models['mail.attachment']
+                const relatedUploadingAttachments = this.env.models['mail.attachment']
                     .find(attachment =>
                         attachment.filename === filename &&
-                        attachment.isTemporary
+                        attachment.isUploading
                     );
-                for (const attachment of relatedTemporaryAttachments) {
+                for (const attachment of relatedUploadingAttachments) {
                     attachment.delete();
                 }
                 return;

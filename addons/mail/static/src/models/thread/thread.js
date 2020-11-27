@@ -1012,10 +1012,10 @@ function factory(dependencies) {
             const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
                 .sort((a1, a2) => {
                     // "uploading" before "uploaded" attachments.
-                    if (!a1.isTemporary && a2.isTemporary) {
+                    if (!a1.isUploading && a2.isUploading) {
                         return 1;
                     }
-                    if (a1.isTemporary && !a2.isTemporary) {
+                    if (a1.isUploading && !a2.isUploading) {
                         return -1;
                     }
                     // "most-recent" before "oldest" attachments.
