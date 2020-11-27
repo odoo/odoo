@@ -422,6 +422,7 @@ class AccountBankStatement(models.Model):
                     'res_id': statement.id
                 })
 
+        self._check_balance_end_real_same_as_computed()
         self.write({'state': 'confirm', 'date_done': fields.Datetime.now()})
 
     def button_validate_or_action(self):
