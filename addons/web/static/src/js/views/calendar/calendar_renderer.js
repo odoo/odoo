@@ -25,6 +25,11 @@ var SidebarFilterM2O = relational_fields.FieldMany2One.extend({
     _getSearchBlacklist: function () {
         return this._super.apply(this, arguments).concat(this.filter_ids || []);
     },
+    _getSearchCreatePopupOptions(view, ids, context, dynamicFilters) {
+        const options = this._super(...arguments);
+        options['domain'] = options['domain'].concat(["!", ["id", "in", this.filter_ids]]);
+        return options;
+    },
 });
 
 var SidebarFilter = Widget.extend(FieldManagerMixin, {
