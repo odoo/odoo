@@ -444,6 +444,7 @@ var SnippetEditor = Widget.extend({
         // Show/hide overlay in preview mode or not
         this.$el.toggleClass('oe_active', show);
         this.cover();
+        this.toggleOverlayVisibility(show);
     },
     /**
      * Displays/Hides the editor (+ parent) options and call onFocus/onBlur if
