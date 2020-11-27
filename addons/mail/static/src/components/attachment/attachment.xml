@@ -7,7 +7,7 @@
                 'o-downloadable': props.isDownloadable,
                 'o-editable': props.isEditable,
                 'o-has-card-details': detailsMode === 'card',
-                'o-temporary': attachment and attachment.isTemporary,
+                'o-isUploading': attachment and attachment.isUploading,
                 'o-viewable': attachment and attachment.isViewable,
             }" t-att-title="attachment ? attachment.displayName : undefined" t-att-data-attachment-local-id="attachment ? attachment.localId : undefined"
         >
@@ -49,7 +49,7 @@
                                     </div>
                                 </t>
                                 <!-- Download button -->
-                                <t t-if="props.isDownloadable and !attachment.isTemporary" t-key="'download'">
+                                <t t-if="props.isDownloadable and !attachment.isUploading" t-key="'download'">
                                     <div class="o_Attachment_action o_Attachment_actionDownload" t-on-click="_onClickDownload" title="Download">
                                         <i class="fa fa-download"/>
                                     </div>
@@ -77,13 +77,13 @@
                 <t t-if="detailsMode !== 'hover' and (props.isDownloadable or props.isEditable)">
                     <div class="o_Attachment_aside" t-att-class="{ 'o-has-multiple-action': props.isDownloadable and props.isEditable }">
                         <!-- Uploading icon -->
-                        <t t-if="attachment.isTemporary and attachment.isLinkedToComposer">
+                        <t t-if="attachment.isUploading and attachment.isLinkedToComposer">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemUploading" title="Uploading">
                                 <i class="fa fa-spin fa-spinner"/>
                             </div>
                         </t>
                         <!-- Uploaded icon -->
-                        <t t-if="!attachment.isTemporary and attachment.isLinkedToComposer">
+                        <t t-if="!attachment.isUploading and attachment.isLinkedToComposer">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemUploaded" title="Uploaded">
                                 <i class="fa fa-check"/>
                             </div>
@@ -95,7 +95,7 @@
                             </div>
                         </t>
                         <!-- Download button -->
-                        <t t-if="props.isDownloadable and !attachment.isTemporary">
+                        <t t-if="props.isDownloadable and !attachment.isUploading">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemDownload" t-on-click="_onClickDownload" title="Download">
                                 <i class="fa fa-download"/>
                             </div>

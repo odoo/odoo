@@ -1749,7 +1749,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1771,7 +1771,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsNone(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed should be uploaded"
     );
     assert.containsOnce(
@@ -1841,7 +1841,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1936,7 +1936,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer .o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "should have an uploading attachment"
     );
 
@@ -1945,7 +1945,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_Composer .o_Attachment',
-        "should not have any attachment left after unlinking temporary one"
+        "should not have any attachment left after unlinking uploading one"
     );
 });
 

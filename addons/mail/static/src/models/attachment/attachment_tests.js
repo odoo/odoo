@@ -40,7 +40,7 @@ QUnit.test('create (txt)', async function (assert) {
     assert.strictEqual(this.env.models['mail.attachment'].find(attachment => attachment.id === 750), attachment);
     assert.strictEqual(attachment.filename, "test.txt");
     assert.strictEqual(attachment.id, 750);
-    assert.notOk(attachment.isTemporary);
+    assert.notOk(attachment.isUploading);
     assert.strictEqual(attachment.mimetype, 'text/plain');
     assert.strictEqual(attachment.name, "test.txt");
 });

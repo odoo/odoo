@@ -40,7 +40,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
 }, {
     content: "Open full composer",
     trigger: '.o_Composer_buttonFullComposer',
-    extra_trigger: '.o_Attachment:not(.o-temporary)' // waiting the attachment to be uploaded
+    extra_trigger: '.o_Attachment:not(.o-isUploading)' // waiting the attachment to be uploaded
 }, {
     content: "Check the earlier provided attachment is listed",
     trigger: '.o_attachment[title="text.txt"]',
