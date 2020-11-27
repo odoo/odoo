@@ -527,7 +527,7 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
-        if 'company_id' in vals:
+        if vals.get('company_id'):
             company = self.env['res.company'].browse(vals['company_id'])
             for partner in self:
                 if partner.user_ids:
