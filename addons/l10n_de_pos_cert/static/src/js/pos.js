@@ -55,7 +55,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         initialize() {
             _super_order.initialize.apply(this,arguments);
             if (this.pos.isCountryGermany()) {
-                this.fiskalyUuid = this.fiskalyUuid || uuidv4();
+                this.fiskalyUuid = this.fiskalyUuid || null;
                 this.txLastRevision = this.txLastRevision || null;
                 this.transactionState = this.transactionState || 'inactive'; // Used to know when we need to create the fiskaly transaction
                 this.tssInformation = this.tssInformation || this._initTssInformation();
@@ -173,18 +173,20 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 await this._authenticate(); //  If there's an error, a promise is created with a rejected value
             }
 
+            const transactionUuid = uuidv4();
             const data = {
                 'state': 'ACTIVE',
                 'client_id': this.pos.getClientId()
             };
 
             return $.ajax({
-                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${this.fiskalyUuid}`,
+                url: `${this.pos.getApiUrl()}tss/${this.pos.getTssId()}/tx/${transactionUuid}`,
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${this.pos.getApiToken()}` },
                 data: JSON.stringify(data),
                 contentType: 'application/json'
             }).then((data) => {
+                this.fiskalyUuid = transactionUuid;
                 this.txLastRevision = data.latest_revision;
                 this.transactionStarted();
                 this.trigger('change');
