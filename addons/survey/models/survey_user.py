@@ -511,7 +511,7 @@ class SurveyUserInputLine(models.Model):
     def _check_answer_type_skipped(self):
         for line in self:
             if (line.skipped == bool(line.answer_type)):
-                raise ValidationError(_('A question is either skipped or answered, not both.'))
+                raise ValidationError(_('A question can either be skipped or answered, not both.'))
 
             # allow 0 for numerical box
             if line.answer_type == 'numerical_box' and float_is_zero(line['value_numerical_box'], precision_digits=6):
