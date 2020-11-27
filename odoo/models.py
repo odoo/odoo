@@ -1969,7 +1969,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param list data: the data containing groups
         :param list groupby: name of the first group by
         :param list aggregated_fields: list of aggregated fields in the query
-        :param relativedelta interval: interval between to temporal groups
+        :param relativedelta interval: interval between two temporal groups
                 expressed as a relativedelta month by default
         :rtype: list
         :return: list
