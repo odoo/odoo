@@ -177,7 +177,9 @@ class ProductProduct(models.Model):
                     # products have 0 qty available.
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                if not qty_per_kit:
+                    continue
                 ratios_virtual_available.append(component.virtual_available / qty_per_kit)
                 ratios_qty_available.append(component.qty_available / qty_per_kit)
                 ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
