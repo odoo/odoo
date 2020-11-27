@@ -56,8 +56,8 @@ class Inventory(models.Model):
     start_empty = fields.Boolean('Empty Inventory',
         help="Allows to start with an empty inventory.")
     prefill_counted_quantity = fields.Selection(string='Counted Quantities',
-        help="Allows to start with prefill counted quantity for each lines or "
-        "with all counted quantity set to zero.", default='counted',
+        help="Allows to start with a pre-filled counted quantity for each lines or "
+        "with all counted quantities set to zero.", default='counted',
         selection=[('counted', 'Default to stock on hand'), ('zero', 'Default to zero')])
     exhausted = fields.Boolean(
         'Include Exhausted Products', readonly=True,

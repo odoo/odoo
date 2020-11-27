@@ -30,8 +30,8 @@ class Mailing(models.Model):
     # otherwise 'sms_subject' will get the old helper from 'mass_mailing' module.
     # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
     # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
-    sms_subject = fields.Char('Title', help='For an Email, Subject your Recipients will see in their inbox.\n'
-                              'For an SMS Text Message, internal Title of the Message.',
+    sms_subject = fields.Char('Title', help='For an email, the subject your recipients will see in their inbox.\n'
+                              'For an SMS, the internal title of the message.',
                               related='subject', translate=True, readonly=False)
     # sms options
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)

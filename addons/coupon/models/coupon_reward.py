@@ -34,7 +34,7 @@ class CouponReward(models.Model):
         help="Percentage - Entered percentage discount will be provided\n" +
         "Amount - Entered fixed amount discount will be provided")
     discount_percentage = fields.Float(string="Discount", default=10,
-        help='The discount in percentage, between 1 to 100')
+        help='The discount in percentage, between 1 and 100')
     discount_apply_on = fields.Selection([
         ('on_order', 'On Order'),
         ('cheapest_product', 'On Cheapest Product'),

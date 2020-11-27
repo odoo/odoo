@@ -88,7 +88,7 @@ class HolidaysAllocation(models.Model):
         help='This area is automatically filled by the user who validates the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automaticly filled by the user who validates the allocation with second level (If allocation type need second validation)')
+        help='This area is automatically filled by the user who validates the allocation with second level (If allocation type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
@@ -484,7 +484,7 @@ class HolidaysAllocation(models.Model):
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
-            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to be reset to Draft.'))
         self.write({
             'state': 'draft',
             'first_approver_id': False,

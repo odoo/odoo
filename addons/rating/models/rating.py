@@ -18,7 +18,7 @@ class Rating(models.Model):
     _order = 'write_date desc'
     _rec_name = 'res_name'
     _sql_constraints = [
-        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 to 5'),
+        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 and 5'),
     ]
 
     @api.depends('res_model', 'res_id')
