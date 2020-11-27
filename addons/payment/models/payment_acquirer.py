@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from dateutil import relativedelta
 import pprint
+import psycopg2
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
@@ -263,6 +264,16 @@ class PaymentAcquirer(models.Model):
             'outbound_payment_method_ids': [],
         }
 
+    def _get_acquirer_journal_domain(self):
+        """Returns a domain for finding a journal corresponding to an acquirer"""
+        self.ensure_one()
+        code_cutoff = self.env['account.journal']._fields['code'].size
+        return [
+            ('name', '=', self.name),
+            ('code', '=', self.name.upper()[:code_cutoff]),
+            ('company_id', '=', self.company_id.id),
+        ]
+
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):
         '''Create the journal for active acquirers.
@@ -271,22 +282,35 @@ class PaymentAcquirer(models.Model):
         (e.g. payment_paypal for Paypal). We can't do that in such modules because we have no guarantee the chart template
         is already installed.
         '''
-        # Search for installed acquirers modules.
+        # Search for installed acquirers modules that have no journal for the current company.
         # If this method is triggered by a post_init_hook, the module is 'to install'.
         # If the trigger comes from the chart template wizard, the modules are already installed.
-        acquirer_modules = self.env['ir.module.module'].search(
-            [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
-        acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
-
-        # Search for acquirers having no journal
         company = company or self.env.user.company_id
-        acquirers = self.env['payment.acquirer'].search(
-            [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
+        acquirers = self.env['payment.acquirer'].search([
+            ('module_state', 'in', ('to install', 'installed')),
+            ('journal_id', '=', False),
+            ('company_id', '=', company.id),
+        ])
 
-        journals = self.env['account.journal']
+        # Here we will attempt to first create the journal since the most common case (first
+        # install) is to successfully to create the journal for the acquirer, in the case of a
+        # reinstall (least common case), the creation will fail because of a unique constraint
+        # violation, this is ok as we catch the error and then perform a search if need be
+        # and assign the existing journal to our reinstalled acquirer. It is better to ask for
+        # forgiveness than to ask for permission as this saves us the overhead of doing a select
+        # that would be useless in most cases.
+        Journal = journals = self.env['account.journal']
         for acquirer in acquirers.filtered(lambda l: not l.journal_id and l.company_id.chart_template_id):
-            acquirer.journal_id = self.env['account.journal'].create(acquirer._prepare_account_journal_vals())
-            journals += acquirer.journal_id
+            try:
+                with self.env.cr.savepoint():
+                    journal = Journal.create(acquirer._prepare_account_journal_vals())
+            except psycopg2.IntegrityError as e:
+                if e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                    journal = Journal.search(acquirer._get_acquirer_journal_domain(), limit=1)
+                else:
+                    raise
+            acquirer.journal_id = journal
+            journals += journal
         return journals
 
     @api.model
