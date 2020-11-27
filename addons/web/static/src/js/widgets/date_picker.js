@@ -45,9 +45,9 @@ var DateWidget = Widget.extend({
             },
             calendarWeeks: true,
             buttons: {
-                showToday: false,
+                showToday: true,
                 showClear: false,
-                showClose: false,
+                showClose: true,
             },
             widgetParent: 'body',
             keyBinds: null,
