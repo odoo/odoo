@@ -29,15 +29,7 @@ class FleetVehicle(models.Model):
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, required=True, help='Model of the vehicle')
-    manager_id = fields.Many2one('res.users', compute='_compute_manager_id', domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)], store=True, readonly=False)
-
-    @api.depends('model_id')
-    def _compute_manager_id(self):
-        for vehicle in self:
-            if vehicle.model_id:
-                vehicle.manager_id = vehicle.model_id.manager_id
-            else:
-                vehicle.manager_id = None
+    manager_id = fields.Many2one('res.users', 'Fleet Manager', domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)])
 
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
@@ -133,8 +125,8 @@ class FleetVehicle(models.Model):
         LogContract = self.env['fleet.vehicle.log.contract']
         for record in self:
             record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
-            record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '!=', 'closed')])
+            record.service_count = LogService.search_count([('vehicle_id', '=', record.id), ('active', '=', record.active)])
+            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '!=', 'closed'), ('active', '=', record.active)])
             record.history_count = self.env['fleet.vehicle.assignation.log'].search_count([('vehicle_id', '=', record.id)])
 
     @api.depends('log_contracts')
@@ -256,8 +248,6 @@ class FleetVehicle(models.Model):
                     future_driver.sudo().write({'plan_to_change_car': True})
 
         res = super(FleetVehicle, self).write(vals)
-        if 'active' in vals and not vals['active']:
-            self.mapped('log_contracts').write({'active': False})
         return res
 
     def create_driver_history(self, driver_id):
@@ -281,6 +271,11 @@ class FleetVehicle(models.Model):
                 vehicle.future_driver_id.sudo().write({'plan_to_change_car': False})
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
+
+    def toggle_active(self):
+        self.env['fleet.vehicle.log.contract'].with_context(active_test=False).search([('vehicle_id', 'in', self.ids)]).toggle_active()
+        self.env['fleet.vehicle.log.services'].with_context(active_test=False).search([('vehicle_id', 'in', self.ids)]).toggle_active()
+        super(FleetVehicle, self).toggle_active()
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):

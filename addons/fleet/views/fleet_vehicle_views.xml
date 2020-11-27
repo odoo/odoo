@@ -5,8 +5,13 @@
         <field name="name">fleet.vehicle.form</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <form string="Vehicle">
+            <form string="Vehicle" js_class="fleet_form">
                 <header>
+                    <button string="Apply New Driver"
+                        class="btn btn-primary"
+                        type="object"
+                        name="action_accept_driver_change"
+                        attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
                     <field name="state_id"  widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -22,7 +27,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-book"
-                            context="{'xml_id':'fleet_vehicle_log_contract_action'}"
+                            context="{'xml_id':'fleet_vehicle_log_contract_action', 'search_default_inactive': not active}"
                             help="show the contract for this vehicle">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
                         </button>
@@ -30,7 +35,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-wrench"
-                            context="{'xml_id':'fleet_vehicle_log_services_action'}"
+                            context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
                             help="show the services logs for this vehicle" >
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
@@ -63,15 +68,7 @@
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
-                            <label for="future_driver_id"/>
-                            <div class="o_row">
-                                <field name="future_driver_id"/>
-                                <button string="Apply Change"
-                                    class="btn btn-primary"
-                                    type="object"
-                                    name="action_accept_driver_change"
-                                    attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
-                            </div>
+                            <field name="future_driver_id"/>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
                             <field name="next_assignation_date"/>
@@ -176,6 +173,8 @@
                 <field string="Status" name="state_id"/>
                 <filter string="Available" name="available"
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', '&amp;', ('plan_to_change_car', '=', True), ('vehicle_type', '=', 'car'), '&amp;', ('plan_to_change_bike', '=', True), ('vehicle_type', '=', 'bike')]"/>
+                <filter string="Bikes" name="bikes" domain="[('vehicle_type', '=', 'bike')]"/>
+                <filter string="Cars" name="cars" domain="[('vehicle_type', '=', 'car')]"/>
                 <filter name="planned" string="Planned for Change" domain="['|', '&amp;', ('vehicle_type', '=', 'bike'), ('plan_to_change_bike', '=', True), '&amp;', ('vehicle_type', '=', 'car'), ('plan_to_change_car', '=', True)]"/>
                 <separator/>
                 <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>

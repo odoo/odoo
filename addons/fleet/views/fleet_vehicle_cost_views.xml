@@ -255,7 +255,7 @@
                 <field name="notes" optional="show" />
                 <field name="amount" sum="Total" widget="monetary"/>
                 <field name="currency_id" invisible="1"/>
-                <field name="state" readonly="1" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'todo'"  decoration-info="state == 'running'" />
+                <field name="state" readonly="1" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'new'"  decoration-info="state == 'running'" />
             </tree>
         </field>
     </record>
@@ -264,23 +264,46 @@
         <field name="name">fleet.vehicle.log.services.kanban</field>
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban default_group_by="state">
                 <field name="currency_id"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <field name="purchaser_id"/>
+                <field name="vendor_id"/>
+                <field name="amount"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div>
-                                <strong>
-                                    <field name="vehicle_id" widget="res_partner_many2one"/>
-                                    <span class="float-right"><field name="date"/></span>
-                                </strong>
-                            </div>
-                            <div>
-                                <field name="purchaser_id" widget="res_partner_many2one"/>
-                            </div>
-                            <div>
-                                <span><field name="vendor_id" widget="res_partner_many2one"/></span>
-                                <span class="float-right"><field name="amount" widget="monetary"/></span>
+                        <div t-attf-class="oe_kanban_global_click container" class="o_kanban_record_has_image_fill">
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_128', record.vehicle_id.raw_value)" t-att-alt="record.vehicle_id.value" class="o_image_24_cover float-left"/>
+                                    <div class="o_kanban_record_headings pl-2 pr-2">
+                                        <div class="text-truncate o_kanban_record_title">
+                                            <strong>
+                                                <span class="float-right"><field name="date"/></span>
+                                                <field name="vehicle_id"/>
+                                            </strong>
+                                        </div>
+                                        <div class="text-truncate">
+                                            <em><field name="service_type_id"/></em>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-truncate">
+                                    <field name="purchaser_id"/>
+                                </div>
+                                <div class="text-truncate">
+                                    <field name="vendor_id"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
