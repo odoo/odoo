@@ -12,8 +12,6 @@ class FleetVehicleModel(models.Model):
     name = fields.Char('Model name', required=True)
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, help='Manufacturer of the vehicle')
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
-    manager_id = fields.Many2one('res.users', 'Fleet Manager', default=lambda self: self.env.uid,
-                                 domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)])
     image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     active = fields.Boolean(default=True)
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True)
@@ -27,14 +25,6 @@ class FleetVehicleModel(models.Model):
                 name = record.brand_id.name + '/' + name
             res.append((record.id, name))
         return res
-
-    def write(self, vals):
-        if 'manager_id' in vals:
-            old_manager = self.manager_id.id if self.manager_id else None
-
-            self.env['fleet.vehicle'].search([('model_id', '=', self.id), ('manager_id', '=', old_manager)]).write({'manager_id': vals['manager_id']})
-
-        return super(FleetVehicleModel, self).write(vals)
 
 
 class FleetVehicleModelBrand(models.Model):
