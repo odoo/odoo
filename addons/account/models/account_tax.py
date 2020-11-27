@@ -297,19 +297,6 @@ class AccountTax(models.Model):
 
         rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
 
-        # The reconciliation widget calls this function to generate writeoffs on bank journals,
-        # so the sign of the tags might need to be inverted, so that the tax report
-        # computation can treat them as any other miscellaneous operations, while
-        # keeping a computation in line with the effect the tax would have had on an invoice.
-
-        if (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund):
-            base_tags = self.env['account.account.tag'].browse(rslt['base_tags'])
-            rslt['base_tags'] = self.env['account.move.line']._revert_signed_tags(base_tags).ids
-
-            for tax_result in rslt['taxes']:
-                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'])
-                tax_result['tag_ids'] = self.env['account.move.line']._revert_signed_tags(tax_tags).ids
-
         return rslt
 
     def flatten_taxes_hierarchy(self):
