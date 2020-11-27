@@ -35,7 +35,7 @@
 }
 
 // This is rtl language specific fix
-// It will fix the extra space in ui-autocomplete class
+// It will fix the extra space in ui-autocomplete class and the time picker direction
 // and flip the next and previous symbols of jquery ui.
 .o_rtl {
     .ui-autocomplete {
@@ -47,6 +47,9 @@
         -webkit-transform: rotate(180deg);
          -o-transform: rotate(180deg);
         transform: rotate(180deg);
+    }
+    .timepicker{
+        direction: rtl;
     }
 }
 
