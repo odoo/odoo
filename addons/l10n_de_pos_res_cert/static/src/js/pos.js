@@ -25,8 +25,11 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
             if (this.isRestaurantCountryGermany() && data.length > 0) {
                 // at this point of the flow, it's impossible to retrieve the local order, only the ids were stored
                 // therefore we create an "empty" order object in order to call the needed methods
-                const order = new models.Order({},{pos:this});
-                data.forEach(async elem => await order.cancelOrderTransaction(elem.differences));
+                data.forEach(async elem => {
+                    const order = new models.Order({},{pos:this});
+                    await order.cancelOrderTransaction(elem.differences);
+                    order.destroy();
+                })
             }
             return _super_posmodel._post_remove_from_server.apply(this, arguments);
         }
@@ -105,12 +108,10 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
                 }
             });
         },
-        async cancelOrderTransaction(lineDifference) {
-            await this.createAndFinishOrderTransaction(lineDifference).then(()=> {
-                this.createTransaction().then(() => {
-                    this.cancelTransaction()
-                })
-            })
+         async cancelOrderTransaction(lineDifference) {
+            await this.createAndFinishOrderTransaction(lineDifference);
+            await this.createTransaction();
+            await this.cancelTransaction();
         }
     });
 });
