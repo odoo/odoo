@@ -15,24 +15,27 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
             return this.isRestaurantCountryGermany() || result;
         },
         update_table_order(server_id, table_orders) {
-            if (this.isRestaurantCountryGermany()) {
-                const order = _super_posmodel.update_table_order.apply(this,arguments);
-                if (server_id.differences && order) {
+            const order = _super_posmodel.update_table_order.apply(this,arguments);
+            if (this.isRestaurantCountryGermany() && server_id.differences && order) {
                     order.createAndFinishOrderTransaction(server_id.differences)
                 }
-                return order
-            } else {
-                return _super_posmodel.update_table_order.apply(this,arguments);
-            }
+            return order
         },
+        _post_remove_from_server(server_ids, data) {
+            if (this.isRestaurantCountryGermany() && data.length > 0) {
+                // at this point of the flow, it's impossible to retrieve the local order, only the ids were stored
+                // therefore we create an "empty" order object in order to call the needed methods
+                const order = new models.Order({},{pos:this});
+                data.forEach(async elem => await order.cancelOrderTransaction(elem.differences));
+            }
+            return _super_posmodel._post_remove_from_server.apply(this, arguments);
+        }
     });
 
     const _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
         _updateTimeStart(seconds) {
-            if (this.pos.isRestaurantCountryGermany() && this.tssInformation.time_start.value) {
-                return;
-            } else {
+            if (!(this.pos.isRestaurantCountryGermany() && this.tssInformation.time_start.value)) {
                 _super_order._updateTimeStart.apply(this, arguments);
             }
         },
@@ -74,7 +77,7 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
             }).catch(async (error) => {
                 if (error.status === 401) {  // Need to update the token
                     await this._authenticate();
-                    return this.createAndFinishOrderTransaction();
+                    return this.createAndFinishOrderTransaction(lineDifference);
                 }
                 // Return a Promise with rejected value for errors that are not handled here
                 return Promise.reject(error);
@@ -90,6 +93,24 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
                 server_id: this.server_id ? this.server_id : false,
                 lines: orderLines
             }
+        },
+        async retrieveAndSendLineDifference() {
+            await this.pos.rpc({
+                model: 'pos.order',
+                method: 'retrieve_line_difference',
+                args: [this.exportOrderLinesAsJson()]
+            }).then(async data => {
+                if (data.differences.length > 0) {
+                    await this.createAndFinishOrderTransaction(data.differences);
+                }
+            });
+        },
+        async cancelOrderTransaction(lineDifference) {
+            await this.createAndFinishOrderTransaction(lineDifference).then(()=> {
+                this.createTransaction().then(() => {
+                    this.cancelTransaction()
+                })
+            })
         }
     });
 });

@@ -17,13 +17,14 @@ class PosOrder(models.Model):
         if session_id:
             config = self.env['pos.session'].browse(session_id).config_id
         elif order_id:
-            config = self.env['pos.order'].browse(order_id).config_id
+            config = self.browse(order_id).config_id
         return False if not config else config.is_company_country_germany and config.floor_ids
 
     @api.model
     def _order_fields(self, ui_order):
         fields = super(PosOrder, self)._order_fields(ui_order)
-        if self._check_config_germany_floor(session_id=ui_order['pos_session_id']) and 'fiskaly_time_start' not in fields:
+        if self._check_config_germany_floor(
+                session_id=ui_order['pos_session_id']) and 'fiskaly_time_start' not in fields:
             fields['fiskaly_time_start'] = ui_order['creation_date'].replace('T', ' ')[:19]
         return fields
 
@@ -65,11 +66,12 @@ class PosOrder(models.Model):
     def line_differences(self, existing_order, ui_order):
         """
         :param existing_order: actual PosOrder object
-        :param ui_order: json order coming from the front end
+        :param ui_order: json order coming from the front end or None
         :return: a list of lines difference
         """
         differences = []
-        new_line_dict = self._merge_order_lines(list(map(lambda line: line[2], ui_order['lines'])))
+        new_line_dict = {} if not ui_order else self._merge_order_lines(
+            list(map(lambda line: line[2], ui_order['lines'])))
         old_lines = []
         if existing_order:
             old_lines = existing_order.lines.read(['qty', 'product_id', 'full_product_name', 'price_subtotal_incl',
@@ -146,9 +148,23 @@ class PosOrder(models.Model):
     def retrieve_line_difference(self, ui_order):
         existing_order = None
         if ui_order.get('server_id'):
-            existing_order = self.env['pos.order'].browse(ui_order['server_id'])
+            existing_order = self.browse(ui_order['server_id'])
         differences = self.line_differences(existing_order, ui_order)
 
         return {
             'differences': differences
         }
+
+    @api.model
+    def remove_from_ui(self, server_ids):
+        """
+        Almost the same as the original method except that we compute the line difference and add it to the response
+        """
+        orders = self.search([('id', 'in', server_ids), ('state', '=', 'draft')])
+        res = []
+        for order in orders:
+            differences = self.line_differences(order, None)
+            res.append({'id': order.id, 'differences': differences})
+        super(PosOrder, self).remove_from_ui(server_ids)
+
+        return res

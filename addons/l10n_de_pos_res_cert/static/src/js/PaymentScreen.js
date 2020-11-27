@@ -9,15 +9,7 @@ odoo.define('l10n_de_pos_res_cert.PaymentScreen', function(require) {
         //@Override
         async validateOrder(isForceValidate) {
             if (this.env.pos.isRestaurantCountryGermany()) {
-                await this.rpc({
-                    model: 'pos.order',
-                    method: 'retrieve_line_difference',
-                    args: [this.currentOrder.exportOrderLinesAsJson()]
-                }).then(async data => {
-                    if (data.differences.length > 0) {
-                        await this.currentOrder.createAndFinishOrderTransaction(data.differences);
-                    }
-                });
+                await this.currentOrder.retrieveAndSendLineDifference();
             }
             await super.validateOrder(...arguments);
         }
