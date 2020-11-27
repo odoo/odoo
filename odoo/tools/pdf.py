@@ -77,7 +77,14 @@ PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwr
 class OdooPdfFileReader(PdfFileReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
 
+    ''' Returns the files inside the PDF.
+    :raises NotImplementedError: if document is encrypted and uses an unsupported encryption method.
+    '''
     def getAttachments(self):
+        if self.isEncrypted:
+            # If the PDF is owner-encrypted, try to unwrap it by giving it an empty user password.
+            self.decrypt('')
+
         if not self.trailer["/Root"].get("/Names", {}).get("/EmbeddedFiles", {}).get("/Names"):
             return []
         for i in range(0, len(self.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Names"]), 2):
