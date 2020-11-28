@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -3146,8 +3146,8 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"La modifica della partita IVA non è consentita dopo l'emissione delle "
-"fatture per il conto. Per questa operazione contattarci direttamente."
+"Impossibile modificare la partita IVA dopo l'emissione delle fatture per il "
+"conto. Per questa operazione contattarci direttamente."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -3157,7 +3157,7 @@ msgid ""
 " your account. Please contact us directly for this operation."
 msgstr ""
 "Impossibile modificare il nome dell'azienda dopo l'emissione delle fatture "
-"del conto. Per questa operazione contattarci direttamente."
+"per il conto. Per questa operazione contattarci direttamente."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -3166,8 +3166,8 @@ msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Impossibile modificare il nome dopo l'emissione delle fatture del conto. Per"
-" questa operazione contattarci direttamente."
+"Impossibile modificare il nome dopo l'emissione delle fatture per il conto. "
+"Per questa operazione contattarci direttamente."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__chart_template_id
@@ -3230,8 +3230,8 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Selezionare questa casella se questo conto consente l'abbinamento dei "
-"movimenti di pagamenti e fatture."
+"Selezionare la casella se questo conto consente l'abbinamento dei movimenti "
+"di pagamenti e fatture."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3239,8 +3239,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
-"Selezionare questa casella per non usare la stessa sequenza per fatture e "
-"note di credito di questo registro"
+"Selezionare la casella per non usare la stessa sequenza per fatture e note "
+"di credito di questo registro"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3256,7 +3256,7 @@ msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
 msgstr ""
-"Selezionare questa casella se il prezzo usato nel prodotto e nelle fatture "
+"Selezionare la casella se il prezzo usato nel prodotto e nelle fatture "
 "include questa imposta."
 
 #. module: account
@@ -3264,7 +3264,7 @@ msgstr ""
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Selezionare questa opzione per consentire all'utente di riconciliare le "
+"Selezionare l'opzione per consentire all'utente di riconciliare le "
 "registrazioni di questo conto."
 
 #. module: account
@@ -5297,6 +5297,9 @@ msgid ""
 "Fill in the details of the line.<br><i>Tip: all the details can be set "
 "automatically if you configure your <b>products</b>.</i>"
 msgstr ""
+"Compila i dettagli della riga.<br><i>Suggerimento: se vengono configurati i "
+"<b>prodotti</b>, i dettagli possono essere tutti impostati in modo "
+"automatico.</i>"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -8335,7 +8338,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, press CONFIRM."
-msgstr ""
+msgstr "Una volta che la fattura è pronta, premi CONFERMA."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10210,7 +10213,7 @@ msgstr "Abbinamento con stessa valuta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__sample_bill_preview
 msgid "Sample Bill Preview"
-msgstr ""
+msgstr "Anteprima fattura campione"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -10540,7 +10543,7 @@ msgstr "Invia ricevuta tramite e-mail"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr ""
+msgstr "Invia ricevute tramite e-mail"
 
 #. module: account
 #. openerp-web
@@ -10827,7 +10830,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
-msgstr "Snailmail"
+msgstr "Posta ordinaria"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13621,7 +13624,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "Valida."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -13857,7 +13860,7 @@ msgstr "Con imposta"
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
-"Scrivi il nome dell'azienda per <b>crearla</b> oppure <b>vedi i "
+"Per <b>creare un'azienda</b> scrivi un nome oppure <b>vedi i "
 "suggerimenti</b>."
 
 #. module: account
@@ -13865,7 +13868,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr "Scrivi qui <b>il tuo indirizzo e-mail</b> per provare il flusso."
+msgstr "Per provare il flusso scrivi qui <b>il tuo indirizzo e-mail</b>."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -14029,6 +14032,8 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "account set on the %s journal."
 msgstr ""
+"Impossibile creare un nuovo pagamento senza aver impostato un conto per i "
+"pagamenti/ricevute in sospeso nel registro %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14207,7 +14212,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the journal of an account move if it has already a sequence "
+"You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
 

@@ -12,6 +12,7 @@
 # Guillaume Piens <gup@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Fernanda Marques <fem@odoo.com>, 2020\n"
+"Last-Translator: Arnaud Willem <contact@arnaud-willem.eu>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +104,7 @@ msgstr "Marge supérieure du chèque"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "Le numéro de chèque ne peut être constitué que de chiffres"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -299,7 +300,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "Mode de paiement préféré"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -309,6 +310,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"Mode de paiement préféré pour ce fournisseur. Ceci est utilisé pour trier "
+"les factures fournisseurs par mode de paiement et enregistrer des paiements "
+"en masse. Cas d'utilisation : création de fichiers de virement bancaires, "
+"impression de chèques."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -371,6 +376,9 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"Une erreur s'est produite lors de la mise en page du chèque, merci de "
+"sélectionner une autre mise en page dans les paramètre Facturation / "
+"Comptabilité et de réessayer."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -388,6 +396,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"Les numéros suivants sont déjà utilisés :\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -428,6 +438,9 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Cette option vous permet d'imprimer un champ de date sur le chèque, selon le"
+" CPA. Elle peut être déactivée si les chèques pré-imprimés le prévoient "
+"déjà."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -445,7 +458,7 @@ msgstr "Décochez ceux qui ont été envoyés"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "Chèque annulé"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -454,3 +467,6 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Vous devez sélectionner une mise en page pour vos chèques. Pour faire cette "
+"sélection, allez dans les paramètres Facturation / Comptabilité, et "
+"choisissez-en une dans le réglage \"Mise en page des chèques\"."

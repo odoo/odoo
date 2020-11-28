@@ -1,17 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_tax_python
+# 	* account_tax_python
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,10 +16,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+
+#. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr "کد قابل اعمال"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -74,49 +85,43 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Fixed"
-msgstr "ثابت"
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Group of Taxes"
-msgstr "گروه مالیاتها"
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__id
+msgid "ID"
+msgstr ""
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price"
-msgstr "درصد قیمت"
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax____last_update
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template____last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price Tax Included"
-msgstr "قیمت مشمول مالیات"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr "کد پایتون"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr "مالیات"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr "محاسبه مالیات"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "قالبها برای مالیاتها"
+msgstr ""

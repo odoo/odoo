@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Romica Paun <roa@odoo.com>, 2020
+# Lorenzo Battistini <lb@takobi.online>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2020
@@ -13,7 +14,6 @@
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Martin Trigaux, 2020
-# Lorenzo Battistini <lb@takobi.online>, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -91,7 +91,7 @@ msgstr "%d giorni di ritardo"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "%d days overdue:"
-msgstr ""
+msgstr "%d giorni di ritardo:"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -306,7 +306,7 @@ msgstr "<p>Crea un canale qui.</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>Crea un canale pubblico o privato.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -706,7 +706,7 @@ msgstr "Aggiungi un contatto da notificare..."
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Add or join a channel"
-msgstr ""
+msgstr "Aggiungi o entra in un canale"
 
 #. module: mail
 #. openerp-web
@@ -869,11 +869,9 @@ msgstr "In archivio"
 #: code:addons/mail/wizard/mail_resend_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s mail delivery failures. You won't be "
+"Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Sei sicuro di voler cancellare %s le email con errori di invio. Non potrai "
-"più inviare di nuovo queste email più tardi."
 
 #. module: mail
 #. openerp-web
@@ -1025,7 +1023,7 @@ msgstr "Avatar"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Avatar of OdooBot"
-msgstr ""
+msgstr "Avatar del bot Odoo"
 
 #. module: mail
 #. openerp-web
@@ -1342,7 +1340,7 @@ msgstr "Chiudi (Esc)"
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Close chat window"
-msgstr "Chiudere la finestra di chat"
+msgstr "Chiudi finestra chat"
 
 #. module: mail
 #. openerp-web
@@ -1444,7 +1442,7 @@ msgstr "Conferma"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr "Congratulazioni, nessun messaggio nella posta in arrivo"
+msgstr "Congratulazioni, la casella di posta è vuota"
 
 #. module: mail
 #. openerp-web
@@ -2050,14 +2048,14 @@ msgstr "Scade tra %d giorni"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Due in %d days:"
-msgstr ""
+msgstr "Scade tra %d giorni:"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Due on"
-msgstr ""
+msgstr "Scade il"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -3843,7 +3841,7 @@ msgstr "I messaggi segnati come letti compaiono nella cronologia."
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Messages pending moderation appear here."
-msgstr ""
+msgstr "I messaggi in attesa di moderazione compaiono qui."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -4414,7 +4412,7 @@ msgstr ""
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
-msgstr "Odoo non avrà il permesso di inviare notifiche sul tuo dispositivo"
+msgstr "Odoo non avrà il permesso di inviare notifiche native sul dispositivo"
 
 #. module: mail
 #. openerp-web
@@ -4814,7 +4812,7 @@ msgstr "Pianificata tra"
 #: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
 #, python-format
 msgid "Please complete customer's information"
-msgstr ""
+msgstr "Completare le informazioni sul cliente"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -5136,7 +5134,7 @@ msgstr "Respingi"
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Reject selected messages"
-msgstr "Respingi i messaggi selezionati"
+msgstr "Respingi messaggi selezionati"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__rejected
@@ -5500,7 +5498,7 @@ msgstr "Seleziona tutto"
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Select all messages"
-msgstr ""
+msgstr "Seleziona tutti i messaggi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__model_object_field
@@ -5757,7 +5755,7 @@ msgstr "Preferiti"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Start a conversation"
-msgstr ""
+msgstr "Avvia una conversazione"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -6065,7 +6063,7 @@ msgstr "Il tipo di documento con il quale questo modello può essere usato"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "There are no messages in this conversation."
-msgstr ""
+msgstr "Nella conversazione non sono presenti messaggi."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -6410,7 +6408,7 @@ msgstr "Deseleziona tutto"
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Unselect all messages"
-msgstr ""
+msgstr "Deseleziona tutti i messaggi"
 
 #. module: mail
 #. openerp-web
@@ -6755,7 +6753,7 @@ msgstr "Verranno bloccati i seguenti utenti:"
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
 msgid "You are going to discard %s messages."
-msgstr ""
+msgstr "Verranno eliminati %s messaggi."
 
 #. module: mail
 #. openerp-web
@@ -6829,7 +6827,7 @@ msgstr "È possibile aprire solo il profilo di canali esistenti."
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
 msgid "You can only open the profile of existing users."
-msgstr ""
+msgstr "È possibile aprire solo profili di utenti esistenti."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:0

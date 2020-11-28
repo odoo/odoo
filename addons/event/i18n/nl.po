@@ -3,22 +3,22 @@
 # 	* event
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yip132 <yannick.renders@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +82,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Business ruimte</b> - Om implementatiemethoden, beste verkooppraktijken, "
+"enz. te bespreken."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -89,6 +91,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Technische ruimtes</b> - Eén speciaal voor geavanceerde Odoo-"
+"ontwikkelaars, één voor nieuwe ontwikkelaars."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -96,6 +100,8 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>De Design Fair wordt voorafgegaan door 2 dagen trainingssessies voor "
+"experts!</b><br>We stellen 3 verschillende trainingen voor, elk 2 dagen."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -104,6 +110,9 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>De plenaire sessies in de ochtend zullen korter zijn</b> en er is meer "
+"tijd voor themabijeenkomsten, conferenties, workshops en tutorialsessies in "
+"de middag."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -114,6 +123,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Het hele evenement is open voor iedereen!</b> <br>Voor de kosten voor de "
+"3 dagen (koffiepauzes, catering, borrel, verrassend concert en bierfeest) "
+"vragen we een deelnameprijs van 49,50 €.<br> Voor degenen die niet willen "
+"bijdragen, is er een gratis ticket, daar zijn catering en toegang tot "
+"avondevenementen niet bij inbegrepen."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -126,6 +140,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                           <span class=\"text-muted\">Plaats je tracks online via een YouTube-integratie.</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -133,6 +149,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                           <span class=\"text-muted\">Deel een quiz met je bezoekers zodra een track is afgelopen.</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -150,6 +168,18 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"   Beste ${object.name},<br/>\n"
+"   Dank je voor je aanvraag.<br/>\n"
+"   Hier is je badge voor het ${object.event_id.name} evenement.<br/>\n"
+"   Mocht je nog vragen hebben, laat het ons dan weten.\n"
+"   <br/> <br/>\n"
+"   Dank je,\n"
+"   % if object.event_id.user_id.signature:\n"
+"       <br/>\n"
+"       ${object.event_id.user_id.signature | safe}\n"
+"     % endif\n"
+"</div>    "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -195,6 +225,8 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Dit evenement en alle conferenties "
+"zijn in het <b>Engels</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -263,6 +295,8 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" states=\"done\">Bijgewoond</span>\n"
+"                                        <span class=\"text-muted\" states=\"cancel\">Geannuleerd</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -810,6 +844,8 @@ msgid ""
 "And this time, we go fully ONLINE! Meet us in our live streams from the comfort of your house.<br>\n"
 "        Special discount codes will be handed out during the various streams, make sure to be there on time."
 msgstr ""
+"En deze keer gaan we volledig ONLINE! Ontmoet ons in onze livestreams vanuit het comfort van je huis.<br>\n"
+"         Tijdens de verschillende streams worden speciale kortingscodes uitgedeeld. Zorg dat je op tijd aanwezig bent."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -827,6 +863,8 @@ msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
 msgstr ""
+"Ongeveer honderd ballonnen zullen tegelijkertijd vliegen en de lucht "
+"veranderen in een prachtig canvas van kleuren."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -903,6 +941,8 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"Registraties automatisch bevestigen. Registraties worden automatisch "
+"bevestigd bij het aanmaken."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
@@ -930,7 +970,7 @@ msgstr "Beschikbare plaatsen"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Awesome! Now, let's <b>save</b> your changes."
-msgstr ""
+msgstr "Geweldig! Laten we nu je wijzigingen <b>opslaan</b>."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_back
@@ -998,6 +1038,8 @@ msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Bloem brengt eerlijkheid en ernst in de houtindustrie en helpt klanten om "
+"met bomen, bloemen en schimmels om te gaan."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
@@ -1016,11 +1058,13 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field"
 " at this 9th annual Field Hockey tournament."
 msgstr ""
+"Breng je outdoor hockeyseizoen naar een hoger niveau door het veld te "
+"betreden bij dit 9e jaarlijkse hockeytoernooi."
 
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "Zakelijke workshops"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -1054,13 +1098,16 @@ msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
 msgstr ""
+"Chamber Works behoudt zich het recht voor om het evenement te annuleren, een"
+" andere naam te geven of te verplaatsen of de data waarop het wordt gehouden"
+" te wijzigen."
 
 #. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Click <b>add</b> to create a new stage."
-msgstr ""
+msgstr "Klik op <b>toevoegen</b> om een nieuwe fase te maken."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -1084,7 +1131,7 @@ msgstr "Communicatie"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Community Chat Rooms"
-msgstr ""
+msgstr "Groepschatrooms"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
@@ -1137,7 +1184,7 @@ msgstr "Bevestigen"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr ""
+msgstr "Bevestig aanwezigheid."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1166,7 +1213,7 @@ msgstr "Land"
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "Create an Attendee"
-msgstr ""
+msgstr "Maak een deelnemer aan."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1201,7 +1248,7 @@ msgstr "Aangemaakt op"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
 msgid "Culture"
-msgstr ""
+msgstr "Cultuur"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -1234,6 +1281,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Bepaal het aantal beschikbare tickets. Als je te veel aanmeldingen hebt, kun"
+" je geen tickets meer verkopen. Stel 0 in om deze regelsetting als onbeperkt"
+" in te stellen."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1251,6 +1301,8 @@ msgstr "Ontwerpevenement Los Angeles"
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
 msgstr ""
+"Ontdek samen met onze experts hoe je een duurzaam bedrijf kunt laten "
+"groeien."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1263,7 +1315,7 @@ msgstr "Ontdek meer"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
 msgid "Discussion Rooms"
-msgstr ""
+msgstr "Discussieruimtes"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
@@ -1336,6 +1388,7 @@ msgstr "Beëindigd"
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
 msgstr ""
+"Verbeter je architectuurbedrijf en verbeter professionele vaardigheden."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1371,7 +1424,7 @@ msgstr "Evenementcategorie"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr ""
+msgstr "Tag voor evenementcategorie"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
@@ -1381,7 +1434,7 @@ msgstr "Evenement einddatum"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr ""
+msgstr "Gamification voor evenementen"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1439,11 +1492,23 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Evenement Scheduler voor:\n"
+"  - Evenement: %(event_name)s (%(event_id)s)\n"
+"  - Gepland: %(date)s\n"
+"  - Template: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Mislukt met fout:\n"
+"  - %(error)s\n"
+"\n"
+"Je ontvangt deze e-mail omdat je:\n"
+"- de organisator bent van het evenement,\n"
+"- of de verantwoordelijke bent van het evenement,\n"
+"- of de laatste schrijver van de sjabloon bent.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "Evenementfase"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
@@ -1465,7 +1530,7 @@ msgstr "Evenement label"
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
 msgid "Event Tag Category"
-msgstr ""
+msgstr "Gebeurtenistagcategorie"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_tag_category_action_tree
@@ -1490,14 +1555,14 @@ msgstr "Evenement sjabloonticket"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "Evenemententemplate tickets"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "Evenemententemplates"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1582,6 +1647,9 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"Gebeurtenissen worden automatisch naar deze fase verplaatst wanneer ze zijn "
+"voltooid. De gebeurtenis die naar deze fase wordt verplaatst, wordt "
+"automatisch als groen ingesteld."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1591,6 +1659,10 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
+"Elk jaar nodigen we onze community, partners en eindgebruikers uit om ons te"
+" ontmoeten! Het is het ideale evenement om samen te komen en nieuwe "
+"functies, routekaart van toekomstige versies, prestaties van de software, "
+"workshops, trainingssessies, enz. te presenteren..."
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -1600,6 +1672,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"Elk jaar nodigen we onze community, partners en eindgebruikers uit om ons te ontmoeten! Het is het ideale evenement om samen te komen en nieuwe functies, routekaart van toekomstige versies, prestaties van de software, workshops, trainingssessies, enz. te presenteren...\n"
+"             Dit evenement is ook een gelegenheid om de case studies, methodologie of ontwikkelingen van onze partners onder de aandacht te brengen. Wees erbij en zie direct vanaf de bron de features van de nieuwe versie!"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -1678,13 +1752,15 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr ""
+msgstr "Voor slechts 10 krijg je toegang tot de catering. Yum yum."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid ""
 "Foster interactions between attendees by creating virtual conference rooms"
 msgstr ""
+"Bevorder interacties tussen deelnemers door virtuele vergaderruimten te "
+"creëren."
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_0
@@ -1704,7 +1780,7 @@ msgstr "Nieuw aangemaakt"
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "Volledig geëindigd"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1738,6 +1814,8 @@ msgstr "Geweldige Reno ballon race"
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
 msgstr ""
+"Super goed! Nu hoef je alleen maar te wachten tot je bezoekers komen "
+"opdagen!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
@@ -1773,7 +1851,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival !"
-msgstr ""
+msgstr "Hier is het, de 12e editie van ons live muziek festival!"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -1836,6 +1914,8 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
+"Als er gebruik wordt gemaakt van ticketing, bevat deze de vroegste "
+"startdatum van de verkoop van tickets."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -1843,6 +1923,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over !"
 msgstr ""
+"Als je niets over hockey weet, is dit een geweldige kennismaking met deze prachtige sport, want je zult wat trainingsprocessen kunnen zien en ook wat tijd hebben\n"
+"                om te chatten met ervaren spelers en trainers als het toernooi voorbij is!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -1885,7 +1967,7 @@ msgstr "Introductie, CRM, Verkoopbeheer"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "Ongeldige keuze voor evenement / ticket"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -1928,19 +2010,19 @@ msgstr "John DOE"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times !"
-msgstr ""
+msgstr "Doe mee met de geweldige ballonrace aller tijden!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr ""
+msgstr "Doe mee met dit 24-uurs-evenement."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "Doe mee met dit driedaagse evenement."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
@@ -2024,7 +2106,7 @@ msgstr "Te late activiteiten"
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "Let's <b>create</b> your first event."
+msgid "Let's create your first <b>event</b>."
 msgstr ""
 
 #. module: event
@@ -2040,12 +2122,12 @@ msgstr "Beperkt aantal plaatsen"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "Live uitzending"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "Live-modus"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -2119,7 +2201,7 @@ msgstr "Beheer &amp; publiceer een schema met sessies"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "Markeer als aanwezig"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2268,6 +2350,8 @@ msgstr "Notities"
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Nu je evenement klaar is, klik hier om het naar een ander stadium te "
+"verplaatsen."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2324,11 +2408,13 @@ msgstr "Doelstellingen"
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
 msgstr ""
+"Opnieuw hebben we de meest legendarische bands uit de rockgeschiedenis "
+"samengesteld."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr ""
+msgstr "Lopende evenementen"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -2338,7 +2424,7 @@ msgstr "Online"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "Online exposanten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -2351,11 +2437,14 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the"
 " event or change the dates on which it is held."
 msgstr ""
+"OpenElec Applications behoudt zich het recht voor om het evenement te "
+"annuleren, een andere naam te geven of te verplaatsen of de data waarop het "
+"wordt gehouden te wijzigen."
 
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "OpenWood collectie online onthulling"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2363,6 +2452,8 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"OpenWood brengt eerlijkheid en ernst in de houtindustrie en helpt klanten om"
+" met bomen, bloemen en schimmels om te gaan."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2375,6 +2466,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"Onze nieuwste collectie wordt online onthuld! Communiceer met ons op onze "
+"livestreams!"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2383,6 +2476,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
 msgstr ""
+"Overschrijf de standaardwaarde die wordt weergegeven voor de geblokkeerde "
+"status voor kanban-selectie."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -2391,6 +2486,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
+"Overschrijf de standaardwaarde die wordt weergegeven voor de status 'klaar' "
+"voor kanban-selectie."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2399,6 +2496,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
+"Overschrijf de standaardwaarde die wordt weergegeven voor de normale status "
+"voor kanban-selectie."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2440,7 +2539,7 @@ msgstr "Inkoop, Verkoop &amp; Inkoopbeheer en Boekhouding."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "Quiz op nummers"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -2468,6 +2567,8 @@ msgstr "Klaar voor volgende fase"
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
 msgstr ""
+"Klaar om evenementen in een paar minuten te <b>organiseren</b>? Laten we "
+"beginnen!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -2502,7 +2603,7 @@ msgstr "Inschrijfdatum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_date
 msgid "Registration End"
-msgstr ""
+msgstr "Registratie einde"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2558,6 +2659,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Inschrijvingen zijn open als:\n"
+"- het evenement niet beëindigd is\n"
+"- er plaatsen beschikbaar zijn op het evenement\n"
+"- de tickets verkoopbaar zijn (als er gebruik wordt gemaakt van ticketing)"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2621,12 +2726,18 @@ msgstr "Gepland"
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you !"
 msgstr ""
+"Doorgewinterde hockeyfans en nieuwsgierige mensen, dit toernooi is voor jou!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
 msgstr "Limiet aantal plaatsen"
+
+#. module: event
+#: model:event.type,name:event.event_type_data_ticket
+msgid "Sell Online"
+msgstr "Verkoop online"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2681,6 +2792,9 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Shanghai Pterocarpus Furniture brengt eerlijkheid en ernst in de "
+"houtindustrie en helpt klanten om met bomen, bloemen en schimmels om te "
+"gaan."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2775,6 +2889,8 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
+"Tag kleur. Geen kleur betekent geen weergave in kanban of front-end, om "
+"interne tags te onderscheiden van openbare categorisatietags."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -2818,6 +2934,7 @@ msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
 msgstr ""
+"De beste hockeyteams van het land strijden om de nationale hockeytrofee."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -2850,6 +2967,9 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"Het evenement is uitverkocht als er geen plaatsen meer beschikbaar zijn op "
+"het evenement. Als er gebruik wordt gemaakt van kaartverkoop en alle tickets"
+" zijn uitverkocht, is het evenement uitverkocht."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -2857,6 +2977,7 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"De beste OpenWood-meubels komen naar je huis in een gloednieuwe collectie"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
@@ -2866,13 +2987,13 @@ msgstr "De plaats is gereserveerd"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first !"
-msgstr ""
+msgstr "De veiligheid van onze bezoekers en onze aeronauten staat voorop!"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
-msgstr ""
+msgstr "De stopdatum kan niet vroeger zijn dan de startdatum."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2891,6 +3012,8 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
+"Dit evenement is volledig online en GRATIS, als je voor tickets hebt betaald, moet je je geld terugkrijgen.<br>\n"
+"Je hebt een goede internetverbinding nodig om de beste videokwaliteit te krijgen."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
@@ -2905,7 +3028,7 @@ msgstr ""
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr ""
+msgstr "Dit is de <b>naam</b> die je gasten zien bij het registreren."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -2913,6 +3036,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories !"
 msgstr ""
+"Dit is de perfecte plek om een leuke dag met je gezin door te brengen, we "
+"garanderen dat je weggaat met mooie, eeuwige herinneringen!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -2920,6 +3045,9 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"Dit is de perfecte plek om een leuke tijd met je vrienden door te brengen "
+"terwijl je luistert naar enkele van de meest iconische rocknummers aller "
+"tijden!"
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2935,6 +3063,8 @@ msgid ""
 "This pipeline can be customized on the fly to fit your organizational needs."
 " For example, let's create a new stage."
 msgstr ""
+"Deze pijplijn kan on-the-fly worden aangepast aan je organisatorische "
+"behoeften. Laten we bijvoorbeeld een nieuwe fase maken."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2959,9 +3089,10 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"Met tickettypen kun je je bezoekers onderscheiden. Laten we een nieuwe "
+"<b>maken</b>."
 
 #. module: event
-#: model:event.type,name:event.event_type_data_ticket
 #: model:ir.model.fields,field_description:event.field_event_type__use_ticket
 msgid "Ticketing"
 msgstr "Ticketing"
@@ -2995,7 +3126,7 @@ msgstr "Totaal"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr ""
+msgstr "Totaal aantal inschrijvingen voor dit evenement."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -3013,6 +3144,8 @@ msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Tree Dealers brengt eerlijkheid en ernst in de houtindustrie en helpt "
+"klanten om met bomen, bloemen en schimmels om te gaan."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
@@ -3091,7 +3224,7 @@ msgstr "Aankomend/Bezig"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Upgrade Sponsors into Exhibitors with virtual conference booths"
-msgstr ""
+msgstr "Upgrade sponsors naar exposanten met virtuele conferentiecabines."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_timezone
@@ -3104,11 +3237,12 @@ msgstr "Gebruik standaard tijdzone"
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
+"Gebruik de <b>broodkruimels</b> om terug te gaan naar je kanbanoverzicht."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr ""
+msgstr "Gebruikte stoelen"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -3158,6 +3292,9 @@ msgid ""
 "We reserve the right to cancel, re-name or re-locate the event or change the"
 " dates on which it is held in case the weather fails us."
 msgstr ""
+"We behouden ons het recht voor om het evenement te annuleren, een nieuwe "
+"naam te geven of te verplaatsen, of de data waarop het wordt gehouden te "
+"wijzigen voor het geval het weer ons in de steek laat."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
@@ -3190,16 +3327,18 @@ msgid ""
 "When will your event take place? <b>Select</b> the start and end dates "
 "<b>and click Apply</b>."
 msgstr ""
+"Wanneer vindt uw evenement plaats? <b>Selecteer</b> de start- en einddatum "
+"<b>en klik op Toepassen</b>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Of het evenement is begonnen."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
-msgstr ""
+msgstr "Je behoort echt tot de besten."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3216,6 +3355,8 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
+"Je kunt hier labels definiëren die in plaats daarvan voor de staat worden weergegeven\n"
+"                             van de standaardlabels in de kanbanweergave."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -3235,7 +3376,7 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "bijv. Conferentie voor architecten"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3245,7 +3386,7 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid "events@penwood.example.com"
-msgstr ""
+msgstr "events@penwood.example.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0

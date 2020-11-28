@@ -6,7 +6,6 @@
 # Radoslav Sloboda <rado.sloboda@gmail.com>, 2020
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
-# Michal Matus <misko.matus@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # Stefan Stieranka <stieranka@itec.sk>, 2020
@@ -14,14 +13,15 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # Matus Krnac <matus.krnac@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2020\n"
+"Last-Translator: Michal Matus <misko.matus@gmail.com>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -941,10 +941,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
+"be reset to Draft."
 msgstr ""
-"Stav žiadosti o pridelenie musí byť „Odmietnuté“ alebo „Schválené“, aby sa "
-"obnovil koncept."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1745,7 +1743,9 @@ msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 
@@ -2370,8 +2370,8 @@ msgstr "Nadradené"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr "Nadradené voľné dni"
+msgid "Parental Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2531,6 +2531,12 @@ msgstr "Zodpovedný užívateľ"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
 msgstr "Behajte do"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručenia SMS"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
@@ -2779,11 +2785,9 @@ msgstr "Túto oblasť automaticky vyplní používateľ, ktorý overuje pridelen
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
-"Táto oblasť je automaticky vyplnená používateľom, ktorý overuje pridelenie "
-"na druhej úrovni (Ak typ pridelenia vyžaduje druhé overenie)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2809,10 +2813,9 @@ msgstr "Táto úprava nie je v súčasnom stave povolená."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
-"Tento používateľ bude zodpovedný za schválenie tohto typu voľna. Používa sa "
-"iba vtedy, keď je overenie „hr“ alebo „oboje“"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
