@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -54,7 +54,7 @@ msgstr "# Verkoopkansen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_count
 msgid "# Overdue Opportunities"
-msgstr "# Achterstallige verkoopkansen"
+msgstr "# Verkoopkansen te laat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
@@ -592,15 +592,6 @@ msgid "Bounce"
 msgstr "Bounce"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Use this button to update the probabilities of all leads. This can take up "
-"to several minutes depending on how many there are."
-msgstr ""
-"Gebruik deze knop om de kansen van alle leads bij te werken. Dit kan enkele "
-"minuten duren, afhankelijk van het aantal."
-
-#. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid ""
@@ -781,6 +772,11 @@ msgstr "Configureer een gepersonaliseerd domein"
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
 msgstr "Gefeliciteerd! Veel succes om zo'n grote vis binnen te halen! :)"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Consider leads created as of the"
+msgstr "Alleen voor leads aangemaakt vanaf"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -2430,7 +2426,7 @@ msgstr "Over 5 jaar"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Overdue Opportunities"
-msgstr "Over tijd verkoopkansen"
+msgstr "Verkoopkansen te laat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_amount
@@ -2904,11 +2900,6 @@ msgstr ""
 "waar een verkoopkans zich in de verkoopcyclus bevindt."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Consider leads created as of the"
-msgstr "Alleen voor leads aangemaakt vanaf"
-
-#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Start scheduling activities on your opportunities"
@@ -3340,6 +3331,15 @@ msgid ""
 msgstr ""
 "Gebruik de <i>Aanmaken </i> knop linksboven, of stuur een e-mail naar %s om "
 "de e-mail gateway te testen."
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Use this button to update the probabilities of all leads. This can take up "
+"to several minutes depending on how many there are."
+msgstr ""
+"Gebruik deze knop om de kansen van alle leads bij te werken. Dit kan enkele "
+"minuten duren, afhankelijk van het aantal."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login

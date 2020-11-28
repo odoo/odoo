@@ -10,17 +10,17 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
 # walther_b <wba@miracle.dk>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
 # Mads Søndergaard, 2020
+# lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -940,10 +940,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
+"be reset to Draft."
 msgstr ""
-"Tildelingsanmodning skal være \"Afvist\" eller \"At godkende\" for at den "
-"skal kunne nulstilles til Kladde."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1744,7 +1742,9 @@ msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Hvis afkrydset har nogle beskeder en leveringsfejl"
 
@@ -2369,8 +2369,8 @@ msgstr "Overordnet"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr "Forældre fri tid"
+msgid "Parental Leaves"
+msgstr "Forældreorlog"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2530,6 +2530,12 @@ msgstr "Ansvarlig bruger"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
 msgstr "Afvikl indtil"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS leveringsfejl"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
@@ -2778,11 +2784,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
-"Dette område udfyldes automatisk af brugeren som validere allokeringen med "
-"anden niveau (Hvis allokeringstypen kræver en anden validering)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2808,10 +2812,9 @@ msgstr "Denne modificering er ikke tilladt på nuværende stadie."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
-"Denne bruger vil være ansvarlig for godkendelse af denne type fri. Det "
-"anvendes kun når validering er 'HR' eller 'begge'"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken

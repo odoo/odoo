@@ -7,6 +7,7 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
+"Last-Translator: Arnaud Willem <contact@arnaud-willem.eu>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Groupe de taxes : la taxe est un ensemble de sous-taxes\n"
+"- Fixe : le montant de la taxe est fixe quel que soit le prix\n"
+"- Pourcentage du prix : la taxe est proportionnelle au prix :\n"
+"      p.ex. : 100 * (1+10%) = 110 (prix exprimé hors taxe)\n"
+"                  110 / (1+10%) = 100 (prix exprimé TTC)\n"
+"- Pourcentage du prix, taxe comprise : le prix est exprimé taxe comprise\n"
+"      p.ex. : 180 / (1 - 10%) = 200\n"
+"                 200 * (1 - 10%) = 180"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable

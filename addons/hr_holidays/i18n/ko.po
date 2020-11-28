@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -908,8 +908,8 @@ msgstr "할당 요청을 확인하려면 (\"제출 대기\") 단계로 초안 �
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
-msgstr "할당 요청 상태가 \"반려됨\" 또는 \"승인 대기\" 상태여야만 초안으로 재설정할 수 있습니다."
+"be reset to Draft."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1693,7 +1693,9 @@ msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합�
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
@@ -2300,8 +2302,8 @@ msgstr "상위"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr "상위 휴가"
+msgid "Parental Leaves"
+msgstr "육아 휴직"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2461,6 +2463,12 @@ msgstr "담당 사용자"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
 msgstr "실행까지"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
@@ -2698,7 +2706,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
 
@@ -2724,7 +2732,8 @@ msgstr "현재 상태에서는 이 수정이 허용되지 않습니다."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
 
 #. module: hr_holidays

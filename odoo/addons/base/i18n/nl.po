@@ -8,23 +8,23 @@
 # Julia van Orsouw <julia@odooexperts.nl>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
 # Melroy van den Berg <webmaster1989@gmail.com>, 2020
-# Maxim Vandenbroucke <mxv@odoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Yip132 <yannick.renders@gmail.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Martin Trigaux, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Maxim Vandenbroucke <mxv@odoo.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1284,7 +1284,7 @@ msgstr ""
 "\n"
 "Odoo zal u laten weten of aan een van deze vereisten niet wordt voldaan.\n"
 "\n"
-"Elke factuur die wordt gevalideerd voor een klant met een mandaat, is\n"
+"Elke factuur die wordt goedgekeurd voor een klant met een mandaat, is\n"
 "automatisch ingesteld op 'betaald' staat, en er wordt een betaling gegenereerd. Een\n"
 "optie in het dashboard zal u dan alle gegenereerde betalingen laten zien\n"
 "via SDD en om een ​​XML-verzamelingsbestand voor hen te genereren, door ze te groeperen als\n"
@@ -1925,7 +1925,7 @@ msgstr ""
 "Betalende rekening wordt in de lijst weergegeven als het rekeningnummer.\n"
 "\n"
 "** Naam rekeninghouder ** - Kan hier worden ingevoerd, indien vereist. Over het algemeen niet\n"
-"gevalideerd door de banken op ABA-bestandsoverdrachten, maar kan worden weergegeven bij de begunstigde\n"
+"goedgekeurd door de banken op ABA-bestandsoverdrachten, maar kan worden weergegeven bij de begunstigde\n"
 "bankafschrift tegen de betaling.\n"
 "\n"
 "- Bankrekeningen van leveranciers kunnen op dezelfde plaats worden opgezet, maar dat is het wel\n"
@@ -4128,7 +4128,7 @@ msgstr ""
 "* Voucher exporteren - webservice\n"
 "* Elektronische fiscale borgstelling - webservice\n"
 "\n"
-"Als u in de elektronische tijdschriften een factuur valideert, wordt deze gevalideerd in zowel Odoo als AFIP. Deze validatie is\n"
+"Als u in de elektronische tijdschriften een factuur valideert, wordt deze goedgekeurd in zowel Odoo als AFIP. Deze validatie is\n"
 "gemaakt op het moment en we ontvangen en \"goedgekeurd / goedgekeurd met observatie / afgewezen\" staat van AFIP. Als de factuur heeft\n"
 "afgewezen door AFIP wordt niet in het systeem geplaatst en er wordt een pop-upbericht weergegeven met zowel de foutdetails (redenen voor afwijzing)\n"
 "we krijgen een HINT over wat het probleem zou kunnen zijn.\n"
@@ -7938,6 +7938,13 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_online_synchronization
+msgid ""
+"\n"
+"This module is used for Online bank synchronization."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_approvals
 msgid ""
 "\n"
@@ -8543,6 +8550,19 @@ msgstr ""
 "Voeg presentaties toe aan uw team, zodat klanten die hulp zoeken, deze kunnen zien voordat ze nieuwe tickets plaatsen."
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_online_synchronization
+msgid ""
+"\n"
+"With this module, users will be able to link bank journals to their\n"
+"online bank accounts (for supported banking institutions), and configure\n"
+"a periodic and automatic synchronization of their bank statements.\n"
+"This module has been added end of 2020 and is purpose is to work with\n"
+"the latest providers. It should be used over the previous account_online_sync\n"
+"module.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_sips
 msgid ""
 "\n"
@@ -8574,7 +8594,7 @@ msgid ""
 "\n"
 "    Supported documents are SO, PO.\n"
 msgstr ""
-"Module voor synchronisatie van documenten tussen verschillende bedrijven. Hiermee kunt u bijvoorbeeld automatisch een verkooporder laten aanmaken wanneer een inkooporder wordt gevalideerd met een ander bedrijf van het systeem als leverancier, en omgekeerd.\n"
+"Module voor synchronisatie van documenten tussen verschillende bedrijven. Hiermee kunt u bijvoorbeeld automatisch een verkooporder laten aanmaken wanneer een inkooporder wordt goedgekeurd met een ander bedrijf van het systeem als leverancier, en omgekeerd.\n"
 "\n"
 "Ondersteunde documenten zijn SO, PO.\n"
 
@@ -9099,8 +9119,8 @@ msgstr "<i class=\"fa fa-times\" title=\"Sluit het onboarding paneel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
-msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr "<span aria-label=\"Afsluiten\">&amp;times;</span>"
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -10329,6 +10349,22 @@ msgid "Add views and tweaks on event"
 msgstr "Voeg weergaven en tweaks toe aan het evenement"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_31
+msgid "Addison Olson is a mighty sales representative at Deco Addict."
+msgstr "Addison Olson is een machtige vertegenwoordiger bij Deco Addict."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_31
+msgid ""
+"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+"Addison Olson werkt sinds <b>10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar."
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model_terms:ir.ui.view,arch_db:base.contact
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -10532,6 +10568,11 @@ msgid "Advanced features for stock_account"
 msgstr "Geavanceerde mogelijkheden voor stock_account"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
+msgid "Advantage Proration"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
@@ -10638,6 +10679,11 @@ msgstr "Verlof toewijzen en verlofaanvragen volgen"
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
 msgstr "Sta genereren van buitendienst taken toe vanuit ticket"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
+msgid "Allow payslip edition"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -11070,6 +11116,16 @@ msgid "Aruba"
 msgstr "Aruba"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "As a team, we are happy to contribute to this event."
+msgstr "Als team dragen wij graag bij aan dit evenement."
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
 msgstr "Beoordeel uw werknemers"
@@ -11298,6 +11354,15 @@ msgstr "Avatar"
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Azerbeidzjan"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_12
+msgid ""
+"Azure Interior brings honesty and seriousness to wood industry while helping"
+" customers deal with trees, flowers and fungi."
+msgstr ""
+"Azure Interior brengt eerlijkheid en ernst in de houtindustrie en helpt "
+"klanten om met bomen, bloemen en schimmels om te gaan."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -11639,6 +11704,11 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belgische Intrastatverklaring"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
+msgid "Belgian Payroll - Advantage Proration"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
 msgid "Belgian Payroll - Posted Employee"
 msgstr ""
@@ -11818,6 +11888,17 @@ msgstr "Ondermarge (mm)"
 #: model:res.country,name:base.bv
 msgid "Bouvet Island"
 msgstr "Bouveteiland"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_15
+msgid ""
+"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+"Brandon werkt sinds <b>10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -12534,6 +12615,17 @@ msgid "Collect payments from your customers through SEPA direct debit."
 msgstr "Incasseer betalingen van uw klanten middels SEPA auto incasso."
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_28
+msgid ""
+"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+"Colleen Diaz werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar."
+
+#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr "Colombia"
@@ -12591,6 +12683,16 @@ msgstr "Kolomreferentie naar het item in de co-model tabel"
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
 msgstr "Kolomreferentie naar het item in de model tabel"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Come see us live, we hope to meet you !"
+msgstr "Kom ons live bekijken, we hopen je te ontmoeten!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -13225,6 +13327,7 @@ msgstr "Maak contextuele actie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
+#: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
 msgstr "Aanmaakdatum"
 
@@ -13533,7 +13636,6 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:base.field_res_partner_category__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title__create_date
-#: model:ir.model.fields,field_description:base.field_res_users__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_date
@@ -13979,6 +14081,15 @@ msgid "Decimal Separator"
 msgstr "Decimaal scheidingsteken"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_2
+msgid ""
+"Deco Addict brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
+"Deco Addict brengt eerlijkheid en ernst in de houtindustrie en helpt klanten"
+" om met bomen, bloemen en schimmels om te gaan."
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
 msgstr "Ontdubbelen contacten"
@@ -14290,6 +14401,16 @@ msgstr "Niet toegestane declaraties"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
 msgstr "Negeren"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Discover more"
+msgstr "Ontdek meer"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -14688,6 +14809,22 @@ msgstr "Gereed"
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Done!"
 msgstr "Gereed!"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_3
+msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
+msgstr "Douglas Fletcher is een machtige functionele adviseur bij Deco Addict"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_3
+msgid ""
+"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+"Douglas Fletcher werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -16124,6 +16261,22 @@ msgid "Float"
 msgstr "Getal"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_4
+msgid "Floyd Steward is a mighty analyst at Deco Addict."
+msgstr "Floyd Steward is een machtige analist bij Deco Addict."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_4
+msgid ""
+"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+"Floyd Steward werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar."
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 mm"
@@ -16430,6 +16583,15 @@ msgid "Gauge Widget for Kanban"
 msgstr "Meterwidget voor Kanban"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_3
+msgid ""
+"Gemini Furniture brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr ""
+"Gemini Furniture brengt eerlijkheid en ernst in de houtindustrie en helpt "
+"klanten om met bomen, bloemen en schimmels om te gaan."
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "Algemeen"
@@ -16657,6 +16819,19 @@ msgid "Google reCAPTCHA integration"
 msgstr ""
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_18
+msgid ""
+"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Senior Consultant."
+msgstr ""
+"Gordon Owens werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar.\n"
+"Beroemde Senior Consultant."
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
@@ -16853,6 +17028,16 @@ msgid "Handle lunch orders of your employees"
 msgstr "Verwerk lunchbestellingen van uw werknemers"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Happy to be Sponsor"
+msgstr "Blij om sponsor te zijn"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "Hardware Driver voor  ESC/POS Printers en kassalade's"
@@ -16970,14 +17155,39 @@ msgstr ""
 "adviseren wij om alleen de module facturatie te installeren."
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_sales_sales
+msgid "Helps you handle your quotations, sale orders and invoicing."
+msgstr "Helpt u offertes, verkooporders en facturen te beheren."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_attendances
+msgid "Helps you manage the attendances."
+msgstr "Helpt u bij het beheren van aanwezigheid."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_services_timesheets
+msgid "Helps you manage the timesheets."
+msgstr "Helpt u bij het beheren van urenstaten"
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
 msgstr "Helpt u gebruikers beheren."
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_marketing_events
+msgid "Helps you manage your Events."
+msgstr "Helpt u bij het beheren van evenementen."
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
 msgid "Helps you manage your appraisals."
 msgstr "Helpt u bij het beheren van beoordelingen"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_approvals
+msgid "Helps you manage your approvals."
+msgstr "Helpt u bij het beheren van goedkeuringen."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
@@ -16990,6 +17200,11 @@ msgid "Helps you manage your employees."
 msgstr "Helpt u bij het beheren van werknemers."
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_expenses
+msgid "Helps you manage your expenses."
+msgstr "Helpt u bij het beheren van declaraties."
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
 msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
@@ -16999,9 +17214,67 @@ msgstr ""
 "leveringen, ontvangsten, etc."
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
+msgid ""
+"Helps you manage your manufacturing processes and generate reports on those "
+"processes."
+msgstr ""
+"Helpt uw productieprocessen te beheren en genereert overzichten van die "
+"processen."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_marketing_email_marketing
+msgid ""
+"Helps you manage your mass mailing to design\n"
+"professional emails and reuse templates."
+msgstr ""
+"Helpt u uw bulk mailingen te beheren voor ontwerp\n"
+"en om professionele e-mails en sjablonen te hergebruiken."
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
 msgid "Helps you manage your payrolls."
 msgstr "Helpt u bij het beheren van loonstroken."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_services_project
+msgid ""
+"Helps you manage your projects and tasks by tracking them, generating "
+"plannings, etc..."
+msgstr ""
+"Helpt uw projecten en taken te beheren door ze te volgen, planningen te "
+"genereren, etc..."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_inventory_purchase
+msgid ""
+"Helps you manage your purchase-related processes such as requests for "
+"quotations, supplier bills, etc..."
+msgstr ""
+"Helpt de inkoop-gerelateerde processen te beheren zoals aanvragen van "
+"offertes,  leveranciersfacturen, enz..."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_manufacturing_quality
+msgid "Helps you manage your quality alerts and quality checks."
+msgstr "Helpt u bij het beheren van kwaliteit waarschuwingen en controles"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_recruitment
+msgid "Helps you manage your recruitments."
+msgstr "Helpt u bij de werving & selectie."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_marketing_surveys
+msgid "Helps you manage your survey for review of different-different users."
+msgstr ""
+"Helpt u uw enquetes te beheren om te controleren van verschillende "
+"gebruikers."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_time_off
+msgid "Helps you manage your time off."
+msgstr "Helpt u met het beheren van uw verlof."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -19735,6 +20008,7 @@ msgstr "Beheer uw voorraad en logistieke activiteiten"
 #: model:ir.module.category,name:base.module_category_manufacturing_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
 msgstr "Productie"
 
@@ -19785,6 +20059,7 @@ msgstr "Marges in verkooporders"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Marketing"
 msgstr "Marketing"
 
@@ -20705,6 +20980,30 @@ msgstr "Nicaragua"
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Nice work! Your configuration is done."
 msgstr "Goed werk! Uw configuratie is klaar."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole is <b>author of several books</b>, including Amazon best seller\n"
+"                \"How Azure and Odoo will change the business world!\"."
+msgstr ""
+"Nicole is <b>auteur van verschillende boeken</b>, waaronder de bestseller van Amazon\n"
+"\"Hoe Azure en Odoo de zakenwereld zullen veranderen!\"."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole works in IT sector <b>since 20 years</b>. She\n"
+"                develops software to help develop websites.  She sold her\n"
+"                first company at 30 years old and manage to grow Azure Interior\n"
+"                from 1 to 55 employees mostly by reselling services on\n"
+"                Odoo."
+msgstr ""
+"Nicole werkt <b>sinds 20 jaar</b> in de IT-sector. Ze\n"
+"ontwikkelt software om websites te helpen ontwikkelen. Ze heeft haar verkocht\n"
+"eerste bedrijf op 30-jarige leeftijd en erin slagen om Azure Interior te laten groeien\n"
+"van 1 tot 55 medewerkers meestal door diensten door te verkopen\n"
+"Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -22771,8 +23070,8 @@ msgid ""
 "Once the delivery is validated, update the cost on the SO to have an exact "
 "margin computation."
 msgstr ""
-"Zodra de levering is gevalideerd, werkt u de kosten op de SO bij om een "
-"exacte margeberekening te hebben."
+"Zodra de levering is bevestigd, werkt u de kosten op de SO bij om een exacte"
+" margeberekening te hebben."
 
 #. module: base
 #: code:addons/models.py:0
@@ -22819,6 +23118,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
 msgstr "Online afspraak"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_synchronization
+msgid "Online Bank Statement Synchronization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -23749,6 +24053,11 @@ msgid "Payroll Localization"
 msgstr "Loonadministratie lokalisatie"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
+msgid "Payroll: Edit lines - Recompute work entries"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "PayuLatam Payment Acquirer"
 msgstr "PayuLatam betaalprovider"
@@ -24108,6 +24417,7 @@ msgstr "Productmatrix"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Productivity"
 msgstr "Productiviteit"
 
@@ -24685,6 +24995,15 @@ msgstr "Leesrechten"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
 msgstr "Alleen lezen"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_4
+msgid ""
+"Ready Mat brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
+"Ready Mat brengt eerlijkheid en ernst in de houtindustrie en helpt klanten "
+"om met bomen, bloemen en schimmels om te gaan."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -26027,6 +26346,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
 #: model:res.partner.category,name:base.res_partner_category_11
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr "Diensten"
 
@@ -27195,6 +27515,15 @@ msgstr ""
 "U kunt dit veld gebruiken voor snelzoeken."
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_10
+msgid ""
+"The Jackson Group brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr ""
+"De Jackson Group brengt eerlijkheid en ernst in de houtindustrie en helpt "
+"klanten om met bomen, bloemen en schimmels om te gaan."
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
 msgid "The Lang Code displayed in the URL"
 msgstr "De taalcode die wordt weergegeven in de URL"
@@ -28246,6 +28575,19 @@ msgstr "Tokelau"
 #: model:res.country,name:base.to
 msgid "Tonga"
 msgstr "Tonga"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_17
+msgid ""
+"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Managing Partner."
+msgstr ""
+"Toni Rhodes werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
+"met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
+"IT-budget met bijna de helft in de afgelopen 2 jaar.\n"
+"Beroemde Managing Partner."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29580,6 +29922,29 @@ msgid "Water supply"
 msgstr "Watertoelevering"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_18
+msgid ""
+"We are a technology consulting & strategic advisory firm that creates value "
+"enhancing solutions through the use of advanced software for our clients "
+"worldwide. At Lumber Inc we bring operational experience combined..."
+msgstr ""
+"Wij zijn een technologisch advies- en strategisch adviesbureau dat "
+"waardeverhogende oplossingen creëert door het gebruik van geavanceerde "
+"software voor onze klanten wereldwijd. Bij Lumber Inc brengen we "
+"operationele ervaring gecombineerd ..."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_18
+msgid ""
+"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
+" <br> <br>\n"
+"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
+msgstr ""
+"Wij zijn een technologisch advies- en strategisch adviesbureau dat waardeverhogende oplossingen creëert door het gebruik van geavanceerde software voor onze klanten wereldwijd.\n"
+"<br> <br>\n"
+"Bij Lumber Inc brengen we operationele ervaring gecombineerd met technologisch inzicht. We begrijpen dat alle software die bedrijfsactiviteiten ondersteunt, zo moet worden ontworpen dat het de uitvoering van kritieke operationele processen vergemakkelijkt en dient als hulpmiddel voor de gebruikers en niet als barrière. Onze benadering is eerst gericht op het proces, ervoor zorgen dat het bijdraagt aan de doelstellingen van het bedrijf, we optimaliseren het en ontwerpen de softwareoplossingen om het zo goed mogelijk te ondersteunen."
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "Web"
 msgstr "Web"
@@ -29922,6 +30287,15 @@ msgstr ""
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_1
+msgid ""
+"Wood Corner brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr ""
+"Wood Corner brengt eerlijkheid en ernst in de houtindustrie en helpt klanten"
+" om met bomen, bloemen en schimmels om te gaan."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry

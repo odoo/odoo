@@ -1,23 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
-# 
-# Translators:
-# Martin Trigaux, 2018
-# Seksan Poltree <seksan.poltree@gmail.com>, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# LAO <sumonchai@gmail.com>, 2018
-# Ekasit Saichompu <ekasitb@gmail.com>, 2018
-# gsong <gsong2014@foxmail.com>, 2018
-# Somchart Jabsung <jabsung.s@gmail.com>, 2018
+# 	* note
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,25 +16,52 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
-msgstr "ต้องดำเนินการ"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "เปิดใช้งาน"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_ids
 msgid "Activities"
-msgstr "กิจกรรม"
+msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_mail_activity
 msgid "Activity"
-msgstr "กิจกรรม"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
@@ -54,6 +71,11 @@ msgstr ""
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
 msgstr ""
 
 #. module: note
@@ -68,14 +90,14 @@ msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:14
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add a note"
 msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:6
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add new note"
 msgstr ""
@@ -83,7 +105,7 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr "เก็บ"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
@@ -96,46 +118,36 @@ msgid "By sticky note Category"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "หมวด"
-
-#. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:10
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Channel"
-msgstr "ช่องทาง"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__color
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
-msgstr "ดัชนีสี"
+msgstr ""
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "การกำหนดค่า"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_uid
 #: model:ir.model.fields,field_description:note.field_note_stage__create_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
-msgstr "สร้างโดย"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_date
 #: model:ir.model.fields,field_description:note.field_note_stage__create_date
 #: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
-msgstr "สร้างเมื่อ"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__date_done
@@ -145,14 +157,17 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr "ลบ"
+msgstr ""
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:note.field_note_note__display_name
 #: model:ir.model.fields,field_description:note.field_note_stage__display_name
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
+#: model:ir.model.fields,field_description:note.field_res_users__display_name
 msgid "Display Name"
-msgstr "ชื่อที่ใช้แสดง"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
@@ -172,17 +187,22 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
 msgid "Followers"
-msgstr "ผู้ติดตาม"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "ผู้ติดตาม (ช่องทาง)"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "ผู้ติดตาม (คู่ค้า)"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -192,24 +212,33 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "จัดกลุ่มโดย"
+msgstr ""
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity__id
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:note.field_note_note__id
 #: model:ir.model.fields,field_description:note.field_note_stage__id
 #: model:ir.model.fields,field_description:note.field_note_tag__id
+#: model:ir.model.fields,field_description:note.field_res_users__id
 msgid "ID"
-msgstr "รหัส"
+msgstr ""
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread
-msgid "If checked new messages require your attention."
-msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
+#: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
@@ -219,28 +248,31 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
-msgstr "เป็นผู้ติดตาม"
+msgstr ""
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity____last_update
+#: model:ir.model.fields,field_description:note.field_mail_activity_type____last_update
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
 #: model:ir.model.fields,field_description:note.field_note_stage____last_update
 #: model:ir.model.fields,field_description:note.field_note_tag____last_update
+#: model:ir.model.fields,field_description:note.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
 #: model:ir.model.fields,field_description:note.field_note_stage__write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
-msgstr "อัพเดทครั้งสุดท้ายโดย"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_date
 #: model:ir.model.fields,field_description:note.field_note_stage__write_date
 #: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
-msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -251,11 +283,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Meeting"
-msgstr "การประชุม"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
@@ -270,17 +297,12 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
 msgid "Messages"
-msgstr "ข้อความ"
-
-#. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
 msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "ใหม่"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -302,7 +324,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "โน้ต"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
@@ -325,14 +347,14 @@ msgid "Note Tag"
 msgstr ""
 
 #. module: note
-#: code:addons/note/models/res_users.py:61
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
-msgstr "โน้ต"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
@@ -344,11 +366,11 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
-msgstr "จำนวนกิจกรรม"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: note
@@ -367,29 +389,14 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "อื่นๆ"
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Overdue"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
 #: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
-msgstr "เจ้าของ"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr ""
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Planned"
 msgstr ""
 
 #. module: note
@@ -399,13 +406,13 @@ msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:23
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Remember..."
 msgstr ""
 
 #. module: note
-#: selection:mail.activity.type,category:0
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
 msgstr ""
@@ -413,11 +420,11 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
 msgid "Responsible User"
-msgstr "ผู้ใช้ที่รับผิดชอบ"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:25
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "SAVE"
 msgstr ""
@@ -426,11 +433,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
-msgstr "ลำดับ"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:18
+#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
 msgstr ""
@@ -444,12 +452,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr "สถานะ"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
-msgstr "ชื่อขั้นตอน"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
@@ -461,7 +469,7 @@ msgstr ""
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr "ขั้นตอน"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
@@ -485,12 +493,12 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr "ชื่อป้ายกำกับ"
+msgstr ""
 
 #. module: note
-#: sql_constraint:note.tag:0
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "ชื่อป้ายกำกับมีอยู่แล้ว"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -500,15 +508,14 @@ msgstr "ชื่อป้ายกำกับมีอยู่แล้ว"
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "ป้ายกำกับ"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
-#: selection:note.note,activity_state:0
+#: code:addons/note/static/src/js/systray_activity_menu.js:0
 #, python-format
 msgid "Today"
-msgstr "วันนี้"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -518,17 +525,22 @@ msgstr ""
 #. module: note
 #: model:note.stage,name:note.note_stage_03
 msgid "Todo"
-msgstr "ที่จะทำ"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread
 msgid "Unread Messages"
-msgstr "ข้อความที่ยังไม่ได้อ่าน"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
@@ -538,14 +550,4 @@ msgstr ""
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr "ผู้ใช้งาน"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "ข้อความจากเว็บไซต์"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารเว็บไซต์"
+msgstr ""

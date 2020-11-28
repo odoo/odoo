@@ -10,7 +10,6 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # Skyy <raozhangshun@163.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Lisa Zhang <lzh@odoo.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
@@ -21,14 +20,16 @@
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # Martin Trigaux, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# rejen he <251442037@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2020\n"
+"Last-Translator: rejen he <251442037@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -909,8 +910,8 @@ msgstr "分配请求必须处于草稿状态（“提交”）才能确认。"
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
-msgstr "分配请求状态必须是“拒绝”或“待批准”才能重置为草稿。"
+"be reset to Draft."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1694,7 +1695,9 @@ msgstr "确认后, 出现提示消息."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
@@ -2301,8 +2304,8 @@ msgstr "上级"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr ""
+msgid "Parental Leaves"
+msgstr "上级假期"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2462,6 +2465,12 @@ msgstr "负责用户"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
 msgstr "运行直到"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "短信发送错误"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
@@ -2697,7 +2706,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
 
@@ -2723,7 +2732,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
 
 #. module: hr_holidays

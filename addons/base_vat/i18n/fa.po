@@ -1,18 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_vat
+# 	* base_vat
 # 
-# Translators:
-# Martin Trigaux, 2018
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,9 +16,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "<span class=\"o_vat_label\">VAT</span>"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "شرکت‌ها"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
@@ -33,7 +41,21 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr "مخاطب"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -43,27 +65,33 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:154
-#, python-format
-msgid ""
-"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
-"Note: the expected format is %s"
+#: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_partner____last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:153
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
-"check or did not respect the expected format %s."
+"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
+"Note: the expected format is %(format)s"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
+"validation check or did not respect the expected format %(format)s."
 msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
-msgstr "ارزش افزوده"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies

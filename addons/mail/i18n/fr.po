@@ -27,7 +27,6 @@
 # Quentin THEURET <odoo@kerpeo.com>, 2020
 # Julien Martin <204336@supinfo.com>, 2020
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
-# Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Martin Trigaux, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # Fabien Bourgeois <fabien@yaltik.com>, 2020
@@ -39,14 +38,16 @@
 # Jonathan Castillo <jcs@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Moka Tourisme <hello@mokatourisme.fr>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -322,7 +323,7 @@ msgstr "<p>Créez un canal ici.</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>Créer un canal public ou privél.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -362,6 +363,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">Force a language: </span>"
 msgstr ""
+"<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">Forcer une langue : </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -616,7 +618,7 @@ msgstr "Type d'activité"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icône de type d'activité"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -709,7 +711,7 @@ msgstr "Ajouter une pièce jointe"
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
 #, python-format
 msgid "Add attachments"
-msgstr ""
+msgstr "Ajouter une pièce jointe"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -727,7 +729,7 @@ msgstr "Ajouter des contacts à prévenir"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Add or join a channel"
-msgstr ""
+msgstr "Ajouter ou rejoindre un canal"
 
 #. module: mail
 #. openerp-web
@@ -837,7 +839,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an email."
-msgstr ""
+msgstr "Une erreur est survenue lors de l'envoi d'un email."
 
 #. module: mail
 #. openerp-web
@@ -890,11 +892,9 @@ msgstr "Archivé"
 #: code:addons/mail/wizard/mail_resend_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s mail delivery failures. You won't be "
+"Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Êtes-vous sûr(e) de vouloir annuler %s échecs d'envoi d'email. Vous ne "
-"pourrez plus renvoyer ces emails après!"
 
 #. module: mail
 #. openerp-web
@@ -1357,7 +1357,7 @@ msgstr "Fermer"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Close (Esc)"
-msgstr ""
+msgstr "Fermer (Esc)"
 
 #. module: mail
 #. openerp-web
@@ -1449,7 +1449,7 @@ msgstr "Configurez vos types d'activités"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr ""
+msgstr "Configurez vos propres serveurs email"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -1565,7 +1565,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/discuss/discuss.js:0
 #, python-format
 msgid "Create or search channel..."
-msgstr ""
+msgstr "Créez ou recherchez un canal..."
 
 #. module: mail
 #. openerp-web
@@ -1636,7 +1636,7 @@ msgstr "Créé le"
 #: code:addons/mail/static/src/models/chatter/chatter.js:0
 #, python-format
 msgid "Creating a new record..."
-msgstr ""
+msgstr "Création d'un nouvel enregistrement..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -1970,14 +1970,14 @@ msgstr ""
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.xml:0
 #, python-format
 msgid "Do you confirm the action?"
-msgstr ""
+msgstr "Confirmez-vous l'action ?"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.js:0
 #, python-format
 msgid "Do you really want to delete \"%s\"?"
-msgstr ""
+msgstr "Voulez-vous réellement supprimer \"%s\" ?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2078,14 +2078,14 @@ msgstr "Dû dans %d jours"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Due in %d days:"
-msgstr ""
+msgstr "Dû dans %d days :"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Due on"
-msgstr ""
+msgstr "Dû le"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -2292,7 +2292,7 @@ msgstr "Emails"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_internal
 msgid "Employee Only"
-msgstr ""
+msgstr "Employés seulement"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
@@ -2304,7 +2304,7 @@ msgstr "Active le suivi commandé"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Enable desktop notifications to chat."
-msgstr ""
+msgstr "Activer les notifications du bureau pour le tchat."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2526,7 +2526,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.js:0
 #, python-format
 msgid "Find or create a channel..."
-msgstr ""
+msgstr "Cherchez ou créez un canal…"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__folded

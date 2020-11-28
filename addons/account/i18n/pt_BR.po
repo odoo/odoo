@@ -70,7 +70,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -1447,12 +1447,12 @@ msgstr "Conta para a qual transferir."
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr ""
+msgstr "Tour de carregamento de conta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr ""
+msgstr "Tour de carregamento de conta confirmada por e-mail"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -4393,7 +4393,7 @@ msgstr "Personalize seu layout."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr ""
+msgstr "Cut-Off"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -5166,7 +5166,7 @@ msgstr "E-mail"
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__email_alias
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
-msgstr "Apelido de E-mail"
+msgstr "Alias de E-mail"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__email_from
@@ -6167,6 +6167,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Se esta caixa de seleção estiver marcada, significa que o usuário não tinha "
+"certeza de todas as informações relacionadas no momento da criação da "
+"movimentação e que a movimentação precisa ser verificada novamente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -6176,8 +6179,8 @@ msgid ""
 "If this checkbox is ticked, this entry will be automatically posted at its "
 "date."
 msgstr ""
-"Se esta caixa de seleção estiver marcada, esta entrada será automaticamente "
-"postada em sua data."
+"Se esta caixa de seleção estiver marcada, esta entrada será lançada "
+"automaticamente em sua data."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8080,7 +8083,7 @@ msgstr "Novo Movimento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transaction"
-msgstr ""
+msgstr "Nova Transação"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -8311,7 +8314,7 @@ msgstr "Novembro"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Now, we'll create your first invoice."
-msgstr ""
+msgstr "Agora, vamos criar sua primeira fatura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
@@ -8689,7 +8692,7 @@ msgstr "Origem"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_move_id
 msgid "Origin Tax Cash Basis Entry"
-msgstr ""
+msgstr "Entrada de base de caixa de imposto de origem"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
@@ -8769,6 +8772,11 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
+"As entradas de pagamentos pendentes acionadas por contas/notas de crédito "
+"serão lançadas na conta de pagamentos pendentes e exibidas como linhas azuis"
+" no widget de reconciliação bancária. Durante o processo de reconciliação, "
+"as transações em questão serão reconciliadas com as entradas na conta de "
+"pagamentos pendentes em vez da conta a pagar."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8780,7 +8788,7 @@ msgstr "Conta de Saída para Avaliação de Estoque"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr ""
+msgstr "Pagamentos Pendentes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
@@ -9387,7 +9395,7 @@ msgstr "Lançar Todas as Entradas"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Post Automatically"
-msgstr ""
+msgstr "Lançar Automaticamente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -9938,7 +9946,7 @@ msgstr "Registre um extrato bancário"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid "Register a new purchase receipt"
-msgstr ""
+msgstr "Registrar um novo recibo de compra"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -10604,6 +10612,10 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
 msgstr ""
+"Selecione uma conta contábil que usará a conta analítica especificada no "
+"padrão analítico (por exemplo, criar uma nova fatura do cliente ou pedido de"
+" venda se selecionarmos esta conta, será considerada automaticamente como "
+"uma conta analítica)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12271,6 +12283,8 @@ msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
+"A nota de crédito é validada automaticamente e reconciliada com a fatura.\n"
+"                               A fatura original é duplicada como um novo rascunho."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12297,6 +12311,10 @@ msgid ""
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
 msgstr ""
+"O estado atual do seu extrato bancário: - Novo: totalmente editável com "
+"rascunhos de lançamentos no diário.- Processamento: não mais editável com "
+"lançamentos lançados no diário, pronto para a reconciliação.- Validado: "
+"todas as linhas estão reconciliadas. Não há mais nada para processar."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -13100,6 +13118,8 @@ msgstr ""
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
+"Este movimento está configurado para ser lançado automaticamente na data da "
+"fatura:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13644,6 +13664,11 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
+"Use a opção “<i>Enviar por Correio</i>” para lançar faturas automaticamente."
+" Pelo custo de um selo local, fazemos todo o trabalho manual: sua fatura "
+"será impressa no país certo, colocada em um envelope e enviada por correio "
+"tradicional. Use este recurso na exibição de lista para postar centenas de "
+"faturas em massa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -14150,6 +14175,8 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "account set on the %s journal."
 msgstr ""
+"Você não pode criar um novo pagamento sem uma conta de pagamentos "
+"pendentes/recebimentos definida no diário %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14158,6 +14185,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"Você não pode criar uma nova linha de extrato sem uma conta suspensa "
+"definida no diário %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14313,7 +14342,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the journal of an account move if it has already a sequence "
+"You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
 

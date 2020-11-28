@@ -10,18 +10,18 @@
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
 # Camille Demolder <cad@odoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Martin Trigaux, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,8 @@ msgid ""
 "and allocations; \tSet by Time Off Officer: allocated by HR and cannot be "
 "bypassed; users can request time off;"
 msgstr ""
+"\tGeen limiet: standaard geen toewijzing, gebruikers kunnen vrijelijk verlof aanvragen; \n"
+"\tSta werknemersverzoeken toe: toegewezen door HR en gebruikers kunnen verlof en toewijzingen aanvragen; \tIngesteld door leidinggevende: toegewezen door HR en kan niet worden omzeild; gebruikers kunnen vrije tijd aanvragen;"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -678,7 +680,7 @@ msgid ""
 "validated on today"
 msgstr ""
 "Afwezige werknemer(s), wiens verlofverzoeken vandaag zijn bevestigd of "
-"gevalideerd"
+"goedgekeurd"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -934,10 +936,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
+"be reset to Draft."
 msgstr ""
-"De status van het toewijzingsverzoek moet \"Afgewezen\" of \"Goedkeuren\" "
-"zijn om te resetten naar Concept."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1679,7 +1679,7 @@ msgstr "Uren"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "HR-pictogramweergave"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__id
@@ -1736,7 +1736,9 @@ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
@@ -2349,7 +2351,7 @@ msgstr "Out of office"
 #: code:addons/hr_holidays/static/src/components/thread_view/thread_view.js:0
 #, python-format
 msgid "Out of office until %s."
-msgstr ""
+msgstr "Niet op kantoor tot %s."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
@@ -2364,7 +2366,7 @@ msgstr "Bovenliggend"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
+msgid "Parental Leaves"
 msgstr "Ouderschapsverlof"
 
 #. module: hr_holidays
@@ -2528,6 +2530,12 @@ msgid "Run until"
 msgstr "Draai t/m"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS fout bij versturen"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
 msgid "Save"
 msgstr "Opslaan"
@@ -2650,7 +2658,7 @@ msgstr "Som"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_leaves_taken
 msgid "Sum of validated and non validated time off requests."
-msgstr "Som van gevalideerde en niet gevalideerde verlofaanvragen."
+msgstr "Som van goedgekeurde en niet goedgekeurde verlofaanvragen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -2778,12 +2786,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
-"Dit gebied wordt automatisch ingevuld door de gebruiker die het verlof "
-"goedkeurt op het tweede niveau (als verlofsoort tweede goedkeuring nodig "
-"heeft)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2811,10 +2816,9 @@ msgstr "Deze wijziging is in de huidige staat niet toegelaten."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
-"Deze gebruiker is verantwoordelijk voor het goedkeuren van dit type verlof. "
-"Dit wordt alleen gebruikt als validatie 'hr' of 'beide' is"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3201,14 +3205,14 @@ msgstr "Gebruiker"
 #: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
 #, python-format
 msgid "User is online"
-msgstr ""
+msgstr "Gebruiker is online."
 
 #. module: hr_holidays
 #. openerp-web
 #: code:addons/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.xml:0
 #, python-format
 msgid "User is out of office"
-msgstr ""
+msgstr "Gebruiker is niet op kantoor."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users

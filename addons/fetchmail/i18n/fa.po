@@ -1,18 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * fetchmail
+# 	* fetchmail
 # 
-# Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,39 +18,52 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "اقدامات برای انجام برای ایمیلهای ورودی"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__active
 msgid "Active"
-msgstr "فعال"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced"
-msgstr "پیشرفته"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "تنظیمات پیشرفته"
+msgstr ""
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Archived"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
-msgstr "پیکربندی"
+msgstr ""
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__done
 msgid "Confirmed"
-msgstr "تایید شد"
+msgstr ""
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:136
+#: code:addons/fetchmail/models/fetchmail.py:0
 #, python-format
 msgid "Connection test failed: %s"
-msgstr "آزمایش اتصال شکست خورد: %s"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__is_ssl
@@ -67,17 +75,17 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__object_id
 msgid "Create a New Record"
-msgstr "ایجاد یک رکورد دیگر"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_uid
 msgid "Created by"
-msgstr "ایجاد شده توسط"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_date
 msgid "Created on"
-msgstr "ایجاد شده در"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
@@ -86,8 +94,9 @@ msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail__display_name
 msgid "Display Name"
-msgstr "نام نمایشی"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
@@ -97,32 +106,33 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
-msgstr "واکشی الان"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
-msgstr "نام میزبان یا آی‌پی سرور ایمیل"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__id
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail__id
 msgid "ID"
-msgstr "شناسه"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "IMAP"
-msgstr "IMAP"
+msgstr ""
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__imap
 msgid "IMAP Server"
-msgstr "سرورIMAP "
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
-msgstr "اگرSSL نیاز باشد"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail__fetchmail_server_id
@@ -135,16 +145,25 @@ msgid "Incoming Email Servers"
 msgstr ""
 
 #. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "سرور ایمیل ورودی"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "سرورهای ایمیل ورودی"
+msgstr ""
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
@@ -154,37 +173,38 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__original
 msgid "Keep Original"
-msgstr "نسخه اصلی نگه دار"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__date
 msgid "Last Fetch Date"
-msgstr "آخرین تاریخ واکشی"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server____last_update
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail____last_update
 msgid "Last Modified on"
-msgstr "آخرین تغییر در"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_uid
 msgid "Last Updated by"
-msgstr "آخرین تغییر توسط"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr ""
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__local
 msgid "Local Server"
-msgstr "سرور محلی"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
-msgstr "اطلاعات ورود"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
@@ -197,22 +217,30 @@ msgstr ""
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__message_ids
 msgid "Messages"
-msgstr "پیام‌ها"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__name
 msgid "Name"
-msgstr "نام"
+msgstr ""
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"No response received. Check server information.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
 msgid "Not Confirmed"
-msgstr "تایید نشده"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
-msgstr "سرورهای ایمیل خروجی"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -222,32 +250,27 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
-msgstr "POP"
+msgstr ""
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__pop
 msgid "POP Server"
-msgstr "سرور POP"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "سرور POP/IMAP"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
-msgstr "سرورهای POP/IMAP"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__password
 msgid "Password"
-msgstr "گذرواژه"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__port
 msgid "Port"
-msgstr "پورت"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__object_id
@@ -260,22 +283,22 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
-msgstr "بازنشانی تایید کردن"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "SSL"
-msgstr "SSL"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
-msgstr "SSL/TLS"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__script
 msgid "Script"
-msgstr "اسکریپت"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -285,52 +308,60 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
-msgstr "سرور و ورود"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
-msgstr "اطلاعات سرور"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server
 msgid "Server Name"
-msgstr "نام سرور"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__priority
 msgid "Server Priority"
-msgstr "اولویت سرور"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__type
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server_type
 msgid "Server Type"
-msgstr "نوع سرور"
+msgstr ""
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
-msgstr "نوع سرور  IMAP."
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
-msgstr "نوع سرور POP."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__state
 msgid "Status"
-msgstr "وضعیت"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
-msgstr "آزمایش و تایید"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__user
 msgid "Username"
-msgstr "نام کاربری"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__original

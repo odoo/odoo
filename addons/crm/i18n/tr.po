@@ -20,16 +20,16 @@
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2020\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,27 +52,27 @@ msgstr "# Toplantı Sayısı"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
 msgid "# Months"
-msgstr ""
+msgstr "# Aylar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
 msgid "# Opportunities"
-msgstr ""
+msgstr "# Fırsatlar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_count
 msgid "# Overdue Opportunities"
-msgstr ""
+msgstr "# Geciken Fırsatlar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr ""
+msgstr "# Atanmamış Adaylar"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% else"
-msgstr ""
+msgstr "% else"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -82,7 +82,7 @@ msgstr "% endif"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% if record and record.alias_domain"
-msgstr ""
+msgstr "% if record and record.alias_domain"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -90,19 +90,21 @@ msgid ""
 "% set record = object.env['crm.team'].search([('alias_name', '!=', "
 "'False')], limit=1)"
 msgstr ""
+"% set record = object.env['crm.team'].search([('alias_name', '!=', "
+"'False')], limit=1)"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%s's opportunity"
-msgstr ""
+msgstr "%s fırsat"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Create your first opportunity.</b>"
-msgstr ""
+msgstr "<b>İlk fırsatınızı oluşturun.</b>"
 
 #. module: crm
 #. openerp-web
@@ -118,7 +120,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr "Tahmini aday puanlama"
+msgstr "<b>Tahmini aday puanlama</b>"
 
 #. module: crm
 #. openerp-web
@@ -189,7 +191,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Adaylar</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -319,7 +321,7 @@ msgstr "Etkin"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr ""
+msgstr "Aktif Adaylar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_ids
@@ -472,7 +474,7 @@ msgstr "Atanan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignment Date"
-msgstr ""
+msgstr "Atama Tarihi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -515,13 +517,6 @@ msgstr "Wow! Son 30 günün ekip rekoru!"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
 msgid "Bounce"
 msgstr "İletilmeyen E-Posta"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Use this button to update the probabilities of all leads. This can take up "
-"to several minutes depending on how many there are."
-msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -698,14 +693,19 @@ msgid "Congrats, best of luck catching such big fish! :)"
 msgstr ""
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Consider leads created as of the"
+msgstr "Olarak oluşturulan potansiyel müşterileri düşünün"
+
+#. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
-msgstr "Temas"
+msgstr "Kontak"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Contact Information"
-msgstr "İletişim Bilgisi"
+msgstr "Kontak Bilgisi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__contact_name
@@ -724,12 +724,12 @@ msgstr "Dönüştürme Eylemi"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Conversion Date"
-msgstr "Çevrim Tarihi"
+msgstr "Dönüştürme Tarihi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Adaydan Fırsata Çevrim Tarihi"
+msgstr "Adaydan Fırsata Dönüştürme Tarihi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -739,12 +739,12 @@ msgstr "Dönüştürme Seçenekleri"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr "Adayı Fırsata Çevir (topluca)"
+msgstr "Adayı Fırsata Dönüştür (topluca)"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr "Adayı Fırsata Çevir (topluca olmadan)"
+msgstr "Adayı Fırsata Dönüştür  (topluca olmadan)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1651,7 +1651,7 @@ msgstr "Aday/Fırsat"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
-msgstr ""
+msgstr "Aday/Fırsat oluşturuldu"
 
 #. module: crm
 #: code:addons/crm/models/crm_lost_reason.py:0
@@ -1826,7 +1826,7 @@ msgstr "Ana Ek"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
 msgid "Make Quote"
-msgstr "Teklif Yap"
+msgstr "Teklife Dönüştür"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1955,7 +1955,7 @@ msgstr "Diğer"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mobile"
-msgstr "Taşınır"
+msgstr "Mobil"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_monthly
@@ -1972,12 +1972,12 @@ msgstr "Aktivitelerim"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline_my
 msgid "My Activities Deadline"
-msgstr ""
+msgstr "Aktivitelerim Zaman Sınırı"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "My Deadline"
-msgstr ""
+msgstr "Zaman Sınırım"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2051,7 +2051,7 @@ msgstr "Konu Yok"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "No data yet!"
-msgstr ""
+msgstr "Henüz veri yok!"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2276,7 +2276,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Organization / Contact"
-msgstr ""
+msgstr "Organizasyon / Kontak"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2360,7 +2360,7 @@ msgstr "Telefon Kalitesi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "Telefon/Mobil"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2404,7 +2404,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__name
 msgid "Plan Name"
-msgstr ""
+msgstr "Plan Adı"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2762,11 +2762,6 @@ msgstr ""
 "konumlandığını kolayca izlemelerine olanak tanır."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Consider leads created as of the"
-msgstr "Olarak oluşturulan potansiyel müşterileri düşünün"
-
-#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Start scheduling activities on your opportunities"
@@ -2777,7 +2772,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "State"
-msgstr "Durumu"
+msgstr "İl/Eyalet"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -3125,7 +3120,7 @@ msgstr "Okunmamış Mesaj Sayacı"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Update Probabilities"
-msgstr ""
+msgstr "Olasılıkları Güncelle"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
@@ -3183,6 +3178,13 @@ msgstr ""
 msgid ""
 "Use the top left <i>Create</i> button, or send an email to %s to test the "
 "email gateway."
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Use this button to update the probabilities of all leads. This can take up "
+"to several minutes depending on how many there are."
 msgstr ""
 
 #. module: crm

@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
 "Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
@@ -923,7 +923,7 @@ msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
 msgstr ""
-"Solicitarea de alocare trebuie să fie în stadiul de Proiect („To Submit”) "
+"Solicitarea de alocare trebuie să fie în stadiul de ciornă  („To Submit”) "
 "pentru a o confirma."
 
 #. module: hr_holidays
@@ -931,7 +931,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
+"be reset to Draft."
 msgstr ""
 
 #. module: hr_holidays
@@ -1558,7 +1558,7 @@ msgstr "Urmăritori (Parteneri)"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
@@ -1732,7 +1732,9 @@ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 
@@ -2357,8 +2359,8 @@ msgstr "Părinte"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr "Timp Liber Parental"
+msgid "Parental Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2518,6 +2520,12 @@ msgstr "Utilizator responsabil"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
 msgstr "Rulează până la"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Eroare livrare SMS"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
@@ -2772,12 +2780,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
-"Această zonă este completată automat de către utilizatorul care validează "
-"alocarea cu al doilea nivel (Dacă tipul de alocare are nevoie de a doua "
-"validare)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2804,10 +2809,9 @@ msgstr "Această modificare nu este permisă în starea actuală."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
-"Acest utilizator va fi responsabil pentru aprobarea acestui tip de pauză. "
-"Aceasta este utilizată numai atunci când validarea este „hr” sau „both”"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3026,8 +3030,8 @@ msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
 msgstr ""
-"Cererea de concediu trebuie să fie în starea de proiectare („Trimitere "
-"Cerere”) pentru a o confirma."
+"Cererea de concediu trebuie să fie în starea de ciornă („Trimitere Cerere”) "
+"pentru a o confirma."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

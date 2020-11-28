@@ -8,20 +8,20 @@
 # Max Belyanin <maxbelyanin@gmail.com>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Martin Trigaux, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -895,7 +895,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
-"reset to Draft."
+"be reset to Draft."
 msgstr ""
 
 #. module: hr_holidays
@@ -1688,7 +1688,9 @@ msgstr "Если отмечено, новые сообщения будут тр
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Если отмечено - некоторые сообщения имеют ошибку доставки."
 
@@ -2297,8 +2299,8 @@ msgstr "Родитель"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
-msgid "Parental Time Off"
-msgstr ""
+msgid "Parental Leaves"
+msgstr "родительские отпуска"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2458,6 +2460,12 @@ msgstr "Ответственный"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
 msgstr "запуск в"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
@@ -2690,7 +2698,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
 msgid ""
-"This area is automaticly filled by the user who validates the allocation "
+"This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
 
@@ -2716,7 +2724,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
 msgid ""
 "This user will be responsible for approving this type of time off. This is "
-"only used when validation is 'hr' or 'both'"
+"only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
+" and Time Off Officer'"
 msgstr ""
 
 #. module: hr_holidays

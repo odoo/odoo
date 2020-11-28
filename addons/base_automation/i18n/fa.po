@@ -1,23 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_automation
+# 	* base_automation
 # 
-# Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2018
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
-# Maziar Niaki <maziarmn@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,35 +16,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"\"\n"
+"                    (ID:"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
 msgid "Action Description"
-msgstr "توضیحات عمل"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
-msgstr "نام کنش"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "عمل برای انجام"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
 msgid "Action Type"
-msgstr "نوع واکنش"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
-msgstr "فعال"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
 msgid "Activity"
-msgstr "فعالیت"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
@@ -64,134 +62,81 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
 msgid "Add Channels"
-msgstr "افزودن کانالها"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
 msgid "Add Followers"
-msgstr "اضافه کردن فالوور"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
 msgid "Apply on"
-msgstr "اعمال روی"
+msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__is_assigned_to_admin
-msgid "Assigned to admin user"
-msgstr "محول شده به کاربر مدیر"
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Archived"
+msgstr ""
 
 #. module: base_automation
-#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 msgid "Automated Action"
-msgstr "عمل خودکار"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
 #: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
-msgstr "عملیات خودکار"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Automated Rule Line Test"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Automated Rule Test"
 msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
-msgstr "اتوماسیون"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr "قانون عمل پایه: بررسی و اجرا"
+msgstr ""
 
 #. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_recursive
-#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
-msgid "Base Automation: test recursive rule"
-msgstr "اتوماسیون پایه: آزمایش قانون بازگشتی"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_create
-#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
-msgid "Base Automation: test rule on create"
-msgstr "اتوماسیون پایه: آزمایش قانون هنگام ایجاد"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_recompute
-#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
-msgid "Base Automation: test rule on recompute"
-msgstr "اتوماسیون پایه: آزمایش قانون هنگام باز محاسبه"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_line
-#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
-msgid "Base Automation: test rule on secondary model"
-msgstr "اتوماسیون پایه: آزمایش قانون هنگام مدل ثانویه"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
-msgid "Base Automation: test rule on write"
-msgstr "اتوماسیون پایه: آزمایش قانون هنگام نوشتن"
-
-#. module: base_automation
-#: model:base.automation,name:base_automation.test_rule_on_write_check_context
-#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
-msgid "Base Automation: test rule on write check context"
-msgstr "اتوماسیون پایه: آزمایش قانون هنگام نوشتن زمینه بررسی"
-
-#. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "Based on Form Modification"
-msgstr "بر اساس تغییرات فرم"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on Timed Condition"
-msgstr "بر اساس شرایط زمانی"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "قبل از بروز کردن دامنه"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
 msgid "Binding Model"
-msgstr "مدل الزام‌آور"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr "نوع الزام‌آور"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
-msgid "Cancelled"
-msgstr "لغو شد"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid ""
-"Check this box if this contact is a customer. It can be selected in sales "
-"orders."
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
+msgid "Binding View Types"
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
 msgid "Child Actions"
-msgstr "عمل‌های زیر دست"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
@@ -201,43 +146,19 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
-msgid "Closed"
-msgstr "بسته شد"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__on_change_fields
-msgid "Comma-separated list of field names that triggers the onchange."
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
+msgid "Created by"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
-msgid "Create/Write Target Model"
-msgstr "ایجاد/نوشتن مدل هدف"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_uid
-msgid "Created by"
-msgstr "ایجاد شده توسط"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_date
 msgid "Created on"
-msgstr "ایجاد شده در"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
 msgid "Days"
-msgstr "روزها"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__deadline
-msgid "Deadline"
-msgstr "آخرین مهلت"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -250,19 +171,35 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
 msgid "Delay after trigger date"
-msgstr "تاخیر پس از روز راه‌اندازی"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay type"
-msgstr "نوع تاخیر"
+msgstr ""
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Disable Action"
+msgstr ""
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"Disabling this automated action will enable you to continue your workflow\n"
+"                    but any data created after this could potentially be corrupted,\n"
+"                    as you are effectively disabling a customization that may set\n"
+"                    important and/or required fields."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
 msgid "Display Name"
-msgstr "نام نمایشی"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
@@ -275,26 +212,46 @@ msgid "Due type"
 msgstr ""
 
 #. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Edit action"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
-msgstr "قالب ایمیل"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
-msgstr "آیدی خارجی"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
+msgid "Fields that trigger the onchange."
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
+msgid "Groups"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
 msgid "Hours"
-msgstr "ساعت‌ها"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__id
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
-msgstr "شناسه"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -311,80 +268,49 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: selection:base.automation.lead.test,state:0
-msgid "In Progress"
-msgstr "در جریان"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__customer
-msgid "Is a Customer"
-msgstr "مشتری است"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__date_action_last
-msgid "Last Action"
-msgstr "آخرین اقدام"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test____last_update
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test____last_update
 msgid "Last Modified on"
-msgstr "آخرین تغییر در"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr "آخرین اجرا"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_uid
 msgid "Last Updated by"
-msgstr "آخرین تغییر توسط"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
-msgid "Lead"
-msgstr "سرنخ"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__line_ids
-msgid "Line"
-msgstr "سطر"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
+msgid "Least Delay Msg"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
-msgid "Link using field"
-msgstr "لینک کردن با استفاده از فیلد"
+msgid "Link Field"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
 msgid "Minutes"
-msgstr "دقیقه‌ها"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "مدل"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
-msgid "Model Description"
-msgstr "شرح مدل"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
 msgid "Model Name"
-msgstr "نام مدل"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
@@ -392,8 +318,6 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"مدل برای ایجاد ثبت / به روز رسانی. این فیلد را فقط برای تعیین یک مدل متفاوت "
-"از مدل پایه تنظیم کنید."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -401,49 +325,46 @@ msgid "Model on which the server action runs."
 msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trg_date_range_type:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
 msgid "Months"
-msgstr "ماه‌ها"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__name
-msgid "Name"
-msgstr "نام"
-
-#. module: base_automation
-#: selection:base.automation.lead.test,state:0
-msgid "New"
-msgstr "جدید"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
 msgid "Note"
-msgstr "یادداشت"
+msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"Note that this action can be trigged up to %d minutes after its schedule."
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "راه‌انداز در هنگام تغییر فبلدها"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On Creation"
-msgstr "هنگام ایجاد"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On Creation & Update"
-msgstr "هنگام ایجاد و بروزرسانی"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On Deletion"
-msgstr "هنگام پاک کردن"
+msgstr ""
 
 #. module: base_automation
-#: selection:base.automation,trigger:0
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On Update"
-msgstr "هنگام بروزرسانی"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
@@ -453,68 +374,36 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
-msgid "Partner"
-msgstr "همکار"
-
-#. module: base_automation
-#: selection:base.automation.lead.test,state:0
-msgid "Pending"
-msgstr "معلق"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__priority
-msgid "Priority"
-msgstr "اولویت"
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
 msgid ""
-"Provide the field used to link the newly created record on the record on "
-"used by the server action."
+"Provide the field used to link the newly created record on the record used "
+"by the server action."
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
 msgid "Python Code"
-msgstr "کد پایتون"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove Action"
-msgstr "حذف عمل"
-
-#. module: base_automation
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Remove the contextual action related to this server action"
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
-msgstr "پاسخگو"
-
-#. module: base_automation
-#: selection:ir.actions.server,usage:0
-msgid "Scheduled Action"
-msgstr "اقدام برنامه ریزی شده"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "دنباله"
+msgstr ""
 
 #. module: base_automation
-#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "کنش کارپذیر"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
 msgid "Server Actions"
-msgstr "کُنش‌های سمت سرور"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
@@ -529,19 +418,19 @@ msgid "Setup a new automated automation"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
-msgid "Status"
-msgstr "وضعیت"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
-msgid "Subject"
-msgstr "موضوع"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
 msgid "Summary"
-msgstr "چکیده"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
+msgid "Target Model"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model Name"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
@@ -549,7 +438,7 @@ msgid "Technical name of the user on the record"
 msgstr ""
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:87
+#: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
@@ -557,32 +446,55 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"The error occurred during the execution of the automated action\n"
+"                    \""
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
-msgid "Trigger Condition"
-msgstr "شرایط راه‌اندازی"
+msgid "Trigger"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "تاریخ رهاساز"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Trigger Fields"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
 msgid "Usage"
-msgstr "کاربرد"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
@@ -595,7 +507,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr "استفاده از گاهشمار"
+msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -608,11 +520,6 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
-msgid "User"
-msgstr "کاربر"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
 msgstr ""
@@ -623,10 +530,10 @@ msgid "Value Mapping"
 msgstr ""
 
 #. module: base_automation
-#: code:addons/base_automation/models/base_automation.py:86
+#: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
-msgstr "هشدار"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -659,4 +566,19 @@ msgstr ""
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
+msgstr ""
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"You can ask an administrator to disable or correct this automated action."
+msgstr ""
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
