@@ -123,6 +123,8 @@ class AccountAnalyticLine(models.Model):
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
+                if task.sale_line_id or project.sale_line_id:
+                    return task.sale_line_id or project.sale_line_id
         return self.env['sale.order.line']
 
     def _timesheet_get_portal_domain(self):
@@ -139,7 +141,7 @@ class AccountAnalyticLine(models.Model):
             '|',
             '&',
             ('timesheet_invoice_id', 'in', invoice_ids.ids),
-            #TODO Question to Reviewer: non_billable was part of domain in _timesheet_get_portal_domain so I kept it here, does this make sense?
+            # TODO : Master: Check if non_billable should be removed ?
             ('timesheet_invoice_type', 'in', ['billable_time', 'non_billable']),
             '&',
             ('timesheet_invoice_type', '=', 'billable_fixed'),
