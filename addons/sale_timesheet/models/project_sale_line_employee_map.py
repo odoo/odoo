@@ -19,7 +19,7 @@ class ProjectProductEmployeeMap(models.Model):
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
-    price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=False)
+    price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_price_unit', store=True, readonly=False)
 
     _sql_constraints = [
@@ -49,10 +49,13 @@ class ProjectProductEmployeeMap(models.Model):
     @api.model
     def create(self, values):
         res = super(ProjectProductEmployeeMap, self).create(values)
-        for project_id in res.filtered(lambda l: l.sale_line_id).project_id:
-            if project_id.allow_timesheets and project_id.allow_billable and project_id.task_ids._get_timesheet():
-                timesheet_ids = project_id.task_ids._get_timesheet()
-                for employee_id in res.filtered(lambda l: l.project_id == project_id).employee_id:
-                    sale_line_id = res.filtered(lambda l: l.project_id == project_id and l.employee_id == employee_id).sale_line_id
-                    timesheet_ids.filtered(lambda t: t.employee_id == employee_id).so_line = sale_line_id
+        res._update_project_timesheet()
         return res
+
+    def write(self, values):
+        res = super(ProjectProductEmployeeMap, self).write(values)
+        self._update_project_timesheet()
+        return res
+
+    def _update_project_timesheet(self):
+        self.filtered(lambda l: l.sale_line_id).project_id._update_timesheets_sale_line_id()
