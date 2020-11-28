@@ -25,12 +25,12 @@ class Project(models.Model):
         return self.env.ref('sale_timesheet.time_product', False)
 
     bill_type = fields.Selection([
-        ('customer_task', 'Invoice tasks separately to different customers'),
-        ('customer_project', 'Invoice all tasks to a single customer')
-    ], string="Customer Type", default="customer_task",
+        ('customer_task', 'Different customers'),
+        ('customer_project', 'A unique customer')
+    ], string="Invoice Tasks to", default="customer_task",
         help='When billing tasks individually, a Sales Order will be created from each task. It is perfect if you would like to bill different services to different customers at different rates. \n When billing the whole project, a Sales Order will be created from the project instead. This option is better if you would like to bill all the tasks of a given project to a specific customer either at a fixed rate, or at an employee rate.')
     pricing_type = fields.Selection([
-        ('fixed_rate', 'Fixed rate'),
+        ('fixed_rate', 'Project rate'),
         ('employee_rate', 'Employee rate')
     ], string="Pricing", default="fixed_rate",
         help='The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
@@ -40,7 +40,7 @@ class Project(models.Model):
     allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
-        'product.product', string='Timesheet Product', 
+        'product.product', string='Timesheet Product',
         domain="""[
             ('type', '=', 'service'),
             ('invoice_policy', '=', 'delivery'),
@@ -83,7 +83,7 @@ class Project(models.Model):
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.bill_type == 'customer_project' and p.pricing_type == 'employee_rate')
         tasks = projects.task_ids.filtered(lambda t: not t.non_allow_billable)
-        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
             dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
@@ -91,7 +91,6 @@ class Project(models.Model):
             project.warning_employee_rate = any(x not in project.sale_line_employee_ids.employee_id.ids for x in dict_project_employee[project.id])
 
         (self - projects).warning_employee_rate = False
-
 
     @api.constrains('sale_line_id', 'pricing_type')
     def _check_sale_line_type(self):
@@ -118,6 +117,19 @@ class Project(models.Model):
                 'so_line': False,
             })
         return res
+
+    def _get_not_billed_timesheets(self):
+        return self.mapped('timesheet_ids').filtered(
+            lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
+
+    def _update_timesheets_sale_line_id(self):
+        for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
+            timesheet_ids = project._get_not_billed_timesheets()
+            if not timesheet_ids:
+                continue
+            for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
+                sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
+                timesheet_ids.filtered(lambda t: t.employee_id == employee_id).so_line = sale_line_id
 
     def action_view_timesheet(self):
         self.ensure_one()
@@ -217,6 +229,7 @@ class ProjectTask(models.Model):
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
         help='Select a Service product with which you would like to bill your time spent on this task.')
 
+    # TODO: [XBO] remove me in master
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
 
     @api.depends(
@@ -232,29 +245,13 @@ class ProjectTask(models.Model):
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
-        if self._get_timesheet() and self.allow_timesheets:
-            if self.sale_line_id:
-                if self.sale_line_id.product_id.service_policy == 'delivered_timesheet' and self._origin.sale_line_id.product_id.service_policy == 'delivered_timesheet':
-                    message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
-                else:
-                    message = _("All timesheet hours will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
-            else:
-                message = _("All timesheet hours that are not yet invoiced will be removed from the selected Sales Order Item on save. Discard to avoid the change.")
-
-            return {'warning': {
-                'title': _("Warning"),
-                'message': message
-            }}
+        # TODO: remove me in master
+        return
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
-        if self._origin.allow_timesheets and self._get_timesheet():
-            message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Project on save. Discard to avoid the change.")
-
-            return {'warning': {
-                'title': _("Warning"),
-                'message': message
-            }}
+        # TODO: remove me in master
+        return
 
     @api.depends('analytic_account_id.active')
     def _compute_analytic_account_active(self):
