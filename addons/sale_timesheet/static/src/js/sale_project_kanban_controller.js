@@ -7,19 +7,9 @@ var session = require('web.session');
 
 var QWeb = core.qweb;
 
-var SaleProjectKanbanController = ProjectKanbanController.include({
-    events: _.extend({}, ProjectKanbanController.prototype.events, {
-        'click .o_create_sale_order': '_onCreateSaleOrder'
-    }),
+// YTI TODO : Master remove file
 
-    /**
-     * @override
-     */
-    willStart: async function () {
-        const _super = this._super.bind(this);
-        await this._showCreateSOButton();
-        return _super(...arguments);
-    },
+var SaleProjectKanbanController = ProjectKanbanController.include({
 
     //--------------------------------------------------------------------------
     // Private
@@ -51,39 +41,6 @@ var SaleProjectKanbanController = ProjectKanbanController.include({
         } else {
             this.showCreateSaleOrder = false;
         }
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @param {jQuery} [$node]
-     */
-    renderButtons: function ($node) {
-        this._super.apply(this, arguments);
-        this.$saleButtons = $(QWeb.render('SaleProjectKanbanView.buttons'));
-        var state = this.model.get(this.handle, {raw: true});
-        var createHidden = this.is_action_enabled('group_create') && state.isGroupedByM2ONoColumn || !this.showCreateSaleOrder;
-        this.$saleButtons.toggleClass('o_hidden', createHidden);
-        this.$saleButtons.appendTo(this.$buttons);
-
-    },
-
-    /**
-     * @override
-     */
-    updateButtons: async function () {
-        if (!this.$buttons) {
-            return;
-        }
-        this._super.apply(this, arguments);
-
-        await this._showCreateSOButton();
-        var state = this.model.get(this.handle, {raw: true});
-        var createHidden = this.is_action_enabled('group_create') && state.isGroupedByM2ONoColumn || !this.showCreateSaleOrder;
-        this.$buttons.find('.o_create_sale_order').toggleClass('o_hidden', createHidden);
     },
 
     //--------------------------------------------------------------------------
