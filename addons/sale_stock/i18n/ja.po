@@ -55,6 +55,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"ここで設定する値は会社固有です。\" "
+"role=\"img\" aria-label=\"ここで設定する値は会社固有です。\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -121,6 +124,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"製品構成に応じて、出荷数量はメカニズムによって自動的に計算できます。\n"
+"-手動:数量はライン上で手動で設定されます\n"
+"-分析から費用:数量は転記された費用からの数量合計です\n"
+"-タイムシート:数量は時間の合計ですこの販売ラインにリンクされたタスクに記録された\n"
+"-在庫移動:数量は確認済みのピッキングから取得されます"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -201,6 +209,7 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"サービス製品の場合、注文ラインの最小リードタイムから計算された、顧客に約束できる納期。配送の場合、注文の配送ポリシーが考慮され、注文ラインの最小または最大のリードタイムが使用されます。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
@@ -377,7 +386,7 @@ msgstr "顧客に約束した日付の許容誤差。サプライチェーンの
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "納品数量を更新する方法"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

@@ -9,6 +9,7 @@
 # Ekasit Saichompu <ekasitb@gmail.com>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
 # Somchart Jabsung <jabsung.s@gmail.com>, 2020
+# Odoo Thaidev <odoothaidev@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2020\n"
+"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +28,12 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"เปิด\"/>"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"ปิด\"/>"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -42,7 +43,7 @@ msgstr "ต้องดำเนินการ"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr ""
+msgstr "ต้องดำเนินการ"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
@@ -50,6 +51,7 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"การดำเนินการอาจทำให้เกิดพฤติกรรมเฉพาะเช่นการเปิดมุมมองปฏิทินหรือทำเครื่องหมายโดยอัตโนมัติว่าเสร็จสิ้นเมื่ออัปโหลดเอกสาร"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -70,41 +72,41 @@ msgstr "กิจกรรม"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "สถานะกิจกรรม"
 
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "ประเภทกิจกรรม"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "เพิ่มโน้ตส่วนตัวใหม่"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "เพิ่มป้ายกำกับใหม่"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "เพิ่มโน้ต"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "เพิ่มโน้ต"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -114,12 +116,12 @@ msgstr "เก็บ"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "จำนวนไฟล์แนบ"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr ""
+msgstr "โดย กลุ่มปักหมุด"
 
 #. module: note
 #. openerp-web
@@ -156,7 +158,7 @@ msgstr "สร้างเมื่อ"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__date_done
 msgid "Date done"
-msgstr ""
+msgstr "วันที่สิ้นสุด"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
@@ -173,17 +175,17 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "เมนูแบบดรอปดาว์น"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
-msgstr ""
+msgstr "โฟลเดอร์เริ่มต้น"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr ""
+msgstr "ผู้ติดตาม"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -203,7 +205,7 @@ msgstr "ผู้ติดตาม (คู่ค้า)"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "กิจกรรมในอนาคต"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -225,7 +227,7 @@ msgstr "ไอคอน"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "ไอคอนเพื่อระบุกิจกรรมข้อยกเว้น"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
@@ -236,7 +238,7 @@ msgstr "ถ้าเลือก ข้อความใหม่จะต้�
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "หากเลือกข้อความบางข้อความมีข้อผิดพลาดในการจัดส่ง"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
@@ -267,22 +269,22 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "กิจกรรมล่าสุด"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "ไฟล์แนบหลัก"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "บันทึกการประชุม"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "ส่งข้อความผิดพลาด"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -297,17 +299,17 @@ msgstr "ใหม่"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "วันที่สิ้นสุดกิจกรรมถัดไป"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "สรุปกิจกรรมถัดไป"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "ประเภทกิจกรรมถัดไป"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -319,7 +321,7 @@ msgstr "โน้ต"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
-msgstr ""
+msgstr "เนื้อหาโน้ต"
 
 #. module: note
 #: model:ir.model,name:note.model_note_stage
@@ -329,12 +331,12 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__name
 msgid "Note Summary"
-msgstr ""
+msgstr "สรุปโน้ต"
 
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr ""
+msgstr "ป้ายกำกับโน้ต"
 
 #. module: note
 #: code:addons/note/models/res_users.py:0
@@ -352,6 +354,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"โน้ตเป็นแบบส่วนตัวเว้นแต่คุณจะแชร์โดยเชิญผู้ติดตามมาที่โน้ต\n"
+"             (มีประโยชน์สำหรับรายงานการประชุม)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -361,22 +365,22 @@ msgstr "จำนวนกิจกรรม"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "จำนวนข้อผิดพลาด"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "จํานวนข้อความที่ต้องการการดําเนินการ"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "จํานวนข้อความที่ยังไม่ได้อ่าน"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -392,20 +396,20 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr ""
+msgstr "โน้ตที่เกี่ยวข้อง"
 
 #. module: note
 #. openerp-web
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "บันทึกช่วยจำ..."
 
 #. module: note
 #: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "แจ้งเตือน"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
@@ -417,7 +421,7 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "บันทึก"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -430,7 +434,7 @@ msgstr "ลำดับ"
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
-msgstr ""
+msgstr "ตั้งค่าเวลาและวันที่"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -478,6 +482,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"สถานะตามกิจกรรม\n"
+"เกินกำหนด: วันที่ครบกำหนดผ่านไปแล้ว\n"
+"วันนี้: วันที่ทำกิจกรรมคือวันนี้\n"
+"ที่วางแผนไว้: กิจกรรมในอนาคต"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -509,7 +517,7 @@ msgstr "วันนี้"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "กิจกรรมวันนี้"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_03
@@ -519,7 +527,7 @@ msgstr "ที่จะทำ"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "พิมพ์กิจกรรมข้อยกเว้นบนบันทึก"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread
@@ -534,7 +542,7 @@ msgstr "จำนวนข้อความที่ยังไม่ได้
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "ใช้เพื่อลำดับขั้นตอนการจดโน้ต"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
