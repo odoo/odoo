@@ -83,8 +83,7 @@ class Project(models.Model):
     @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id', 'bill_type')
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.bill_type == 'customer_project' and p.pricing_type == 'employee_rate')
-        tasks = projects.task_ids.filtered(lambda t: not t.non_allow_billable)
-        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', projects.task_ids.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
             dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
@@ -235,9 +234,6 @@ class ProjectTask(models.Model):
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
         help='Select a Service product with which you would like to bill your time spent on this task.')
-
-    # TODO: [XBO] remove me in master
-    non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
@@ -288,12 +284,12 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'non_allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
-            if not task.allow_billable or task.non_allow_billable:
+            if not task.allow_billable:
                 task.sale_order_id = False
-            elif task.allow_billable:
+            else:
                 if task.sale_line_id:
                     task.sale_order_id = task.sale_line_id.sudo().order_id
                 elif task.project_id.sale_order_id:
@@ -333,21 +329,6 @@ class ProjectTask(models.Model):
             project_dest = self.env['project.project'].browse(values['project_id'])
             if project_dest.bill_type == 'customer_project' and project_dest.pricing_type == 'employee_rate':
                 self.write({'sale_line_id': False})
-        if 'non_allow_billable' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
-            timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
-                lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
-            )
-            if values['non_allow_billable']:
-                timesheet_ids.write({'so_line': False})
-                self.sale_line_id = False
-            else:
-                # We write project on timesheet lines to call _timesheet_preprocess. This function will set correct the SOL
-                for project in timesheet_ids.project_id:
-                    current_timesheet_ids = timesheet_ids.filtered(lambda t: t.project_id == project)
-                    current_timesheet_ids.task_id.update({'sale_line_id': project.sale_line_id.id})
-                    for employee in current_timesheet_ids.employee_id:
-                        current_timesheet_ids.filtered(lambda t: t.employee_id == employee).write({'project_id': project.id})
-
         return res
 
     def _get_last_sol_of_customer(self):

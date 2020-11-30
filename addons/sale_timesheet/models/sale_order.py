@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
         for sale_order in self:
             timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
             total_time = 0.0
-            for timesheet in timesheets.filtered(lambda t: not t.non_allow_billable):
+            for timesheet in timesheets:
                 # Timesheets may be stored in a different unit of measure, so first we convert all of them to the reference unit
                 total_time += timesheet.unit_amount * timesheet.product_uom_id.factor_inv
             # Now convert to the proper unit of measure
@@ -147,7 +147,7 @@ class SaleOrderLine(models.Model):
             if not line.is_expense and line.product_id.type == 'service' and line.product_id.service_type == 'timesheet':
                 line.qty_delivered_method = 'timesheet'
 
-    @api.depends('analytic_line_ids.project_id', 'analytic_line_ids.non_allow_billable', 'project_id.pricing_type', 'project_id.bill_type')
+    @api.depends('analytic_line_ids.project_id', 'project_id.pricing_type', 'project_id.bill_type')
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
@@ -159,7 +159,7 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_compute_delivered_quantity_domain(self):
         """ Hook for validated timesheet in addionnal module """
-        return [('project_id', '!=', False), ('non_allow_billable', '=', False)]
+        return [('project_id', '!=', False)]
 
     ###########################################
     # Service : Project and task generation
