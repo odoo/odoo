@@ -1035,7 +1035,8 @@ class AccountMove(models.Model):
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
         for m in self:
-            domain = [('company_id', '=', m.company_id.id), ('type', '=?', m.invoice_filter_type_domain)]
+            journal_type = m.invoice_filter_type_domain or 'general'
+            domain = [('company_id', '=', m.company_id.id), ('type', '=', journal_type)]
             m.suitable_journal_ids = self.env['account.journal'].search(domain)
 
     @api.depends('posted_before', 'state', 'journal_id', 'date')
@@ -1172,8 +1173,6 @@ class AccountMove(models.Model):
                 move.invoice_filter_type_domain = 'sale'
             elif move.is_purchase_document(include_receipts=True):
                 move.invoice_filter_type_domain = 'purchase'
-            elif move.move_type == 'entry':
-                move.invoice_filter_type_domain = 'general'
             else:
                 move.invoice_filter_type_domain = False
 
