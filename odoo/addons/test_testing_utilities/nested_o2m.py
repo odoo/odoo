@@ -1,6 +1,6 @@
 from lxml.builder import E
 
-from odoo import fields, models, api
+from odoo import fields, models, api, Command
 
 class Product(models.Model):
     _name = _description = 'ttu.product'
@@ -140,7 +140,7 @@ class Child(models.Model):
                         'product_uom_qty': 0,
                         'qty_done': quantity_done,
                     })
-                    move.write({'move_line_ids': [(4, move_line.id)]})
+                    move.write({'move_line_ids': [Command.link(move_line.id)]})
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:

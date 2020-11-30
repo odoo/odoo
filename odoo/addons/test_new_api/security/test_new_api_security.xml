@@ -5,7 +5,7 @@
             <field name="name">model_shared_cache_compute_line: See own lines</field>
             <field name="model_id" ref="test_new_api.model_test_new_api_model_shared_cache_compute_line"/>
             <field name="domain_force">[('user_id', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
         </record>
     </data>
 </odoo>
