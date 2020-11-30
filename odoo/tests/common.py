@@ -613,6 +613,7 @@ class ChromeBrowser():
         url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
         self._logger.info('Url : %s', url)
         delay = 0.1
+        res = dict()
         while timeout > 0:
             try:
                 r = requests.get(url, timeout=3)
