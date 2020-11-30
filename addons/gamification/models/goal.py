@@ -218,12 +218,17 @@ class Goal(models.Model):
             return {}
 
         # generate a reminder report
-        body_html = self.env.ref('gamification.email_template_goal_reminder')._render_field('body_html', self.ids, compute_lang=True)[self.id]
+        template = self.env.ref('gamification.email_template_goal_reminder')
+        body_html = template._render_field('body_html', self.ids, compute_lang=True)[self.id]
         self.message_notify(
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],
             subtype_xmlid='mail.mt_comment',
             email_layout_xmlid='mail.mail_notification_light',
+            mail_auto_delete=template.auto_delete,
+            mail_server_id=template.mail_server_id,
+            attachment_ids=[(4, attach.id) for attach in template.attachment_ids],
+
         )
 
         return {'to_update': True}

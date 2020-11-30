@@ -575,7 +575,8 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = challenge.report_template_id.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
+                template = challenge.report_template_id
+                body_html = template.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
 
                 # notify message only to users, do not post on the challenge
                 challenge.message_notify(
@@ -583,6 +584,9 @@ class Challenge(models.Model):
                     partner_ids=[user.partner_id.id],
                     subtype_xmlid='mail.mt_comment',
                     email_layout_xmlid='mail.mail_notification_light',
+                    mail_auto_delete=template.auto_delete,
+                    mail_server_id=template.mail_server_id,
+                    attachment_ids=[(4, attach.id) for attach in template.attachment_ids],
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(

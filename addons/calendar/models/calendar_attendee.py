@@ -125,6 +125,7 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
+                attachment_values += [(4, attach.id) for attach in invitation_template.attachment_ids]
                 body = invitation_template.with_context(rendering_context)._render_field(
                     'body_html',
                     attendee.ids,
@@ -140,7 +141,10 @@ class Attendee(models.Model):
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
-                    force_send=force_send)
+                    force_send=force_send,
+                    mail_server_id=invitation_template.mail_server_id.id,
+                    mail_auto_delete=invitation_template.auto_delete,
+                )
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """
