@@ -935,6 +935,18 @@ class Module(models.Model):
             if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)
 
+    def _get(self, name):
+        """ Return the (sudoed) `ir.module.module` record with the given name.
+        The result may be an empty recordset if the module is not found.
+        """
+        model_id = self._get_id(name) if name else False
+        return self.browse(model_id).sudo()
+
+    @tools.ormcache('name')
+    def _get_id(self, name):
+        self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
+        return self.env.cr.fetchone()
+
     @api.model
     @tools.ormcache()
     def _installed(self):
