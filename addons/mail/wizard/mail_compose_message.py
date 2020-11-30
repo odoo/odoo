@@ -5,7 +5,7 @@ import ast
 import base64
 import re
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 
 
@@ -201,7 +201,7 @@ class MailComposer(models.TransientModel):
                     else:
                         new_attachment_ids.append(attachment.id)
                 new_attachment_ids.reverse()
-                wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
+                wizard.write({'attachment_ids': [Command.set(new_attachment_ids)]})
 
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
@@ -326,7 +326,7 @@ class MailComposer(models.TransientModel):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')
-                mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
+                mail_values['recipient_ids'] = [Command.link(id) for id in mail_values.pop('partner_ids', [])]
 
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
@@ -392,7 +392,7 @@ class MailComposer(models.TransientModel):
                 }
                 attachment_ids.append(Attachment.create(data_attach).id)
             if values.get('attachment_ids', []) or attachment_ids:
-                values['attachment_ids'] = [(6, 0, values.get('attachment_ids', []) + attachment_ids)]
+                values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
@@ -417,7 +417,7 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
+                'attachment_ids': [Command.set([att.id for att in record.attachment_ids])],
             }
             template = self.env['mail.template'].create(values)
             # generate the saved template
