@@ -450,6 +450,9 @@ var Wysiwyg = Widget.extend({
      * @override
      */
     destroy: function () {
+        // Saving the content of the editor is not possible after destroy,
+        // so there's no need to keep the pop-up warning in this case.
+        window.onbeforeunload = null;
         this.editor.stop();
         this._super();
     },
