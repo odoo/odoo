@@ -225,7 +225,6 @@ class ProjectTask(models.Model):
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
-    display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
         'product.product', string='Service',
         domain="""[
@@ -256,17 +255,6 @@ class ProjectTask(models.Model):
 
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
-
-    @api.depends(
-        'allow_billable', 'allow_timesheets', 'sale_order_id')
-    def _compute_display_create_order(self):
-        for task in self:
-            show = True
-            if not task.allow_billable or not task.allow_timesheets or \
-                (task.bill_type != 'customer_task' and not task.timesheet_product_id) or (not task.partner_id and task.bill_type != 'customer_task') or \
-                task.sale_order_id or (task.bill_type != 'customer_task' and task.pricing_type != 'employee_rate'):
-                show = False
-            task.display_create_order = show
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
