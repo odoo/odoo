@@ -617,6 +617,12 @@ class AccountPayment(models.Model):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):
+
+            # After the migration to 14.0, the journal entry could be shared between the account.payment and the
+            # account.bank.statement.line. In that case, the synchronization will only be made with the statement line.
+            if pay.move_id.statement_line_id:
+                continue
+
             move = pay.move_id
             move_vals_to_write = {}
             payment_vals_to_write = {}
