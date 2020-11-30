@@ -16,6 +16,34 @@ function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        _willCreate() {
+            const res = super._willCreate(...arguments);
+            /**
+             * Determines whether there is a mention RPC currently in progress.
+             * Useful to queue a new call if there is already one pending.
+             */
+            this._hasMentionRpcInProgress = false;
+            /**
+             * Determines the next function to execute after the current mention
+             * RPC is done, if any.
+             */
+            this._nextMentionRpcFunction = undefined;
+            return res;
+        }
+
+        /**
+         * @override
+         */
+        _willDelete() {
+            // Clears the mention queue on deleting the record to prevent
+            // unnecessary RPC.
+            this._nextMentionRpcFunction = undefined;
+            return super._willDelete(...arguments);
+        }
+
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
@@ -63,7 +91,7 @@ function factory(dependencies) {
                             mainSuggestedRecordsListName: "mainSuggestedPartners",
                             suggestionModelName: "mail.partner",
                         });
-                        this._updateSuggestedPartners(mentionKeyword);
+                        this._executeOrQueueFunction(() => this._updateSuggestedPartners(mentionKeyword));
                         break;
                     case ':':
                         this.update({
@@ -71,7 +99,7 @@ function factory(dependencies) {
                             mainSuggestedRecordsListName: "suggestedCannedResponses",
                             suggestionModelName: "mail.canned_response",
                         });
-                        this._updateSuggestedCannedResponses(mentionKeyword);
+                        this._executeOrQueueFunction(() => this._updateSuggestedCannedResponses(mentionKeyword));
                         break;
                     case '/':
                         this.update({
@@ -79,7 +107,7 @@ function factory(dependencies) {
                             mainSuggestedRecordsListName: "suggestedChannelCommands",
                             suggestionModelName: "mail.channel_command",
                         });
-                        this._updateSuggestedChannelCommands(mentionKeyword);
+                        this._executeOrQueueFunction(() => this._updateSuggestedChannelCommands(mentionKeyword));
                         break;
                     case '#':
                         this.update({
@@ -87,7 +115,7 @@ function factory(dependencies) {
                             mainSuggestedRecordsListName: "suggestedChannels",
                             suggestionModelName: "mail.thread",
                         });
-                        this._updateSuggestedChannels(mentionKeyword);
+                        this._executeOrQueueFunction(() => this._updateSuggestedChannels(mentionKeyword));
                         break;
                 }
             } else {
@@ -564,6 +592,33 @@ function factory(dependencies) {
                 }
             }
             return [['unlink', unmentionedChannels]];
+        }
+
+        /**
+         * Executes the given async function, only when the last function
+         * executed by this method terminates. If there is already a pending
+         * function it is replaced by the new one. This ensures the result of
+         * these function come in the same order as the call order, and it also
+         * allows to skip obsolete intermediate calls.
+         *
+         * @private
+         * @param {function} func
+         */
+        async _executeOrQueueFunction(func) {
+            if (this._hasMentionRpcInProgress) {
+                this._nextMentionRpcFunction = func;
+                return;
+            }
+            this._hasMentionRpcInProgress = true;
+            this._nextMentionRpcFunction = undefined;
+            try {
+                await this.async(func);
+            } finally {
+                this._hasMentionRpcInProgress = false;
+                if (this._nextMentionRpcFunction) {
+                    this._executeOrQueueFunction(this._nextMentionRpcFunction);
+                }
+            }
         }
 
         /**
