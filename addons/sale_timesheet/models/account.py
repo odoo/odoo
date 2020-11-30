@@ -18,21 +18,14 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billed on Timesheets'),
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
-        ('non_billable_timesheet', 'Non Billable Timesheet'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
-    non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheet will not be billed.")
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
 
     # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to bill_type and pricing_type of project (See in master)
-    @api.depends('so_line.product_id', 'project_id', 'task_id', 'non_allow_billable', 'task_id.bill_type', 'task_id.pricing_type', 'task_id.non_allow_billable')
+    @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.bill_type', 'task_id.pricing_type')
     def _compute_timesheet_invoice_type(self):
-        non_allowed_billable = self.filtered('non_allow_billable')
-        non_allowed_billable.timesheet_invoice_type = 'non_billable_timesheet'
-        non_allowed_billable_task = (self - non_allowed_billable).filtered(lambda t: t.task_id.bill_type == 'customer_project' and t.task_id.pricing_type == 'employee_rate' and t.task_id.non_allow_billable)
-        non_allowed_billable_task.timesheet_invoice_type = 'non_billable'
-
-        for timesheet in self - non_allowed_billable - non_allowed_billable_task:
+        for timesheet in self:
             if timesheet.project_id:  # AAL will be set to False
                 invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
                 if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
@@ -113,7 +106,7 @@ class AccountAnalyticLine(models.Model):
                 return task.sale_line_id
             if task.pricing_type == 'fixed_rate':
                 return task.sale_line_id
-            elif task.pricing_type == 'employee_rate' and not task.non_allow_billable:
+            elif task.pricing_type == 'employee_rate':
                 map_entry = project.sale_line_employee_ids.filtered(lambda map_entry: map_entry.employee_id == employee)
                 if map_entry:
                     return map_entry.sale_line_id
