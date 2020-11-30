@@ -66,7 +66,7 @@
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <graph string="Timesheet" sample="1">
+                <graph string="Timesheet" sample="1" js_class="hr_timesheet_graphview">
                     <field name="task_id" type="row"/>
                     <field name="project_id" type="row"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
