@@ -107,8 +107,13 @@ class Meeting(models.Model):
         return {'start', 'stop', 'start_date', 'stop_date'}
 
     @api.model
+    def _get_custom_fields(self):
+        all_fields = self.fields_get(attributes=['manual'])
+        return {fname for fname in all_fields if all_fields[fname]['manual']}
+
+    @api.model
     def _get_public_fields(self):
-        return self._get_recurrent_fields() | self._get_time_fields() | {
+        return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as'}
