@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.tests import common
 from odoo.exceptions import ValidationError
+from odoo import Command
 
 
 class test_inherits(common.TransactionCase):
@@ -49,19 +50,19 @@ class test_inherits(common.TransactionCase):
     def test_write_4_one2many(self):
         """ Check that we can write on an inherited one2many field. """
         box = self.env.ref('test_inherits.box_a')
-        box.write({'line_ids': [(0, 0, {'name': 'Line 1'})]})
+        box.write({'line_ids': [Command.create({'name': 'Line 1'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['Line 1'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
         box.flush()
         box.invalidate_cache(['line_ids'])
-        box.write({'line_ids': [(0, 0, {'name': 'Line 2'})]})
+        box.write({'line_ids': [Command.create({'name': 'Line 2'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['Line 1', 'Line 2'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
         box.flush()
         box.invalidate_cache(['line_ids'])
-        box.write({'line_ids': [(1, box.line_ids[0].id, {'name': 'First line'})]})
+        box.write({'line_ids': [Command.update(box.line_ids[0].id, {'name': 'First line'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['First line', 'Line 2'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
