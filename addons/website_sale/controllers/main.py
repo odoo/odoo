@@ -681,8 +681,7 @@ class WebsiteSale(http.Controller):
                         mode = ('edit', 'shipping')
                     else:
                         return Forbidden()
-                if mode:
-                    values = Partner.browse(partner_id)
+                values = Partner.browse(partner_id).read()[0]
             elif partner_id == -1:
                 mode = ('new', 'shipping')
             else: # no mode - refresh without post?
