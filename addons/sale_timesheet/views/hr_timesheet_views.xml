@@ -10,8 +10,8 @@
                     <field name="timesheet_invoice_type"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
-                    <filter name="billable_timesheet" string="Billable" domain="[('so_line', '!=', False), ('non_allow_billable', '=', False)]"/>
-                    <filter name="non_billable_timesheet" string="Non Billable" domain="['|', ('so_line', '=', False), ('non_allow_billable', '=', True)]"/>
+                    <filter name="billable_timesheet" string="Billable" domain="[('so_line', '!=', False)]"/>
+                    <filter name="non_billable_timesheet" string="Non Billable" domain="[('so_line', '=', False)]"/>
                     <separator/>
                     <filter name="billable_time" string="Billed on Timesheets" domain="[('timesheet_invoice_type', '=', 'billable_time')]"/>
                     <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"/>
@@ -33,17 +33,6 @@
                 <field name="date" interval="month" type="col"/>
                 <field name="unit_amount" type="measure"/>
             </pivot>
-        </field>
-    </record>
-
-    <record id="timesheet_view_tree_sale" model="ir.ui.view">
-        <field name="name">account.analytic.line.view.tree.with.allow.billable</field>
-        <field name="model">account.analytic.line</field>
-        <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
-                <field name="non_allow_billable" attrs="{'invisible': [('non_allow_billable', '=', False)]}"/>
-            </xpath>
         </field>
     </record>
 
