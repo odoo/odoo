@@ -2153,6 +2153,64 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('many2one in sidebar', async function (assert) {
+        assert.expect(7);
+
+        for (var i = 5; i < 13; i++) {
+            this.data.partner.records.push({id: i, display_name: 'partner ' + i});
+        }
+
+        var domains = [
+            [["id", "not in", [2, 1]]],
+            ["!", ["id", "in", [2, 1]]],
+        ];
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" ' +
+                'date_start="start" ' +
+                'date_stop="stop">' +
+                '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>' +
+            '</calendar>',
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search></search>',
+            },
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, domains[0]);
+                }
+                if (route === '/web/dataset/search_read' && args.model === 'partner') {
+                    assert.deepEqual(args.domain, domains[1]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsN(calendar, '.fc-event', 9,
+            "should display 9 events on the week");
+        var $dropdown = calendar.$('.o_field_many2one input').autocomplete('widget');
+        await testUtils.fields.many2one.clickOpenDropdown('partner_id');
+        assert.ok($dropdown.is(':visible'),
+            'clicking on the m2o input should open the dropdown if it is not open yet');
+        assert.strictEqual($dropdown.find('li:not(.o_m2o_dropdown_option)').length, 7,
+            'autocomplete should contains 7 suggestions');
+        assert.notOk($dropdown.find('li:not(.o_m2o_dropdown_option):contains(partner 1)').length,
+            'autocomplete should not contains "partner 1" in suggestions');
+
+        await testUtils.fields.many2one.clickItem('partner_id', 'Search');
+        assert.notOk($('.modal tbody tr:contains(partner 2)').length,
+            'autocomplete should not contains "partner 1" in suggestions');
+
+        calendar.destroy();
+    });
+
     QUnit.test('ensure events are still shown if filters give an empty domain', async function (assert) {
         assert.expect(2);
 
