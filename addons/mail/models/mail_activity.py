@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 import logging
 import pytz
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
 
 from odoo.tools.misc import clean_context
@@ -546,7 +546,7 @@ class MailActivity(models.Model):
                 },
                 subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
                 mail_activity_type_id=activity.activity_type_id.id,
-                attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
+                attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
 
             # Moving the attachments in the message

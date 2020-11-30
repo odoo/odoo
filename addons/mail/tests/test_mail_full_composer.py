@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, HttpCase
+from odoo import Command
 
 
 @tagged('-at_install', 'post_install')
@@ -17,7 +18,7 @@ class TestMailFullComposer(HttpCase):
         })
         testuser = self.env['res.users'].create({
             'email': 'testuser@testuser.com',
-            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_partner_manager')])],
+            'groups_id': [Command.set([self.ref('base.group_user'), self.ref('base.group_partner_manager')])],
             'name': 'Test User',
             'login': 'testuser',
             'password': 'testuser',

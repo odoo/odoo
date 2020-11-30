@@ -5,7 +5,7 @@ import base64
 import logging
 
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -245,8 +245,8 @@ class MailTemplate(models.Model):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
-        values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
-        values['attachment_ids'] = [(4, aid) for aid in values.get('attachment_ids', list())]
+        values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
+        values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
