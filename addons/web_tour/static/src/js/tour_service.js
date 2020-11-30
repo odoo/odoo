@@ -5,6 +5,7 @@ var rootWidget = require('root.widget');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
+const { device } = require('web.config');
 
 const untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
 
@@ -32,7 +33,8 @@ return session.is_bound.then(function () {
     }
     return Promise.all(defs).then(function (results) {
         var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
-        var tour_manager = new TourManager(rootWidget, consumed_tours);
+        const disabled = session.tour_disable || device.isMobile;
+        var tour_manager = new TourManager(rootWidget, consumed_tours, disabled);
 
         function _isTrackedNode(node) {
             if (node.classList) {
