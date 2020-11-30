@@ -136,7 +136,7 @@
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <field name="timesheet_invoice_id" invisible="1"/>
-                    <field name="so_line" readonly="1" attrs="{'column_invisible': [('parent.has_multi_sol', '=', False), '|', ('parent.is_project_map_empty', '=', True), ('parent.pricing_type', '!=', 'employee_rate')]}" optional="hide"/>
+                    <field name="so_line" readonly="1" attrs="{'column_invisible': [('parent.has_multi_sol', '=', False), '|', ('parent.is_project_map_empty', '=', True), ('parent.pricing_type', '!=', 'employee_rate')]}" context="{'with_remaining_hours': True}" optional="hide"/>
                     <field name="non_allow_billable" attrs="{'column_invisible': ['|', '&amp;', '&amp;', '|', ('parent.bill_type', '!=', 'customer_project'), ('parent.pricing_type', '!=', 'employee_rate'), ('parent.timesheet_product_id', '=', False), ('parent.sale_line_id', '=', False), '&amp;', ('parent.bill_type', '=', 'customer_project'), ('parent.pricing_type', '=', 'employee_rate')]}" optional="hide"/>
                 </xpath>
             </field>
@@ -148,9 +148,24 @@
             <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
+                    <attribute name="context">{'with_remaining_hours': True}</attribute>
                     <attribute name="attrs">
                         {'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False)]}
                     </attribute>
+                </xpath>
+                <xpath expr="//field[@name='remaining_hours']" position="after">
+                    <field name="remaining_hours_available" invisible="1"/>
+                    <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}">
+                        <label class="font-weight-bold" for="remaining_hours_so" string="Remaining Hours on SO"
+                               attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&lt;', 0)]}"/>
+                        <label class="font-weight-bold" for="remaining_hours_so" string="Remaining Days on SO"
+                               attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&lt;', 0)]}"/>
+                        <label class="font-weight-bold text-danger" for="remaining_hours_so" string="Remaining Hours on SO"
+                               attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&gt;=', 0)]}"/>
+                        <label class="font-weight-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
+                               attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
+                    </span>
+                    <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom"></field>
                 </xpath>
             </field>
         </record>
