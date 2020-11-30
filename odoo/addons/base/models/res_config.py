@@ -413,14 +413,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         return ret_val
 
     def onchange_module(self, field_value, module_name):
-        ModuleSudo = self.env['ir.module.module'].sudo()
-        modules = ModuleSudo.search(
-            [('name', '=', module_name.replace("module_", '')),
-            ('state', 'in', ['to install', 'installed', 'to upgrade'])])
-
-        if modules and not int(field_value):
-            deps = modules.sudo().downstream_dependencies()
-            dep_names = (deps | modules).mapped('shortdesc')
+        module_sudo = self.env['ir.module.module']._get(module_name[7:])
+        if not int(field_value) and module_sudo.state in ('to install', 'installed', 'to upgrade'):
+            deps = module_sudo.downstream_dependencies()
+            dep_names = (deps | module_sudo).mapped('shortdesc')
             message = '\n'.join(dep_names)
             return {
                 'warning': {
@@ -475,7 +471,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             elif name.startswith('module_'):
                 if field.type not in ('boolean', 'selection'):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
-                module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)
+                module = IrModule._get(name[7:])
                 modules.append((name, module))
             elif hasattr(field, 'config_parameter'):
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
