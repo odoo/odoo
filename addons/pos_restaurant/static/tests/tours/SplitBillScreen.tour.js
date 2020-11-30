@@ -2,6 +2,7 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     'use strict';
 
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { Chrome } = require('pos_restaurant.tour.ChromeTourMethods');
     const { FloorScreen } = require('pos_restaurant.tour.FloorScreenTourMethods');
     const { ProductScreen } = require('pos_restaurant.tour.ProductScreenTourMethods');
@@ -18,6 +19,13 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     ProductScreen.exec.addOrderline('Water', '5', '2', '10.0');
     ProductScreen.exec.addOrderline('Minute Maid', '3', '2', '6.0');
     ProductScreen.exec.addOrderline('Coca-Cola', '1', '2', '2.0');
+
+    // Sync order before proceeding
+    Chrome.do.backToFloor();
+    FloorScreen.check.orderCountSyncedInTableIs('T2', '1');
+
+    // Go back to the order in T2
+    FloorScreen.do.clickTable('T2');
     ProductScreen.do.clickSplitBillButton();
 
     // Check if the screen contains all the orderlines
@@ -41,6 +49,13 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     PaymentScreen.do.clickBack();
     ProductScreen.do.clickOrderline('Water', '3.0')
     ProductScreen.do.clickOrderline('Coca-Cola', '1.0')
+
+    // Pay the splitted order
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.validateButtonIsHighlighted(true);
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
 
     // go back to the original order and see if the order is changed
     Chrome.do.clickTicketButton();
