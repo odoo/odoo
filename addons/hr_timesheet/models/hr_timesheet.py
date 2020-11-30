@@ -48,6 +48,8 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+    unit_amount = fields.Float('Duration', default=0.0)
+    amount = fields.Monetary('Timesheet Costs', required=True, default=0.0)
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
