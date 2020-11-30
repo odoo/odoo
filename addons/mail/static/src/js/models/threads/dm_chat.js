@@ -23,7 +23,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
      * @param {Object[]} params.data.direct_partner
      * @param {integer} params.data.direct_partner[0].id
      * @param {string} params.data.direct_partner[0].im_status
-     * @param {string} params.data.direct_partner[0].name
+     * @param {string} params.data.direct_partner[0].name server name of partner
      * @param {string} [params.data.direct_partner[0].out_of_office_message]
      * @param {string} [params.data.direct_partner[0].out_of_office_date_end]
      */

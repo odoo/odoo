@@ -603,7 +603,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        related='categ_id.total_route_ids', readonly=False, related_sudo=False)
 
     def _is_cost_method_standard(self):
         return True
