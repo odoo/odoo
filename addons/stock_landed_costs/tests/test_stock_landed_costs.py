@@ -22,6 +22,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'name': "LC product 1",
             'weight': 10,
             'volume': 1,
+            'type': 'product',
         })
         product_landed_cost_1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
@@ -31,6 +32,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'name': "LC product 2",
             'weight': 20,
             'volume': 1.5,
+            'type': 'product',
         })
         product_landed_cost_2.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
