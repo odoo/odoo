@@ -327,7 +327,7 @@ var CalendarController = AbstractController.extend({
                 res_id: id || null,
                 context: event.context || self.context,
                 readonly: readonly,
-                title: _t("Open: ") + event.data.title,
+                title: _t("Open: ") + _.escape(event.data.title),
                 on_saved: function () {
                     if (event.data.on_save) {
                         event.data.on_save();

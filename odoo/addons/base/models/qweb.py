@@ -16,7 +16,7 @@ from psycopg2.extensions import TransactionRollbackError
 import werkzeug
 from werkzeug.utils import escape as _escape
 
-from odoo.tools import pycompat, freehash
+from odoo.tools import pycompat, freehash, wrap_values
 
 try:
     import builtins
@@ -343,6 +343,7 @@ class QWeb(object):
             log = {'last_path_node': None}
             new = self.default_values()
             new.update(values)
+            wrap_values(new)
             try:
                 return compiled(self, append, new, options, log)
             except (QWebException, TransactionRollbackError) as e:
