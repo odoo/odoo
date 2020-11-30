@@ -18,6 +18,8 @@ var fieldRegistry = require('web.field_registry');
 var fieldRegistryOwl = require('web.field_registry_owl');
 var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
+const widgetRegistry = require('web.widget_registry');
+const widgetRegistryOwl = require('web.widgetRegistry');
 
 var BasicView = AbstractView.extend({
     config: _.extend({}, AbstractView.prototype.config, {
@@ -372,6 +374,28 @@ var BasicView = AbstractView.extend({
      * @returns {boolean} false iff subnodes must not be visited.
      */
     _processNode: function (node, fv) {
+        const viewType = fv.type;
+        const fieldsInfo = fv.fieldsInfo[viewType];
+        const fields = fv.viewFields;
+
+        const _addFieldDependencies = (deps) => {
+            for (const dependencyName in deps) {
+                const dependencyDict = { name: dependencyName, type: deps[dependencyName].type };
+                if (!(dependencyName in fieldsInfo)) {
+                    fieldsInfo[dependencyName] = _.extend({}, dependencyDict, {
+                        options: deps[dependencyName].options || {},
+                    });
+                }
+                if (!(dependencyName in fields)) {
+                    fields[dependencyName] = dependencyDict;
+                }
+
+                if (fv.fields && !(dependencyName in fv.fields)) {
+                    fv.fields[dependencyName] = dependencyDict;
+                }
+            }
+        };
+
         if (typeof node === 'string') {
             return false;
         }
@@ -382,29 +406,27 @@ var BasicView = AbstractView.extend({
             node.attrs.options = node.attrs.options ? JSON.parse(node.attrs.options) : {};
         }
         if (node.tag === 'field') {
-            var viewType = fv.type;
-            var fieldsInfo = fv.fieldsInfo[viewType];
-            var fields = fv.viewFields;
             fieldsInfo[node.attrs.name] = this._processField(viewType,
                 fields[node.attrs.name], node.attrs ? _.clone(node.attrs) : {});
 
             if (fieldsInfo[node.attrs.name].fieldDependencies) {
                 var deps = fieldsInfo[node.attrs.name].fieldDependencies;
-                for (var dependency_name in deps) {
-                    var dependency_dict = {name: dependency_name, type: deps[dependency_name].type};
-                    if (!(dependency_name in fieldsInfo)) {
-                        fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {
-                            options: deps[dependency_name].options || {},
-                        });
-                    }
-                    if (!(dependency_name in fields)) {
-                        fields[dependency_name] = dependency_dict;
-                    }
-
-                    if (fv.fields && !(dependency_name in fv.fields)) {
-                        fv.fields[dependency_name] = dependency_dict;
-                    }
-                }
+                _addFieldDependencies(deps);
+            }
+            return false;
+        }
+        // custom widget may have fieldDependencies so add it to fields of fields_view
+        if (node.tag === 'widget') {
+            const Widget = widgetRegistryOwl.get(node.attrs.name) || widgetRegistry.get(node.attrs.name);
+            const legacy = !(Widget.prototype instanceof owl.Component);
+            let deps;
+            if (legacy && Widget.prototype.fieldDependencies) {
+                deps = Widget.prototype.fieldDependencies;
+            } else if (Widget.fieldDependencies) {
+                deps = Widget.fieldDependencies;
+            }
+            if (deps) {
+                _addFieldDependencies(deps);
             }
             return false;
         }
