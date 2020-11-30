@@ -15,12 +15,13 @@
     <t t-name="calendar-box">
         <t t-set="color" t-value="widget.getColor(event.color_index)"/>
         <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
-            <div class="fc-time"/>
+            <!-- <div class="fc-time"/> Removido para aproveitar espaço de linhas -->
             <div class="o_fields">
                 <t t-foreach="widget.displayFields" t-as="name">
                     <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
                         <t t-if="widget.displayFields[name].avatar_field">
                             <t t-if="!isMobile"><t t-esc="fields[name].string"/>:</t>
+                            <t t-if="!isMobile"><t t-esc="format(record, name)"/></t>
                             <div class="o_calendar_avatars float-right">
                                 <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
                                 <span t-if="record[name].length - 3 > 0">+<t t-esc="record[name].length - 3"/></span>
