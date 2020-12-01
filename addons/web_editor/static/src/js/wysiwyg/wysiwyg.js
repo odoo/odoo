@@ -1003,7 +1003,9 @@ var Wysiwyg = Widget.extend({
             }
 
             if (translationFormat.translationId) {
-                promises.push(this._saveTranslationTo($renderedTranslation, +translationFormat.translationId));
+                if (!this.isTranslationPristine($renderedTranslation.get(0))) {
+                    promises.push(this._saveTranslationTo($renderedTranslation, +translationFormat.translationId));
+                }
             } else {
                 const attributes = translationFormat.modifiers.find(JWEditorLib.Attributes);
                 promises.push(this._saveViewTo(
@@ -1017,10 +1019,12 @@ var Wysiwyg = Widget.extend({
         // Save attributes
         for (const attribute_translation of this.$attribute_translations) {
             const $attribute_translations = $(attribute_translation);
-            promises.push(this._saveTranslationTo(
-                $attribute_translations,
-                +$attribute_translations.data('oe-translation-id')
-            ));
+            if (!this.isTranslationPristine(attribute_translation)){
+                promises.push(this._saveTranslationTo(
+                    $attribute_translations,
+                    +$attribute_translations.data('oe-translation-id')
+                    ));
+            }
         }
 
         await Promise.all(promises);
@@ -1347,6 +1351,38 @@ var Wysiwyg = Widget.extend({
         }
         this.$attribute_translations = $('.o_editable_translatable_attribute');
         this.translations = [];
+        // (id -> value) map of the initial values of a translation, to be able
+        // to determine whether a translation has been modified or not, so as to
+        // not save unmodified translation (important because when a translation
+        // is saved, Odoo marks it as translated).
+        const textTranslationsInitialValues = $('[data-oe-translation-id]')
+        .toArray().reduce((acc, elem) => {
+            acc[elem.getAttribute('data-oe-translation-id')] = elem.textContent;
+            return acc;
+        }, {});
+        // This function concatenates the values of the relevant attributes to
+        // have a snapshot of their initial state.
+        const getAttributesSnapshot = (elem) => attributeNames.reduce(
+            (acc, attribute) => acc + (elem.getAttribute(attribute)) || '',
+            '');
+        // (id -> snapshot) map of the initial values of translatable
+        // attributes.
+        const attributeTranslationsInitialValues = domNodesToTranslateAttributes
+        .reduce((acc, elem) => {
+            acc[elem.getAttribute('data-original-id')] = getAttributesSnapshot(elem);
+            return acc;
+        }, {});
+        // Function that checks whether the translation has been modified or
+        // not.
+        this.isTranslationPristine = elem => {
+            const translationId = elem.getAttribute('data-oe-translation-id');
+            if (translationId) {
+                return textTranslationsInitialValues[translationId] === elem.textContent;
+            } else {
+                const id = elem.getAttribute('data-oe-id');
+                return attributeTranslationsInitialValues[id] === getAttributesSnapshot(elem);
+            }
+        };
         this._markTranslatableNodes();
 
         // We don't want the BS dropdown to close
