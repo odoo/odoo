@@ -822,3 +822,47 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         wizard.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
+
+    def test_reservation_method_w_sale(self):
+        picking_type_out = self.company_data['default_warehouse'].out_type_id
+        # make sure generated picking will auto-assign
+        picking_type_out.reservation_method = 'at_confirm'
+        product = self.company_data['product_delivery_no']
+        product.type = 'product'
+        self.env['stock.quant']._update_available_quantity(product, self.company_data['default_warehouse'].lot_stock_id, 20)
+
+        sale_order1 = self._get_new_sale_order(amount=10.0)
+        # Validate the sale order, picking should automatically assign stock
+        sale_order1.action_confirm()
+        picking1 = sale_order1.picking_ids
+        self.assertTrue(picking1)
+        self.assertEqual(picking1.state, 'assigned')
+        picking1.unlink()
+
+        # make sure generated picking will does not auto-assign
+        picking_type_out.reservation_method = 'manual'
+        sale_order2 = self._get_new_sale_order(amount=10.0)
+        # Validate the sale order, picking should not automatically assign stock
+        sale_order2.action_confirm()
+        picking2 = sale_order2.picking_ids
+        self.assertTrue(picking2)
+        self.assertEqual(picking2.state, 'confirmed')
+        picking2.unlink()
+
+        # make sure generated picking auto-assigns according to (picking) scheduled date
+        picking_type_out.reservation_method = 'by_date'
+        picking_type_out.reservation_days_before = 2
+        # too early for scheduled date => don't auto-assign
+        sale_order3 = self._get_new_sale_order(amount=10.0)
+        sale_order3.commitment_date = datetime.now() + timedelta(days=10)
+        sale_order3.action_confirm()
+        picking3 = sale_order3.picking_ids
+        self.assertTrue(picking3)
+        self.assertEqual(picking3.state, 'confirmed')
+        picking3.unlink()
+        # within scheduled date + reservation days before => auto-assign
+        sale_order4 = self._get_new_sale_order(amount=10.0)
+        sale_order4.commitment_date = datetime.now() + timedelta(days=1)
+        sale_order4.action_confirm()
+        self.assertTrue(sale_order4.picking_ids)
+        self.assertEqual(sale_order4.picking_ids.state, 'assigned')

@@ -23,6 +23,7 @@ class TestStockCommon(common.TransactionCase):
         # Model Data
         cls.picking_type_in = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_in')
         cls.picking_type_out = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
+        cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
         cls.supplier_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
         cls.stock_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
         pack_location = cls.env.ref('stock.location_pack_zone')

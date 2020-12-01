@@ -3841,7 +3841,7 @@ class StockMove(TransactionCase):
         })
         move1._action_confirm()
 
-        self.assertEqual(move1.state, 'confirmed')
+        self.assertEqual(move1.state, 'assigned')
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
             'product_uom_id': self.product.uom_id.id,
