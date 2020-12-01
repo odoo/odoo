@@ -801,8 +801,8 @@ class Warehouse(models.Model):
 
     def _update_reception_delivery_resupply(self, reception_new, delivery_new):
         """ Check if we need to change something to resupply warehouses and associated MTO rules """
-        input_loc, output_loc = self._get_input_output_locations(reception_new, delivery_new)
         for warehouse in self:
+            input_loc, output_loc = warehouse._get_input_output_locations(reception_new, delivery_new)
             if reception_new and warehouse.reception_steps != reception_new and (warehouse.reception_steps == 'one_step' or reception_new == 'one_step'):
                 warehouse._check_reception_resupply(input_loc)
             if delivery_new and warehouse.delivery_steps != delivery_new and (warehouse.delivery_steps == 'ship_only' or delivery_new == 'ship_only'):
