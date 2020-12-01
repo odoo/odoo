@@ -1,46 +1,36 @@
 odoo.define('hr_timesheet.res.config.form', function (require) {
     "use strict";
 
-    const core = require('web.core');
-    const config = require('web.config');
     const viewRegistry = require('web.view_registry');
     const BaseSetting = require('base.settings');
-    
-    const _t = core._t;
+    const QRCodeMixin = require('base_setup.QRCodeMixin');
 
-    const TimesheetConfigQRCodeMixin = {
-        async _renderView() {
-            const self = this;
-            await this._super(...arguments);
-            const google_url = "https://play.google.com/store/apps/details?id=com.odoo.OdooTimesheets";
-            const apple_url = "https://apps.apple.com/be/app/awesome-timesheet/id1078657549";
-            const action_desktop = {
-                name: _t('Download our App'),
-                type: 'ir.actions.client',
-                tag: 'timesheet_qr_code_modal',
-                target: 'new',
-            };
-            this.$el.find('img.o_config_app_store').on('click', function(event) {
-                event.preventDefault();
-                if (!config.device.isMobile) {
-                    self.do_action(_.extend(action_desktop, {params: {'url': apple_url}}));
-                } else {
-                    self.do_action({type: 'ir.actions.act_url', url: apple_url});
-                }
-            });
-            this.$el.find('img.o_config_play_store').on('click', function(event) {
-                event.preventDefault();
-                if (!config.device.isMobile) {
-                    self.do_action(_.extend(action_desktop, {params: {'url': google_url}}));
-                } else {
-                    self.do_action({type: 'ir.actions.act_url', url: google_url});
-                }
-            });
+    const TimesheetConfigQRCodeMixin = Object.assign({}, QRCodeMixin, {
+        events: _.extend({}, QRCodeMixin.events, {
+            'click .o_config_app_store, .o_config_play_store': '_onClickTSAppStoreIcon',
+        }),
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickTSAppStoreIcon(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            const googleUrl = "https://play.google.com/store/apps/details?id=com.odoo.OdooTimesheets";
+            const appleUrl = "https://apps.apple.com/be/app/awesome-timesheet/id1078657549";
+            const url = ev.target.classList.contains("o_config_play_store") ? googleUrl : appleUrl;
+            this._openQRCodeScanner(url, 'TimeSheet App');
         },
-    };
+    });
 
+    const TimesheetConfigFormRenderer = BaseSetting.Renderer.extend({}, TimesheetConfigQRCodeMixin, {
+        events: _.extend({}, TimesheetConfigQRCodeMixin.events, BaseSetting.Renderer.prototype.events),
+    });
 
-    var TimesheetConfigFormRenderer = BaseSetting.Renderer.extend(TimesheetConfigQRCodeMixin);
     const BaseSettingView = viewRegistry.get('base_settings');
     var TimesheetConfigFormView = BaseSettingView.extend({
         config: _.extend({}, BaseSettingView.prototype.config, {
@@ -48,8 +38,8 @@ odoo.define('hr_timesheet.res.config.form', function (require) {
         }),
     });
 
-    viewRegistry.add('hr_timesheet_config_form', TimesheetConfigFormView);
+    viewRegistry.add('base_settings', TimesheetConfigFormView);
 
-    return {TimesheetConfigQRCodeMixin, TimesheetConfigFormRenderer, TimesheetConfigFormView};
+    return { TimesheetConfigQRCodeMixin, TimesheetConfigFormRenderer, TimesheetConfigFormView };
 
 });

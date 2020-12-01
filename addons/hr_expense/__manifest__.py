@@ -49,7 +49,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'qweb': [
         "static/src/xml/documents_upload_views.xml",
         "static/src/xml/expense_dashboard.xml",
-        "static/src/xml/expense_qr_modal_template.xml",
     ],
     'installable': True,
     'application': True,

@@ -36,9 +36,6 @@ up a management by affair.
         'data/hr_timesheet_data.xml',
         'wizard/project_task_create_timesheet_views.xml',
     ],
-    'qweb': [
-        "static/src/xml/qr_modal_template.xml",
-    ],
     'demo': [
         'data/hr_timesheet_demo.xml',
     ],

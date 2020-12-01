@@ -11,8 +11,8 @@ odoo.define('hr_expense.expenses.tree', function (require) {
     var ListRenderer = require('web.ListRenderer');
     var KanbanRenderer = require('web.KanbanRenderer');
     var PivotRenderer = require('web.PivotRenderer');
+    const QRCodeMixin = require('base_setup.QRCodeMixin');
     var session = require('web.session');
-    const config = require('web.config');
 
     var QWeb = core.qweb;
 
@@ -24,37 +24,24 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
-    const ExpenseQRCodeMixin = {
-        async _renderView() {
-            const self = this;
-            await this._super(...arguments);
-            const google_url = "https://play.google.com/store/apps/details?id=com.odoo.mobile";
-            const apple_url = "https://apps.apple.com/be/app/odoo/id1272543640";
-            const action_desktop = {
-                name: 'Download our App',
-                type: 'ir.actions.client',
-                tag: 'expense_qr_code_modal',
-                params: {'url': "https://apps.apple.com/be/app/odoo/id1272543640"},
-                target: 'new',
-            };
-            this.$el.find('img.o_expense_apple_store').on('click', function(event) {
-                event.preventDefault();
-                if (!config.device.isMobile) {
-                    self.do_action(_.extend(action_desktop, {params: {'url': apple_url}}));
-                } else {
-                    self.do_action({type: 'ir.actions.act_url', url: apple_url});
-                }
-            });
-            this.$el.find('img.o_expense_google_store').on('click', function(event) {
-                event.preventDefault();
-                if (!config.device.isMobile) {
-                    self.do_action(_.extend(action_desktop, {params: {'url': google_url}}));
-                } else {
-                    self.do_action({type: 'ir.actions.act_url', url: google_url});
-                }
-            });
+    const ExpenseQRCodeMixin = Object.assign({}, QRCodeMixin, {
+        events: _.extend({}, QRCodeMixin.events, {
+            'click .o_expense_google_store, .o_expense_apple_store': '_onClickEXAppStoreIcon',
+        }),
+
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickEXAppStoreIcon(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            const googleUrl = "https://play.google.com/store/apps/details?id=com.odoo.mobile";
+            const appleUrl = "https://apps.apple.com/be/app/odoo/id1272543640";
+            const url = ev.target.classList.contains("o_expense_apple_store") ? googleUrl : appleUrl;
+            this._openQRCodeScanner(url);
         },
-    };
+    });
 
     const ExpenseDashboardMixin = {
         _render: async function () {
