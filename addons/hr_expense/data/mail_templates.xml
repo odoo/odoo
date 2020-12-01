@@ -17,11 +17,11 @@
                 </t>
             </p>
             <p t-if="expense.product_id">
-                Product: <t t-esc="expense.product_id.name"/>
+                Category: <t t-esc="expense.product_id.name"/>
             </p>
             <div t-else="">
-                <p>Product: not found</p>
-                <p>The first word of the email subject did not correspond to any product code. You'll have to set the product manually on the expense.</p>
+                <p>Category: not found</p>
+                <p>The first word of the email subject did not correspond to any category code. You'll have to set the category manually on the expense.</p>
             </div>
             <p>
                 Price: <t t-esc="expense.unit_amount"/><t t-esc="expense.currency_id.symbol"/>
