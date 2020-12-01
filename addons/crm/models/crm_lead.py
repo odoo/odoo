@@ -84,15 +84,24 @@ class Lead(models.Model):
                 'format.address.mixin',
                ]
     _primary_email = 'email_from'
+    _check_company_auto = True
 
     # Description
     name = fields.Char(
         'Opportunity', index=True, required=True,
         compute='_compute_name', readonly=False, store=True)
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one(
+        'res.users', string='Salesperson', default=lambda self: self.env.user,
+        domain="['&', ('share', '=', False), ('company_ids', 'in', user_company_ids)]",
+        check_company=True, index=True, tracking=True)
+    user_company_ids = fields.Many2many(
+        'res.company', compute='_compute_user_company_ids',
+        help='UX: Limit to lead company or all if no company')
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company.id)
+    company_id = fields.Many2one(
+        'res.company', string='Company', index=True,
+        compute='_compute_company_id', readonly=False, store=True)
     referred = fields.Char('Referred By')
     description = fields.Text('Notes')
     active = fields.Boolean('Active', default=True, tracking=True)
@@ -104,7 +113,8 @@ class Lead(models.Model):
         crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True,
         default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     team_id = fields.Many2one(
-        'crm.team', string='Sales Team', index=True, tracking=True,
+        'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         compute='_compute_team_id', readonly=False, store=True)
     stage_id = fields.Many2one(
         'crm.stage', string='Stage', index=True, tracking=True,
@@ -149,7 +159,7 @@ class Lead(models.Model):
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', index=True, tracking=10,
+        'res.partner', string='Customer', check_company=True, index=True, tracking=10,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
@@ -240,6 +250,15 @@ class Lead(models.Model):
     def _search_activity_date_deadline_my(self, operator, operand):
         return ['&', ('activity_ids.user_id', '=', self._uid), ('activity_ids.date_deadline', operator, operand)]
 
+    @api.depends('company_id')
+    def _compute_user_company_ids(self):
+        all_companies = self.env['res.company'].search([])
+        for lead in self:
+            if not lead.company_id:
+                lead.user_company_ids = all_companies
+            else:
+                lead.user_company_ids = lead.company_id
+
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
@@ -254,6 +273,32 @@ class Lead(models.Model):
             team_domain = [('use_leads', '=', True)] if lead.type == 'lead' else [('use_opportunities', '=', True)]
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
             lead.team_id = team.id
+
+    @api.depends('user_id', 'team_id')
+    def _compute_company_id(self):
+        """ Compute company_id coherency. """
+        for lead in self:
+            proposal = lead.company_id
+
+            # invalidate wrong configuration: company not in responsible companies or in team company if set
+            if proposal and lead.user_id and proposal not in lead.user_id.company_ids:
+                proposal = False
+            if proposal and lead.team_id.company_id and proposal != lead.team_id.company_id:
+                proposal = False
+
+            # propose a new company based on responsible, limited by team
+            if not proposal:
+                if not lead.user_id or lead.user_id == self.env.user:
+                    proposal = self.env.company
+                elif lead.user_id:
+                    proposal = lead.user_id.company_id
+
+                if lead.team_id.company_id and proposal != lead.team_id.company_id:
+                    proposal = False
+
+            # set a new company
+            if lead.company_id != proposal:
+                lead.company_id = proposal
 
     @api.depends('team_id', 'type')
     def _compute_stage_id(self):
