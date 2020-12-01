@@ -104,10 +104,20 @@ class CRMLeadMiningRequest(models.Model):
         for request in self:
             request.lead_count = mapped_data.get(request.id, 0)
 
-    @api.depends('user_id')
+    @api.depends('user_id', 'lead_type')
     def _compute_team_id(self):
-        for record in self:
-            record.team_id = record.user_id.sale_team_id
+        """ When changing the user, also set a team_id or restrict team id
+        to the ones user_id is member of. """
+        for mining in self:
+            # setting user as void should not trigger a new team computation
+            if not mining.user_id:
+                continue
+            user = mining.user_id
+            if mining.team_id and user in mining.team_id.member_ids | mining.team_id.user_id:
+                continue
+            team_domain = [('use_leads', '=', True)] if mining.lead_type == 'lead' else [('use_opportunities', '=', True)]
+            team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
+            mining.team_id = team.id
 
     @api.onchange('lead_number')
     def _onchange_lead_number(self):
