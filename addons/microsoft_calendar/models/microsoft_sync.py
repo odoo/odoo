@@ -72,7 +72,7 @@ class MicrosoftSync(models.AbstractModel):
     def write(self, vals):
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         if 'microsoft_id' in vals:
-            self._from_microsoft_ids.clear_cache(self)
+            self.clear_caches()
         synced_fields = self._get_microsoft_synced_fields()
         if 'need_sync_m' not in vals and vals.keys() & synced_fields and not self.env.user.microsoft_synchronization_stopped:
             fields_to_sync = [x for x in vals.keys() if x in synced_fields]
@@ -94,7 +94,7 @@ class MicrosoftSync(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         if any(vals.get('microsoft_id') for vals in vals_list):
-            self._from_microsoft_ids.clear_cache(self)
+            self.clear_caches()
         if self.env.user.microsoft_synchronization_stopped:
             for vals in vals_list:
                 vals.update({'need_sync_m': False})

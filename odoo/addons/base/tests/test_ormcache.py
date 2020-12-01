@@ -17,7 +17,7 @@ class TestOrmcache(TransactionCase):
         miss = counter.miss
 
         # clear the cache of ir.model.data.xmlid_lookup, retrieve its key and
-        IMD.xmlid_lookup.clear_cache(IMD)
+        IMD.clear_caches()
         self.assertNotIn(key, cache)
 
         # lookup some reference

@@ -70,7 +70,7 @@ class GoogleSync(models.AbstractModel):
     def write(self, vals):
         google_service = GoogleCalendarService(self.env['google.service'])
         if 'google_id' in vals:
-            self._from_google_ids.clear_cache(self)
+            self.clear_caches()
         synced_fields = self._get_google_synced_fields()
         if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
@@ -85,7 +85,7 @@ class GoogleSync(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         if any(vals.get('google_id') for vals in vals_list):
-            self._from_google_ids.clear_cache(self)
+            self.clear_caches()
         if self.env.user.google_synchronization_stopped:
             for vals in vals_list:
                 vals.update({'need_sync': False})

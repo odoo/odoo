@@ -225,7 +225,7 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
+            self.clear_caches()
         return super(Groups, self).write(vals)
 
 
