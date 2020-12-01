@@ -185,7 +185,7 @@ class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
     _description = 'HR Work Entry Type'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
