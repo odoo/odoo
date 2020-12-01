@@ -462,9 +462,9 @@ var SelectCreateDialog = ViewDialog.extend({
                     display_name: record.data.display_name || record.data.name,
                 }];
                 self.on_selected(values);
+                self.close();
             },
         })).open();
-        dialog.on('closed', this, this.close);
         return dialog;
     },
     /**

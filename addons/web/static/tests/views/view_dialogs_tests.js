@@ -272,6 +272,43 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
+    QUnit.test('Create from SelectCreateDialog and close dialog using Escape', function (assert) {
+        assert.expect(3);
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,form':
+                    '<form>' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</form>',
+                'partner,false,list':
+                    '<tree string="Partner" editable="bottom">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search': '<search/>'
+            },
+        });
+
+        new dialogs.SelectCreateDialog(parent, {
+            res_model: 'partner',
+        }).open();
+
+        var $modal = $('.modal-lg');
+        assert.equal($modal.length, 1, 'There should be one modal');
+        // click on Create button
+        $modal.find('.modal-footer button:eq(1)').click();
+
+        assert.equal($('.modal-lg').length, 2, 'There should be two modals');
+        // trigger keydown ESCAPE in the modal
+        $('.modal:eq(1)').trigger({ type: 'keydown', which: $.ui.keyCode.ESCAPE });
+        assert.equal($('.modal-lg').length, 1, 'There should be one modal');
+
+        parent.destroy();
+    });
+
     QUnit.test('SelectCreateDialog cascade x2many in create mode', function (assert) {
         assert.expect(5);
 
