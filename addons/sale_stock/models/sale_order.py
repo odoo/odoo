@@ -3,13 +3,11 @@
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
-from odoo.tools.float_utils import float_repr
-from odoo.tools.misc import format_date
+from odoo.tools import float_compare, float_round
 from odoo.exceptions import UserError
 
 
@@ -587,6 +585,14 @@ class SaleOrderLine(models.Model):
                 line.name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
+
+        # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
+        orders = self.mapped('order_id')
+        for order in orders:
+            pickings_to_confirm = order.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
+            if pickings_to_confirm:
+                # Trigger the Scheduler for Pickings
+                pickings_to_confirm.action_confirm()
         return True
 
     def _check_package(self):

@@ -15,6 +15,7 @@ class TestBatchPicking(TransactionCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.picking_type_out = self.env['ir.model.data'].xmlid_to_res_id('stock.picking_type_out')
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'manual'
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
