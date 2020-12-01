@@ -20,6 +20,7 @@ except ImportError:
     import xmlrpclib
 
 from collections import namedtuple
+from email import message_from_string, policy
 from email.message import Message
 from lxml import etree
 from werkzeug import url_encode
@@ -1331,7 +1332,7 @@ class MailThread(models.AbstractModel):
         if not isinstance(email_message, Message):
             raise TypeError('message must be an email.message.Message at this point')
 
-        email_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/rfc822'), None)
+        email_part = next((part for part in email_message.walk() if part.get_content_type() in {'message/rfc822', 'text/rfc822-headers'}), None)
         dsn_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
         bounced_email = False
@@ -1346,7 +1347,11 @@ class MailThread(models.AbstractModel):
         bounced_msg_id = False
         bounced_message = self.env['mail.message'].sudo()
         if email_part:
-            email = email_part.get_payload()[0]
+            if email_part.get_content_type() == 'text/rfc822-headers':
+                # Convert the message body into a message itself
+                email = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+            else:
+                email = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
             if bounced_msg_id:
                 bounced_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_msg_id)])
