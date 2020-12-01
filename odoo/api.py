@@ -528,6 +528,7 @@ class Environment(Mapping):
     def user(self):
         """Return the current user (as an instance).
 
+        :returns: current user - sudoed
         :rtype: :class:`~odoo.addons.base.models.res_users`"""
         return self(su=True)['res.users'].browse(self.uid)
 
@@ -539,7 +540,7 @@ class Environment(Mapping):
         fallback on current user main company.
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
-        :return: current company (default=`self.user.company_id`)
+        :return: current company (default=`self.user.company_id`), with the current environment
         :rtype: res.company
 
         .. warning::
@@ -559,7 +560,7 @@ class Environment(Mapping):
                 if any(cid not in user_company_ids for cid in company_ids):
                     raise AccessError(_("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids[0])
-        return self.user.company_id
+        return self.user.company_id.with_env(self)
 
     @lazy_property
     def companies(self):
@@ -569,7 +570,7 @@ class Environment(Mapping):
         fallback on current user companies.
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
-        :return: current companies (default=`self.user.company_ids`)
+        :return: current companies (default=`self.user.company_ids`), with the current environment
         :rtype: res.company
 
         .. warning::
@@ -599,7 +600,7 @@ class Environment(Mapping):
         #   - when printing a report for several records from several companies
         #   - when accessing to a record from the notification email template
         #   - when loading an binary image on a template
-        return self.user.company_ids
+        return self.user.company_ids.with_env(self)
 
     @property
     def lang(self):
