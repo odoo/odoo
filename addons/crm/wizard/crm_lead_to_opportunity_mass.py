@@ -50,8 +50,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             user = convert.user_id or convert.user_ids and convert.user_ids[0] or self.env.user
             if convert.team_id and user in convert.team_id.member_ids | convert.team_id.user_id:
                 continue
-            team_domain = []
-            team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
+            team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=None)
             convert.team_id = team.id
 
     @api.depends('lead_tomerge_ids')
