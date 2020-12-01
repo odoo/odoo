@@ -10,7 +10,7 @@
 # Rona Lin <ssauapw@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# Xu Lei <xulei8@qq.com>, 2017
+# Lei Xu <xulei8@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # niulin lnc. <admin@niulin.net>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
@@ -33,7 +33,7 @@
 # 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# Emily JIA <eji@odoo.com>, 2018
+# Emily Jia <eji@odoo.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2019
 # John An <johnxan@163.com>, 2019
 # 
@@ -2667,6 +2667,12 @@ msgid "Is Read"
 msgstr "已读"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
 msgstr "已订阅"
@@ -4958,6 +4964,12 @@ msgstr ""
 "在收到此别名的电子邮件时创建记录的所有者。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的所有者，或者如果没有找到该地址的系统用户将使用管理员帐户。"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_activity.py:175
 #: code:addons/mail/models/mail_message.py:598
 #: code:addons/mail/models/mail_message.py:698
@@ -5532,6 +5544,24 @@ msgid ""
 msgstr "你可以给任何的消息加星号，然后它就会显示在这个渠道。"
 
 #. module: mail
+#: cod:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:54
 #, python-format
 msgid ""
@@ -5566,8 +5596,8 @@ msgstr "你被指派到"
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:588
 #, python-format
-msgid "You have been invited to: "
-msgstr "你已被邀请："
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids

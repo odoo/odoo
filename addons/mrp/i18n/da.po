@@ -18,6 +18,7 @@
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +156,7 @@ msgstr "<span class=\"o_stat_text\">Tid<br/> Analyse</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Arbejdscenter Belastning</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -229,7 +230,7 @@ msgstr "<strong>Antal Minutter</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Printing date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Udskriftsdato:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -442,7 +443,7 @@ msgstr "Styklistenavn"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "Stykliste Produkt Varianter påkrævet for at anvende denne linje."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
@@ -555,7 +556,7 @@ msgstr "Blokkeret tid"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr ""
+msgstr "Blokerede time(r) over den sidste måned"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
@@ -789,7 +790,7 @@ msgstr "Forbrugte afmonteringsordre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
 msgid "Consumed Less Than Planned"
-msgstr ""
+msgstr "Forbrugt Mindre End Planlagt"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -894,7 +895,7 @@ msgstr "Dato"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
 msgid "Deadline End"
-msgstr ""
+msgstr "Deadline Slut"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
@@ -990,7 +991,7 @@ msgstr "Udført"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_done_wo
 msgid "Done for Work Order"
-msgstr ""
+msgstr "Udført for Arbejdsordre"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1210,7 +1211,7 @@ msgstr "Er blevet produceret"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
 msgid "Has Moves"
-msgstr ""
+msgstr "Har Bevægelser"
 
 #. module: mrp
 #: selection:mrp.document,priority:0
@@ -1292,6 +1293,8 @@ msgid ""
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
 msgstr ""
+"Hvis produktet er et færdigt produkt: Leveringsordren vil indeholde de rå\n"
+"                                     materialer, i stedet for det færdige produkt, ved behandling af salgsordre for dette produkt."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1391,6 +1394,9 @@ msgid ""
 "Set a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Lad stå tom hvis du producerer på stedet hvor du finder de rå materialer. "
+"Angiv et sted hvis du producere et fast sted. Dette kan være en partner "
+"lokation hvis du underleverer produktions operationerne."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter selection:mrp.bom,type:0
@@ -1769,7 +1775,7 @@ msgstr "Bevægelse fuldført"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Move forward deadline start dates by"
-msgstr ""
+msgstr "Flyt deadline start datoer frem med"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_raw_ids
@@ -1831,7 +1837,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
-msgstr ""
+msgstr "Næste Operation"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
@@ -1955,7 +1961,7 @@ msgstr "\"Ved behov\" harddisk der har kapacitet efter behovet."
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "Når et minimum af produkter er behandlet"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
@@ -2201,7 +2207,7 @@ msgstr "Produkt bevægelser"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_produce_id
 msgid "Product Produce"
-msgstr ""
+msgstr "Produkt Producer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
@@ -2230,7 +2236,7 @@ msgstr "Vare variant"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_produce_line_ids
 msgid "Product to Track"
-msgstr ""
+msgstr "Produkt at spore"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_message_kanban
@@ -2446,7 +2452,7 @@ msgstr "Rekord produktion"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Record Production Line"
-msgstr ""
+msgstr "Optag Produktionslinje"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:166
@@ -2741,6 +2747,9 @@ msgid ""
 "to produce after the quantity set in 'Quantity To Process' has been "
 "produced."
 msgstr ""
+"Angiv til 'nej' for at planlægge den næste arbejdsordre after den "
+"foregående. Angiv til 'ja' for at producere efter kvantiteten angivet i "
+"\"Kvantitet Til Behandling\" er blevet produceret."
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
@@ -2885,13 +2894,13 @@ msgstr "Teknisk felt til at bestille bevægelser"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
-msgstr ""
+msgstr "Teknisk felt til at se om vi kan vise 'Marker som Færidg' knap"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line_done_wo
 msgid ""
 "Technical Field which is False when temporarily filled in in work order"
-msgstr ""
+msgstr "Teknisk Felt som er Falsk når midlertidig udfyldt i arbejdsordre"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_is_user_working
@@ -2914,6 +2923,8 @@ msgid ""
 "Technical field used to see if we have to display a warning or not when "
 "confirming an order."
 msgstr ""
+"Teknisk felt brugt til se om vi skal vise en advarsel eller ej når en ordre "
+"bekræftes."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
@@ -3051,6 +3062,8 @@ msgid ""
 "There is no Bill of Material found for the product %s. Please define a Bill "
 "of Material for this product."
 msgstr ""
+"Der blev ikke fundet nogen Stykliste for produktet %s. Vær venlig at "
+"definere en Stykliste for dette produkt."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3182,6 +3195,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"For at producere og samle produkter, og bruger råmaterialer og færdige \n"
+"            produkter, skal du også håndtere produktionsoperationer.\n"
+"            Produktionsoperationer kaldes ofte Arbejdsordre. De diverse\n"
+"            operationer vil have en forskellig indflydelse på omkostningen af\n"
+"            produktionen og planlægningen, afhængig af den tilgængelig arbejdsbelastning."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3575,6 +3593,10 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"Arbejdsordre operationer gør det muligt for dig at oprette og administrere "
+"produktions operationer som skal følges i dine workcentre, for at producere "
+"et produkt. De er vedhæftet til styklister som vil definere de påkrævede "
+"komponenter."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
@@ -3759,6 +3781,9 @@ msgid ""
 "material.             If you want to cancel this MO, please change the "
 "consumed quantities to 0."
 msgstr ""
+"Du kan ikke annullere en produktionsordre hvis du allerede har brugt "
+"materiale.            Hvis du vil annullere denne produktionsordre, bedes du"
+" venligst ændre den forbrugte mængde til 0."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:209
@@ -3794,6 +3819,8 @@ msgid ""
 "You have consumed less material than what was planned. Are you sure you want"
 " to close this MO?"
 msgstr ""
+"Du har forbrugt mindre materiale end planlagt. Er du sikker på du vil "
+"afslutte denne Produktionsordre?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:429
@@ -3936,4 +3963,4 @@ msgstr "Arbejdsordrer"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_worksheet
 msgid "worksheet"
-msgstr ""
+msgstr "arbejdsseddel"

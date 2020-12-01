@@ -10,7 +10,7 @@
 # Martin K <martinkuenz@gmail.com>, 2017
 # Thomas Neu <t.neu@runbox.com>, 2017
 # Tom, 2017
-# Walter Müller <inactive+WILL.I.AM@transifex.com>, 2017
+# dd256e210d6036751f64d38852b8a332_e79cb88 <9b58773c6587e6146b8596f8192096a0_521366>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
 # Dejan Dinic, 2017
@@ -21,7 +21,7 @@
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Martin Trigaux, 2017
 # Markus Menner <markus.menner@axxelia.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
 # brokemeister <work@maltejansen.de>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
@@ -2741,6 +2741,12 @@ msgid "Is Read"
 msgstr "Ist gelesen"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
 msgstr "Wird abonniert"
@@ -5108,6 +5114,12 @@ msgstr ""
 "Adresse gefunden wird."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_activity.py:175
 #: code:addons/mail/models/mail_message.py:598
 #: code:addons/mail/models/mail_message.py:698
@@ -5702,6 +5714,24 @@ msgstr ""
 "Sie können beliebige Mitteilungen zur Anzeige in diesem Kanal priorisieren."
 
 #. module: mail
+#: cod:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:54
 #, python-format
 msgid ""
@@ -5740,8 +5770,8 @@ msgstr "Du wurdest hinzugefügt zu "
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:588
 #, python-format
-msgid "You have been invited to: "
-msgstr "Sie wurden eingeladen zu:"
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids

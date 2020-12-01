@@ -19,6 +19,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2557,6 +2558,8 @@ msgid ""
 "Invalid record set: should be called as model (without records) or on "
 "single-record recordset"
 msgstr ""
+"Ugyldig datasæt angivet: bør kaldes som en model (uden datasæt) eller en "
+"enkelt-datasæts datasæt"
 
 #. module: mail
 #: code:addons/mail/controllers/main.py:41
@@ -2690,6 +2693,12 @@ msgstr "Er notificeret"
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_read
 msgid "Is Read"
 msgstr "Er Læst"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
@@ -3088,6 +3097,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Foto i medium størrelse af gruppen. Det bliver automatisk tilpasset til et "
+"128x128 px billede, uden at ændre aspektet. Brug dette felt i "
+"formularvisninger eller nogle kanban visninger."
 
 #. module: mail
 #: selection:mail.activity.type,category:0
@@ -4708,7 +4720,7 @@ msgstr "Sendt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_email
 msgid "Sent by Email"
-msgstr ""
+msgstr "Afsendt per Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_sequence
@@ -4793,6 +4805,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Foto i lille størrelse af gruppen. Det bliver automatisk tilpasset til et "
+"64x64 px billede, uden at ændre aspektet. Brug dette felt hvor der kræves et"
+" lille billede."
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -5038,6 +5053,12 @@ msgstr ""
 "dette felt ikke er indstillet, forsøger systemet at finde den rigtige ejer "
 "baseret på afsenderens (Fra) adresse eller bruger administratorkontoen, hvis"
 " der ikke findes en systembruger for den pågældende adresse."
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:175
@@ -5552,6 +5573,7 @@ msgstr ""
 msgid ""
 "When set, every modification to this field will be tracked in the chatter."
 msgstr ""
+"Når angivet vil alle modifikationer af dette felt blive sporet i chatteren."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
@@ -5625,6 +5647,24 @@ msgid ""
 msgstr "Du kan stjernemarkere enhver besked, og den dukker op i denne kanal."
 
 #. module: mail
+#: cod:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:54
 #, python-format
 msgid ""
@@ -5663,8 +5703,8 @@ msgstr "Du er blevet tildelt"
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:588
 #, python-format
-msgid "You have been invited to: "
-msgstr "Du er blevet inviteret til:"
+msgid "You have been invited to: %s"
+msgstr "Du er blevet inviteret til: %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids
@@ -5832,6 +5872,8 @@ msgstr "model %s accepterer ikke dokumentopdatering"
 msgid ""
 "model %s does not accept document update, fall back on document creation"
 msgstr ""
+"model %saccepterer ikke dokument opdatering, fald tilbage til dokument "
+"oprettelse"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -5865,6 +5907,8 @@ msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"postering af en besked uden model bør være med et nul res_id (privat "
+"besked), modtaget %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:922
@@ -5872,6 +5916,7 @@ msgstr ""
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
 msgstr ""
+"postering af en besked uden model bør være med et parent_id (privat besked)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -5906,13 +5951,14 @@ msgstr "post:"
 #: code:addons/mail/models/mail_thread.py:940
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "besvar manglende dokument (%s, %s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:933
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
+"besvar manglende dokument (%s, %s), fald tilbage til nyt dokument oprettelse"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -5923,7 +5969,7 @@ msgstr "res.config.settings"
 #: code:addons/mail/models/mail_thread.py:918
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "nulstiller thread_id"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:254
