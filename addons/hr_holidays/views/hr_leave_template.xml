@@ -6,6 +6,7 @@
       <script type="text/javascript" src="/hr_holidays/static/src/js/leave_stats_widget.js"></script>
       <script type="text/javascript" src="/hr_holidays/static/src/bugfix/bugfix.js"/>
       <script type="text/javascript" src="/hr_holidays/static/src/components/thread_view/thread_view.js"/>
+      <script type="text/javascript" src="/hr_holidays/static/src/models/partner/partner.js"/>
     </xpath>
     <xpath expr="link[last()]" position="after">
       <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/scss/hr_leave_mobile.scss"/>
@@ -19,6 +20,9 @@
   <template id="qunit_suite" name="hr_holidays_qunit_suite" inherit_id="web.qunit_suite_tests">
       <xpath expr="." position="inside">
           <script type="text/javascript" src="/hr_holidays/static/src/bugfix/bugfix_tests.js"></script>
+          <script type="text/javascript" src="/hr_holidays/static/src/components/thread_view/thread_view_tests.js"/>
+          <script type="text/javascript" src="/hr_holidays/static/tests/helpers/mock_models.js"/>
+          <script type="text/javascript" src="/hr_holidays/static/tests/helpers/mock_server.js"/>
           <script type="text/javascript" src="/hr_holidays/static/tests/test_leave_stats_widget.js"></script>
       </xpath>
   </template>
