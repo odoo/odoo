@@ -20,17 +20,57 @@ class CrmTeam(models.Model):
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=None, domain=None):
-        if user_id is None:
-            user_id = self.env.user.id
+        """ Compute default team id for sales related documents. Note that this
+        method is not called by default_get as it takes some additional
+        parameters and is meant to be called by other default methods.
 
-        team = self.env['crm.team'].search([
-            ('company_id', 'in', [False, self.env.company.id]),
-            '|', ('user_id', '=', user_id), ('member_ids', 'in', [user_id]),
-        ], limit=1)
+        Heuristic (when multiple match: take first sequence ordered)
+
+          1- any of my teams (member OR responsible) matching domain
+          2- any of my teams (member OR responsible)
+          3- default from context
+          4- any team matching my company and domain
+          5- any team matching my company
+
+        Note: ResPartner.team_id field is explicitly not taken into account. We
+        think this field causes a lot of noises compared to its added value.
+        Think notably: team not in responsible teams, team company not matching
+        responsible or lead company, asked domain not matching, ...
+
+        :param user_id: salesperson to target, fallback on env.uid;
+        :domain: optional domain to filter teams (like use_lead = True);
+        """
+        if user_id is None:
+            user = self.env.user
+        else:
+            user = self.env['res.users'].sudo().browse(user_id)
+        valid_cids = [False] + user.company_ids.ids
+
+        # 1- find in user memberships - note that if current user in C1 searches
+        # for team belonging to a user in C1/C2 -> only results for C1 will be returned
+        team = self.env['crm.team']
+        teams = self.env['crm.team'].search([
+            ('company_id', 'in', valid_cids),
+            '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id]),
+        ])
+        if teams and domain:
+            team = teams.filtered_domain(domain)[:1]
+        # 2- any of my teams
+        if not team:
+            team = teams[:1]
+
+        # 3- default: context
         if not team and 'default_team_id' in self.env.context:
             team = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
+
+        # 4- default: first one matching domain, then first one
         if not team:
-            team = self.env['crm.team'].search(domain or [], limit=1)
+            teams = self.env['crm.team'].search([('company_id', 'in', valid_cids)])
+            if teams and domain:
+                team = teams.filtered_domain(domain)[:1]
+            if not team:
+                team = teams[:1]
+
         return team
 
     def _get_default_favorite_user_ids(self):

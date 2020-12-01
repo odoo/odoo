@@ -407,7 +407,7 @@ class SaleOrder(models.Model):
         if self.user_id:
             self.team_id = self.env['crm.team'].with_context(
                 default_team_id=self.team_id.id
-            )._get_default_team_id(user_id=self.user_id.id)
+            )._get_default_team_id(user_id=self.user_id.id, domain=None)
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
