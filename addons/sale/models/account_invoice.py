@@ -53,7 +53,7 @@ class AccountMove(models.Model):
 
         # Recompute 'narration' based on 'company.invoice_terms'.
         if self.type == 'out_invoice':
-            self.narration = self.company_id.with_context(lang=self.partner_id.lang).invoice_terms
+            self.narration = self.company_id.with_context(lang=self.partner_id.lang or self.env.lang).invoice_terms
 
         return res
 

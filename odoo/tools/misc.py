@@ -1391,6 +1391,19 @@ pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), enc
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
 
+def wrap_values(d):
+    # apparently sometimes people pass raw records as eval context
+    # values
+    if not (d and isinstance(d, dict)):
+        return d
+    for k in d:
+        v = d[k]
+        if isinstance(v, types.ModuleType):
+            d[k] = wrap_module(v, None)
+    return d
+import shutil
+_missing = object()
+_cache = dict.fromkeys([os, os.path, shutil, sys, subprocess])
 def wrap_module(module, attr_list):
     """Helper for wrapping a package/module to expose selected attributes
 
@@ -1399,17 +1412,41 @@ def wrap_module(module, attr_list):
             attributes and their own main attributes. No support for hiding attributes in case
             of name collision at different levels.
     """
-    attr_list = set(attr_list)
+    wrapper = _cache.get(module)
+    if wrapper:
+        return wrapper
+
+    attr_list = attr_list and set(attr_list)
     class WrappedModule(object):
         def __getattr__(self, attrib):
-            if attrib in attr_list:
-                target = getattr(module, attrib)
-                if isinstance(target, types.ModuleType):
-                    return wrap_module(target, attr_list)
-                return target
-            raise AttributeError(attrib)
+            # respect whitelist if there is one
+            if attr_list is not None and attrib not in attr_list:
+                raise AttributeError(attrib)
+
+            target = getattr(module, attrib)
+            if isinstance(target, types.ModuleType):
+                wrapper = _cache.get(target, _missing)
+                if wrapper is None:
+                    raise AttributeError(attrib)
+                if wrapper is _missing:
+                    target = wrap_module(target, attr_list)
+                else:
+                    target = wrapper
+            setattr(self, attrib, target)
+            return target
     # module and attr_list are in the closure
-    return WrappedModule()
+    wrapper = WrappedModule()
+    _cache.setdefault(module, wrapper)
+    return wrapper
+
+# dateutil submodules are lazy so need to import them for them to "exist"
+import dateutil
+mods = ['parser', 'relativedelta', 'rrule', 'tz']
+for mod in mods:
+    __import__('dateutil.%s' % mod)
+attribs = [attr for m in mods for attr in getattr(dateutil, m).__all__]
+dateutil = wrap_module(dateutil, set(mods + attribs))
+datetime = wrap_module(datetime, ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
 
 
 class DotDict(dict):

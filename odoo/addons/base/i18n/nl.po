@@ -14,9 +14,9 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yip132 <yannick.renders@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -836,6 +836,8 @@ msgid ""
 "        Bridge module between sale_intrastat and l10n_be_intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"Brugmodule tussen sale_intrastat en l10n_be_intrastat."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -956,6 +958,11 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Definieer standaard inkoopdagboek voor het magazijn,\n"
+"u helpen bij het kiezen van het juiste inkoopboek op de inkooporder wanneer\n"
+"u verandert de picking bewerkingen.\n"
+"handig wanneer u de meerdere GSTIN-eenheden instelt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -976,6 +983,11 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Definieer standaard verkoopdagboek voor het magazijn,\n"
+"u helpen bij het kiezen van het juiste verkoopboek op de verkooporder wanneer\n"
+"je verandert het magazijn.\n"
+"handig wanneer u de meerdere GSTIN-eenheden instelt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -1500,6 +1512,23 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"Beheer kortingen in taxclouds-berekeningen.\n"
+"Zie https://taxcloud.com/support/discounts of\n"
+"https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"Samenvatting: alle door de verkoper verstrekte kortingen moeten worden toegepast op de verkoopprijs voordat de omzetbelasting wordt berekend.\n"
+"Verkopers moeten hun methodologie aan klanten bekendmaken in een beleid voor het aanvragen van kortingen.\n"
+"\n"
+"Het algoritme is als volgt:\n"
+"- lijnspecifieke kortingen worden eerst toegepast op de lijnen waarop ze zouden moeten gelden.\n"
+"Dit betekent productspecifieke kortingen of kortingen op de goedkoopste lijn.\n"
+"- Vervolgens worden globale kortingen zoveel mogelijk gelijkmatig over de betaalde lijnen toegepast.\n"
+"Als er een rest is, wordt deze opeenvolgend toegepast, in de volgorde van de regels,\n"
+"totdat er geen korting meer is of er geen korting meer is.\n"
+"\n"
+"Houd er rekening mee dat op kortingsregels (met een negatieve prijs) geen belastingen worden toegepast,\n"
+"maar het aantal van deze regels zal worden afgetrokken van de regels waarop ze van toepassing zijn tijdens de belastingberekening."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1533,6 +1562,10 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"Noors SAF-T is een standaard bestandsformaat voor het exporteren van verschillende soorten boekhoudkundige transactiegegevens met behulp van het XML-formaat.\n"
+"De eerste versie van de SAF-T Financial is beperkt tot het grootboekniveau inclusief klant- en leverancierstransacties.\n"
+"Noodzakelijke stamgegevens zijn ook inbegrepen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -1578,6 +1611,11 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
+"\n"
+"Deze module is voor alle Ierse KMO's die hun boekhouding snel willen opzetten. De module biedt:\n"
+"\n"
+"- een rekeningschema aangepast aan Ierland\n"
+"- BTW-tarieven en structuur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_saft
@@ -1748,6 +1786,102 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA-overboeking\n"
+"===================\n"
+"\n"
+"Met deze module kunnen betalingsbatches worden gegenereerd als ABA (Australian\n"
+"Bankers Association) tekstbestanden. Het gegenereerde 'aba'-bestand kan worden geüpload\n"
+"voor veel Australische banken.\n"
+"\n"
+"Opstelling\n"
+"-----\n"
+"\n"
+"- * Account> Configuratie> facturering> Dagboeken *\n"
+"\n"
+"Maak indien nodig een nieuw dagboek aan of kies een bestaand dagboek met ** Type **\n"
+"ingesteld op * \"Bank\" *.\n"
+"\n"
+"Zorg ervoor dat bij ** Geavanceerde instellingen ** ABA-kredietoverdracht is aangevinkt.\n"
+"\n"
+"Voer op het tabblad ** Bankrekening ** het ** rekeningnummer ** in.\n"
+"\n"
+"Zorg ervoor dat op hetzelfde tabblad de ABA-overdrachtsinformatie is ingesteld.\n"
+"\n"
+"** BSB ** - Vereist, 6 cijfers, en wordt automatisch opgemaakt.\n"
+"\n"
+"** Code financiële instelling ** - Vereist (verstrekt door bank of kan worden gevonden\n"
+"op Google). Het zijn drie hoofdletters van 3 tekens.\n"
+"\n"
+"** Gebruikersnaam opgeven ** - Bij sommige banken is dit een vrije vorm, bij sommige banken\n"
+"kan het ABA-bestand weigeren als de opgegeven gebruikersnaam niet is zoals verwacht. Het\n"
+"mag niet langer zijn dan 26 tekens.\n"
+"\n"
+"** APCA-identificatienummer ** - Gebruikersidentificatienummer is bank\n"
+"toegewezen. Het is 6 cijfers.\n"
+"\n"
+"** Inclusief zelfbalancerende transactie ** - Sommige instellingen vereisen dat de\n"
+"de laatste is een zelfbalancerende transactie die als verificatie wordt gebruikt.\n"
+"\n"
+"- * Boekhouding> Configuratie> Betalingen> Bankrekeningen *\n"
+"\n"
+"Account wordt in de lijst weergegeven als de journaalnaam.\n"
+"\n"
+"Bij het bewerken wordt het ** accountnummer ** weergegeven. Dit is belangrijk omdat het wordt gebruikt door\n"
+"het ABA-proces.\n"
+"\n"
+"** Bank ** is optioneel.\n"
+"\n"
+"- * Contacten> Configuratie> Bankrekeningen> Bankrekeningen *\n"
+"\n"
+"Betalende rekening wordt in de lijst weergegeven als het rekeningnummer.\n"
+"\n"
+"** Naam rekeninghouder ** - Kan hier worden ingevoerd, indien vereist. Over het algemeen niet\n"
+"gevalideerd door de banken op ABA-bestandsoverdrachten, maar kan worden weergegeven bij de begunstigde\n"
+"bankafschrift tegen de betaling.\n"
+"\n"
+"- Bankrekeningen van leveranciers kunnen op dezelfde plaats worden opgezet, maar dat is het wel\n"
+"over het algemeen gemakkelijker om ze in te stellen vanaf de partner van voor de verkoper.\n"
+"\n"
+"- * Boekhouding> Leveranciers> Leveranciers *\n"
+"\n"
+"Klik op het tabblad ** Boekhouding ** op * \"Accountgegevens bekijken\" * van waaruit een\n"
+"de bankrekening van de leverancier kan worden gemaakt of bewerkt.\n"
+"\n"
+"** Accountnummer ** - Vereist, moet minder dan 9 cijfers bevatten.\n"
+"\n"
+"** BSB ** - Vereist, 6 cijfers, en wordt automatisch opgemaakt.\n"
+"\n"
+"** Naam rekeninghouder ** - Optioneel.\n"
+"\n"
+"Gebruik\n"
+"---\n"
+"\n"
+"- Maak op de normale manier een leveranciersbetaling aan.\n"
+"\n"
+"Zorg ervoor dat de ** Leverancier ** er een is met een geldige ABA-betaalrekening.\n"
+"\n"
+"Kies het juiste ** Betalingsdagboek ** dat is ingesteld voor ABA-betalingen.\n"
+"\n"
+"Selecteer het keuzerondje ** ABA-kredietoverdracht **.\n"
+"\n"
+"Als de leverancier meerdere bankrekeningnummers heeft, moet u mogelijk het\n"
+"correct ** Bankrekening van de ontvanger **. Of als u een leveranciersrekening betaalt, kan dat ook\n"
+"de juiste bankrekening nodig die eraan is gekoppeld.\n"
+"\n"
+"Voer het betalingsbedrag in, enz.\n"
+"\n"
+"- * Verkopers> Betalingen *\n"
+"\n"
+"Nadat de betaling (en) zijn bevestigd, verschijnen deze in de betalingslijst.\n"
+"\n"
+"Gebruik filters of sorteer om de betalingen te selecteren die u wilt opnemen. Onder\n"
+"* Acties * kiezen * Batchbetaling aanmaken *.\n"
+"\n"
+"- * Leveranciers> Batchbetalingen *\n"
+"\n"
+"Bij het valideren van een batchbetaling wordt het ABA-bestand gegenereerd. Het kan\n"
+"worden geregenereerd. Dit bestand kan vervolgens naar de bank worden geüpload.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -1865,6 +1999,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Boekhoudkundige rapporten voor Finland\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -2002,6 +2141,45 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Voeg een nieuw model toe met de naam 'Identificatietype' dat de btw-veldfunctionaliteit in de partner uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (btw), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd ziet u nu in het partnerformulier twee velden:\n"
+"\n"
+"* Identificatie type\n"
+"* Identificatie Nummer\n"
+"\n"
+"Dit gedrag is een algemene vereiste voor sommige Latijns-Amerikaanse landen, zoals Argentinië en Chili. Als uw lokalisatie deze vereisten heeft, moet u van deze module afhankelijk zijn en in uw lokalisatiemodule de identificatietypen definiëren die in uw land worden gebruikt. Over het algemeen worden dit soort identificaties gedefinieerd door de overheidsinstanties die de fiscale operaties reguleren. Bijvoorbeeld:\n"
+"\n"
+"* AFIP in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL (btw voor natuurlijke persoon) en nog eens 80 geldige identificatietypen.\n"
+"\n"
+"Elke identificatie bevat deze informatie:\n"
+"\n"
+"* naam: korte naam van de identificatie\n"
+"* beschrijving: kan dezelfde korte naam of een lange naam zijn\n"
+"* country_id: het land waar deze identificatie thuishoort\n"
+"* is_vat: identificeer dit record als de overeenkomstige btw voor het specifieke land.\n"
+"* volgorde: laten we de identificatietypen sorteren op basis van degene die het meest worden gebruikt.\n"
+"* actief: we kunnen identificaties activeren / deactiveren om het onze klanten gemakkelijker te maken\n"
+"\n"
+"Om deze module compatibel te maken voor omgevingen met meerdere bedrijven waar we bedrijven hebben die deze vereiste niet nodig / ondersteunen, hebben we generieke identificatietypen en generieke regels toegevoegd om de contactgegevens te beheren en deze transparant te maken voor de gebruiker wanneer alleen de BTW zoals we voorheen kenden.\n"
+"\n"
+"Generieke identificaties:\n"
+"\n"
+"* BTW: Het fiscale belastingnummer of BTW-nummer wordt standaard geselecteerd als identificatietype, zodat de gebruiker alleen het gerelateerde BTW-nummer hoeft toe te voegen.\n"
+"* Paspoort\n"
+"* Buitenlands identiteitsbewijs (buitenlands nationaal document)\n"
+"\n"
+"Regels bij het aanmaken van een nieuwe partner: We zien alleen de identificatietypen die zinvol zijn, rekening houdend met deze regels:\n"
+"\n"
+"* Als de partner geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van de partner (als de partner geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
+"\n"
+"* Als de partner een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van de partner.\n"
+"\n"
+"Bij het aanmaken van een nieuw bedrijf, wordt op de gerelateerde partner altijd het gerelateerde land is_vat-identificatietype ingesteld.\n"
+"\n"
+"Alle gedefinieerde identificatietypen kunnen worden bekeken en geactiveerd / gedeactiveerd in het menu \"Contacten / Configuratie / Identificatietype\".\n"
+"\n"
+"Deze module is compatibel met de base_vat-module om btw-nummers te kunnen valideren voor elk land dat al dan niet de mogelijkheid heeft om meerdere identificatietypen te beheren.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -2559,6 +2737,10 @@ msgid ""
 "This is meant to be used with localization specific modules.\n"
 "    "
 msgstr ""
+"\n"
+"Basismodule voor SAF-T-rapportage\n"
+"===============================\n"
+"Dit is bedoeld om te worden gebruikt met lokalisatiespecifieke modules."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -2715,6 +2897,24 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Belgische geregistreerde kassa\n"
+"================================\n"
+"\n"
+"Deze module maakt van de POS-module een gecertificeerde Belgische kassa.\n"
+"\n"
+"Meer informatie:\n"
+"* http://www.systemedecaisseenregistreuse.be/\n"
+"* http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Juridisch\n"
+"-----\n"
+"** Het gebruik van pos_blackbox_be-bronnen is alleen gecertificeerd op het SaaS-platform van odoo.com\n"
+"voor versie 13.0. ** Neem contact op met Odoo SA alvorens de module pos_blackbox_be te installeren.\n"
+"\n"
+"Een versluierde en gecertificeerde versie van de pos_blackbox_be kan worden verstrekt op\n"
+"aanvragen voor on-premise installaties.\n"
+"Geen enkele gewijzigde versie is gecertificeerd en ondersteund door Odoo SA."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2742,6 +2942,11 @@ msgid ""
 "button on Accounting's reports allowing to save the report into the\n"
 "Documents app in the desired format(s).\n"
 msgstr ""
+"\n"
+"Brugmodule tussen de boekhoud- en documenten-apps. Het maakt mogelijk\n"
+"de aanmaakfacturen uit de Documenten-module, en voegt een\n"
+"knop op de boekhoudkundige rapporten waarmee u het rapport kunt opslaan in het\n"
+"Documenten-app in de gewenste indeling (en).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -3534,6 +3739,9 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"Elektronische boekhoudrapporten voor Luxemburg\n"
+"============================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_contract
@@ -3758,6 +3966,73 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"Dagboeken  kunnen aanmaken in Odoo om elektronische klantenfacturen aan te maken en vervolgens te rapporteren aan AFIP (via webservices).\n"
+"De beschikbare opties zijn:\n"
+"\n"
+"* Elektronische factuur - webservice\n"
+"* Voucher exporteren - webservice\n"
+"* Elektronische fiscale borgstelling - webservice\n"
+"\n"
+"Als u in de elektronische tijdschriften een factuur valideert, wordt deze gevalideerd in zowel Odoo als AFIP. Deze validatie is\n"
+"gemaakt op het moment en we ontvangen en \"goedgekeurd / goedgekeurd met observatie / afgewezen\" staat van AFIP. Als de factuur heeft\n"
+"afgewezen door AFIP wordt niet in het systeem geplaatst en er wordt een pop-upbericht weergegeven met zowel de foutdetails (redenen voor afwijzing)\n"
+"we krijgen een HINT over wat het probleem zou kunnen zijn.\n"
+"\n"
+"Voor audit- en probleemoplossingsdoeleinden voegen we ook een menu \"Consulitfactuur in AFIP\" toe waarmee we eerder facturen kunnen raadplegen\n"
+"verzonden naar AFIP en laatste nummer gebruikt als ondersteuning voor mogelijke problemen met de synchronisatie van de sequenties tussen Odoo en AFIP.\n"
+"\n"
+"OPMERKING: Vanuit de formulierweergave van het Journal zijn we in staat om een ​​synchronisatie tussen de odoo-reeksen naar elk van de documenttypen in\n"
+"met de laatste nummers geregistreerd in AFIP.\n"
+"\n"
+"Van leveranciersfacturen hebben we een functionaliteit toegevoegd die kan worden geconfigureerd in de boekhoudinstellingen om te kunnen verifiëren\n"
+"leveranciersrekeningen in AFIP om te controleren of de leveranciersrekeningen echt zijn (meer informatie vindt u in de beschrijving van de instelling).\n"
+"\n"
+"Configuratie:\n"
+"\n"
+"1. Ga naar Accountinstellingen> Argentijnse lokalisatie\n"
+"\n"
+"1.1. Configureer de AFIP-webservicemodus:\n"
+"\n"
+"* Testomgeving om demo-certificaten te gebruiken die zullen worden gebruikt om de instantie te testen en om NOT te maken\n"
+"echte facturen aan AFIP. is alleen om te testen. Omdat demo-instaces al vooraf zijn gedefinieerd, hoeft u deze niet te configureren\n"
+"it (gewoonlijk in AFIP genoemd als homologatieomgeving).\n"
+"* Productieomgeving om echte certificaten en wettelijke facturen aan AFIP te genereren,\n"
+"\n"
+"1.2. Configureer uw AFIP-certificaat: als u zich in een demo-instantie bevindt, is deze standaard ingesteld. als jij\n"
+"in productie zijn, hoeft u alleen maar te gaan om uw AFIP-certificaat te uploaden\n"
+"\n"
+"1.3. Optioneel kunt u aangeven of u leveranciersrekeningen in AFIP wilt kunnen verifiëren.\n"
+"\n"
+"2. Maak verkoopdagboeken die elk van uw AFIP POS (beschikbaar in AFIP Portal) vertegenwoordigen die u wilt gebruiken in Odoo.\n"
+"\n"
+"2.1. Het veld Documenten gebruiken is standaard ingesteld, wijzig dit niet\n"
+"2.2. Stel AFIP POS-systeem in voor een van de elektronische.\n"
+"\n"
+"* Elektronische factuur - webservice '\n"
+"* Elektronische fiscale obligatie - webservice '\n"
+"* Voucher exporteren - Webservice '\n"
+"\n"
+"2.3. Stel het AFIP POS-nummer en AFIP POS-adres in, rekening houdend met wat u in uw AFIP-portaal hebt geconfigureerd.\n"
+"\n"
+"OPMERKING: U kunt de knop \"Beschikbare AFIP POS controleren\" in het formulier van het tijdschrift gebruiken om te bevestigen dat u de tijdschriften moet maken.\n"
+"\n"
+"Ga voor meer informatie over Argentijnse elektronische facturering naar http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"De webservices die worden geïmplementeerd, zijn de meest voorkomende:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (elektronische factuur)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (elektronische exportfactuur - hetzelfde als exportvoucher)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Verificatie van facturen)\n"
+"\n"
+"Ga voor informatie over ontwikkeling naar http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -4150,6 +4425,11 @@ msgid ""
 "The wizard used is similar as the one for the credit note.\n"
 "    "
 msgstr ""
+"\n"
+"In veel landen wordt een debetnota gebruikt als verhoging van de bedragen van een bestaande factuur\n"
+"of in sommige specifieke gevallen om een creditnota te annuleren.\n"
+"Het is als een gewone factuur, maar we moeten de link met de originele factuur bijhouden.\n"
+"De gebruikte wizard is vergelijkbaar met die voor de creditnota."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -7836,6 +8116,8 @@ msgid ""
 "\n"
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Verlof-documenten worden automatisch geïntegreerd in de Document-app.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -8241,6 +8523,8 @@ msgstr " - %r in %s=%r"
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
+"Voegt een stat-knop toe aan de leadformulierweergave om toegang te krijgen "
+"tot hun livechat-sessies."
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -8868,7 +9152,7 @@ msgid ""
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
-"label=\"Zoeken\" title=\"Zoeken\"/></span>"
+"label=\"Zoek\" title=\"Zoek\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -9913,7 +10197,7 @@ msgstr "Voeg voltooide cursussen toe aan het CV van uw werknemers"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
 msgid "Add crm UTM info on social"
-msgstr ""
+msgstr "Voeg crm UTM-info toe op social media"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
@@ -9943,7 +10227,7 @@ msgstr "Voeg livechat ondersteuning toe voor OdooBot"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
 msgid "Add sale UTM info on social"
-msgstr ""
+msgstr "Verkoop UTM-info op social media toevoegen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
@@ -10282,7 +10566,7 @@ msgstr "Toestaan dat bezoekers zich aansluiten bij openbare e-mailkanalen"
 #. module: base
 #: model:ir.module.module,summary:base.module_odoo_referral
 msgid "Allow you to refer your friends to Odoo and get rewards"
-msgstr ""
+msgstr "Sta toe dat u uw vrienden naar Odoo verwijst en beloningen ontvangt"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_odoo_referral_portal
@@ -10629,7 +10913,7 @@ msgstr "Argentijnse boekhoudrapporten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_edi
 msgid "Argentinian Electronic Invoicing"
-msgstr ""
+msgstr "Argentijnse elektronische facturering"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__params
@@ -12361,7 +12645,7 @@ msgstr "Configuratie wizard"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr ""
+msgstr "Configureer de commissies van resellers op abonnementsverkoop"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -20126,7 +20410,7 @@ msgstr "Noorwegen - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_saft
 msgid "Norwegian Standard Audit File for Tax"
-msgstr ""
+msgstr "Noors standaard audit bestand voor belastingen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstalled
@@ -24665,7 +24949,7 @@ msgstr "Rapportages"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
 msgid "Reporting for Argentinian Localization"
-msgstr ""
+msgstr "Rapportage voor Argentijnse lokalisatie"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report
@@ -26939,6 +27223,8 @@ msgid ""
 "The m2o field %s is required but declares its ondelete policy as being 'set "
 "null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
+"Het m2o-veld %s is verplicht, maar geeft aan dat het beleid voor ondelete is"
+" ingesteld op 'null'. Alleen 'beperken' en 'cascade' hebben zin."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
@@ -28091,12 +28377,12 @@ msgstr "UTM en bulkmailing op verkooporders"
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
 msgid "UTM and post on sale orders"
-msgstr ""
+msgstr "UTM en post op verkooporders"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_crm
 msgid "UTM and posts on crm"
-msgstr ""
+msgstr "UTM en post op crm"
 
 #. module: base
 #: model:res.country,name:base.ug

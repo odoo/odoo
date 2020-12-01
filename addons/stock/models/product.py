@@ -503,7 +503,7 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         ctx = dict(self.env.context)
         ctx.update({'no_at_date': True, 'search_default_on_hand': True})
         return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
@@ -603,7 +603,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        related='categ_id.total_route_ids', readonly=False, related_sudo=False)
 
     def _is_cost_method_standard(self):
         return True

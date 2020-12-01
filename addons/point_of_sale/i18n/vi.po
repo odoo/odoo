@@ -11,9 +11,9 @@
 # Martin Trigaux, 2019
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2020\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4265,6 +4265,7 @@ msgstr "Hiển thị Thuế"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -4321,6 +4322,8 @@ msgid ""
 "Technical field which is used to hide use_payment_terminal when no payment "
 "interfaces are installed."
 msgstr ""
+"Trường này được dùng để ẩn đi thông tin use_payment_terminal khi không kết "
+"nối với bất kỳ loại máy thanh toán nào."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4445,6 +4448,8 @@ msgid ""
 "The payment method is of type cash. A cash statement will be automatically "
 "generated."
 msgstr ""
+"Phương thức thanh toán là kiểu tiền mặt. Sao kê tiền mặt sẽ được tự động tạo "
+"ra."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_payment.py:0
@@ -4475,6 +4480,8 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"Điểm bán này chỉ hiển thị các sản phẩm thuộc danh mục có trên cây danh mục "
+"đã chọn. Nếu không có danh mục nào, thì sẽ hiển thị tất cả các sản phẩm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -4502,8 +4509,7 @@ msgstr "Không thể đọc tệp được cung cấp do lỗi không xác đị
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
-"Tỷ giá tiền tệ so với tiền tệ của tỷ giá áp dụng được tại ngày đặt hàng"
+msgstr "Tỷ giá tiền tệ so với tiền tệ của tỷ giá áp dụng được tại ngày đặt hàng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -4555,6 +4561,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"Giao dịch đang được xử lý bằng Adyen. Cài tài khoản Adyen của bạn vào phương"
+" thức thanh toán này."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -4563,6 +4571,8 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
 msgstr ""
+"Giao dịch đang được xử lý bằng Vantiv. Cài tài khoản Vantiv của bạn vào "
+"phương thức thanh toán này."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -4594,13 +4604,15 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"Đang có đơn hàng dự thảo trong phiên này. Vui lòng thanh toán hoặc hủy các đơn hàng dưới đây để xác nhận đóng phiên:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr ""
+msgstr "Có một thanh toán điện tử đang được đưa vào xử lý."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4608,6 +4620,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"Hiện không có hệ thống tài khoản nào được cài cho công ty này. Vui lòng vào "
+"phần cài đặt kế toán để cài hệ thống tài khoản."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4647,6 +4661,15 @@ msgstr "Thêm sự lựa chọn của một loại tiền tệ trên bảng giá
 msgid ""
 "This barcode is already assigned to another contact. Please make sure you "
 "assign a unique barcode to this contact."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"This customer does not have a valid email address, define one or do not send"
+" an email."
 msgstr ""
 
 #. module: point_of_sale
@@ -4754,6 +4777,13 @@ msgstr ""
 " chỉnh số tham chiếu của đơn hàng của bạn."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "This session is already closed."
+msgstr "Phiên này đã bị đóng rồi."
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr ""
@@ -4776,6 +4806,9 @@ msgid ""
 "close a session with a too high difference between real and expected closing"
 " balance"
 msgstr ""
+"Tính năng này được sử dụng để hiển thị thông báo cảnh báo nếu người quản lý "
+"muốn đóng phiên với mức chênh lệch quá cao giữa số dư cuối kỳ thực tế và dự "
+"kiến"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4823,7 +4856,7 @@ msgstr "Để tạo đơn hàng mới, bắt đầu một ca bán hàng mới"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr ""
+msgstr "Để trả sản phẩm, bạn cần mở 1 phiên trong POS %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -4900,6 +4933,11 @@ msgid "Transaction cancelled"
 msgstr "Giao dịch đã bị hủy"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Phiếu giao nhận"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 msgid "Type"
 msgstr "Kiểu"
@@ -4922,6 +4960,9 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"Không thể đóng và xác nhận phiên.\n"
+"Vui lòng đặt tài khoản thuế tương ứng trong mỗi dòng phân loại của các loại thuế sau: \n"
+"%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5300,6 +5341,14 @@ msgid "You need to select the customer before you can invoice an order."
 msgstr ""
 "Bạn cần phải chọn một khách hàng trước khi bạn có thể xuất hoá đơn cho một "
 "đơn bán."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"You need to select the customer before you can send the receipt via email."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

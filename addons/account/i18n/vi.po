@@ -105,6 +105,11 @@ msgid "%s Sequence"
 msgstr "Trình tự %s"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "&amp;nbsp;<span>on</span>"
+msgstr "&amp;nbsp;<span>trên cơ sở</span>"
+
+#. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
@@ -5596,6 +5601,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
+"Nếu chọn, bút toán kế toán hoặc hóa đơn nhận được mã băm ngay sau khi nó "
+"được vào sổ và không thể sửa đổi được nữa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5742,12 +5749,12 @@ msgstr "Không hiệu lực"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__inalterable_hash
 msgid "Inalterability Hash"
-msgstr ""
+msgstr "Không thể thay đổi Hash"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Inalterability check"
-msgstr ""
+msgstr "Kiểm tra không thể thay đổi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
@@ -5821,7 +5828,7 @@ msgstr "Mã Tiêu chuẩn Incoterm"
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_view_search
 #: model_terms:ir.ui.view,arch_db:account.view_incoterms_tree
 msgid "Incoterms"
-msgstr ""
+msgstr "Incoterms"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__name
@@ -5900,6 +5907,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_type__internal_group
 msgid "Internal Group"
 msgstr "Nhóm nội bộ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Internal Note"
+msgstr "Ghi chú nội bộ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
@@ -6032,7 +6044,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr ""
+msgstr "Tên Hiển thị cho đối tác ở hóa đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_icon
@@ -6086,7 +6098,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_line_ids
 msgid "Invoice lines"
-msgstr ""
+msgstr "Dòng hóa đơn"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -6376,7 +6388,7 @@ msgstr "Số Bút toán Sổ nhật ký"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
 msgid "Journal Group"
-msgstr ""
+msgstr "Nhóm sổ nhật ký"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
@@ -6462,7 +6474,7 @@ msgstr "Các phát sinh kế toán mà có số đối soát/khớp chưa đư�
 #: model:ir.model.fields,help:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,help:account.field_res_company__accrual_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr ""
+msgstr "Sổ nhật ký được dùng mặc định để ghi nhận việc bút toán kết chuyển của kỳ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
