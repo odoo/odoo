@@ -2120,16 +2120,19 @@
     1,2,3
 </template>
 
+<!-- PAGE 404 -->
 <template id="page_404" name="Page Not Found">
     <t t-call="http_routing.404">
-        <div class="container o_not_editable">
-            <div class="alert alert-info mt32">
-                <p>This page does not exist, but you can create it as you are administrator of this site.</p>
-                <a role="button" class="btn btn-primary js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+        <div class="o_not_editable bg-100 pt40">
+            <div class="container">
+                <div class="alert alert-info d-flex justify-content-between align-items-center">
+                    <p class="m-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
+                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                </div>
+                <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>
-            <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
+            <hr/>
         </div>
-        <hr/>
     </t>
 </template>
 
