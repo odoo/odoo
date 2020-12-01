@@ -86,9 +86,12 @@ Available manifest fields are:
 ``demo`` (``list(str)``)
     List of data files which are only installed or updated in *demonstration
     mode*
-``auto_install`` (``bool``, default: ``False``)
+``auto_install`` (``bool`` | ``list(str)``, default: ``False``)
     If ``True``, this module will automatically be installed if all of its
     dependencies are installed.
+
+    Alternatively, a list of dependencies in place of ``depends`` can be
+    provided here.
 
     It is generally used for "link modules" implementing synergic integration
     between two otherwise independent modules.
