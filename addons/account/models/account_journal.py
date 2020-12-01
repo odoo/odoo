@@ -521,11 +521,6 @@ class AccountJournal(models.Model):
         company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
         vals['company_id'] = company.id
 
-        # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
-        random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
-        digits = len(random_account.code) if random_account else 6
-
-        liquidity_type = self.env.ref('account.data_account_type_liquidity')
         current_assets_type = self.env.ref('account.data_account_type_current_assets')
 
         if journal_type in ('bank', 'cash'):
@@ -550,20 +545,20 @@ class AccountJournal(models.Model):
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
-                default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
+                default_account_code = self.env['account.account']._search_new_account_code(company, prefix=liquidity_account_prefix, padding_right=1)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
             if not has_payment_accounts:
                 vals['payment_debit_account_id'] = self.env['account.account'].create({
                     'name': _("Outstanding Receipts"),
-                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
+                    'code': self.env['account.account']._search_new_account_code(company, prefix=liquidity_account_prefix),
                     'reconcile': True,
                     'user_type_id': current_assets_type.id,
                     'company_id': company.id,
                 }).id
                 vals['payment_credit_account_id'] = self.env['account.account'].create({
                     'name': _("Outstanding Payments"),
-                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
+                    'code': self.env['account.account']._search_new_account_code(company, prefix=liquidity_account_prefix),
                     'reconcile': True,
                     'user_type_id': current_assets_type.id,
                     'company_id': company.id,

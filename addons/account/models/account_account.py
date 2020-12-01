@@ -3,6 +3,8 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 
+import re
+
 
 class AccountAccountType(models.Model):
     _name = "account.account.type"
@@ -89,6 +91,130 @@ class AccountAccount(models.Model):
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
+
+    # -------------------------------------------------------------------------
+    # HELPERS
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _split_account_code(self, account_code, prefix=None):
+        ''' Split an account code to distinguish the prefix part, the numerical parts and the additional characters
+        such as '.' or letters.
+
+        :param account_code:    An account code.
+        :param prefix:          An optional account code prefix.
+        :return:                A list of tuple (<substring>, <prefix|num|misc>)
+        '''
+        code_split = []
+        trailing_code = account_code
+        if prefix:
+            assert account_code.startswith(prefix)
+            code_split.append((prefix, 'prefix'))
+            trailing_code = trailing_code[len(prefix):]
+        while trailing_code:
+            matcher = re.match(r'\d+', trailing_code)
+            if matcher:
+                split_type = 'num'
+            else:
+                matcher = re.match(r'\D+', trailing_code)
+                split_type = 'misc'
+            head_code = matcher.group(0)
+            code_split.append((head_code, split_type))
+            trailing_code = trailing_code[len(head_code):]
+        return code_split
+
+    @api.model
+    def _convert_to_account_code(self, code_split):
+        ''' Concatenate the list of tuple created using the '_split_account_code' method into an account code.
+
+        :param code_split:  A list of tuple (<substring>, <prefix|num|misc>)
+        :return:            An account code.
+        '''
+        return ''.join(code for code, split_type in code_split)
+
+    @api.model
+    def _next_account_code(self, account_code, prefix=None, padding_right=0):
+        ''' Increment the account code passed as parameter.
+
+        :param account_code:    The account code from which create the new one.
+        :param prefix:          The prefix of account_code that should be preserved into the new one.
+        :param padding_right:   The number of digits that need to remain available to create child codes.
+        :return:                The next account code after account_code.
+        '''
+        # Split the account_code. E.g. account_code='01.12.133.08' & prefix='01.12.':
+        # => code_split: [('01.12.', 'prefix), ('133', 'num'), ('.', 'misc'), ('08', 'num')]
+        code_split = self._split_account_code(account_code, prefix=prefix)
+
+        # Increment the last number.
+        # ('08', 'num') => ('09', 'num')
+        num_str = code_split[-1][0]
+        num_size = len(num_str)
+        num_int = int(num_str)
+        num_inc_int = num_int + pow(10, padding_right)
+        num_inc_str = str(num_inc_int).rjust(num_size, '0')
+        new_code_split = code_split[:-1] + [(num_inc_str, 'num')]
+        return self._convert_to_account_code(new_code_split)
+
+    @api.model
+    def _search_new_account_code(self, company, prefix=None, padding_right=0):
+        ''' Helper to find a new available code to create a new account.
+
+        :param company:         The company owning the existing accounts.
+        :param prefix:          The optional unalterable prefix of the account code.
+        :param padding_right:   The number of digits that need to remain available to create child codes.
+        :return:                A new available account code.
+        '''
+
+        # Collect the account codes having the requested prefix and having the highest length.
+        self.flush(['code', 'company_id'])
+        self._cr.execute('''
+            SELECT code
+            FROM account_account
+            WHERE company_id = %s
+            AND code LIKE %s
+            ORDER BY CHAR_LENGTH(code) DESC, code DESC
+        ''', [company.id, (prefix or '') + '%'])
+        sorted_account_codes = [r[0] for r in self._cr.fetchall()]
+
+        # Iterate starting from the highest code until a new code is found.
+        fallback_account_codes = []
+        for i, account_code in enumerate(sorted_account_codes):
+            next_account_code = self._next_account_code(account_code, prefix=prefix, padding_right=padding_right)
+
+            # This code is already used, skip it.
+            if i > 0 and next_account_code == sorted_account_codes[i - 1]:
+                continue
+
+            # Found a new code without adding a new digits.
+            if len(next_account_code) == len(account_code):
+                return next_account_code
+
+            # Track the newly computed codes in order to use them as fallback if needed.
+            fallback_account_codes.append(next_account_code)
+
+        # Create the root account_code.
+        if sorted_account_codes:
+            min_digits = len(sorted_account_codes[-1])
+        elif company.chart_template_id:
+            min_digits = company.chart_template_id.code_digits
+        else:
+            random_account = self.search([('company_id', '=', company.id)], order='CHAR_LENGTH(code) DESC', limit=1)
+            min_digits = len(random_account.code) if random_account else 6
+        root_account_code = prefix.ljust(min_digits, '0')
+
+        # Use the root code if not already used.
+        if not sorted_account_codes or sorted_account_codes[-1] != root_account_code:
+            return root_account_code
+
+        # At this point, there is no code left using the initial number of digits.
+        if fallback_account_codes:
+            return fallback_account_codes[0]
+
+        return root_account_code + '0'
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
 
     @api.constrains('reconcile', 'internal_group', 'tax_ids')
     def _constrains_reconcile(self):
@@ -213,15 +339,6 @@ class AccountAccount(models.Model):
             WHERE EXISTS (SELECT * FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
         """)
         return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
-
-    @api.model
-    def _search_new_account_code(self, company, digits, prefix):
-        for num in range(1, 10000):
-            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
-            rec = self.search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
-            if not rec:
-                return new_code
-        raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_opening_debit_credit(self):
         self.opening_debit = 0

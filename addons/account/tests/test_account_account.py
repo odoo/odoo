@@ -7,6 +7,23 @@ from odoo.exceptions import UserError
 @tagged('post_install', '-at_install')
 class TestAccountAccount(AccountTestInvoicingCommon):
 
+    # -------------------------------------------------------------------------
+    # HELPERS
+    # -------------------------------------------------------------------------
+
+    def _create_accounts_by_codes(self, account_codes):
+        current_assets_type_id = self.env.ref('account.data_account_type_current_assets').id
+        return self.env['account.account'].create([{
+            'name': "test account %s" % i,
+            'code': code,
+            'user_type_id': current_assets_type_id,
+            'company_id': self.env.company.id,
+        } for i, code in enumerate(account_codes)])
+
+    # -------------------------------------------------------------------------
+    # MULTI-COMPANIES
+    # -------------------------------------------------------------------------
+
     def test_changing_account_company(self):
         ''' Ensure you can't change the company of an account.account if there are some journal entries '''
 
@@ -27,6 +44,10 @@ class TestAccountAccount(AccountTestInvoicingCommon):
 
         with self.assertRaises(UserError), self.cr.savepoint():
             self.company_data['default_account_revenue'].company_id = self.company_data_2['company']
+
+    # -------------------------------------------------------------------------
+    # TOGGLE RECONCILE
+    # -------------------------------------------------------------------------
 
     def test_toggle_reconcile(self):
         ''' Test the feature when the user sets an account as reconcile/not reconcile with existing journal entries. '''
@@ -126,3 +147,32 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         # Try to set the account as a not-reconcile one.
         with self.assertRaises(UserError), self.cr.savepoint():
             account.reconcile = False
+
+    # -------------------------------------------------------------------------
+    # NEW ACCOUNT CODES
+    # -------------------------------------------------------------------------
+
+    def test_search_new_code_with_prefix(self):
+        self._create_accounts_by_codes(['101.1230', '101.1240', '101.1260', '101.1290'])
+
+        prefix = '101.12'
+
+        expected_codes = (
+            # Fill after the highest code first.
+            '101.1270',
+            '101.1280',
+            # Avoid adding a new digit if possible.
+            '101.1250',
+            '101.1200',
+            '101.1210',
+            '101.1220',
+            # No available code left, add a new digit.
+            '101.12100',
+            '101.12110',
+            '101.12120',
+        )
+
+        for expected_code in expected_codes:
+            new_code = self.env['account.account']._search_new_account_code(self.env.company, prefix=prefix, padding_right=1)
+            self.assertEqual(new_code, expected_code)
+            self._create_accounts_by_codes([new_code])

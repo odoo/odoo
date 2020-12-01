@@ -162,10 +162,10 @@ class AccountChartTemplate(models.Model):
         }
 
     @api.model
-    def _create_liquidity_journal_suspense_account(self, company, code_digits):
+    def _create_liquidity_journal_suspense_account(self, company):
         return self.env['account.account'].create({
             'name': _("Bank Suspense Account"),
-            'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
+            'code': self.env['account.account']._search_new_account_code(company, prefix=company.bank_account_code_prefix or ''),
             'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
             'company_id': company.id,
         })
@@ -252,12 +252,12 @@ class AccountChartTemplate(models.Model):
 
         # Set default cash difference account on company
         if not company.account_journal_suspense_account_id:
-            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
+            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company)
 
         if not company.default_cash_difference_expense_account_id:
             company.default_cash_difference_expense_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Loss'),
-                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'code': self.env['account.account']._search_new_account_code(company, prefix='999'),
                 'user_type_id': self.env.ref('account.data_account_type_expenses').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
@@ -266,7 +266,7 @@ class AccountChartTemplate(models.Model):
         if not company.default_cash_difference_income_account_id:
             company.default_cash_difference_income_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Gain'),
-                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'code': self.env['account.account']._search_new_account_code(company, prefix='999'),
                 'user_type_id': self.env.ref('account.data_account_type_revenue').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
@@ -393,10 +393,9 @@ class AccountChartTemplate(models.Model):
         :return:            A dictionary of values to create a new account.account.
         """
         vals = self._prepare_transfer_account_template()
-        digits = self.code_digits or 6
         prefix = self.transfer_account_code_prefix or ''
         vals.update({
-            'code': self.env['account.account']._search_new_account_code(company, digits, prefix),
+            'code': self.env['account.account']._search_new_account_code(company, prefix=prefix),
             'name': name,
             'company_id': company.id,
         })
