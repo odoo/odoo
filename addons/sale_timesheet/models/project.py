@@ -129,7 +129,7 @@ class Project(models.Model):
                 continue
             for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
                 sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
-                timesheet_ids.filtered(lambda t: t.employee_id == employee_id).so_line = sale_line_id
+                timesheet_ids.filtered(lambda t: t.employee_id == employee_id).sudo().so_line = sale_line_id
 
     def action_view_timesheet(self):
         self.ensure_one()
