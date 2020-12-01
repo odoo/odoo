@@ -323,6 +323,9 @@ function factory(dependencies) {
         messagesAsAuthor: one2many('mail.message', {
             inverse: 'author',
         }),
+        /**
+         * Serves as compute dependency.
+         */
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
         }),
