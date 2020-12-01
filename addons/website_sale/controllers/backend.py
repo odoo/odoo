@@ -129,14 +129,6 @@ class WebsiteSaleBackend(WebsiteBackend):
         return results
 
     def fetch_utm_data(self, date_from, date_to):
-        # avoid access right error when non sales users access website dashboard
-        if not request.env['res.users'].has_group('sales_team.group_sale_salesman'):
-            return {
-                'campaign_id': [],
-                'medium_id': [],
-                'source_id': [],
-                }
-
         sale_utm_domain = [
             ('website_id', '!=', False),
             ('state', 'in', ['sale', 'done']),
