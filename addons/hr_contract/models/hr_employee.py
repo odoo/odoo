@@ -17,7 +17,7 @@ class Employee(models.Model):
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
 
-    @api.depends('contract_ids.state')
+    @api.depends('contract_ids.state', 'contract_ids.date_start')
     def _compute_first_contract_date(self):
         for employee in self:
             contracts = employee.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
