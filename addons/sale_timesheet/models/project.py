@@ -125,7 +125,7 @@ class Project(models.Model):
         return res
 
     def _get_not_billed_timesheets(self):
-        return self.mapped('timesheet_ids').filtered(
+        return self.sudo(False).mapped('timesheet_ids').filtered(
             lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
 
     def _update_timesheets_sale_line_id(self):
