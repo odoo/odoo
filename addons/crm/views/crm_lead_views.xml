@@ -213,10 +213,9 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                             <group>
-                                <field name="user_id" domain="[('share', '=', False)]"
+                                <field name="user_id"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
-                                <field name="team_id" widget="selection"
-                                    domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                                <field name="team_id" widget="selection"/>
                                 <field name="type" invisible="1"/>
                             </group>
                             <group name="lead_priority" attrs="{'invisible': [('type', '=', 'opportunity')]}">
@@ -227,6 +226,7 @@
                                 <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="user_company_ids" invisible="1"/>
                             </group>
                         </group>
 
@@ -338,7 +338,9 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show" options="{'no_open': True, 'no_create': True}"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="user_id" optional="show"  widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                    <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
+                    <field name="user_id" optional="show"  widget="many2one_avatar_user"
+                        domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
@@ -443,6 +445,7 @@
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="user_id" invisible="1"/>
+                        <field name="user_company_ids" invisible="1"/>
                         <field name="team_id" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <field name="partner_name" invisible="1"/>
@@ -669,7 +672,9 @@
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
-                    <field name="user_id" widget="many2one_avatar_user" optional="show" domain="[('share', '=', False)]"/>
+                    <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
+                    <field name="user_id" widget="many2one_avatar_user" optional="show"
+                        domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="hide"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_ids" widget="list_activity"/>
