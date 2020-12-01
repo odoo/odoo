@@ -14,9 +14,10 @@ TranslationDataBase.include({
         if (Component.env.messaging) {
             // Update messaging locale whenever the translation bundle changes.
             // In particular if messaging is created before the end of the
-            // `load_translations` RPC, the default text direction has to be
-            // updated by the received one.
+            // `load_translations` RPC, the default values have to be
+            // updated by the received ones.
             Component.env.messaging.locale.update({
+                language: this.parameters.code,
                 textDirection: this.parameters.direction,
             });
         }
