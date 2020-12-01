@@ -57,10 +57,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.constrains('so_line', 'project_id')
     def _check_sale_line_in_project_map(self):
-        for timesheet in self:
-            if timesheet.project_id and timesheet.so_line:  # billed timesheet
-                if timesheet.so_line not in timesheet.project_id.mapped('sale_line_employee_ids.sale_line_id') | timesheet.task_id.sale_line_id | timesheet.project_id.sale_line_id:
-                    raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
+        for timesheet in self.filtered(lambda t: t.project_id and t.so_line):  # billed timesheet
+            if timesheet.so_line not in timesheet.project_id.mapped('sale_line_employee_ids.sale_line_id') | timesheet.task_id.sale_line_id | timesheet.project_id.sale_line_id:
+                raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
 
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
