@@ -362,6 +362,7 @@ class ProductProduct(models.Model):
             ('stock_move_id', '!=', False),
             ('company_id', '=', company.id),
         ], order='create_date, id')
+        as_svls = []
         for svl_to_vacuum in svls_to_vacuum:
             domain = [
                 ('company_id', '=', svl_to_vacuum.company_id.id),
@@ -431,13 +432,13 @@ class ProductProduct(models.Model):
             if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
                 product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
-            # Create the account move.
             if self.valuation != 'real_time':
                 continue
-            vacuum_svl.stock_move_id._account_entry_move(
-                vacuum_svl.quantity, vacuum_svl.description, vacuum_svl.id, vacuum_svl.value
-            )
-            # Create the related expense entry
+            as_svls.append((vacuum_svl, svl_to_vacuum))
+
+        self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
+
+        for vacuum_svl, svl_to_vacuum in as_svls:
             self._create_fifo_vacuum_anglo_saxon_expense_entry(vacuum_svl, svl_to_vacuum)
 
     def _create_fifo_vacuum_anglo_saxon_expense_entry(self, vacuum_svl, svl_to_vacuum):

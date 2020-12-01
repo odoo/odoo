@@ -36,3 +36,19 @@ class StockValuationLayer(models.Model):
             self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
         )
 
+    def _validate_accounting_entries(self):
+        am_vals = []
+        for svl in self:
+            if not svl.product_id.valuation == 'real_time':
+                continue
+            if svl.currency_id.is_zero(svl.value):
+                continue
+            am_vals += svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+        if am_vals:
+            account_moves = self.env['account.move'].sudo().create(am_vals)
+            account_moves._post()
+        if self.company_id.anglo_saxon_accounting:
+            # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            for svl in self:
+                svl.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=svl.product_id)
+
