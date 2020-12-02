@@ -358,8 +358,12 @@ class Survey(http.Controller):
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
+        answer_sudo = access_data['answer_sudo']
+        if answer_sudo.state != 'done' and answer_sudo.survey_time_limit_reached:
+            answer_sudo._mark_done()
+
         return request.render('survey.survey_page_fill',
-            self._prepare_survey_data(access_data['survey_sudo'], access_data['answer_sudo'], **post))
+            self._prepare_survey_data(access_data['survey_sudo'], answer_sudo, **post))
 
     @http.route('/survey/get_background_image/<string:survey_token>/<string:answer_token>', type='http', auth="public", website=True, sitemap=False)
     def survey_get_background(self, survey_token, answer_token):
