@@ -1143,7 +1143,15 @@ class Message(models.Model):
                 ('email', 'not in', [self.author_id.email, self.email_from]),
             ])
             for partner in new_pids:
-                rdata['partners'].append({'id': partner.id, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []})
+                user = partner.user_ids
+                partner_share = partner.partner_share
+                if not partner_share and user:  # has an user and is not shared, is therefore user
+                    partner_type = 'user'
+                elif partner_share and user:  # has an user but is shared, is therefore portal
+                    partner_type = 'portal'
+                else:  # has no user, is therefore customer
+                    partner_type = 'customer'
+                rdata['partners'].append({'id': partner.id, 'share': partner_share, 'notif': 'email', 'type': partner_type, 'groups': []})
 
         partner_email_rdata = [r for r in rdata['partners'] if r['notif'] == 'email']
         if partner_email_rdata:
