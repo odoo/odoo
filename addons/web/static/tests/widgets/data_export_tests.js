@@ -313,6 +313,7 @@ QUnit.module('widgets', {
                 get_file(args) {
                     let data = JSON.parse(args.data.data);
                     assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
+                    console.log("Inside session ::: ", JSON.stringify(data))
                     assert.deepEqual(data, {
                         context: {},
                         model: 'partner',
