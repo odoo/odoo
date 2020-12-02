@@ -107,7 +107,7 @@
                 <br/>
                 <strong>Address:</strong>
                 <span t-field="o.partner_id"
-                      t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true, 'no_tag_br': True}"/>
+                      t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True, 'no_tag_br': True}"/>
 
                 <strong>Payment Terms:</strong>
                 <span t-esc="o.invoice_payment_term_id.name or ''"/>

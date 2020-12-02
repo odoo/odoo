@@ -203,7 +203,7 @@
                                 <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </time>
                             <!-- Location -->
-                            <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                            <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': True}"/>
                             <div class="mt8 d-flex align-items-center">
                                 <t t-foreach="event.tag_ids" t-as="tag">
                                     <span t-if="tag.color"
