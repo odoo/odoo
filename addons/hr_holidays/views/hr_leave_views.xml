@@ -383,7 +383,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">calendar</field>
         <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1, 'search_default_managed_people': 1, 'search_default_managed_people': 1, 'search_default_my_team_leaves': 1}</field>
-        <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
+        <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse'), ('user_id.active','=',True)]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
         <field name="view_id" ref="hr_leave_view_calendar"/>
     </record>
