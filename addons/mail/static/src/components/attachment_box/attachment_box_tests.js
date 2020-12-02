@@ -307,11 +307,11 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment_actionUnlink',
+        '.o_Attachment_asideItemUnlink',
         "attachment should have a delete button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Attachment_actionUnlink').click());
+    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirmDialog',
