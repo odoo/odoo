@@ -183,25 +183,13 @@
                     </t>
                     <t t-if="message.attachments and message.attachments.length > 0">
                         <div class="o_Message_footer">
-                            <!-- TODO XDU This does not allow to preview all attachments at once, find somethind else -->
-                            <t t-if="imageAttachments and imageAttachments.length > 0">
-                                <AttachmentList
-                                    class="o_Message_attachmentList"
-                                    areAttachmentsDownloadable="true"
-                                    areAttachmentsEditable="message.author === env.messaging.currentPartner"
-                                    attachmentLocalIds="imageAttachments.map(attachment => attachment.localId)"
-                                    attachmentsDetailsMode="props.attachmentsDetailsMode"
-                                />
-                            </t>
-                            <t t-if="nonImageAttachments and nonImageAttachments.length > 0">
-                                <AttachmentList
-                                    class="o_Message_attachmentList"
-                                    areAttachmentsDownloadable="true"
-                                    areAttachmentsEditable="message.author === env.messaging.currentPartner"
-                                    attachmentLocalIds="nonImageAttachments.map(attachment => attachment.localId)"
-                                    attachmentsDetailsMode="props.attachmentsDetailsMode"
-                                />
-                            </t>
+                            <AttachmentList
+                                class="o_Message_attachmentList"
+                                areAttachmentsDownloadable="true"
+                                areAttachmentsEditable="message.author === env.messaging.currentPartner"
+                                attachmentLocalIds="message.attachments.map(attachment => attachment.localId)"
+                                attachmentsDetailsMode="props.attachmentsDetailsMode"
+                            />
                         </div>
                     </t>
                 </div>
