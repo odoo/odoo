@@ -22,7 +22,9 @@ class AccountAnalyticLine(models.Model):
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheet will not be billed.")
+    so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
 
+    # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to bill_type and pricing_type of project (See in master)
     @api.depends('so_line.product_id', 'project_id', 'task_id', 'non_allow_billable', 'task_id.bill_type', 'task_id.pricing_type', 'task_id.non_allow_billable')
     def _compute_timesheet_invoice_type(self):
         non_allowed_billable = self.filtered('non_allow_billable')
@@ -55,12 +57,20 @@ class AccountAnalyticLine(models.Model):
             else:
                 self.so_line = False
 
+    @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id')
+    def _compute_so_line(self):
+        for timesheet in self._get_not_billed():  # Get only the timesheets are not yet invoiced
+            timesheet.so_line = timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
+
+    def _get_not_billed(self):
+        return self.filtered(lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
+
     def _check_timesheet_can_be_billed(self):
         return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
 
     @api.constrains('so_line', 'project_id')
     def _check_sale_line_in_project_map(self):
-        if not all(t._check_timesheet_can_be_billed() for t in self.filtered(lambda t: t.project_id and t.so_line)):
+        if not all(t._check_timesheet_can_be_billed() for t in self._get_not_billed().filtered(lambda t: t.project_id and t.so_line)):
             raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
 
     def write(self, values):
@@ -91,16 +101,6 @@ class AccountAnalyticLine(models.Model):
             project = self.env['project.project'].sudo().browse(values['project_id']) if values.get('project_id') else task.project_id
             values['so_line'] = self._timesheet_determine_sale_line(task, employee, project).id
         return values
-
-    def _timesheet_postprocess_values(self, values):
-        result = super(AccountAnalyticLine, self)._timesheet_postprocess_values(values)
-        # (re)compute the sale line
-        if any(field_name in values for field_name in ['task_id', 'employee_id', 'project_id']):
-            for timesheet in self:
-                result[timesheet.id].update({
-                    'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id).id,
-                })
-        return result
 
     @api.model
     def _timesheet_determine_sale_line(self, task, employee, project):
