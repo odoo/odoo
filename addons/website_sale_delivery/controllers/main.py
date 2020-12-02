@@ -43,6 +43,22 @@ class WebsiteSaleDelivery(WebsiteSale):
         carrier = request.env['delivery.carrier'].sudo().browse(int(carrier_id))
         rate = carrier.rate_shipment(order)
         if rate.get('success'):
+            tax_ids = carrier.product_id.taxes_id.filtered(lambda t: t.company_id == order.company_id)
+            if tax_ids:
+                fpos = order.fiscal_position_id
+                tax_ids = fpos.map_tax(tax_ids, carrier.product_id, order.partner_shipping_id)
+                taxes = tax_ids.compute_all(
+                    rate['price'],
+                    currency=order.currency_id,
+                    quantity=1.0,
+                    product=carrier.product_id,
+                    partner=order.partner_shipping_id,
+                )
+                if request.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+                    rate['price'] = taxes['total_excluded']
+                else:
+                    rate['price'] = taxes['total_included']
+
             res['status'] = True
             res['new_amount_delivery'] = Monetary.value_to_html(rate['price'], {'display_currency': order.currency_id})
             res['is_free_delivery'] = not bool(rate['price'])
