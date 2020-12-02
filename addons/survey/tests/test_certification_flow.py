@@ -28,7 +28,6 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
                 'is_time_limited': True,
                 'time_limit': 10,
-                'state': 'open',
             })
 
             q01 = self._add_question(
@@ -135,7 +134,6 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'title': 'User randomized Certification',
                 'questions_layout': 'page_per_section',
                 'questions_selection': 'random',
-                'state': 'open',
                 'scoring_type': 'scoring_without_answers',
             })
 

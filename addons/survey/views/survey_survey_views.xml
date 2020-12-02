@@ -9,21 +9,19 @@
                 <field name="id" invisible="1"/>
                 <field name="session_state" invisible="1"/>
                 <header>
-                    <button name="action_open" string="Start Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('id', '=', False)]}"/>
-                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight" states="open"/>
+                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight" attrs="{'invisible': [('active', '=', False)]}"/>
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
-                      attrs="{'invisible': ['|', ('state', '=', 'draft'), ('answer_done_count', '&lt;=', 0)]}"/>
+                      attrs="{'invisible': [('answer_done_count', '&lt;=', 0)]}"/>
                     <button name="action_start_session" string="Create Live Session" type="object"
-                        attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('state', '!=', 'open'), ('certification', '=', True)]}" />
+                        attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('active', '=', False), ('certification', '=', True)]}" />
                     <button name="action_open_session_manager" string="Open Session Manager" type="object"
-                        attrs="{'invisible': ['|', ('session_state', '=', False), ('state', '=', 'draft')]}" />
+                        attrs="{'invisible': [('session_state', '=', False)]}" />
                     <button name="action_end_session" string="Close Live Session" type="object"
-                        attrs="{'invisible': ['|', ('session_state', 'not in', ['ready', 'in_progress']), ('state', '=', 'draft')]}" />
-                    <button name="action_draft" string="Set to draft" type="object" states="closed"/>
-                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': ['|', ('state', '=', 'closed'), ('id', '=', False)]}"/>
-                    <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_close" string="Close" type="object" states="open"/>
-                    <field name="state" widget="statusbar"/>
+                        attrs="{'invisible': [('session_state', 'not in', ['ready', 'in_progress'])]}" />
+                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_print_survey" string="Print" type="object"/>
+                    <button name="action_archive" string="Close" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_unarchive" string="Reopen" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -165,7 +163,6 @@
                 <field name="active" invisible="1"/>
                 <field name="certification" invisible="1"/>
                 <field name="title"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'open'"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
                 <field name="success_count"/>
@@ -181,7 +178,6 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <kanban sample="1">
-                <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />
                 <field name="certification" />
@@ -192,6 +188,7 @@
                 <field name="activity_state" />
                 <field name="success_count"/>
                 <field name="success_ratio"/>
+                <field name='active'/>
                 <templates>
                     <div t-name="kanban-box" 
                         t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey 
@@ -203,7 +200,7 @@
                             </a>
                             <div class="dropdown-menu" role="menu">
                                 <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
-                                <a t-if="record.state.raw_value != 'closed'" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
+                                <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 <div role="separator" class="dropdown-divider"/>
                                 <div role="separator" class="dropdown-item-text">Color</div>
@@ -215,7 +212,7 @@
                         </div>
                         <div class="row">
                             <div class="col-10 p-0 pb-1">
-                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0 or record.state.raw_value != 'draft'">
+                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0">
                                     <div class="row mt-4 ml-5">
                                         <div class="col-4 p-0">
                                             <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
@@ -270,9 +267,6 @@
                     domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Upcoming Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                <group expand="0" string="Group By">
-                    <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
-                </group>
             </search>
         </field>
     </record>
@@ -281,7 +275,6 @@
         <field name="name">Surveys</field>
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="context">{'search_default_groupby_state': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new survey

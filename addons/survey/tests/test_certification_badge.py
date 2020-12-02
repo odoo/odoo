@@ -17,7 +17,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
             'certification': True,
-            'state': 'open',
         })
 
         self.certification_survey_2 = self.env['survey.survey'].with_user(self.survey_manager).create({
@@ -26,7 +25,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
             'certification': True,
-            'state': 'open',
         })
 
         self.certification_badge = self.env['gamification.badge'].with_user(self.survey_manager).create({
@@ -160,7 +158,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'certification': True,
             'certification_give_badge': True,
             'certification_badge_id': self.certification_badge.id,
-            'state': 'open'
         }
         survey_1 = self.env['survey.survey'].create(vals.copy())
         vals.update({'certification_badge_id': self.certification_badge_2.id})

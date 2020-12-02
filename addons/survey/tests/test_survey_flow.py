@@ -26,7 +26,6 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
                 'access_mode': 'public',
                 'users_login_required': False,
                 'questions_layout': 'page_per_section',
-                'state': 'open'
             })
 
             # First page is about customer data

@@ -35,7 +35,6 @@ class TestUiSession(HttpCase):
         survey_session = self.env['survey.survey'].create({
             'title': 'User Session Survey',
             'access_token': 'b137640d-14d4-4748-9ef6-344caaaaafe',
-            'state': 'open',
             'access_mode': 'public',
             'users_can_go_back': False,
             'questions_layout': 'page_per_question',
