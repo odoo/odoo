@@ -360,7 +360,8 @@ snippetOptions.registry.BlogPostTagSelection = snippetOptions.SnippetOptionWidge
         }
         const $select = $(uiFragment.querySelector('we-select[data-name="blog_existing_tag_opt"]'));
         for (const [key, tag] of Object.entries(this.allTagsByID)) {
-            if (this.tagIDs.includes(parseInt(key))) {
+            if (this.tagIDs.includes(parseInt(key)) || this.tagIDs.includes(key)) {
+                // saved tag keys are numbers, new tag keys are strings
                 continue;
             }
             $select.prepend(qweb.render('website_blog.TagSelectItem', {
