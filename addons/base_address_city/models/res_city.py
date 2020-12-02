@@ -28,7 +28,7 @@ class City(models.Model):
             if city.country_id:
                 name.append(city.country_id.name)
             res.append((city.id, ', '.join(name)))
-         return res
+        return res
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
