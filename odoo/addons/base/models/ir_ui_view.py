@@ -9,6 +9,7 @@ import inspect
 import json
 import logging
 import math
+import pprint
 import re
 import time
 import uuid
@@ -360,7 +361,7 @@ actual arch.
                 match = TRANSLATED_ATTRS_RE.search(node.get('expr', ''))
                 if match:
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
-                    self.handle_view_error(message)
+                    self.handle_view_error(message, node)
                 if WRONGCLASS.search(node.get('expr', '')):
                     _logger.warning(
                         "Error-prone use of @class in view %s (%s): use the "
@@ -371,7 +372,7 @@ actual arch.
                 for attr in TRANSLATED_ATTRS:
                     if node.get(attr):
                         message = "View inheritance may not use attribute %r as a selector." % attr
-                        self.handle_view_error(message)
+                        self.handle_view_error(message, node)
         return True
 
     @api.constrains('arch_db')
@@ -380,6 +381,7 @@ actual arch.
         # Any exception raised below will cause a transaction rollback.
         for view in self:
             try:
+                # verify the view is valid xml and that the inheritance resolves
                 view_arch = etree.fromstring(view.arch.encode('utf-8'))
                 view._valid_inheritance(view_arch)
                 view_def = view.read_combined(['arch'])
@@ -387,6 +389,13 @@ actual arch.
                 if view.type == 'qweb':
                     continue
                 view_doc = etree.fromstring(view_arch_utf8)
+            except ValueError as e:
+                raise ValidationError(_(
+                    "Error while validating view:\n\n%(error)s",
+                    error=tools.ustr(e),
+                )).with_traceback(e.__traceback__) from None
+
+            try:
                 # verify that all fields used are valid, etc.
                 view.postprocess_and_fields(view_doc, validate=True)
                 # RNG-based validation is not possible anymore with 7.0 forms
@@ -405,10 +414,14 @@ actual arch.
                     if check == "Warning":
                         _logger.warning('Invalid view %s definition in %s \n%s', view_name, view.arch_fs, view.arch)
             except ValueError as e:
-                raise ValidationError(_(
-                    "Error while validating view:\n\n%(error)s",
-                    error=tools.ustr(e),
-                )).with_traceback(e.__traceback__) from None
+                lines = view_arch_utf8.splitlines(keepends=True)
+                fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
+                err = ValidationError(_(
+                    "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
+                    fivelines=fivelines, error=tools.ustr(e),
+                ))
+                err.context = e.context
+                raise err.with_traceback(e.__traceback__) from None
 
         return True
 
@@ -634,7 +647,7 @@ actual arch.
             error = _("View '%(name)s' is private", name=self.key)
         raise AccessError(error)
 
-    def handle_view_error(self, message, *, raise_exception=True, from_exception=None, from_traceback=None):
+    def handle_view_error(self, message, failed_node, *, raise_exception=True, from_exception=None, from_traceback=None):
         """ Handle a view error by raising an exception or logging a warning,
         depending on the value of `raise_exception`.
 
@@ -649,30 +662,24 @@ actual arch.
             when raising an exception, start with this traceback (default: start
             at exception creation)
         """
-        # Do not translate warning logs
-        _t = _ if raise_exception else lambda txt, *args, **kwargs: txt % (args or kwargs)
-        lines = [message]
-        if self.name:
-            lines.append("\n%s" % _t('View name: %(name)s', name=self.name))
-
         error_context = {
             'view': self,
+            'name': getattr(self, 'name', None),
             'xmlid': self.env.context.get('install_xmlid') or self.xml_id,
             'view.model': self.model,
             'view.parent': self.inherit_id,
             'file': self.env.context.get('install_filename'),
+            'line': failed_node.sourceline if failed_node is not None else 1,
         }
-        if any(error_context.values()):
-            lines.append(_t("Error context:"))
-            lines.extend(" %s: %s" % (k, v) for k, v in error_context.items() if v)
-            lines.append("")
-
-        formatted_message = "\n".join(lines)
         if raise_exception:
-            _logger.info(formatted_message)
-            raise ValueError(formatted_message).with_traceback(from_traceback) from from_exception
-        else:
-            _logger.warning(formatted_message)
+            err = ValueError(message).with_traceback(from_traceback)
+            err.context = error_context
+            raise err from from_exception
+
+        _logger.warning(
+            "%s\nView error context:\n%s",
+            message, pprint.pformat(error_context)
+        )
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
@@ -713,7 +720,7 @@ actual arch.
         architecture) given by an inheriting view.
 
         :param Element source: a parent architecture to modify
-        :param Elepect specs_tree: a modifying architecture in an inheriting view
+        :param Element specs_tree: a modifying architecture in an inheriting view
         :param (optional) pre_locate: function that is execute before locating a node.
                                         This function receives an arch as argument.
         :return: a modified source where the specs are applied
@@ -728,7 +735,7 @@ actual arch.
                 pre_locate=pre_locate,
             )
         except ValueError as e:
-            self.handle_view_error(str(e))
+            self.handle_view_error(str(e), specs_tree)
         return source
 
     def apply_view_inheritance(self, source, model):
@@ -851,7 +858,7 @@ actual arch.
     def _postprocess_view(self, node, model, validate=True, editable=True):
 
         if model not in self.env:
-            self.handle_view_error(_('Model not found: %(model)s', model=model))
+            self.handle_view_error(_('Model not found: %(model)s', model=model), node)
 
         self._postprocess_on_change(model, node)
 
@@ -1074,7 +1081,7 @@ actual arch.
     def _validate_tag_field(self, node, name_manager, node_info):
         name = node.get('name')
         if not name:
-            self.handle_view_error(_("Field tag must have a \"name\" attribute defined"))
+            self.handle_view_error(_("Field tag must have a \"name\" attribute defined"), node)
         field = name_manager.Model._fields.get(name)
         if not field and name in name_manager.fields_get:
             return
@@ -1083,13 +1090,13 @@ actual arch.
                 'Field "%(field_name)s" does not exist in model "%(model_name)s"',
                 field_name=name, model_name=name_manager.Model._name,
             )
-            self.handle_view_error(msg)
+            self.handle_view_error(msg, node)
         if node.get('domain') and field.comodel_name not in self.env:
             msg = _(
                 'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
                 name=name, domain=node.get('domain'),
             )
-            self.handle_view_error(msg)
+            self.handle_view_error(msg, node)
 
         for attribute in ('invisible', 'readonly', 'required'):
             val = node.get(attribute)
@@ -1100,7 +1107,7 @@ actual arch.
                         'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
                         attribute=attribute, value=val,
                     )
-                    self.handle_view_error(msg)
+                    self.handle_view_error(msg, node)
 
     def _validate_tag_button(self, node, name_manager, node_info):
         name = node.get('name')
@@ -1108,12 +1115,12 @@ actual arch.
         type_ = node.get('type')
         if special:
             if special not in ('cancel', 'save', 'add'):
-                self.handle_view_error(_("Invalid special '%(value)s' in button", value=special))
+                self.handle_view_error(_("Invalid special '%(value)s' in button", value=special), node)
         elif type_:
             if type_ == 'edit': # list_renderer, used in kanban view
                 return
             elif not name:
-                self.handle_view_error(_("Button must have a name"))
+                self.handle_view_error(_("Button must have a name"), node)
             elif type_ == 'object':
                 func = getattr(type(name_manager.Model), name, None)
                 if not func:
@@ -1121,7 +1128,7 @@ actual arch.
                         "%(action_name)s is not a valid action on %(model_name)s",
                         action_name=name, model_name=name_manager.Model._name,
                     )
-                    self.handle_view_error(msg)
+                    self.handle_view_error(msg, node)
                 try:
                     check_method_name(name)
                 except AccessError:
@@ -1129,12 +1136,12 @@ actual arch.
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name, model=name_manager.Model._name,
                     )
-                    self.handle_view_error(msg)
+                    self.handle_view_error(msg, node)
                 try:
                     inspect.signature(func).bind(self=name_manager.Model)
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
-                    self.handle_view_error(msg % (name, name_manager.Model._name), raise_exception=False)
+                    self.handle_view_error(msg % (name, name_manager.Model._name), node, raise_exception=False)
             elif type_ == 'action':
                 # logic mimics /web/action/load behaviour
                 action = False
@@ -1144,20 +1151,20 @@ actual arch.
                     model, action_id = self.env['ir.model.data'].xmlid_to_res_model_res_id(name, raise_if_not_found=False)
                     if not action_id:
                         msg = _("Invalid xmlid %(xmlid)s for button of type action.", xmlid=name)
-                        self.handle_view_error(msg)
+                        self.handle_view_error(msg, node)
                     if not issubclass(self.pool[model], self.pool['ir.actions.actions']):
                         msg = _(
                             "%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions.actions",
                             xmlid=name, xmlid_model=model,
                         )
-                        self.handle_view_error(msg)
+                        self.handle_view_error(msg, node)
                 action = self.env['ir.actions.actions'].browse(action_id).exists()
                 if not action:
                     msg = _(
                         "Action %(action_reference)s (id: %(action_id)s) does not exist for button of type action.",
                         action_reference=name, action_id=action_id,
                     )
-                    self.handle_view_error(msg)
+                    self.handle_view_error(msg, node)
 
             name_manager.has_action(name)
         elif node.get('icon'):
@@ -1168,7 +1175,7 @@ actual arch.
         for child in node.iterchildren(tag=etree.Element):
             if child.tag != 'field' and not isinstance(child, etree._Comment):
                 msg = _('A <graph> can only contains <field> nodes, found a <%s>', child.tag)
-                self.handle_view_error(msg)
+                self.handle_view_error(msg, child)
 
     def _validate_tag_groupby(self, node, name_manager, node_info):
         # groupby nodes should be considered as nested view because they may
@@ -1182,7 +1189,7 @@ actual arch.
                         "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
                         name=field.name, type=field.type,
                     )
-                    self.handle_view_error(msg)
+                    self.handle_view_error(msg, node)
                 name_manager.must_have_fields(
                     self._get_field_domain_variables(node, field, node_info['editable'])
                 )
@@ -1191,7 +1198,7 @@ actual arch.
                     "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
                     field=name, model=name_manager.Model._name,
                 )
-                self.handle_view_error(msg)
+                self.handle_view_error(msg, node)
 
     def _validate_tag_tree(self, node, name_manager, node_info):
         allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
@@ -1201,23 +1208,26 @@ actual arch.
                     'Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)',
                     tags=', '.join(allowed_tags), wrong_tag=child.tag,
                 )
-                self.handle_view_error(msg)
+                self.handle_view_error(msg, child)
 
     def _validate_tag_search(self, node, name_manager, node_info):
         if len([c for c in node if c.tag == 'searchpanel']) > 1:
-            self.handle_view_error(_('Search tag can only contain one search panel'))
+            self.handle_view_error(_('Search tag can only contain one search panel'), node)
         if not list(node.iterdescendants(tag="field")):
             # the field of the search view may be within a group node, which is why we must check
             # for all descendants containing a node with a field tag, if this is not the case
             # then a search is not possible.
             self.handle_view_error(
-                'Search tag requires at least one field element', raise_exception=False)
+                'Search tag requires at least one field element',
+                failed_node=node,
+                raise_exception=False
+            )
 
     def _validate_tag_searchpanel(self, node, name_manager, node_info):
         for child in node.iterchildren(tag=etree.Element):
             if child.get('domain') and child.get('select') != 'multi':
                 msg = _('Searchpanel item with select multi cannot have a domain.')
-                self.handle_view_error(msg)
+                self.handle_view_error(msg, child)
 
     def _validate_tag_label(self, node, name_manager, node_info):
         # replace return not arch.xpath('//label[not(@for) and not(descendant::input)]')
@@ -1225,25 +1235,28 @@ actual arch.
         if not for_:
             msg = _('Label tag must contain a "for". To match label style '
                     'without corresponding field or button, use \'class="o_form_label"\'.')
-            self.handle_view_error(msg)
+            self.handle_view_error(msg, node)
         else:
             name_manager.must_have_name_or_id(for_, 'label for') # this could be done in check_attr
 
     def _validate_tag_page(self, node, name_manager, node_info):
         if node.getparent() is None or node.getparent().tag != 'notebook':
-            self.handle_view_error(_('Page direct ancestor must be notebook'))
+            self.handle_view_error(_('Page direct ancestor must be notebook'), node)
 
     def _validate_tag_img(self, node, name_manager, node_info):
         if not any(node.get(alt) for alt in self._att_list('alt')):
             self.handle_view_error(
-                '<img> tag must contain an alt attribute', raise_exception=False)
+                '<img> tag must contain an alt attribute',
+                failed_node=node,
+                raise_exception=False
+            )
 
     def _validate_tag_a(self, node, name_manager, node_info):
         #('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
         if any('btn' in node.get(cl, '') for cl in self._att_list('class')):
             if node.get('role') != 'button':
                 msg = '"<a>" tag with "btn" class must have "button" role'
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
     def _validate_tag_ul(self, node, name_manager, node_info):
         self._check_dropdown_menu(node) # was applied to all node, but in practice, only used on div and ul
@@ -1261,22 +1274,22 @@ actual arch.
         if any('dropdown-menu' in node.get(cl, '') for cl in self._att_list('class')):
             if node.get('role') != 'menu':
                 msg = 'dropdown-menu class must have menu role'
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
     def _check_progress_bar(self, node):
         if any('o_progressbar' in node.get(cl, '') for cl in self._att_list('class')):
             if node.get('role') != 'progressbar':
                 msg = 'o_progressbar class must have progressbar role'
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
             if not any(node.get(at) for at in self._att_list('aria-valuenow')):
                 msg = 'o_progressbar class must have aria-valuenow attribute'
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
             if not any(node.get(at) for at in self._att_list('aria-valuemin')):
                 msg = 'o_progressbar class must have aria-valuemin attribute'
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
             if not any(node.get(at) for at in self._att_list('aria-valuemax')):
                 msg = 'o_progressbar class must have aria-valuemaxattribute'
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
     def _att_list(self, name):
         return [name, 't-att-%s' % name, 't-attf-%s' % name]
@@ -1287,7 +1300,7 @@ actual arch.
 
         for attr, expr in node.items():
             if attr == 'domain':
-                fields = self._get_server_domain_variables(expr, 'domain of <%s%s> ' % (node.tag, (' name="%s"' % node.get('name')) if node.get('name') else '' ), Model)
+                fields = self._get_server_domain_variables(node, expr, 'domain of <%s%s> ' % (node.tag, (' name="%s"' % node.get('name')) if node.get('name') else '' ), Model)
                 name_manager.must_have_fields(fields)
 
             elif attr.startswith('decoration-'):
@@ -1300,7 +1313,7 @@ actual arch.
                         # domains in attrs are used for readonly, invisible, ...
                         # and thus are only executed client side
                         desc = '%s.%s' % (attr, key)
-                        fields = self._get_client_domain_variables(val_ast, desc, expr)
+                        fields = self._get_client_domain_variables(node, val_ast, desc, expr)
                         name_manager.must_have_fields(fields)
 
                     elif key == 'group_by':  # only in context
@@ -1309,7 +1322,7 @@ actual arch.
                                 '"group_by" value must be a string %(attribute)s=%(value)r',
                                 attribute=attr, value=expr,
                             )
-                            self.handle_view_error(msg)
+                            self.handle_view_error(msg, node)
                         group_by = val_ast.s
                         fname = group_by.split(':')[0]
                         if not fname in Model._fields:
@@ -1317,7 +1330,7 @@ actual arch.
                                 'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
                                 field=fname, attribute=attr, value=expr,
                             )
-                            self.handle_view_error(msg)
+                            self.handle_view_error(msg, node)
                     else:
                         use = '%s.%s (%s)' % (attr, key, expr)
                         fields = dict.fromkeys(get_variable_names(val_ast), use)
@@ -1327,10 +1340,11 @@ actual arch.
                 # col check is mainly there for the tag 'group', but previous
                 # check was generic in view form
                 if not expr.isdigit():
-                    self.handle_view_error(_(
-                        '%(attribute)r value must be an integer (%(value)s)',
-                        attribute=attr, value=expr,
-                    ))
+                    self.handle_view_error(
+                        _('%(attribute)r value must be an integer (%(value)s)',
+                          attribute=attr, value=expr),
+                        failed_node=node,
+                    )
 
             elif attr in ('class', 't-att-class', 't-attf-class'):
                 self._validate_classes(node, expr)
@@ -1342,28 +1356,28 @@ actual arch.
                     # order to batch check them at the end
                     if not self.env['ir.model.data'].xmlid_to_res_id(group.strip(), raise_if_not_found=False):
                         msg = "The group %r defined in view does not exist!"
-                        self.handle_view_error(msg % group, raise_exception=False)
+                        self.handle_view_error(msg % group, node, raise_exception=False)
 
             elif attr == 'group':
                 msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
             elif attr == 'data-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
                     msg = 'tab link (data-toggle="tab") must have "tab" role'
-                    self.handle_view_error(msg, raise_exception=False)
+                    self.handle_view_error(msg, node, raise_exception=False)
                 aria_control = node.get('aria-controls') or node.get('t-att-aria-controls')
                 if not aria_control and not node.get('t-attf-aria-controls'):
                     msg = 'tab link (data-toggle="tab") must have "aria_control" defined'
-                    self.handle_view_error(msg, raise_exception=False)
+                    self.handle_view_error(msg, node, raise_exception=False)
                 if aria_control and '#' in aria_control:
                     msg = 'aria-controls in tablink cannot contains "#"'
-                    self.handle_view_error(msg, raise_exception=False)
+                    self.handle_view_error(msg, node, raise_exception=False)
 
             elif attr == "role" and expr in ('presentation', 'none'):
                 msg = ("A role cannot be `none` or `presentation`. "
                     "All your elements must be accessible with screen readers, describe it.")
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
     def _validate_classes(self, node, expr):
         """ Validate the classes present on node. """
@@ -1372,27 +1386,27 @@ actual arch.
         # example: <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
         if 'modal' in classes and node.get('role') != 'dialog':
             msg = '"modal" class should only be used with "dialog" role'
-            self.handle_view_error(msg, raise_exception=False)
+            self.handle_view_error(msg, node, raise_exception=False)
 
         if 'modal-header' in classes and node.tag != 'header':
             msg = '"modal-header" class should only be used in "header" tag'
-            self.handle_view_error(msg, raise_exception=False)
+            self.handle_view_error(msg, node, raise_exception=False)
 
         if 'modal-body' in classes and node.tag != 'main':
             msg = '"modal-body" class should only be used in "main" tag'
-            self.handle_view_error(msg, raise_exception=False)
+            self.handle_view_error(msg, node, raise_exception=False)
 
         if 'modal-footer' in classes and node.tag != 'footer':
             msg = '"modal-footer" class should only be used in "footer" tag'
-            self.handle_view_error(msg, raise_exception=False)
+            self.handle_view_error(msg, node, raise_exception=False)
 
         if 'tab-pane' in classes and node.get('role') != 'tabpanel':
             msg = '"tab-pane" class should only be used with "tabpanel" role'
-            self.handle_view_error(msg, raise_exception=False)
+            self.handle_view_error(msg, node, raise_exception=False)
 
         if 'nav-tabs' in classes and node.get('role') != 'tablist':
             msg = 'A tab list with class nav-tabs must have role="tablist"'
-            self.handle_view_error(msg, raise_exception=False)
+            self.handle_view_error(msg, node, raise_exception=False)
 
         if any(klass.startswith('alert-') for klass in classes):
             if (
@@ -1403,7 +1417,7 @@ actual arch.
                         "status role or an alert-link class. Please use alert and "
                         "alertdialog only for what expects to stop any activity to "
                         "be read immediately.")
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
         if any(klass.startswith('fa-') for klass in classes):
             description = 'A <%s> with fa class (%s)' % (node.tag, expr)
@@ -1420,7 +1434,7 @@ actual arch.
                 msg = ("A simili button must be in tag a/button/select or tag `input` "
                         "with type button/submit/reset or have class in "
                         "btn-group/btn-toolbar/btn-ship")
-                self.handle_view_error(msg, raise_exception=False)
+                self.handle_view_error(msg, node, raise_exception=False)
 
     def _validate_fa_class_accessibility(self, node, description):
         valid_aria_attrs = set(
@@ -1478,9 +1492,9 @@ actual arch.
             return
 
         msg = ('%s must have title in its tag, parents, descendants or have text')
-        self.handle_view_error(msg % description, raise_exception=False)
+        self.handle_view_error(msg % description, node, raise_exception=False)
 
-    def _get_client_domain_variables(self, domain, key, expr):
+    def _get_client_domain_variables(self, node, domain, key, expr):
         """ Returns all field and variable names present in the given domain
         (to be used client-side).
 
@@ -1494,11 +1508,11 @@ actual arch.
                 'Invalid domain format while checking %(attribute)s in %(value)s',
                 attribute=expr, value=key,
             )
-            self.handle_view_error(msg)
+            self.handle_view_error(msg, node)
 
         return dict.fromkeys(field_names | var_names, '%s (%s)' % (key, expr))
 
-    def _get_server_domain_variables(self, domain, key, Model):
+    def _get_server_domain_variables(self, node, domain, key, Model):
         """ Returns all the variable names present in the given domain (to be
         used server-side).
         """
@@ -1506,7 +1520,7 @@ actual arch.
             (field_names, var_names) = get_domain_identifiers(domain)
         except ValueError as e:
             msg = _('Invalid domain format while checking %s in %s', domain, key)
-            self.handle_view_error(msg, from_traceback=e.__traceback__)
+            self.handle_view_error(msg, node, from_traceback=e.__traceback__)
 
         # checking field names
         for name_seq in field_names:
@@ -1519,21 +1533,21 @@ actual arch.
                             'Trying to access "%(field)s" on %(model)s in path %(field_path)r in %(attribute)s=%(value)r',
                             field=fname, model=model, field_path=name_seq, attribute=key, value=domain,
                         )
-                        self.handle_view_error(msg)
+                        self.handle_view_error(msg, node)
                     field = model._fields[fname]
                     if not field._description_searchable:
                         msg = _(
                             'Unsearchable field "%(field)s" in path %(field_path)r in %(attribute)s=%(value)r',
                             field=field, field_path=name_seq, attribute=key, value=domain,
                         )
-                        self.handle_view_error(msg)
+                        self.handle_view_error(msg, node)
                     model = model[fname]
             except KeyError:
                 msg = _(
                     'Unknown field "%(model)s.%(field)s" in %(attribute)s%(value)r',
                     model=model._name, field=fname, attribute=key, value=domain,
                 )
-                self.handle_view_error(msg)
+                self.handle_view_error(msg, node)
 
         return dict.fromkeys(var_names, "%s (%s)" % (key, domain))
 
@@ -1545,6 +1559,7 @@ actual arch.
             domain = field._description_domain(self.env)
             if isinstance(domain, str):
                 return self._get_server_domain_variables(
+                    node,
                     domain,
                     'field %s default domain' % field.name,
                     self.env[field.comodel_name],
@@ -1790,10 +1805,7 @@ actual arch.
         views = self.browse([row[0] for row in self._cr.fetchall()])
 
         for view in views:
-            try:
-                view._check_xml()
-            except Exception as e:
-                view.handle_view_error("Can't validate view:\n%s" % e)
+            view._check_xml()
 
     def _create_all_specific_views(self, processed_modules):
         """To be overriden and have specific view behaviour on create"""
@@ -1958,12 +1970,12 @@ class NameManager:
                     "Name or id '%(name_or_id)s' used in '%(use)s' must be present in view but is missing.",
                     name_or_id=action, use=use,
                 )
-                view.handle_view_error(msg)
+                view.handle_view_error(msg, None)
 
         for field_name in self.available_fields:
             if field_name not in self.fields_get:
                 message = _("Field `%(name)s` does not exist", name=field_name)
-                view.handle_view_error(message)
+                view.handle_view_error(message, None)
 
         for field, use in self.mandatory_fields.items():
             if field == 'id':  # always available
@@ -1973,20 +1985,20 @@ class NameManager:
                     "Invalid composed field %(definition)s in %(use)s",
                     definition=field, use=use,
                 )
-                view.handle_view_error(msg)
+                view.handle_view_error(msg, None)
             corresponding_field = self.available_fields.get(str(field))
             if corresponding_field is None:
                 msg = _(
                     "Field %(name)s used in %(use)s must be present in view but is missing.",
                     name=field, use=use,
                 )
-                view.handle_view_error(msg)
+                view.handle_view_error(msg, None)
             if corresponding_field.get('select') == 'multi':  # mainly for searchpanel, but can be a generic behaviour.
                 msg = _(
                     "Field %(name)s used in %(use)s is present in view but is in select multi.",
                     name=field, use=use,
                 )
-                view.handle_view_error(msg)
+                view.handle_view_error(msg, None)
 
     def update_view_fields(self):
         for field_name, field_infos in self.available_fields.items():

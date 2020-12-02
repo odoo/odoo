@@ -10,6 +10,7 @@ import base64
 import io
 import logging
 import os.path
+import pprint
 import re
 import subprocess
 import warnings
@@ -30,6 +31,7 @@ from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from odoo import SUPERUSER_ID, api
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -678,8 +680,17 @@ form: module.record_id""" % (xml_id,)
                 f(rec)
             except ParseError:
                 raise
+            except ValidationError as err:
+                msg = "while parsing {file}:{viewline}\n{err}\n\nView error context:\n{context}\n".format(
+                    file=rec.getroottree().docinfo.URL,
+                    viewline=rec.sourceline,
+                    context=pprint.pformat(err.context),
+                    err=err.args[0],
+                )
+                _logger.debug(msg, exc_info=True)
+                raise ParseError(msg) from None  # Restart with "--log_handler odoo.tools.convert:DEBUG" for complete traceback
             except Exception as e:
-                raise ParseError('while parsing %s:%s, near\n%s' % (
+                raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
                     rec.getroottree().docinfo.URL,
                     rec.sourceline,
                     etree.tostring(rec, encoding='unicode').rstrip()
