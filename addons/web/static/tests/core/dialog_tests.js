@@ -124,6 +124,39 @@ QUnit.module('core', {}, function () {
 
         parent.destroy();
     });
+
+    QUnit.test("Disabled buttons after click footer button", async function (assert) {
+        assert.expect(3);
+
+        var testPromise = testUtils.makeTestPromiseWithAssert(assert, 'button callback');
+        var parent = createEmptyParent();
+        new Dialog(parent, {
+            buttons: [
+                {
+                    text: "Close",
+                    classes: 'btn-primary',
+                    close: true,
+                    click: function () {
+                        if (this.$footer.find('button').attr('disabled') !== 'disabled') {
+                            testPromise.reject();
+                        }
+                        testPromise.resolve();
+                    },
+                },
+            ],
+        }).open();
+
+        assert.verifySteps([]);
+
+        await testUtils.nextTick();
+        await testUtils.dom.click($('.modal[role="dialog"] .btn-primary'));
+
+        testPromise.then(() => {
+            assert.verifySteps(['ok button callback']);
+        });
+
+        parent.destroy();
+    });
 });
 
 });
