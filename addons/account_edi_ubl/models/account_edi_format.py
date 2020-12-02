@@ -144,7 +144,7 @@ class AccountEdiFormat(models.Model):
                     elements = eline.xpath('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'GTIN\']', namespaces=namespaces)
                     if elements:
                         product_ean13 = elements[0].text
-                        domains.append([('ean13', '=', product_ean13)])
+                        domains.append([('barcode', '=', product_ean13)])
                     if domains:
                         product = self.env['product.product'].search(expression.OR(domains), limit=1)
                         if product:
