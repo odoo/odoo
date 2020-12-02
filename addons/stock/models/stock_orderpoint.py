@@ -200,6 +200,11 @@ class StockWarehouseOrderpoint(models.Model):
                 ('company_id', '=', self.company_id.id)
             ], limit=1)
 
+    @api.onchange('route_id')
+    def _onchange_route_id(self):
+        if self.route_id:
+            self.qty_multiple = self._get_qty_multiple_to_order()
+
     def write(self, vals):
         if 'company_id' in vals:
             for orderpoint in self:
@@ -258,6 +263,12 @@ class StockWarehouseOrderpoint(models.Model):
                 if float_compare(remainder, 0.0, precision_rounding=rounding) > 0:
                     qty_to_order += orderpoint.qty_multiple - remainder
             orderpoint.qty_to_order = qty_to_order
+
+    def _get_qty_multiple_to_order(self):
+        """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM
+        """
+        self.ensure_one()
+        return 0
 
     def _set_default_route_id(self):
         """ Write the `route_id` field on `self`. This method is intendend to be called on the
@@ -358,8 +369,8 @@ class StockWarehouseOrderpoint(models.Model):
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
-            orderpoint.route_id = orderpoint.product_id.route_ids[:1]
-        orderpoints.filtered(lambda o: not o.route_id)._set_default_route_id()
+            orderpoint.route_id = orderpoint.product_id.route_ids[:1] or orderpoint._set_default_route_id()
+            orderpoint.qty_multiple = orderpoint._get_qty_multiple_to_order()
         return action
 
     @api.model
