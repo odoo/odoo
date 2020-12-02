@@ -79,7 +79,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             return false;
         }
         this.$target.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
-        const tokenObj = await this._recaptcha.getToken('website_form');
+        const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
         if (tokenObj.error) {
             self.displayNotification({
                 type: 'danger',
