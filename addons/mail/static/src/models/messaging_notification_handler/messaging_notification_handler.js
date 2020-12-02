@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/messaging_notification_handler/messaging_not
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2one } = require('mail/static/src/model/model_field.js');
+const { htmlToTextContentInline } = require('mail.utils');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -759,7 +760,7 @@ function factory(dependencies) {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = message.prettyBody.substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
             messaging.update({ outOfFocusUnreadMessageCounter: messaging.outOfFocusUnreadMessageCounter + 1 });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
