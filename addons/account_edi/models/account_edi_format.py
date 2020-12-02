@@ -411,19 +411,18 @@ class AccountEdiFormat(models.Model):
         domain = expression.OR(domains)
         return self.env['res.partner'].search(domain, limit=1)
 
-    def _retrieve_product(self, name=None, default_code=None, ean13=None, barcode=None):
+    def _retrieve_product(self, name=None, default_code=None, barcode=None):
         '''Search all products and find one that matches one of the parameters.
 
         :param name:            The name of the product.
         :param default_code:    The default_code of the product.
-        :param ean13:           The ean13 of the product.
+        :param bracode:         The barcode of the product.
         :returns:               A product or an empty recordset if not found.
         '''
         domains = []
         for value, domain in (
             (name, ('name', 'ilike', name)),
             (default_code, ('default_code', '=', default_code)),
-            (ean13, ('ean13', '=', ean13)),
             (barcode, ('barcode', '=', barcode)),
         ):
             if value is not None:
