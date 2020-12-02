@@ -79,6 +79,8 @@ class ProductAttribute(models.Model):
                     _("You cannot delete the attribute %s because it is used on the following products:\n%s") %
                     (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                 )
+            for value in pa.value_ids:
+                value.unlink()
         return super(ProductAttribute, self).unlink()
 
 
