@@ -835,3 +835,51 @@ class TestBoM(TestMrpCommon):
             line.product_uom_id = uom_unit
             line.product_qty = 5
         bom_finished = bom_finished.save()
+
+    def test_replenishment(self):
+        """ Tests the auto generation of manual orderpoints.
+            The multiple quantity of the orderpoint should be the
+            quantity of the BoM in the UoM of the product.
+        """
+
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_gram = self.env.ref('uom.product_uom_gram')
+
+        product_gram = self.env['product.product'].create({
+            'name': 'Product sold in grams',
+            'type': 'product',
+            'uom_id': uom_gram.id,
+            'uom_po_id': uom_gram.id,
+        })
+        # We create a BoM that manufactures 2kg of product
+        self.env['mrp.bom'].create({
+            'product_id': product_gram.id,
+            'product_tmpl_id': product_gram.product_tmpl_id.id,
+            'product_uom_id': uom_kg.id,
+            'product_qty': 2.0,
+            'type': 'normal',
+        })
+        # We create a delivery order of 2300 grams
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_gram
+            move.product_uom_qty = 2300.0
+        customer_picking = picking_form.save()
+        customer_picking.action_confirm()
+
+        # We check the created orderpoint without manufacturing route manufacturing
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
+        self.assertEqual(orderpoint.qty_multiple, 0.0)
+        self.assertEqual(orderpoint.qty_to_order, 2300.0)
+
+        # We select the manufacturing route and check the impact on the quantities
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
+        manufacturing_route = self.env['stock.location.route'].search([('id', '=', manufacturing_route_id)])
+        orderpoint_form = Form(orderpoint)
+        orderpoint_form.route_id = manufacturing_route
+        orderpoint_form.save()
+        self.assertEqual(orderpoint.qty_multiple, 2000.0)
+        self.assertEqual(orderpoint.qty_to_order, 4000.0)
