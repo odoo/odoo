@@ -1818,7 +1818,14 @@ class Datetime(Field):
             return datetime.combine(value, time.min)
 
         # TODO: fix data files
-        return datetime.strptime(value, DATETIME_FORMAT[:len(value)-2])
+        try:
+            return datetime.strptime(value, DATETIME_FORMAT[:len(value)-2])
+        except ValueError as e:
+            # ignore milliseconds part if there is one
+            splitted_value = value.split('.')
+            if len(splitted_value) == 2:
+                return datetime.strptime(splitted_value[0], DATETIME_FORMAT[:len(splitted_value[0]) - 2])
+            raise e
 
     # kept for backwards compatibility, but consider `from_string` as deprecated, will probably
     # be removed after V12
