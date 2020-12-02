@@ -116,7 +116,7 @@ class AccountEdiFormat(models.Model):
                     invoice_line_form.product_id = self._retrieve_product(
                         default_code=_find_value('cac:Item/cac:SellersItemIdentification/cbc:ID', eline),
                         name=_find_value('cac:Item/cbc:Name', eline),
-                        ean13=_find_value('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'0160\']', eline)
+                        barcode=_find_value('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'0160\']', eline)
                     )
 
                     # Quantity
