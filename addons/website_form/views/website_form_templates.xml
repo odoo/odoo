@@ -3,70 +3,72 @@
 
     <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
         <xpath expr="//div[@name='mail_button']" position="replace">
-            <form id="contactus_form" t-ignore="true" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-success_page="/contactus-thank-you">
-                <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Name">Your Name</label>
+            <div id="contactus_form_section" t-ignore="true">
+                <form id="contactus_form" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-success_page="/contactus-thank-you">
+                    <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="Name">Your Name</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <input type="text" class="form-control o_website_form_input" name="Name" required=""/>
+                        </div>
                     </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="Name" required=""/>
+                    <div class="form-group row form-field o_website_form_custom">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="Phone">Phone Number</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <input type="text" class="form-control o_website_form_input" name="Phone"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row form-field o_website_form_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Phone">Phone Number</label>
+                    <div class="form-group row form-field o_website_form_required_custom">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="email_from">Email</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
+                        </div>
                     </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="Phone"/>
+                    <div class="form-group row form-field o_website_form_custom">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="Partner Name">Your Company</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <input type="text" class="form-control o_website_form_input" name="Partner Name"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row form-field o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="email_from">Email</label>
+                    <div class="form-group row form-field o_website_form_required_custom">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="subject">Subject</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <input type="text" class="form-control o_website_form_input" name="subject" required=""/>
+                        </div>
                     </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
+                    <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="Description">Your Question</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <textarea class="form-control o_website_form_input" name="Description" required=""></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row form-field o_website_form_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Partner Name">Your Company</label>
+                    <div class="form-group row form-field d-none">
+                        <div class="col-lg-3 col-md-4">
+                            <label class="col-form-label" for="email_to">Email To</label>
+                        </div>
+                        <div class="col-lg-7 col-md-8">
+                            <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                        </div>
                     </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="Partner Name"/>
+                    <div class="form-group row">
+                        <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
+                            <a href="#" class="btn btn-primary btn-lg o_website_form_send">Send</a>
+                            <span id="o_website_form_result"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row form-field o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="subject">Subject</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="text" class="form-control o_website_form_input" name="subject" required=""/>
-                    </div>
-                </div>
-                <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="Description">Your Question</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <textarea class="form-control o_website_form_input" name="Description" required=""></textarea>
-                    </div>
-                </div>
-                <div class="form-group row form-field d-none">
-                    <div class="col-lg-3 col-md-4">
-                        <label class="col-form-label" for="email_to">Email To</label>
-                    </div>
-                    <div class="col-lg-7 col-md-8">
-                        <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
-                        <a href="#" class="btn btn-primary btn-lg o_website_form_send">Send</a>
-                        <span id="o_website_form_result"></span>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </xpath>
     </template>
 

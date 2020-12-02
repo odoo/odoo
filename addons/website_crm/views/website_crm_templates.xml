@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website_form.contactus_form" customize_show="True">
-            <xpath expr="//form[@id='contactus_form']" position="replace">
+            <xpath expr="//div[@id='contactus_form_section']" position="replace">
                 <div t-ignore="true">
                     <form action="/website_form/" method="post" data-model_name="crm.lead" data-success_page="/contactus-thank-you" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-editable-form="false">
                         <div class="form-group row form-field o_website_form_required_custom">
