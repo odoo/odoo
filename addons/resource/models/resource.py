@@ -990,11 +990,11 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', related='calendar_id.company_id', string="Company",
         readonly=True, store=True)
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours')
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
-        "resource.resource", 'Resource',
+        "resource.resource", 'Resource', index=True,
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
                                  help="Whether this should be computed as a time off or as work time (eg: formation)")
