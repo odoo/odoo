@@ -46,7 +46,7 @@ class StockQuant(models.Model):
             return
         domain = [('type', '=', 'product')]
         if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
-            products = self.env.context.get('product_tmpl_id', []) + [self.env.context.get('product_tmpl_id', 0)]
+            products = self.env.context.get('product_tmpl_ids', []) + [self.env.context.get('product_tmpl_id', 0)]
             domain = expression.AND([domain, [('product_tmpl_id', 'in', products)]])
         return domain
 
