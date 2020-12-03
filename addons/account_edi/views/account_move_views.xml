@@ -43,7 +43,7 @@
                     <field name="edi_state" attrs="{'invisible': ['|', ('edi_document_ids', '=', []), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="after">
-                    <page id="edi_documents" string="EDI Documents" groups="base.group_no_one">
+                    <page id="edi_documents" string="EDI Documents" groups="base.group_no_one" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
                         <field name="edi_document_ids">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>

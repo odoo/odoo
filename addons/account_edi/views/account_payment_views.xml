@@ -36,7 +36,7 @@
                 </xpath>
                 <xpath expr="//group[@name='group3']" position="after">
                     <group groups="base.group_no_one">
-                        <field name="edi_document_ids" string="EDI Documents">
+                        <field name="edi_document_ids" string="EDI Documents" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
