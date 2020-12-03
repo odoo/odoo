@@ -76,7 +76,7 @@ class Followers(models.Model):
                 obj.check_access_rule('write')
                 subject = record.channel_id or record.partner_id
                 subject.check_access_rights('read')
-                subject.check_access_rule('read ')
+                subject.check_access_rule('read')
             else:
                 obj.check_access_rights('read')
                 obj.check_access_rule('read')
