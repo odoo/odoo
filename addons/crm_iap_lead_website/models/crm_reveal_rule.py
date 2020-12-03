@@ -82,11 +82,11 @@ class CRMRevealRule(models.Model):
                 (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
                 {'type': 'simple_notification', 'title': _('Missing Library'), 'message': message, 'sticky': True, 'warning': True})
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         self._assert_geoip()
-        return super(CRMRevealRule, self).create(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         fields_set = {

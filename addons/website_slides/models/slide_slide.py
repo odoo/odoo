@@ -35,8 +35,9 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
-    def create(self, values):
-        res = super(SlidePartnerRelation, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
         completed = res.filtered('completed')
         if completed:
             completed._set_completed_callback()

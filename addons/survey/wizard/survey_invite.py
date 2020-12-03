@@ -149,15 +149,16 @@ class SurveyInvite(models.TransientModel):
                 invite.subject = invite.template_id.subject
                 invite.body = invite.template_id.body_html
 
-    @api.model
-    def create(self, values):
-        if values.get('template_id') and not (values.get('body') or values.get('subject')):
-            template = self.env['mail.template'].browse(values['template_id'])
-            if not values.get('subject'):
-                values['subject'] = template.subject
-            if not values.get('body'):
-                values['body'] = template.body_html
-        return super(SurveyInvite, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('template_id') and not (values.get('body') or values.get('subject')):
+                template = self.env['mail.template'].browse(values['template_id'])
+                if not values.get('subject'):
+                    values['subject'] = template.subject
+                if not values.get('body'):
+                    values['body'] = template.body_html
+        return super().create(vals_list)
 
     # ------------------------------------------------------
     # Wizard validation and send

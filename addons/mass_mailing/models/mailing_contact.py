@@ -27,15 +27,17 @@ class MassMailingContactListRel(models.Model):
          'A contact cannot be subscribed multiple times to the same list!')
     ]
 
-    @api.model
-    def create(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContactListRel, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        now = fields.Datetime.now()
+        for vals in vals_list:
+            if 'opt_out' in vals:
+                vals['unsubscription_date'] = now if vals['opt_out'] else False
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
+            vals['unsubscription_date'] = fields.Datetime.now() if vals['opt_out'] else False
         return super(MassMailingContactListRel, self).write(vals)
 
 

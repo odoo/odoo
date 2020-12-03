@@ -7,24 +7,28 @@ from odoo import api, models, _
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    @api.model
-    def create(self, vals):
-        new_company = super(ResCompany, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super(ResCompany, self).create(vals_list)
         ProductPricelist = self.env['product.pricelist']
-        pricelist = ProductPricelist.search([('currency_id', '=', new_company.currency_id.id), ('company_id', '=', False)], limit=1)
-        if not pricelist:
-            params = {'currency': new_company.currency_id.name}
-            pricelist = ProductPricelist.create({
-                'name': _("Default %(currency)s pricelist") %  params,
-                'currency_id': new_company.currency_id.id,
-            })
-        self.env['ir.property']._set_default(
-            'property_product_pricelist',
-            'res.partner',
-            pricelist,
-            new_company,
-        )
-        return new_company
+        for new_company in companies:
+            pricelist = ProductPricelist.search([
+                ('currency_id', '=', new_company.currency_id.id),
+                ('company_id', '=', False)
+            ], limit=1)
+            if not pricelist:
+                params = {'currency': new_company.currency_id.name}
+                pricelist = ProductPricelist.create({
+                    'name': _("Default %(currency)s pricelist") %  params,
+                    'currency_id': new_company.currency_id.id,
+                })
+            self.env['ir.property']._set_default(
+                'property_product_pricelist',
+                'res.partner',
+                pricelist,
+                new_company,
+            )
+        return companies
 
     def write(self, values):
         # When we modify the currency of the company, we reflect the change on the list0 pricelist, if
