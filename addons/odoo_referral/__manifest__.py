@@ -9,5 +9,8 @@
     'data': [
         'views/templates.xml',
     ],
-    'auto_install': True,
+    'qweb': [
+        "static/src/xml/systray.xml",
+    ],
+    'auto_install': False,
 }
