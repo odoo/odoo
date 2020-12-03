@@ -180,7 +180,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         },
         locale: moment.locale(),
         maxDate: moment({ y: 9999, M: 11, d: 31 }),
-        minDate: moment({ y: 1 }),
+        minDate: moment({ y: 1000 }),
         useCurrent: false,
         widgetParent: 'body',
     };

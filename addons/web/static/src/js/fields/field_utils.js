@@ -484,10 +484,12 @@ function parseDate(value, field, options) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
-        date.toJSON = function () {
-            return this.clone().locale('en').format('YYYY-MM-DD');
-        };
-        return date;
+        if (date.year() >= 1000){
+            date.toJSON = function () {
+                return this.clone().locale('en').format('YYYY-MM-DD');
+            };
+            return date;
+        }
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
 }
@@ -521,6 +523,7 @@ function parseDateTime(value, field, options) {
         datetime = smartDate;
     } else {
         if (options && options.isUTC) {
+            value = value.padStart(19, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
             // phatomjs crash if we don't use this format
             datetime = moment.utc(value.replace(' ', 'T') + 'Z');
         } else {
@@ -534,10 +537,12 @@ function parseDateTime(value, field, options) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
-        datetime.toJSON = function () {
-            return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
-        };
-        return datetime;
+        if (datetime.year() >= 1000) {
+            datetime.toJSON = function () {
+                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
+            };
+            return datetime;
+        }
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
