@@ -88,7 +88,9 @@
             </t>
         </div>
         <!-- SPONSOR DESCRIPTION -->
-        <span class="h5 d-inline-block mx-3 mt-3 mb-0">About <t t-esc="sponsor.name"/></span>
+        <span class="h5 d-inline-block mx-3 mt-3 mb-0">
+            About <t t-esc="sponsor.name"/>
+        </span>
         <hr class="mt-2 mb-0"/>
         <div class="ml-3 clearfix">
             <div class="float-left pt-3">
@@ -104,7 +106,16 @@
                         <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
                               t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
                     </div>
-                    <span t-field="sponsor.subtitle" class="text-muted mb-3"/>
+                    <span t-field="sponsor.subtitle"
+                        t-att-class="'text-muted %s' % '' if sponsor.hour_from and sponsor.hour_to else 'mb-3'"/>
+                    <div t-if="sponsor.hour_from and sponsor.hour_to"
+                        t-att-class="'%s' % 'mb-3' if sponsor.hour_from and sponsor.hour_to else ''">
+                        Available from
+                        <t t-esc="sponsor.hour_from" t-options="{'widget': 'float_time'}"/>
+                        -
+                        <t t-esc="sponsor.hour_to" t-options="{'widget': 'float_time'}"/>
+                        <span t-esc="sponsor.event_date_tz"/>
+                    </div>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
                         <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
                     </div>
