@@ -293,3 +293,13 @@ class Mailing(models.Model):
             mailing_domain = expression.AND([mailing_domain, [('phone_sanitized_blacklisted', '=', False)]])
 
         return mailing_domain
+
+    def convert_links(self):
+        sms_mailings = self.filtered(lambda m: m.mailing_type == 'sms')
+        res = {}
+        for mailing in sms_mailings:
+            tracker_values = mailing._get_link_tracker_values()
+            body = mailing._shorten_links_text(mailing.body_plaintext, tracker_values)
+            res[mailing.id] = body
+        res.update(super(Mailing, self - sms_mailings).convert_links())
+        return res
