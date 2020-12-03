@@ -430,9 +430,6 @@ class PurchaseOrderLine(models.Model):
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
         self.ensure_one()
         product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
-        description_picking = product._get_description(self.order_id.picking_type_id)
-        if self.product_description_variants:
-            description_picking += self.product_description_variants
         date_planned = self.date_planned or self.order_id.date_planned
         return {
             # truncate to 2000 to avoid triggering index limit error
@@ -453,7 +450,7 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
-            'description_picking': description_picking,
+            'description_picking': product.description_pickingin or self.name,
             'propagate_cancel': self.propagate_cancel,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
