@@ -34,6 +34,15 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
     def edi_cron(self):
         self.env['account.edi.document'].sudo().with_context(edi_test_mode=True).search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services()
 
+    def _create_empty_vendor_bill(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': self.company_data['default_journal_purchase'].id,
+        })
+        if 'extract_state' in invoice._fields:
+            invoice.extract_state = 'done'  # prevent ocr
+        return invoice
+
     def update_invoice_from_file(self, module_name, subfolder, filename, invoice):
         file_path = get_module_resource(module_name, subfolder, filename)
         file = open(file_path, 'rb').read()
@@ -58,7 +67,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         })
 
         journal_id = self.company_data['default_journal_sale']
-        invoice = journal_id.with_context(default_move_type='in_invoice')._create_invoice_from_single_attachment(attachment)
+        journal_id.with_context(default_move_type='in_invoice')._create_invoice_from_single_attachment(attachment)
 
     def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None):
         invoice.action_post()
