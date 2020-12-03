@@ -268,8 +268,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in po lines')
 
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, order_line_description + "Color (Red)", 'wrong description in picking')
-        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, order_line_description + "Color (Green)", 'wrong description in picking')
+        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Red)", 'wrong description in picking')
+        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
         company = self.env.ref('base.main_company')
