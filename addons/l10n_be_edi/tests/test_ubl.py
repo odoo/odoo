@@ -10,7 +10,7 @@ class TestUBL(AccountEdiTestCommon):
         cls.partner_a.vat = 'BE0123456789'
 
     def test_invoice_edi_xml(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice = self._create_empty_vendor_bill()
         invoice_count = len(self.env['account.move'].search([]))
         self.update_invoice_from_file('l10n_be_edi', 'test_xml_file', 'efff_test.xml', invoice)
 
