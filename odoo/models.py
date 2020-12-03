@@ -66,6 +66,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_ftorder = re.compile(r'^[\w \|&:\*\(\)\']*$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -4106,6 +4107,11 @@ Record ids: %(records)s
             raise UserError(_('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
+    def _check_qftorder(self, word):
+        if not regex_ftorder.match(word):
+            raise UserError(_('Invalid "tsquery" specified.'))
+        return True
+
     @api.model
     def _apply_ir_rules(self, query, mode='read'):
         """Add what's missing in ``query`` to implement all appropriate ir.rules
@@ -4249,6 +4255,11 @@ Record ids: %(records)s
                         order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 elif field.store and field.column_type:
                     qualifield_name = self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)
+                    fto = self._context.get('ftorder_'+order_field)
+                    if fto:
+                        self._check_qftorder(fto)
+                        order_by_elements.append("ts_rank_cd(to_tsvector('spanish',%s),to_tsquery('spanish', '%s')) desc" % (qualifield_name,re.sub('\'','\'\'',fto)))
+                        continue
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
