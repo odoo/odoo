@@ -50,6 +50,7 @@
 
     &:not(.o-mobile) {
         display: flex;
+        flex-shrink: 0; // Forces Safari to not shrink below fit content
     }
 
     &.o-mobile {
