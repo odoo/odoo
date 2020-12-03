@@ -120,11 +120,12 @@ class AccountEdiFormat(models.Model):
                 attachment_name = element.xpath('cbc:ID', namespaces=namespaces)
                 attachment_data = element.xpath('cac:Attachment//cbc:EmbeddedDocumentBinaryObject', namespaces=namespaces)
                 if attachment_name and attachment_data:
+                    text = attachment_data[0].text
                     attachments |= self.env['ir.attachment'].create({
                         'name': attachment_name[0].text,
                         'res_id': invoice.id,
                         'res_model': 'account.move',
-                        'datas': attachment_data[0].text,
+                        'datas': text + '=' * (len(text) % 3),  # Fix incorrect padding
                         'type': 'binary',
                     })
             if attachments:
