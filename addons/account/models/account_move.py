@@ -1538,8 +1538,8 @@ class AccountMove(models.Model):
             if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
                 move.tax_lock_date_message = _(
                     "The accounting date is set prior to the tax lock date which is set on %s. "
-                    "Hence, the accounting date will be changed to the next available date when posting.",
-                    format_date(self.env, move.company_id.tax_lock_date))
+                    "Hence, the accounting date will be changed to %s.",
+                    format_date(self.env, move.company_id.tax_lock_date), format_date(self.env, fields.Date.context_today(self)))
             else:
                 move.tax_lock_date_message = False
 
@@ -2441,11 +2441,11 @@ class AccountMove(models.Model):
                 move.invoice_date = fields.Date.context_today(self)
                 move.with_context(check_move_validity=False)._onchange_invoice_date()
 
-            # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
+            # When the accounting date is prior to the tax lock date, move it automatically to today.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
             if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tax_tag_ids):
-                move.date = move.company_id.tax_lock_date + timedelta(days=1)
+                move.date = fields.Date.context_today(self)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.

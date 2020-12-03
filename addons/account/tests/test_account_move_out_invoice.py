@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 from unittest.mock import patch
 from datetime import timedelta
+from freezegun import freeze_time
 
 
 @tagged('post_install', '-at_install')
@@ -2138,8 +2139,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_total': 1430.0,
             })
 
+    @freeze_time('2017-01-15')
     def test_out_invoice_post_2(self):
-        ''' Check the date will be set automatically at the next available post date due to the tax lock date. '''
+        ''' Check the date will be set automatically at today due to the tax lock date. '''
         # Create an invoice with rate 1/3.
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -2183,7 +2185,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
         # Set the tax lock date:
-        # - The date must be set automatically at the date after the tax_lock_date.
+        # - The date must be set automatically at the date of today (2017-01-15).
         # - As the date changed, the currency rate has changed (1/3 => 1/2).
         move.company_id.tax_lock_date = fields.Date.from_string('2016-12-31')
 
@@ -2237,7 +2239,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'payment_reference': move.name,
             'currency_id': self.currency_data['currency'].id,
-            'date': fields.Date.from_string('2017-01-01'),
+            'date': fields.Date.from_string('2017-01-15'),
             'amount_untaxed': 1200.0,
             'amount_tax': 230.0,
             'amount_total': 1430.0,
