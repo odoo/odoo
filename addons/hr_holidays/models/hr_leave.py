@@ -902,10 +902,6 @@ class HolidaysRequest(models.Model):
             result.append(meeting_values)
         return result
 
-    # YTI TODO: Remove me in master
-    def _prepare_holiday_values(self, employee):
-        return self._prepare_employees_holiday_values(employee)[0]
-
     def _prepare_employees_holiday_values(self, employees):
         self.ensure_one()
         work_days_data = employees._get_work_days_data_batch(self.date_from, self.date_to)
