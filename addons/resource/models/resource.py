@@ -372,14 +372,6 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
-    # YTI TODO: Remove me in master
-    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
-        if resource is None:
-            resource = self.env['resource.resource']
-        return self._attendance_intervals_batch(
-            start_dt, end_dt, resources=resource, domain=domain, tz=tz
-        )[resource.id]
-
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the attendance intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the resource's timezone.
@@ -506,14 +498,6 @@ class ResourceCalendar(models.Model):
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
-    # YTI TODO: Remove me in master
-    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
-        if resource is None:
-            resource = self.env['resource.resource']
-        return self._work_intervals_batch(
-            start_dt, end_dt, resources=resource, domain=domain, tz=tz
-        )[resource.id]
-
     def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
@@ -579,12 +563,6 @@ class ResourceCalendar(models.Model):
             'days': days,
             'hours': sum(day_hours.values()),
         }
-
-    # YTI TODO: Remove me in master
-    def _get_day_total(self, from_datetime, to_datetime, resource=None):
-        if resource is None:
-            resource = self.env['resource.resource']
-        return self._get_resources_day_total(from_datetime, to_datetime, resources=resource)[resource.id]
 
     def _get_resources_day_total(self, from_datetime, to_datetime, resources=None):
         """
@@ -708,17 +686,22 @@ class ResourceCalendar(models.Model):
         """
         day_dt, revert = make_aware(day_dt)
 
+        if resource is None:
+            resource = self.env['resource.resource']
+
         # which method to use for retrieving intervals
         if compute_leaves:
-            get_intervals = partial(self._work_intervals, domain=domain, resource=resource)
+            get_intervals = partial(self._work_intervals_batch, domain=domain, resources=resource)
+            resource_id = resource.id
         else:
-            get_intervals = self._attendance_intervals
+            get_intervals = self._attendance_intervals_batch
+            resource_id = False
 
         if hours >= 0:
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta):
+                for start, stop, meta in get_intervals(dt, dt + delta)[resource_id]:
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
                         return revert(start + timedelta(hours=hours))
@@ -729,7 +712,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
+                for start, stop, meta in reversed(get_intervals(dt - delta, dt)[resource_id]):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
                         return revert(stop - timedelta(hours=hours))
@@ -750,16 +733,16 @@ class ResourceCalendar(models.Model):
 
         # which method to use for retrieving intervals
         if compute_leaves:
-            get_intervals = partial(self._work_intervals, domain=domain)
+            get_intervals = partial(self._work_intervals_batch, domain=domain)
         else:
-            get_intervals = self._attendance_intervals
+            get_intervals = self._attendance_intervals_batch
 
         if days > 0:
             found = set()
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta):
+                for start, stop, meta in get_intervals(dt, dt + delta)[False]:
                     found.add(start.date())
                     if len(found) == days:
                         return revert(stop)
@@ -771,7 +754,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
+                for start, stop, meta in reversed(get_intervals(dt - delta, dt)[False]):
                     found.add(start.date())
                     if len(found) == days:
                         return revert(start)
