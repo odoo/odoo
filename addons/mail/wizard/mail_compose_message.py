@@ -175,7 +175,7 @@ class MailComposer(models.TransientModel):
     # to ensure the context is passed correctly
     def action_send_mail(self):
         self.send_mail()
-        return {'type': 'ir.actions.act_window_close', 'infos': 'mail_sent'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
