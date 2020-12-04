@@ -160,7 +160,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.is_delivery:
                 line.order_id.carrier_id = False
-        super(SaleOrderLine, self).unlink()
+        return super(SaleOrderLine, self).unlink()
 
     def _is_delivery(self):
         self.ensure_one()
