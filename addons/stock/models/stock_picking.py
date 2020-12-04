@@ -404,7 +404,9 @@ class Picking(models.Model):
 
     @api.one
     def _compute_has_packages(self):
-        self.has_packages = self.move_line_ids.filtered(lambda ml: ml.result_package_id)
+        domain = [('picking_id', '=', self.id), ('result_package_id', '!=', False)]
+        result = self.env['stock.move.line'].search(domain, limit=1)
+        self.has_packages = bool(result)
 
     @api.multi
     def _compute_show_check_availability(self):
