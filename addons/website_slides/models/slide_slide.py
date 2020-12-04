@@ -32,6 +32,7 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
+    @api.model
     def create(self, values):
         res = super(SlidePartnerRelation, self).create(values)
         completed = res.filtered('completed')
