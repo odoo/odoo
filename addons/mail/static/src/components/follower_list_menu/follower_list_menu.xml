@@ -16,9 +16,6 @@
                                 Add Followers
                             </a>
                         </t>
-                        <a class="o_FollowerListMenu_addChannelsButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddChannels">
-                            Add Channels
-                        </a>
                         <t t-if="thread.followers.length > 0">
                             <div role="separator" class="dropdown-divider"/>
                             <t t-foreach="thread.followers" t-as="follower" t-key="follower.localId">

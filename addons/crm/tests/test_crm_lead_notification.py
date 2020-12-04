@@ -10,14 +10,13 @@ class NewLeadNotification(TestCrmCommon):
         """ Test newly create leads like from the website. People and channels
         subscribed to the Sales Team shoud be notified. """
         # subscribe a partner and a channel to the Sales Team with new lead subtype
-        channel_listen = self.env['mail.channel'].create({'name': 'Listener'})
         sales_team_1 = self.env['crm.team'].create({
             'name': 'Test Sales Team',
             'alias_name': 'test_sales_team',
         })
 
         subtype = self.env.ref("crm.mt_salesteam_lead")
-        sales_team_1.message_subscribe(partner_ids=[self.user_sales_manager.partner_id.id], channel_ids=[channel_listen.id], subtype_ids=[subtype.id])
+        sales_team_1.message_subscribe(partner_ids=[self.user_sales_manager.partner_id.id], subtype_ids=[subtype.id])
 
         # Imitate what happens in the controller when somebody creates a new
         # lead from the website form
@@ -32,11 +31,9 @@ class NewLeadNotification(TestCrmCommon):
         })
         # partner and channel should be auto subscribed
         self.assertIn(self.user_sales_manager.partner_id, lead.message_partner_ids)
-        self.assertIn(channel_listen, lead.message_channel_ids)
 
         msg = lead.message_ids[0]
         self.assertIn(self.user_sales_manager.partner_id, msg.notified_partner_ids)
-        self.assertIn(channel_listen, msg.channel_ids)
 
         # The user should have a new unread message
         lead_user = lead.with_user(self.user_sales_manager)

@@ -115,14 +115,14 @@ class TestCrmMailActivity(TestCrmCommon):
                 - only activity followers are recipients when this kind of activity is logged
         """
         # Add explicitly a the client as follower
-        self.lead_1.message_subscribe([self.contact_1.id])
+        self.lead_1.message_subscribe(partner_ids=[self.contact_1.id])
 
         # Check the client is not follower of any internal subtype
         internal_subtypes = self.lead_1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.contact_1).mapped('subtype_ids').filtered(lambda subtype: subtype.internal)
         self.assertFalse(internal_subtypes)
 
         # Add sale manager as follower of default subtypes
-        self.lead_1.message_subscribe([self.user_sales_manager.partner_id.id], subtype_ids=[self.env.ref('mail.mt_activities').id, self.env.ref('mail.mt_comment').id])
+        self.lead_1.message_subscribe(partner_ids=[self.user_sales_manager.partner_id.id], subtype_ids=[self.env.ref('mail.mt_activities').id, self.env.ref('mail.mt_comment').id])
 
         activity = self.env['mail.activity'].with_user(self.user_sales_leads).create({
             'activity_type_id': self.activity_type_1.id,

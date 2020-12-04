@@ -43,7 +43,6 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         channel = self.env['mail.channel'].with_user(self.user_employee).with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
-            'mail_channel_noautofollow': True,
         }).create({
             'channel_partner_ids': [(4, partner.id), (4, partner2.id)],
             'public': 'private',

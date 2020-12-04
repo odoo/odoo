@@ -27,7 +27,6 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         })
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | random_partner)
-        self.assertEqual(self.test_partner.message_channel_ids, self.env.ref('mail.channel_all_employees'))
 
     def test_action_next_activity(self):
         self.action.write({

@@ -47,13 +47,12 @@ class BaseFollowersTest(TestMailCommon):
 
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id], channel_ids=[self.channel_listen.id])
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id])
         followers = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
             ('res_id', '=', test_record.id)])
         self.assertEqual(followers, test_record.message_follower_ids)
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.channel_listen)
 
     def test_followers_subtypes_default(self):
         test_record = self.test_record.with_user(self.user_employee)
@@ -142,16 +141,6 @@ class BaseFollowersTest(TestMailCommon):
                 'partner_id': self.user_employee.partner_id.id,
                 'channel_id': self.channel_listen.id,
             })
-
-    def test_followers_default_partner_context(self):
-        """Test that a follower partner_id is not taken from context
-           when channel id is also defined.
-        """
-        test_record = self.test_record.with_user(self.user_employee)
-        test_record.with_context(default_partner_id=1).message_subscribe(
-            partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id],
-            channel_ids=[self.channel_listen.id]
-        )
 
     @users('employee')
     def test_followers_inactive(self):
