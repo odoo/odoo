@@ -170,7 +170,7 @@ class HrEmployeeBase(models.AbstractModel):
                 to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
                 # Getting work interval of the first is working. Functions called on resource_calendar_id
                 # are waiting for singleton
-                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals(from_datetime, to_datetime)
+                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
                 # Employee that is not supposed to work have empty items.
                 if len(work_interval._items) > 0:
                     # The employees should be working now according to their work schedule

@@ -224,8 +224,9 @@ class MrpWorkcenter(models.Model):
         self.ensure_one()
         start_datetime, revert = make_aware(start_datetime)
 
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals, domain=[('time_type', 'in', ['other', 'leave'])], resource=self.resource_id)
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals, domain=[('time_type', '=', 'other')], resource=self.resource_id)
+        resource = self.resource_id
+        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, domain=[('time_type', 'in', ['other', 'leave'])], resources=resource)
+        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=[('time_type', '=', 'other')], resources=resource)
 
         remaining = duration
         start_interval = start_datetime
@@ -233,8 +234,8 @@ class MrpWorkcenter(models.Model):
 
         for n in range(50):  # 50 * 14 = 700 days in advance (hardcoded)
             dt = start_datetime + delta * n
-            available_intervals = get_available_intervals(dt, dt + delta)
-            workorder_intervals = get_workorder_intervals(dt, dt + delta)
+            available_intervals = get_available_intervals(dt, dt + delta)[resource.id]
+            workorder_intervals = get_workorder_intervals(dt, dt + delta)[resource.id]
             for start, stop, dummy in available_intervals:
                 interval_minutes = (stop - start).total_seconds() / 60
                 # If the remaining minutes has never decrease update start_interval
