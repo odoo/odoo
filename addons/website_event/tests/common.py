@@ -16,6 +16,7 @@ class EventDtPatcher(TransactionCase):
     def setUpClass(cls):
         super(EventDtPatcher, cls).setUpClass()
 
+        # Mock dates to have reproducible computed fields based on time
         cls.reference_now = datetime(2020, 7, 6, 10, 0, 0)
         cls.reference_today = datetime(2020, 7, 6)
 
