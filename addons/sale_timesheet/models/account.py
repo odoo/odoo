@@ -137,6 +137,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def _timesheet_get_sale_domain(self, order_lines_ids, invoice_ids):
+        if not invoice_ids:
+            return [('so_line', 'in', order_lines_ids.ids)]
+
         return [
             '|',
             '&',
