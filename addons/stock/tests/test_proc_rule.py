@@ -236,6 +236,91 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
+    def test_fixed_procurement_01(self):
+        """ Run a procurement for 5 products when there are only 4 in stock then
+        check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
+        """
+        self.partner = self.env['res.partner'].create({'name': 'Partner'})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        final_location = self.partner.property_stock_customer
+
+        # Create a product and add 10 units in stock
+        product_a = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 10.0)
+
+        # Create a route which will allows 'wave picking'
+        wave_pg = self.env['procurement.group'].create({'name': 'Wave PG'})
+        wave_route = self.env['stock.location.route'].create({
+            'name': 'Wave for ProductA',
+            'product_selectable': True,
+            'sequence': 1,
+            'rule_ids': [(0, 0, {
+                'name': 'Stock -> output rule',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_internal'),
+                'location_src_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.ref('stock.stock_location_output'),
+                'group_propagation_option': 'fixed',
+                'group_id': wave_pg.id,
+            })],
+        })
+
+        # Set this route on `product_a`
+        product_a.write({
+            'route_ids': [(4, wave_route.id)]
+        })
+
+        # Create a procurement for 2 units
+        pg = self.env['procurement.group'].create({'name': 'Wave 1'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                2.0,
+                product_a.uom_id,
+                final_location,
+                'wave_part_1',
+                'wave_part_1',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+
+        # 2 pickings should be created: 1 for pick, 1 for ship
+        picking_pick = self.env['stock.picking'].search([('group_id', '=', wave_pg.id)])
+        picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 2.0)
+        self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 2.0)
+
+        # Create a procurement for 3 units
+        pg = self.env['procurement.group'].create({'name': 'Wave 2'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                3.0,
+                product_a.uom_id,
+                final_location,
+                'wave_part_2',
+                'wave_part_2',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+
+        # The picking for the pick operation should be reused and the lines merged.
+        picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 5.0)
+        self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 3.0)
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
