@@ -412,6 +412,9 @@ class StockQuant(models.Model):
                 if e.pgcode == '55P03':  # could not obtain the lock
                     continue
                 else:
+                    # Because savepoint doesn't flush, we need to invalidate the cache
+                    # when there is a error raise from the write (other than lock-error)
+                    self.clear_caches()
                     raise
         else:
             self.create({
