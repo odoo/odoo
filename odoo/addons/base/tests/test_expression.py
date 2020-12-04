@@ -783,6 +783,16 @@ class TestExpression(SavepointCaseWithUserDemo):
         expr = expression.AND([expression.OR([false]), normal])
         self.assertEqual(expr, false)
 
+    def test_filtered_domain_order(self):
+        domain = [('name', 'ilike', 'a')]
+        countries = self.env['res.country'].search(domain)
+        self.assertGreater(len(countries), 1)
+        # same ids, same order
+        self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
+        # again, trying the other way around
+        countries = countries.browse(reversed(countries._ids))
+        self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
+
 
 class TestExpression2(TransactionCase):
 
