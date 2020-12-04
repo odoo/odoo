@@ -4,8 +4,9 @@ odoo.define('hr_timesheet.task_with_hours', function (require) {
 var field_registry = require('web.field_registry');
 var relational_fields = require('web.relational_fields');
 var FieldMany2One = relational_fields.FieldMany2One;
+const ListFieldMany2One = relational_fields.ListFieldMany2One;
 
-var TaskWithHours = FieldMany2One.extend({
+const TaskWithHoursMixin = {
     /**
      * @override
      */
@@ -23,14 +24,19 @@ var TaskWithHours = FieldMany2One.extend({
      * @override
      * @private
      */
-    _renderEdit: function (){
+    _renderEdit: function () {
         this.m2o_value = this._getDisplayNameWithoutHours(this.m2o_value);
         this._super.apply(this, arguments);
     },
-});
+};
+
+const TaskWithHours = FieldMany2One.extend(TaskWithHoursMixin, {});
+
+const ListTaskWithHours = ListFieldMany2One.extend(TaskWithHoursMixin, {});
 
 field_registry.add('task_with_hours', TaskWithHours);
+field_registry.add('list.task_with_hours', ListTaskWithHours);
 
-return TaskWithHours;
+return { TaskWithHours, ListTaskWithHours };
 
 });
