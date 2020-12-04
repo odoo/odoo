@@ -188,10 +188,6 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave_types.ids)]
 
-    # YTI TODO: Remove me in master
-    def get_days(self, employee_id):
-        return self.get_employees_days([employee_id])[employee_id]
-
     def get_employees_days(self, employee_ids):
         result = {
             employee_id: {
