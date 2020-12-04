@@ -266,6 +266,30 @@ var FieldMany2One = AbstractField.extend({
                     }
                 });
             },
+            open: function (event, ui) {
+                // maybe bind mousedown and set flag like preventWindowClick and on window click stopPropagation of flag is set
+                var preventWindowClick = false;
+                self._onWindowMousedown = function (ev) {
+                    if (self.el.contains(ev.target) || this.el === ev.target
+                        || $(ev.target).parents('.ui-autocomplete').length) {
+                        return;
+                    }
+                    if (self.floating && self.$input.hasClass('ui-autocomplete-input')) {
+                        const $dropdown = self.$input.autocomplete("widget");
+                        if ($dropdown.is(":visible")) {
+                            preventWindowClick = true;
+                        }
+                    }
+                };
+                self._onWindowClick = function (ev) {
+                    if (preventWindowClick) {
+                        ev.stopPropagation();
+                        preventWindowClick = false;
+                    }
+                };
+                window.addEventListener('mousedown', self._onWindowMousedown, true);
+                window.addEventListener('click', self._onWindowClick, true);
+            },
             select: function (event, ui) {
                 // we do not want the select event to trigger any additional
                 // effect, such as navigating to another field.
