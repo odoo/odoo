@@ -405,6 +405,7 @@ function factory(dependencies) {
                         this[this.mainSuggestedRecordsListName][this[this.mainSuggestedRecordsListName].length - 1]
                     ]],
                 });
+                return;
             }
             this.update({
                 [this.activeSuggestedRecordName]: [[
