@@ -6,10 +6,10 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
-from odoo.addons.website_event_track.tests.common import TestEventTrackOnlineCommon
+from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 
 
-class TestTrackSuggestions(TestEventTrackOnlineCommon):
+class TestTrackSuggestions(TestEventOnlineCommon):
 
     def test_track_suggestion(self):
         [location_1, location_2] = self.env['event.track.location'].create([

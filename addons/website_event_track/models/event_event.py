@@ -10,8 +10,6 @@ class Event(models.Model):
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     track_count = fields.Integer('Track Count', compute='_compute_track_count')
-    sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
-    sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
     website_track = fields.Boolean(
         'Tracks on Website', compute='_compute_website_track',
         readonly=False, store=True)
@@ -30,12 +28,6 @@ class Event(models.Model):
         result = dict((data['event_id'][0], data['event_id_count']) for data in data)
         for event in self:
             event.track_count = result.get(event.id, 0)
-
-    def _compute_sponsor_count(self):
-        data = self.env['event.sponsor'].read_group([], ['event_id'], ['event_id'])
-        result = dict((data['event_id'][0], data['event_id_count']) for data in data)
-        for event in self:
-            event.sponsor_count = result.get(event.id, 0)
 
     @api.depends('event_type_id', 'website_menu')
     def _compute_website_track(self):

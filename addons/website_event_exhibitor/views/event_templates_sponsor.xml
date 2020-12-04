@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='wrap']" position="inside">
+        <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
+            <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
+                <t t-foreach="event.sponsor_ids" t-as="sponsor">
+                    <t t-if="sponsor.url">
+                        <a class="o_wevent_sponsor o_wevent_sponsor_card" target="_blank" t-att-href="sponsor.url">
+                            <div class="h-100 shadow-sm p-2">
+                                <span t-field="sponsor.image_128"
+                                    t-options='{"widget": "image", "class": "img img-fluid"}'/>
+                                <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                                      t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+                            </div>
+                        </a>
+                    </t>
+                    <t t-if="not sponsor.url">
+                        <div class="o_wevent_sponsor o_wevent_sponsor_card">
+                            <div class="h-100 shadow-sm p-2">
+                                <span t-field="sponsor.image_128"
+                                    t-options='{"widget": "image", "class": "img img-fluid"}'/>
+                                <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                                      t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
