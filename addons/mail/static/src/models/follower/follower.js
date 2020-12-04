@@ -19,18 +19,6 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
-            if ('channel_id' in data) {
-                if (!data.channel_id) {
-                    data2.channel = [['unlink-all']];
-                } else {
-                    const channelData = {
-                        id: data.channel_id,
-                        model: 'mail.channel',
-                        name: data.name,
-                    };
-                    data2.channel = [['insert', channelData]];
-                }
-            }
             if ('id' in data) {
                 data2.id = data.id;
             }
@@ -78,16 +66,11 @@ function factory(dependencies) {
          */
         async remove() {
             const partner_ids = [];
-            const channel_ids = [];
-            if (this.partner) {
-                partner_ids.push(this.partner.id);
-            } else {
-                channel_ids.push(this.channel.id);
-            }
+            partner_ids.push(this.partner.id);
             await this.async(() => this.env.services.rpc({
                 model: this.followedThread.model,
                 method: 'message_unsubscribe',
-                args: [[this.followedThread.id], partner_ids, channel_ids]
+                args: [[this.followedThread.id], partner_ids]
             }));
             const followedThread = this.followedThread;
             this.delete();
@@ -149,8 +132,6 @@ function factory(dependencies) {
                 };
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
-                } else {
-                    kwargs.channel_ids = [this.channel.id];
                 }
                 await this.async(() => this.env.services.rpc({
                     model: this.followedThread.model,

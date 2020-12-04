@@ -1814,7 +1814,7 @@ class MailThread(models.AbstractModel):
 
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and partner_ids:
-            self.message_subscribe(list(partner_ids))
+            self.message_subscribe(partner_ids=list(partner_ids))
 
         MailMessage_sudo = self.env['mail.message'].sudo()
         if self._mail_flat_thread and not parent_id:
@@ -1862,7 +1862,7 @@ class MailThread(models.AbstractModel):
 
         if values['author_id'] and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
             if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
-                self._message_subscribe([values['author_id']])
+                self._message_subscribe(partner_ids=[values['author_id']])
 
         self._message_post_after_hook(new_message, values)
         self._notify_thread(new_message, values, **notif_kwargs)
@@ -2614,18 +2614,17 @@ class MailThread(models.AbstractModel):
     # FOLLOWERS API
     # ------------------------------------------------------
 
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Main public API to add followers to a record set. Its main purpose is
         to perform access rights checks before calling ``_message_subscribe``. """
-        if not self or (not partner_ids and not channel_ids):
+        if not self or not partner_ids:
             return True
 
         partner_ids = partner_ids or []
-        channel_ids = channel_ids or []
         adding_current = set(partner_ids) == set([self.env.user.partner_id.id])
         customer_ids = [] if adding_current else None
 
-        if not channel_ids and partner_ids and adding_current:
+        if partner_ids and adding_current:
             try:
                 self.check_access_rights('read')
                 self.check_access_rule('read')
@@ -2639,9 +2638,9 @@ class MailThread(models.AbstractModel):
         if partner_ids and not adding_current:
             partner_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('active', '=', True)]).ids
 
-        return self._message_subscribe(partner_ids, channel_ids, subtype_ids, customer_ids=customer_ids)
+        return self._message_subscribe(partner_ids, subtype_ids, customer_ids=customer_ids)
 
-    def _message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, customer_ids=None):
+    def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
         """ Main private API to add followers to a record set. This method adds
         partners and channels, given their IDs, as followers of all records
         contained in the record set.
@@ -2659,24 +2658,24 @@ class MailThread(models.AbstractModel):
 
         if not subtype_ids:
             self.env['mail.followers']._insert_followers(
-                self._name, self.ids, partner_ids, None, channel_ids, None,
+                self._name, self.ids, partner_ids, None, None, None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='skip')
         else:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
                 partner_ids, dict((pid, subtype_ids) for pid in partner_ids),
-                channel_ids, dict((cid, subtype_ids) for cid in channel_ids),
+                None, None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
         return True
 
-    def message_unsubscribe(self, partner_ids=None, channel_ids=None):
+    def message_unsubscribe(self, partner_ids=None):
         """ Remove partners from the records followers. """
         # not necessary for computation, but saves an access right check
-        if not partner_ids and not channel_ids:
+        if not partner_ids:
             return True
         user_pid = self.env.user.partner_id.id
-        if not channel_ids and set(partner_ids) == set([user_pid]):
+        if set(partner_ids) == set([user_pid]):
             self.check_access_rights('read')
             self.check_access_rule('read')
         else:
@@ -2685,9 +2684,7 @@ class MailThread(models.AbstractModel):
         self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
-            '|',
             ('partner_id', 'in', partner_ids or []),
-            ('channel_id', 'in', channel_ids or [])
         ]).unlink()
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
@@ -2822,7 +2819,7 @@ class MailThread(models.AbstractModel):
         self.env['mail.followers']._insert_followers(
             self._name, self.ids,
             list(new_partners), new_partners,
-            list(new_channels), new_channels,
+            None, None,
             check_existing=True, existing_policy=followers_existing_policy)
 
         # notify people from auto subscription, for example like assignation

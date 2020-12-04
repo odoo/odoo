@@ -439,10 +439,6 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', 'test-catchall')
         self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'test-bounce')
 
-        self.channel = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
-            'name': 'Listener',
-        })
-
         # prepare recipients to test for more realistic workload
         self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
             'name': 'Test Customer',
@@ -523,7 +519,6 @@ class TestMailComplexPerformance(BaseMailPerformance):
     @warmup
     def test_complex_message_subscribe(self):
         pids = self.partners.ids
-        cids = self.channel.ids
         subtypes = self.env.ref('mail.mt_comment') | self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         subtype_ids = subtypes.ids
         rec = self.env['mail.test.ticket'].create({
@@ -535,40 +530,33 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id)
-        self.assertEqual(rec1.message_channel_ids, self.env['mail.channel'])
 
         # subscribe new followers with forced given subtypes
-        with self.assertQueryCount(__system__=8, emp=8):
+        with self.assertQueryCount(__system__=7, emp=7):
             rec.message_subscribe(
                 partner_ids=pids[:4],
-                channel_ids=cids,
                 subtype_ids=subtype_ids
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:4])
-        self.assertEqual(rec1.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=False, meaning only some new followers will be added
         with self.assertQueryCount(__system__=6, emp=6):
             rec.message_subscribe(
                 partner_ids=pids[:6],
-                channel_ids=cids,
                 subtype_ids=None
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:6])
-        self.assertEqual(rec1.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=True, meaning all will have the same subtypes
         with self.assertQueryCount(__system__=7, emp=7):
             rec.message_subscribe(
                 partner_ids=pids,
-                channel_ids=cids,
                 subtype_ids=subtype_ids
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners)
-        self.assertEqual(rec1.message_channel_ids, self.channel)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')

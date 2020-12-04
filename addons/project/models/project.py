@@ -371,7 +371,7 @@ class Project(models.Model):
             for project in self:
                 permission_removed = allowed_users.get(project) - project.allowed_user_ids
                 allowed_portal_users_removed = permission_removed.filtered('share')
-                project.message_unsubscribe(allowed_portal_users_removed.partner_id.commercial_partner_id.ids)
+                project.message_unsubscribe(partner_ids=allowed_portal_users_removed.partner_id.commercial_partner_id.ids)
                 for task in project.task_ids:
                     task.allowed_user_ids -= permission_removed
 
@@ -420,17 +420,17 @@ class Project(models.Model):
         analytic_accounts_to_delete.unlink()
         return result
 
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """
         Subscribe to all existing active tasks when subscribing to a project
         And add the portal user subscribed to allowed portal users
         """
-        res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+        res = super(Project, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
         task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
         if not subtype_ids or task_subtypes:
             self.mapped('tasks').message_subscribe(
-                partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
+                partner_ids=partner_ids, subtype_ids=task_subtypes)
         if partner_ids:
             all_users = self.env['res.partner'].browse(partner_ids).user_ids
             portal_users = all_users.filtered('share')
@@ -439,10 +439,10 @@ class Project(models.Model):
             self.allowed_internal_user_ids |= internal_users
         return res
 
-    def message_unsubscribe(self, partner_ids=None, channel_ids=None):
+    def message_unsubscribe(self, partner_ids=None):
         """ Unsubscribe from all tasks when unsubscribing from a project """
-        self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
-        return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
+        self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids)
+        return super(Project, self).message_unsubscribe(partner_ids=partner_ids)
 
     def _alias_get_creation_values(self):
         values = super(Project, self)._alias_get_creation_values()
@@ -995,11 +995,11 @@ class Task(models.Model):
         )
         return super(Task, self).get_empty_list_help(help)
 
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """
         Add the users subscribed to allowed portal users
         """
-        res = super(Task, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+        res = super(Task, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         if partner_ids:
             new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
             tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')

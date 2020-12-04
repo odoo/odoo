@@ -67,18 +67,6 @@
             <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
-        <!-- Channel -->
-        <record id="mail_channel_project_task" model="mail.channel">
-            <field name="name">Projects &amp; Tasks</field>
-            <field name="group_public_id" ref="group_project_user"/>
-            <field name="group_ids" eval="[(4, ref('group_project_user'))]"/>
-        </record>
-
-        <!-- Channel follows all above projects -->
-        <function model="project.project" name="message_subscribe"
-            eval="[ref('project_project_1'), ref('project_project_2')
-            ], None, [ref('mail_channel_project_task')]"/>
-
         <!-- Tasks -->
         <record id="project_task_1" model="project.task">
             <field name="planned_hours" eval="40.0"/>

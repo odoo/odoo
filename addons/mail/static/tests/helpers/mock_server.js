@@ -251,15 +251,13 @@ MockServer.include({
         if (args.method === 'message_subscribe') {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
-            const channel_ids = args.args[2] || args.kwargs.channel_ids;
-            const subtype_ids = args.args[3] || args.kwargs.subtype_ids;
-            return this._mockMailThreadMessageSubscribe(args.model, ids, partner_ids, channel_ids, subtype_ids);
+            const subtype_ids = args.args[2] || args.kwargs.subtype_ids;
+            return this._mockMailThreadMessageSubscribe(args.model, ids, partner_ids, subtype_ids);
         }
         if (args.method === 'message_unsubscribe') {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
-            const channel_ids = args.args[2] || args.kwargs.channel_ids;
-            return this._mockMailThreadMessageUnsubscribe(args.model, ids, partner_ids, channel_ids);
+            return this._mockMailThreadMessageUnsubscribe(args.model, ids, partner_ids);
         }
         if (args.method === 'message_post') {
             const id = args.args[0];
@@ -1617,7 +1615,7 @@ MockServer.include({
      * @param {integer[]} subtype_ids
      * @returns {boolean}
      */
-    _mockMailThreadMessageSubscribe(model, ids, partner_ids, channel_ids, subtype_ids) {
+    _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
         // message_subscribe is too complex for a generic mock.
         // mockRPC should be considered for a specific result.
     },
@@ -1657,19 +1655,16 @@ MockServer.include({
      * @param {string} model not in server method but necessary for thread mock
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
-     * @param {integer[]} channel_ids
      * @returns {boolean|undefined}
      */
-    _mockMailThreadMessageUnsubscribe(model, ids, partner_ids, channel_ids) {
-        if (!partner_ids && !channel_ids) {
+    _mockMailThreadMessageUnsubscribe(model, ids, partner_ids) {
+        if (!partner_ids) {
             return true;
         }
         const followers = this._getRecords('mail.followers', [
             ['res_model', '=', model],
             ['res_id', 'in', ids],
-            '|',
             ['partner_id', 'in', partner_ids || []],
-            ['channel_id', 'in', channel_ids || []],
         ]);
         this._mockUnlink(model, [followers.map(follower => follower.id)]);
     },
