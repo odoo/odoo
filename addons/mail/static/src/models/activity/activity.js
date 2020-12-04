@@ -283,6 +283,12 @@ function factory(dependencies) {
         creator: many2one('mail.user'),
         dateCreate: attr(),
         dateDeadline: attr(),
+        /**
+         * Backup of the feedback content of an activity to be marked as done in the popover.
+         * Feature-specific to restoring the feedback content when component is re-mounted.
+         * In all other cases, this field value should not be trusted.
+         */
+        feedbackBackup: attr(),
         force_next: attr({
             default: false,
         }),
