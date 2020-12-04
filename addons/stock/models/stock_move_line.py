@@ -417,6 +417,8 @@ class StockMoveLine(models.Model):
         # the line. It is mandatory in order to free the reservation and correctly apply
         # `action_done` on the next move lines.
         ml_to_delete = self.env['stock.move.line']
+        lot_vals_to_create = []  # lot values for batching the creation
+        associate_line_lot = []  # move_line to associate to the lot
         for ml in self:
             # Check here if `ml.qty_done` respects the rounding of `ml.product_uom_id`.
             uom_qty = float_round(ml.qty_done, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
@@ -437,10 +439,9 @@ class StockMoveLine(models.Model):
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
-                                lot = self.env['stock.production.lot'].create(
-                                    {'name': ml.lot_name, 'product_id': ml.product_id.id, 'company_id': ml.move_id.company_id.id}
-                                )
-                                ml.write({'lot_id': lot.id})
+                                lot_vals_to_create.append({'name': ml.lot_name, 'product_id': ml.product_id.id, 'company_id': ml.move_id.company_id.id})
+                                associate_line_lot.append(ml)
+                                continue  # Avoid the raise after because not lot_id is set
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
                             # If the user disabled both `use_create_lots` and `use_existing_lots`
                             # checkboxes on the picking type, he's allowed to enter tracked
@@ -459,8 +460,12 @@ class StockMoveLine(models.Model):
                 ml_to_delete |= ml
         ml_to_delete.unlink()
 
-        (self - ml_to_delete)._check_company()
+        # Batching the creation of lots and associated each to the right ML (order is preserve in the create)
+        lots = self.env['stock.production.lot'].create(lot_vals_to_create)
+        for ml, lot in zip(associate_line_lot, lots):
+            ml.write({'lot_id': lot.id})
 
+        (self - ml_to_delete)._check_company()
         # Now, we can actually move the quant.
         done_ml = self.env['stock.move.line']
         for ml in self - ml_to_delete:
