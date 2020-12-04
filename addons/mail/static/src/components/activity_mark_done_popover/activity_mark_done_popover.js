@@ -28,6 +28,9 @@ class ActivityMarkDonePopover extends Component {
 
     mounted() {
         this._feedbackTextareaRef.el.focus();
+        if (this.activity.feedbackBackup) {
+            this._feedbackTextareaRef.el.value = this.activity.feedbackBackup;
+        }
     }
 
     /**
@@ -58,6 +61,15 @@ class ActivityMarkDonePopover extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onBlur() {
+        this.activity.update({
+            feedbackBackup: this._feedbackTextareaRef.el.value,
+        });
+    }
 
     /**
      * @private
