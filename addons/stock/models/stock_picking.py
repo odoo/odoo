@@ -526,8 +526,11 @@ class Picking(models.Model):
             picking.move_line_exist = bool(picking.move_line_ids)
 
     def _compute_has_packages(self):
+        domain = [('picking_id', 'in', self.ids), ('result_package_id', '!=', False)]
+        cnt_by_picking = self.env['stock.move.line'].read_group(domain, ['picking_id'], ['picking_id'])
+        cnt_by_picking = {d['picking_id'][0]: d['picking_id_count'] for d in cnt_by_picking}
         for picking in self:
-            picking.has_packages = bool(self.env['stock.move.line'].search_count([('picking_id', '=', picking.id), ('result_package_id', '!=', False)]))
+            picking.has_packages = bool(cnt_by_picking.get(picking.id, False))
 
     @api.depends('immediate_transfer', 'state')
     def _compute_show_check_availability(self):
