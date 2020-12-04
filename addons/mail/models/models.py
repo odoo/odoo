@@ -163,10 +163,9 @@ class BaseModel(models.AbstractModel):
         if alias.alias_contact == 'followers':
             if not self.ids:
                 return _('incorrectly configured alias (unknown reference record)')
-            if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
+            if not hasattr(self, "message_partner_ids"):
                 return _('incorrectly configured alias')
-            accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
-            if not author or author not in accepted_partner_ids:
+            if not author or author not in self.message_partner_ids:
                 return _('restricted to followers')
         elif alias.alias_contact == 'partners' and not author:
             return _('restricted to known authors')

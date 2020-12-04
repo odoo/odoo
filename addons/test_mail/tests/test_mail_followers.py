@@ -91,12 +91,10 @@ class BaseFollowersTest(TestMailCommon):
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_noforce(self):
@@ -105,13 +103,11 @@ class BaseFollowersTest(TestMailCommon):
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
         # set new subtypes with force=False, meaning no rewriting of the subscription is done -> result should not change
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_update(self):
