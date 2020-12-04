@@ -23,7 +23,6 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         self.action.write({
             'state': 'followers',
             'partner_ids': [(4, self.env.ref('base.partner_admin').id), (4, random_partner.id)],
-            'channel_ids': [(4, self.env.ref('mail.channel_all_employees').id)]
         })
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | random_partner)
