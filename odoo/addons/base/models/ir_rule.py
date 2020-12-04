@@ -168,11 +168,6 @@ class IrRule(models.Model):
             yield v
 
     @api.model
-    def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
-        self.clear_caches()
-
-    @api.model
     def domain_get(self, model_name, mode='read'):
         # this method is now unsafe, since it returns a list of tables which
         # does not contain the joins present in the generated Query object

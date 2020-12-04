@@ -826,8 +826,6 @@ class Users(models.Model):
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                          (self._uid, module, ext_id))
         return bool(self._cr.fetchone())
-    # for a few places explicitly clearing the has_group cache
-    has_group.clear_cache = _has_group.clear_cache
 
     def action_show_groups(self):
         self.ensure_one()

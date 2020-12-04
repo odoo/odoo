@@ -1613,11 +1613,6 @@ actual arch.
         view = self.sudo().search([('key', '=', template)], limit=1)
         return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
-    def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
-        if 'xml' not in config['dev_mode']:
-            self.clear_caches()
-
     def _contains_branded(self, node):
         return node.tag == 't'\
             or 't-raw' in node.attrib\

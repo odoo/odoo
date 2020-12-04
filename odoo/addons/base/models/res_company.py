@@ -192,10 +192,6 @@ class Company(models.Model):
         _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
 
-    # deprecated, use clear_caches() instead
-    def cache_restart(self):
-        self.clear_caches()
-
     @api.model
     def create(self, vals):
         if not vals.get('favicon'):
