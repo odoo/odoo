@@ -2069,8 +2069,11 @@ class IrModelData(models.Model):
         # methods is not in cache it will be fetched, and fields that exist in the registry but not
         # in the database will be prefetched, this will of course fail and prevent the uninstall.
         for ir_field in self.env['ir.model.fields'].browse(field_ids):
-            field = self.pool[ir_field.model]._fields[ir_field.name]
-            field.prefetch = False
+            model = self.pool.get(ir_field.model)
+            if model is not None:
+                field = model._fields.get(ir_field.name)
+                if field is not None:
+                    field.prefetch = False
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
