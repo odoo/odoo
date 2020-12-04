@@ -195,13 +195,16 @@ class Http(models.AbstractModel):
 
         request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
-        # This is mainly to avoid access errors in website controllers where there is no
-        # context (eg: /shop), and it's not going to propagate to the global context of the tab
-        # If the company of the website is not in the allowed companies of the user, set the main
-        # company of the user.
-        if request.website.company_id in request.env.user.company_ids:
+        is_portal_user = request.env.user != request.website.user_id and request.env.user.share
+        if is_portal_user:
+            context['allowed_company_ids'] = request.env.user.company_ids.ids
+        elif request.website.company_id in request.env.user.company_ids:
+            # This is mainly to avoid access errors in website controllers where there is no
+            # context (eg: /shop), and it's not going to propagate to the global context of the tab
             context['allowed_company_ids'] = request.website.company_id.ids
         else:
+            # If the company of the website is not in the allowed companies of the user, set the main
+            # company of the user.
             context['allowed_company_ids'] = request.env.user.company_id.ids
 
         # modify bound context
