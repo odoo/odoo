@@ -155,11 +155,13 @@ class ComposerTextInput extends Component {
         }
         this._textareaRef.el.value = this.composer.textInputContent;
         this._mirroredTextareaRef.el.value = this.composer.textInputContent;
-        this._textareaRef.el.setSelectionRange(
-            this.composer.textInputCursorStart,
-            this.composer.textInputCursorEnd,
-            this.composer.textInputSelectionDirection,
-        );
+        if (this.composer.hasFocus) {
+            this._textareaRef.el.setSelectionRange(
+                this.composer.textInputCursorStart,
+                this.composer.textInputCursorEnd,
+                this.composer.textInputSelectionDirection,
+            );
+        }
         this._updateHeight();
     }
 
