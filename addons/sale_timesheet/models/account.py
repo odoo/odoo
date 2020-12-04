@@ -109,19 +109,20 @@ class AccountAnalyticLine(models.Model):
             2/ timesheet on employee rate task: find the SO line in the map of the project (even for subtask), or fallback on the SO line of the task, or fallback
                 on the one on the project
         """
-        if project.sale_line_id and not task:
+        if not task:
             if project.bill_type == 'customer_project' and project.pricing_type == 'employee_rate':
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', project.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
-            return project.sale_line_id
+            if project.sale_line_id:
+                return project.sale_line_id
         if task.allow_billable:
             if task.bill_type == 'customer_task':
                 return task.sale_line_id
             if task.pricing_type == 'fixed_rate':
                 return task.sale_line_id
             elif task.pricing_type == 'employee_rate' and not task.non_allow_billable:
-                map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
+                map_entry = project.sale_line_employee_ids.filtered(lambda map_entry: map_entry.employee_id == employee)
                 if map_entry:
                     return map_entry.sale_line_id
                 if task.sale_line_id or project.sale_line_id:
