@@ -66,7 +66,7 @@ class StockQuant(models.Model):
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
+        'stock.production.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', readonly=True, check_company=True,
         domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
