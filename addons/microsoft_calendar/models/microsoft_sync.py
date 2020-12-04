@@ -72,7 +72,7 @@ class MicrosoftSync(models.AbstractModel):
     def write(self, vals):
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         if 'microsoft_id' in vals:
-            self.clear_caches()
+            self and self.clear_caches()
         synced_fields = self._get_microsoft_synced_fields()
         if 'need_sync_m' not in vals and vals.keys() & synced_fields and not self.env.user.microsoft_synchronization_stopped:
             fields_to_sync = [x for x in vals.keys() if x in synced_fields]

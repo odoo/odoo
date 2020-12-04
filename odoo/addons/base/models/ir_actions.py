@@ -43,25 +43,25 @@ class IrActions(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrActions, self).create(vals_list)
+        actions = super().create(vals_list)
         # self.get_bindings() depends on action records
-        self.clear_caches()
-        return res
+        actions and self.clear_caches()
+        return actions
 
     def write(self, vals):
-        res = super(IrActions, self).write(vals)
+        res = super().write(vals)
         # self.get_bindings() depends on action records
-        self.clear_caches()
+        self and self.clear_caches()
         return res
 
     def unlink(self):
         """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
-        todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
-        todos.unlink()
-        res = super(IrActions, self).unlink()
+        if self:
+            self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)]).unlink()
+        res = super().unlink()
         # self.get_bindings() depends on action records
-        self.clear_caches()
+        self and self.clear_caches()
         return res
 
     @api.model
@@ -251,15 +251,16 @@ class IrActionsActWindow(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
         for vals in vals_list:
             if not vals.get('name') and vals.get('res_model'):
                 vals['name'] = self.env[vals['res_model']]._description
-        return super(IrActionsActWindow, self).create(vals_list)
+        actions = super().create(vals_list)
+        actions and self.clear_caches()
+        return actions
 
     def unlink(self):
-        self.clear_caches()
-        return super(IrActionsActWindow, self).unlink()
+        self and self.clear_caches()
+        return super().unlink()
 
     def exists(self):
         ids = self._existing()

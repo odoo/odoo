@@ -491,7 +491,7 @@ actual arch.
             values['arch_prev'] = values.get('arch_base') or values.get('arch_db') or values.get('arch')
             values.update(self._compute_defaults(values))
 
-        self.clear_caches()
+        vals_list and self.clear_caches()
         return super(View, self).create(vals_list)
 
     def write(self, vals):
@@ -506,7 +506,7 @@ actual arch.
         if custom_view:
             custom_view.unlink()
 
-        self.clear_caches()
+        self and self.clear_caches()
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 

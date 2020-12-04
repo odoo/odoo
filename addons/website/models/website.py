@@ -182,7 +182,7 @@ class Website(models.Model):
         public_user_to_change_websites = self.env['website']
         self._handle_favicon(values)
 
-        self.clear_caches()
+        self and self.clear_caches()
 
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])

@@ -600,7 +600,7 @@ class Users(models.Model):
             *self._get_session_token_fields()
         }
         if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
-            self.clear_caches()
+            self and self.clear_caches()
 
         return res
 

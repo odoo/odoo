@@ -138,14 +138,15 @@ class IrUiMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
         for values in vals_list:
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).create(vals_list)
+        menus = super().create(vals_list)
+        menus and self.clear_caches()
+        return menus
 
     def write(self, values):
-        self.clear_caches()
+        self and self.clear_caches()
         if 'web_icon' in values:
             values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).write(values)

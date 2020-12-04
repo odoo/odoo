@@ -186,8 +186,9 @@ class View(models.Model):
             for view in self.filtered(lambda view: not view.website_id):
                 specific_views += view._get_specific_views()
 
-        result = super(View, self + specific_views).unlink()
-        self.clear_caches()
+        views_to_unlink = self + specific_views
+        result = super(View, views_to_unlink).unlink()
+        views_to_unlink and self.clear_caches()
         return result
 
     def _create_website_specific_pages_for_view(self, new_view, website):

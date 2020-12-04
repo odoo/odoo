@@ -267,7 +267,7 @@ class Lang(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        vals_list and self.clear_caches()
         for vals in vals_list:
             if not vals.get('url_code'):
                 vals['url_code'] = vals.get('iso_code') or vals['code']
@@ -286,8 +286,8 @@ class Lang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
-        self.flush()
-        self.clear_caches()
+        self and self.flush()
+        self and self.clear_caches()
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -304,7 +304,7 @@ class Lang(models.Model):
     def unlink(self):
         for language in self:
             self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
-        self.clear_caches()
+        self and self.clear_caches()
         return super(Lang, self).unlink()
 
     def format(self, percent, value, grouping=False, monetary=False):

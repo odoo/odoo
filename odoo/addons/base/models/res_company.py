@@ -224,7 +224,7 @@ class Company(models.Model):
         return company
 
     def write(self, values):
-        self.clear_caches()
+        self and self.clear_caches()
         # Make sure that the selected currency is enabled
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])

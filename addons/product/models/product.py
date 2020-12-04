@@ -327,15 +327,15 @@ class ProductProduct(models.Model):
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
-        self.clear_caches()
+        products and self.clear_caches()
         return products
 
     def write(self, values):
         res = super(ProductProduct, self).write(values)
-        if 'product_template_attribute_value_ids' in values:
+        if self and 'product_template_attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`
             self.clear_caches()
-        if 'active' in values:
+        if self and 'active' in values:
             # prefetched o2m have to be reloaded (because of active_test)
             # (eg. product.template: product_variant_ids)
             self.flush()
@@ -366,7 +366,7 @@ class ProductProduct(models.Model):
         # products due to ondelete='cascade'
         unlink_templates.unlink()
         # `_get_variant_id_for_combination` depends on existing variants
-        self.clear_caches()
+        (unlink_products or unlink_templates) and self.clear_caches()
         return res
 
     def _unlink_or_archive(self, check_access=True):

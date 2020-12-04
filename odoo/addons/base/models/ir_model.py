@@ -1943,8 +1943,8 @@ class IrModelData(models.Model):
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
-        self.clear_caches()
-        return super(IrModelData, self).unlink()
+        self and self.clear_caches()
+        return super().unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """

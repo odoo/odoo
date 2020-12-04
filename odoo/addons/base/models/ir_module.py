@@ -319,8 +319,8 @@ class Module(models.Model):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
 
     def unlink(self):
-        self.clear_caches()
-        return super(Module, self).unlink()
+        self and self.clear_caches()
+        return super().unlink()
 
     @staticmethod
     def _check_python_external_dependency(pydep):
