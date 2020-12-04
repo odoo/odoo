@@ -38,7 +38,7 @@ class StockRule(models.Model):
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
         required=True)
     sequence = fields.Integer('Sequence', default=20)
-    company_id = fields.Many2one('res.company', 'Company',
+    company_id = fields.Many2one('res.company', 'Company', required=True,
         default=lambda self: self.env.company)
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
