@@ -658,7 +658,7 @@ class Channel(models.Model):
                 moderation_status = 'pending_moderation'
         return moderation_status, email
 
-    def _message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, customer_ids=None):
+    def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
         """ Do not allow follower subscription on channels. Only members are
         considered. """
         raise UserError(_('Adding followers on channels is not possible. Consider adding members instead.'))

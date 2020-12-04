@@ -752,13 +752,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Open a dialog to add channels as followers.
-         */
-        promptAddChannelFollower() {
-            this._promptAddFollower({ mail_invite_follower_channel_only: true });
-        }
-
-        /**
          * Open a dialog to add partners as followers.
          */
         promptAddPartnerFollower() {
