@@ -25,7 +25,40 @@ LivechatButton.include({
         }
         return this._super();
     },
+	
+	/**
+     * @override
+     * opening a longpolling to listen message post from backend
+	*/
+	start: function () {
+        this._super();
+		this.call('bus_service', 'addChannel', utils.get_cookie('visitor_uuid'));
+		this.call('bus_service', 'startPolling');
+    },
+	
+	_openlivechatImmediate: function (notification) {
+		self = this 
+		var channel = notification[0];
+		var cookie_info = notification[1];
+		if (channel === utils.get_cookie('visitor_uuid')){
+			this._messages = [];
+			utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(cookie_info)), 60*60*24);
+			this.willStart().then(function () {
+             if (self._history) {
+            _.each(self._history.reverse(), self._addMessage.bind(self));
+            self._openChat();
+        }});
+	};
 
+	},
+	
+    _onNotification: function (notifications) {
+        var self = this;
+        _.each(notifications, function (notification) {
+		self._openlivechatImmediate(notification);
+        });
+		this._super(notifications);
+		},
     /**
      * @override
      * Called when the visitor closes the livechat chatter
