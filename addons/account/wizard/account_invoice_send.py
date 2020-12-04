@@ -92,7 +92,14 @@ class AccountInvoiceSend(models.TransientModel):
             if self.env.context.get('mark_invoice_as_sent'):
                 #Salesman send posted invoice, without the right to write
                 #but they should have the right to change this flag
+<<<<<<< HEAD
                 self.mapped('invoice_ids').sudo().write({'is_move_sent': True})
+=======
+                self.mapped('invoice_ids').sudo().write({'invoice_sent': True})
+            for inv in self.invoice_ids:
+                if inv.attachment_ids:
+                    inv._message_set_main_attachment_id([(False,att) for att in inv.attachment_ids.ids])
+>>>>>>> 6e1d313dc60... temp
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
