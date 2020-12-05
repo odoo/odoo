@@ -3,12 +3,11 @@
 # 	* mail
 # 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2020
 # Sergey Vilizhanin, 2020
 # 6da4f49c4b78e697e34b24b2a66289f5, 2020
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2020
-# Максим Дронь <dronmax@gmail.com>, 2020
 # Denis Baranov <baranov@itlibertas.com>, 2020
-# Dinar <gabbasov@it-projects.info>, 2020
 # Андрей Гусев <gaussgss@gmail.com>, 2020
 # Vitalius Sharkhun <al070572sva@gmail.com>, 2020
 # Oleg Kuryan <oleg@ventor.tech>, 2020
@@ -19,8 +18,8 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Collex100, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # 
 msgid ""
 msgstr ""
@@ -28,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2020\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1144,7 +1143,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Cancel"
-msgstr "Отменить"
+msgstr "Отмена"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
@@ -1650,6 +1649,12 @@ msgid "Customer is required for inbox / email notification"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -1851,7 +1856,7 @@ msgstr "Отменить выбранные сообщения"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #, python-format
 msgid "Discuss"
-msgstr "Общение"
+msgstr "Обсуждения"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
@@ -2002,7 +2007,7 @@ msgstr "Сделано. Запустить следующее"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Готово & Запланировать следующее"
+msgstr "Сделано + записать ещё"
 
 #. module: mail
 #. openerp-web
@@ -2114,7 +2119,7 @@ msgstr "Редактировать подписку"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email"
-msgstr "Эл. адрес"
+msgstr "Электронная почта"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
@@ -5374,7 +5379,7 @@ msgstr "Сохранить как новый шаблон"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Запланировать"
+msgstr "Записать"
 
 #. module: mail
 #. openerp-web
@@ -5383,7 +5388,7 @@ msgstr "Запланировать"
 #: code:addons/mail/static/src/models/activity/activity.js:0
 #, python-format
 msgid "Schedule Activity"
-msgstr "Запланировать мероприятие"
+msgstr "Записать задачу"
 
 #. module: mail
 #. openerp-web
@@ -5398,20 +5403,20 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "Schedule activity"
-msgstr "Планирование"
+msgstr "Записать задачу"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Schedule an Activity"
-msgstr "Запланировать мероприятие"
+msgstr "Записать задачу"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule an activity"
-msgstr "Запланировать мероприятие"
+msgstr "Записать задачу"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -5424,7 +5429,7 @@ msgstr "Запланированная дата"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr "Расписание даты отправки"
+msgstr "Запланированная дата отправки"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -6453,7 +6458,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr ""
+msgstr "Загрузить документ"
 
 #. module: mail
 #. openerp-web

@@ -20,12 +20,12 @@
 # thomas quertinmont <tqu@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
-# Jonathan Quique <jqu@odoo.com>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Martin Trigaux, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # 
 msgid ""
@@ -929,6 +929,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "be reset to Draft."
 msgstr ""
+"L'état de la demande d'allocation doit être «Refusé» ou «À approuver» pour "
+"être réinitialisé en Brouillon."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -2356,7 +2358,7 @@ msgstr "Parent"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
 msgid "Parental Leaves"
-msgstr ""
+msgstr "Congés parentaux"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2773,6 +2775,9 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
+"Cet espace est rempli automatiquement par l'utilisateur qui valide "
+"l'allocation au deuxième niveau (si le type d'allocation nécessite une "
+"deuxième validation)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2801,6 +2806,9 @@ msgid ""
 "only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
 " and Time Off Officer'"
 msgstr ""
+"Cet utilisateur sera responsable de l'approbation de ce type de congé. Ceci "
+"n'est utilisé que lorsque la validation est effectuée 'Par le responsable "
+"des congés' ou 'Par le manager de l'employé et le responsable des congés'"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3450,3 +3458,10 @@ msgstr "à"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "validé"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/bugfix/bugfix.js:0
+#, python-format
+msgid "Out of office until %s"
+msgstr "Absent du bureau jusqu'au %s"

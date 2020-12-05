@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_iban
+# 	* base_iban
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,44 +21,68 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_iban
+#. openerp-web
+#: code:addons/base_iban/static/src/js/iban_widget.js:0
+#, python-format
+msgid "Account isn't IBAN compliant."
+msgstr ""
+
+#. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "គណនីធនាគារ"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:67
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "មិនអាចគណនា BBAN ទេពីព្រោះលេខគណនីមិនមែន IBAN ទេ។"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:54
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr "ឈ្មោះសំរាប់បង្ហាញ"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:39
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__id
+msgid "ID"
+msgstr "អត្តសញ្ញាណ"
+
+#. module: base_iban
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank____last_update
+msgid "Last Modified on"
+msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"IBAN ហាក់ដូចជាមិនត្រឹមត្រូវ។ អ្នកគួរតែបញ្ចូលអ្វីមួយដូចនេះ នៅកន្លែងដែល = "
+"លេខកូដធនាគារថ្នាក់ជាតិលេខ = លេខកូដសាខា C = គណនីលេខ k = សូមពិនិត្យខ្ទង់%s"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:35
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "IBAN មិនត្រឹមត្រូវវាគួរតែចាប់ផ្តើមជាមួយលេខកូដប្រទេស"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:31
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "មិនមានកូដ IBAN ទេ។"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:45
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "IBAN នេះមិនហុចឆែកសុពលភាពទេសូមផ្ទៀងផ្ទាត់វា។"
