@@ -101,7 +101,7 @@ msgstr "Skontrolujte hornú maržu"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "Kontrolné čísla sa môžu skladať iba z číslic"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -295,7 +295,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "Preferovaný spôsob platby"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -305,6 +305,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"Preferovaný spôsob platby pri platbe tomuto predajcovi. Používa sa na "
+"filtrovanie faktúr dodávateľov podľa preferovaného spôsobu platby na "
+"hromadnú registráciu platieb. Prípady použitia: vytvorte bankové súbory pre "
+"dávkové káble, skontrolujte behy."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -367,6 +371,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"Pri kontrole rozloženia sa vyskytla chyba. Vyberte iné rozloženie v "
+"nastaveniach fakturácie / účtovníctva a skúste to znova."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -384,6 +390,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"Nasledujúce čísla sú už použité:\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -423,6 +431,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Táto možnosť vám umožňuje vytlačiť štítok s dátumom na šek podľa CPA.\n"
+"Toto vypnite, ak vaša predtlačená kontrola obsahuje štítok s dátumom."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -438,7 +448,7 @@ msgstr "Odznačenie poslané"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "Kontrola neplatnosti"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -447,3 +457,6 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Musíte zvoliť rozloženie kontroly. Prejdite na to do časti Nastavenia "
+"fakturácie / účtovníctva, vyhľadajte položku „Kontroly rozloženia“ a jednu z"
+" nich nastavte."

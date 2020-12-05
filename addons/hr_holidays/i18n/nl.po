@@ -882,7 +882,7 @@ msgstr "Soort toewijzing"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_used_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_used_display
 msgid "Allocation Used Display"
-msgstr ""
+msgstr "Toegewezen verbruikt weergave"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
@@ -896,6 +896,8 @@ msgid ""
 "Allocation of %(allocation_name)s : %(duration).2f %(duration_type)s to "
 "%(person)s"
 msgstr ""
+"Toewijzing van %(allocation_name)s : %(duration).2f %(duration_type)s t/m "
+"%(person)s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -938,6 +940,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "be reset to Draft."
 msgstr ""
+"De status van het toewijzingsverzoek moet \"Geweigerd\" of \"Te goedkeuren\""
+" zijn om te worden gereset naar Concept."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1718,6 +1722,8 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
+"Bij toerekening: het aantal dagen dat wordt toegewezen naast de dagen die u "
+"via het opbouwsysteem krijgt."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -1725,6 +1731,8 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
+"Indien toerekening: het aantal uren dat wordt toegewezen naast de uren die u"
+" krijgt via het opbouwsysteem."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2789,6 +2797,9 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
+"Dit gebied wordt automatisch gevuld door de gebruiker die de toewijzing "
+"valideert met het tweede niveau (als toewijzingstype een tweede validatie "
+"nodig heeft)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2819,6 +2830,9 @@ msgid ""
 "only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
 " and Time Off Officer'"
 msgstr ""
+"Deze gebruiker is verantwoordelijk voor het goedkeuren van dit type verlof. "
+"Dit wordt alleen gebruikt als de validatie 'Door verlofaanvraag beheerder' "
+"of 'Door de manager van de werknemer en de verlofaanvraag beheerder' is"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -2908,6 +2922,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
+"Verlofbeheerder wijzen vrije dagen toe aan werknemers (bijv. Betaald verlof).<br>\n"
+"Medewerkers vragen toewijzingen aan verlofbeheerders (bijv. vakantiedagen)."
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
@@ -3299,7 +3315,7 @@ msgstr "Jaren"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You can allocate %(allocation_type)s only before %(date)s."
-msgstr ""
+msgstr "U kunt %(allocation_type)s alleen toewijzen voor %(date)s."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3354,6 +3370,8 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
+"U moet ofwel de manager van ofwel de verlofbeheerder van %s zijn om dit "
+"verlof goed te keuren"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3469,3 +3487,10 @@ msgstr "t/m"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "bevestigd"
+
+#. module: hr_holidays
+#. openerp-web
+#: code:addons/hr_holidays/static/src/bugfix/bugfix.js:0
+#, python-format
+msgid "Out of office until %s"
+msgstr "Niet op kantoor tot %s"

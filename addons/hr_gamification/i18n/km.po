@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_gamification
+# 	* hr_gamification
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,13 +26,18 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"គោលដៅត្រូវបានកំណត់ដោយអ្នកប្រើប្រាស់និងប្រភេទគោលដៅ។\n"
+"                    គោលដៅអាចត្រូវបានបង្កើតដោយស្វ័យប្រវត្តិដោយប្រើការប្រកួតប្រជែង។"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
+"ផ្លាកសញ្ញានិយោជិកទាំងអស់ត្រូវបានផ្សារភ្ជាប់ទៅនឹងនិយោជិកដោយផ្ទាល់ឬតាមរយៈអ្នកប្រើប្រាស់។"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -39,22 +46,37 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"ចាត់តាំងបញ្ជីគោលដៅដល់អ្នកប្រើប្រាស់ដែលបានជ្រើសរើសដើម្បីវាយតម្លៃពួកគេ។\n"
+"                    បញ្ហាប្រឈមអាចប្រើរយៈពេល (ប្រចាំសប្តាហ៍ប្រចាំខែ ... ) សម្រាប់ការបង្កើតគោលដៅដោយស្វ័យប្រវត្តិ។\n"
+"                    គោលដៅត្រូវបានបង្កើតឡើងសម្រាប់អ្នកប្រើប្រាស់ឬសមាជិកក្រុម។"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
-msgstr ""
+msgstr "សញ្ញា"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
 msgstr ""
+"ផ្លាកសញ្ញាគឺជារង្វាន់នៃការងារល្អ។ ផ្តល់ឱ្យពួកគេទៅមនុស្សដែលអ្នកជឿថាសមនឹងវា។ "
+"ចំណាំអ្នកអភិវឌ្ឍន៍។ ម៉ូឌុល៖ hr_gamification ។ វាយការបកប្រែរបស់អ្នកនៅទីនេះ។ "
+"រក្សាទុកការបកប្រែ។   បរិបទ។ ការផ្តល់យោបល់។ ប្រវត្តិសាស្រ្ត។ សទ្ទានុក្រម។ ៣ "
+"យោបល់។ ភាពស្របគ្នា។ មិនមានការណែនាំទេ។"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
+msgstr "ផ្លាកសញ្ញាភ្ជាប់ដោយផ្ទាល់ជាមួយនិយោជិក។"
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_hr_employee_base
+msgid "Basic Employee"
 msgstr ""
 
 #. module: hr_gamification
@@ -67,30 +89,40 @@ msgstr "លុបចោល"
 #: model:ir.ui.menu,name:hr_gamification.gamification_challenge_menu_hr
 #: model:ir.ui.menu,name:hr_gamification.menu_hr_gamification
 msgid "Challenges"
-msgstr ""
+msgstr "ឧបសគ្គ"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Create a new challenge"
-msgstr ""
+msgstr "បង្កើតបញ្ហាប្រឈមថ្មី។"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
-msgstr ""
+msgstr "បង្កើតគោលដៅថ្មី។"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr ""
+msgstr "រៀបរាប់ពីអ្វីដែលពួកគេបានធ្វើនិងមូលហេតុដែលវាសំខាន់ (នឹងមានជាសាធារណៈ)"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាផ្ទាល់"
 
 #. module: hr_gamification
-#: model:ir.model,name:hr_gamification.model_hr_employee
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__display_name
+msgid "Display Name"
+msgstr "ឈ្មោះសំរាប់បង្ហាញ"
+
+#. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__employee_id
 msgid "Employee"
@@ -98,96 +130,123 @@ msgstr "បុគ្គលិក"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
 msgid "Employee Badges"
-msgstr ""
+msgstr "ផ្លាកសញ្ញារបស់និយោជិក"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "គោលដៅធនធានមនុស្សរបស់បុគ្គលិក"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "ផ្លាកហ្គាម៉ា"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "ផ្លាកសញ្ញាអ្នកប្រើហ្គាស"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "អ្នកជំនួយការផ្លាកសញ្ញាអ្នកប្រើហ្គាស"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
 msgid "Goal"
-msgstr ""
+msgstr "គោលដៅ"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
-msgstr ""
+msgstr "ប្រវត្តិសាស្រ្តគោលដៅ"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
-msgstr ""
+msgstr "ផ្តល់ផ្លាកសញ្ញា"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "ផ្តល់ឱ្យផ្លាកសញ្ញាដំបូងរបស់និយោជិកនេះ"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr ""
+msgstr "បានផ្តល់"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "ចំនួននិយោជិកដែលទទួលបានការអនុញ្ញាត"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__has_badges
 msgid "Has Badges"
-msgstr ""
+msgstr "មានផ្លាកសញ្"
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__id
+msgid "ID"
+msgstr "អត្តសញ្ញាណ"
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base____last_update
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
+
+#. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr ""
+msgstr "ទទួលបានផ្លាកសញ្ញា"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "ឈ្មោះអ្នកប្រើដែលពាក់ព័ន្ធសម្រាប់ធនធានដើម្បីគ្រប់គ្រងការចូលប្រើរបស់វា។"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr ""
+msgstr "និយោជិករង្វាន់"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr ""
+msgstr "ផ្តល់រង្វាន់ដល់និយោជិកជាមួយ"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/models/gamification.py:18
+#: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
-msgstr ""
+msgstr "និយោជិកដែលបានជ្រើសរើសមិនត្រូវគ្នានឹងអ្នកប្រើប្រាស់ដែលបានជ្រើសរើសទេ។"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "User"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
@@ -197,21 +256,22 @@ msgstr "អ្នកប្រើ"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr ""
+msgstr "តើអ្នកអរគុណអ្វីខ្លះ?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
-msgstr ""
+msgstr "អ្នកមិនអាចផ្ញើផ្លាកសញ្ញាទៅខ្លួនអ្នកបានទេ។"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr ""
+msgstr "អ្នកអាចផ្ញើផ្លាកសញ្ញាទៅតែនិយោជិកដែលភ្ជាប់ទៅនឹងអ្នកប្រើប្រាស់"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr ""
+msgstr "ដើម្បីផ្តល់រង្វាន់ដល់បុគ្គលិកនេះសម្រាប់សកម្មភាពល្អ"

@@ -7,8 +7,8 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-11-16 13:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -524,7 +524,7 @@ msgstr "Rijbewijs"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__drivinglicense
 msgid "Driving license"
-msgstr ""
+msgstr "Rijbewijs"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -577,7 +577,7 @@ msgstr "Volledige naam"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__fundtransfer
 msgid "Fund Transfer"
-msgstr ""
+msgstr "Geldtransfer"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__house_number_or_name
@@ -601,6 +601,8 @@ msgid ""
 "I confirm I have taken notice of and accept the following terms and "
 "restrictions:"
 msgstr ""
+"Ik bevestig dat ik kennis heb genomen van de volgende voorwaarden en "
+"beperkingen en deze accepteer:"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__iban
@@ -625,13 +627,13 @@ msgstr "ID"
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__id_card
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__id_card
 msgid "ID Card"
-msgstr ""
+msgstr "ID-kaart"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__document_number
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__document_number
 msgid "ID Number"
-msgstr ""
+msgstr "ID-nummer"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_back_filename
@@ -674,21 +676,21 @@ msgstr "Is een volger"
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__is_business
 msgid "Is a business"
-msgstr ""
+msgstr "Is een bedrijf."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__kyc_status
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__kyc_status
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__kyc_status
 msgid "KYC Status"
-msgstr ""
+msgstr "CDD-status"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__kyc_status_message
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__kyc_status_message
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__kyc_status_message
 msgid "KYC Status Message"
-msgstr ""
+msgstr "CDD-status boodschap"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account____last_update
@@ -735,7 +737,7 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__legal_business_name
 #, python-format
 msgid "Legal Business Name"
-msgstr ""
+msgstr "Wettelijke bedrijfsnaam"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -743,7 +745,7 @@ msgstr ""
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Legal Entity"
-msgstr ""
+msgstr "Juridische entiteit"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_main_attachment_id
@@ -753,7 +755,7 @@ msgstr "Hoofdbijlage"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__manualcorrected
 msgid "Manual Corrected"
-msgstr ""
+msgstr "Handmatig gecorrigeerd."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_has_error
@@ -769,7 +771,7 @@ msgstr "Berichten"
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "Missing required fields: "
-msgstr ""
+msgstr "Ontbrekende verplichte velden:"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__month
@@ -784,24 +786,24 @@ msgstr "Naam"
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
 msgid "New KYC Status:"
-msgstr ""
+msgstr "Nieuwe CDD-status:"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__next_scheduled_payout
 msgid "Next scheduled payout"
-msgstr ""
+msgstr "Volgende geplande uitbetaling"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "No balance is currently awaitng payout."
-msgstr ""
+msgstr "Er wacht momenteel geen saldo op uitbetaling."
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "No pending balance"
-msgstr ""
+msgstr "Geen openstaand saldo"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_needaction_counter
@@ -833,47 +835,47 @@ msgstr "Aantal ongelezen berichten"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Onboarding and KYC cost 5€."
-msgstr ""
+msgstr "Onboarding en CDD kosten €5."
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
 msgid "Owner Address"
-msgstr ""
+msgstr "Adres van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_city
 msgid "Owner City"
-msgstr ""
+msgstr "Stad van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_country_id
 msgid "Owner Country"
-msgstr ""
+msgstr "Land eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_house_number_or_name
 msgid "Owner House Number or Name"
-msgstr ""
+msgstr "Huisnummer of naam van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_name
 msgid "Owner Name"
-msgstr ""
+msgstr "Naam van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_state_id
 msgid "Owner State"
-msgstr ""
+msgstr "Provincie van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_street
 msgid "Owner Street"
-msgstr ""
+msgstr "Straat van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_zip
 msgid "Owner ZIP"
-msgstr ""
+msgstr "Postcode van de eigenaar"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__passport
@@ -881,25 +883,25 @@ msgstr ""
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__passport
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__passport
 msgid "Passport"
-msgstr ""
+msgstr "Paspoort"
 
 #. module: adyen_platforms
 #. openerp-web
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Payment and processing fees are listed on"
-msgstr ""
+msgstr "Betalings- en verwerkingskosten staan vermeld op"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payout
 msgid "Payout"
-msgstr ""
+msgstr "Uitbetaling"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "Payout Request sent"
-msgstr ""
+msgstr "Uitbetalingsverzoek verzonden"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payoutreversed
@@ -910,36 +912,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__payout_ids
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
 msgid "Payouts"
-msgstr ""
+msgstr "Uitbetalingen"
 
 #. module: adyen_platforms
 #. openerp-web
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Payouts cost 0.20€ (EU) or 0.22$ (US) each."
-msgstr ""
+msgstr "Uitbetalingen kosten €0,20 (EU) of $0,22 (VS) elk."
 
 #. module: adyen_platforms
 #. openerp-web
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Payouts will be blocked until your application has been accepted."
-msgstr ""
+msgstr "Uitbetalingen worden geblokkeerd totdat je aanvraag is geaccepteerd."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingcredit
 msgid "Pending Credit"
-msgstr ""
+msgstr "In afwachting van krediet."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingdebit
 msgid "Pending Debit"
-msgstr ""
+msgstr "In afwachting van afschrijving."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingfundtransfer
 msgid "Pending Fund Transfer"
-msgstr ""
+msgstr "In afwachting van overboeking."
 
 #. module: adyen_platforms
 #. openerp-web
@@ -954,27 +956,29 @@ msgstr "Telefoonnummer"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back
 msgid "Photo ID Back"
-msgstr ""
+msgstr "Foto ID achterkant"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front
 msgid "Photo ID Front"
-msgstr ""
+msgstr "Foto ID voorkant"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "Photo ID file size must be between 100kB (1kB for PDFs) and 4MB"
 msgstr ""
+"De bestandsgrootte van foto-ID's moet tussen 100 kB (1 kB voor pdf's) en 4 "
+"MB zijn"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_type
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_type
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_type
 msgid "Photo ID type"
-msgstr ""
+msgstr "Foto ID-type"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -988,7 +992,7 @@ msgstr "Prijzen"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Prohibited Products and Services List of our Processor"
-msgstr ""
+msgstr "Lijst met verboden producten en services van onze verwerker."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__proxy_token
@@ -998,7 +1002,7 @@ msgstr ""
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
 msgid "Reason(s):"
-msgstr ""
+msgstr "Reden(en)"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_account_reference
@@ -1013,17 +1017,17 @@ msgstr "Referentie"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__registration_number
 #, python-format
 msgid "Registration Number"
-msgstr ""
+msgstr "Registratienummer"
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_payout_view_form
 msgid "Request a payout now"
-msgstr ""
+msgstr "Vraag nu een uitbetaling aan."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__savings
 msgid "Savings"
-msgstr ""
+msgstr "Spaargeld"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__payout_schedule
@@ -1034,12 +1038,12 @@ msgstr "Planning"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__shareholder_ids
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
 msgid "Shareholders"
-msgstr ""
+msgstr "Aandeelhouders"
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
 msgid "Shareholders:"
-msgstr ""
+msgstr "Aandeelhouders:"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__state_id
@@ -1073,26 +1077,26 @@ msgstr "Straat"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Submitted data"
-msgstr ""
+msgstr "Ingediende gegevens"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "Successfully sent payout request for %s"
-msgstr ""
+msgstr "Uitbetalingsverzoek verzonden voor %s"
 
 #. module: adyen_platforms
 #. openerp-web
 #: code:addons/adyen_platforms/static/src/xml/adyen_transactions_templates.xml:0
 #, python-format
 msgid "Sync Transactions"
-msgstr ""
+msgstr "Transacties synchroniseren"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "The Adyen proxy is not reachable, please try again later."
-msgstr ""
+msgstr "De Adyen-proxy is niet bereikbaar, probeer het later opnieuw."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_account__country_code
@@ -1112,6 +1116,8 @@ msgid ""
 "The bank account to which the payout is to be made. If left blank, a bank "
 "account is automatically selected"
 msgstr ""
+"De bankrekening waarop de uitbetaling moet worden gedaan. Indien leeg "
+"gelaten, wordt automatisch een bankrekening geselecteerd."
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1158,7 +1164,7 @@ msgstr "Transacties"
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__transactions_count
 msgid "Transactions Count"
-msgstr ""
+msgstr "Transacties telling"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__status
@@ -1184,7 +1190,7 @@ msgstr "Aantal ongelezen berichten"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__visa
 msgid "Visa"
-msgstr ""
+msgstr "Visa"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1216,6 +1222,8 @@ msgid ""
 "We had troubles reaching Adyen, please retry later or contact the support if"
 " the problem persists"
 msgstr ""
+"We hadden problemen om Adyen te bereiken. Probeer het later opnieuw of neem "
+"contact op met de ondersteuning als het probleem zich blijft voordoen"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1225,6 +1233,8 @@ msgid ""
 "We will notify you when the status of the review changes or if additionnal "
 "data is required."
 msgstr ""
+"We zullen je op de hoogte brengen wanneer de status van de beoordeling "
+"verandert of als er aanvullende gegevens nodig zijn."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__week
@@ -1237,6 +1247,8 @@ msgstr "Wekelijks"
 #, python-format
 msgid "You can start processing payments as soon as your application is sent."
 msgstr ""
+"Je kunt beginnen met het verwerken van betalingen zodra je aanvraag is "
+"verzonden."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__bank_statement
@@ -1248,6 +1260,12 @@ msgid ""
 "the account holder.        Allowed formats: jpg, pdf, png. Maximum allowed "
 "size: 10MB."
 msgstr ""
+"Je moet een bankafschrift verstrekken om uitbetalingen mogelijk te maken. "
+"Het bestand moet een bankafschrift zijn, een screenshot van je "
+"internetbankieromgeving, een brief van de bank of een cheque en moet het "
+"logo van de bank of de naam in een uniek lettertype bevatten, de "
+"bankrekeninggegevens, de naam van de rekening houder. Toegestane formaten: "
+"jpg, pdf, png. Maximaal toegestane grootte: 10 MB."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__zip
@@ -1264,7 +1282,7 @@ msgstr "Postcode"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "adyen.com/pricing"
-msgstr ""
+msgstr "adyen.com/pricing"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1280,4 +1298,4 @@ msgstr "hier"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "to download and review)"
-msgstr ""
+msgstr "downloaden en beoordelen)"

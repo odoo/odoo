@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * partner_autocomplete
+# 	* partner_autocomplete
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,108 +21,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "(Time Now)"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-arrow-right\"/>\n"
-"                        Buy more credits"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; You don't "
-"have credits to auto-complete companies' data anymore."
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-building text-primary\"/>\n"
-"                <b>Company type:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-calendar text-primary\"/>\n"
-"                <b>Founded:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-cube text-primary\"/>\n"
-"                <b>Technology Used :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-envelope text-primary\"/>\n"
-"                <b>Email :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-globe text-primary\"/>\n"
-"                <b>Timezone :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-industry text-primary\"/>\n"
-"                <b>Sector:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Estimated annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-phone text-primary\"/>\n"
-"                <b>Phone :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-users text-primary\"/>\n"
-"                <b>Employees:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid "<span>&amp;times;</span>"
-msgstr ""
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
-msgstr ""
+msgstr "ព័ត៌មាន​បន្ថែម"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid "Close"
-msgstr "បិទ"
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
+#, python-format
+msgid "Buy more credits"
+msgstr "ទិញឥណទានបន្ថែម។"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_company
@@ -130,13 +41,14 @@ msgstr "ក្រុមហ៊ុន"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
 msgid "Company database ID"
-msgstr ""
+msgstr "លេខសម្គាល់មូលដ្ឋានទិន្នន័យរបស់ក្រុមហ៊ុន"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner
@@ -154,26 +66,42 @@ msgid "Created on"
 msgstr "បង្កើតនៅ"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
 msgid "Display Name"
 msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 
 #. module: partner_autocomplete
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
+#, python-format
+msgid "IAP Account Token missing"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
 msgid "ID"
-msgstr "ID"
+msgstr "អត្តសញ្ញាណ"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
-msgstr ""
+msgstr "ឥណទានមិនគ្រប់គ្រាន់។"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
 msgid "Is synched"
-msgstr ""
+msgstr "ត្រូវបានធ្វើសមកាលកម្ម។"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company____last_update
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner____last_update
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
 msgid "Last Modified on"
 msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
@@ -189,6 +117,13 @@ msgid "Last Updated on"
 msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 
 #. module: partner_autocomplete
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
+#, python-format
+msgid "Not enough credits for Partner Autocomplete"
+msgstr ""
+
+#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
 msgid "Partner"
 msgstr "ដៃគូ"
@@ -198,38 +133,36 @@ msgstr "ដៃគូ"
 #: model:ir.cron,cron_name:partner_autocomplete.ir_cron_partner_autocomplete
 #: model:ir.cron,name:partner_autocomplete.ir_cron_partner_autocomplete
 msgid "Partner Autocomplete : Sync with remote DB"
-msgstr ""
+msgstr "ដៃគូបំពេញស្វ័យប្រវត្តិកម្ម៖ ធ្វើសមកាលកម្មជាមួយឌីប៊ីពីចម្ងាយ។"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
 msgid "Partner Autocomplete Sync"
-msgstr ""
+msgstr "ដៃគូធ្វើសមកាលកម្មស្វ័យប្រវត្តិដៃគូ។"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr ""
+msgstr "ដៃគូត្រូវបានបង្កើតឡើងដោយសេវាកម្មបំពេញស្វ័យប្រវត្តិកម្ម Odoo ដៃគូ។"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:8
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
-msgstr ""
+msgstr "កន្លែងដាក់។"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:22
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:0
 #, python-format
 msgid "Searching Autocomplete..."
-msgstr ""
+msgstr "ស្វែងរកការបំពេញស្វ័យប្រវត្តិ ... "
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "Twitter :"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "followers)"
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
+#, python-format
+msgid "Set Your Account Token"
 msgstr ""
