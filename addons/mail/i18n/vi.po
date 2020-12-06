@@ -2073,7 +2073,7 @@ msgstr "Emojis"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Envelope Example"
-msgstr ""
+msgstr "Ví dụ phong bì"
 
 #. module: mail
 #. openerp-web
@@ -2097,6 +2097,8 @@ msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
+"Lỗi không có ngoại lệ. Có thể do Cập Nhật truy cập đồng thời các bản ghi "
+"thông báo. Vui lòng xem với quản trị viên."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:329
@@ -2383,7 +2385,7 @@ msgstr "Cổng"
 #. module: mail
 #: selection:ir.actions.server,activity_user_type:0
 msgid "Generic User From Record"
-msgstr ""
+msgstr "Người dùng chung từ dữ liệu"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:88
@@ -2650,6 +2652,9 @@ msgid ""
 "notification and review them one by one by clicking on the red envelope next"
 " to each message."
 msgstr ""
+"Nếu bạn muốn gửi lại chúng, hãy nhấp vào hủy ngay bây giờ, sau đó nhấp vào "
+"thông báo và đánh giá từng cái một bằng cách nhấp vào phong bì màu đỏ bên "
+"cạnh mỗi thư."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -2684,6 +2689,8 @@ msgstr "Hộp thư đến"
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
 msgstr ""
+"Cho biết hoạt động này đã được tạo tự động chứ không phải bởi bất kỳ người "
+"dùng nào."
 
 #. module: mail
 #. openerp-web
@@ -2741,7 +2748,7 @@ msgstr ""
 #: code:addons/mail/models/mail_blacklist.py:129
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr ""
+msgstr "Trường email chính không hợp lệ trên đối tượng %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1968
@@ -2841,6 +2848,12 @@ msgstr "Là Thông báo"
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
 msgid "Is Read"
 msgstr "Đã được đọc"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
@@ -3364,7 +3377,7 @@ msgstr "Kiểu thông điệp"
 #: code:addons/mail/models/mail_message.py:1277
 #, python-format
 msgid "Message are pending moderation"
-msgstr ""
+msgstr "Tin nhắn của bạn đang đợi kiểm duyệt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
@@ -3556,7 +3569,7 @@ msgstr "Đếm email được kiểm duyệt"
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation"
-msgstr ""
+msgstr "Kiểm duyệt"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
@@ -3590,19 +3603,19 @@ msgstr "Người kiểm duyệt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
-msgstr ""
+msgstr "Người kiểm duyệt"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:154
 #, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "Người kiểm duyệt phải có địa chỉ email."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:160
 #, python-format
 msgid "Moderators should be members of the channel they moderate."
-msgstr ""
+msgstr "Người kiểm duyệt phải là thành viên của kênh mà họ kiểm duyệt."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -4519,7 +4532,7 @@ msgstr "Kênh Công cộng"
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Hợp đồng bảo hành nhà phát hành"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -4763,7 +4776,7 @@ msgstr "Tính năng gửi lại"
 #: code:addons/mail/static/src/xml/thread.xml:69
 #, python-format
 msgid "Reset Zoom"
-msgstr ""
+msgstr "Đặt lại thu phóng"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -5358,6 +5371,12 @@ msgstr ""
 "system user is found for that address."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_activity.py:243
 #: code:addons/mail/models/mail_message.py:704
 #: code:addons/mail/models/mail_message.py:874
@@ -5406,7 +5425,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
 msgid "This field is case insensitive."
-msgstr ""
+msgstr "Trường này không phân biệt chữ hoa chữ thường."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -6065,6 +6084,24 @@ msgstr ""
 " hiện trong hộp thư."
 
 #. module: mail
+#: cod:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:87
 #, python-format
 msgid ""
@@ -6091,6 +6128,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address."
 msgstr ""
+"Bạn không thể sử dụng bất kỳ thứ gì khác ngoài các ký tự latin không có dấu "
+"trong địa chỉ alias."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:257
@@ -6099,6 +6138,8 @@ msgid ""
 "You do not have the rights to modify fields related to moderation on one of "
 "the channels you are modifying."
 msgstr ""
+"Bạn không có quyền sửa đổi các trường liên quan đến kiểm duyệt trên một "
+"trong các kênh mà bạn đang sửa đổi."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2365
@@ -6115,8 +6156,8 @@ msgstr "Bạn đã được phân công/gán cho"
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:198
 #, python-format
-msgid "You have been invited to: "
-msgstr "Bạn được mời đến: "
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

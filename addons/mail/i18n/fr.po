@@ -26,13 +26,13 @@
 # lcaodoo <lca@odoo.com>, 2019
 # Jonathan Castillo <jcs@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Arnaud Dupin de Beyssat <a.adupinbe@orange.fr>, 2020
+# 0169fee580ff5de3f9b7241d14f30af9_5f30934 <1948a2319336319ed4429b6139c8c1c2_916898>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Arnaud Dupin de Beyssat <a.adupinbe@orange.fr>, 2020\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2870,6 +2870,14 @@ msgid "Is Read"
 msgstr "Est lu"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+"Impossible de mettre à jour le message ou le destinataire d'une "
+"notification."
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
 msgid "Is Subscribed"
 msgstr "Est abonné"
@@ -5412,6 +5420,12 @@ msgstr ""
 "trouvé pour cette adresse."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_activity.py:243
 #: code:addons/mail/models/mail_message.py:704
 #: code:addons/mail/models/mail_message.py:874
@@ -6127,6 +6141,24 @@ msgstr ""
 "dans cet onglet."
 
 #. module: mail
+#: cod:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:87
 #, python-format
 msgid ""
@@ -6179,8 +6211,8 @@ msgstr "Vous avez été assigné à "
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:198
 #, python-format
-msgid "You have been invited to: "
-msgstr "Vous avez été invité à:"
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
