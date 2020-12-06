@@ -1584,6 +1584,13 @@ msgid "Customer is required for inbox / email notification"
 msgstr "Per le notifiche posta in arrivo / e-mail il cliente è obbligatorio"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+"Impossibile aggiornare il messaggio o il destinatario di una notifica."
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -5654,6 +5661,12 @@ msgstr ""
 "utente di sistema verrà usato l'account amministratore."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
@@ -6388,6 +6401,24 @@ msgstr ""
 "casella di posta."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -6440,8 +6471,8 @@ msgstr "Sei stato assegnato a "
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
-msgid "You have been invited to: "
-msgstr "Ricevuto un invito per:"
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

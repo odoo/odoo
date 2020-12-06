@@ -45,7 +45,7 @@ msgstr ""
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -395,6 +395,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -975,32 +977,32 @@ msgstr "บริษัท"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "คํานวณค่าใช้จ่ายการขนส่งและจัดส่งกับ DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "คํานวณค่าใช้จ่ายการขนส่งและจัดส่งกับ Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "คํานวณค่าใช้จ่ายการขนส่งและจัดส่งกับ FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "คํานวณค่าใช้จ่ายการขนส่งและจัดส่งกับ UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "คํานวณค่าใช้จ่ายการขนส่งและจัดส่งกับ USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "คํานวณค่าใช้จ่ายการขนส่งและจัดส่งกับ bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1044,6 +1046,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"การแปลงระหว่างหน่วยวัดจะเกิดขึ้นได้ก็ต่อเมื่ออยู่ในหมวดหมู่เดียวกัน "
+"การแปลงจะทำตามอัตราส่วน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_coupon
@@ -1237,7 +1241,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr ""
+msgstr "ตัวเชื่อมต่อ DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1476,7 +1480,7 @@ msgstr "ร่างใบเสนอราคา"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost Connector"
 
 #. module: sale
 #. openerp-web
@@ -1730,7 +1734,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "นำเข้าคำสั่งซื้อของ Amazon และซิงค์การจัดส่ง"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -2026,7 +2030,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Lock"
-msgstr ""
+msgstr "ล็อค"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
@@ -3272,6 +3276,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3382,7 +3389,7 @@ msgstr "ค่าใช้จ่ายการจัดส่ง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Show all records which has next action date is before today"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3882,12 +3889,12 @@ msgstr "พิมพ์กิจกรรมข้อยกเว้นบนบ
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "ตัวเชื่อมต่อ UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "ตัวเชื่อมต่อ USPS"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
@@ -3920,7 +3927,7 @@ msgstr "หน่วยวัด"
 #: model:product.template,uom_name:sale.advance_product_0_product_template
 #: model:product.template,uom_name:sale.product_product_4e_product_template
 msgid "Units"
-msgstr ""
+msgstr "หน่วย"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -3937,7 +3944,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Unlock"
-msgstr ""
+msgstr "ปลดล็อค"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread
@@ -4177,7 +4184,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "ตัวเชื่อมต่อ bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

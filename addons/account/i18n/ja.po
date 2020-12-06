@@ -14,22 +14,22 @@
 # kent_ocean <ke.tanabe@gmail.com>, 2019
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2019
 # Hau Dao <hau@quartile.co>, 2020
-# Martin Trigaux, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Ryoko Tsuda <ryoko@quartile.co>, 2020
+# Martin Trigaux, 2020
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Noma Yuki, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -2605,6 +2605,7 @@ msgstr "記帳取消"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "取消済"
 
@@ -6097,6 +6098,14 @@ msgid ""
 msgstr "仕訳が作成された支払は削除できません(番号の隙間を防ぐため)。必要に応じて仕訳を再作成の上逆仕訳を作成することで取り消してください。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr "仕訳の作成以降、税金が変更されたようです。代わりに、手動でのクレジットメモを作成する必要があります。"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "件"
@@ -6700,7 +6709,7 @@ msgstr "ウィザードによりインストールされるべき全ての税金
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Load more"
-msgstr ""
+msgstr "もっと読み込む"
 
 #. module: account
 #. openerp-web
@@ -8196,6 +8205,18 @@ msgid ""
 msgstr "勘定科目表をインストールするか、続行する前にその他のジャーナルを作成してください。"
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "厳密な正の丸め値を設定してください。"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "お支払参照:"
@@ -8919,6 +8940,11 @@ msgid "Revenue/Expense Account"
 msgstr "収益/費用勘定"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "逆転移動"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "逆仕訳日"
@@ -9396,6 +9422,12 @@ msgid "Send Money"
 msgstr "支払"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "サンプル請求書を送信"
@@ -9413,6 +9445,11 @@ msgstr "請求書や支払督促を郵送"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
+msgstr "電子メールで領収書を送信"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
 msgstr "電子メールで領収書を送信"
 
 #. module: account
@@ -10466,6 +10503,11 @@ msgid "Terms & Conditions"
 msgstr "諸条件"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "諸条件"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10750,6 +10792,14 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr "顧客が電子メールアドレスを持っていないので、次の請求書(複数可)は、電子メールで送信されません。"
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12169,6 +12219,12 @@ msgid "You can only send invoices."
 msgstr "請求書を送ることのみができます。"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12284,6 +12340,12 @@ msgstr "記帳済の支払は削除できません。"
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "一度投稿されたエントリを削除することはできません。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr "投稿されたエントリにリンクされている項目を削除することはできません。"
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12551,12 +12613,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "郵便番号の範囲"
@@ -12670,6 +12726,11 @@ msgstr "今月分"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "翌月分"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "on"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

@@ -7,8 +7,8 @@
 # Martin Trigaux, 2019
 # sharkutz <sharkutz4life@yahoo.com>, 2019
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1575,6 +1575,12 @@ msgstr "Nume Canal Personalizat"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Clientul trebuie să primească notificări inbox / email"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -4604,7 +4610,7 @@ msgstr "Te rog așteaptă"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Please wait..."
-msgstr ""
+msgstr "Te rog așteaptă ..."
 
 #. module: mail
 #. openerp-web
@@ -4715,7 +4721,7 @@ msgstr "Confidențialitate"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Private channel"
-msgstr ""
+msgstr "Canal privat"
 
 #. module: mail
 #. openerp-web
@@ -4741,7 +4747,7 @@ msgstr "Editor: Notificare de actualizare"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Quick search..."
-msgstr ""
+msgstr "Căutare rapidă..."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:0
@@ -5651,6 +5657,12 @@ msgstr ""
 "adresă."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
@@ -6386,6 +6398,24 @@ msgstr ""
 "poștală."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -6440,8 +6470,8 @@ msgstr "Ați fost asignat la "
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
-msgid "You have been invited to: "
-msgstr "Ați fost invitat la:"
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

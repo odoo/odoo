@@ -6,7 +6,6 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2019
 # waveyeung <waveyeung@qq.com>, 2019
-# 演奏王 <wangwhai@qq.com>, 2019
 # 卫安琪 <weianqi1991@gmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # John An <johnxan@163.com>, 2019
@@ -30,19 +29,21 @@
 # as co02 <asco02@163.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
 # 226408 台北 <226408@so8d.com>, 2020
-# Martin Trigaux, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 黎伟杰 <674416404@qq.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Martin Trigaux, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
+# shan wang <wangshan0901@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
+"Last-Translator: shan wang <wangshan0901@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2666,6 +2667,7 @@ msgstr "取消分录"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -6155,6 +6157,14 @@ msgid ""
 msgstr "不允许删除已创建会计凭证的付款，因为它会在编号中产生差异。您应该取消它正常恢复后再次生成会计凭证。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr "自日记帐分录创建以来，税收似乎已经修改。应改为手动创建贷方记录。"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "项目"
@@ -8259,6 +8269,18 @@ msgid ""
 msgstr "请在处理之前先安装会计科目表或创建一个杂项日记账."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "请设置一个正的舍入值。"
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "请设置一个严格为正的舍入值"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "请使用以下付款方式："
@@ -8982,6 +9004,11 @@ msgid "Revenue/Expense Account"
 msgstr "收入/费用科目"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "反向凭证"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "反转日期"
@@ -9461,6 +9488,12 @@ msgid "Send Money"
 msgstr "付款"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "发送发票样例"
@@ -9478,6 +9511,11 @@ msgstr "邮寄发票及付款跟进"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
+msgstr "通过电子邮件发送收据"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
 msgstr "通过电子邮件发送收据"
 
 #. module: account
@@ -10531,6 +10569,11 @@ msgid "Terms & Conditions"
 msgstr "条款及条件"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "条款和条件"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10820,6 +10863,14 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr "以下发票将不会通过电子邮件发送，因为客户没有电子邮件地址。"
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12240,6 +12291,12 @@ msgid "You can only send invoices."
 msgstr "您只能发送发票。"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12353,6 +12410,12 @@ msgstr "已经过账的付款不能被删除。"
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "你不能删除已经被发布的凭证。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr "不能删除链接到已过帐条目的项目。"
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12619,12 +12682,6 @@ msgid ""
 msgstr "您应该在会计配置配置 '汇率损失科目' ，自动管理与汇率之间的差额的会计凭证的录入."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "请设置一个正的舍入值。"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "邮编范围"
@@ -12738,6 +12795,11 @@ msgstr "当月"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "下月"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "在"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

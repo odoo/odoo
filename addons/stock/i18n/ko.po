@@ -6300,6 +6300,16 @@ msgstr ""
 "선별을 <b>반대</b>로 해야합니다 (중복 된 작업을 생성 할 수 있음)"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."

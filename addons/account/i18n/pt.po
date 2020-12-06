@@ -19,20 +19,20 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Tiago Santos <tiago.santos@arxi.pt>, 2020
 # cafonso <cafonso62@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # João Carvalho <jpldcarvalho+github@gmail.com>, 2020
 # Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
+# Martin Trigaux, 2020
+# Nuno Silva <nuno.silva@arxi.pt>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -340,6 +340,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>Envio de emails em massa </strong>\n"
+"                                        <span>para os registos selecionados</span>\n"
+"                                    </span>\n"
+"                                    <span>Seguidores do documento e</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -405,6 +410,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Estes valores são específicos"
+" por empresa.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -429,6 +436,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
 "'between')]}\">and</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
+"'between')]}\">e</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -436,11 +445,14 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Todas as entradas de diário selecionadas vão "
+"ser validadas e publicadas. Não as poderá alterar no fim de ralizar a "
+"operação.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Incoterm</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Incoterm Predefinido</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2642,6 +2654,7 @@ msgstr "Cancelar Movimento"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Cancelado"
 
@@ -6204,6 +6217,14 @@ msgstr ""
 "lançamento em diário e cancelá-lo através de uma reversão regular."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "Itens"
@@ -8324,6 +8345,18 @@ msgstr ""
 "Instale um plano de contas ou crie um diário de diversos antes de proceder."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Por favor, utilize a seguinte referência no seu pagamento:"
@@ -9055,6 +9088,11 @@ msgid "Revenue/Expense Account"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Data de Reversão"
@@ -9538,6 +9576,12 @@ msgid "Send Money"
 msgstr "Enviar Dinheiro"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "enviar amostra de fatura "
@@ -9555,6 +9599,11 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
 msgstr ""
 
 #. module: account
@@ -10628,6 +10677,11 @@ msgid "Terms & Conditions"
 msgstr "Termos & Condições"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Termos e condições"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10917,6 +10971,14 @@ msgstr ""
 #, python-format
 msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
 
@@ -12389,6 +12451,12 @@ msgid "You can only send invoices."
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12511,6 +12579,12 @@ msgstr "Não pode apagar um pagamento que já está postado "
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 
 #. module: account
@@ -12795,12 +12869,6 @@ msgstr ""
 "contabilísticos relacionados com as diferenças entre taxas de câmbio."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Código Postal"
@@ -12915,6 +12983,11 @@ msgstr "do mês atual"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "Do mês seguinte"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "em"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

@@ -38,7 +38,7 @@
 # ryan ryan <itechr@outlook.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# Lin Li <ljsrzc007@gmail.com>, 2020
+# ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
+"Last-Translator: ljsrzc007 <ljsrzc007@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6253,6 +6253,16 @@ msgid ""
 " would create duplicated operations)"
 msgstr ""
 "这个拣货显示和别的作业链接起来. 稍后, 如果你正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
