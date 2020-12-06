@@ -31,7 +31,7 @@
 # Philipp Hug <philipp@hug.cx>, 2019
 # Jan Meyer, 2019
 # Oliver Roch <oliver.roch@d9t.de>, 2019
-# Andreas Brückl <andreas.brueckl@datenpol.at>, 2019
+# qndi <andreas.brueckl@datenpol.at>, 2019
 # Jürgen Bereuter <jub@matchcut.at>, 2019
 # Markus Mair <mm@aster.bz>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
@@ -41,7 +41,6 @@
 # Robert Förster <hello@suppliot.eu>, 2020
 # JEK Odoo <jek@odoo.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Nicola Peiffer <epn@odoo.com>, 2020
 # Caroline Renson <car@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
@@ -51,15 +50,17 @@
 # Serkan Oezcan <serkan.oezcan@braintec-group.com>, 2020
 # Damian Bürgin <damian.buergin@braintec-group.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
+# Martin Trigaux, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
+"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2753,6 +2754,7 @@ msgstr "Buchung Abbrechen"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Abgebrochen"
 
@@ -6403,6 +6405,14 @@ msgstr ""
 "stornieren."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "Artikel"
@@ -8570,6 +8580,18 @@ msgstr ""
 "Journal, bevor Sie fortfahren."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Voreinstellung Bitte stellen Sie einen positiven Rundungswert ein."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Bitte geben Sie einen rein positiven Rundungswert an."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung:"
@@ -9312,6 +9334,11 @@ msgid "Revenue/Expense Account"
 msgstr "Ertrags-/Aufwandskonto"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "Stornieren"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Stornodatum"
@@ -9798,6 +9825,12 @@ msgid "Send Money"
 msgstr "Geld schicken"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Senden Sie eine Beispielrechnung"
@@ -9816,6 +9849,11 @@ msgstr "Senden Sie Rechnungen und Mahnungen per Post"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "Quittung per E-Mail senden"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10960,6 +10998,11 @@ msgid "Terms & Conditions"
 msgstr "Geschäftsbedingungen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Bedingungen und Konditionen"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -11301,6 +11344,14 @@ msgid ""
 msgstr ""
 "Die folgende(n) Rechnung(en) können nicht per E-Mail versand werden, da bei "
 "den Kunden keine E-Mail Adresse hinterlegt ist."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12881,6 +12932,12 @@ msgid "You can only send invoices."
 msgstr "Sie können nur Rechnungen versenden."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13023,6 +13080,12 @@ msgstr "Sie können eine bereits gebuchte Zahlung nicht löschen."
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "Sie können einen einmal gebuchten Eintrag nicht löschen."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -13341,12 +13404,6 @@ msgstr ""
 "Einstellungen bitte das Konto für Kursaufwendungen an."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "Voreinstellung Bitte stellen Sie einen positiven Rundungswert ein."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "PLZ Bereich"
@@ -13464,6 +13521,11 @@ msgstr "des laufenden Monats"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "des folgenden Monats"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "an"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

@@ -6,7 +6,6 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2019
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2019
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
 # Ladislav Tomm <tomm@helemik.cz>, 2019
 # Chris <krystof.reklamy13@gmail.com>, 2019
 # Martin N <nedbalm@gmail.com>, 2019
@@ -14,16 +13,18 @@
 # Michal Veselý <michal@veselyberanek.net>, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
 # Martin Trigaux, 2020
-# trendspotter, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# trendspotter, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: trendspotter, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -419,6 +420,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2662,6 +2665,7 @@ msgstr "Zrušit položku"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Zrušeno"
 
@@ -6217,6 +6221,14 @@ msgstr ""
 " díky pravidelnému vrácení."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "Položky"
@@ -6468,7 +6480,7 @@ msgstr "Udržujte prázdné pro žádnou kontrolu"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_difference_handling__open
 msgid "Keep open"
-msgstr ""
+msgstr "Mějte otevřené"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__property_account_income_id
@@ -8328,6 +8340,18 @@ msgstr ""
 "deník."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Pro platbu prosím použijte následující sdělení:"
@@ -9059,6 +9083,11 @@ msgid "Revenue/Expense Account"
 msgstr "Účet příjmů a výdajů"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr ""
@@ -9536,6 +9565,12 @@ msgid "Send Money"
 msgstr "Poslat peníze"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Odeslat vzorovou fakturu"
@@ -9554,6 +9589,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "Odeslat stvrzenku e-mailem"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10621,6 +10661,11 @@ msgid "Terms & Conditions"
 msgstr "Všeobecné obchodní podmínky"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Podmínky"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10903,6 +10948,14 @@ msgstr "Fiskální pozice určuje daně / účty použité pro tento kontakt."
 #, python-format
 msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
 
@@ -12351,6 +12404,12 @@ msgid "You can only send invoices."
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12470,6 +12529,12 @@ msgstr "Platbu, která již byla zaslána, nemůžete smazat."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 
 #. module: account
@@ -12751,12 +12816,6 @@ msgstr ""
 "kurzy."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Rozsah PSČ"
@@ -12874,6 +12933,11 @@ msgstr "aktuálního měsíce"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "na"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

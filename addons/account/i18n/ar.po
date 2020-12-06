@@ -35,7 +35,6 @@
 # ADADI REDOUANE <odadi332014@gmail.com>, 2019
 # Othman Gabr <jabor4u@hotmail.com>, 2020
 # Tasneem Sarhan <tsa@odoo.com>, 2020
-# Mustafa Rawi <mustafa@cubexco.com>, 2020
 # Enjy Abu-Taleb <ema@odootec.com>, 2020
 # Amer Hazaa <eng.amer.it@gmail.com>, 2020
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
@@ -45,14 +44,15 @@
 # Waleed Mohsen <mohsen.waleed@gmail.com>, 2020
 # Nabil Jabraouti <nabil@bluechipcd.com>, 2020
 # Talal Albahra <talal.albahra@outlook.com>, 2020
+# Mustafa Rawi <mustafa@cubexco.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Talal Albahra <talal.albahra@outlook.com>, 2020\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2721,6 +2721,7 @@ msgstr "إلغاء القيد"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "ملغي"
 
@@ -6269,6 +6270,14 @@ msgstr ""
 "بالأرقام. يجب إنشاء قيد اليومية مرة أخرى وإلغاؤه باستخدام العودة العادية."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "العناصر"
@@ -8399,6 +8408,18 @@ msgid ""
 msgstr "برجاء تثبيت دليل محاسبي أو إنشاء دفتر يومية عام قبل المتابعة."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "برجاء استخدام هذا المرجع عند السداد:"
@@ -9130,6 +9151,11 @@ msgid "Revenue/Expense Account"
 msgstr "حساب الإيرادات/المصروفات"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "تاريخ الانعكاس"
@@ -9610,6 +9636,12 @@ msgid "Send Money"
 msgstr "سند صرف"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "إرسال فاتورة عينة"
@@ -9628,6 +9660,11 @@ msgstr "إرسال الفواتير ومتابعة الدفع عن طريق ال
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "إرسال الإيصال عن طريق البريد الإلكتروني"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10700,6 +10737,11 @@ msgid "Terms & Conditions"
 msgstr "الشروط والأحكام"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "الشروط والأحكام"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10998,6 +11040,14 @@ msgid ""
 msgstr ""
 "الفواتير التالية لن ترسل عبر البريد الالكتروني ،بسبب أن العميل لا يملك عنوان"
 " بريد الكتروني."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12476,6 +12526,12 @@ msgid "You can only send invoices."
 msgstr "يمكنك فقط إرسال الفواتير."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12601,6 +12657,12 @@ msgstr "لا يمكنك حذف دفعة تم ترحيلها."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 
 #. module: account
@@ -12886,12 +12948,6 @@ msgstr ""
 "المحاسبة للفروق بين أسعار الصرف تلقائيًا."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "نطاق الرمز البريدي"
@@ -13007,6 +13063,11 @@ msgstr "من الشهر الجاري"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "من الشهر التالي"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "في"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

@@ -21,21 +21,21 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Анищук Сергей <anishukserg@gmail.com>, 2020
-# Martin Trigaux, 2020
 # GulShar Mungatova <mungatova@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Ye Ye <vrio.ua@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ye Ye <vrio.ua@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2683,6 +2683,7 @@ msgstr "Отменить проводку"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Отменено"
 
@@ -6273,6 +6274,14 @@ msgstr ""
 "журнале еще раз и отменить её благодаря регулярному возврату."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "Пункты"
@@ -8417,6 +8426,18 @@ msgstr ""
 "Прежде чем продолжать, установите план счетов или создайте другой журнал."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Используйте следующее сообщение для осуществления платежа:"
@@ -9154,6 +9175,11 @@ msgid "Revenue/Expense Account"
 msgstr "Счет доходов / расходов"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Дата аннулирования"
@@ -9635,6 +9661,12 @@ msgid "Send Money"
 msgstr "Отправить перевод"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Отправить образец счета"
@@ -9652,6 +9684,11 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
 msgstr ""
 
 #. module: account
@@ -10740,6 +10777,11 @@ msgid "Terms & Conditions"
 msgstr "Сроки и условия"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Правила и условия"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -11049,6 +11091,14 @@ msgid ""
 msgstr ""
 "Следующие счета-фактуры не будет передаваться по электронной почте, "
 "поскольку клиенты не имеют адреса электронной почты."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12558,6 +12608,12 @@ msgid "You can only send invoices."
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12680,6 +12736,12 @@ msgstr "Вы не можете удалить платежи, которые у�
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
 
 #. module: account
@@ -12976,12 +13038,6 @@ msgstr ""
 "записями, связанными с различиями между обменными курсами."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Почтовый Диапазон"
@@ -13099,6 +13155,11 @@ msgstr "текущего месяца"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "в следующем месяце"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "на"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

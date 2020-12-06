@@ -17,21 +17,21 @@
 # mohammad rahmani <mohammadrahmani2o0@gmail.com>, 2020
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
-# Martin Trigaux, 2020
 # Hamid Darabi, 2020
 # Pouya Malekinejad <pouya.malekinejad@gmail.com>, 2020
 # hossein almasi <h.almasi2012@gmail.com>, 2020
 # Amir Fayaz <amirfayaz13@gmail.com>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
 # Maryam Samadi Nia <samadi@zaka.ir>, 2020
+# Martin Trigaux, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Maryam Samadi Nia <samadi@zaka.ir>, 2020\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2674,6 +2674,7 @@ msgstr "لغو ثبت سند"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "لغو شد"
 
@@ -6182,6 +6183,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "آیتم ها"
@@ -8283,6 +8292,18 @@ msgstr ""
 "قبل از ادامه لطفا یک درخت حساب نصب کنید یا یک روزنامه متفرقه ایجاد کنید."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "لطفا در موقع اعلام پرداخت به مرجع زیر اشاره کنید :"
@@ -9004,6 +9025,11 @@ msgid "Revenue/Expense Account"
 msgstr "حساب درآمد/هزینه"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr ""
@@ -9476,6 +9502,12 @@ msgid "Send Money"
 msgstr "ارسال پول"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "ارسال یک فاکتور نمونه"
@@ -9494,6 +9526,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "ارسال رسید با ایمیل"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10538,6 +10575,11 @@ msgid "Terms & Conditions"
 msgstr "شرایط و ضوابط"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "شرایط و ضوابط"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10825,6 +10867,14 @@ msgid ""
 "don't have email address."
 msgstr ""
 "فاکتور(ها) زیر با ایمیل ارسال نمی شوند، زیرا مشتریان نشانی ایمیل ندارند."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12223,6 +12273,12 @@ msgid "You can only send invoices."
 msgstr "شما فقط می توانید فاکتورها را ارسال کنید."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12344,6 +12400,12 @@ msgstr "شما نمی توانید پرداختی که الان راسال شد�
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "شما نمی توانید یک ثبت سند وقتی یک بار ارسال شده را حذف کنید."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12610,12 +12672,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "دامنه زیپ"
@@ -12729,6 +12785,11 @@ msgstr "در این ماه"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "در ماه بعد"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "در"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

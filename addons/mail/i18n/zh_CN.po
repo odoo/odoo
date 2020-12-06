@@ -9,7 +9,7 @@
 # fausthuang, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
 # diaojiaolou <124412206@qq.com>, 2019
-# 演奏王 <wangwhai@qq.com>, 2019
+# 稀饭~~ <wangwhai@qq.com>, 2019
 # F4NNIU <sparkamax@gmail.com>, 2019
 # waveyeung <waveyeung@qq.com>, 2019
 # Lisa Zhang <lzh@odoo.com>, 2019
@@ -1563,6 +1563,12 @@ msgstr "自定义频道名称"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "客户需要收件箱/电子邮件通知"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -5519,6 +5525,12 @@ msgstr ""
 "基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用系统管理员账户。"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
@@ -6227,6 +6239,24 @@ msgid ""
 msgstr "您可以给任何消息加星号，然后它会出现在邮箱里。"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -6275,8 +6305,8 @@ msgstr "您被指派到"
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
-msgid "You have been invited to: "
-msgstr "您已被邀请："
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

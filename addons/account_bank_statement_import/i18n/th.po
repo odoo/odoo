@@ -194,12 +194,12 @@ msgstr "ดัชนีสี"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
 msgid "Communication Standard"
-msgstr ""
+msgstr "Communication Standard"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
 msgid "Communication Type"
-msgstr ""
+msgstr "Communication Type"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
@@ -239,7 +239,7 @@ msgstr "ใบลดหนี้"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes Next Number"
-msgstr ""
+msgstr "ใบลดหนี้หมายเลขถัดไป"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -264,7 +264,7 @@ msgstr "บัญชีเดบิตเริ่มต้น"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "Defines how the bank statements will be registered"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
@@ -476,7 +476,7 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr ""
+msgstr "Lock Posted Entries with Hash"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -506,6 +506,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Manual:Pay bill by cash or any other method outside of Odoo.\n"
+"Check:Pay bill by check and print it from Odoo.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
@@ -596,7 +599,7 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
 msgid "Secure Sequence"
-msgstr ""
+msgstr "Secure Sequence"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -606,6 +609,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
+"Select 'General' for miscellaneous operations journals."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -620,12 +627,12 @@ msgstr "ลำดับ"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr ""
+msgstr "Sequence to use to ensure the securisation of data"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "Set active to false to hide the Journal without removing it."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
@@ -681,17 +688,17 @@ msgstr "หน่วยเงินตราที่ใช้ในงบกา
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
+msgstr "The journal entries of this journal will be named using this prefix."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
+msgstr "The next sequence number will be used for the next credit note."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "The next sequence number will be used for the next invoice."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -699,6 +706,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"This field contains the information related to the numbering of the credit "
+"note entries of this journal."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -706,6 +715,8 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"This field contains the information related to the numbering of the journal "
+"entries of this journal."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -761,6 +772,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Used to register a loss when the ending balance of a cash register differs "
+"from what the system computes"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -768,6 +781,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Used to register a profit when the ending balance of a cash register differs"
+" from what the system computes"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
@@ -782,7 +797,7 @@ msgstr "ประวัติการสื่อสารเว็บไซต
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Whether this journal should be displayed on the dashboard or not"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
@@ -796,6 +811,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
@@ -804,6 +821,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
+"You can set here the default communication that will appear on customer "
+"invoices, once validated, to help the customer to refer to that particular "
+"invoice when making the payment."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

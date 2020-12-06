@@ -914,7 +914,7 @@ msgstr "การเข้าถึงผิดพลาด"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
-msgstr ""
+msgstr "เข้าถึง"
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
@@ -1099,12 +1099,12 @@ msgstr "แอพ"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "ชื่อไฟล์"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "ชื่อไฟล์"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
@@ -1171,7 +1171,7 @@ msgstr "พื้นฐาน"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "มุมมองออกแบบ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1455,7 +1455,7 @@ msgstr "ปิด"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Colors"
-msgstr ""
+msgstr "สี"
 
 #. module: website
 #: model:ir.model,name:website.model_res_company
@@ -2300,7 +2300,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Full Screen"
-msgstr ""
+msgstr "เข้าถึงแบบเต็ม"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2434,7 +2434,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
 #: model_terms:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Calendar"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
@@ -2498,7 +2498,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "See http://openerp.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2760,7 +2760,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #, python-format
 msgid "Indexed"
-msgstr ""
+msgstr "เนื้อหาไฟล์"
 
 #. module: website
 #. openerp-web
@@ -3691,6 +3691,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
+"\n"
+"* if extension (default), if this view is requested the closest primary view\n"
+"is looked up (via inherit_id), then all views inheriting from it with this\n"
+"view's model are applied\n"
+"* if primary, the closest primary view is fully resolved (even if it uses a\n"
+"different model than this one), then this view's inheritance specs\n"
+"(<xpath/>) are applied, and the result is used as if it were this view's\n"
+"actual arch.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4025,12 +4034,12 @@ msgstr "คุณภาพ"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "QWeb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
@@ -4440,7 +4449,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Social Media"
-msgstr ""
+msgstr "สื่อสังคม"
 
 #. module: website
 #. openerp-web
@@ -5234,7 +5243,7 @@ msgstr "มุมมอง"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "มุมมองที่สืบทอดมาจากมุมมองนี้"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line

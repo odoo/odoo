@@ -10,20 +10,20 @@
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Minh Nguyen <ndminh210994@gmail.com>, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Manh Vu <vuducmanh96vp@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Nguyen Duc Hoang <ndhdldt1@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
+# fanha99 <fanha99@hotmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -2638,6 +2638,7 @@ msgstr "Hủy bút toán"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "Đã hủy"
 
@@ -6229,6 +6230,14 @@ msgstr ""
 "Bạn cần tạo bút toán ngược và hủy nó."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "Dòng"
@@ -8381,6 +8390,18 @@ msgstr ""
 " xử lý."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Vui lòng đặt một giá trị làm tròn dương hoàn toàn."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Vui lòng làm theo mô tả sau khi bạn thực hiện thanh toán :"
@@ -9111,6 +9132,11 @@ msgid "Revenue/Expense Account"
 msgstr "Tài khoản doanh thu/chi phí"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "Bút toán đảo"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "Ngày đảo"
@@ -9594,6 +9620,12 @@ msgid "Send Money"
 msgstr "Gửi tiền"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "Gửi hóa đơn mẫu"
@@ -9612,6 +9644,11 @@ msgstr "Gửi hóa đơn và theo dõi thanh toán qua đường bưu điện"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "Gửi biên nhận qua email"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr "Gửi biên lai bằng email"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10689,6 +10726,11 @@ msgid "Terms & Conditions"
 msgstr "Điều khoản & Điều kiện"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "Điều khoản và Điều kiện"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10997,6 +11039,14 @@ msgid ""
 msgstr ""
 "Các công nợ sau sẽ không được gửi qua email, bởi vì khách hàng không có địa "
 "chỉ email."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12491,6 +12541,12 @@ msgid "You can only send invoices."
 msgstr "Bạn chỉ có thể gửi hóa đơn."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12623,6 +12679,12 @@ msgstr "Bạn không thể xóa một khoản thanh toán mà đã vào sổ r�
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "Bạn không thể xóa bút toán một khi nó đã được đưa vào sổ."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr "Bạn không thể xóa chi tiết bút toán một khi nó đã được đưa vào sổ."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12930,12 +12992,6 @@ msgstr ""
 "chênh lệch tỉ giá."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Phạm vi mã bưu điện"
@@ -13053,6 +13109,11 @@ msgstr "của tháng hiện tại"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "của tháng tiếp theo"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "trên"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

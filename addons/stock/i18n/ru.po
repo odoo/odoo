@@ -17,7 +17,7 @@
 # Sergey Vilizhanin, 2019
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Pavel Kedrinskiy <pavel.py3@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Martin Trigaux, 2020
 # Polina Alexandrova <polinaalexnder@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
@@ -6405,6 +6405,16 @@ msgstr ""
 "получаете товары, которые вы возвращаете сейчас, убедитесь, что "
 "<b>реверс</b> вернули сборку, чтобы избежать повторного применения "
 "логистических правил (что создало бы дублированные операции)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

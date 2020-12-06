@@ -7,8 +7,8 @@
 # Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # erik_bzcl <erik@bizicloud.ro>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2629,6 +2629,9 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
+"În cazul în care ridicarea este deblocată, puteți edita cererea inițială "
+"(pentru o ridicare ciornă) sau cantitățile efective (pentru o ridicare "
+"efectuată)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -6487,6 +6490,16 @@ msgstr ""
 " primiți mărfurile pe care le returnați acum, asigurați-vă că ați <b> "
 "inversat </b> preluarea returnată, pentru a evita aplicarea din nou a "
 "regulilor logisticii (ceea ce ar crea operațiuni duplicate)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -2657,6 +2657,7 @@ msgstr "항목 취소"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "취소됨"
 
@@ -6158,6 +6159,14 @@ msgstr ""
 "합니다."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
 msgstr "항목"
@@ -8270,6 +8279,18 @@ msgid ""
 msgstr "계정과목 일람표를 설치하거나 처리 전에 기타 분개장을 생성해 주십시오."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "양수 반올림 값을 설정하십시오."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "지불 방법은 다음과 같습니다 :"
@@ -8998,6 +9019,11 @@ msgid "Revenue/Expense Account"
 msgstr "수익/비용 계정"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr "환입 이동"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
 msgstr "환입일"
@@ -9476,6 +9502,12 @@ msgid "Send Money"
 msgstr "송금"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr "예제 청구서 전송"
@@ -9494,6 +9526,11 @@ msgstr "우편으로 송장 및 결제 후속 조치 발송"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "이메일로 영수증 전송"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10562,6 +10599,11 @@ msgid "Terms & Conditions"
 msgstr "내용 및 조건"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr "이용 약관"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10855,6 +10897,14 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr "고객에게 이메일 주소가 없으므로 다음 송장을 이메일로 보내지 않습니다."
+
+#. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12300,6 +12350,12 @@ msgid "You can only send invoices."
 msgstr "송장만 보낼 수 있습니다."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12414,6 +12470,12 @@ msgstr "이미 전기된 지불금을 삭제할 수 없습니다."
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "한 번 전기된 항목은 삭제할 수 없습니다."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12682,12 +12744,6 @@ msgid ""
 msgstr "회계 설정에서 ‘손실 환율 계정’을 구성해야 환율 차이와 관련된 회계 항목 기장을 자동으로 관리할 수 있습니다."
 
 #. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "양수 반올림 값을 설정하십시오."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "우편번호 범위"
@@ -12801,6 +12857,11 @@ msgstr "이번 달"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
 msgstr "다음 달"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr "있음"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
