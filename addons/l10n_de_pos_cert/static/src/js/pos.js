@@ -21,7 +21,13 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         initialize(attributes) {
             _super_posmodel.initialize.apply(this,arguments);
             this.token = '';
-            this.apiUrl = 'https://kassensichv.io/api/v1/';
+            this.rpc({
+                model: 'ir.config_parameter',
+                method: 'get_param',
+                args: ['fiskaly_kassensichv_api_url'],
+            }).then(data => {
+                this.apiUrl = data;
+            })
         },
         getApiToken() {
             return this.token;
