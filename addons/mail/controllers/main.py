@@ -268,6 +268,7 @@ class MailController(http.Controller):
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
             'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
             'public_partner': request.env.ref('base.public_partner').sudo().mail_partner_format(),
+            'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),
             'current_user_id': request.env.user.id,
         }
