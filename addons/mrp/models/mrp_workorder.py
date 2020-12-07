@@ -132,6 +132,7 @@ class MrpWorkorder(models.Model):
     capacity = fields.Float(
         'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
+    allowed_lots_domain = fields.One2many(comodel_name='stock.production.lot', compute="_compute_allowed_lots_domain")
 
     @api.multi
     def name_get(self):
@@ -177,6 +178,24 @@ class MrpWorkorder(models.Model):
         count_data = dict((item['workorder_id'][0], item['workorder_id_count']) for item in data)
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
+
+    def _compute_allowed_lots_domain(self):
+        """ 
+        Restrict the selectable lot to the lot/sn used in other workorders.
+        """
+        productions = self.mapped('production_id')
+        treated = self.browse()
+
+        for production in productions:
+            if production.product_id.tracking == 'none':
+                continue
+            allowed_lot_ids = self.env['stock.production.lot'].search([('product_id', '=', production.product_id.id)])
+            used = productions.mapped("move_finished_ids").mapped("move_line_ids").filtered(lambda mov: mov.qty_done > 0).mapped('lot_id')
+            for workorder in production.workorder_ids.filtered(lambda wo: wo.state not in ('done', 'cancel')):
+                workorder.allowed_lots_domain = (allowed_lot_ids - used) if workorder.product_tracking == 'serial' else allowed_lot_ids
+                treated |= workorder
+        for record in (self - treated):
+            record.allowed_lots_domain = False
 
     @api.multi
     @api.depends('date_planned_finished', 'production_id.date_planned_finished')
