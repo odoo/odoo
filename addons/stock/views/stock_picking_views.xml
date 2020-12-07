@@ -524,7 +524,8 @@
             <field name="code">
             if records:
                 res = records.button_validate()
-                action = res
+                if isinstance(res, dict):
+                    action = res
             </field>
         </record>
 
