@@ -9,7 +9,6 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
-from odoo.addons.microsoft_account.models.microsoft_service import MICROSOFT_TOKEN_ENDPOINT
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService, InvalidSyncToken
 
 _logger = logging.getLogger(__name__)
@@ -50,7 +49,8 @@ class User(models.Model):
         }
 
         try:
-            dummy, response, dummy = self.env['microsoft.service']._do_request(MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri='')
+            endpoint = self.env['microsoft.service']._get_token_endpoint()
+            dummy, response, dummy = self.env['microsoft.service']._do_request(endpoint, params=data, headers=headers, method='POST', preuri='')
             ttl = response.get('expires_in')
             self.write({
                 'microsoft_calendar_token': response.get('access_token'),
