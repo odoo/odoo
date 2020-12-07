@@ -2150,6 +2150,43 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     );
 });
 
+QUnit.test('composer text input read only and than cleared on message post', async function (assert) {
+    assert.expect(1);
+
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            const _super = this._super.bind(this);
+            if (args.method === 'message_post') {
+                await new Promise(() => {});
+            }
+            return _super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    await this.createComposerComponent(thread.composer);
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerTextInput_textarea').focus();
+        document.execCommand('insertText', false, "test message");
+    });
+
+    // Send message
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerTextInput_textarea[readonly]',
+        "Composer must become read only while a message is being posted"
+    );
+});
+
 });
 });
 });
