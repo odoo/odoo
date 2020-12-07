@@ -139,8 +139,9 @@ QUnit.module('core', {}, function () {
                     click: function () {
                         if (this.$footer.find('button').attr('disabled') !== 'disabled') {
                             testPromise.reject();
+                        }else{
+                            testPromise.resolve();
                         }
-                        testPromise.resolve();
                     },
                 },
             ],
