@@ -5,6 +5,7 @@ import json
 from ast import literal_eval
 
 from odoo import models, fields, api
+from odoo.tools import date_utils
 
 
 class pos_cache(models.Model):
@@ -30,7 +31,7 @@ class pos_cache(models.Model):
                 display_default_code=False, lang=cache.compute_user_id.lang)
             res = prod_ctx.read(cache.get_product_fields())
             cache.write({
-                'cache': base64.encodebytes(json.dumps(res).encode('utf-8')),
+                'cache': base64.encodebytes(json.dumps(res, default=date_utils.json_default).encode('utf-8')),
             })
 
     @api.model
