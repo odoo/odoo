@@ -76,7 +76,7 @@ class PosConfig(models.Model):
                     self.write(phantom_tss)
             except ConnectionError:
                 #  kind of useless? If the odoo server lose connection, the error won't appear to the client
-                raise ValidationError(_("Check your internet connection and try again."))
+                raise ValidationError(_("Connection error between Odoo and Fiskaly."))
             except ConnectTimeout:
                 raise ValidationError(_("There are some connection issues between us and Fiskaly, try again later."))
 
@@ -92,7 +92,7 @@ class PosConfig(models.Model):
             if disable_tss_response.status_code != 200:
                 raise ValidationError(_("It seems there are some issues, please try again later."))
         except ConnectionError:
-            raise ValidationError(_("Check your internet connection and try again."))
+            raise ValidationError(_("Connection error between Odoo and Fiskaly."))
         except ConnectTimeout:
             raise ValidationError(_("There are some connection issues between us and Fiskaly, try again later."))
 
