@@ -39,7 +39,7 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
                  * of polluting the database, it is therefore acceptable and
                  * easier to handle one temporary partner per channel.
                  */
-                data2.members.push(['unlink', this.env.messaging.publicPartner]);
+                data2.members.push(['unlink', this.env.messaging.publicPartners]);
                 const partner = this.env.models['mail.partner'].create(
                     Object.assign(
                         this.env.models['mail.partner'].convertData(data.livechat_visitor),
