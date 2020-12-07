@@ -55,7 +55,7 @@ class AccountMove(models.Model):
         for move in self:
             to_process = move.edi_document_ids.filtered(lambda d: d.state in ['to_send', 'to_cancel'])
             format_web_services = to_process.edi_format_id.filtered(lambda f: f._needs_web_services())
-            move.edi_web_services_to_process = ', '.join(f.name for f in format_web_services)
+            move.edi_web_services_to_process = ', '.join(f.name for f in format_web_services) or False
 
     @api.depends('restrict_mode_hash_table', 'state')
     def _compute_show_reset_to_draft_button(self):
