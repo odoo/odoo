@@ -159,6 +159,15 @@ var FieldMany2One = AbstractField.extend({
         this.$external_button = this.$('.o_external_button');
         return this._super.apply(this, arguments);
     },
+    destroy: function () {
+        if (this._onWindowMousedown) {
+            window.removeEventListener('scroll', this._onWindowMousedown, true);
+        }
+        if (this._onWindowClick) {
+            window.removeEventListener('scroll', this._onWindowClick, true);
+        }
+        this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -275,7 +284,7 @@ var FieldMany2One = AbstractField.extend({
                         return;
                     }
                     if (self.floating && self.$input.hasClass('ui-autocomplete-input')) {
-                        const $dropdown = self.$input.autocomplete("widget");
+                        var $dropdown = self.$input.autocomplete("widget");
                         if ($dropdown.is(":visible")) {
                             preventWindowClick = true;
                         }
@@ -313,6 +322,12 @@ var FieldMany2One = AbstractField.extend({
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
                     event.stopPropagation();
+                }
+                if (self._onWindowMousedown) {
+                    window.removeEventListener('scroll', self._onWindowMousedown, true);
+                }
+                if (self._onWindowClick) {
+                    window.removeEventListener('scroll', self._onWindowClick, true);
                 }
             },
             autoFocus: true,
