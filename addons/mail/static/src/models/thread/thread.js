@@ -1067,6 +1067,7 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
          */
         _computeHasSeenIndicators() {
             if (this.model !== 'mail.channel') {
@@ -1473,23 +1474,23 @@ function factory(dependencies) {
         }
 
         /**
-         * Fetches followers of chats when they are displayed for the first
-         * time. This is necessary to clean the followers.
-         * @see `_onChangeFollowersPartner` for more information.
-         *
          * @private
          */
         _onChangeThreadViews() {
-            if (this.channel_type !== 'chat') {
-                return;
-            }
             if (this.threadViews.length === 0) {
                 return;
             }
-            if (this.areFollowersLoaded) {
-                return;
+            /**
+             * Fetches followers of chats when they are displayed for the first
+             * time. This is necessary to clean the followers.
+             * @see `_onChangeFollowersPartner` for more information.
+             */
+            if (this.channel_type === 'chat' && !this.areFollowersLoaded) {
+                this.refreshFollowers();
             }
-            this.refreshFollowers();
+            if (this.needactionMessagesAsOriginThread.length > 0) {
+                this.markNeedactionMessagesAsOriginThreadAsRead();
+            }
         }
 
         /**
