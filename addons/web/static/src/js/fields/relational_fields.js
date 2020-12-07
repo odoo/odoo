@@ -150,6 +150,7 @@ var FieldMany2One = AbstractField.extend({
         this.createDef = undefined;
     },
     start: function () {
+        var self = this;
         // booleean indicating that the content of the input isn't synchronized
         // with the current m2o value (for instance, the user is currently
         // typing something in the input, and hasn't selected a value yet).
@@ -157,14 +158,35 @@ var FieldMany2One = AbstractField.extend({
 
         this.$input = this.$('input');
         this.$external_button = this.$('.o_external_button');
+        var preventWindowClick = false;
+        this._onWindowMousedown = function (ev) {
+            if (self.el.contains(ev.target) || this.el === ev.target
+                || $(ev.target).parents('.ui-autocomplete').length) {
+                return;
+            }
+            if (self.floating && self.$input.hasClass('ui-autocomplete-input')) {
+                var $dropdown = self.$input.autocomplete("widget");
+                if ($dropdown.is(":visible")) {
+                    preventWindowClick = true;
+                }
+            }
+        };
+        this._onWindowClick = function (ev) {
+            if (preventWindowClick) {
+                ev.stopPropagation();
+                preventWindowClick = false;
+            }
+        };
+        window.addEventListener('mousedown', self._onWindowMousedown, true);
+        window.addEventListener('click', self._onWindowClick, true);
         return this._super.apply(this, arguments);
     },
     destroy: function () {
         if (this._onWindowMousedown) {
-            window.removeEventListener('scroll', this._onWindowMousedown, true);
+            window.removeEventListener('mousedown', this._onWindowMousedown, true);
         }
         if (this._onWindowClick) {
-            window.removeEventListener('scroll', this._onWindowClick, true);
+            window.removeEventListener('click', this._onWindowClick, true);
         }
         this._super.apply(this, arguments);
     },
@@ -275,30 +297,6 @@ var FieldMany2One = AbstractField.extend({
                     }
                 });
             },
-            open: function (event, ui) {
-                // maybe bind mousedown and set flag like preventWindowClick and on window click stopPropagation of flag is set
-                var preventWindowClick = false;
-                self._onWindowMousedown = function (ev) {
-                    if (self.el.contains(ev.target) || this.el === ev.target
-                        || $(ev.target).parents('.ui-autocomplete').length) {
-                        return;
-                    }
-                    if (self.floating && self.$input.hasClass('ui-autocomplete-input')) {
-                        var $dropdown = self.$input.autocomplete("widget");
-                        if ($dropdown.is(":visible")) {
-                            preventWindowClick = true;
-                        }
-                    }
-                };
-                self._onWindowClick = function (ev) {
-                    if (preventWindowClick) {
-                        ev.stopPropagation();
-                        preventWindowClick = false;
-                    }
-                };
-                window.addEventListener('mousedown', self._onWindowMousedown, true);
-                window.addEventListener('click', self._onWindowClick, true);
-            },
             select: function (event, ui) {
                 // we do not want the select event to trigger any additional
                 // effect, such as navigating to another field.
@@ -322,12 +320,6 @@ var FieldMany2One = AbstractField.extend({
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
                     event.stopPropagation();
-                }
-                if (self._onWindowMousedown) {
-                    window.removeEventListener('scroll', self._onWindowMousedown, true);
-                }
-                if (self._onWindowClick) {
-                    window.removeEventListener('scroll', self._onWindowClick, true);
                 }
             },
             autoFocus: true,
