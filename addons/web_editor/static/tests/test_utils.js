@@ -9,7 +9,6 @@ var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');
 
 const COLOR_PICKER_TEMPLATE = `
-    <t t-name="web_editor.colorpicker">
         <colorpicker>
             <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
                 <button data-color="o-color-1"/>
@@ -28,8 +27,7 @@ const COLOR_PICKER_TEMPLATE = `
                 <button data-color="white-75"/>
             </div>
             <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"/>
-        </colorpicker>
-    </t>`;
+        </colorpicker>`;
 const SNIPPETS_TEMPLATE = `
     <h2 id="snippets_menu">Add blocks</h2>
     <div id="o_scroll">
@@ -92,11 +90,12 @@ MockServer.include({
      * @returns {Promise}
      */
     async _performRpc(route, args) {
-        if (args.model === "ir.ui.view") {
-            if (args.method === 'read_template' && args.args[0] === "web_editor.colorpicker") {
+        if ((args.model === "ir.ui.view" && args.method === 'render_public_asset') ||
+                route === '/web_editor/public_render_template') {
+            if (args.args[0] === "web_editor.colorpicker") {
                 return COLOR_PICKER_TEMPLATE;
             }
-            if (args.method === 'render_public_asset' && args.args[0] === "web_editor.snippets") {
+            if (args.args[0] === "web_editor.snippets") {
                 return SNIPPETS_TEMPLATE;
             }
         }
@@ -192,14 +191,11 @@ function wysiwygData(data) {
                 },
             },
             records: [],
-            read_template(args) {
-                if (args[0] === 'web_editor.colorpicker') {
-                    return COLOR_PICKER_TEMPLATE;
-                }
-            },
             render_template(args) {
                 if (args[0] === 'web_editor.snippets') {
                     return SNIPPETS_TEMPLATE;
+                } else if (args[0] === 'web_editor.colorpicker') {
+                    return COLOR_PICKER_TEMPLATE;
                 }
             },
         },

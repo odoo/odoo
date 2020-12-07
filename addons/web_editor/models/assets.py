@@ -275,4 +275,4 @@ class Assets(models.AbstractModel):
         return {}
 
     def _get_public_asset_xmlids(self):
-        return ["web_editor.compiled_assets_wysiwyg"]
+        return ["web_editor.compiled_assets_wysiwyg", "web_editor.colorpicker"]

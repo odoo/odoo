@@ -230,7 +230,7 @@
     If a color is no longer used you need to add the d-none class to it and not remove it from this file !!
     Else you will no longer be able to use them.
 -->
-<template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user">
+<template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user,base.group_portal">
     <colorpicker>
         <div class="o_colorpicker_section" data-name="theme">
             <button t-foreach="5" t-as="i" t-attf-data-color="o-color-#{i + 1}"></button>
