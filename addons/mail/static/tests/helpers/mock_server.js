@@ -420,7 +420,7 @@ MockServer.include({
             moderation_counter,
             needaction_inbox_counter,
             partner_root: partnerRootFormat,
-            public_partner: publicPartnerFormat,
+            public_partners: [publicPartnerFormat],
             shortcodes,
             starred_counter: starredCounter,
         };
