@@ -35,8 +35,8 @@
             <field name="email_to">${(object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
-% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmssZ')
-% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmssZ')
+% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format="yyyyMMdd'T'HHmmss'Z'")
+% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format="yyyyMMdd'T'HHmmss'Z'")
 % set is_online = 'is_published' in object.event_id and object.event_id.is_published
 % set event_organizer = object.event_id.organizer_id
 % set event_address = object.event_id.address_id
@@ -259,8 +259,8 @@
             <field name="email_to">${(object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
-% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmssZ')
-% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmssZ')
+% set date_begin = format_datetime(object.event_id.date_begin, tz='UTC', dt_format="yyyyMMdd'T'HHmmss'Z'")
+% set date_end = format_datetime(object.event_id.date_end, tz='UTC', dt_format="yyyyMMdd'T'HHmmss'Z'")
 % set is_online = 'is_published' in object.event_id and object.event_id.is_published
 % set event_organizer = object.event_id.organizer_id
 % set event_address = object.event_id.address_id
