@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging/messaging.js', function (require) 
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -231,7 +231,11 @@ function factory(dependencies) {
             default: 0,
         }),
         partnerRoot: many2one('mail.partner'),
-        publicPartner: many2one('mail.partner'),
+        /**
+         * Determines which partners should be considered the public partners,
+         * which are special partners notably used in livechat.
+         */
+        publicPartners: many2many('mail.partner'),
         /**
          * Mailbox Starred.
          */
