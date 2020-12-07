@@ -3,35 +3,19 @@ odoo.define('web.open_studio_button', function (require) {
     
     var Widget = require('web.Widget');
     var core = require('web.core');
-    var framework = require('web.framework');
+    var Dialog = require('web.Dialog');
 
-    var _lt = core._lt;
+    var _t = core._t;
     
     var OpenStudioButton = Widget.extend({
-        tagName: 'a',
-        className: 'btn btn-default dropdown-item d-none d-md-block',
-        icon: "fa-plus",
+        template: 'web.open_studio_button',
         state_open: false,
         studio_name: 'web_studio',
-        child_widget: undefined,
         events: {
             'click': '_onButtonClick',
         },
         init: function(parent){
             this._super(parent);
-        },
-        /**
-         * @override
-         */
-        start: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function(){
-                var $i = $('<i>').addClass("fa fa-fw")
-                                .addClass("o_button_icon")
-                                .addClass(self.icon);
-                var $span = $('<span>').text(_lt('Add Custom Field'));
-                self.$el.append($i).append($span);
-            });
         },
         /**
          * @override
@@ -54,51 +38,67 @@ odoo.define('web.open_studio_button', function (require) {
     });
 
     var PromoteStudio = Widget.extend({
-        events: { 
-            'click button.open_install_web_studio': '_open_install_web_studio' 
+        events: {
+            'click button.o-install-studio': '_onInstallStudio',
         },
         template: 'web.install_web_studio',
         init: function(parent){
             this._super(parent);
         },
-        _open_install_web_studio: function (ev) {
-            ev.preventDefault();
-            framework.blockUI();
+        _onInstallStudio: function (ev) {
+            ev.stopPropagation();
             var self = this;
             this._rpc({
                 model: 'ir.module.module',
                 method: 'search_read',
-                fields: ['id', 'to_buy'],
+                fields: ['id', 'shortdesc'],
                 domain: [['name', '=', self.getParent().studio_name]],
             }).then(function (modules){
-                var studioModuleID = modules[0].id;
-                var toBuy = modules[0].to_buy;
-                if(toBuy){
-                    framework.unblockUI();
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: 'ir.module.module',
-                        views: [[false, 'form']], 
-                        res_id: studioModuleID
-                    });
-                } else {
-                    self._rpc({
-                        model: 'ir.module.module',
-                        method: 'button_immediate_install',
-                        args: [[studioModuleID]],
-                    }).then(function() {
-                        window.location.reload();
-                        framework.unblockUI();
-                    }).guardedCatch(reason => {
-                        framework.unblockUI();
-                        reason.event.preventDefault();
-                        self.displayNotification({
-                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), name),
-                            type: 'danger',
-                            sticky: true,
-                        });
-                    });
-                }
+                var studio_module_id = modules[0].id;
+                var studio_name = modules[0].shortdesc;
+                new Dialog(self, {
+                    title: _.str.sprintf(_t("Install %(studio_name)s"), {studio_name: studio_name}),
+                    size: 'medium',
+                    $content: $('<div/>', {
+                        text: _.str.sprintf(_t("Do you confirm the installation of %(studio_name)s ?"),
+                                                {studio_name: studio_name})})
+                         .append($('<a/>', {
+                            target: '_blank',
+                            href: '/web#id=' + studio_module_id + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                            text: _t("More info about this app."),
+                            class: 'ml4',
+                        })
+                    ),
+                    buttons: [{
+                        text: _t("Confirm"),
+                        classes: 'btn-primary',
+                        click: function () {
+                            this.$footer.find('.btn').toggleClass('o_hidden');
+                            this._rpc({
+                                model: 'ir.module.module',
+                                method: 'button_immediate_install',
+                                args: [[studio_module_id]],
+                            }).then(() => {
+                                window.location.reload();
+                            }).guardedCatch(reason => {
+                                reason.event.preventDefault();
+                                this.close();
+                                this.displayNotification({
+                                    message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), studio_name),
+                                    type: 'danger',
+                                    sticky: true,
+                                });
+                            });
+                        },
+                    }, {
+                        text: _t("Install in progress"),
+                        icon: 'fa-spin fa-spinner fa-pulse mr8',
+                        classes: 'btn-primary disabled o_hidden',
+                    }, {
+                        text: _t("Cancel"),
+                        close: true,
+                    }],
+                }).open();
             });
         },
     });

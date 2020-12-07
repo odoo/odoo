@@ -130,17 +130,17 @@ var ListRenderer = BasicRenderer.extend({
      * installation.
      * 
      * @private
-     * @param {Object} dropdown the optional columns dropdown list
+     * @param {Object} optionalColumnsDropdown the optional columns dropdown list
      */
-    _appendAddCustomField: function(dropdown){
+    _appendAddCustomField: function(optionalColumnsDropdown){
         if(this._isAllowedToUseStudio()){
             if(this.optionalColumns.length){
-                dropdown.append($("<hr />"));
+                optionalColumnsDropdown.append($("<hr />"));
             }
             if(!this.addCustomField || this.addCustomField.isDestroyed()){
                 this.addCustomField = new OpenStudioButton(this);
             }
-            this.addCustomField.appendTo(dropdown);
+            this.addCustomField.appendTo(optionalColumnsDropdown);
         }
     },
     /**
@@ -367,7 +367,8 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {boolean}
      */
     _isAllowedToUseStudio: function(){
-        return session.is_admin || session.is_system;
+        var isEnterprise = odoo.session_info !== undefined && _.last(odoo.session_info.server_version_info) === 'e';
+        return isEnterprise && (session.is_admin || session.is_system);
     },
     /**
      * Processes arch's child nodes for the needs of the list view:
@@ -1055,11 +1056,8 @@ var ListRenderer = BasicRenderer.extend({
                 class: "dropdown-item",
             }).append($checkbox));
         });
-
         this._appendAddCustomField($dropdown);
-
-        $dropdown.appendTo($optionalColumnsDropdown);        
-
+        $dropdown.appendTo($optionalColumnsDropdown);
         return $optionalColumnsDropdown;
     },
     /**

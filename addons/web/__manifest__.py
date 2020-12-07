@@ -30,12 +30,12 @@ This module provides the core of the Odoo Web Client.
         "static/src/xml/kanban.xml",
         "static/src/xml/menu.xml",
         "static/src/xml/notification.xml",
+        "static/src/xml/open_studio_button.xml",
         "static/src/xml/pivot.xml",
         "static/src/xml/rainbow_man.xml",
         "static/src/xml/report.xml",
         "static/src/xml/search_panel.xml",
         "static/src/xml/web_calendar.xml",
-        "static/src/xml/web_studio.xml",
         "static/src/xml/graph.xml",
     ],
     'bootstrap': True,  # load translations for login screen
