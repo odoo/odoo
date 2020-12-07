@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SplitOrderline" owl="1">
-        <li class="orderline" t-att-class="{ selected: isSelected, partially: props.split.quantity !== props.line.get_quantity() }">
+    <t t-name="pos_restaurant.SplitOrderline" owl="1">
+        <t t-set="_orderlinePrices" t-value="env.model.getOrderlinePrices(props.line)" />
+        <t t-set="_otherOrderlinePrices" t-value="props.otherLines.map(line => env.model.getOrderlinePrices(line))" />
+        <t t-set="_isSelected" t-value="props.split.quantity !== 0" />
+        <li class="orderline" t-att-class="{ selected: _isSelected, partially: env.model.floatCompare(props.split.quantity, props.line.qty) !== 0 }">
             <span class="product-name">
-                <t t-esc="props.line.get_product().display_name" />
+                <t t-esc="env.model.getFullProductName(props.line)" />
             </span>
             <span class="price">
-                <t t-esc="env.pos.format_currency(props.line.get_display_price())" />
+                <t t-esc="env.model.formatCurrency(getDisplayPrice(_orderlinePrices, ..._otherOrderlinePrices))" />
             </span>
             <ul class="info-list">
-                <t t-if="props.line.get_quantity_str() !== '1'">
+                <t t-set="_quantityStr" t-value="getQuantityStrOfLines(props.line, ...props.otherLines)" />
+                <t t-set="_unit" t-value="env.model.getOrderlineUnit(props.line)" />
+                <t t-if="_quantityStr !== '1'">
                     <li class="info">
-                        <t t-if="isSelected and props.line.get_unit().is_pos_groupable">
+                        <t t-if="_isSelected and _unit.is_pos_groupable">
                             <em class="big">
                                 <t t-esc="props.split.quantity" />
                             </em>
                             /
-                            <t t-esc="props.line.get_quantity_str()" />
+                            <t t-esc="_quantityStr" />
                         </t>
-                        <t t-if="!(isSelected and props.line.get_unit().is_pos_groupable)">
+                        <t t-if="!(_isSelected and _unit.is_pos_groupable)">
                             <em>
-                                <t t-esc="props.line.get_quantity_str()" />
+                                <t t-esc="_quantityStr" />
                             </em>
                         </t>
-                        <t t-esc="props.line.get_unit().name" />
+                        <t t-esc="_unit.name" />
                         at
-                        <t t-esc="env.pos.format_currency(props.line.get_unit_price())" />
+                        <t t-esc="env.model.formatCurrency(_orderlinePrices.unitPrice)" />
                         /
-                        <t t-esc="props.line.get_unit().name" />
+                        <t t-esc="_unit.name" />
                     </li>
                 </t>
-                <t t-if="props.line.get_discount_str() !== '0'">
+                <t t-if="!env.model.getIsZeroDiscount(props.line)">
                     <li class="info">
                         <span>With a </span>
                         <em>
-                            <t t-esc="props.line.get_discount_str()" />
+                            <t t-esc="props.line.discount" />
                             <span>%</span>
                         </em>
                         <span> discount</span>

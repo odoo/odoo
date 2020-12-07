@@ -15,12 +15,12 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
     TicketScreen.check.noNewTicketButton();
     TicketScreen.do.clickDiscard();
 
-    // Deleting the last order in the table brings back to floorscreen
     FloorScreen.do.clickTable('T4');
     ProductScreen.check.isShown();
     Chrome.do.clickTicketButton();
     TicketScreen.check.nthRowContains(2, '-0001');
     TicketScreen.do.deleteOrder('-0001');
+    Chrome.do.backToFloor();
     FloorScreen.check.isShown();
 
     // Create 2 items in a table. From floorscreen, delete 1 item. Then select the other item.

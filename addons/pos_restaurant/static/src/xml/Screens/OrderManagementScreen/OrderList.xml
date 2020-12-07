@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderList" t-inherit="point_of_sale.OrderList" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_restaurant.OrderList" t-inherit="point_of_sale.OrderList" t-inherit-mode="extension" owl="1">
+        <!-- Header -->
         <xpath expr="//div[hasclass('order-row')]//div[hasclass('customer')]" position="after">
-            <div t-if="env.pos.config.module_pos_restaurant" class="header table">
+            <div t-if="env.model.ifaceFloorplan" class="header table">
                 Table
+            </div>
+        </xpath>
+
+        <!-- OrderRow -->
+        <xpath expr="//div[hasclass('order-list')]//div[hasclass('order-row')]//div[hasclass('customer')]" position="after">
+            <div t-if="env.model.ifaceFloorplan" class="item table">
+                <t t-esc="env.model.getTable(_order)" />
             </div>
         </xpath>
     </t>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="TableWidget" owl="1">
+    <t t-name="pos_restaurant.TableWidget" owl="1">
         <div t-if="!props.isSelected" class="table" t-on-click.stop="trigger('select-table', props.table)">
+            <t t-set="_orderCount" t-value="getTableOrderCount(props.table)" />
             <span class="table-cover" t-att-class="{ full: fill >= 1 }"></span>
-            <span t-att-class="orderCountClass" t-att-hidden="orderCount === 0">
-                <t t-esc="orderCount" />
+            <span t-att-class="orderCountClass" t-att-hidden="_orderCount === 0">
+                <t t-esc="_orderCount" />
             </span>
             <span class="label">
                 <t t-esc="props.table.name" />

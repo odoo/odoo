@@ -56,6 +56,7 @@ class PosController(http.Controller):
         context = {
             'session_info': session_info,
             'login_number': pos_session.login(),
+            'pos_session_id': pos_session.id,
         }
         return request.render('point_of_sale.index', qcontext=context)
 

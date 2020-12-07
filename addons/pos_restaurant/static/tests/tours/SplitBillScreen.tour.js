@@ -31,10 +31,8 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     SplitBillScreen.do.clickOrderline('Water');
     SplitBillScreen.do.clickOrderline('Water');
     SplitBillScreen.check.orderlineHas('Water', '5', '3');
-    SplitBillScreen.check.subtotalIs('6.0')
     SplitBillScreen.do.clickOrderline('Coca-Cola');
     SplitBillScreen.check.orderlineHas('Coca-Cola', '1', '1');
-    SplitBillScreen.check.subtotalIs('8.0')
 
     // click pay to split, go back to check the lines
     SplitBillScreen.do.clickPay();

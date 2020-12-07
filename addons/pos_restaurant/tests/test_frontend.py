@@ -3,7 +3,7 @@
 
 import odoo.tests
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'pos_frontend')
 class TestFrontend(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()

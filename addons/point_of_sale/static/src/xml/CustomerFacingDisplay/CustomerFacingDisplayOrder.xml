@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="CustomerFacingDisplayHead">
+    <t t-name="point_of_sale.CustomerFacingDisplayHead">
         <div class="resources">
             <base t-att-href="origin"/>
             <meta http-equiv="cache-control" content="no-cache" />
@@ -12,14 +12,16 @@
         </div>
     </t>
 
-    <t t-name="CustomerFacingDisplayOrder">
+    <t t-name="point_of_sale.CustomerFacingDisplayOrder">
         <!-- Header -->
-        <t t-call="CustomerFacingDisplayHead"/>
+        <t t-call="point_of_sale.CustomerFacingDisplayHead"/>
+
+        <t t-set="_orderTotals" t-value="model.getOrderTotals(order)" />
 
         <div class="pos-customer_facing_display pos-palette_01">
             <!-- Orderlines -->
             <div class="pos-customer_products" name="Products list">
-                <t t-call="CustomerFacingDisplayOrderLines"/>
+                <t t-call="point_of_sale.CustomerFacingDisplayOrderLines"/>
             </div>
 
             <div class="pos-payment_info">
@@ -33,12 +35,12 @@
                             <span class="total-amount-formatting">TOTAL</span>
                         </div>
                         <div>
-                            <span class="pos_total-amount" t-esc="pos.format_currency(order and order.get_total_with_tax() || 0)"/>
+                            <span class="pos_total-amount" t-esc="model.formatCurrency(order and _orderTotals.withTaxWithDiscount or 0)"/>
                         </div>
                     </div>
 
                     <!-- Paymentlines -->
-                    <t t-call="CustomerFacingDisplayPaymentLines"/>
+                    <t t-call="point_of_sale.CustomerFacingDisplayPaymentLines"/>
 
                     <!-- Odoo Logo -->
                     <div class="pos-odoo_logo_container"/>
@@ -47,7 +49,7 @@
         </div>
     </t>
 
-    <t t-name="CustomerFacingDisplayOrderLines">
+    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines">
         <div class="pos_orderlines">
             <div class="pos_orderlines_item pos_orderlines_header">
                 <div/>
@@ -57,26 +59,29 @@
             </div>
             <div class="pos_orderlines_list">
                 <t t-if="order">
-                    <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
-                        <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
-                        <div t-esc="orderline.get_full_product_name()"/>
-                        <div t-esc="orderline.get_quantity_str()"/>
-                        <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+                    <div t-foreach="model.getOrderlines(order)" t-as="_orderline" class="pos_orderlines_item">
+                        <t t-set="_product" t-value="model.getRecord('product.product', _orderline.product_id)" />
+                        <t t-set="_orderlinePrices" t-value="model.getOrderlinePrices(_orderline)" />
+                        <div><div t-attf-style="background-image:url(#{_product._extras?.image_base64})"/></div>
+                        <div t-esc="model.getFullProductName(_orderline)"/>
+                        <div t-esc="model.getQuantityStr(_orderline)"/>
+                        <div t-esc="model.formatCurrency(model.getOrderlineDisplayPrice(_orderlinePrices))"/>
                     </div>
                 </t>
             </div>
         </div>
     </t>
 
-    <t t-name="CustomerFacingDisplayPaymentLines">
+    <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines">
         <div class="pos-paymentlines">
             <t t-if="order">
-                <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+                <t t-foreach="model.getPayments(order)" t-as="_payment">
+                    <t t-set="_paymentMethod" t-value="model.getRecord('pos.payment.method', _payment.payment_method_id)" />
                     <div>
-                        <span><t t-esc="paymentline.name"/>:</span>
+                        <span><t t-esc="_paymentMethod.name"/>:</span>
                     </div>
                     <div>
-                        <span t-esc="pos.format_currency(paymentline.get_amount())"/>
+                        <span t-esc="model.formatCurrency(_payment.amount)"/>
                     </div>
                 </t>
             </t>
@@ -85,7 +90,7 @@
                 <span class="pos-change_title">Change</span>
             </div>
             <div>
-                <span class="pos-change_amount" t-esc="pos.format_currency(order and order.get_change() || 0)"/>
+                <span class="pos-change_amount" t-esc="model.formatCurrency(order and model.getOrderChange(order) || 0)"/>
             </div>
         </div>
     </t>

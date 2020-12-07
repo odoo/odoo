@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="CashierName" owl="1">
+    <t t-name="point_of_sale.CashierName" owl="1">
         <div class="oe_status">
             <span class="username">
-                <t t-esc="username" />
+                <t t-esc="env.model.getCashierName()" />
             </span>
         </div>
     </t>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="CashOpeningPopup" owl="1">
+    <t t-name="point_of_sale.CashOpeningPopup" owl="1">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-confirm">
                 <header class="title drag-handle">
@@ -17,7 +17,7 @@
                             <span t-if="currency.position === 'before'">
                                 <t t-esc="currency.symbol"/><span> </span>
                             </span>
-                            <t t-esc="cashBoxValue"/>
+                            <t t-esc="state.buffer"/>
                             <span t-if="currency.position === 'after'">
                                 <span> </span><t t-esc="currency.symbol"/>
                             </span>
@@ -25,7 +25,7 @@
                     </div><br/>
                     <textarea style="line-height: 20px;" rows="3"
                            placeholder="Notes" class="cashbox-input cashbox-notes"
-                           t-model="state.notes" t-ref="input"/><br/><br/>
+                           t-model="state.notes"/><br/><br/>
                     <div>
                         <button class="input-button number-char cashbox-button" t-on-click="sendInput('1')">1</button>
                         <button class="input-button number-char cashbox-button" t-on-click="sendInput('2')">2</button>

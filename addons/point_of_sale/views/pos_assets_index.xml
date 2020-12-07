@@ -30,13 +30,14 @@
                 'csrf_token': request.csrf_token(None),
                 'session_info': session_info,
                 'login_number': login_number,
+                'pos_session_id': pos_session_id,
                 'debug': debug,
             })"/>;
         </script>
 
         <t t-call="point_of_sale.assets_common"/>
         <t t-call="web.conditional_assets_tests"/>
-        <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>
+        <t t-call-assets="point_of_sale.main"/>
     </head>
     <body>
     </body>

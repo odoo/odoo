@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ErrorPopup" owl="1">
+    <t t-name="point_of_sale.ErrorPopup" owl="1">
         <div role="dialog" class="modal-dialog">
-            <div class="popup popup-error">
-                <p class="title">
-                    <t t-esc="props.title" />
-                </p>
-                <p class="body">
-                    <t t-esc="props.body" />
-                </p>
-                <div class="footer">
-                    <div class="button cancel" t-on-click="confirm">
-                        <t t-esc="props.confirmText" />
+            <Draggable>
+                <div class="popup popup-error">
+                    <p class="title drag-handle">
+                        <t t-esc="props.title" />
+                    </p>
+                    <p class="body">
+                        <t t-esc="props.body" />
+                    </p>
+                    <div class="footer">
+                        <div class="button cancel" t-on-click="props.respondWith()">
+                            <t t-esc="props.confirmText" />
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Draggable>
         </div>
     </t>
 

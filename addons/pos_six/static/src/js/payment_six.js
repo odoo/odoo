@@ -1,12 +1,12 @@
 odoo.define('pos_six.payment', function (require) {
 "use strict";
 
-const { Gui } = require('point_of_sale.Gui');
 var core = require('web.core');
-var PaymentInterface = require('point_of_sale.PaymentInterface');
+var { PaymentInterface, registerImplementation } = require('point_of_sale.PaymentInterface');
 
 var _t = core._t;
 
+// These are overrides of timapi methods.
 onTimApiReady = function () {};
 onTimApiPublishLogRecord = function (record) {
     // Log only warning or errors
@@ -36,8 +36,8 @@ var PaymentSix = PaymentInterface.extend({
         settings.dcc = false;
 
         this.terminal = new timapi.Terminal(settings);
-        this.terminal.setPosId(this.pos.pos_session.name);
-        this.terminal.setUserId(this.pos.pos_session.user_id[0]);
+        this.terminal.setPosId(this.model.session.name);
+        this.terminal.setUserId(this.model.session.user_id);
 
         this.terminalListener = new timapi.DefaultTerminalListener();
         this.terminalListener.transactionCompleted = this._onTransactionComplete.bind(this);
@@ -70,19 +70,21 @@ var PaymentSix = PaymentInterface.extend({
     /**
      * @override
      */
-    send_payment_request: function () {
+    send_payment_request: async function (paymentId) {
         this._super.apply(this, arguments);
-        this.pos.get_order().selected_paymentline.set_payment_status('waitingCard');
-        return this._sendTransaction(timapi.constants.TransactionType.purchase);
+        const payment = this.model.getRecord('pos.payment', paymentId);
+        await this.model.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waitingCard'] })
+        return this._sendTransaction(timapi.constants.TransactionType.purchase, payment);
     },
 
     /**
      * @override
      */
-    send_payment_reversal: function () {
+    send_payment_reversal: function (paymentId) {
         this._super.apply(this, arguments);
-        this.pos.get_order().selected_paymentline.set_payment_status('reversing');
-        return this._sendTransaction(timapi.constants.TransactionType.reversal);
+        const payment = this.model.getRecord('pos.payment', paymentId);
+        this.model.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversing'] })
+        return this._sendTransaction(timapi.constants.TransactionType.reversal, payment);
     },
 
     send_balance: function () {
@@ -95,10 +97,9 @@ var PaymentSix = PaymentInterface.extend({
 
     _onTransactionComplete: function (event, data) {
         timapi.DefaultTerminalListener.prototype.transactionCompleted(event, data);
-
         if (event.exception) {
             if (event.exception.resultCode !== timapi.constants.ResultCode.apiCancelEcr) {
-                Gui.showPopup('ErrorPopup', {
+                this.model.ui.askUser('ErrorPopup', {
                     title: _t('Transaction was not processed correctly'),
                     body: event.exception.errorText,
                 });
@@ -121,7 +122,7 @@ var PaymentSix = PaymentInterface.extend({
 
     _onBalanceComplete: function (event, data) {
         if (event.exception) {
-            Gui.showPopup('ErrorPopup',{
+            this.model.ui.askUser('ErrorPopup',{
                 'title': _t('Balance Failed'),
                 'body':  _t('The balance operation failed.'),
             });
@@ -133,23 +134,25 @@ var PaymentSix = PaymentInterface.extend({
     _printReceipts: function (receipts) {
         _.forEach(receipts, (receipt) => {
             var value = receipt.value.replace(/\n/g, "<br />");
-            if (receipt.recipient === timapi.constants.Recipient.merchant && this.pos.proxy.printer) {
-                this.pos.proxy.printer.print_receipt(
+            if (receipt.recipient === timapi.constants.Recipient.merchant && this.model.proxy.printer) {
+                this.model.proxy.printer.print_receipt(
                     "<div class='pos-receipt'><div class='pos-payment-terminal-receipt'>" +
                         value +
                     "</div></div>"
                 );
             } else if (receipt.recipient === timapi.constants.Recipient.cardholder) {
-                this.pos.get_order().selected_paymentline.set_receipt_info(value);
+                const activeOrder = this.model.getActiveOrder();
+                const activePayment = this.model.getActivePayment(activeOrder);
+                this.model.noMutexActionHandler({ name: 'actionSetReceiptInfo', args: [activePayment, value] });
             }
         });
     },
 
-    _sendTransaction: function (transactionType) {
+    _sendTransaction: function (transactionType, payment) {
         var amount = new timapi.Amount(
-            Math.round(this.pos.get_order().selected_paymentline.amount / this.pos.currency.rounding),
-            timapi.constants.Currency[this.pos.currency.name],
-            this.pos.currency.decimals
+            Math.round(payment.amount / this.model.currency.rounding),
+            timapi.constants.Currency[this.model.currency.name],
+            this.model.currency.decimals
         );
 
         return new Promise((resolve) => {
@@ -158,6 +161,8 @@ var PaymentSix = PaymentInterface.extend({
         });
     },
 });
+
+registerImplementation('six', PaymentSix);
 
 return PaymentSix;
 

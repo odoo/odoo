@@ -1,90 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ClientListScreen" owl="1">
-        <div class="clientlist-screen screen" t-on-activate-edit-mode="activateEditMode">
-            <div class="screen-content">
-                <div class="top-content">
-                    <div t-if="!state.detailIsShown &amp;&amp; !state.selectedClient" class="button new-customer" role="img" aria-label="Add a customer"
-                          t-on-click="trigger('activate-edit-mode', { isNewClient: true })"
-                          title="Add a customer">
-                        <t t-if="!env.isMobile">
-                            Create
-                        </t>
-                        <t t-else="">
-                            <i class="fa fa-plus"></i>
-                        </t>
-                    </div>
-                    <div t-if="isNextButtonVisible" t-on-click="clickNext"
-                          class="button next highlight">
-                        <t t-if="!env.isMobile">
-                            <t t-esc="nextButton.text" />
-                        </t>
-                        <t t-else="">
-                            <i t-if="nextButton.command === 'deselect'" class="fa fa-trash"></i>
-                            <i t-if="nextButton.command === 'set'" class="fa fa-check"></i>
-                        </t>
-                    </div>
-                    <div class="button" t-if="state.detailIsShown" t-on-click="trigger('click-save')">
-                        <t t-if="!env.isMobile">
-                            <i class="fa fa-floppy-o"/>
-                            <span> Save</span>
-                        </t>
-                        <t t-else="">
-                            <i class="fa fa-floppy-o"/>
-                        </t>
-                    </div>
-                    <div class="button back" t-on-click="back">
-                        <t t-if="!env.isMobile">Discard</t>
-                        <t t-else="">
-                            <i class="fa fa-undo"></i>
-                        </t>
-                    </div>
-                    <div t-if="!state.detailIsShown" class="searchbox-client top-content-center">
-                        <input placeholder="Search Customers" size="1" t-on-keyup="updateClientList" />
-                        <span class="search-clear-client"></span>
-                    </div>
-                </div>
-                <section class="full-content">
-                    <div class="client-window">
-                        <section class="subwindow collapsed">
-                            <div class="subwindow-container collapsed">
-                                <div t-if="state.detailIsShown" class="client-details-contents subwindow-container-fix">
-                                    <ClientDetailsEdit t-props="state.editModeProps"
-                                                       t-on-cancel-edit="cancelEdit"/>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="subwindow list">
-                            <div class="subwindow-container">
-                                <div t-if="!state.detailIsShown" class="subwindow-container-fix scrollable-y">
-                                    <table class="client-list">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th t-if="!env.isMobile">Address</th>
-                                                <th t-if="!env.isMobile">Phone</th>
-                                                <th t-if="env.isMobile">ZIP</th>
-                                                <th>Email</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="client-list-contents">
-                                            <t t-foreach="clients" t-as="partner"
-                                               t-key="partner.id">
-                                                <ClientLine partner="partner"
-                                                            selectedClient="state.selectedClient"
-                                                            detailIsShown="state.detailIsShown"
-                                                            t-on-click-client="clickClient" />
-                                            </t>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </section>
-            </div>
+  <t t-name="point_of_sale.ClientListScreen" owl="1">
+    <div class="clientlist-screen screen">
+      <div class="screen-content">
+        <div class="top-content">
+          <div t-if="!state.detailIsShown and !state.selectedClientId" class="button new-customer" role="img"
+            aria-label="Add a customer" t-on-click="onCreateNewClient" title="Add a customer">
+            <t t-if="!env.isMobile">
+              Create
+            </t>
+            <t t-else="">
+              <i class="fa fa-plus"></i>
+            </t>
+          </div>
+          <div t-if="isNextButtonVisible" t-on-click="clickNext" class="button next highlight">
+            <t t-if="!env.isMobile">
+              <t t-esc="nextButton.text" />
+            </t>
+            <t t-else="">
+              <i t-if="nextButton.command === 'deselect'" class="fa fa-trash"></i>
+              <i t-if="nextButton.command === 'set'" class="fa fa-check"></i>
+            </t>
+          </div>
+          <div class="button" t-if="state.detailIsShown" t-on-click="onClickSave">
+            <t t-if="!env.isMobile">
+              <i class="fa fa-floppy-o" />
+              <span> Save</span>
+            </t>
+            <t t-else="">
+              <i class="fa fa-floppy-o" />
+            </t>
+          </div>
+          <div class="button back" t-on-click="back">
+            <t t-if="!env.isMobile">Discard</t>
+            <t t-else="">
+              <i class="fa fa-undo"></i>
+            </t>
+          </div>
+          <div t-if="!state.detailIsShown" class="searchbox-client top-content-center">
+            <input placeholder="Search Customers" size="1" t-on-keyup="updateClientList" />
+            <span class="search-clear-client"></span>
+          </div>
         </div>
-    </t>
+        <section class="full-content">
+          <div class="client-window">
+            <section class="subwindow collapsed">
+              <div class="subwindow-container collapsed">
+                <div t-if="state.detailIsShown" class="client-details-contents subwindow-container-fix">
+                  <!-- ClientDetailsEdit -->
+                  <t t-set="_client" t-value="getClientToEdit()" />
+                  <section class="client-details edit">
+                    <div class="client-picture">
+                      <t t-if="partnerImageUrl">
+                        <img t-att-src="partnerImageUrl" alt="Partner"
+                          style="width: 64px; height: 64px; object-fit: cover;" />
+                      </t>
+                      <t t-else="">
+                        <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                      </t>
+                      <input type="file" class="image-uploader" t-on-change="uploadImage" />
+                    </div>
+                    <input class="detail client-name" name="name" t-att-value="_client.name || ''" placeholder="Name"
+                      t-on-change="captureChange" />
+                    <div class="client-details-box clearfix">
+                      <div class="client-details-left">
+                        <div class="client-detail">
+                          <span class="label">Street</span>
+                          <input class="detail client-address-street" name="street" t-on-change="captureChange"
+                            t-att-value="_client.street || ''" placeholder="Street" />
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">City</span>
+                          <input class="detail client-address-city" name="city" t-on-change="captureChange"
+                            t-att-value="_client.city || ''" placeholder="City" />
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">Postcode</span>
+                          <input class="detail client-address-zip" name="zip" t-on-change="captureChange"
+                            t-att-value="_client.zip || ''" placeholder="ZIP" />
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">State</span>
+                          <select class="detail client-address-states needsclick" name="state_id"
+                            t-on-change="captureChange">
+                            <option value="">None</option>
+                            <t t-foreach="env.model.getRecords('res.country.state')" t-as="state" t-key="state.id">
+                              <option t-if="_client.country_id == state.country_id" t-att-value="state.id"
+                                t-att-selected="_client.state_id ? ((state.id === _client.state_id) ? true : undefined) : undefined">
+                                <t t-esc="state.name" />
+                              </option>
+                            </t>
+                          </select>
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">Country</span>
+                          <select class="detail client-address-country needsclick" name="country_id"
+                            t-on-change="captureChange">
+                            <option value="">None</option>
+                            <t t-foreach="env.model.getRecords('res.country')" t-as="country" t-key="country.id">
+                              <option t-att-value="country.id"
+                                t-att-selected="_client.country_id ? ((country.id === _client.country_id) ? true : undefined) : undefined">
+                                <t t-esc="country.name" />
+                              </option>
+                            </t>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="client-details-right">
+                        <div class="client-detail">
+                          <span class="label">Language</span>
+                          <select class="detail client-lang needsclick" name="lang" t-on-change="captureChange">
+                            <t t-foreach="env.model.getRecords('res.lang')" t-as="lang" t-key="lang.id">
+                              <option t-att-value="lang.code"
+                                t-att-selected="_client.lang ? ((lang.code === _client.lang) ? true : undefined) : lang.code === env.model.user.lang? true : undefined">
+                                <t t-esc="lang.name" />
+                              </option>
+                            </t>
+                          </select>
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">Email</span>
+                          <input class="detail client-email" name="email" type="email" t-on-change="captureChange"
+                            t-att-value="_client.email || ''" />
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">Phone</span>
+                          <input class="detail client-phone" name="phone" type="tel" t-on-change="captureChange"
+                            t-att-value="_client.phone || ''" />
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">Barcode</span>
+                          <input class="detail barcode" name="barcode" t-on-change="captureChange"
+                            t-att-value="_client.barcode || ''" />
+                        </div>
+                        <div class="client-detail">
+                          <span class="label">Tax ID</span>
+                          <input class="detail vat" name="vat" t-on-change="captureChange"
+                            t-att-value="_client.vat || ''" />
+                        </div>
+                        <t t-set="_pricelists" t-value="env.model.getRecords('product.pricelist')" />
+                        <div t-if="_pricelists.length gt 1" class="client-detail">
+                          <span class="label">Pricelist</span>
+                          <select class="detail needsclick" name="property_product_pricelist"
+                            t-on-change="captureChange">
+                            <t t-foreach="_pricelists" t-as="pricelist" t-key="pricelist.id">
+                              <option t-att-value="pricelist.id"
+                                t-att-selected="_client.property_product_pricelist ? (pricelist.id === _client.property_product_pricelist ? true : false) : false">
+                                <t t-esc="pricelist.display_name" />
+                              </option>
+                            </t>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </section>
+            <section class="subwindow list">
+              <div class="subwindow-container">
+                <div t-if="!state.detailIsShown" class="subwindow-container-fix scrollable-y">
+                  <table class="client-list">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th t-if="!env.isMobile">Address</th>
+                        <th t-if="!env.isMobile">Phone</th>
+                        <th t-if="env.isMobile">ZIP</th>
+                        <th>Email</th>
+                      </tr>
+                    </thead>
+                    <tbody class="client-list-contents">
+                      <t t-foreach="getVisibleClients()" t-as="_partner" t-key="_partner.id">
+                        <!-- ClientLine -->
+                        <t t-set="_highlight" t-value="isHighlighted(_partner) ? 'highlight' : ''" />
+                        <tr t-attf-class="client-line {{_highlight}}" t-att-data-id="_partner.id"
+                          t-on-click="onClickClient(_partner)">
+                          <td>
+                            <t t-esc="_partner.name" />
+                            <span t-if="_highlight">
+                              <br /><button class="edit-client-button"
+                                t-on-click.stop="onClickEdit">EDIT</button>
+                            </span>
+                          </td>
+                          <td t-if="!env.isMobile">
+                            <t t-esc="env.model.getAddress(_partner)" />
+                          </td>
+                          <td t-if="!env.isMobile" style="width: 130px;">
+                            <t t-esc="_partner.phone || ''" />
+                          </td>
+                          <td t-if="env.isMobile">
+                            <t t-esc="_partner.zip or ''" />
+                            <span t-if="_highlight"><br /></span>
+                          </td>
+                          <td>
+                            <t t-esc="_partner.email or ''" />
+                            <span t-if="_highlight"><br /></span>
+                          </td>
+                        </tr>
+                      </t>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </div>
+  </t>
 
 </templates>

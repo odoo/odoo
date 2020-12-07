@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="BillScreen" owl="1">
+    <t t-name="pos_restaurant.BillScreen" owl="1">
         <div class="receipt-screen screen">
             <div class="screen-content">
                 <div class="top-content">
@@ -26,7 +26,7 @@
                         <span>Print</span>
                     </div>
                     <div class="pos-receipt-container">
-                        <OrderReceipt order="currentOrder" isBill="true" t-ref="order-receipt"/>
+                        <OrderReceipt order="props.activeOrder" isBill="true" t-ref="order-receipt"/>
                     </div>
                 </div>
             </div>

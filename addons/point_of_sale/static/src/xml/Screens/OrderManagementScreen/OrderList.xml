@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderList" owl="1">
+    <t t-name="point_of_sale.OrderList" owl="1">
         <div class="orders">
             <div class="order-row header">
                 <div class="header name">Order</div>
@@ -10,8 +10,24 @@
                 <div class="header total">Total</div>
             </div>
             <div class="order-list">
-                <t t-foreach="props.orders" t-as="order" t-key="order.cid">
-                    <OrderRow order="order" highlightedOrder="highlightedOrder" />
+                <t t-foreach="props.orders" t-as="_order" t-key="_order.id">
+                    <t t-set="_orderTotals" t-value="env.model.getOrderTotals(_order)" />
+                    <div class="order-row"
+                        t-att-class="{ highlight: isHighlighted(_order), lighter: !_order.state or _order.state == 'draft' }"
+                        t-on-click="trigger('click-order', _order)">
+                        <div class="item name">
+                            <t t-esc="env.model.getOrderName(_order)" />
+                        </div>
+                        <div class="item date">
+                            <t t-esc="_order.date_order" />
+                        </div>
+                        <div class="item customer">
+                            <t t-esc="env.model.getCustomerName(_order)" />
+                        </div>
+                        <div class="item total">
+                            <t t-esc="env.model.formatCurrency(_orderTotals.withTaxWithDiscount)" />
+                        </div>
+                    </div>
                 </t>
             </div>
         </div>

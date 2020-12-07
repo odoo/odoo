@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+  <t t-name="point_of_sale.BasicSearchBar" owl="1">
+    <div class="search-bar-portal">
+      <div class="search-box" t-if="_state.show">
+        <span class="icon"><i class="fa fa-search"></i></span>
+        <span class="clear-icon" t-on-click="_onClickClear">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+        <input type="text" t-att-value="_state.searchTerm"
+          t-att-placeholder="_activeConfig.placeholder" t-on-keyup="_onInputKeyUp" />
+      </div>
+    </div>
+  </t>
+
+</templates>

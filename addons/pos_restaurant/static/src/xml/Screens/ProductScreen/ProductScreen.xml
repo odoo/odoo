@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('control-buttons')]" position="inside">
+            <OrderlineNoteButton activeOrder="props.activeOrder" t-if="env.model.config.module_pos_restaurant" />
+            <TableGuestsButton activeOrder="props.activeOrder" t-if="env.model.config.module_pos_restaurant" />
+            <TransferOrderButton activeOrder="props.activeOrder" t-if="env.model.ifaceFloorplan" />
+            <SplitBillButton activeOrder="props.activeOrder" t-if="env.model.config.iface_splitbill" />
+            <PrintBillButton activeOrder="props.activeOrder" t-if="env.model.config.iface_printbill" />
+            <SubmitOrderButton activeOrder="props.activeOrder" t-if="env.model.ifacePrinters" />
+        </xpath>
+    </t>
+
+</templates>

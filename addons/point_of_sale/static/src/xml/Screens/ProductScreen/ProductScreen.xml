@@ -1,34 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductScreen" owl="1">
-        <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="screen-full-width">
-                <div class="leftpane" t-if="!env.isMobile || mobile_pane === 'left'">
-                    <OrderWidget/>
-                    <div class="pads">
-                        <div class="control-buttons">
-                            <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
-                                <t t-component="cb.component" t-key="cb.name" />
-                            </t>
-                        </div>
-                        <div class="subpads">
-                            <ActionpadWidget client="client"/>
-                            <NumpadWidget activeMode="state.numpadMode" />
-                        </div>
-                    </div>
-                    <t t-if="env.isMobile">
-                        <MobileOrderWidget pane="mobile_pane" t-on-switchpane="switchPane"/>
-                    </t>
+  <t t-name="point_of_sale.ProductScreen" owl="1">
+    <div class="product-screen screen">
+      <div class="screen-full-width">
+        <div class="leftpane" t-if="!env.isMobile || mobile_pane === 'left'">
+          <!-- OrderWidget -->
+          <div class="order-container" t-ref="order-container-ref">
+            <div class="order">
+              <t t-set="_orderlines" t-value="env.model.getOrderlines(props.activeOrder)" />
+              <t t-if="_orderlines.length === 0">
+                <div class='order-empty'>
+                  <i class='fa fa-shopping-cart' role="img" aria-label="Shopping cart" title="Shopping cart" />
+                  <h1>This order is empty</h1>
                 </div>
-                <div class="rightpane" t-if="!env.isMobile || mobile_pane === 'right'">
-                    <ProductsWidget/>
-                    <t t-if="env.isMobile">
-                        <MobileOrderWidget pane="mobile_pane" t-on-switchpane="switchPane"/>
-                    </t>
-                </div>
+              </t>
+              <t t-else="">
+                <ul class="orderlines">
+                  <t t-foreach="_orderlines" t-as="_orderline" t-key="_orderline.id">
+                    <Orderline orderline="_orderline"
+                      additionalClasses="getOrderlineAdditionalClasses(_orderline)"
+                      activeOrderlineId="getActiveOrderlineId()" />
+                  </t>
+                </ul>
+                <OrderSummary order="props.activeOrder" />
+              </t>
             </div>
+          </div>
+          <div class="pads">
+            <!-- Control buttons -->
+            <div class="control-buttons">
+              <SetFiscalPositionButton activeOrder="props.activeOrder" t-if="showSetFiscalPositionButton()" />
+              <SetPricelistButton activeOrder="props.activeOrder" t-if="showSetPricelistButton()" />
+            </div>
+            <div class="subpads">
+              <ActionpadWidget client="env.model.getCustomer(props.activeOrder)" />
+              <NumpadWidget activeMode="state.numpadMode" />
+            </div>
+          </div>
+          <t t-if="env.isMobile">
+            <MobileOrderWidget pane="mobile_pane" order="props.activeOrder" />
+          </t>
         </div>
-    </t>
+        <div class="rightpane" t-if="!env.isMobile || mobile_pane === 'right'">
+          <div class="products-widget">
+            <t t-if="!hasNoCategories">
+              <!-- ProductsWidgetControlPanel -->
+              <div class="products-widget-control">
+                <div class="rightpane-header" t-att-class="{
+                    'green-border-bottom': !env.model.config.iface_display_categ_images,
+                    'grey-border-bottom': env.model.config.iface_display_categ_images,
+                }">
+                  <div class="breadcrumbs">
+                    <!-- HomeCategoryBreadcrumb -->
+                    <span class="breadcrumb">
+                      <span t-if="!env.isMobile" class="breadcrumb-button breadcrumb-home"
+                        t-on-click="env.model.actionHandler({ name: 'actionSetActiveCategoryId', args: [0] })">
+                        <i class="fa fa-home" role="img" aria-label="Home" title="Home"></i>
+                      </span>
+                      <span t-if="env.isMobile" class="breadcrumb-button breadcrumb-home"
+                        t-on-click="trigger('categ-popup', getSubcategories(getActiveCategoryId()))">
+                        <t t-if="getActiveCategoryId() === 0">
+                          All
+                        </t>
+                        <t t-else="">
+                          <t t-esc="getActiveCategory().name" />
+                        </t>
+                      </span>
+                    </span>
+                    <t t-if="!env.isMobile">
+                      <t t-foreach="getBreadcrumbs(getActiveCategoryId())" t-as="category"
+                        t-key="category.id">
+                        <!-- CategoryBreadcrumb -->
+                        <span class="breadcrumb">
+                          <img src="/point_of_sale/static/src/img/bc-arrow-big.png" class="breadcrumb-arrow"
+                            alt="Slash" />
+                          <span class="breadcrumb-button"
+                            t-on-click="env.model.actionHandler({ name: 'actionSetActiveCategoryId', args: [category.id] })">
+                            <t t-esc="category.name"></t>
+                          </span>
+                        </span>
+                      </t>
+                    </t>
+                  </div>
+                  <t t-if="!env.model.config.iface_display_categ_images and !env.isMobile">
+                    <t t-foreach="getSubcategories(getActiveCategoryId())" t-as="category" t-key="category.id">
+                      <!-- CategorySimpleButton -->
+                      <span class="category-simple-button"
+                        t-on-click="env.model.actionHandler({ name: 'actionSetActiveCategoryId', args: [category.id] })">
+                        <t t-esc="category.name" />
+                      </span>
+                    </t>
+                  </t>
+                </div>
+                <t t-if="env.model.config.iface_display_categ_images and !env.isMobile">
+                  <div class="categories">
+                    <div class="category-list-scroller">
+                      <div t-if="getSubcategories(getActiveCategoryId()).length" class="category-list">
+                        <t t-foreach="getSubcategories(getActiveCategoryId())" t-as="category" t-key="category.id">
+                          <!-- CategoryButton -->
+                          <span class="category-button"
+                            t-on-click="env.model.actionHandler({ name: 'actionSetActiveCategoryId', args: [category.id] })">
+                            <div class="category-img">
+                              <img t-att-src="getCategoryImageURL(category)" alt="Category" />
+                            </div>
+                            <div class="category-name">
+                              <t t-esc="category.name" />
+                            </div>
+                          </span>
+                        </t>
+                      </div>
+                    </div>
+                  </div>
+                </t>
+              </div>
+            </t>
+            <!-- ProductList -->
+            <div class="product-list-container">
+              <t t-set="productsToDisplay" t-value="getProductsToDisplay()" />
+              <div t-if="productsToDisplay.length != 0" class="product-list">
+                <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                  <!-- ProductItem -->
+                  <article class="product" tabindex="0" t-on-keypress="onSpaceClickProduct(product)"
+                    t-on-click="trigger('click-product', product)" t-att-data-product-id="product.id"
+                    t-attf-aria-labelledby="article_product_{{product.id}}">
+                    <div class="product-img">
+                      <img t-att-src="getProductImageURL(product)" t-att-alt="product.display_name" />
+                      <span class="price-tag">
+                        <t t-esc="getProductDisplayPrice(product)" />
+                      </span>
+                    </div>
+                    <div class="product-name" t-attf-id="article_product_{{product.id}}">
+                      <t t-esc="product.display_name" />
+                    </div>
+                  </article>
+                </t>
+              </div>
+              <div t-else="" class="product-list-empty">
+                <div class="product-list-empty">
+                  <t t-if="state.searchTerm !== ''">
+                    <p>
+                      No results found for "
+                      <b t-esc="state.searchTerm"></b>
+                      ".
+                    </p>
+                  </t>
+                  <t t-else="">
+                    <p>There are no products in this category.</p>
+                  </t>
+                </div>
+              </div>
+            </div>
+          </div>
+          <t t-if="env.isMobile">
+            <MobileOrderWidget pane="mobile_pane" order="props.activeOrder" />
+          </t>
+        </div>
+      </div>
+    </div>
+  </t>
 
 </templates>

@@ -420,8 +420,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         excluded_pricelist = env['product.pricelist'].create({
             'name': 'Not loaded'
         })
+        # I tell you, there is original Lumber Inc. This one is just a copy.
+        # We want to make sure this is the one selected -- the one with default
+        # pricelist that is not loaded.
         res_partner_18 = env['res.partner'].create({
-            'name': 'Lumber Inc',
+            'name': 'Lumber Inc 2',
             'is_company': True,
         })
         res_partner_18.property_product_pricelist = excluded_pricelist
@@ -471,7 +474,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         )
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'pos_frontend')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
 

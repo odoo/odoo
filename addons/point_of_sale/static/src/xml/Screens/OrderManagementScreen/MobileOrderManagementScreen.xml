@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <div t-name="MobileOrderManagementScreen" class="screen-full-width" owl="1">
+    <div t-name="point_of_sale.MobileOrderManagementScreen" class="screen-full-width" owl="1">
         <div t-if="mobileState.showDetails" class="leftpane">
-            <OrderDetails order="orderManagementContext.selectedOrder" />
+            <t t-set="_order" t-value="getActiveOrder()" />
+            <OrderDetails order="_order" />
             <div class="pads">
                 <div class="control-buttons">
-                    <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
-                        <t t-component="cb.component" t-key="cb.name" />
-                    </t>
+                    <InvoiceButton activeOrder="_order" />
+                    <ReprintReceiptButton activeOrder="_order" />
                 </div>
                 <div class="subpads">
                     <ActionpadWidget client="selectedClient" />
@@ -22,7 +22,7 @@
         <div t-else="" class="rightpane">
             <div class="flex-container">
                 <OrderManagementControlPanel />
-                <OrderList orders="orders" initHighlightedOrder="orderManagementContext.selectedOrder" />
+                <OrderList orders="env.model.orderFetcher.ordersToShow" />
             </div>
         </div>
     </div>

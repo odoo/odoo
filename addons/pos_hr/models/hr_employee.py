@@ -17,10 +17,12 @@ class HrEmployee(models.Model):
         visible_emp_ids = self.search([('id', 'in', self.ids)])
         employees_data = self.sudo().search_read([('id', 'in', visible_emp_ids.ids)], ['barcode', 'pin'])
 
+        employees_data_by_id = {}
         for e in employees_data:
             e['barcode'] = hashlib.sha1(e['barcode'].encode('utf8')).hexdigest() if e['barcode'] else False
             e['pin'] = hashlib.sha1(e['pin'].encode('utf8')).hexdigest() if e['pin'] else False
-        return employees_data
+            employees_data_by_id[e['id']] = e
+        return employees_data_by_id
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):

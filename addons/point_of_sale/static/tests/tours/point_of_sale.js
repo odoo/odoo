@@ -21,12 +21,13 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
 
     function compare_backend_frontend (product, pricelist_name, quantity) {
         return function () {
-            var pricelist = _.findWhere(posmodel.pricelists, {name: pricelist_name});
-            var frontend_price = product.get_price(pricelist, quantity);
+            var pricelist = _.findWhere(posmodel.getRecords('product.pricelist'), {name: pricelist_name});
+            var frontend_price = posmodel.getProductPrice(product.id, pricelist.id, quantity);
             // ORM applies digits= on non-stored computed field when
             // reading. It does not however truncate like it does when
             // storing the field.
-            frontend_price = round_di(frontend_price, posmodel.dp['Product Price']);
+            const dp = posmodel.getDecimalPrecision('Product Price');
+            frontend_price = round_di(frontend_price, dp.digits);
 
             var context = _build_pricelist_context(pricelist, quantity);
             return rpc.query({model: 'product.product', method: 'read', args: [[product.id], ['price']], context: context})
@@ -51,13 +52,13 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         extra_trigger: 'body .pos:not(:has(.loader))', // Pos has finished loading
         trigger: 'body:not(.oe_wait)', // WebClient has finished Loading
         run: function () {
-            var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
-            var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
-            var product_magnetic_board = posmodel.db.search_product_in_category(0, 'Magnetic Board')[0];
-            var product_monitor_stand = posmodel.db.search_product_in_category(0, 'Monitor Stand')[0];
-            var product_desk_pad = posmodel.db.search_product_in_category(0, 'Desk Pad')[0];
-            var product_letter_tray = posmodel.db.search_product_in_category(0, 'Letter Tray')[0];
-            var product_whiteboard = posmodel.db.search_product_in_category(0, 'Whiteboard')[0];
+            var product_wall_shelf = posmodel.getProducts(0, 'Wall Shelf Unit')[0];
+            var product_small_shelf = posmodel.getProducts(0, 'Small Shelf')[0];
+            var product_magnetic_board = posmodel.getProducts(0, 'Magnetic Board')[0];
+            var product_monitor_stand = posmodel.getProducts(0, 'Monitor Stand')[0];
+            var product_desk_pad = posmodel.getProducts(0, 'Desk Pad')[0];
+            var product_letter_tray = posmodel.getProducts(0, 'Letter Tray')[0];
+            var product_whiteboard = posmodel.getProducts(0, 'Whiteboard')[0];
 
             compare_backend_frontend(product_letter_tray, 'Public Pricelist', 0, undefined)()
                 .then(compare_backend_frontend(product_letter_tray, 'Public Pricelist', 1, undefined))
@@ -128,10 +129,14 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: "button.set-customer",
     }, {
         content: "select Lumber Inc",
-        trigger: ".client-line:contains('Lumber Inc')",
+        trigger: ".client-line:contains('Lumber Inc 2')",
     },  {
         content: "confirm selection",
         trigger: ".clientlist-screen .next",
+    }, {
+        content: "pricelist should be Public Pricelist",
+        trigger: ".control-button.o_pricelist_button:contains('Public Pricelist')",
+        run: function() {},
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -148,6 +153,10 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }, {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
+    }, {
+        content: "pricelist should be min_quantity ordering",
+        trigger: ".control-button.o_pricelist_button:contains('min_quantity ordering')",
+        run: function() {},
     }, {
         content: "order 1 kg shelf",
         trigger: ".product:contains('Wall Shelf')",

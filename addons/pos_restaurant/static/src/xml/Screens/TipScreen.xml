@@ -6,12 +6,12 @@
             <div class="pos-receipt-container"/>
             <div class="screen-content">
                 <div class="top-content">
-                    <span class="button back" t-on-click="showScreen('FloorScreen')">
+                    <span class="button back" t-on-click="env.model.actionHandler({ name: 'actionSetFloor', args: [env.model.getActiveFloor()] })">
                         <i class="fa fa-angle-double-left"></i>
                         <span> </span>
-                        <span>Back</span>
+                        <span>Back To FloorScreen</span>
                     </span>
-                    <span class="button" t-if="env.pos.proxy.printer" t-on-click="printTipReceipt()">
+                    <span class="button" t-if="env.model.proxy.printer" t-on-click="printTipReceipt()">
                         <i class="fa fa-print"></i>
                         <span> </span>
                         <span>Reprint receipts</span>
@@ -19,7 +19,7 @@
                     <div class="top-content-center">
                         <h1>Add a tip</h1>
                     </div>
-                    <div class="button highlight next" t-on-click="validateTip">
+                    <div class="button highlight next" t-on-click="onValidateTip">
                         Settle <i class="fa fa-angle-double-right"></i>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                                         <t t-esc="tip.percentage"></t>
                                     </div>
                                     <div class="amount">
-                                        <t t-esc="env.pos.format_currency(tip.amount)" />
+                                        <t t-esc="env.model.formatCurrency(tip.amount)" />
                                     </div>
                                 </div>
                             </t>
@@ -48,7 +48,7 @@
                             <div class="item input">
                                 <input type="text" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount" />
                                 <div class="currency">
-                                    <t t-esc="env.pos.getCurrencySymbol()" />
+                                    <t t-esc="env.model.currency ? env.model.currency.symbol : '$'" />
                                 </div>
                             </div>
                         </div>

@@ -1,70 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="Orderline" owl="1">
-        <li t-on-click="selectLine" class="orderline" t-att-class="addedClasses">
+    <t t-name="point_of_sale.Orderline" owl="1">
+        <t t-set="_orderline" t-value="props.orderline" />
+        <t t-set="_orderlinePrices" t-value="env.model.getOrderlinePrices(_orderline)" />
+        <t t-set="_orderlineUnit" t-value="env.model.getOrderlineUnit(_orderline)" />
+        <t t-set="_lstPrice" t-value="getProductLstPrice(_orderline)" />
+        <t t-set="_displayUnitPrice" t-value="getDisplayUnitPrice(_orderlinePrices)" />
+        <li t-on-click="onClickOrderline(_orderline)" class="orderline"
+            t-att-class="props.additionalClasses">
             <span class="product-name">
-                <t t-esc="props.line.get_full_product_name()"/>
+                <t t-esc="env.model.getFullProductName(_orderline)" />
                 <span> </span>
-                <t t-if="props.line.get_product().tracking!=='none' &amp;&amp; (env.pos.picking_type.use_create_lots || env.pos.picking_type.use_existing_lots)">
-                    <t t-if="props.line.has_valid_product_lot()">
-                        <i  t-on-click.stop="lotIconClicked"
+                <t t-if="getIsOrderlineTracked(_orderline)">
+                    <t t-if="getOrderlineHasValidLots(_orderline)">
+                        <i t-on-click.stop="trigger('click-lot', _orderline)"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
-                            aria-label="Valid product lot"
-                            role="img"
-                            title="Valid product lot"
-                        />
+                            aria-label="Valid product lot" role="img" title="Valid product lot" />
                     </t>
                     <t t-else="">
-                        <i  t-on-click.stop="lotIconClicked"
+                        <i t-on-click.stop="trigger('click-lot', _orderline)"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red"
-                            aria-label="Invalid product lot"
-                            role="img"
-                            title="Invalid product lot"
-                        />
+                            aria-label="Invalid product lot" role="img" title="Invalid product lot" />
                     </t>
                 </t>
             </span>
             <span class="price">
-                <t t-esc="env.pos.format_currency(props.line.get_display_price())"/>
+                <t t-esc="env.model.formatCurrency(env.model.getOrderlineDisplayPrice(_orderlinePrices))" />
             </span>
             <ul class="info-list">
-                <t t-if="props.line.get_quantity_str() !== '1' || props.line.selected ">
+                <t t-if="env.model.getQuantityStr(_orderline) !== '1' or _orderline.id === props.activeOrderlineId">
                     <li class="info">
                         <em>
-                            <t t-esc="props.line.get_quantity_str()" />
+                            <t t-esc="env.model.getQuantityStr(_orderline)" />
                         </em>
-                        <span> </span><t t-esc="props.line.get_unit().name" />
+                        <span> </span>
+                        <t t-esc="_orderlineUnit.name" />
                         at
-                        <t t-if="props.line.display_discount_policy() == 'without_discount' and
-                            props.line.get_unit_display_price() &lt; props.line.get_lst_price()">
+                        <t t-if="showListPrice(_orderline, _displayUnitPrice, _lstPrice)">
                             <s>
-                                <t t-esc="env.pos.format_currency(props.line.get_fixed_lst_price(),'Product Price')" />
+                                <t t-esc="getFormattedProductLstPrice(_lstPrice)" />
                             </s>
-                            <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
+                            <t t-esc="getFormattedDisplayUnitPrice(_displayUnitPrice)" />
                         </t>
                         <t t-else="">
-                            <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
+                            <t t-esc="getFormattedDisplayUnitPrice(_displayUnitPrice)" />
                         </t>
                         /
-                        <t t-esc="props.line.get_unit().name" />
+                        <t t-esc="_orderlineUnit.name" />
                     </li>
                 </t>
-                <t t-if="props.line.get_discount_str() !== '0'">
+                <t t-if="!env.model.getIsZeroDiscount(_orderline)">
                     <li class="info">
                         With a
                         <em>
-                            <t t-esc="props.line.get_discount_str()" />%
+                            <t t-esc="_orderline.discount" />%
                         </em>
                         discount
                     </li>
                 </t>
             </ul>
-            <t t-if="props.line.get_lot_lines()">
+            <t t-set="lotLines" t-value="getLotLines(_orderline)" />
+            <t t-if="lotLines.length gt 0">
                 <ul class="info-list">
-                    <t t-foreach="props.line.get_lot_lines()" t-as="lot">
+                    <t t-foreach="lotLines" t-as="lot" t-key="lot.id">
                         <li>
-                            SN <t t-esc="lot.attributes['lot_name']"/>
+                            SN
+                            <t t-esc="lot.lot_name" />
                         </li>
                     </t>
                 </ul>

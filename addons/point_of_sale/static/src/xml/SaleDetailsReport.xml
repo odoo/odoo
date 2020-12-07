@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SaleDetailsReport" owl="1">
+    <t t-name="point_of_sale.SaleDetailsReport">
         <div class="pos-receipt">
-            <t t-if="pos.company_logo_base64">
-                <img class="pos-receipt-logo" t-att-src="pos.company_logo_base64" alt="Logo"/>
+            <t t-if="model.data.derived.companyLogoBase64">
+                <img class="pos-receipt-logo" t-att-src="model.data.derived.companyLogoBase64" alt="Logo"/>
                 <br/>
             </t>
-            <t t-if="!pos.company_logo_base64" class="pos-receipt-center-align">
-                <h1 t-esc="pos.company.name" />
+            <t t-if="!model.data.derived.companyLogoBase64" class="pos-receipt-center-align">
+                <h1 t-esc="model.company.name" />
                 <br/>
             </t>
             <br /><br />
@@ -18,12 +18,12 @@
                     <div>
                         <t t-esc="line.product_name.substr(0,20)" />
                         <span class="pos-receipt-right-align">
-                            <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />
+                            <t t-esc="Math.round(line.quantity * Math.pow(10, model.getDecimalPrecision('Product Unit of Measure').digits)) / Math.pow(10, model.getDecimalPrecision('Product Unit of Measure').digits)" />
                             <t t-if="line.uom !== 'Units'">
                                 <t t-esc="line.uom" />
                             </t>
                             x
-                            <t t-esc="pos.format_currency_no_symbol(line.price_unit)" />
+                            <t t-esc="model.formatCurrencyNoSymbol(line.price_unit)" />
                         </span>
                     </div>
                     <t t-if="line.discount !== 0">
@@ -41,7 +41,7 @@
             </div>
             <div t-foreach="payments" t-as="payment">
                 <t t-esc="payment.name" />
-                <span t-esc="pos.format_currency_no_symbol(payment.total)" class="pos-receipt-right-align"/>
+                <span t-esc="model.formatCurrencyNoSymbol(payment.total)" class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -53,7 +53,7 @@
             </div>
             <div t-foreach="taxes" t-as="tax">
                 <t t-esc="tax.name" />
-                <span t-esc="pos.format_currency_no_symbol(tax.tax_amount)" class="pos-receipt-right-align"/>
+                <span t-esc="model.formatCurrencyNoSymbol(tax.tax_amount)" class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -62,7 +62,7 @@
 
             <div>
                 Total:
-                <span t-esc="pos.format_currency_no_symbol(total_paid)" class="pos-receipt-right-align"/>
+                <span t-esc="model.formatCurrencyNoSymbol(total_paid)" class="pos-receipt-right-align"/>
             </div>
 
             <br/>

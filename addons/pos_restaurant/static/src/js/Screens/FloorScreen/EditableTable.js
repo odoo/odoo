@@ -1,10 +1,11 @@
-odoo.define('pos_restaurant.EditableTable', function(require) {
+odoo.define('pos_restaurant.EditableTable', function (require) {
     'use strict';
 
     const { onPatched, onMounted } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+    const Draggable = require('point_of_sale.Draggable');
+    const Resizeable = require('pos_restaurant.Resizeable');
 
     class EditableTable extends PosComponent {
         constructor() {
@@ -52,9 +53,8 @@ odoo.define('pos_restaurant.EditableTable', function(require) {
             this.trigger('save-table', this.props.table);
         }
     }
-    EditableTable.template = 'EditableTable';
-
-    Registries.Component.add(EditableTable);
+    EditableTable.components = { Draggable, Resizeable };
+    EditableTable.template = 'pos_restaurant.EditableTable';
 
     return EditableTable;
 });

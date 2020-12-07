@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+    <t t-name="l10n_fr_pos_cert.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
-            <t t-if="receipt.l10n_fr_hash !== false">
+            <t t-if="_receipt.l10n_fr_hash !== false">
                 <br/>
-                <div style="word-wrap:break-word;"><t t-esc="receipt.l10n_fr_hash"/></div>
+                <div style="word-wrap:break-word;"><t t-esc="_receipt.l10n_fr_hash"/></div>
             </t>
         </xpath>
     </t>

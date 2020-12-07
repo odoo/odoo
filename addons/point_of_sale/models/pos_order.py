@@ -64,6 +64,7 @@ class PosOrder(models.Model):
             'cardholder_name': ui_paymentline.get('cardholder_name'),
             'transaction_id': ui_paymentline.get('transaction_id'),
             'payment_status': ui_paymentline.get('payment_status'),
+            'cashier_receipt': ui_paymentline.get('cashier_receipt'),
             'pos_order_id': order.id,
         }
 
@@ -461,6 +462,7 @@ class PosOrder(models.Model):
                 raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
+        self.lines.write({'price_manually_set': True})
 
         return True
 
@@ -546,8 +548,12 @@ class PosOrder(models.Model):
                 existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
             if (existing_order and existing_order.state == 'draft') or not existing_order:
                 order_ids.append(self._process_order(order, draft, existing_order))
+            # Add the paid existing order so that the caller of this method knows the corresponding backend info of the order it tries to create.
+            # Draft orders are not included because they are replaced above.
+            if (existing_order and existing_order.state != 'draft'):
+                order_ids.append(existing_order.id)
 
-        return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
+        return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
 
     def _create_order_picking(self):
         self.ensure_one()
@@ -683,40 +689,20 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ids': ids, 'totalCount': totalCount}
 
-    def _export_for_ui(self, order):
-        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-        return {
-            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
-            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
-            'name': order.pos_reference,
-            'uid': order.pos_reference[6:],
-            'amount_paid': order.amount_paid,
-            'amount_total': order.amount_total,
-            'amount_tax': order.amount_tax,
-            'amount_return': order.amount_return,
-            'pos_session_id': order.session_id.id,
-            'is_session_closed': order.session_id.state == 'closed',
-            'pricelist_id': order.pricelist_id.id,
-            'partner_id': order.partner_id.id,
-            'user_id': order.user_id.id,
-            'sequence_number': order.sequence_number,
-            'creation_date': order.date_order.astimezone(timezone),
-            'fiscal_position_id': order.fiscal_position_id.id,
-            'to_invoice': order.to_invoice,
-            'to_ship': order.to_ship,
-            'state': order.state,
-            'account_move': order.account_move.id,
-            'id': order.id,
-            'is_tipped': order.is_tipped,
-            'tip_amount': order.tip_amount,
-        }
-
     def export_for_ui(self):
-        """ Returns a list of dict with each item having similar signature as the return of
-            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
-            between the pos frontend and backend.
-        """
-        return self.mapped(self._export_for_ui) if self else []
+        orderlines = self.env['pos.order.line'].search([('order_id', 'in', self.ids)])
+        payments = self.env['pos.payment'].search([('pos_order_id', 'in', self.ids)])
+        lots = self.env['pos.pack.operation.lot'].search([('pos_order_line_id', 'in', orderlines.ids)])
+        closed_orders = self.filtered(lambda order: order.session_id.state == 'closed').mapped(lambda order: order.id)
+        return {
+            'data': {
+                'pos.order': self.read([], load=False),
+                'pos.order.line': orderlines.read([], load=False),
+                'pos.payment': payments.read([], load=False),
+                'pos.pack.operation.lot': lots.read([], load=False)
+            },
+            'closed_orders': closed_orders,
+        }
 
 
 class PosOrderLine(models.Model):
@@ -761,6 +747,7 @@ class PosOrderLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
+    price_manually_set = fields.Boolean('Price Manually Set', help="Does not affect backend computation at the moment, only used for frontend. And when the order is done, it will be set to True.")
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
@@ -853,22 +840,6 @@ class PosOrderLine(models.Model):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
 
-    def _export_for_ui(self, orderline):
-        return {
-            'qty': orderline.qty,
-            'price_unit': orderline.price_unit,
-            'price_subtotal': orderline.price_subtotal,
-            'price_subtotal_incl': orderline.price_subtotal_incl,
-            'product_id': orderline.product_id.id,
-            'discount': orderline.discount,
-            'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
-            'id': orderline.id,
-            'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
-        }
-
-    def export_for_ui(self):
-        return self.mapped(self._export_for_ui) if self else []
-
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id
 
@@ -944,13 +915,6 @@ class PosOrderLineLot(models.Model):
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
-    def _export_for_ui(self, lot):
-        return {
-            'lot_name': lot.lot_name,
-        }
-
-    def export_for_ui(self):
-        return self.mapped(self._export_for_ui) if self else []
 
 class ReportSaleDetails(models.AbstractModel):
 

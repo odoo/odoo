@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SplitBillScreen" owl="1">
+    <t t-name="pos_restaurant.SplitBillScreen" owl="1">
         <div class="splitbill-screen screen">
             <div class="contents">
                 <div class="top-content">
-                    <span class="button back" t-on-click="back">
+                    <span class="button back" t-on-click="env.model.actionHandler({ name: 'actionShowScreen', args: ['ProductScreen'] })">
                         <i class="fa fa-angle-double-left"></i>
                         <span> </span>
                         <span>Back</span>
@@ -18,20 +18,18 @@
                     <div class="lines">
                         <div class="order">
                             <ul class="orderlines">
-                                <t t-foreach="orderlines" t-as="line" t-key="line.cid">
-                                    <SplitOrderline line="line" split="splitlines[line.id]" />
+                                <t t-foreach="getGroupedLinesToShow()" t-as="groupedLines" t-key="groupedLines[0]">
+                                    <SplitOrderline
+                                        line="groupedLines[1]"
+                                        otherLines="groupedLines[2]"
+                                        split="splitlines[groupedLines[0]]" />
                                 </t>
                             </ul>
                         </div>
                     </div>
                     <div class="controls">
-                        <div class="order-info">
-                            <span class="subtotal">
-                                <t t-esc="env.pos.format_currency(newOrder.get_subtotal())" />
-                            </span>
-                        </div>
                         <div class="pay-button">
-                            <div class="button" t-on-click="proceed">
+                            <div class="button" t-on-click="onProceed">
                                 <i class="fa fa-chevron-right" />
                                 <span> </span>
                                 <span>Payment</span>

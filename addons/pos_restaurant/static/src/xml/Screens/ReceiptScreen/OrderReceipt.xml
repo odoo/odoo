@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_restaurant.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
             <t t-if="props.isBill">
                 <div>PRO FORMA</div>
@@ -11,34 +11,34 @@
             <attribute name="t-if">!props.isBill</attribute>
         </xpath>
         <xpath expr="//div[hasclass('cashier')]" position="after">
-            <t t-if="receipt.table">
-                at table <t t-esc="receipt.table" />
+            <t t-if="_receipt.table">
+                at table <t t-esc="_receipt.table" />
             </t>
-            <t t-if="receipt.table and receipt.customer_count">
-                <div>Guests: <t t-esc="receipt.customer_count" /></div>
+            <t t-if="_receipt.table and _receipt.customer_count">
+                <div>Guests: <t t-esc="_receipt.customer_count" /></div>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
-            <t t-if="props.isBill and env.pos.config.set_tip_after_payment">
+            <t t-if="props.isBill and env.model.config.set_tip_after_payment">
                 <div class="tip-form">
                     <div class="title">For convenience, we are providing the following gratuity calculations:</div>
                     <div class="percentage-options">
                         <div class="option">
                             <div>15%</div>
                             <div class="amount">
-                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.15)"></t>
+                                <t t-esc="env.model.formatCurrency(_receipt.total_with_tax * 0.15)"></t>
                             </div>
                         </div>
                         <div class="option">
                             <div>20%</div>
                             <div class="amount">
-                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.20)"></t>
+                                <t t-esc="env.model.formatCurrency(_receipt.total_with_tax * 0.20)"></t>
                             </div>
                         </div>
                         <div class="option">
                             <div>25%</div>
                             <div class="amount">
-                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.25)"></t>
+                                <t t-esc="env.model.formatCurrency(_receipt.total_with_tax * 0.25)"></t>
                             </div>
                         </div>
                     </div>

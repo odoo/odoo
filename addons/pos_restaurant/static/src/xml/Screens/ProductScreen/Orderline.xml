@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_restaurant.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
         <xpath expr="//ul[hasclass('info-list')]" position="inside">
-            <t t-if="props.line.get_note()">
+            <t t-if="props.orderline.note">
                 <li class="info orderline-note">
                     <i class="fa fa-tag" role="img" aria-label="Note" title="Note"/>
-                    <t t-esc="props.line.get_note()" />
+                    <t t-esc="props.orderline.note" />
                 </li>
             </t>
         </xpath>

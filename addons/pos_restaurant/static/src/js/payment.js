@@ -1,15 +1,15 @@
 odoo.define('pos_restaurant.PaymentInterface', function (require) {
     "use strict";
 
-    var PaymentInterface = require('point_of_sale.PaymentInterface');
+    var { PaymentInterface } = require('point_of_sale.PaymentInterface');
 
     PaymentInterface.include({
         /**
          * Return true if the amount that was authorized can be modified,
          * false otherwise
-         * @param {string} cid - The id of the paymentline
+         * @param {string} id - The id of the paymentline
          */
-        canBeAdjusted(cid) {
+        canBeAdjusted(id) {
             return false;
         },
 
@@ -17,8 +17,8 @@ odoo.define('pos_restaurant.PaymentInterface', function (require) {
          * Called when the amount authorized by a payment request should
          * be adjusted to account for a new order line, it can only be called if
          * canBeAdjusted returns True
-         * @param {string} cid - The id of the paymentline
+         * @param {string} id - The id of the paymentline
          */
-        send_payment_adjust: function (cid) {},
+        send_payment_adjust: function (id, ...otherArgs) {},
     });
 });

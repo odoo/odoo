@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="FloorScreen" owl="1">
+    <t t-name="pos_restaurant.FloorScreen" owl="1">
         <div class="floor-screen screen">
             <div class="screen-content-flexbox">
-                <t t-if="env.pos.floors.length > 1">
+                <t t-if="env.model.data.derived.sortedFloors.length > 1">
                     <div class="floor-selector">
-                        <t t-foreach="env.pos.floors" t-as="floor" t-key="floor.id">
-                            <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="selectFloor(floor)">
+                        <t t-foreach="env.model.data.derived.sortedFloors" t-as="floor" t-key="floor.id">
+                            <span class="button button-floor" t-att-class="{ active: floor.id === env.model.data.uiState.activeFloorId }" t-on-click="env.model.actionHandler({ name: 'actionSetFloor', args: [floor] })">
                                 <t t-esc="floor.name" />
                             </span>
                         </t>
                     </div>
                 </t>
-                <div class="floor-map" t-on-click="trigger('deselect-table')" t-ref="floor-map-ref">
-                    <div t-if="isFloorEmpty" class="empty-floor">
+                <div class="floor-map" t-on-click="env.model.actionHandler({ name: 'actionDeselectTable' })" t-ref="floor-map-ref">
+                    <t t-set="_activeTables" t-value="getActiveTables()" />
+                    <div t-if="!_activeTables.length" class="empty-floor">
                         <span>This floor has no tables yet, use the </span>
                         <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
                         <span> button in the editing toolbar to create new tables.</span>
                     </div>
                     <div t-else="" class="tables">
-                        <t t-foreach="activeTables" t-as="table" t-key="table.id">
-                            <TableWidget t-if="table.id !== state.selectedTableId" table="table" />
+                        <t t-foreach="_activeTables" t-as="table" t-key="table.id">
+                            <TableWidget t-if="table.id !== env.model.data.uiState.FloorScreen.selectedTableId" table="table" />
                             <EditableTable t-else="" table="table" />
                         </t>
                     </div>
-                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode">
+                    <span t-if="env.model.getIsCashierManager()" class="edit-button editing" t-att-class="{ active: env.model.data.uiState.FloorScreen.isEditMode }" t-on-click.stop="env.model.actionHandler({ name: 'actionToggleEditMode' })">
                         <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
                     </span>
-                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" />
+                    <EditBar t-if="env.model.data.uiState.FloorScreen.isEditMode" selectedTable="env.model.getSelectedTable()" />
                 </div>
             </div>
         </div>

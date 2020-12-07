@@ -1,12 +1,71 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
+from odoo.osv.expression import AND, OR
+
+
+LOADERS = []
+
+LoaderContext = namedtuple('LoaderContext', ['data', 'sorted_ids', 'contents', 'model', 'fields'])
+
+def _find_index(model):
+    return next((i for i, loader in enumerate(LOADERS) if loader[0] == model), -1)
+
+def _load_fields(model_index, fields):
+    current_fields = LOADERS[model_index][2]
+    for field in fields:
+        current_fields.add(field)
+
+def load_fields(model, fields):
+    _load_fields(_find_index(model), fields)
+
+def loader(model, fields=None, before=None, after=None):
+    '''
+    Decorates a pos.session method to register it as a loader method.
+
+    :param model: name of the model to be loaded, e.g. product.product
+    :type model: string
+    :param fields: a list of field names of the model to be loaded
+    :type fields: string[] = []
+    :param before: the `model` will be loaded before the given `before` model
+    :type fields: string = None
+    :param after: the `model` will be loaded after the given `after` model
+    :type fields: string = None
+    '''
+    if not fields:
+        fields = []
+    def wrapper(method):
+        method_name = method.__name__
+        model_index = _find_index(model)
+        after_index = _find_index(after) if after else -1
+        before_index = _find_index(before) if before else -1
+        if model_index > -1:
+            methods = LOADERS[model_index][1]
+            if not method_name in methods:
+                methods.append(method_name)
+            _load_fields(model_index, fields)
+        elif after_index > -1:
+            LOADERS.insert(after_index + 1, [model, [method_name], {*fields}])
+        elif before_index > -1:
+            LOADERS.insert(before_index, [model, [method_name], {*fields}])
+        else:
+            LOADERS.append([model, [method_name], {*fields}])
+        return method
+    return wrapper
+
+def get_fields_to_load(model):
+    model_index = _find_index(model)
+    if model_index > -1:
+        return LOADERS[model_index][2]
+    else:
+        return []
+
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -1158,6 +1217,333 @@ class PosSession(models.Model):
                 ) % ', '.join(draft_orders.mapped('name'))
             )
         return True
+
+    @api.model
+    def get_onboarding_data(self):
+        category_refs = ["pos_category_furniture", "pos_category_miscellaneous"]
+        product_refs = ["wall_shelf", "small_shelf", "monitor_stand", "desk_organizer", "whiteboard_pen"]
+        categories = self.env["pos.category"]
+        products = self.env["product.product"]
+        for category_ref in category_refs:
+            categories |= self.env.ref("point_of_sale." + category_ref)
+        for product_ref in product_refs:
+            products |= self.env.ref("point_of_sale." + product_ref)
+        result_products = {}
+        result_categories = {}
+        for category in categories.read(get_fields_to_load("pos.category"), load=False):
+            result_categories[category["id"]] = category
+        for product in products.with_context(display_default_code=False).read(get_fields_to_load("product.product"), load=False):
+            result_products[product["id"]] = product
+        return {
+            "categories": result_categories,
+            "products": result_products,
+        }
+
+    def load_pos_data(self):
+        '''
+        Calls the loader methods to build `data` which will contain the objects
+        needed to load the pos ui. It returns the built `data` dict and some
+        field definitions needed in the pos ui.
+
+        Register a method as a loader by decorating it using `loader`.
+        Each loader method will be provided with a `LoaderContext` instance which contains
+        reference to `data`, `contents`, `model`, `fields`.
+            data: the dict that contains all the loaded objects
+                signature: data = { model { object }}
+                When a loader method needs loaded objects from other models, find the info
+                thru this dict.
+            contents: the dict that is supposed to contain the objects for the model
+                The goal of a loader method is to populate this with objects that will be
+                used in loading the pos ui.
+            model: name of the model that is processed in the loader method
+            fields: fields to load for the model
+
+        See the methods decorated with `loader` for examples.
+        '''
+        data = {}
+        sorted_ids = {}
+        field_defs = {}
+        for model, methods, fields in LOADERS:
+            field_defs[model] = self.env[model].fields_get(get_fields_to_load(model))
+            if not model in data:
+                data[model] = {}
+            for method in methods:
+                getattr(self, method)(LoaderContext(data, sorted_ids, data[model], model, fields))
+
+        for model in ["pos.order", "pos.order.line", "pos.payment", "pos.pack.operation.lot", "account.tax", "res.partner"]:
+            _fields = self.env[model].fields_get(get_fields_to_load(model))
+            _trimmed_fields = {}
+            for key in _fields.keys():
+                if _fields[key].get("related", False) or _fields[key].get("depends", False):
+                    continue
+                _trimmed_fields[key] = _fields[key]
+            field_defs[model] = _trimmed_fields
+
+        return (data, sorted_ids, field_defs)
+
+    @loader(
+        "res.company",
+        ["currency_id", "email", "website", "company_registry", "vat", "name", "phone", "partner_id", "country_id", "state_id", "tax_calculation_rounding_method"],
+    )
+    def _load_res_company(self, lcontext):
+        lcontext.contents[self.company_id.id] = self.company_id.read(lcontext.fields, load=False)[0]
+
+    @loader("decimal.precision", ["name", "digits"])
+    def _load_decimal_precision(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("uom.uom", [])
+    def _load_uom_uom(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader(
+        "res.partner",
+        [
+            "name",
+            "street",
+            "city",
+            "state_id",
+            "country_id",
+            "vat",
+            "lang",
+            "phone",
+            "zip",
+            "mobile",
+            "email",
+            "barcode",
+            "write_date",
+            "property_account_position_id",
+            "property_product_pricelist",
+        ],
+    )
+    def _load_res_partner(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+        lcontext.sorted_ids[lcontext.model] = [record["id"] for record in records]
+
+    @loader("res.country.state", ["name", "country_id"])
+    def _load_res_country_state(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("res.country", ["name", "vat_label", "code"])
+    def _load_res_country(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("res.lang", ["name", "code"])
+    def _load_res_lang(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("account.tax", ["name", "amount", "price_include", "include_base_amount", "is_base_affected", "amount_type", "children_tax_ids"])
+    def _load_account_tax(self, lcontext):
+        records = self.env[lcontext.model].search([("company_id", "=", self.company_id.id)])
+        records_dict = records.read(lcontext.fields, load=False)
+        for record in records_dict:
+            lcontext.contents[record["id"]] = record
+
+        real_tax_amounts = records.get_real_tax_amount()
+        for real_tax in real_tax_amounts:
+            lcontext.contents[real_tax["id"]]["amount"] = real_tax["amount"]
+
+    @loader(
+        "pos.session",
+        ["id", "name", "user_id", "config_id", "start_at", "stop_at", "sequence_number", "payment_method_ids", "cash_register_id", "state", "login_number"],
+    )
+    def _load_pos_session(self, lcontext):
+        lcontext.contents[self.id] = self.read(lcontext.fields, load=False)[0]
+
+    @loader("pos.config", [])
+    def _load_pos_config(self, lcontext):
+        lcontext.contents[self.config_id.id] = self.config_id.read(lcontext.fields, load=False)[0]
+
+    @loader("stock.picking.type", ["use_create_lots", "use_existing_lots"])
+    def _load_stock_picking_type(self, lcontext):
+        lcontext.contents[self.config_id.picking_type_id.id] = self.config_id.picking_type_id.read(lcontext.fields, load=False)[0]
+
+    @loader("res.users", ["name", "company_id", "id", "groups_id", "lang"])
+    def _load_res_users(self, lcontext):
+        domain = [
+            ("company_ids", "in", self.config_id.company_id.id),
+            "|",
+            ("groups_id", "=", self.config_id.group_pos_manager_id.id),
+            ("groups_id", "=", self.config_id.group_pos_user_id.id),
+        ]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("product.pricelist", ["name", "display_name", "discount_policy", "item_ids"])
+    def _load_product_pricelist(self, lcontext):
+        if self.config_id.use_pricelist:
+            domain = [("id", "in", self.config_id.available_pricelist_ids.ids)]
+        else:
+            domain = [("id", "=", self.config_id.pricelist_id.id)]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("account.bank.statement", ["id", "balance_start"])
+    def _load_account_bank_statement(self, lcontext):
+        domain = [("id", "=", self.cash_register_id.id)]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("product.pricelist.item", [])
+    def _load_product_pricelist_item(self, lcontext):
+        domain = [("pricelist_id", "in", [*lcontext.data["product.pricelist"].keys()])]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("product.category", ["name", "parent_id"])
+    def _load_product_category(self, lcontext):
+        records = self.env[lcontext.model].search([]).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader(
+        "res.currency",
+        ["name", "symbol", "position", "rounding", "rate", "decimal_places"],
+    )
+    def _load_res_currency(self, lcontext):
+        domain = [("id", "in", [self.config_id.currency_id.id, self.company_id.currency_id.id])]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader(
+        "pos.category",
+        ["id", "name", "parent_id", "child_id", "write_date"],
+    )
+    def _load_pos_category(self, lcontext):
+        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
+            domain = [("id", "in", self.config_id.iface_available_categ_ids.ids)]
+        else:
+            domain = []
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+        lcontext.sorted_ids[lcontext.model] = [record["id"] for record in records]
+
+    @loader(
+        "product.product",
+        [
+            "display_name",
+            "lst_price",
+            "standard_price",
+            "categ_id",
+            "pos_categ_id",
+            "taxes_id",
+            "barcode",
+            "default_code",
+            "to_weight",
+            "uom_id",
+            "description_sale",
+            "description",
+            "product_tmpl_id",
+            "tracking",
+            "write_date",
+            "available_in_pos",
+            "attribute_line_ids",
+        ],
+    )
+    def _load_product_product(self, lcontext):
+        order = "sequence,default_code,name"
+        domain = self._get_product_product_domain()
+        records = self.env[lcontext.model].with_context(display_default_code=False).search(domain, order=order).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+        lcontext.sorted_ids[lcontext.model] = [record["id"] for record in records]
+
+    def _get_product_product_domain(self):
+        domain = ["&", "&", ("sale_ok", "=", True), ("available_in_pos", "=", True), "|", ("company_id", "=", self.config_id.company_id.id), ("company_id", "=", False)]
+        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
+            domain = AND(
+                [
+                    domain,
+                    [("pos_categ_id", "in", self.config_id.iface_available_categ_ids.ids)],
+                ]
+            )
+        if self.config_id.iface_tipproduct:
+            domain = OR([domain, [("id", "=", self.config_id.tip_product_id.id)]])
+        return domain
+
+    @loader("product.attribute", ["name", "display_type"])
+    def _load_product_attribute(self, lcontext):
+        if not self.config_id.product_configurator:
+            return
+        domain = [("create_variant", "=", "no_variant")]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader(
+        "product.attribute.value",
+        ["name", "attribute_id", "is_custom", "html_color"],
+    )
+    def _load_product_attribute_value(self, lcontext):
+        if not self.config_id.product_configurator:
+            return
+        domain = [("attribute_id", "in", [*lcontext.data["product.attribute"].keys()])]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader(
+        "product.template.attribute.value",
+        ["product_attribute_value_id", "attribute_id", "attribute_line_id", "price_extra"],
+    )
+    def _load_product_template_attribute_value(self, lcontext):
+        if not self.config_id.product_configurator:
+            return
+        domain = [("attribute_id", "in", [*lcontext.data["product.attribute"].keys()])]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("account.cash.rounding", ["name", "rounding", "rounding_method"])
+    def _load_account_cash_rounding(self, lcontext):
+        domain = [("id", "=", self.config_id.rounding_method.id)]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader(
+        "pos.payment.method",
+        ["name", "is_cash_count", "use_payment_terminal"],
+    )
+    def _load_pos_payment_method(self, lcontext):
+        domain = [("id", "in", self.config_id.payment_method_ids.ids)]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("account.fiscal.position", [])
+    def _load_account_fiscal_position(self, lcontext):
+        domain = [("id", "in", self.config_id.fiscal_position_ids.ids)]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
+    @loader("account.fiscal.position.tax", [])
+    def _load_account_fiscal_position_tax(self, lcontext):
+        fiscal_position_tax_ids = sum([fpos["tax_ids"] for fpos in lcontext.data["account.fiscal.position"].values()], [])
+        domain = [("id", "in", fiscal_position_tax_ids)]
+        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
+        for record in records:
+            lcontext.contents[record["id"]] = record
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

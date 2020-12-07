@@ -5,7 +5,7 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 from odoo.tests import Form, tagged
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "pos_frontend")
 class TestUi(TestPointOfSaleHttpCommon):
     def setUp(self):
         super().setUp()

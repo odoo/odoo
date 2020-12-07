@@ -1,104 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="PaymentScreen" owl="1">
-        <div class="payment-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
-            <div class="screen-content">
-                <t t-if="!env.isMobile">
-                    <div class="top-content">
-                        <div class="button back"
-                              t-on-click="showScreen('ProductScreen')">
-                            <i class="fa fa-angle-double-left fa-fw"></i>
-                            <span class="back_text">Back</span>
-                        </div>
-                        <div class="top-content-center"><h1>Payment</h1></div>
-                        <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() }"
-                              t-on-click="validateOrder(false)">
-                            <span class="next_text">Validate</span>
-                            <i class="fa fa-angle-double-right fa-fw"></i>
-                        </div>
-                    </div>
-                </t>
-                <div class="main-content">
-                    <div class="left-content">
-                        <t t-if="env.isMobile">
-                            <section class="paymentlines-container">
-                                <PaymentScreenStatus paymentLines="paymentLines" />
-                            </section>
-                        </t>
-                        <div class="paymentmethods-container">
-                            <PaymentScreenPaymentLines paymentLines="paymentLines" />
-                            <div class="paymentmethods">
-                                <t t-foreach="env.pos.payment_methods" t-as="paymentMethod"
-                                   t-key="paymentMethod.id">
-                                    <PaymentMethodButton paymentMethod="paymentMethod" />
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="right-content">
-                        <t t-if="!env.isMobile">
-                            <section class="paymentlines-container">
-                                <PaymentScreenStatus paymentLines="paymentLines" />
-                            </section>
-                        </t>
-
-                        <div class="payment-buttons-container">
-                            <section class="payment-numpad">
-                                <PaymentScreenNumpad />
-                            </section>
-
-                            <div class="payment-buttons">
-                                <div class="customer-button">
-                                    <div class="button" t-on-click="selectClient">
-                                        <i class="fa fa-user" role="img" aria-label="Customer"
-                                           title="Customer" />
-                                        <span class="js_customer_name">
-                                            <t t-if="env.pos.get_client()">
-                                                <t t-esc="env.pos.get_client().name" />
-                                            </t>
-                                            <t t-if="!env.pos.get_client()">
-                                                Customer
-                                            </t>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="payment-controls">
-                                    <div t-if="env.pos.config.module_account" class="button js_invoice"
-                                        t-att-class="{ highlight: currentOrder.is_to_invoice() }"
-                                        t-on-click="toggleIsToInvoice">
-                                        <i class="fa fa-file-text-o" /> Invoice
-                                    </div>
-                                    <div t-if="env.pos.config.tip_product_id" class="button js_tip"
-                                        t-on-click="addTip">
-                                        <i class="fa fa-heart" /> Tip
-                                    </div>
-                                    <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
-                                        t-on-click="openCashbox">
-                                        <i class="fa fa-archive" /> Open Cashbox
-                                    </div>
-                                    <div t-if="env.pos.config.ship_later" class="button"
-                                         t-att-class="{ highlight: currentOrder.is_to_ship() }"
-                                         t-on-click="toggleIsToShip()">
-                                        <i class="fa fa-clock-o" /> Ship Later
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <t t-if="env.isMobile">
-                    <div class="switchpane">
-                        <button class="btn-switchpane" t-att-class="{ secondary: !currentOrder.is_paid() }" t-on-click="validateOrder(false)">
-                            <h1>Validate</h1>
-                        </button>
-                        <button class="btn-switchpane secondary" t-on-click="showScreen('ProductScreen', {mobile_pane: 'left'})">
-                            <h1>Review</h1>
-                        </button>
-                    </div>
-                </t>
+  <t t-name="point_of_sale.PaymentScreen" owl="1">
+    <div class="payment-screen screen">
+      <t t-set="_payments" t-value="env.model.getPayments(props.activeOrder)" />
+      <div class="screen-content">
+        <t t-if="!env.isMobile">
+          <div class="top-content">
+            <div class="button back" t-on-click="env.model.actionHandler({ name: 'actionShowScreen', args: [previousScreen] })">
+              <i class="fa fa-angle-double-left fa-fw"></i>
+              <span class="back_text">Back</span>
             </div>
+            <div class="top-content-center">
+              <h1>Payment</h1>
+            </div>
+            <div class="button next" t-att-class="{ highlight: getOrderIsPaid(props.activeOrder) }"
+              t-on-click="onValidateOrder(props.activeOrder)">
+              <span class="next_text">Validate</span>
+              <i class="fa fa-angle-double-right fa-fw"></i>
+            </div>
+          </div>
+        </t>
+        <div class="main-content">
+          <div class="left-content">
+            <t t-if="env.isMobile">
+              <section class="paymentlines-container">
+                <PaymentScreenStatus paymentLines="_payments" activeOrder="props.activeOrder" />
+              </section>
+            </t>
+            <div class="paymentmethods-container">
+              <!-- PaymentScreenPaymentLines -->
+              <div class="paymentlines">
+                <t t-foreach="_payments" t-as="_payment" t-key="_payment.id">
+                  <div class="paymentline" t-att-class="getPaymentlineExtraClass(_payment)"
+                    t-on-click="trigger('select-payment', _payment)">
+                    <div class="payment-name">
+                      <t t-esc="getPaymentMethod(_payment).name" />
+                    </div>
+                    <div class="payment-amount">
+                      <t t-esc="env.model.formatCurrencyNoSymbol(_payment.amount)" />
+                    </div>
+                    <t t-if="!_payment.payment_status or !['done', 'reversed'].includes(_payment.payment_status)">
+                      <div class="delete-button" t-on-click="trigger('delete-payment', _payment)" aria-label="Delete"
+                        title="Delete">
+                        <i class="fa fa-times-circle" />
+                      </div>
+                    </t>
+                  </div>
+                  <t t-if="isPaymentSelected(_payment) and _payment.payment_status">
+                    <PaymentScreenElectronicPayment line="_payment" />
+                  </t>
+                </t>
+              </div>
+
+              <div class="paymentmethods">
+                <t t-foreach="env.model.data.derived.paymentMethods" t-as="_paymentMethod" t-key="_paymentMethod.id">
+                  <!-- PaymentMethodButton -->
+                  <div class="button paymentmethod" t-on-click="trigger('add-payment', _paymentMethod)">
+                    <div class="payment-name">
+                      <t t-esc="_paymentMethod.name" />
+                    </div>
+                  </div>
+                </t>
+              </div>
+            </div>
+          </div>
+          <div class="right-content">
+            <t t-if="!env.isMobile">
+              <section class="paymentlines-container">
+                <PaymentScreenStatus paymentLines="_payments" activeOrder="props.activeOrder" />
+              </section>
+            </t>
+
+            <div class="payment-buttons-container">
+              <section class="payment-numpad">
+                <!-- PaymentScreenNumpad -->
+                <div class="numpad">
+                  <PSNumpadInputButton value="'1'" />
+                  <PSNumpadInputButton value="'2'" />
+                  <PSNumpadInputButton value="'3'" />
+                  <PSNumpadInputButton value="'+10'" changeClassTo="'mode-button'" />
+                  <br />
+                  <PSNumpadInputButton value="'4'" />
+                  <PSNumpadInputButton value="'5'" />
+                  <PSNumpadInputButton value="'6'" />
+                  <PSNumpadInputButton value="'+20'" changeClassTo="'mode-button'" />
+                  <br />
+                  <PSNumpadInputButton value="'7'" />
+                  <PSNumpadInputButton value="'8'" />
+                  <PSNumpadInputButton value="'9'" />
+                  <PSNumpadInputButton value="'+50'" changeClassTo="'mode-button'" />
+                  <br />
+                  <PSNumpadInputButton value="'-'" text="'+/-'" />
+                  <PSNumpadInputButton value="'0'" />
+                  <PSNumpadInputButton value="env._t.database.parameters.decimal_point" />
+                  <PSNumpadInputButton value="'Backspace'">
+                    <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace" />
+                  </PSNumpadInputButton>
+                </div>
+              </section>
+
+              <div class="payment-buttons">
+                <div class="customer-button">
+                  <div class="button" t-on-click="onSelectClient">
+                    <i class="fa fa-user" role="img" aria-label="Customer" title="Customer" />
+                    <span class="js_customer_name">
+                      <t t-set="_activeOrderClient" t-value="env.model.getCustomer(props.activeOrder)" />
+                      <t t-if="_activeOrderClient">
+                        <t t-esc="_activeOrderClient.name" />
+                      </t>
+                      <t t-if="!_activeOrderClient">
+                        Customer
+                      </t>
+                    </span>
+                  </div>
+                </div>
+                <div class="payment-controls">
+                  <div t-if="env.model.config.module_account" class="button js_invoice"
+                    t-att-class="{ highlight: props.activeOrder.to_invoice }"
+                    t-on-click="env.model.actionHandler({ name: 'actionToggleToInvoice', args: [props.activeOrder] })">
+                    <i class="fa fa-file-text-o" /> Invoice
+                  </div>
+                  <div t-if="env.model.config.tip_product_id" class="button js_tip"
+                    t-on-click="env.model.actionHandler({ name: 'actionAddTip', args: [props.activeOrder] })">
+                    <i class="fa fa-heart" /> Tip
+                  </div>
+                  <div t-if="env.model.config.iface_cashdrawer" class="button js_cashdrawer"
+                    t-on-click="onOpenCashbox">
+                    <i class="fa fa-archive" /> Open Cashbox
+                  </div>
+                  <div t-if="env.model.config.ship_later" class="button"
+                    t-att-class="{ highlight: props.activeOrder.to_ship }"
+                    t-on-click="env.model.actionHandler({ name: 'actionToggleToShip', args: [props.activeOrder] })">
+                    <i class="fa fa-clock-o" /> Ship Later
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </t>
+        <t t-if="env.isMobile">
+          <div class="switchpane">
+            <button class="btn-switchpane" t-att-class="{ secondary: !getOrderIsPaid(props.activeOrder) }"
+              t-on-click="onValidateOrder(props.activeOrder)">
+              <h1>Validate</h1>
+            </button>
+            <button class="btn-switchpane secondary" t-on-click="env.model.actionHandler({ name: 'actionShowScreen', args: ['ProductScreen', { mobile_pane: 'left' }] })">
+              <h1>Review</h1>
+            </button>
+          </div>
+        </t>
+      </div>
+    </div>
+  </t>
 
 </templates>

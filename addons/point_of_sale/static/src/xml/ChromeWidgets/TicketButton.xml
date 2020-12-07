@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="TicketButton" owl="1">
-        <div class="ticket-button" t-att-class="{ highlight: props.isTicketScreenShown }" t-on-click="onClick">
-            <div class="with-badge" t-att-badge="count">
+    <t t-name="point_of_sale.TicketButton" owl="1">
+        <div class="ticket-button" t-att-class="{ highlight: env.model.getActiveScreen() === 'TicketScreen' }"
+            t-on-click="env.model.actionHandler({ name: 'actionToggleScreen', args: ['TicketScreen'] })">
+            <div class="with-badge" t-att-badge="getNumberOfOrders()">
                 <i class="fa fa-ticket" aria-hidden="true"></i>
             </div>
             <div>Orders</div>

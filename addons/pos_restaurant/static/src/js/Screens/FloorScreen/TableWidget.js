@@ -1,8 +1,7 @@
-odoo.define('pos_restaurant.TableWidget', function(require) {
+odoo.define('pos_restaurant.TableWidget', function (require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
 
     class TableWidget extends PosComponent {
         mounted() {
@@ -30,16 +29,8 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
             Object.assign(tableCover.style, { height: `${Math.ceil(this.fill * 100)}%` });
         }
         get fill() {
-            const customerCount = this.env.pos.get_customer_count(this.props.table);
-            return Math.min(1, Math.max(0, customerCount / this.props.table.seats));
-        }
-        get orderCount() {
-            const table = this.props.table;
-            return table.order_count !== undefined
-                ? table.order_count
-                : this.env.pos
-                      .get_table_orders(table)
-                      .filter(o => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
+            const nCustomers = this.env.model.getTotalNumberCustomers(this.props.table);
+            return Math.min(1, Math.max(0, nCustomers / this.props.table.seats));
         }
         get orderCountClass() {
             const notifications = this._getNotifications();
@@ -50,27 +41,30 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
             };
         }
         get customerCountDisplay() {
-            return `${this.env.pos.get_customer_count(this.props.table)}/${this.props.table.seats}`;
+            const nCustomers = this.env.model.getTotalNumberCustomers(this.props.table);
+            return `${nCustomers}/${this.props.table.seats}`;
+        }
+        getTableOrderCount(table) {
+            if (table.id in this.env.model.data.uiState.FloorScreen.tableBackendOrdersCount) {
+                return this.env.model.data.uiState.FloorScreen.tableBackendOrdersCount[table.id];
+            } else {
+                return this.env.model.getOrderCount(table);
+            }
         }
         _getNotifications() {
-            const orders = this.env.pos.get_table_orders(this.props.table);
-
             let hasChangesCount = 0;
             let hasSkippedCount = 0;
-            for (let i = 0; i < orders.length; i++) {
-                if (orders[i].hasChangesToPrint()) {
+            for (const order of this.env.model.getTableOrders(this.props.table)) {
+                if (this.env.model.hasResumeChangesToPrint(order)) {
                     hasChangesCount++;
-                } else if (orders[i].hasSkippedChanges()) {
+                } else if (this.env.model.hasSkippedResumeChanges(order)) {
                     hasSkippedCount++;
                 }
             }
-
             return hasChangesCount ? { printing: true } : hasSkippedCount ? { skipped: true } : {};
         }
     }
-    TableWidget.template = 'TableWidget';
-
-    Registries.Component.add(TableWidget);
+    TableWidget.template = 'pos_restaurant.TableWidget';
 
     return TableWidget;
 });

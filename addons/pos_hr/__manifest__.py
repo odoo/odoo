@@ -23,12 +23,7 @@ The actual till still requires one user but an unlimited number of employees can
     'assets': {
         'point_of_sale.assets': [
             'pos_hr/static/src/css/pos.css',
-            'pos_hr/static/src/js/models.js',
-            'pos_hr/static/src/js/useSelectEmployee.js',
-            'pos_hr/static/src/js/Chrome.js',
-            'pos_hr/static/src/js/HeaderLockButton.js',
-            'pos_hr/static/src/js/CashierName.js',
-            'pos_hr/static/src/js/LoginScreen.js',
+            'pos_hr/static/src/js/**/*.js',
         ],
         'web.assets_tests': [
             'pos_hr/static/tests/**/*',

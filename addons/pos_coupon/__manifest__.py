@@ -25,16 +25,10 @@
     'assets': {
         'point_of_sale.assets': [
             'pos_coupon/static/src/css/coupon.css',
-            'pos_coupon/static/src/js/coupon.js',
-            'pos_coupon/static/src/js/Orderline.js',
-            'pos_coupon/static/src/js/PaymentScreen.js',
-            'pos_coupon/static/src/js/ProductScreen.js',
-            'pos_coupon/static/src/js/ActivePrograms.js',
-            'pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js',
-            'pos_coupon/static/src/js/ControlButtons/ResetProgramsButton.js',
+            'pos_coupon/static/src/js/**/*.js',
         ],
         'web.assets_tests': [
-            'pos_coupon/static/src/js/tours/**/*',
+            'pos_coupon/static/tests/tours/**/*',
         ],
         'web.assets_qweb': [
             'pos_coupon/static/src/xml/**/*',

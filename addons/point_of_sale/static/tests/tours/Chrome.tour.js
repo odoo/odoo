@@ -76,9 +76,8 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     // click next screen on order 3
     // then delete the new empty order
     ReceiptScreen.do.clickNextOrder();
-    ProductScreen.check.orderIsEmpty();
+    ProductScreen.check.isShown();
     Chrome.do.clickTicketButton();
-    TicketScreen.do.deleteOrder('-0004');
     TicketScreen.do.deleteOrder('-0001');
 
     // After deleting order 1 above, order 2 became

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderSummary" owl="1">
+    <t t-name="point_of_sale.OrderSummary" owl="1">
+        <t t-set="_orderTotals" t-value="env.model.getOrderTotals(props.order)" />
         <div class="summary clearfix">
             <div class="line">
                 <div class="entry total">
                     <span class="badge">Total: </span>
                     <span class="value">
-                        <t t-esc="props.total" />
+                        <t t-esc="env.model.formatCurrency(_orderTotals.withTaxWithDiscount)" />
                     </span>
-                    <div t-if="props.tax" class="subentry">
+                    <div t-if="_orderTotals.totalTax" class="subentry">
                         Taxes:
                         <span class="value">
-                            <t t-esc="props.tax" />
+                            <t t-esc="env.model.formatCurrency(_orderTotals.totalTax)" />
                         </span>
                     </div>
                 </div>

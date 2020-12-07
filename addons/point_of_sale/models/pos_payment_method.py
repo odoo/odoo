@@ -20,7 +20,11 @@ class PosPaymentMethod(models.Model):
     _order = "id asc"
 
     def _get_payment_terminal_selection(self):
-        return []
+        pos_module = self.env['ir.module.module'].search([('name', '=', 'point_of_sale')])
+        if pos_module.demo:
+            return [('dummy', 'Dummy Terminal')]
+        else:
+            return []
 
     name = fields.Char(string="Payment Method", required=True, translate=True)
     receivable_account_id = fields.Many2one('account.account',

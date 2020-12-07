@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductConfiguratorPopup" owl="1">
+    <t t-name="point_of_sale.ProductConfiguratorPopup" owl="1">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-text popup-lg product-configurator-popup">
                 <header class="title">
@@ -29,7 +29,7 @@
         </div>
     </t>
 
-    <t t-name="RadioProductAttribute" owl="1">
+    <t t-name="point_of_sale.RadioProductAttribute" owl="1">
         <div class="configurator_radio">
             <div t-foreach="values" t-as="value">
                 <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
@@ -39,7 +39,7 @@
                     <div class="radio_attribute_label">
                         <t t-esc="value.name"/>
                         <span t-if="value.price_extra" class="price_extra">
-                            + <t t-esc="env.pos.format_currency(value.price_extra)"/>
+                            + <t t-esc="env.model.formatCurrencyNoSymbol(value.price_extra)"/>
                         </span>
                     </div>
 
@@ -51,7 +51,7 @@
         </div>
     </t>
 
-    <t t-name="SelectProductAttribute" owl="1">
+    <t t-name="point_of_sale.SelectProductAttribute" owl="1">
         <div>
             <t t-set="is_custom" t-value="false"/>
 
@@ -60,7 +60,7 @@
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
-                        + <t t-esc="env.pos.format_currency(value.price_extra)"/>
+                        + <t t-esc="env.model.formatCurrencyNoSymbol(value.price_extra)"/>
                     </t>
                 </option>
             </select>
@@ -69,7 +69,7 @@
         </div>
     </t>
 
-    <t t-name="ColorProductAttribute" owl="1">
+    <t t-name="point_of_sale.ColorProductAttribute" owl="1">
         <div>
             <t t-set="is_custom" t-value="false"/>
 

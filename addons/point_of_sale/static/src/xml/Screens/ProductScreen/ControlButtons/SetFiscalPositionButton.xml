@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SetFiscalPositionButton" owl="1">
-        <div class="control-button o_fiscal_position_button">
+    <t t-name="point_of_sale.SetFiscalPositionButton" owl="1">
+        <div class="control-button o_fiscal_position_button" t-on-click="onClick">
             <i class="fa fa-book" role="img" aria-label="Set fiscal position"
                title="Set fiscal position" />
             <t t-esc='currentFiscalPositionName' />

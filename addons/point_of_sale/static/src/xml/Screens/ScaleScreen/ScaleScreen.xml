@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ScaleScreen" owl="1">
+    <t t-name="point_of_sale.ScaleScreen" owl="1">
         <div class="scale-screen screen">
             <div class="screen-content">
                 <div class="top-content">
@@ -18,8 +18,7 @@
                         <t t-esc="productWeightString" />
                     </div>
                     <div class="product-price">
-                        <t
-                           t-esc="env.pos.format_currency(productPrice) + '/' + productUom" />
+                        <t t-esc="env.model.formatCurrency(productPrice) + ' / ' + productUom" />
                     </div>
                     <div class="computed-price">
                         <t t-esc="computedPriceString" />

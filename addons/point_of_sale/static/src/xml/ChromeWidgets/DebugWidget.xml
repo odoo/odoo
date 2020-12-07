@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="DebugWidget" owl="1">
+    <t t-name="point_of_sale.DebugWidget" owl="1">
         <Draggable limitArea="'.pos'">
             <div class="debug-widget">
                 <header class="drag-handle">
@@ -67,7 +67,6 @@
 
                     <p class="category">Hardware Status</p>
                     <ul>
-                        <li class="status weighing">Weighing</li>
                         <li class="button display_refresh" t-on-click="refreshDisplay">
                             Refresh Display
                         </li>
@@ -84,7 +83,24 @@
                             <span>Buffer: </span>
                             <t t-esc="bufferRepr" />
                         </li>
+                        <li class="button" t-on-click="_onToggleIdleTimerControl">
+                            <span t-esc="getIdleTimerMessage()" />
+                        </li>
                     </ul>
+                    <t t-if="showDummyTerminalControls">
+                        <p class="category">Dummy Terminal</p>
+                        <ul>
+                            <li class="button" t-on-click="_onToggleSuccessfulRequest">
+                                Request should <t t-esc="env.model.data.uiState.DebugWidget.successfulRequest ? 'succeed' : 'fail'"></t>
+                            </li>
+                            <li class="button" t-on-click="_onToggleSuccessfulCancel">
+                                Cancel should <t t-esc="env.model.data.uiState.DebugWidget.successfulCancel ? 'succeed' : 'fail'"></t>
+                            </li>
+                            <li class="button" t-on-click="_onToggleSuccessfulReverse">
+                                Reverse should <t t-esc="env.model.data.uiState.DebugWidget.successfulReverse ? 'succeed' : 'fail'"></t>
+                            </li>
+                        </ul>
+                    </t>
                 </div>
             </div>
         </Draggable>

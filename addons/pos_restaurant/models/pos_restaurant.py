@@ -67,9 +67,6 @@ class RestaurantTable(models.Model):
             id, it will modify the existing table. It then
             returns the id of the table.
         """
-        if table.get('floor_id'):
-            table['floor_id'] = table['floor_id'][0]
-
         table_id = table.pop('id', False)
         if table_id:
             self.browse(table_id).write(table)

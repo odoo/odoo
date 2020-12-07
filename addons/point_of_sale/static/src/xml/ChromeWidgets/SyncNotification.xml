@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SyncNotification" owl="1">
-        <div class="oe_status" t-on-click="onClick">
-            <span t-if="state.msg" class="js_msg">
-                <t t-esc="state.msg" />
+    <t t-name="point_of_sale.SyncNotification" owl="1">
+        <div class="oe_status" t-on-click="trigger('click-sync-notification')">
+            <span t-if="props.msg" class="js_msg">
+                <t t-esc="props.msg" />
                 <span> </span>
             </span>
             <div t-if="state.status === 'connected'" class="js_connected oe_icon oe_green">

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="PaymentScreenElectronicPayment" owl="1">
+    <t t-name="point_of_sale.PaymentScreenElectronicPayment" owl="1">
         <div class="paymentline electronic_payment">
             <t t-if="props.line.payment_status == 'pending'">
                 <div>
-                    Payment request pending
+                    <t t-esc="getPendingMessage(props.line)" />
                 </div>
-                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', [props.line])">
                     Send
                 </div>
             </t>
             <t t-elif="props.line.payment_status == 'retry'">
                 <div>
-                    Transaction cancelled
+                    <t t-esc="getCancelledMessage(props.line)" />
                 </div>
-                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                <div class="button retry_payment_request highlight" title="Retry Payment Request" t-on-click="trigger('send-payment-request', [props.line])">
                     Retry
                 </div>
             </t>
@@ -23,7 +23,7 @@
                 <div>
                     Connection error
                 </div>
-                <div class="button send_force_done" title="Force Done" t-on-click="trigger('send-force-done', props.line)">
+                <div class="button send_force_done" title="Force Done" t-on-click="trigger('send-force-done', [props.line])">
                     Force done
                 </div>
             </t>
@@ -31,7 +31,7 @@
                 <div>
                     Waiting for card
                 </div>
-                <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="trigger('send-payment-cancel', props.line)">
+                <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="trigger('send-payment-cancel', [props.line])">
                     Cancel
                 </div>
             </t>
@@ -55,8 +55,8 @@
                 <div>
                     Payment Successful
                 </div>
-                <t t-if="props.line.can_be_reversed">
-                    <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="trigger('send-payment-reverse', props.line)">
+                <t t-if="props.line._extras.can_be_reversed">
+                    <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="trigger('send-payment-reverse', [props.line])">
                         Reverse
                     </div>
                 </t>

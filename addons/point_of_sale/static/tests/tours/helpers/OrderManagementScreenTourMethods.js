@@ -107,7 +107,7 @@ odoo.define('point_of_sale.tour.OrderManagementScreenTourMethods', function (req
             for (let { product, quantity } of lines) {
                 steps.push({
                     content: `order details has product '${product}' and quantity '${quantity}'`,
-                    trigger: `.orderlines .product-name:contains("${product}") ~ .info strong:contains("${quantity}")`,
+                    trigger: `.orderlines .product-name:contains("${product}") ~ .info-list .info em:contains("${quantity}")`,
                     run: () => {},
                 });
             }

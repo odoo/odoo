@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_mercury.PaymentScreenElectronicPayment" t-inherit="point_of_sale.PaymentScreenElectronicPayment" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('send_payment_request')]" position="attributes">
+            <attribute name="t-if">showSendButton</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('retry_payment_request')]" position="attributes">
+            <attribute name="t-if">showSendButton</attribute>
+        </xpath>
+    </t>
+
+</templates>

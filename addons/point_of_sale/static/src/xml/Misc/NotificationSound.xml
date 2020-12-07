@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="NotificationSound" owl="1">
-        <audio t-att-src="props.sound.src" autoplay="true"></audio>
+    <t t-name="point_of_sale.NotificationSound" owl="1">
+        <!-- TODO jcb: put this error sound back -->
+        <!-- <audio t-if="state.src" t-att-src="state.src" autoplay="true" t-on-ended="state.src = false" />
+        <div t-else="" style="display: none;" /> -->
+        <div style="display: none;"></div>
     </t>
 
 </templates>
