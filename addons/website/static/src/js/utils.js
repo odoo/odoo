@@ -89,8 +89,10 @@ function autocompleteWithPages(self, $input, options) {
                 });
             }
         },
-        close: function () {
+        select: function (ev, ui) {
+            ev.target.value = ui.item.value;
             self.trigger_up('website_url_chosen');
+            ev.preventDefault();
         },
     });
 }
