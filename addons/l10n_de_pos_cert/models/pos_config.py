@@ -87,7 +87,7 @@ class PosConfig(models.Model):
 
             headers = self.fiskaly_authentication(cache['fiskaly_secret'], cache['fiskaly_key'])
             disable_tss_response = requests.put('{0}tss/{1}'.format(url, cache['fiskaly_tss_id']),
-                                                {'state': 'DISABLED'}, headers=headers,
+                                                json={'state': 'DISABLED'}, headers=headers,
                                                 timeout=timeout)
             if disable_tss_response.status_code != 200:
                 raise ValidationError(_("It seems there are some issues, please try again later."))
@@ -100,7 +100,7 @@ class PosConfig(models.Model):
         url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_kassensichv_api_url')
         timeout = float(self.env['ir.config_parameter'].sudo().get_param('fiskaly_api_timeout'))
 
-        auth_response = requests.post(url + 'auth', {
+        auth_response = requests.post(url + 'auth', json={
             'api_secret': secret,
             'api_key': key
         }, timeout=timeout)
@@ -144,7 +144,7 @@ class PosConfig(models.Model):
 
         tss_id = str(uuid.uuid4())
         tss_creation_response = requests.put('{0}tss/{1}'.format(url, tss_id),
-                                             {'state': 'INITIALIZED', 'description': ''}, headers=headers,
+                                             json={'state': 'INITIALIZED', 'description': ''}, headers=headers,
                                              timeout=timeout)
         if tss_creation_response.status_code != 200:
             raise ValidationError(_("It seems there are some issues, please try again later."))
@@ -157,7 +157,7 @@ class PosConfig(models.Model):
 
         client_id = str(uuid.uuid4())
         client_creation_response = requests.put('{0}tss/{1}/client/{2}'.format(url, tss_id, client_id),
-                                                {'serial_number': self.uuid}, headers=headers, timeout=timeout)
+                                                json={'serial_number': self.uuid}, headers=headers, timeout=timeout)
         if client_creation_response.status_code != 200:
             raise ValidationError(_("It seems there are some issues, please try again later."))
 
