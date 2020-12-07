@@ -24,7 +24,7 @@
                 </xpath>
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                        attrs="{'invisible': [('edi_web_services_to_process', '=', '')]}">
+                        attrs="{'invisible': [('edi_web_services_to_process', '=', False)]}">
                          <div>The invoice will be sent asynchronously to :
                             <field name="edi_web_services_to_process" class="oe_inline"/>
                          </div>
