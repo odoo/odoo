@@ -1188,7 +1188,7 @@ class GroupsView(models.Model):
                 # group of res.groups without implied groups (with each other).
                 if app.xml_id == 'base.module_category_user_type':
                     # application name with a selection field
-                    field_name = name_selection_groups(gs.ids)
+                    field_name = name_selection_groups(sorted(gs.ids))
                     user_type_field_name = field_name
                     user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
@@ -1198,7 +1198,7 @@ class GroupsView(models.Model):
 
                 elif kind == 'selection':
                     # application name with a selection field
-                    field_name = name_selection_groups(gs.ids)
+                    field_name = name_selection_groups(sorted(gs.ids))
                     attrs['attrs'] = user_type_readonly
                     if category_name not in xml_by_category:
                         xml_by_category[category_name] = []
@@ -1446,7 +1446,7 @@ class UsersView(models.Model):
                 selection_vals = [(False, '')]
                 if app.xml_id == 'base.module_category_user_type':
                     selection_vals = []
-                field_name = name_selection_groups(gs.ids)
+                field_name = name_selection_groups(sorted(gs.ids))
                 if allfields and field_name not in allfields:
                     continue
                 # selection group field
