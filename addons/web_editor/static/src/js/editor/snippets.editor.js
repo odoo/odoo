@@ -2455,7 +2455,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onDeactivateSnippet: function (ev) {
-        this._enableLastEditor(ev.data.previewMode);
+        this._enableLastEditor(ev && ev.data.previewMode);
     },
 
     /**
