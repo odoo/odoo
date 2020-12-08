@@ -370,6 +370,35 @@
                                                 <field name="tag_ids" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the tags-->
                                                 <field name="base" invisible="1"/>
                                             </tree>
+                                            <kanban class="o_kanban_mobile">
+                                                <field name="tax_id"/>
+                                                <field name="tax_ids"/>
+                                                <field name="sequence"/>
+                                                <field name="manual"/>
+                                                <field name="account_id"/>
+                                                <field name="account_analytic_id"/>
+                                                <field name="analytic_tag_ids"/>
+                                                <field name="amount_rounding"/>
+                                                <field name="amount_total"/>
+                                                <field name="currency_id"/>
+                                                <field name="tax_repartition_line_id"/>
+                                                <field name="tag_ids"/>
+                                                <field name="base"/>
+                                                <templates>
+                                                    <t t-name="kanban-box">
+                                                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <strong><field name="name"/></strong>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <span class="float-right"><field name="amount" widget="float"/></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </templates>
+                                            </kanban>
                                         </field>
                                     </div>
                                 </group>
@@ -623,7 +652,7 @@
                                     <field name="partner_bank_id"/>
                                 </group>
                             </group>
-                            <field name="tax_line_ids">
+                            <field name="tax_line_ids" mode="tree,kanban">
                                 <tree editable="bottom" string="Taxes" create="0">
                                     <field name="name"/>
                                     <!--Need invisible fields for on_change to create all necessary info -->
@@ -642,6 +671,35 @@
                                     <field name="tag_ids" invisible="1"/> <!--Needed in order for the onchange computing the taxes to keep the tags-->
                                     <field name="base" invisible="1"/>
                                 </tree>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="tax_id"/>
+                                    <field name="tax_ids"/>
+                                    <field name="sequence"/>
+                                    <field name="manual"/>
+                                    <field name="account_id"/>
+                                    <field name="account_analytic_id"/>
+                                    <field name="analytic_tag_ids"/>
+                                    <field name="amount_rounding"/>
+                                    <field name="amount_total"/>
+                                    <field name="currency_id"/>
+                                    <field name="tax_repartition_line_id"/>
+                                    <field name="tag_ids"/>
+                                    <field name="base"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <strong><field name="name"/></strong>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <span class="float-right"><field name="amount" widget="float"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
                             </field>
                         </page>
                     </notebook>
