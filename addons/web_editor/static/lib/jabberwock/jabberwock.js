@@ -2232,6 +2232,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             return new this.constructor();
         }
     }
+    Modifier.cascading = false;
 
     class CssStyle extends EventMixin {
         constructor(style) {
@@ -3009,21 +3010,40 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
         }
         find(modifier) {
+            var _a;
+            let predicate;
+            let recurse;
             if (!this._contents) {
                 return;
             }
             else if (modifier instanceof Modifier) {
                 // `modifier` is an instance of `Modifier` -> find it in the array.
-                return this._contents.find(instance => instance === modifier);
+                predicate = (mod) => mod === modifier;
+                recurse = modifier.constructor.cascading;
             }
             else if (isConstructor(modifier, Modifier)) {
                 // `modifier` is a `Modifier` class -> find its first instance in
                 // the array.
-                return this._contents.find(mod => mod.constructor.name === modifier.name);
+                predicate = (mod) => mod.constructor.name === modifier.name;
+                recurse = modifier.cascading;
             }
             else if (modifier instanceof Function) {
                 // `modifier` is a callback -> call `find` natively on the array.
-                return this._contents.find(modifier);
+                predicate = modifier;
+                recurse = true;
+            }
+            for (const mod of this._contents) {
+                if (predicate(mod)) {
+                    return mod;
+                }
+                else if (recurse) {
+                    // Only cascading submodifiers can apply to the item so only
+                    // these are checked.
+                    const subModifier = (_a = mod.modifiers) === null || _a === void 0 ? void 0 : _a.find(m => m.constructor.cascading && predicate(m));
+                    if (subModifier) {
+                        return subModifier;
+                    }
+                }
             }
         }
         /**
@@ -3207,6 +3227,19 @@ odoo.define('web_editor.jabberwock', (function(require) {
         map(callbackfn) {
             var _a;
             return ((_a = this._contents) === null || _a === void 0 ? void 0 : _a.map(callbackfn)) || [];
+        }
+        /**
+         * Iterate through all modifiers.
+         */
+        [Symbol.iterator]() {
+            let index = -1;
+            const data = this._contents || [];
+            return {
+                next: () => ({
+                    value: data[++index],
+                    done: !(index in data),
+                }),
+            };
         }
         /**
          * @override
@@ -5245,9 +5278,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
         _updateModifiers() {
             let nodeToCopyModifiers;
             if (this.isCollapsed()) {
-                nodeToCopyModifiers =
-                    this.start.previousSibling() ||
-                        this.start.nextSibling();
+                nodeToCopyModifiers = this.start.previousSibling() || this.start.nextSibling();
             }
             else {
                 nodeToCopyModifiers = this.start.nextSibling();
@@ -6164,24 +6195,26 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Stop this editor instance.
          */
         async stop() {
-            if (this.memory) {
-                this.memory.create('stop');
-                this.memory.switchTo('stop'); // Unfreeze the memory.
-            }
-            for (const plugin of this.plugins.values()) {
-                await plugin.stop();
-            }
-            if (this.memory) {
-                this.memory.create('stopped'); // Freeze the memory.
-                this.memory = null;
-            }
-            this.plugins.clear();
-            this.dispatcher = new Dispatcher(this);
-            this.selection = new VSelection(this);
-            this.contextManager = new ContextManager(this, this._execSubCommand);
-            // Clear loaders.
-            this.loaders = {};
-            this._stage = EditorStage.CONFIGURATION;
+            await this.nextEventMutex(async (execCommand) => {
+                if (this.memory) {
+                    this.memory.create('stop');
+                    this.memory.switchTo('stop'); // Unfreeze the memory.
+                }
+                for (const plugin of this.plugins.values()) {
+                    await plugin.stop();
+                }
+                if (this.memory) {
+                    this.memory.create('stopped'); // Freeze the memory.
+                    this.memory = null;
+                }
+                this.plugins.clear();
+                this.dispatcher = new Dispatcher(this);
+                this.selection = new VSelection(this);
+                this.contextManager = new ContextManager(this, this._execSubCommand);
+                // Clear loaders.
+                this.loaders = {};
+                this._stage = EditorStage.CONFIGURATION;
+            });
         }
         async _withOpenMemory(commandName, params) {
             if (!this.memory.isFrozen()) {
@@ -6581,6 +6614,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this.renderingPromises = new Map();
             // VNodes locations in a rendering (by default the rendering is equal to the location).
             this.locations = new Map();
+            // Locate modifiers created with type `T`.
+            this.modifierLocations = new Map();
             // List of VNode and Modifiers linked to a rendering.
             // When the rendering is invalidated every VNode or Modifier will be invalidated.
             this.renderingDependent = new Map();
@@ -7058,10 +7093,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     let lastUnit = [unit[0], unit[1].slice(1), unit[2]];
                     const newRenderingUnits = [lastUnit];
                     let nextUnit;
+                    const mods = [modifier];
                     while ((nextUnit = renderingUnits[nextUnitIndex + 1]) &&
                         lastUnit[0].parent === nextUnit[0].parent &&
                         nextUnit[1].length &&
                         this._modifierIsSameAs(cache, modifier, (_a = nextUnit[1]) === null || _a === void 0 ? void 0 : _a[0])) {
+                        mods.push(nextUnit[1][0]);
                         nextUnitIndex++;
                         lastUnit = renderingUnits[nextUnitIndex];
                         newRenderingUnits.push([lastUnit[0], lastUnit[1].slice(1), lastUnit[2]]);
@@ -7098,8 +7135,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
                                     }
                                 }
                             }
-                            this.depends(cache, modifier, wrap);
-                            this.depends(cache, wrap, modifier);
+                            cache.modifierLocations.set(wrap, mods);
+                            for (const mod of mods) {
+                                this.depends(cache, mod, wrap);
+                                this.depends(cache, wrap, mod);
+                            }
                         }
                         // Update the renderings promise.
                         for (const node of nodes) {
@@ -10336,6 +10376,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
         constructor() {
             super(...arguments);
             this.htmlTag = 'U';
+            this.level = ModifierLevel.LOW;
         }
     }
 
@@ -14059,8 +14100,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Return the VNode(s) corresponding to the given DOM Node.
          *
          * @param domNode
+         * @param loose When a DomObject corresponding to the domNode is not found,
+         * loosely use the closest DomObject instead.
          */
-        fromDom(domNode) {
+        fromDom(domNode, loose = true) {
             let object;
             const nodes = [];
             while (!object && domNode) {
@@ -14071,7 +14114,13 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     if (!(items === null || items === void 0 ? void 0 : items.length)) {
                         items = this._items.get(object.object);
                     }
-                    object = this._objects[object.parent];
+                    if (loose) {
+                        object = this._objects[object.parent];
+                    }
+                    else {
+                        object = null;
+                        domNode = null;
+                    }
                 }
                 if (items === null || items === void 0 ? void 0 : items.length) {
                     for (const item of items) {
@@ -14088,11 +14137,29 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         domNode = domNode.defaultView.frameElement;
                     }
                     else {
-                        domNode = domNode.parentNode;
+                        domNode = loose ? domNode.parentNode : null;
                     }
                 }
             }
             return [...new Set(nodes)];
+        }
+        /**
+         * Return the Modifier(s) corresponding to the given DOM Node relative to
+         * the cache of modifiers locations.
+         *
+         * @param domNode
+         * @param modifierLocations The cache of the modifiers locations
+         */
+        modifierFromDom(domNode, modifierLocations) {
+            let object;
+            object = this._objects[this._fromDom.get(domNode)];
+            while (object) {
+                const modifiers = modifierLocations.get(object.object);
+                if (modifiers) {
+                    return modifiers;
+                }
+                object = this._objects[object.parent];
+            }
         }
         /**
          * Return the DOM Node corresponding to the given VNode.
@@ -15596,9 +15663,19 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Return the VNode(s) corresponding to the given DOM Node.
          *
          * @param Node
+         * @param loose When a VNode corresponding to the domNode is not found,
+         * loosely use the closest VNode instead.
          */
-        getNodes(domNode) {
-            return this._domReconciliationEngine.fromDom(domNode);
+        getNodes(domNode, loose) {
+            return this._domReconciliationEngine.fromDom(domNode, loose);
+        }
+        /**
+         * Return all the modifiers that represent the domNode.
+         *
+         * @param domNode
+         */
+        getModifiers(domNode) {
+            return this._domReconciliationEngine.modifierFromDom(domNode, this._rendererCache.modifierLocations);
         }
         /**
          * Return the DOM Node(s) corresponding to the given VNode.
@@ -16744,7 +16821,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             if (isInstanceOf(ev.target, Element) && ev.target.shadowRoot) {
                 root = ev.target.shadowRoot;
             }
-            if (iframe) {
+            if (iframe === null || iframe === void 0 ? void 0 : iframe.contentDocument) {
                 const iframeDoc = iframe.contentDocument;
                 const domSelection = iframeDoc.getSelection();
                 if (isInstanceOf(domSelection.anchorNode, HTMLBodyElement)) {
@@ -17651,6 +17728,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this._normalizedRoot.clear();
             this._unbindEvents();
             this._triggerEventBatch = null;
+            this._triggerEventBatchOutside = null;
             this._isInEditable = null;
         }
         /**
@@ -19889,7 +19967,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
     class TextareaXmlDomParser extends AbstractParser {
         constructor() {
             super(...arguments);
-            this.predicate = (item) => item instanceof HTMLTextAreaElement;
+            this.predicate = (item) => nodeName(item) === 'TEXTAREA';
         }
         /**
          * Parse a list (UL, OL) and its children list elements (LI).
@@ -21027,6 +21105,46 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     Strikethrough.dependencies = [Inline];
 
+    class QuoteFormat extends Format {
+        constructor() {
+            super('Q');
+        }
+    }
+
+    class QuoteXmlDomParser extends FormatXmlDomParser {
+        constructor() {
+            super(...arguments);
+            this.predicate = (item) => {
+                return item instanceof Element && nodeName(item) === 'Q';
+            };
+        }
+        /**
+         * Parse an italic node.
+         *
+         * @param item
+         */
+        async parse(item) {
+            const quote = new QuoteFormat();
+            const attributes = this.engine.parseAttributes(item);
+            if (attributes.length) {
+                quote.modifiers.append(attributes);
+            }
+            const children = await this.engine.parse(...item.childNodes);
+            this.applyFormat(quote, children);
+            return children;
+        }
+    }
+
+    class Quote extends JWPlugin {
+        constructor() {
+            super(...arguments);
+            this.loadables = {
+                parsers: [QuoteXmlDomParser],
+            };
+        }
+    }
+    Quote.dependencies = [Inline];
+
     class BasicEditor extends JWEditor {
         constructor(params) {
             super();
@@ -21057,6 +21175,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     [Span],
                     [Bold],
                     [Italic],
+                    [Quote],
                     [Underline],
                     [Strikethrough],
                     [Link],
@@ -21234,10 +21353,36 @@ odoo.define('web_editor.jabberwock', (function(require) {
         }
     }
 
+    class DomMutationParsingEngine extends HtmlDomParsingEngine {
+        async parseWithOptions(nodes, options) {
+            this.getNodes = options.getVNodes;
+            return this.parse(...nodes);
+        }
+        async _parseItem(node) {
+            if (this.getNodes) {
+                const alreadyExistNodes = this.getNodes(node);
+                if (alreadyExistNodes && alreadyExistNodes.length) {
+                    return alreadyExistNodes;
+                }
+                else {
+                    return super._parseItem(node);
+                }
+            }
+            else {
+                return super._parseItem(node);
+            }
+        }
+    }
+    DomMutationParsingEngine.id = 'mutation/html';
+    DomMutationParsingEngine.extends = [HtmlDomParsingEngine.id, XmlDomParsingEngine.id];
+
     class DomHelpers extends JWPlugin {
         constructor() {
             super(...arguments);
             this._specializedAttributes = new Map();
+            this.loadables = {
+                parsingEngines: [DomMutationParsingEngine],
+            };
             /**
              * Return the DOM Node(s) from a position, including DOM into shadow.
              *
@@ -21604,6 +21749,16 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 nodes = domEngine.getNodes(domNode);
             }
             return nodes;
+        }
+        /**
+         * Return all the modifiers that represent the domNode.
+         *
+         * @param domNode
+         */
+        getModifiers(domNode) {
+            const layout = this.editor.plugins.get(Layout);
+            const domEngine = layout.engines.dom;
+            return domEngine.getModifiers(domNode);
         }
         /**
          * Return the DOM Node(s) matching a VNode or a list of VNodes.
@@ -23889,6 +24044,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     [Span],
                     [Bold],
                     [Italic],
+                    [Quote],
                     [Underline],
                     [Strikethrough],
                     [Input],
@@ -24209,6 +24365,350 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     Resizer.dependencies = [DomLayout];
 
+    // todo: Move withDomMutation in the plugin rather than setting a global
+    // variable.
+    const activeObservers = new Map();
+    /**
+     * Observe the mutations of `node` and replicate them in the VDocument.
+     *
+     * Current limitations:
+     *
+     * - If there is a textNode that exist in the Dom but not in our Document and
+     *   there is a change that have that textNode withing two HTMLElement, the
+     *   characterData mutation will be wrongly interpreted as we calculate the text
+     *   offset relative to a HTMLElementNode.
+     * - When adding a class in outside the mutationTransaction and a single class
+     *   is added within, we add all the classes.
+     * - Do not handle the mutation of multiples textNode added/removed or used as
+     *   reference.
+     *   - The textNode are currently destroyed by the ReconciliationEngine, which
+     *     means we loose the reference between two mutations.
+     * - Do not handle the mutation of charData if there is textNode in the DOM but
+     *   not in VDOC between the textNode that trigger the CharData and the first
+     *   previousSibling that is wether an element or undefined
+     */
+    async function withDomMutations(editor, node, callback, context = editor) {
+        const domEngine = editor.plugins.get(Layout).engines.dom;
+        const parser = editor.plugins.get(Parser);
+        if (activeObservers.size) {
+            for (const [observationNode, observer] of activeObservers.entries()) {
+                const ancestors = getAncestors(node).concat([node]);
+                // If a parent is alread observed, the mutations will be handeled by
+                // his own observer.
+                if (ancestors.includes(observationNode)) {
+                    let result;
+                    await context.execCommand(async (context) => {
+                        result = await callback(context);
+                    });
+                    return result;
+                }
+                const ancestorsObservation = getAncestors(observationNode);
+                if (ancestorsObservation.includes(node)) {
+                    // Disconnect and remove the previous observation as the
+                    // mutation will be included in the newly created observer.
+                    observer.disconnect();
+                    activeObservers.delete(observationNode);
+                    break;
+                }
+            }
+        }
+        let result;
+        const withDomMutations = async (subContext) => {
+            const originalParents = new Map();
+            const stack = [node];
+            let currentNode;
+            // Save the state at one point in time of all the ancestors for `node` and all
+            // it's descendants into a map.
+            originalParents.set(node, [...getAncestors(node)]);
+            while ((currentNode = stack.shift())) {
+                const ancestors = [currentNode, ...getAncestors(currentNode)];
+                for (const child of currentNode.childNodes) {
+                    originalParents.set(child, [...ancestors]);
+                    stack.push(child);
+                }
+            }
+            // Map a vnode that has been removed to the node that replace it.
+            const replacementMap = new Map();
+            const charDataChanged = new Set();
+            const getFirstFormat = (domNode) => {
+                var _a;
+                return (_a = getFormats(domEngine, domNode)) === null || _a === void 0 ? void 0 : _a[0];
+            };
+            const getVNodes = (domNode) => {
+                const vnodes = domEngine.getNodes(domNode, false);
+                const currentNodes = vnodes &&
+                    vnodes
+                        // If a not has been remplated, take that one.
+                        .map(vnode => (replacementMap.get(vnode) ? replacementMap.get(vnode) : vnode));
+                const uniqueCurrentNodes = vnodes && [...new Set(currentNodes)];
+                return uniqueCurrentNodes;
+            };
+            const removedNodes = new Set();
+            // Map the addedNodes with the key being the parent and the value being
+            // the modified childrens.
+            const addedNodes = new Map();
+            const observer = new MutationObserver(async (mutations) => {
+                for (const mutation of mutations) {
+                    if (mutation.type === 'attributes') {
+                        const formats = getFormats(domEngine, mutation.target);
+                        let vnodesOrFormats = ((formats === null || formats === void 0 ? void 0 : formats.length) && formats) || domEngine.getNodes(mutation.target);
+                        const value = mutation.target.getAttribute(mutation.attributeName);
+                        if (vnodesOrFormats.length) {
+                            if (vnodesOrFormats[0] instanceof ContainerNode) {
+                                // Only add the attribute on the first container as
+                                // getNodes can return a list of containers.
+                                vnodesOrFormats = [vnodesOrFormats[0]];
+                            }
+                            // However, if vnodeOrFormat is a list of inlineNodes
+                            // (e.g. CharNodes[]), or a list of formats, add the
+                            // attribute on all of them.
+                            for (const vnodeOrFormat of vnodesOrFormats) {
+                                const attributes = vnodeOrFormat.modifiers.get(Attributes);
+                                attributes.set(mutation.attributeName, value);
+                            }
+                        }
+                    }
+                    else if (mutation.type === 'childList') {
+                        for (const addedNode of mutation.addedNodes) {
+                            const addedChildren = addedNodes.get(mutation.target) || [];
+                            addedChildren.push(addedNode);
+                            addedNodes.set(mutation.target, addedChildren);
+                        }
+                        for (const removedNode of mutation.removedNodes) {
+                            removedNodes.add(removedNode);
+                        }
+                    }
+                    else if (mutation.type === 'characterData') {
+                        charDataChanged.add(mutation.target);
+                    }
+                }
+            });
+            observer.observe(node, {
+                attributes: true,
+                characterData: true,
+                characterDataOldValue: true,
+                childList: true,
+                subtree: true,
+            });
+            activeObservers.set(node, observer);
+            result = await callback(subContext);
+            // ---------------------------------------------------------------------
+            // Process mutations in 3 steps
+            // ---------------------------------------------------------------------
+            // 1) Handle charData.
+            for (const charDomNode of charDataChanged) {
+                const targetVNodes = getVNodes(charDomNode);
+                const originalModifiers = targetVNodes[0].modifiers;
+                const text = removeFormattingSpace(charDomNode);
+                const vnodeToInsert = await parser.parse('text/html', text);
+                for (const vnode of vnodeToInsert) {
+                    vnode.modifiers.prepend(...originalModifiers);
+                    targetVNodes[0].before(vnode);
+                }
+                for (const targetVNode of targetVNodes) {
+                    targetVNode.remove();
+                }
+            }
+            // 2) Remove the nodes.
+            removeNodes(originalParents, removedNodes, getVNodes, getFirstFormat, replacementMap);
+            // 3) Add the nodes.
+            for (const childs of addedNodes.values()) {
+                await addVNodes(childs, originalParents, getVNodes, getFirstFormat, parser, domEngine);
+            }
+            // ---------------------------------------------------------------------
+            // Process mutation finish... Well done my friend.
+            // ---------------------------------------------------------------------
+            for (const [observerNode, activeObservation] of activeObservers.entries()) {
+                // The observation might have been already removed by another call
+                // so we only delete and disconnect when it's still active.
+                if (activeObservation === activeObservation) {
+                    activeObservers.delete(observerNode);
+                    observer.disconnect();
+                    break;
+                }
+            }
+        };
+        await context.execCommand(withDomMutations);
+        return result;
+    }
+    /**
+     * Retrieve list of modifiers for a node that have similar formats.
+     *
+     * For example, if we have an html like:
+     *
+     * <b><b><b>ab</b></b></b>
+     *
+     * - If we want to retrieve the modifier of the textNode (ab), it will give all
+     *   the modifiers.
+     * - If we want to retrieve the modifiers of third node `<b>`, it will return
+     *   two Format modifier `<b>` and their corresponding modifiers (e.g.
+     *   Attributes).
+     */
+    function getParentModifiers(inlineNode, ancestors, getFormat, getVNodes) {
+        if (!ancestors.length)
+            return [];
+        const ancestorsFormats = [];
+        // Get the Format of all inline ancestors until a container.
+        for (const ancestor of ancestors) {
+            const format = getFormat(ancestor);
+            if (!format)
+                break;
+            ancestorsFormats.push(format);
+        }
+        const greatestAncestorVNode = getVNodes(ancestors[0]);
+        const allParentFormat = greatestAncestorVNode[0].modifiers.filter(m => m instanceof Format);
+        // Now we can retrieve the format of `inlineNode`.
+        const inlineNodeFormat = allParentFormat[ancestorsFormats.length - 1];
+        // When we find the proper format, aggregate other modifier until another
+        // format.
+        let breakNextFormat = false;
+        const modifiers = (greatestAncestorVNode[0] && [...greatestAncestorVNode[0].modifiers]) || [];
+        const inlineModifiers = [...inlineNode.modifiers];
+        const parentModifiers = [];
+        for (let i = 0; i < modifiers.length; i++) {
+            const modifier = modifiers[i];
+            if (breakNextFormat && modifier instanceof Format)
+                break;
+            if (modifier === inlineNodeFormat)
+                breakNextFormat = true;
+            // Get the modifiers from the inline itself to get the reference of the
+            // inline modifiers.
+            parentModifiers.push(inlineModifiers[i]);
+        }
+        return parentModifiers;
+    }
+    /**
+     *  Get all the ancestors of `node`.
+     */
+    function getAncestors(node) {
+        const nodes = [];
+        let parent = node;
+        while ((parent = parent.parentElement)) {
+            nodes.push(parent);
+        }
+        return nodes;
+    }
+    /**
+     * Get all the formats for a node.
+     */
+    function getFormats(domEngine, domNode) {
+        const modifiers = domEngine.getModifiers(domNode);
+        return modifiers === null || modifiers === void 0 ? void 0 : modifiers.filter(x => x instanceof Format);
+    }
+    /**
+     * Add all the nodes in the VDocument.
+     */
+    async function addVNodes(addedDomNodes, initialParents, getVNodes, getFirstFormat, parser, domEngine) {
+        var _a;
+        for (const addedDomNode of addedDomNodes) {
+            const parentVNode = (_a = getVNodes(addedDomNode.parentElement)) === null || _a === void 0 ? void 0 : _a[0];
+            // Only add when a parent VNode is found.
+            if (parentVNode) {
+                domEngine.markForRedraw([addedDomNode]);
+                let vnodesToInsert = getVNodes(addedDomNode);
+                if (!vnodesToInsert.length) {
+                    // todo: Change this ugly api for providing a `getVNode`
+                    // function through a parsing option rather than the following
+                    // expression.
+                    const engine = parser.engines['mutation/html'];
+                    vnodesToInsert = await engine.parseWithOptions([addedDomNode], {
+                        getVNodes,
+                    });
+                }
+                // Try to locate a previous sibling VNode.
+                let previousSibling = addedDomNode;
+                let previousSiblingVNode;
+                let nextSiblingVNode;
+                while (!previousSiblingVNode && (previousSibling = previousSibling.previousSibling)) {
+                    const siblingVNodes = getVNodes(previousSibling);
+                    // In case the siblingVNodes are text, we need the last letter.
+                    previousSiblingVNode = siblingVNodes[siblingVNodes.length - 1];
+                }
+                let nextSibling = addedDomNode;
+                while (!nextSiblingVNode && (nextSibling = nextSibling.nextSibling)) {
+                    nextSiblingVNode = getVNodes(nextSibling)[0];
+                }
+                const siblingVNode = previousSiblingVNode || nextSiblingVNode;
+                if (siblingVNode) {
+                    const sortedNodes = previousSiblingVNode
+                        ? [...vnodesToInsert].reverse()
+                        : vnodesToInsert;
+                    const modifiers = getParentModifiers(siblingVNode, initialParents.get(previousSibling || nextSibling) || [], getFirstFormat, getVNodes).map(m => m.clone());
+                    for (const vnode of sortedNodes) {
+                        // parentVNode could be an InlineNode because the dom Node
+                        // is represented by a Format.
+                        if (parentVNode instanceof InlineNode) {
+                            vnode.modifiers.prepend(...modifiers);
+                        }
+                        if (previousSiblingVNode) {
+                            previousSiblingVNode.after(vnode);
+                        }
+                        else {
+                            nextSiblingVNode.before(vnode);
+                        }
+                    }
+                }
+                else {
+                    // As we havent found the previous sibling VNode, try to locate
+                    // a next sibling VNode.
+                    if (parentVNode instanceof InlineNode && parentVNode.length === 0) {
+                        for (const vnode of vnodesToInsert) {
+                            for (const modifier of parentVNode.modifiers) {
+                                vnode.modifiers.prepend(modifier);
+                            }
+                            parentVNode.before(vnode);
+                        }
+                        // If there were node to insert, remove the inline
+                        // InlineNode that represented the empty Format.
+                        if (vnodesToInsert)
+                            parentVNode.remove();
+                    }
+                    else {
+                        for (const vnode of vnodesToInsert) {
+                            parentVNode.append(vnode);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * Remove all the nodes in the VDocument.
+     */
+    function removeNodes(originalParents, removedDomNodes, getVNode, getFirstFormat, replacementMap) {
+        for (const removedDomNode of removedDomNodes) {
+            const removedVNodes = getVNode(removedDomNode);
+            if (removedVNodes) {
+                const firstVNode = removedVNodes[0];
+                // If we remove a text node that has a format, as no textnode will
+                // represent the format after removing it, we need to insert an
+                // InlineNode of length 0 with the cloned format.
+                let emptyInline;
+                if (removedDomNode.nodeType === Node.TEXT_NODE &&
+                    firstVNode.modifiers.filter(Format).length) {
+                    // todo: Clean emptyInlineNode if it's not the only one in
+                    // container
+                    emptyInline = new InlineNode();
+                    emptyInline.modifiers = firstVNode.modifiers.clone();
+                    firstVNode.before(emptyInline);
+                }
+                for (const vnode of removedVNodes) {
+                    if (vnode instanceof InlineNode) {
+                        const modifiers = getParentModifiers(vnode, originalParents.get(removedDomNode) || [], getFirstFormat, getVNode);
+                        // We might add back the vnode later from the cache. In
+                        // that case, we must remove it's original parents
+                        // modifiers.
+                        for (const modifier of modifiers) {
+                            vnode.modifiers.remove(modifier);
+                        }
+                    }
+                    replacementMap.set(vnode, emptyInline);
+                    vnode.remove();
+                }
+            }
+        }
+    }
+
     exports.Attributes = Attributes;
     exports.BasicEditor = BasicEditor;
     exports.ContainerNode = ContainerNode;
@@ -24236,6 +24736,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
     exports.SeparatorNode = SeparatorNode;
     exports.TagNode = TagNode;
     exports.VRange = VRange;
+    exports.withDomMutations = withDomMutations;
 
 }(this.jabberwock = this.jabberwock || {}, owl));
 return this.jabberwock;
