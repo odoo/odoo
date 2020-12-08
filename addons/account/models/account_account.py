@@ -59,7 +59,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    used = fields.Boolean(store=False, search='_search_used')
+    used = fields.Boolean(compute='_compute_used', search='_search_used')
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
@@ -213,6 +213,11 @@ class AccountAccount(models.Model):
             WHERE EXISTS (SELECT * FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
         """)
         return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
+
+    def _compute_used(self):
+        ids = set(self._search_used('=', True)[0][2])
+        for record in self:
+            record.used = record.id in ids
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
