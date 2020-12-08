@@ -2474,9 +2474,11 @@ class AccountMove(models.Model):
             (partner | partner.commercial_partner_id)._increase_rank('supplier_rank', count)
 
         # Trigger action for paid invoices in amount is zero
-        to_post.filtered(
+        invoices_zero = to_post.filtered(
             lambda m: m.is_invoice(include_receipts=True) and m.currency_id.is_zero(m.amount_total)
-        ).action_invoice_paid()
+        )
+        for company in invoices_zero.mapped('company_id'):
+            invoices_zero.filtered(lambda i: i.company_id == company).with_company(company).action_invoice_paid()
 
         # Force balance check since nothing prevents another module to create an incorrect entry.
         # This is performed at the very end to avoid flushing fields before the whole processing.
@@ -4527,6 +4529,7 @@ class AccountMoveLine(models.Model):
 
         # Trigger action for paid invoices
         not_paid_invoices\
+            .with_company(company)\
             .filtered(lambda move: move.payment_state in ('paid', 'in_payment'))\
             .action_invoice_paid()
 
