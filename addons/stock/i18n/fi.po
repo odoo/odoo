@@ -3,7 +3,7 @@
 # 	* stock
 # 
 # Translators:
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Simo Suurla <simo@suurla.fi>, 2019
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2019
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
@@ -6370,6 +6370,16 @@ msgstr ""
 "saat nyt palauttamasi tavarat, varmista, että <b> peruutetaan </b> "
 "palautettu poiminta, jotta vältetään logististen sääntöjen soveltaminen "
 "uudelleen (mikä aiheuttaisi päällekkäisiä toimintoja)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

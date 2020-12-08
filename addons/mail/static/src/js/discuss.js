@@ -655,19 +655,19 @@ var Discuss = AbstractAction.extend({
                 autoFocus: true,
                 classes: { 'ui-autocomplete': 'o_mail_channel' },
                 source: function (request, response) {
-                    self._lastSearchVal = _.escape(request.term);
+                    self._lastSearchVal = request.term;
                     self._searchChannel(self._lastSearchVal).then(function (result){
                         result.push({
                             label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s (Public)") + '</strong>',
-                                        '<em>"#' + self._lastSearchVal + '"</em>'
+                                        '<em>"#' + _.escape(self._lastSearchVal) + '"</em>'
                             ),
                             value: self._lastSearchVal,
                             special: 'public',
                         }, {
                             label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s (Private)") + '</strong>',
-                                        '<em>"#' + self._lastSearchVal + '"</em>'
+                                        '<em>"#' + _.escape(self._lastSearchVal) + '"</em>'
                             ),
                             value: self._lastSearchVal,
                             special: 'private',
@@ -697,8 +697,8 @@ var Discuss = AbstractAction.extend({
             $input.autocomplete({
                 autoFocus: true,
                 source: function (request, response) {
-                    self._lastSearchVal = _.escape(request.term);
-                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).then(response);
+                    self._lastSearchVal = request.term;
+                    self.call('mail_service', 'searchPartner', _.escape(self._lastSearchVal), 10).then(response);
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;
@@ -1338,7 +1338,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _onInviteButtonClicked: function () {
-        var title = _.str.sprintf(_t("Invite people to #%s"), this._thread.getName());
+        var title = _.str.sprintf(_t("Invite people to #%s"), _.escape(this._thread.getName()));
         new PartnerInviteDialog(this, title, this._thread.getID()).open();
     },
     /**

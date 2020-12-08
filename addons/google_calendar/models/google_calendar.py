@@ -445,7 +445,13 @@ class GoogleCalendar(models.AbstractModel):
         event.OE.event_id = res
         meeting = self.env['calendar.event'].browse(res)
         attendee_record = self.env['calendar.attendee'].search([('partner_id', '=', partner_id), ('event_id', '=', res)])
-        attendee_record.with_context(context_tmp).write({'oe_synchro_date': meeting.oe_update_date, 'google_internal_event_id': event.GG.event['id']})
+        # if on GC the user invite n email address which corresponds to contacts merged into a single partner,
+        # here the attendee_record will contain n records with same partner_id - event_id
+        # We just need to set the google_internal_event_id on the first one
+        # As this data come from GC we may not delete attendees
+        if not attendee_record.filtered(lambda att: att.google_internal_event_id):
+            attendee_record[:1].with_context(context_tmp).write({'google_internal_event_id': event.GG.event['id']})
+        attendee_record.with_context(context_tmp).write({'oe_synchro_date': meeting.oe_update_date})
         if meeting.recurrency:
             attendees = self.env['calendar.attendee'].sudo().search([('google_internal_event_id', '=ilike', '%s\_%%' % event.GG.event['id'])])
             excluded_recurrent_event_ids = set(attendee.event_id for attendee in attendees)
@@ -471,7 +477,7 @@ class GoogleCalendar(models.AbstractModel):
                 partner_email = google_attendee.get('email')
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
-                        if oe_attendee.email == partner_email or oe_attendee.partner_id.user_ids.google_calendar_cal_id == partner_email:
+                        if oe_attendee.email == partner_email or partner_email in oe_attendee.partner_id.user_ids.mapped('google_calendar_cal_id'):
                             oe_attendee.write({'state': google_attendee['responseStatus'], 'google_internal_event_id': single_event_dict.get('id')})
                             google_attendee['found'] = True
                             continue

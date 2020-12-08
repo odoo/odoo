@@ -152,7 +152,8 @@
                     <a href="#" role="button" class="ribbon btn btn-danger">Sale</a>
                 </div>
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
-                    <span t-field="product.image_1920"
+                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
+                    <span t-field="image_holder.image_1920"
                         t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256'}"
                         class="d-flex h-100 justify-content-center align-items-center"/>
                 </a>
@@ -755,7 +756,7 @@
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
-                                <t t-set="redirect">/shop/extra_info</t>
+                                <t t-set="redirect" t-valuef="/shop/extra_info"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
@@ -1071,7 +1072,7 @@
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
-                                <t t-set="redirect">/shop/checkout</t>
+                                <t t-set="redirect" t-valuef="/shop/checkout"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
@@ -1182,7 +1183,7 @@
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="hide_coupon">True</t>
-                                <t t-set="redirect">/shop/address</t>
+                                <t t-set="redirect" t-valuef="/shop/address"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
@@ -1323,11 +1324,13 @@
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                 <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
                     <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <t t-set="company_name_not_editable_message">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</t>
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="company_name_not_editable_message if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
                 <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
                     <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
-                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <t t-set="vat_not_editable_message">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</t>
+                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="vat_not_editable_message if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
             </t>
         </xpath>

@@ -44,7 +44,7 @@
                     </group>
                     <h4 attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}">By-products</h4>
                     <group>
-                        <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_finished_lot_id': finished_lot_id}">
+                        <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_finished_lot_id': finished_lot_id, 'default_company_id': company_id}">
                             <tree editable="bottom" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
                                 <field name="company_id" invisible="1"/>
                                 <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id), ('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" force_save="1"/>

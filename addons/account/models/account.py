@@ -1656,9 +1656,12 @@ class AccountTax(models.Model):
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
-        if base <= 0:
-            base = -base
+        if currency.is_zero(base):
+            sign = self._context.get('force_sign', 1)
+        elif base < 0:
             sign = -1
+        if base < 0:
+            base = -base
 
         # Store the totals to reach when using price_include taxes (only the last price included in row)
         total_included_checkpoints = {}

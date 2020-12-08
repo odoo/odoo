@@ -11,6 +11,7 @@
 # Martin Trigaux, 2020
 # Camille Demolder <cad@odoo.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
@@ -555,6 +556,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                     De werknemer heeft een andere tijdzone dan die van jou! Hier worden datums en tijden weergegeven in de tijdzone van de medewerker.\n"
+"                  </span>\n"
+"                  <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                     Het bedrijf van de afdeling heeft een andere tijdzone dan die van jou! Hier worden datums en tijden weergegeven in de tijdzone van het bedrijf.\n"
+"                  </span>\n"
+"                   <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                      Het bedrijf heeft een andere tijdzone dan de jouwe! Hier worden datums en tijden weergegeven in de tijdzone van het bedrijf.\n"
+"                    </span>\n"
+"                      ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -808,7 +819,7 @@ msgstr "Soort toewijzing"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_used_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_used_display
 msgid "Allocation Used Display"
-msgstr ""
+msgstr "Toegewezen verbruikt weergave"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -1568,6 +1579,8 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
+"Bij toerekening: het aantal dagen dat wordt toegewezen naast de dagen die u "
+"via het opbouwsysteem krijgt."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -1575,6 +1588,8 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
+"Indien toerekening: het aantal uren dat wordt toegewezen naast de uren die u"
+" krijgt via het opbouwsysteem."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2106,6 +2121,7 @@ msgstr "Alleen een verlof manager kan zijn eigen verzoeken goedkeuren."
 #, python-format
 msgid "Only a time off Manager can reset other people allocation."
 msgstr ""
+"Alleen een vrijetijdmanager kan de toewijzing van andere personen resetten."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2642,6 +2658,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
+"Verlofbeheerder wijzen vrije dagen toe aan werknemers (bijv. Betaald verlof).\n"
+"Medewerkers vragen toewijzingen aan verlofbeheerders (bijv. vakantiedagen)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
@@ -2773,6 +2791,8 @@ msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
 msgstr ""
+"Het verlofverzoek moet de status Concept hebben (\"Te verzenden\") om het te"
+" bevestigen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2869,6 +2889,9 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types"
 " without overriding limit."
 msgstr ""
+"Totaal aantal betaalde vrije dagen toegewezen aan deze werknemer, wijzig "
+"deze waarde om toewijzing / verlofaanvraag te creëren. Totaal gebaseerd op "
+"alle soorten vrije tijd zonder overschrijvende limiet."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2927,14 +2950,14 @@ msgstr "Gebruiker"
 #: code:addons/hr_holidays/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is online"
-msgstr ""
+msgstr "Gebruiker is online."
 
 #. module: hr_holidays
 #. openerp-web
 #: code:addons/hr_holidays/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is out of office"
-msgstr ""
+msgstr "Gebruiker is niet op kantoor."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id

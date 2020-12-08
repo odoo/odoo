@@ -4,7 +4,6 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
@@ -19,6 +18,7 @@
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Jon Perez <jop@odoo.com>, 2020
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -716,6 +716,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"En la confirmación de la orden de venta, este producto puede generar un proyecto y / o tarea.         A partir de ellos, puede realizar un seguimiento del servicio que está vendiendo.\n"
+"         'En el proyecto de la orden de venta': usará el proyecto configurado de la orden de venta si está definido o se utilizará como respaldo         para crear un nuevo proyecto basado en la plantilla seleccionada."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
@@ -973,17 +975,18 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "Pedido de venta al que está vinculado el proyecto."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Pedido de venta al que está vinculada la tarea."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
+"Seleccione un proyecto no facturable en el que se puedan crear tareas."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
@@ -1080,6 +1083,8 @@ msgstr "Tareas asociadas a esta etapa"
 msgid ""
 "The Project should be linked to a Sale Order to select an Sale Order Items."
 msgstr ""
+"El proyecto debe estar vinculado a una orden de venta para seleccionar los "
+"artículos de una orden de venta."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1100,6 +1105,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"El producto %s no debe tener un proyecto global ya que generará un proyecto."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1108,6 +1114,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"El producto %s no debe tener un proyecto ni una plantilla de proyecto, ya "
+"que no generará proyecto."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1116,6 +1124,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"El producto %s no debe tener una plantilla de proyecto, ya que generará una "
+"tarea en un proyecto global."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1413,3 +1423,4 @@ msgstr ""
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
 msgstr ""
+"Debe desvincular la tarea del artículo de la orden de venta para eliminarlo."

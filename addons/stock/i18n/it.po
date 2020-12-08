@@ -2445,6 +2445,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr ""
+"Fornisce la sequenza della riga quando vengono visualizzati i magazzini."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -2651,6 +2652,9 @@ msgid ""
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
 msgstr ""
+"Se la casella è selezionata, Odoo precompila automaticamente le operazioni "
+"dettagliate con i prodotti, le ubicazioni e i numeri di lotto/serie "
+"corrispondenti."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4661,7 +4665,7 @@ msgstr "Prendi da"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Pull Rule"
-msgstr ""
+msgstr "Regola di prelevamento"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6487,6 +6491,16 @@ msgstr ""
 " applichino di nuovo (ciò creerebbe operazioni duplicate). "
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -6712,7 +6726,7 @@ msgstr "Attivare un'altra regola"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule If No Stock"
-msgstr ""
+msgstr "Attiva altra regola se nessuna giacenza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type

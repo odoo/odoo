@@ -128,6 +128,31 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<table style=\"width:600px;margin:5px auto;\">\n"
+"<tbody>\n"
+"<tr><td>\n"
+"<!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"<a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"</td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"الشهادة: ${object.survey_id.display_name}\n"
+"</td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"<tbody>\n"
+"<tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"<p>عزيزي <span>${object.partner_id.name or 'المشارك'}</span></p>\n"
+"<p>\n"
+"هنا، في مرفق، وثيقة شهادتك ل\n"
+"<strong>${object.survey_id.display_name}</strong>\n"
+"</p>\n"
+"<p>تهانينا على نجاحك في الاختبار!</p>\n"
+"</td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</div> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -1007,9 +1032,7 @@ msgstr "تاريخ الإجابة"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
-msgstr ""
-"التاريخ الذي يمكن فيه الزبون من فتح الاستطلاع وتقديم الإجابات\n"
-" "
+msgstr "التاريخ الذي يمكن فيه للزبون فتح الاستطلاع وتقديم الإجابات"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline

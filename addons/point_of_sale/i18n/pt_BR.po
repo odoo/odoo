@@ -4266,7 +4266,7 @@ msgstr "TOTAL"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 msgid "Take Money In/Out"
-msgstr ""
+msgstr "Leve dinheiro para dentro/para fora"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4798,6 +4798,13 @@ msgstr ""
 "para personalizar os números de referência das suas ordens."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "This session is already closed."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr "Esta taxa aplica-se a qualquer produto novo criado no catálogo."
@@ -5225,6 +5232,8 @@ msgid ""
 "You are not allowed to change the cash control status while a session is "
 "already opened."
 msgstr ""
+"Você não tem permissão para alterar o status do controle de caixa enquanto "
+"uma sessão já estiver aberta."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

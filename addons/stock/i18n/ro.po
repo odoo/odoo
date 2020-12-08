@@ -5,9 +5,9 @@
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2019
 # Martin Trigaux, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # erik_bzcl <erik@bizicloud.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
@@ -2629,6 +2629,9 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
+"În cazul în care ridicarea este deblocată, puteți edita cererea inițială "
+"(pentru o ridicare ciornă) sau cantitățile efective (pentru o ridicare "
+"efectuată)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3204,7 +3207,7 @@ msgstr "Termen livrare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_type
 msgid "Lead Type"
-msgstr ""
+msgstr "Tip Pistă"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__none
@@ -6269,6 +6272,8 @@ msgid ""
 "The scheduled date should be updated due to a delay on <a href='#' data-oe-"
 "model='%s' data-oe-id='%s'>%s</a>."
 msgstr ""
+"Data programată ar trebui actualizată din cauza unei întârzieri la <a "
+"href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6485,6 +6490,16 @@ msgstr ""
 " primiți mărfurile pe care le returnați acum, asigurați-vă că ați <b> "
 "inversat </b> preluarea returnată, pentru a evita aplicarea din nou a "
 "regulilor logisticii (ceea ce ar crea operațiuni duplicate)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

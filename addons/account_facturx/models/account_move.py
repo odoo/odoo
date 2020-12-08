@@ -55,7 +55,7 @@ class AccountMove(models.Model):
         # Invoice lines.
         for i, line in enumerate(self.invoice_line_ids.filtered(lambda l: not l.display_type)):
             price_unit_with_discount = line.price_unit * (1 - (line.discount / 100.0))
-            taxes_res = line.tax_ids.compute_all(
+            taxes_res = line.tax_ids.with_context(force_sign=line.move_id._get_tax_force_sign()).compute_all(
                 price_unit_with_discount,
                 currency=line.currency_id,
                 quantity=line.quantity,

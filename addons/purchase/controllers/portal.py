@@ -110,4 +110,6 @@ class CustomerPortal(CustomerPortal):
             return request.redirect('/my')
 
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
+        if order_sudo.company_id:
+            values['res_company'] = order_sudo.company_id
         return request.render("purchase.portal_my_purchase_order", values)

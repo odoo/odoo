@@ -154,7 +154,7 @@ class AccountPayment(models.Model):
 
         multi_stub = self.company_id.account_check_printing_multi_stub
 
-        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.invoice_date_due)
+        invoices = self.reconciled_invoice_ids.sorted(key=lambda r: r.invoice_date_due or fields.Date.context_today(self))
         debits = invoices.filtered(lambda r: r.type == 'in_invoice')
         credits = invoices.filtered(lambda r: r.type == 'in_refund')
 
