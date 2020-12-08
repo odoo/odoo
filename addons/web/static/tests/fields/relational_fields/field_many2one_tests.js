@@ -328,7 +328,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2ones in form views with show_address', async function (assert) {
-            assert.expect(4);
+            assert.expect(6);
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -360,6 +360,11 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('a.o_form_uri').html(), '<span>aaa</span><br><span>Street</span><br><span>City ZIP</span>',
                 "input should have a multi-line content in readonly due to show_address");
             await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('input.o_input').val(), 'aaa');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>Street</span><br><span>City ZIP</span>');
+
             assert.containsOnce(form, 'button.o_external_button:visible',
                 "should have an open record button");
 
@@ -370,6 +375,57 @@ QUnit.module('fields', {}, function () {
             form.$('input.o_input').trigger('focusout');
             assert.strictEqual($('.modal button:contains(Create and edit)').length, 0,
                 "there should not be a quick create modal");
+
+            form.destroy();
+        });
+
+        QUnit.test('many2one show_address in edit', async function (assert) {
+            assert.expect(6);
+
+            const addresses = {
+                "aaa": "\nAAA\nRecord",
+                "first record": "\nFirst\nRecord",
+                "second record": "\nSecond\nRecord",
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form><sheet><group>
+                        <field name="trululu" context="{'show_address': 1}" options="{'always_reload': True}"/>
+                    </group></sheet></form>
+                `,
+                mockRPC: function (route, args) {
+                    if (args.method === 'name_get') {
+                        return this._super(route, args).then(function (result) {
+                            result[0][1] += addresses[result[0][1]];
+                            return result;
+                        });
+                    }
+                    return this._super(route, args);
+                },
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+            assert.strictEqual(form.$('input').val(), 'aaa');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>AAA</span><br><span>Record</span>');
+
+            await testUtils.fields.editInput(form.$('input'), 'first record');
+            await testUtils.fields.many2one.clickHighlightedItem('trululu');
+
+            assert.strictEqual(form.$('input').val(), 'first record');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>First</span><br><span>Record</span>');
+
+            await testUtils.fields.editInput(form.$('input'), 'second record');
+            await testUtils.fields.many2one.clickHighlightedItem('trululu');
+            assert.strictEqual(form.$('input').val(), 'second record');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>Second</span><br><span>Record</span>');
 
             form.destroy();
         });
