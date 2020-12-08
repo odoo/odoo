@@ -40,7 +40,7 @@ async function loadFromTextarea(parent, textarea, options) {
     const $textarea = $(textarea);
     const currentOptions = Object.assign({}, options);
     if (!currentOptions.value || !currentOptions.value.trim()) {
-        currentOptions.value = '<p><br><p>';
+        currentOptions.value = '<p><br></p>';
     }
     const wysiwyg = await createWysiwyg(parent, currentOptions);
 
