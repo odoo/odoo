@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
+    display_license_plate = fields.Boolean(compute="_compute_display_license_plate", string="Assigned Car")
     mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):
@@ -35,6 +36,19 @@ class Employee(models.Model):
         for employee in self:
             drivers = employee.user_id.partner_id | employee.sudo().address_home_id
             employee.employee_cars_count = sum(mapped_data.get(pid, 0) for pid in drivers.ids)
+
+    @api.depends_context('uid')
+    def _compute_display_license_plate(self):
+        if self.user_has_groups('hr.group_hr_user, fleet.fleet_group_user'):
+            self.display_license_plate = False
+        else:
+            driver_ids = (self.mapped('user_id.partner_id') | self.sudo().mapped('address_home_id')).ids
+            fleet_data = self.env['fleet.vehicle'].read_group(
+                domain=[('driver_id', 'in', driver_ids)], fields=['id:array_agg'], groupby=['driver_id'])
+            mapped_data = list(data['driver_id'][0] for data in fleet_data)
+            for employee in self:
+                drivers = employee.user_id.partner_id | employee.sudo().address_home_id
+                employee.display_license_plate = any(pid in mapped_data for pid in drivers.ids)
 
     def action_get_claim_report(self):
         self.ensure_one()

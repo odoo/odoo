@@ -8,6 +8,7 @@ class User(models.Model):
     _inherit = ['res.users']
 
     employee_cars_count = fields.Integer(related='employee_id.employee_cars_count')
+    display_license_plate = fields.Boolean(related='employee_id.display_license_plate')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -16,7 +17,7 @@ class User(models.Model):
         """
         init_res = super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['employee_cars_count']
+        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['employee_cars_count', 'display_license_plate']
         return init_res
 
     def action_get_claim_report(self):

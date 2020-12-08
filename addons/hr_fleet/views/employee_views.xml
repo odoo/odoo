@@ -5,12 +5,18 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <field name="display_license_plate" invisible="1"/>
+            </xpath>
              <xpath expr="//header" position="inside">
                 <button name="action_get_claim_report" string="Claim Car Report"
                 class="btn btn-secondary"
                 type="object" groups="fleet.fleet_group_manager"
                 attrs="{'invisible': [('employee_cars_count','=', 0)]}"
                 confirm="This report will contain only PDF files. If you want all documents, please go on vehicle page. Do you want to proceed?"/>
+            </xpath>
+            <xpath expr="//field[@name='license_plate']" position="attributes">
+                <attribute name="attrs">{'readonly': [('display_license_plate', '=', True)]}</attribute>
             </xpath>
             <div name="button_box" position="inside">
                 <button name="action_open_employee_cars" type="object"
@@ -33,6 +39,9 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <field name="display_license_plate" invisible="1"/>
+            </xpath>
              <xpath expr="//header" position="inside">
                 <button name="action_get_claim_report" string="Claim Car Report"
                 class="btn btn-primary"
@@ -47,6 +56,9 @@
                         attrs="{'invisible': [('employee_cars_count','=', 0)]}">
                     <field name="employee_cars_count" widget="statinfo" />
                 </button>
+            </xpath>
+            <xpath expr="//field[@name='license_plate']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('can_edit', '=', False), ('display_license_plate', '=', True)]}</attribute>
             </xpath>
         </field>
     </record>

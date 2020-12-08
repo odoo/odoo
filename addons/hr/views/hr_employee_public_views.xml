@@ -9,6 +9,7 @@
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="job_title" string="Job Title"/>
+                    <field string="License Plate" name="license_plate" filter_domain="[('license_plate', 'ilike', self)]"/>
                     <field name="department_id" string="Department"/>
                     <field name="company_id" string="Company"/>
                     <separator/>

@@ -31,6 +31,7 @@ class HrEmployeePublic(models.Model):
     tz = fields.Selection(readonly=True)
     color = fields.Integer(readonly=True)
     employee_type = fields.Selection(readonly=True)
+    license_plate = fields.Char(readonly=True)
 
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
