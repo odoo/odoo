@@ -37,10 +37,13 @@ odoo.define('l10n_de_pos_cert.ProductScreen', function(require) {
             }
         }
         async _showTaxError() {
+            const rates = Object.keys(this.env.pos.vatRateMapping);
+            const ratesText = [rates.slice(0,-1).join(', '), rates.slice(-1)[0]].join(' and ');
+
             const title = this.env._t('Tax error');
-            const body = this.env._t(
-                'Product has an invalid tax amount. Only standard (16% or 19%), reduced (5% or 7%) and zero (0%) rates are allowed.'
-            );
+            const body = _.str.sprintf(this.env._t(
+                'Product has an invalid tax amount. Only the following rates are allowed: %s.'
+            ), ratesText);
             await this.showPopup('ErrorPopup', { title, body });
         }
 

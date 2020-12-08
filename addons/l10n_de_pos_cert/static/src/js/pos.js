@@ -5,12 +5,12 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
     const { uuidv4, convertFromEpoch } = require('l10n_de_pos_cert.utils');
     const { TaxError } = require('l10n_de_pos_cert.errors');
 
-    const RATE_MAPPING = {
-        16: 'NORMAL',
-        19: 'NORMAL',
-        5:  'REDUCED_1',
-        7:  'REDUCED_1',
-        0:  'NULL',
+    const RATE_ID_MAPPING = {
+        1: 'NORMAL',
+        2: 'REDUCED_1',
+        3: 'SPECIAL_RATE_1',
+        4: 'SPECIAL_RATE_2',
+        5: 'NULL',
     };
 
     models.load_fields('res.company', ['fiskaly_key', 'fiskaly_secret']);
@@ -21,13 +21,28 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         initialize(attributes) {
             _super_posmodel.initialize.apply(this,arguments);
             this.token = '';
-            this.rpc({
-                model: 'ir.config_parameter',
-                method: 'get_param',
-                args: ['fiskaly_kassensichv_api_url'],
-            }).then(data => {
-                this.apiUrl = data;
-            })
+            this.vatRateMapping = {};
+        },
+        //@Override
+        after_load_server_data() {
+            if (this.isCountryGermany) {
+                this.rpc({
+                    model: 'ir.config_parameter',
+                    method: 'get_param',
+                    args: ['fiskaly_kassensichv_api_url'],
+                }).then(url => {
+                    this.apiUrl = url;
+                });
+
+                this.rpc({
+                    model: 'ir.config_parameter',
+                    method: 'get_param',
+                    args: ['fiskaly_dsfinvk_api_url'],
+                }).then(url => {
+                    this.initVatRates(url);
+                })
+            }
+            return _super_posmodel.after_load_server_data.apply(this, arguments);
         },
         getApiToken() {
             return this.token;
@@ -52,6 +67,33 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         },
         isCountryGermany() {
             return this.config.is_company_country_germany;
+        },
+        initVatRates(url) {
+            console.log(this);
+            const data = {
+                'api_key': this.getApiKey(),
+                'api_secret': this.getApiSecret()
+            }
+
+            $.ajax({
+                url: url + 'auth',
+                method: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json'
+            }).then((data) => {
+                const token = data.access_token;
+                $.ajax({
+                    url: url + 'vat_definitions',
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                }).then((vat_data) => {
+                    vat_data.data.forEach(vat_definition => {
+                        if (!(vat_definition.percentage in this.vatRateMapping)) {
+                            this.vatRateMapping[vat_definition.percentage] = RATE_ID_MAPPING[vat_definition.vat_definition_export_id];
+                        }
+                    })
+                })
+            })
         }
     });
 
@@ -153,20 +195,23 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         //@Override
         add_product(product, options) {
             if (this.pos.isCountryGermany()) {
-                if (product.taxes_id.length === 0 || !(this.pos.taxes_by_id[product.taxes_id[0]].amount in RATE_MAPPING)) {
+                if (product.taxes_id.length === 0 || !(this.pos.taxes_by_id[product.taxes_id[0]].amount in this.pos.vatRateMapping)) {
                     throw new TaxError(product);
                 }
             }
             _super_order.add_product.apply(this, arguments);
         },
         _authenticate() {
+            const data = {
+                'api_key': this.pos.getApiKey(),
+                'api_secret': this.pos.getApiSecret()
+            }
+
             return $.ajax({
                 url: this.pos.getApiUrl() + 'auth',
                 method: 'POST',
-                data: {
-                    'api_key': this.pos.getApiKey(),
-                    'api_secret': this.pos.getApiSecret()
-                }
+                data: JSON.stringify(data),
+                contentType: 'application/json'
             }).then((data) => {
                 this.pos.setApiToken(data.access_token);
             }).catch((error) => {
@@ -215,7 +260,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                 'NULL': [],
             };
             this.get_tax_details().forEach((detail) => {
-                rateIds[RATE_MAPPING[detail.tax.amount]].push(detail.tax.id);
+                rateIds[this.pos.vatRateMapping[detail.tax.amount]].push(detail.tax.id);
             });
             const amountPerVatRate = { 'NORMAL': 0, 'REDUCED_1': 0, 'NULL': 0 };
             for (var rate in rateIds) {
