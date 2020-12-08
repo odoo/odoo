@@ -1,25 +1,33 @@
-.oe_tax_group_editable {
+.o_tax_group_editable {
     width: 100%;
+    padding: 1% 0% !important;
 }
 
-.tax_group_edit {
+.o_tax_group_edit {
     white-space: nowrap;
 }
 
-.tax_group_edit:hover {
+.o_tax_group_edit:hover {
     color: #00A09D;
     cursor: pointer;
 }
 
-.oe_tax_group_name {
-    font-weight: bold; 
+.o_tax_group_name {
+    font-weight: bold;
     min-width: 150px;
     text-align: right;
-    padding-right: 20px;
 }
 
-.oe_tax_group_editable .oe_tax_group_amount_value input {
-    width: 65%; 
-    float: right; 
+.o_tax_group_name label {
+    padding-top: 2%;
+}
+
+.o_tax_group_editable .o_tax_group_amount_value input {
+    width: 65%;
+    float: right;
     text-align: right;
+}
+
+.o_tax_group_editable .o_tax_group_amount_value::before {
+    content: ' ';
 }

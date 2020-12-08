@@ -1,171 +1,190 @@
-odoo.define('account.tax_group', function (require) {
-    "use strict";
+/** @odoo-module alias=account.tax_group_owl **/
+"use strict";
 
-    var core = require('web.core');
-    var session = require('web.session');
-    var fieldRegistry = require('web.field_registry');
-    var AbstractField = require('web.AbstractField');
-    var fieldUtils = require('web.field_utils');
-    var QWeb = core.qweb;
+const { Component } = owl;
+const { useState, useRef } = owl.hooks;
+import session from 'web.session';
+import AbstractFieldOwl from 'web.AbstractFieldOwl';
+import fieldUtils from 'web.field_utils';
+import field_registry from 'web.field_registry_owl';
 
-    var TaxGroupCustomField = AbstractField.extend({
-        events: {
-            'click .tax_group_edit': '_onClick',
-            'keydown .oe_tax_group_editable .tax_group_edit_input input': '_onKeydown',
-            'blur .oe_tax_group_editable .tax_group_edit_input input': '_onBlur',
-        },
+class TaxGroupComponent extends Component {
+    constructor(parent, props) {
+        super(parent, props);
+        this.inputTax = useRef('taxValueInput');
+        this.state = useState({value: 'readonly'});
+    }
 
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    // Life cycle methods
+    //--------------------------------------------------------------------------
 
-        /**
-         * This method is called by "_setTaxGroups". It is 
-         * responsible for calculating taxes based on
-         * tax groups and triggering an event to
-         * notify the ORM of a change.
-         * 
-         * @param {Id} taxGroupId
-         * @param {Float} deltaAmount
-         */
-        _changeTaxValueByTaxGroup: function (taxGroupId, deltaAmount) {
-            var self = this;
-            // Search for the first tax line with the same tax group and modify its value
-            var line_id = self.record.data.line_ids.data.find(elem => elem.data.tax_group_id && elem.data.tax_group_id.data.id === taxGroupId);
+    willUpdateProps(nextProps) {
+        this.setState('readonly'); // If props are edited, we set the state to readonly
+    }
 
-            var debitAmount = 0;
-            var creditAmount = 0;
-            var amount_currency = 0;
-            if (line_id.data.currency_id) { // If multi currency enable
-                if (this.record.data.move_type === "in_invoice") {
-                    amount_currency = line_id.data.amount_currency - deltaAmount;
-                } else {
-                    amount_currency = line_id.data.amount_currency + deltaAmount;
-                }
-            } else {
-                var balance = line_id.data.price_subtotal;
-                balance -= deltaAmount;
-                if (this.record.data.move_type === "in_invoice") { // For vendor bill
-                    if (balance > 0) {
-                        debitAmount = balance;
-                    } else if (balance < 0) {
-                        creditAmount = -balance;
-                    }
-                } else { // For refund
-                    if (balance > 0) {
-                        creditAmount = balance;
-                    } else if (balance < 0) {
-                        debitAmount = -balance;
-                    }
-                }
-            }
-            // Trigger ORM
-            self.trigger_up('field_changed', {
-                dataPointID: self.record.id,
-                changes: { line_ids: { operation: "UPDATE", id: line_id.id, data: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount } } }, // account.move change
-                initialEvent: { dataPointID: line_id.id, changes: { amount_currency: amount_currency, debit: debitAmount, credit: creditAmount }, }, // account.move.line change
-            });
-        },
+    patched() {
+        if (this.state.value === 'edit') {
+            this.inputTax.el.focus(); // Focus the input
+            this.inputTax.el.value = this.props.taxGroup.tax_group_amount;
+        }
+    }
 
-        /**
-         * This method checks that the document where the widget
-         * is located is of the "in_invoice" or "in_refund" type.
-         * This makes it possible to know if it is a purchase
-         * document.
-         * 
-         * @returns boolean (true if the invoice is a purchase document)
-         */
-        _isPurchaseDocument: function () {
-            return this.record.data.move_type === "in_invoice" || this.record.data.move_type === 'in_refund';
-        },
+    //--------------------------------------------------------------------------
+    // Main methods
+    //--------------------------------------------------------------------------
 
-        /**
-         * This method is part of the widget life cycle and allows you to render 
-         * the widget.
-         * 
-         * @private
-         * @override 
-         */
-        _render: function () {
-            var self = this;
-            // Display the pencil and allow the event to click and edit only on purchase that are not posted and in edit mode.
-            // since the field is readonly its mode will always be readonly. Therefore we have to use a trick by checking the 
-            // formRenderer (the parent) and check if it is in edit in order to know the correct mode.
-            var displayEditWidget = self._isPurchaseDocument() && this.record.data.state === 'draft' && this.getParent().mode === 'edit';
-            this.$el.html($(QWeb.render('AccountTaxGroupTemplate', {
-                lines: self.value,
-                displayEditWidget: displayEditWidget,
-            })));
-        },
+    /**
+     * The purpose of this method is to change the state of the component.
+     * It can have one of the following three states:
+     *  - readonly: display in read-only mode of the field,
+     *  - edit: display with a html input field,
+     *  - disable: display with a html input field that is disabled.
+     *
+     * If a value other than one of these 3 states is passed as a parameter,
+     * the component is set to readonly by default.
+     *
+     * @param {String} value
+     */
+    setState(value) {
+        if (['readonly', 'edit', 'disable'].includes(value)) {
+            this.state.value = value;
+        }
+        else {
+            this.state.value = 'readonly';
+        }
+    }
 
-        //--------------------------------------------------------------------------
-        // Handler
-        //--------------------------------------------------------------------------
+    /**
+     * This method handles the "_onChangeTaxValue" event. In this method,
+     * we get the new value for the tax group, we format it and we call
+     * the method to recalculate the tax lines. At the moment the method
+     * is called, we disable the html input field.
+     *
+     * In case the value has not changed or the tax group is equal to 0,
+     * the modification does not take place.
+     */
+    _onChangeTaxValue() {
+        this.setState('disable'); // Disable the input
+        let newValue = this.inputTax.el.value; // Get the new value
+        let currency = session.get_currency(this.props.record.data.currency_id.data.id);
+        try {
+            newValue = fieldUtils.parse.float(newValue); // Need a float for format the value
+            newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits}); // Return a string rounded to currency precision
+            newValue = fieldUtils.parse.float(newValue); // Convert back to Float to compare with oldValue to know if value has changed
+        } catch (err) {
+            $(this.inputTax.el).addClass('o_field_invalid');
+            this.setState('edit');
+            return;
+        }
+        // The newValue can't be equals to 0
+        if (newValue === this.props.taxGroup.tax_group_amount || newValue === 0) {
+            this.setState('readonly');
+            return;
+        }
+        this.trigger('change-tax-group', {
+            oldValue: this.props.taxGroup.tax_group_amount,
+            newValue: newValue,
+            taxGroupId: this.props.taxGroup.tax_group_id
+        });
+    }
+}
+TaxGroupComponent.props = ['taxGroup', 'displayEditWidget', 'record'];
+TaxGroupComponent.template = 'account.TaxGroupComponent';
 
-        /**
-         * This method is called when the user is in edit mode and 
-         * leaves the <input> field. Then, we execute the code that 
-         * modifies the information.
-         * 
-         * @param {event} ev 
-         */
-        _onBlur: function (ev) {
-            ev.preventDefault();
-            var $input = $(ev.target);
-            var newValue = $input.val();
-            var currency = session.get_currency(this.record.data.currency_id.data.id);
-            try {
-                newValue = fieldUtils.parse.float(newValue);    // Need a float for format the value.             
-                newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits}); // return a string rounded to currency precision
-                newValue = fieldUtils.parse.float(newValue); // convert back to Float to compare with oldValue to know if value has changed
-            } catch (err) {
-                $input.addClass('o_field_invalid');
-                return;
-            }
-            var oldValue = $input.data('originalValue');
-            if (newValue === oldValue || newValue === 0) {
-                return this._render();
-            }
-            var taxGroupId = $input.parents('.oe_tax_group_editable').data('taxGroupId');
-            this._changeTaxValueByTaxGroup(taxGroupId, oldValue-newValue);
-        },
+class TaxGroupListComponent extends AbstractFieldOwl {
+    constructor(...args) {
+        super(...args);
+        this.taxGroups = useState({value: JSON.parse(this.value)});
+        this.displayEditWidget = this._displayEditWidget();
+    }
 
-        /**
-         * This method is called when the user clicks on a specific <td>.
-         * it will hide the edit button and display the field to be edited.
-         * 
-         * @param {event} ev 
-         */
-        _onClick: function (ev) {
-            ev.preventDefault();
-            var $taxGroupElement = $(ev.target).parents('.oe_tax_group_editable');
-            // Show input and hide previous element
-            $taxGroupElement.find('.tax_group_edit').addClass('d-none');
-            $taxGroupElement.find('.tax_group_edit_input').removeClass('d-none');
-            var $input = $taxGroupElement.find('.tax_group_edit_input input');
-            // Get original value and display it in user locale in the input
-            var formatedOriginalValue = fieldUtils.format.float($input.data('originalValue'), {}, {});
-            $input.focus(); // Focus the input
-            $input.val(formatedOriginalValue); //add value in user locale to the input
-        },
+    //--------------------------------------------------------------------------
+    // Life cycle method
+    //--------------------------------------------------------------------------
 
-        /**
-         * This method is called when the user is in edit mode and pressing 
-         * a key on his keyboard. If this key corresponds to ENTER or TAB, 
-         * the code that modifies the information is executed.
-         * 
-         * @param {event} ev 
-         */
-        _onKeydown: function (ev) {
-            switch (ev.which) {
-                // Trigger only if the user clicks on ENTER or on TAB.
-                case $.ui.keyCode.ENTER:
-                case $.ui.keyCode.TAB:
-                    // trigger blur to prevent the code being executed twice
-                    $(ev.target).blur();
-            }
-        },
+    willUpdateProps(nextProps) {
+        // We only reformat tax groups if there are changed
+        if (nextProps.fieldName === 'amount_by_group') {
+            this.taxGroups.value = JSON.parse(this.value);
+        }
+    }
 
-    });
-    fieldRegistry.add('tax-group-custom-field', TaxGroupCustomField)
-});
+    //--------------------------------------------------------------------------
+    // Events
+    //--------------------------------------------------------------------------
+
+    _onKeydown(ev) {
+        switch (ev.which) {
+            // Trigger only if the user clicks on ENTER or on TAB.
+            case $.ui.keyCode.ENTER:
+            case $.ui.keyCode.TAB:
+                // trigger blur to prevent the code being executed twice
+                $(ev.target).blur();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // Private methods
+    //--------------------------------------------------------------------------
+
+    /**
+     * Tricky method to get the parentWidget. It necessary to do that because
+     * we need to know the view mode. (If we are in readonly or edit).
+     */
+    _getParentWidget() {
+        return this.__owl__.parent.parentWidget;
+    }
+
+    /**
+     * This method checks that the document where the widget
+     * is located is of the "in_invoice" or "in_refund" type.
+     * This makes it possible to know if it is a purchase
+     * document.
+     *
+     * @returns boolean (true if the invoice is a purchase document)
+     */
+    _isPurchaseDocument() {
+        let purchaseMoveTypes = ['in_invoice', 'in_refund'];
+        return purchaseMoveTypes.includes(this.record.data.move_type)
+    }
+
+    /**
+     * This method verifies that the account move is a purchase document, that the document is in draft and
+     * that the edit mode is enabled.
+     */
+    _displayEditWidget() {
+        return this._isPurchaseDocument() && this.record.data.state === 'draft' && this._getParentWidget().mode === 'edit';
+    }
+
+    /**
+     * This method is the main function of the tax group widget.
+     * It is called by an event trigger (from the TaxGroupComponent) and receives
+     * a particular payload.
+     *
+     * It is responsible for calculating taxes based on tax groups and triggering
+     * an event to notify the ORM of a change.
+     *
+     * @param {*} ev
+     * @param {*} ev.details A payload with the tax group id, the old value of the
+     * tax group and the new value.
+     */
+    _onChangeTaxValueByTaxGroup(ev) {
+        let detail = ev.detail;
+        this.taxGroups.value.forEach(taxGroup => {
+           if (taxGroup.tax_group_id === detail.taxGroupId) {
+               taxGroup.tax_group_amount = detail.newValue;
+           }
+        });
+        this.trigger('field-changed', {
+            dataPointID: this.record.id,
+            changes: { amount_by_group: JSON.stringify(this.taxGroups.value) }
+        })
+    }
+}
+TaxGroupListComponent.template = 'account.TaxGroupCustomField';
+TaxGroupListComponent.components = { TaxGroupComponent };
+
+field_registry.add('tax-group-custom-field', TaxGroupListComponent);
+
+export default TaxGroupListComponent

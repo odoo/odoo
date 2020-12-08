@@ -238,7 +238,7 @@ class AccountMove(models.Model):
         compute='_compute_amount', currency_field='currency_id')
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
         compute='_compute_amount', currency_field='company_currency_id')
-    amount_by_group = fields.Binary(string="Tax amount by group",
+    amount_by_group = fields.Char(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
         help='Edit Tax amounts if you encounter rounding issues.')
     payment_state = fields.Selection(PAYMENT_STATE_SELECTION, string="Payment Status", store=True,
@@ -544,6 +544,28 @@ class AccountMove(models.Model):
     @api.onchange('line_ids', 'invoice_payment_term_id', 'invoice_date_due', 'invoice_cash_rounding_id', 'invoice_vendor_bill_id')
     def _onchange_recompute_dynamic_lines(self):
         self._recompute_dynamic_lines()
+
+    @api.onchange('amount_by_group')
+    def _onchange_amount_by_group(self):
+        """ This method is triggered by the tax group widget. It allows us to edit the right
+            line_ids according to the edited tax group.
+        """
+        for move in self:
+            amount_by_groups = json.loads(move.amount_by_group)
+            for amount_by_group in amount_by_groups:
+                tax_lines = move.line_ids.filtered(lambda line: line.tax_group_id and line.tax_group_id.id == amount_by_group['tax_group_id'])
+                if len(tax_lines):
+                    first_tax_line = tax_lines[0]
+                    tax_group_old_amount = sum(tax_lines.mapped('amount_currency'))
+                    delta_amount = tax_group_old_amount - amount_by_group['tax_group_amount']
+                    delta_amount *= move.move_type == 'in_invoice' and -1 or 1
+
+                    if delta_amount != 0:
+                        first_tax_line.amount_currency = first_tax_line.amount_currency + delta_amount
+                        # We have to trigger the on change manually because we don"t change the value of
+                        # amount_currency in the view.
+                        first_tax_line._onchange_amount_currency()
+            move._recompute_dynamic_lines()
 
     @api.model
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
@@ -1597,7 +1619,7 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = json.dumps(False)
 
-    @api.depends('line_ids.price_subtotal', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
+    @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
     def _compute_invoice_taxes_by_group(self):
         for move in self:
 
