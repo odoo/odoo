@@ -10,7 +10,10 @@
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_id" ref="account.field_account_invoice_report__price_subtotal"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('state','!=','cancel'),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
+            <field name="domain">[('state','!=','cancel'),('move_type','=','out_invoice')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="account.field_account_invoice_report__invoice_user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_nbr_new_leads">
@@ -21,7 +24,10 @@
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="field_date_id" search="[('model','=','crm.lead'),('name','=','create_date')]" />
             <!-- lead AND opportunity as don't want to be penalised for lead converted to opportunity -->
-            <field name="domain">[('user_id','=',user.id), '|', ('type', '=', 'lead'), ('type', '=', 'opportunity')]</field>
+            <field name="domain">['|', ('type', '=', 'lead'), ('type', '=', 'opportunity')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="crm.field_crm_lead__user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_lead_delay_open">
@@ -33,7 +39,10 @@
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="field_id" ref="crm.field_crm_lead__day_close"/>
             <field name="field_date_id" ref="crm.field_crm_lead__date_closed"/>
-            <field name="domain">[('user_id','=',user.id),('type', '=', 'lead')]</field>
+            <field name="domain">[('type', '=', 'lead')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="crm.field_crm_lead__user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_lead_delay_close">
@@ -45,7 +54,10 @@
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="field_id" ref="crm.field_crm_lead__day_open"/>
             <field name="field_date_id" ref="crm.field_crm_lead__date_open"/>
-            <field name="domain">[('user_id','=',user.id)]</field>
+            <field name="domain">[]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="crm.field_crm_lead__user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
 
@@ -56,7 +68,10 @@
             <field name="suffix">opportunities</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="field_date_id" ref="crm.field_crm_lead__date_open"/>
-            <field name="domain">[('user_id','=',user.id),('type','=','opportunity')]</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="crm.field_crm_lead__user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_nbr_sale_order_created">
@@ -66,7 +81,10 @@
             <field name="suffix">orders</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="field_date_id" ref="sale.field_sale_order__date_order"/>
-            <field name="domain">[('user_id','=',user.id),('state','not in',('draft', 'sent', 'cancel'))]</field>
+            <field name="domain">[('state','not in',('draft', 'sent', 'cancel'))]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="sale.field_sale_order__user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_crm_nbr_paid_sale_order">
@@ -76,7 +94,10 @@
             <field name="suffix">orders</field>
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('payment_state','in',('paid', 'in_payment')),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
+            <field name="domain">[('payment_state','in',('paid', 'in_payment')),('move_type','=','out_invoice')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="account.field_account_invoice_report__invoice_user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.goal.definition" id="definition_crm_tot_paid_sale_order">
             <field name="name">Total Paid Sales Orders</field>
@@ -86,7 +107,10 @@
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_id" ref="account.field_account_invoice_report__price_subtotal"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('payment_state','in',('paid', 'in_payment')),('invoice_user_id','=',user.id),('move_type','=','out_invoice')]</field>
+            <field name="domain">[('payment_state','in',('paid', 'in_payment')),('move_type','=','out_invoice')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="account.field_account_invoice_report__invoice_user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
 
@@ -98,7 +122,10 @@
             <field name="suffix">invoices</field>
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('state','!=','cancel'),('invoice_user_id','=',user.id),('move_type','=','out_refund')]</field>
+            <field name="domain">[('state','!=','cancel'),('move_type','=','out_refund')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="account.field_account_invoice_report__invoice_user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.goal.definition" id="definition_crm_tot_customer_refunds">
             <field name="name">Total Customer Credit Notes</field>
@@ -109,7 +136,10 @@
             <field name="model_id" ref="account.model_account_invoice_report"/>
             <field name="field_id" ref="account.field_account_invoice_report__price_subtotal"/>
             <field name="field_date_id" ref="account.field_account_invoice_report__invoice_date"/>
-            <field name="domain">[('state','!=','cancel'),('invoice_user_id','=',user.id),('move_type','=','out_refund')]</field>
+            <field name="domain">[('state','!=','cancel'),('move_type','=','out_refund')]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="account.field_account_invoice_report__invoice_user_id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
 
@@ -119,7 +149,7 @@
             <field name="name">Monthly Sales Targets</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="user_domain" eval="str([('groups_id', 'in', ref('sales_team.group_sale_salesman'))])" />
+            <field name="user_domain" eval="str([('groups_id', 'in', [ref('sales_team.group_sale_salesman')])])" />
             <field name="report_message_frequency">weekly</field>
         </record>
 
@@ -127,7 +157,7 @@
             <field name="name">Lead Acquisition</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="user_domain" eval="str([('groups_id', 'in', ref('sales_team.group_sale_salesman'))])" />
+            <field name="user_domain" eval="str([('groups_id', 'in', [ref('sales_team.group_sale_salesman')])])" />
             <field name="report_message_frequency">weekly</field>
         </record>
 
