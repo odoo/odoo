@@ -12,8 +12,8 @@
 }
 
 // Empty
-.o_field_empty {
-    display: none!important;
+.o_field_empty:empty {
+    min-height: $font-size-base * $line-height-base;
 }
 
 // Numbers
@@ -84,6 +84,21 @@
                 width: 100px;
                 flex: 1 0 auto;
             }
+        }
+    }
+
+    // Many2One
+    &.o_field_many2one {
+        flex-direction: column;
+
+        .o_field_many2one_selection {
+            display: flex;
+            width: 100%;
+        }
+
+        .o_external_button {
+            padding-top: 0;
+            padding-bottom: 0;
         }
     }
 
