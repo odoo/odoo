@@ -181,7 +181,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     </div>`,
             };
 
-            await wysiwygLoader.loadFromTextarea(this, $textarea, options);
+            await wysiwygLoader.loadFromTextarea(self, $textarea, options);
         });
 
         _.each(this.$('.o_wforum_bio_popover'), authorBox => {
