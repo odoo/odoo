@@ -93,7 +93,7 @@ class AccountInvoiceSend(models.TransientModel):
                 #but they should have the right to change this flag
                 self.mapped('invoice_ids').sudo().write({'invoice_sent': True})
             for inv in self.invoice_ids:
-                if inv.attachment_ids:
+                if hasattr(inv, 'attachment_ids') and inv.attachment_ids:
                     inv._message_set_main_attachment_id([(False,att) for att in inv.attachment_ids.ids])
 
     def _print_document(self):
