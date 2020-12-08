@@ -139,6 +139,8 @@ class ProjectTaskRecurrence(models.Model):
     def _new_task_values(self, task):
         values = super(ProjectTaskRecurrence, self)._new_task_values(task)
         task = self.sudo().task_ids[0]
-        if not task.is_fsm:
-            values['sale_line_id'] = task.sale_line_id.id
+        values['sale_line_id'] = self._get_sale_line_id(task)
         return values
+
+    def _get_sale_line_id(self, task):
+        return task.sale_line_id.id
