@@ -132,6 +132,10 @@
             max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
         }
 
+        .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
+            padding: 0.3rem;
+        }
+
         @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
             .o_row {
                 > .o_field_widget, > div {

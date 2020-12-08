@@ -278,7 +278,13 @@
 
     // Handle widget
     &.o_row_handle {
-        cursor: ns-resize;
+        cursor: grab;
+        color: #adb5bd;
+        text-align: center;
+        width: 100%;
+        &:hover {
+            color: #666666;
+        }
     }
 
     &.o_field_selection_badge {

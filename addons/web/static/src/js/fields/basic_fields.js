@@ -1498,7 +1498,7 @@ var ListFieldText = FieldText.extend({
 var HandleWidget = AbstractField.extend({
     description: _lt("Handle"),
     noLabel: true,
-    className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    className: 'o_row_handle fa fa-sort ui-sortable-handle',
     widthInList: '33px',
     tagName: 'span',
     supportedFieldTypes: ['integer'],
