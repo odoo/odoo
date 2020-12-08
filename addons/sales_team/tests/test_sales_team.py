@@ -1,17 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sales_team.tests.common import TestSalesMC
+from odoo.addons.sales_team.tests.common import TestSalesCommon
 
 
-class TestDefaultTeam(TestSalesMC):
+class TestDefaultTeam(TestSalesCommon):
     """Tests to check if correct default team is found."""
 
     @classmethod
     def setUpClass(cls):
         """Set up data for default team tests."""
         super(TestDefaultTeam, cls).setUpClass()
-
+        cls.company_2 = cls.env['res.company'].create({
+            'name': 'New Test Company',
+            'email': 'company.2@test.example.com',
+            'country_id': cls.env.ref('base.fr'),
+        })
+        cls.team_c2 = cls.env['crm.team'].create({
+            'name': 'C2 Team1',
+            'sequence': 1,
+            'company_id': cls.company_2.id,
+        })
         cls.team_sequence = cls.env['crm.team'].create({
             'name': 'Team LowSequence',
             'sequence': 0,
