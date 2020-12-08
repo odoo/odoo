@@ -9,6 +9,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules import get_module_resource
+from odoo.osv import expression
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -197,6 +198,9 @@ class IrUiMenu(models.Model):
         """
         return self.search([('parent_id', '=', False)])
 
+    def _load_menus_blacklist(self):
+        return []
+
     @api.model
     @tools.ormcache_context('self._uid', keys=('lang',))
     def load_menus_root(self):
@@ -240,7 +244,11 @@ class IrUiMenu(models.Model):
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
-        menus = self.search([('id', 'child_of', menu_roots.ids)])
+        menus_domain = [('id', 'child_of', menu_roots.ids)]
+        blacklisted_menu_ids = self._load_menus_blacklist()
+        if blacklisted_menu_ids:
+            menus_domain = expression.AND([menus_domain, [('id', 'not in', blacklisted_menu_ids)]])
+        menus = self.search(menus_domain)
         menu_items = menus.read(fields)
 
         # add roots at the end of the sequence, so that they will overwrite
