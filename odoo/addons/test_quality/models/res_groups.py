@@ -18,10 +18,9 @@ class ResGroups(models.Model):
         for group in self:
             group.xml_id = xml_ids.get(group.id, [''])[0]
 
-    transitive_access_ids = fields.Many2many("ir.model.access", string="Inherited Access Rights", compute="_compute_transitive_rules")
-    transitive_rule_ids = fields.Many2many("ir.rule", string="Inherited Record Rules", compute="_compute_transitive_rules")
+    transitive_access_ids = fields.Many2many("ir.model.access", string="Inherited Access Rights", compute="_compute_transitive_access_ids")
+    transitive_rule_ids = fields.Many2many("ir.rule", string="Inherited Record Rules", compute="_compute_transitive_access_ids")
 
-    @api.depends("trans_implied_ids.model_access", "trans_implied_ids.rule_groups")
     def _compute_transitive_access_ids(self):
         for group in self:
             group.transitive_access_ids = group.trans_implied_ids.model_access

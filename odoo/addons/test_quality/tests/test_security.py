@@ -3,10 +3,19 @@
 from odoo.tests.common import TransactionCase, tagged
 from collections import defaultdict
 import logging
+
 _logger = logging.getLogger(__name__)
 
-def value(rule):
+def value_sum(rule):
     return sum(int(rule[perm]) for perm in ['perm_read', 'perm_write', 'perm_create', 'perm_unlink']) if rule else 0
+
+def rule_compare(rule1, rule2):
+    """ Return True if rule1 is containing in rule2"""
+    rules_per = [(rule1[perm], rule2[perm]) for perm in ['perm_read', 'perm_write', 'perm_create', 'perm_unlink']]
+    for per_1, per_2 in rules_per:
+        if per_2 < per_1:
+            return False
+    return True
 
 @tagged('post_install', '-at_install')
 class TestIrRules(TransactionCase):
@@ -26,7 +35,7 @@ class TestIrRules(TransactionCase):
                 if len(same_model_group_rules) > 1:
                     _logger.warning("Duplicate rules for model %s, group %s (%s), %i --> %i, %s" % (
                         rule.model_id.model, group.name, group.full_name,
-                        value(rule), value((same_model_group_rules-rule)[0]),
+                        value_sum(rule), value_sum((same_model_group_rules-rule)[0]),
                         same_model_group_rules.mapped('name')))
 
 @tagged('post_install', '-at_install')
@@ -51,7 +60,7 @@ class TestIrModelAccess(TransactionCase):
             if len(public_rules) > 1:
                 for public_rule in public_rules:
                     for r in (public_rules - public_rule):
-                        if value(public_rule) <= value(r) and public_rule._is_loaded_after(r):
+                        if rule_compare(public_rule, r) and public_rule._is_loaded_after(r):
                             _logger.warning(
                                 "Public rule %s has no impact because loaded after %s",
                                 public_rule.csv_id,
@@ -61,7 +70,7 @@ class TestIrModelAccess(TransactionCase):
 
             def is_implied_by_public_rules(rule):
                 if any(
-                    value(rule) <= value(public_rule)
+                    rule_compare(rule, public_rule)
                     and rule._is_loaded_after(public_rule)
                     for public_rule in main_public_rules
                 ):
@@ -74,7 +83,7 @@ class TestIrModelAccess(TransactionCase):
                 elif rule.group_id:
                     implied_accesses = rule.group_id.trans_implied_ids.model_access.filtered(lambda r: r.model_id == model)
                     for implied_rule in implied_accesses:
-                        if value(implied_rule) >= value(rule) and rule._is_loaded_after(implied_rule):
+                        if rule_compare(rule, implied_rule) and rule._is_loaded_after(implied_rule):
                             if rule.module not in modules_take_in_account:
                                 continue
                             key = (rule.group_id.id, implied_rule.group_id.id)
