@@ -8605,8 +8605,8 @@ QUnit.module('Views', {
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 
-        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-left'),
-            'In RTL, the dropdown should be anchored to the left and expand to the right');
+        assert.ok(list.$('.o_optional_columns .dropdown-menu').hasClass('dropdown-menu-right'),
+            'In RTL, the dropdown should dropdown-menu-right class as rtlcss will reverse css');
 
         list.destroy();
     });
