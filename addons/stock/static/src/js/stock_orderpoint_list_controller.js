@@ -18,7 +18,6 @@ var StockOrderpointListController = ListController.extend({
      */
     renderButtons: function () {
         this._super.apply(this, arguments);
-        this.$buttons.find('.o_button_import').addClass('d-none');
         this.$buttons.find('.o_list_export_xlsx').addClass('d-none');
         this.$buttons.find('.o_list_button_add').removeClass('btn-primary').addClass('btn-secondary');
         var $buttons = $(qweb.render('StockOrderpoint.Buttons'));
