@@ -140,7 +140,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         self.ensure_one()
 
-        lines = self.line_ids
+        lines = self.line_ids._origin
 
         if len(lines.company_id) > 1:
             raise UserError(_("You can't create payments for entries belonging to different companies."))
