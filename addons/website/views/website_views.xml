@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Menu items -->
-        <menuitem name="Website"
-            id="menu_website_configuration"
-            sequence="9"
-            groups="base.group_user"
-            web_icon="website,static/description/icon.png"/>
-
+        <!-- ====== Actions ====================================================
+        ==================================================================== -->
         <record id="action_website_add_features" model="ir.actions.act_window">
             <field name="name">Apps</field>
             <field name="type">ir.actions.act_window</field>
@@ -17,8 +12,8 @@
             <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
-
-        <!-- website views -->
+        <!-- ====== website views ==============================================
+        ==================================================================== -->
         <record id="view_website_form" model="ir.ui.view">
             <field name="name">website.form</field>
             <field name="model">website</field>
@@ -51,18 +46,6 @@
                                 <field name="custom_code_footer" widget="ace" options="{'mode': 'xml'}"/>
                             </page>
                         </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_arch_only" model="ir.ui.view">
-            <field name="name">website.ir_ui_view.arch_only</field>
-            <field name="model">ir.ui.view</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <field name="arch"/>
                     </sheet>
                 </form>
             </field>
@@ -108,7 +91,8 @@
         </record>
 
 
-        <!-- website.page views -->
+        <!-- ====== website.page views =========================================
+        ==================================================================== -->
         <record id="website_pages_form_view" model="ir.ui.view">
             <field name="name">website.page.form</field>
             <field name="model">website.page</field>
@@ -179,7 +163,8 @@
             <field name="target">current</field>
         </record>
 
-        <!-- website.menu views -->
+        <!-- ====== website.menu views =========================================
+        ==================================================================== -->
         <record id="website_menus_form_view" model="ir.ui.view">
             <field name="name">website.menu.form</field>
             <field name="model">website.menu</field>
@@ -260,7 +245,8 @@
             <field name="target">current</field>
         </record>
 
-        <!-- ir.ui.view views -->
+        <!-- ====== ir.ui.view views ============================================
+        ==================================================================== -->
         <record model="ir.ui.view" id="view_view_form_extend">
             <field name="model">ir.ui.view</field>
             <field name="inherit_id" ref="base.view_view_form"/>
@@ -308,7 +294,20 @@
             </field>
         </record>
 
-        <!-- Dashboard -->
+        <record id="view_arch_only" model="ir.ui.view">
+            <field name="name">website.ir_ui_view.arch_only</field>
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="arch"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ====== Dashboard ==================================================
+        ==================================================================== -->
         <record id="backend_dashboard" model="ir.actions.client">
             <field name="name">Analytics</field>
             <field name="tag">backend_dashboard</field>
@@ -330,6 +329,8 @@
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
+        <!-- ====== Themes =====================================================
+        ==================================================================== -->
         <!-- Custom module kanban : install button (even if already installed) which -->
         <!-- redirects to website after (fake or not) installation + live preview button -->
         <record model="ir.ui.view" id="theme_view_kanban">
@@ -444,7 +445,8 @@
             <field name="sequence">0</field>
         </record>
 
-        <!-- ONBOARDING -->
+        <!-- ====== Onboarding =================================================
+        ==================================================================== -->
         <template id="onboarding_website_theme_step">
             <t t-call="base.onboarding_step">
                 <t t-set="title">Website Theme</t>
@@ -455,6 +457,14 @@
                 <t t-set="done" t-value="company.website_theme_onboarding_done" />
             </t>
         </template>
+
+        <!-- ====== Menu Items =================================================
+        ==================================================================== -->
+        <menuitem name="Website"
+            id="menu_website_configuration"
+            sequence="9"
+            groups="base.group_user"
+            web_icon="website,static/description/icon.png"/>
 
         <menuitem id="menu_dashboard"
             name="Dashboard"
