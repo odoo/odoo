@@ -2148,7 +2148,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldradio widget with numerical keys encoded as strings', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         this.data.partner.fields.selection = {
             type: 'selection',
@@ -2173,8 +2173,8 @@ QUnit.module('relational_fields', {
         });
 
 
-        assert.strictEqual(form.$('.o_field_widget').text(), '',
-            "field should be unset");
+        assert.strictEqual(form.$('.o_field_widget').text().trim().split(/\s+/g).join(','), 'Red,Black');
+        assert.containsNone(form, '.o_radio_input:checked', "no value should be checked");
 
         await testUtils.form.clickEdit(form);
 
@@ -2185,8 +2185,9 @@ QUnit.module('relational_fields', {
 
         await testUtils.form.clickSave(form);
 
-        assert.strictEqual(form.$('.o_field_widget').text(), 'Black',
-            "value should be 'Black'");
+        assert.strictEqual(form.$('.o_field_widget').text().trim().split(/\s+/g).join(','), 'Red,Black');
+        assert.containsOnce(form, '.o_radio_input[data-index=1]:checked',
+            "'Black' should be checked");
 
         await testUtils.form.clickEdit(form);
 

@@ -328,7 +328,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2ones in form views with show_address', async function (assert) {
-            assert.expect(4);
+            assert.expect(6);
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -360,6 +360,11 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('a.o_form_uri').html(), '<span>aaa</span><br><span>Street</span><br><span>City ZIP</span>',
                 "input should have a multi-line content in readonly due to show_address");
             await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('input.o_input').val(), 'aaa');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>Street</span><br><span>City ZIP</span>');
+
             assert.containsOnce(form, 'button.o_external_button:visible',
                 "should have an open record button");
 

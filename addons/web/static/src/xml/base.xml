@@ -1235,7 +1235,7 @@
 </t>
 <t t-name="FieldRadio.button">
     <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
-        <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
+        <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
             t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
         <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
@@ -1253,16 +1253,19 @@
         <span t-if="widget.noOpen"/>
     </t>
     <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
-        <div class="o_input_dropdown">
-            <input type="text" class="o_input"
-                t-att-barcode_events="widget.nodeOptions.barcode_events"
-                t-att-tabindex="widget.attrs.tabindex"
-                t-att-autofocus="widget.attrs.autofocus"
-                t-att-placeholder="widget.attrs.placeholder"
-                t-att-id="widget.idForLabel"/>
-            <a role="button" class="o_dropdown_button" draggable="false"/>
+        <div class="o_field_many2one_selection">
+            <div class="o_input_dropdown">
+                <input type="text" class="o_input"
+                    t-att-barcode_events="widget.nodeOptions.barcode_events"
+                    t-att-tabindex="widget.attrs.tabindex"
+                    t-att-autofocus="widget.attrs.autofocus"
+                    t-att-placeholder="widget.attrs.placeholder"
+                    t-att-id="widget.idForLabel"/>
+                <a role="button" class="o_dropdown_button" draggable="false"/>
+            </div>
+            <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
         </div>
-        <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
+        <div class="o_field_many2one_extra"/>
     </div>
 </t>
 

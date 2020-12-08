@@ -501,6 +501,8 @@ var FieldMany2One = AbstractField.extend({
     _renderEdit: function () {
         var value = this.m2o_value;
 
+        this.$('.o_field_many2one_extra').html(this._renderValueLines(false));
+
         // this is a stupid hack necessary to support the always_reload flag.
         // the field value has been reread by the basic model.  We use it to
         // display the full address of a partner, separated by \n.  This is
@@ -518,13 +520,22 @@ var FieldMany2One = AbstractField.extend({
     },
     /**
      * @private
+     * @param {boolean} needFirstLine
+     * @returns {string} escaped html of value lines
+     */
+    _renderValueLines: function (needFirstLine) {
+        const escapedValue = _.escape((this.m2o_value || "").trim());
+        const lines = escapedValue.split('\n');
+        if (!needFirstLine) {
+            lines.shift();
+        }
+        return lines.map((line) => `<span>${line}</span>`).join('<br/>');
+    },
+    /**
+     * @private
      */
     _renderReadonly: function () {
-        var escapedValue = _.escape((this.m2o_value || "").trim());
-        var value = escapedValue.split('\n').map(function (line) {
-            return '<span>' + line + '</span>';
-        }).join('<br/>');
-        this.$el.html(value);
+        this.$el.html(this._renderValueLines(true));
         if (!this.noOpen && this.value) {
             this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
             this.$el.addClass('o_form_uri');
@@ -2922,7 +2933,7 @@ var FieldSelection = AbstractField.extend({
         this._super.apply(this, arguments);
         if (!this.attrs.modifiersValue.invisible && this.mode !== 'readonly') {
             this._setValues();
-            this._renderEdit();
+            this._render();
         }
     },
 
@@ -3016,7 +3027,7 @@ var FieldRadio = FieldSelection.extend({
     description: _lt("Radio"),
     template: null,
     className: 'o_field_radio',
-    tagName: 'span',
+    tagName: 'div',
     specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
@@ -3027,10 +3038,7 @@ var FieldRadio = FieldSelection.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.mode === 'edit') {
-            this.tagName = 'div';
-            this.className += this.nodeOptions.horizontal ? ' o_horizontal' : ' o_vertical';
-        }
+        this.className += this.nodeOptions.horizontal ? ' o_horizontal' : ' o_vertical';
         this.unique_id = _.uniqueId("radio");
         this._setValues();
     },
@@ -3084,7 +3092,7 @@ var FieldRadio = FieldSelection.extend({
      * @private
      * @override
      */
-    _renderEdit: function () {
+    _render: function () {
         var self = this;
         var currentValue;
         if (this.field.type === 'many2one') {
@@ -3102,6 +3110,7 @@ var FieldRadio = FieldSelection.extend({
                 index: index,
                 name: self.unique_id,
                 value: value,
+                disabled: self.mode !== 'edit',
             }));
         });
     },
