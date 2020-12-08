@@ -180,12 +180,8 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * @param {Event} ev
      */
     _onActionMenuClick: function (ev) {
-        var $button = $(ev.currentTarget);
-        $button.prop('disabled', true);
-        var always = function () {
-            $button.prop('disabled', false);
-        };
-        this._handleAction($button.data('action')).then(always).guardedCatch(always);
+        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        this._handleAction($(ev.currentTarget).data('action')).then(restore).guardedCatch(restore);
     },
     /**
      * Called when an action is asked to be executed from a child widget ->
