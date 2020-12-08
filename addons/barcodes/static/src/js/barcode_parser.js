@@ -53,24 +53,24 @@ var BarcodeParser = Class.extend({
     /**
      * This algorithm is identical for all fixed length numeric GS1 data structures.
      *
-     * It is also valid for ean8,12(upca),13 check digit, just need to shift with zero to the left to have 18 digit.
+     * It is also valid for EAN-8, EAN-12 (UPC-A), EAN-13 check digit after sanitizing.
      * https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf
-     * 
-     * @param {String} numericBarcode Need to have a length of 18, and the last numeric char is the check digit (or '0')
+     *
+     * @param {String} numericBarcode Need to have a length of 18
      * @returns {number} Check Digit
      */
     get_barcode_check_digit(numericBarcode) {
-        var code = numericBarcode.split('');
-        if (code.length !== 18) {
-            return -1;
-        }
-    
+        let oddsum = 0, evensum = 0, total = 0;
+        // Reverses the barcode to be sure each digit will be in the right place
+        // regardless the barcode length.
+        const code = numericBarcode.split('').reverse();
+        // Removes the last barcode digit (should not be took in account for its own computing).
+        code.shift();
+
         // Multiply value of each position by
         // N1  N2  N3  N4  N5  N6  N7  N8  N9  N10 N11 N12 N13 N14 N15 N16 N17 N18
         // x3  X1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  CHECK_DIGIT
-        var oddsum = 0, evensum = 0, total = 0;
-        code.pop();
-        for (var i = 0; i < code.length; i++) {
+        for (let i = 0; i < code.length; i++) {
             if (i % 2 === 0){
                 evensum += parseInt(code[i]);
             } else {
@@ -78,37 +78,49 @@ var BarcodeParser = Class.extend({
             }
         }
         total = evensum * 3 + oddsum;
-        return ((10 - total % 10) % 10);
+        return (10 - total % 10) % 10;
     },
 
-    // returns true if the barcode string is encoded with the provided encoding.
+    /**
+     * Checks if the barcode string is encoded with the provided encoding.
+     *
+     * @param {String} barcode
+     * @param {String} encoding could be 'any' (no encoding rules), 'ean8', 'upca' or 'ean13'
+     * @returns {boolean}
+     */
     check_encoding: function(barcode, encoding) {
-        var len = barcode.length;
-        var allnum = /^\d+$/.test(barcode);
-
-        if (encoding === 'ean13') {
-            return len === 13 && allnum && this.get_barcode_check_digit("0".repeat(18 - len) + barcode) === parseInt(barcode[len - 1]);
-        } else if (encoding === 'ean8') {
-            return len === 8 && allnum && this.get_barcode_check_digit("0".repeat(18 - len) + barcode) === parseInt(barcode[len - 1]);
-        } else if (encoding === 'upca') {
-            return len === 12 && allnum && this.get_barcode_check_digit("0".repeat(18 - len) + barcode) === parseInt(barcode[len - 1]);
-        } else if (encoding === 'any') {
+        if (encoding === 'any') {
             return true;
-        } else {
-            return false;
         }
+        const barcodeSizes = {
+            ean8: 8,
+            ean13: 13,
+            upca: 12,
+        };
+        return barcode.length === barcodeSizes[encoding] && /^\d+$/.test(barcode) &&
+            this.get_barcode_check_digit(barcode) === parseInt(barcode[len - 1]);
     },
 
-    // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
+    /**
+     * Sanitizes a EAN-13 prefix by padding it with chars zero.
+     *
+     * @param {String} ean
+     * @returns {String}
+     */
     sanitize_ean: function(ean){
         ean = ean.substr(0, 13);
         ean = "0".repeat(13 - ean.length) + ean;
-        return ean.substr(0, 12) + this.get_barcode_check_digit("0".repeat(5) + ean);
+        return ean.substr(0, 12) + this.get_barcode_check_digit(ean);
     },
 
-    // Returns a valid zero padded UPC-A from a UPC-A prefix. the UPC-A prefix must be a string.
+    /**
+     * Sanitizes a UPC-A prefix by padding it with chars zero.
+     *
+     * @param {String} upc
+     * @returns {String}
+     */
     sanitize_upc: function(upc) {
-        return this.sanitize_ean('0' + upc).substr(1, 12);
+        return this.sanitize_ean(upc).substr(1, 12);
     },
 
     // Checks if barcode matches the pattern
@@ -138,33 +150,33 @@ var BarcodeParser = Class.extend({
             if (whole_part === ''){
                 whole_part = '0';
             }
-            match['value'] = parseInt(whole_part) + parseFloat(decimal_part);
+            match.value = parseInt(whole_part) + parseFloat(decimal_part);
 
             // replace numerical content by 0's in barcode and pattern
-            match['base_code'] = barcode.substr(0,num_start);
+            match.base_code = barcode.substr(0,num_start);
             var base_pattern = pattern.substr(0,num_start);
             for(var i=0;i<(num_length-2);i++) {
-                match['base_code'] += "0";
+                match.base_code += "0";
                 base_pattern += "0";
             }
-            match['base_code'] += barcode.substr(num_start+num_length-2,barcode.length-1);
+            match.base_code += barcode.substr(num_start+num_length-2,barcode.length-1);
             base_pattern += pattern.substr(num_start+num_length,pattern.length-1);
 
-            match['base_code'] = match['base_code']
+            match.base_code = match.base_code
                 .replace("\\\\", "\\")
                 .replace("\{", "{")
                 .replace("\}","}")
                 .replace("\.",".");
 
-            var base_code = match.base_code.split('')
+            var base_code = match.base_code.split('');
             if (encoding === 'ean13') {
-                base_code[12] = '' + this.get_barcode_check_digit("0".repeat(5) + match.base_code);
+                base_code[12] = '' + this.get_barcode_check_digit(match.base_code);
             } else if (encoding === 'ean8') {
-                base_code[7]  = '' + this.get_barcode_check_digit("0".repeat(10) + match.base_code);
+                base_code[7]  = '' + this.get_barcode_check_digit(match.base_code);
             } else if (encoding === 'upca') {
-                base_code[11] = '' + this.get_barcode_check_digit("0".repeat(6) + match.base_code);
+                base_code[11] = '' + this.get_barcode_check_digit(match.base_code);
             }
-            match.base_code = base_code.join('')
+            match.base_code = base_code.join('');
         }
 
         if (base_pattern[0] !== '^') {

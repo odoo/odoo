@@ -1,7 +1,7 @@
 odoo.define('barcodes.barcode_parser', function (require) {
 "use strict";
 
-var BarcodeParser = require('barcodes.BarcodeParser');
+const BarcodeParser = require('barcodes.BarcodeParser');
 
 
 QUnit.module('Barcodes', {}, function () {
@@ -18,7 +18,7 @@ QUnit.module('Barcode Parser', {
                     {id: 1, name: "normal", upc_ean_conv: "always"},
                 ],
             },
-            'barcode.rule': { 
+            'barcode.rule': {
                 fields: {
                     name: {type: 'char', string: 'Barcode Nomenclature'},
                     barcode_nomenclature_id: {type: 'many2one', relation: 'barcode.nomenclature'},
@@ -37,21 +37,21 @@ QUnit.module('Barcode Parser', {
 }, function () {
     QUnit.test('Test check digit', async function (assert) {
         assert.expect(6);
-        var barcodeNomenclature = new BarcodeParser({'nomenclature_id': false});
+        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': false});
         await barcodeNomenclature.loaded;
 
-        var ean8 = "87111125";
-        assert.equal(barcodeNomenclature.get_barcode_check_digit("0".repeat(10) + ean8), ean8.charAt(ean8.length - 1));
+        let ean8 = "87111125";
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean8), ean8.charAt(ean8.length - 1));
         ean8 = "4725992";
-        assert.equal(barcodeNomenclature.get_barcode_check_digit("0".repeat(10) + ean8 + "0"), 8);
-        var ean13 = "1234567891231";
-        assert.equal(barcodeNomenclature.get_barcode_check_digit("0".repeat(5) + ean13), ean13.charAt(ean13.length - 1));
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean8 + "0"), 8);
+        let ean13 = "1234567891231";
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean13), ean13.charAt(ean13.length - 1));
         ean13 = "962434754318";
-        assert.equal(barcodeNomenclature.get_barcode_check_digit("0".repeat(5) + ean13 + "0"), 4);
-        var utca = "692771981161";
-        assert.equal(barcodeNomenclature.get_barcode_check_digit("0".repeat(6) + utca), utca.charAt(utca.length - 1));
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean13 + "0"), 4);
+        let utca = "692771981161";
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(utca), utca.charAt(utca.length - 1));
         utca = "71679131569";
-        assert.equal(barcodeNomenclature.get_barcode_check_digit("0".repeat(6) + utca + "0"), 7);
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(utca + "0"), 7);
     });
 });
 });
