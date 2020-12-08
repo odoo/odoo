@@ -854,7 +854,7 @@ class PosSession(models.Model):
 
     def _get_statement_line_vals(self, statement, receivable_account, amount, date=False):
         return {
-            'date': date or fields.Date.context_today(self),
+            'date': fields.Date.context_today(self, timestamp=date),
             'amount': amount,
             'payment_ref': self.name,
             'statement_id': statement.id,
@@ -863,7 +863,7 @@ class PosSession(models.Model):
         }
 
     def _get_split_statement_line_vals(self, statement, payment, amount):
-        res = self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amount, payment.payment_date.date())
+        res = self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amount, payment.payment_date)
         res['partner_id'] = self.env['res.partner']._find_accounting_partner(payment.partner_id).id
         return res
 
