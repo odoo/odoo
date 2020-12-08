@@ -1092,6 +1092,7 @@ ListRenderer.include({
                 items: '> tr.o_data_row',
                 helper: 'clone',
                 handle: '.o_row_handle',
+                cursor: "grabbing",
                 stop: function (event, ui) {
                     // update currentID taking moved line into account
                     if (self.currentRow !== null) {
