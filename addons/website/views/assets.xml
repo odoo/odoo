@@ -36,6 +36,7 @@
 
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/view_hierarchy.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website_visitor_views.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.theme_install.scss"/>
@@ -44,6 +45,7 @@
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
         <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
         <script type="text/javascript" src="/website/static/src/js/backend/res_config_settings.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/view_hierarchy.js"/>
         <script type="text/javascript" src="/website/static/src/js/widget_iframe.js"/>
         <script type="text/javascript" src="/website/static/src/js/theme_preview_kanban.js"/>
         <script type="text/javascript" src="/website/static/src/js/theme_preview_form.js"/>

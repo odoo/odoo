@@ -72,14 +72,15 @@ class View(models.Model):
         return super().create(vals_list)
 
     def name_get(self):
-        if (not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website')) or \
-                not self._context.get('display_website'):
+        if not (self._context.get('display_key') or self._context.get('display_website')):
             return super(View, self).name_get()
 
         res = []
         for view in self:
             view_name = view.name
-            if view.website_id:
+            if self._context.get('display_key'):
+                view_name += ' <%s>' % view.key
+            if self._context.get('display_website') and view.website_id:
                 view_name += ' [%s]' % view.website_id.name
             res.append((view.id, view_name))
         return res
@@ -233,6 +234,10 @@ class View(models.Model):
             })
             page.menu_ids.filtered(lambda m: m.website_id.id == website.id).page_id = new_page.id
 
+    def _get_top_level_view(self):
+        self.ensure_one()
+        return self.inherit_id._get_top_level_view() if self.inherit_id else self
+
     @api.model
     def get_related_views(self, key, bundles=False):
         '''Make this only return most specific views for website.'''
@@ -357,15 +362,6 @@ class View(models.Model):
                 raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
             return view.id
         return super(View, self.sudo()).get_view_id(xml_id)
-
-    def _get_original_view(self):
-        """Given a view, retrieve the original view it was COW'd from.
-        The given view might already be the original one. In that case it will
-        (and should) return itself.
-        """
-        self.ensure_one()
-        domain = [('key', '=', self.key), ('model_data_id', '!=', None)]
-        return self.with_context(active_test=False).search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
 
     def _handle_visibility(self, do_raise=True):
         """ Check the visibility set on the main view and raise 403 if you should not have access.
