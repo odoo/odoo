@@ -3,9 +3,11 @@
 
 from datetime import timedelta
 import math
+from uuid import uuid4
 import babel.dates
 import logging
 import pytz
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models
 from odoo import tools
@@ -77,6 +79,15 @@ class Meeting(models.Model):
             if active_id not in partners.ids:
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
+
+    @api.model
+    def _default_videocall_location(self):
+        if self.env.context.get('calendar_no_videocall'):
+            return False
+        jitsi_url = self.env['ir.config_parameter'].sudo().get_param('website_jitsi.jitsi_server_domain', 'meet.jit.si')
+        if not jitsi_url.startswith('http'):
+            jitsi_url = 'https://' + jitsi_url
+        return url_join(jitsi_url, 'odoo-%s' % (uuid4().hex[:12]))
 
     def _find_my_attendee(self):
         """ Return the first attendee where the user connected has been invited
@@ -211,6 +222,7 @@ class Meeting(models.Model):
          ('confidential', 'Only internal users')],
         'Privacy', default='public', required=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
+    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     show_as = fields.Selection(
         [('free', 'Available'),
          ('busy', 'Busy')], 'Show Time as', default='busy', required=True)

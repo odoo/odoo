@@ -869,6 +869,7 @@ class HolidaysRequest(models.Model):
             meeting_values = meeting_holidays._prepare_holidays_meeting_values()
             meetings = self.env['calendar.event'].with_context(
                 no_mail_to_attendees=True,
+                calendar_no_videocall=True,
                 active_model=self._name
             ).create(meeting_values)
             for holiday, meeting in zip(meeting_holidays, meetings):

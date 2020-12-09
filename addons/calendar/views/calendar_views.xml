@@ -112,6 +112,11 @@
                                 class="oe_inline"/>
                         </h2>
                     </div>
+                    <group>
+                        <group>
+                            <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" attrs="{'invisible': [('videocall_location', '=', False)]}" />
+                        </group>
+                    </group>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group>
@@ -255,6 +260,7 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="user_id">
+                <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" />
                 <field name="attendee_status"/>
                 <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
                 <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
