@@ -1763,6 +1763,8 @@ class MailThread(models.AbstractModel):
                     content = content.encode('utf-8')
                 elif content is None:
                     continue
+                elif isinstance(content, EmailMessage):
+                    content = content.as_bytes()
                 attachement_values= {
                     'name': name,
                     'datas': base64.b64encode(content),
