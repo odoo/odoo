@@ -915,6 +915,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': False,
                 'sequence': max_sequence + 1,
                 'show_reserved': False,
+                'show_operations': False,
                 'sequence_code': 'IN',
                 'company_id': self.company_id.id,
             }, 'out_type_id': {
