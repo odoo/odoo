@@ -6,13 +6,10 @@ const { ComponentWrapper } = require('web.OwlCompatibility');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
-var session = require('web.session');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
-
-var OpenStudioButton = require('web.open_studio_button');
 
 var _t = core._t;
 
@@ -124,25 +121,6 @@ var ListRenderer = BasicRenderer.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * This method adds a button to invite admin user to use odoo studio.
-     * This button either opens the studio view, either redirects to the module
-     * installation.
-     * 
-     * @private
-     * @param {Object} dropdown the optional columns dropdown list
-     */
-    _appendAddCustomField: function(dropdown){
-        if(this._isAllowedToUseStudio()){
-            if(this.optionalColumns.length){
-                dropdown.append($("<hr />"));
-            }
-            if(!this.addCustomField || this.addCustomField.isDestroyed()){
-                this.addCustomField = new OpenStudioButton(this);
-            }
-            this.addCustomField.appendTo(dropdown);
-        }
-    },
     /**
      * This method does a in-memory computation of the aggregate values, for
      * each columns that corresponds to a numeric field with a proper aggregate
@@ -358,16 +336,6 @@ var ListRenderer = BasicRenderer.extend({
             }
         }
         this.arch.children = children;
-    },
-    /**
-     * This method tells if current session is ran by a user who will be able to
-     * use or install odoo studio.
-     * 
-     * @private
-     * @returns {boolean}
-     */
-    _isAllowedToUseStudio: function(){
-        return session.is_admin || session.is_system;
     },
     /**
      * Processes arch's child nodes for the needs of the list view:
@@ -1055,11 +1023,7 @@ var ListRenderer = BasicRenderer.extend({
                 class: "dropdown-item",
             }).append($checkbox));
         });
-
-        this._appendAddCustomField($dropdown);
-
-        $dropdown.appendTo($optionalColumnsDropdown);        
-
+        $dropdown.appendTo($optionalColumnsDropdown);
         return $optionalColumnsDropdown;
     },
     /**
@@ -1143,7 +1107,7 @@ var ListRenderer = BasicRenderer.extend({
             if (document.body.contains(this.el)) {
                 this.pagers.forEach(pager => pager.on_attach_callback());
             }
-            if (this.optionalColumns.length || this._isAllowedToUseStudio()){
+            if (this.optionalColumns.length) {
                 this.el.classList.add('o_list_optional_columns');
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
