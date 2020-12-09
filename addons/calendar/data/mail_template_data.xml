@@ -77,6 +77,9 @@
                     </li>
                 % endfor
                 </ul></li>
+                % if object.event_id.videocall_location:
+                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                % endif
             </ul>
         </td>
     </tr></table>
@@ -168,6 +171,9 @@
                     </li>
                 % endfor
                 </ul></li>
+                % if object.event_id.videocall_location:
+                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                % endif
             </ul>
         </td>
     </tr></table>
@@ -257,6 +263,9 @@
                     </li>
                 % endfor
                 </ul></li>
+                % if object.event_id.videocall_location:
+                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                % endif
             </ul>
         </td>
     </tr></table>
