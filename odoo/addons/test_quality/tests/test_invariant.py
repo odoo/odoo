@@ -15,11 +15,10 @@ class TestIrRules(TransactionCase):
         modes = ('read', 'write', 'create', 'unlink')
         models = self.env['ir.model'].sudo().search([], order="model")
         groups = self.env['res.groups'].sudo().search([], order="name")
-
         res = []
         for model in models:
             for group in groups:
-                acls = model.access_ids & (group.model_access | group.transitive_access_ids)
+                acls = model.access_ids & (group | group.implied_ids | group.trans_implied_ids).model_access
                 acl_max = [1 if max(acls.mapped(f"perm_{mode}"), default=False) else 0 for mode in modes]
                 if acl_max != [0, 0, 0, 0]:
                     ir_data_group = self.env['ir.model.data'].search([('model', '=', 'res.groups'), ('res_id', '=', group.id)])
