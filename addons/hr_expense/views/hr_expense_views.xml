@@ -466,6 +466,9 @@
                         <label for="can_be_expensed"/>
                     </div>
                 </div>
+                <xpath expr="//page[@name='general_information']//field[@name='taxes_id']" position="after">
+                    <field name="supplier_taxes_id" widget="many2many_tags" attrs="{'invisible':['|',('can_be_expensed','=',False),('purchase_ok','=',True)]}" context="{'default_type_tax_use':'purchase', 'search_default_purchase': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
+                </xpath>
             </field>
         </record>
 
