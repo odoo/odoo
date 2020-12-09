@@ -554,6 +554,7 @@ odoo.define('website_slides.quiz', function (require) {
          * Displays the created Question at the correct place (after the last question or
          * at the first place if there is no questions yet) It also displays the 'Add Question'
          * button or open a new QuestionFormWidget if the user wants to immediately add another one.
+         * If needed, it also disables the 'Set Done' button for the slide.
          *
          * @param event
          * @private
@@ -564,6 +565,7 @@ odoo.define('website_slides.quiz', function (require) {
                 $lastQuestion.after(event.data.newQuestionRenderedTemplate);
             } else {
                 this.$el.prepend(event.data.newQuestionRenderedTemplate);
+                this.trigger_up('slide_disable_setdone');
             }
             this.quiz.questionsCount++;
             event.data.questionFormWidget.destroy();
@@ -679,6 +681,7 @@ odoo.define('website_slides.quiz', function (require) {
         custom_events: {
             slide_go_next: '_onQuizNextSlide',
             slide_completed: '_onQuizCompleted',
+            slide_disable_setdone: '_onDisableSetdone',
         },
 
         //----------------------------------------------------------------------
@@ -712,6 +715,18 @@ odoo.define('website_slides.quiz', function (require) {
         //----------------------------------------------------------------------
         // Handlers
         //---------------------------------------------------------------------
+        /**
+         * When first question for the quiz is added, 'Set Done' button should be disabled
+         *
+         * @private
+         */
+        _onDisableSetdone: function () {
+            let setDoneBtn = this.el.querySelector('a.o_wslides_set_done');
+            if (setDoneBtn && !setDoneBtn.classList.contains('disabled')) {
+                setDoneBtn.classList.add('disabled');
+                setDoneBtn.setAttribute('href', '#');
+            }
+        },
         _onQuizCompleted: function (ev) {
             var slide = ev.data.slide;
             var completion = ev.data.completion;
