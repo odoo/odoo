@@ -490,7 +490,7 @@ class Product(models.Model):
         return action
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         self.ensure_one()
