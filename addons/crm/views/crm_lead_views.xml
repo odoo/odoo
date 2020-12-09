@@ -488,7 +488,7 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
-                    archivable="false" sample="1">
+                    archivable="false">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -641,7 +641,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" sample="1" multi_edit="1">
+                <tree string="Opportunities" multi_edit="1">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity" readonly="1"/>
@@ -737,7 +737,7 @@
             <field name="name">crm.lead.view.graph</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities" sample="1">
+                <graph string="Opportunities">
                     <field name="stage_id" type="col"/>
                     <field name="user_id" type="row"/>
                     <field name="color" invisible="1"/>
@@ -749,7 +749,7 @@
             <field name="name">crm.lead.view.pivot</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <pivot string="Pipeline Analysis" sample="1">
+                <pivot string="Pipeline Analysis">
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="expected_revenue" type="measure"/>
@@ -862,6 +862,7 @@ if record:
                     'default_type':'lead',
                     'search_default_type': 'lead',
                     'search_default_to_process':1,
+                    'action_helper': 'leads',
                 }
             </field>
         </record>
@@ -914,7 +915,7 @@ if record:
             <field name="domain">[('activity_ids','!=',False)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_my_activities_filter"/>
             <field name="context">{'default_type': 'opportunity',
-                    'search_default_assigned_to_me': 1}
+                    'search_default_assigned_to_me': 1,'action_helper': 'activities'}
             </field>
         </record>
 
@@ -932,7 +933,7 @@ if record:
             <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
-                    'default_type': 'opportunity',
+                    'default_type': 'opportunity'
                 }
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
@@ -988,7 +989,8 @@ if record:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'search_default_assigned_to_me': 1
+                    'search_default_assigned_to_me': 1,
+                    'action_helper': 'pipeline'
             }</field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         </record>

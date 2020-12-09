@@ -251,13 +251,45 @@ class CRMLeadMiningRequest(models.Model):
         </p>""")
         return action
 
+    @api.model
+    def action_try_button(self):
+        last_action = self.env['crm.iap.lead.mining.request'].search([('user_id', '=', self.env.uid)], order='create_date desc', limit=1)
+        return {
+            'name': _('Try Again'),
+            'res_model': 'crm.iap.lead.mining.request',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'domain': [('type', '=', 'opportunity')],
+            'type': 'ir.actions.act_window',
+            'res_id':self.id,
+            'context': {'is_modal': True,'default_type': 'opportunity',
+                        'default_lead_number':last_action.lead_number,
+                        'default_country_ids':last_action.country_ids.ids,
+                        'default_search_type': last_action.search_type,
+                        'default_state_ids': last_action.state_ids.ids,
+                        'default_industry_ids':last_action.industry_ids.ids,
+                        'default_filter_on_size':last_action.filter_on_size,
+                        'default_company_size_min':last_action.company_size_min,
+                        'default_company_size_max':last_action.company_size_max,
+                        'default_team_id':last_action.team_id.id,
+                        'default_user_id':last_action.user_id.id,
+                        'default_tag_ids':last_action.tag_ids.ids,
+                        'default_contact_number':last_action.contact_number,
+                        'default_contact_filter_type':last_action.contact_filter_type,
+                        'default_preferred_role_id':last_action.preferred_role_id.id,
+                        'default_role_ids':last_action.role_ids.ids}
+        }
+
     def action_get_opportunity_action(self):
+        action_id = self.env.ref('crm_iap_lead.action_try_again').id
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
-            No opportunities found
+            No leads found
         </p><p>
-            No opportunities could be generated according to your search criteria
-        </p>""")
+            Your search criteria did not return any leads.
+        </p>
+        <a type="action" name="%(action_id)s" class="text-primary">Try Again</a>
+         """)% {'action_id': action_id}
         return action

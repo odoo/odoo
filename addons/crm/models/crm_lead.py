@@ -1297,11 +1297,26 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        help_title, sub_title = "", ""
-        if self._context.get('default_type') == 'lead':
-            help_title = _('Create a new lead')
-        else:
+        help_title = _('No data found!')
+        sub_title = ""
+        if self.env.context.get('action_helper') == 'pipeline':
             help_title = _('Create an opportunity to start playing with your pipeline.')
+        elif self.env.context.get('action_helper') == 'leads':
+            help_title = _('Create a Lead')
+            sub_title = _('Leads are the qualification step before the creation of an opportunity.')
+        elif self.env.context.get('action_helper') == 'activities':
+            help_title = _('Looks like nothing is planned.')
+            sub_title = _('Schedule activities to keep track of everything you have to do.')
+        elif self.env.context.get('action_helper') == 'lead_analysis':
+            sub_title = _('This analysis shows you how many leads have been created per month.')
+        elif self.env.context.get('action_helper') == 'pipeline_analysis':
+            sub_title = _('Use this menu to have an overview of your Pipeline.')
+        elif self.env.context.get('action_helper') == 'opportunity_dashboard':
+            sub_title = _('Use this menu to have an overview of your Pipeline.')
+        elif self.env.context.get('action_helper') == 'lead_dashboard':
+            sub_title = _('This Dashboard allows you to see at a glance how well you are doing.')
+        else:
+            help_title = ""
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),

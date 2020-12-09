@@ -29,7 +29,7 @@ class Lead(models.Model):
             self.show_enrich_button = False
             return
         for lead in self:
-            if not lead.active or not lead.email_from or lead.iap_enrich_done or lead.reveal_id or lead.probability == 100:
+            if not lead.active or not lead.email_from or lead.iap_enrich_done or lead.reveal_id or lead.probability == 100 or not lead.email_state == "correct":
                 lead.show_enrich_button = False
             else:
                 lead.show_enrich_button = True
