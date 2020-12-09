@@ -50,7 +50,7 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
                 }
             });
         };
-        await this.wysiwyg.editor.execCommand(galleryStart);
+        await this.wysiwyg.execCommand(galleryStart);
 
         const $container = this.$('> .container, > .container-fluid, > .o_container_small');
         if ($container.find('> *:not(div)').length) {
