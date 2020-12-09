@@ -345,6 +345,95 @@ QUnit.test('preview should display last needaction message preview even if there
     );
 });
 
+QUnit.test('needaction preview should only show on its origin thread', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 12 });
+    this.data['mail.message'].records.push({
+        channel_ids: [12],
+        id: 21,
+        model: 'res.partner',
+        needaction: true,
+        needaction_partner_ids: [this.data.currentPartnerId],
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        mail_message_id: 21,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: this.data.currentPartnerId,
+    });
+    await this.start({ hasMessagingMenu: true });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-thread-cache-loaded-messages',
+        func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
+        message: "should wait until inbox loaded initial needaction messages",
+        predicate: ({ threadCache }) => {
+            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadNeedactionPreview',
+        "should have only one preview"
+    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'res.partner',
+    });
+    assert.containsOnce(
+        document.body,
+        `.o_ThreadNeedactionPreview[data-thread-local-id="${thread.localId}"]`,
+        "preview should be on the origin thread"
+    );
+});
+
+QUnit.test('chat window header should not have unread counter for non-channel thread', async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
+        author_id: 11,
+        body: 'not empty',
+        id: 21,
+        model: 'res.partner',
+        needaction: true,
+        needaction_partner_ids: [this.data.currentPartnerId],
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        mail_message_id: 21,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: this.data.currentPartnerId,
+    });
+    await this.start({
+        hasChatWindow: true,
+        hasMessagingMenu: true,
+    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-thread-cache-loaded-messages',
+        func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
+        message: "should wait until inbox loaded initial needaction messages",
+        predicate: ({ threadCache }) => {
+            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+        },
+    }));
+    await afterNextRender(() =>
+        document.querySelector('.o_ThreadNeedactionPreview').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have opened the chat window on clicking on the preview"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindowHeader_counter',
+        "chat window header should not have unread counter for non-channel thread"
+    );
+});
+
 });
 });
 });
