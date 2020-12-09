@@ -655,7 +655,16 @@ function factory(dependencies) {
         }
 
         /**
-         * Mark all needaction messages of this thread as read.
+         * Marks as read all needaction messages with this thread as origin.
+         */
+        async markNeedactionMessagesAsOriginThreadAsRead() {
+            await this.async(() =>
+                this.env.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
+            );
+        }
+
+        /**
+         * Mark as read all needaction messages of this thread.
          */
         async markNeedactionMessagesAsRead() {
             await this.async(() =>
@@ -1239,6 +1248,24 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastNeedactionMessageAsOriginThread() {
+            const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
+                (m1, m2) => m1.id < m2.id ? -1 : 1
+            );
+            const {
+                length: l,
+                [l - 1]: lastNeedactionMessageAsOriginThread,
+            } = orderedNeedactionMessagesAsOriginThread;
+            if (lastNeedactionMessageAsOriginThread) {
+                return [['link', lastNeedactionMessageAsOriginThread]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * @private
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
@@ -1250,6 +1277,10 @@ function factory(dependencies) {
          * @returns {integer}
          */
         _computeLocalMessageUnreadCounter() {
+            if (this.model !== 'mail.channel') {
+                // unread counter only makes sense on channels
+                return clear();
+            }
             // By default trust the server up to the last message it used
             // because it's not possible to do better.
             let baseCounter = this.serverMessageUnreadCounter;
@@ -1291,6 +1322,14 @@ function factory(dependencies) {
          */
         _computeNeedactionMessages() {
             return [['replace', this.messages.filter(message => message.isNeedaction)]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeNeedactionMessagesAsOriginThread() {
+            return [['replace', this.messagesAsOriginThread.filter(message => message.isNeedaction)]];
         }
 
         /**
@@ -1810,6 +1849,15 @@ function factory(dependencies) {
             dependencies: ['needactionMessages'],
         }),
         /**
+         * States the last known needaction message having this thread as origin.
+         */
+        lastNeedactionMessageAsOriginThread: many2one('mail.message', {
+            compute: '_computeLastNeedactionMessageAsOriginThread',
+            dependencies: [
+                'needactionMessagesAsOriginThread',
+            ],
+        }),
+        /**
          * Last non-transient message.
          */
         lastNonTransientMessage: many2one('mail.message', {
@@ -1883,11 +1931,29 @@ function factory(dependencies) {
             readonly: true,
         }),
         /**
+         * All messages that have been originally posted in this thread.
+         */
+        messagesAsOriginThread: one2many('mail.message', {
+            inverse: 'originThread',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        messagesAsOriginThreadIsNeedaction: attr({
+            related: 'messagesAsOriginThread.isNeedaction',
+        }),
+        /**
          * All messages that are contained on this channel on the server.
          * Equivalent to the inverse of python field `channel_ids`.
          */
         messagesAsServerChannel: many2many('mail.message', {
             inverse: 'serverChannels',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        messagesIsNeedaction: attr({
+            related: 'messages.isNeedaction',
         }),
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
@@ -1920,7 +1986,20 @@ function factory(dependencies) {
         name: attr(),
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
-            dependencies: ['messages'],
+            dependencies: [
+                'messages',
+                'messagesIsNeedaction',
+            ],
+        }),
+        /**
+         * States all known needaction messages having this thread as origin.
+         */
+        needactionMessagesAsOriginThread: many2many('mail.message', {
+            compute: '_computeNeedactionMessagesAsOriginThread',
+            dependencies: [
+                'messagesAsOriginThread',
+                'messagesAsOriginThreadIsNeedaction',
+            ],
         }),
         /**
          * Not a real field, used to trigger `_onChangeFollowersPartner` when one of
