@@ -386,9 +386,10 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             }
         }
         if (this.$message.length) {
-            await this.editorHelpers.removeClass(this.wysiwyg.editor, this.$target[0], 'd-none');
-            await this.editorHelpers.addClass(context, this.$message[0], 'd-none');
-
+            await this.wysiwyg.withDomMutations(this.$target, () => {
+                this.$target.removeClass('d-none');
+                this.$message.addClass('d-none');
+            });
         }
     },
     /**
@@ -1291,15 +1292,17 @@ snippetOptions.registry.AddFieldForm = FormEditor.extend({
      * New field is set as active
      */
     addField: async function (previewMode, value, params) {
-        const field = this._getCustomField('char', 'Custom Text');
-        field.formatInfo = this._getDefaultFormat();
-        const htmlField = this._renderField(field);
-        this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
-        this.trigger_up('activate_snippet', {
-            $element: $(htmlField),
-            saveTarget: true,
-        });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        const addField = () => {
+            const field = this._getCustomField('char', 'Custom Text');
+            field.formatInfo = this._getDefaultFormat();
+            const htmlField = this._renderField(field);
+            this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
+            this.trigger_up('activate_snippet', {
+                $element: $(htmlField),
+                saveTarget: true,
+            });
+        };
+        this.wysiwyg.withDomMutations(this.$target, addField);
     },
 });
 
@@ -1316,15 +1319,16 @@ snippetOptions.registry.AddField = FieldEditor.extend({
      * New field is set as active
      */
     addField: async function (previewMode, value, params) {
-        this.trigger_up('option_update', {
-            optionName: 'WebsiteFormEditor',
-            name: 'add_field',
-            data: {
-                formatInfo: this._getFieldFormat(),
-                $target: this.$target,
-            },
+        await context.withDomMutations(this.$target, () => {
+            this.trigger_up('option_update', {
+                optionName: 'WebsiteFormEditor',
+                name: 'add_field',
+                data: {
+                    formatInfo: this._getFieldFormat(),
+                    $target: this.$target,
+                },
+            });
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 

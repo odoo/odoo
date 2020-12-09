@@ -803,16 +803,17 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         header_overlay: async function (value, wysiwyg) {
             const $wrapwrap = $('#wrapwrap');
             wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
-            await wysiwyg.editorHelpers.setClass(wysiwyg.editor, $wrapwrap[0], 'o_header_overlay', !!value);
+            await wysiwyg.withDomMutations($wrapwrap, () => {
+                $wrapwrap.toggleClass('o_header_overlay', !!value);
+            });
         },
         header_color: async function (value, wysiwyg) {
             const $wrapwrap = $('#wrapwrap');
             wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
             const ContentMenuHeaderColor = async (context) => {
-                await wysiwyg.editorHelpers.removeClass(context, $wrapwrap.find('>header')[0], this.value);
-                await wysiwyg.editorHelpers.addClass(context, $wrapwrap.find('>header')[0], value);
+                $wrapwrap.find('>header').removeClass(this.value).addClass(value);
             };
-            await wysiwyg.editor.execCommand(ContentMenuHeaderColor);
+            await wysiwyg.withDomMutations($wrapwrap, ContentMenuHeaderColor);
         },
         header_visible: function (value) {
             $('#wrapwrap > header').toggleClass('d-none o_snippet_invisible', !value);

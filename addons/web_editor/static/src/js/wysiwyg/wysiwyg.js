@@ -42,6 +42,8 @@ var Wysiwyg = Widget.extend({
         this.value = options.value || '';
         this.options = options;
         this.colorPickers = [];
+        this._execCommandContext = undefined;
+        this._execCommandContextArray = [];
         this.JWEditorLib = JWEditorLib;
         if (this.options.enableTranslation) {
             this._modeConfig = {
@@ -708,7 +710,7 @@ var Wysiwyg = Widget.extend({
                     link.modifiers.get(JWEditorLib.Attributes).set('class', params.classes);
                 }
             };
-            await this.editor.execCommand(onSaveLinkDialog);
+            await this.execCommand(onSaveLinkDialog);
         });
     },
     openMediaDialog(params) {
@@ -741,7 +743,7 @@ var Wysiwyg = Widget.extend({
                 if (params.htmlClass) {
                     element.className += " " + params.htmlClass;
                 }
-                await this.editor.execCommand('insertMedia', { element: element });
+                await this.execCommand('insertMedia', { element: element });
             }
         });
     },
@@ -813,7 +815,7 @@ var Wysiwyg = Widget.extend({
             this._transform($node);
         }
     },
-    async updateChanges($target, context = this.editor) {
+    async updateChanges($target) {
         const updateChanges = async (context) => {
             const html = $target.html();
             $target.html('');
@@ -825,11 +827,45 @@ var Wysiwyg = Widget.extend({
             await this.editorHelpers.empty(context, $target[0]);
             await this.editorHelpers.insertHtml(context, html, $target[0], 'INSIDE');
         };
-        await context.execCommand(updateChanges);
+        return this._withStackContext((context) => {
+            return context.execCommand(updateChanges);
+        });
     },
-    withDomMutationsObserver ($target, callback) {
-        callback();
-        this.updateChanges($target);
+    /**
+     * Execute a command within the editor. If a command is still running within
+     * a Promise, the execution of the callback will be in the same "step" as
+     * the running command.
+     *
+     * @param {string} commandName The command name or the callback
+     * @param {Array} [args] Arguments provided to the command
+     *//**
+     * Execute a command within the editor. If a command is still running within
+     * a Promise, the execution of the callback will be in the same "step" as
+     * the running command.
+     *
+     * @param {Function} callback The custom command callback
+     */
+    async execCommand(...args) {
+        return this._withStackContext((context) => {
+            return context.execCommand(...args);
+        });
+    },
+    /**
+     * Within a callback, observe the mutation that are produced in the dom and
+     * replicate them in the internal structure of the editor.
+     *
+     * @param {jQuery} $target The root element to observe
+     * @param {Function} callback The callback being executed
+     * @param {Context} [context] The context in which it applies
+     */
+    async withDomMutations($target, callback, context) {
+        if (context) {
+            return JWEditorLib.withDomMutations(this.editor, $($target)[0], callback, context);
+        } else {
+            return this._withStackContext((context) => {
+                return JWEditorLib.withDomMutations(this.editor, $($target)[0], callback, context);
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -949,8 +985,7 @@ var Wysiwyg = Widget.extend({
             }
 
             new AttributeTranslateDialog(self, {
-                editor: self.editor,
-                editorHelpers: self.editorHelpers,
+                wysiwyg: self,
             }, ev.target).open();
         });
     },
@@ -1189,7 +1224,7 @@ var Wysiwyg = Widget.extend({
                 }
             }
         };
-        await this.editor.execCommand(wysiwygSaveNewsletterBlocks);
+        await this.execCommand(wysiwygSaveNewsletterBlocks);
         return Promise.all(defs);
     },
     /**
@@ -1235,6 +1270,7 @@ var Wysiwyg = Widget.extend({
             }
             const isStructureDirty = node instanceof JWEditorLib.OdooStructureNode && node.dirty;
             const isFieldDirty = node instanceof JWEditorLib.OdooFieldNode && node.fieldInfo.originalValue !== node.fieldInfo.value.get();
+            console.log(isStructureDirty, isStructureDirty, isFieldDirty);
             if (isStructureDirty || isFieldDirty) {
                 const promise = this._saveViewTo($saveNode, +$saveNode[0].dataset.oeId, node.xpath);
                 promise.catch(() => { console.error('Fail to save:', $saveNode[0]); });
@@ -1287,13 +1323,13 @@ var Wysiwyg = Widget.extend({
     },
     _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
         if(color === "") {
-            this.editor.execCommand(unsetCommandId);
+            this.execCommand(unsetCommandId);
         } else {
             if (colorpicker.colorNames.indexOf(color) !== -1) {
                 // todo : find a better way to detect and send css variable
                 color = "var(--" + color + ")";
             }
-            this.editor.execCommand(setCommandId, {color: color});
+            this.execCommand(setCommandId, {color: color});
         }
         const $jwButton = $dropDownToToggle.find(".dropdown-toggle")
         // Only adapt the color preview in the toolbar for the web_editor.
@@ -1440,6 +1476,75 @@ var Wysiwyg = Widget.extend({
         }
         this.editorHelpers.updateAttributes(this.editor, node, attributes);
     },
+
+    /**
+     * If there is an editor context, grab it directly from the stack, otherwise
+     * create one.
+     *
+     * This method prevent deadlock situations when differents modules need to
+     * to execute an editor command.
+     *
+     * @param {Function} callback The callback that will receive a newly context if i.
+     */
+    async _withStackContext(callback) {
+        if (!this._execCommandContextArray.length) {
+            let resolve1;
+            const promise = new Promise((r)=>{resolve1 = r;});
+
+            let resolve2;
+            const promise2 = new Promise((r)=>{resolve2 = r;});
+            this._execCommandContextArray.push(promise);
+
+            // There is potentially multiples editor commands running at the
+            // same time. For example, a user can double click twice on a
+            // button, which will call two differents commands. If the first
+            // command finished before the second, we need to wait for the
+            // second command to finish. We create only one context for
+            // aggregated commands. We track commands called with
+            // `_execCommandContextCount`. The pro of this technique is that it
+            // handle deadlock situation in an automated way. The con of this
+            // technique is that it sometimes interpret two steps (for undo) as
+            // only one.
+            this._contextPromise = new Promise((resolve) => {
+                this.editor.execCommand(async (context) => {
+                    resolve(context);
+
+                    await promise;
+
+                    // Because we await during the loop, the
+                    // _execCommandContextArray.length might increase in between
+                    // the loop when multiples commands are called together.
+                    for (let i = 0; i < this._execCommandContextArray.length; i++) {
+                        await this._execCommandContextArray[i];
+                    }
+
+                    this._execCommandContextArray = [];
+                    this._contextPromise = undefined;
+                    resolve2();
+                });
+            });
+            this._execCommandContext = await this._contextPromise;
+
+            let result;
+            try {
+                result = await callback(this._execCommandContext);
+            } catch (e) {
+                resolve1();
+                throw e;
+            }
+            resolve1();
+            await promise2;
+            return result;
+        } else {
+            let result;
+            await this._contextPromise;
+            const promise = callback(this._execCommandContext);
+            this._execCommandContextArray.push(promise);
+            result = await promise;
+            return result;
+        }
+
+    },
 });
 
 //--------------------------------------------------------------------------
@@ -1478,7 +1583,7 @@ Wysiwyg.setRange = async function (wysiwyg, startNode, startOffset, endNode, end
         const endVNode = wysiwyg.editorHelpers.getNodes(endNode);
         wysiwyg.editor.selection.select(startVNode[startOffset], endVNode[endOffset]);
     };
-    await wysiwyg.editor.execCommand(wysiwygSetRange);
+    await wysiwyg.execCommand(wysiwygSetRange);
 };
 
 return Wysiwyg;

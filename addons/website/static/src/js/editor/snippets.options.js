@@ -747,24 +747,26 @@ snippetOptions.registry.BackgroundVideo = snippetOptions.SnippetOptionWidget.ext
      * @see this.selectClass for parameters
      * @returns {Promise}
      */
-    _setBgVideo: async function (previewMode, value) {
-        this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
+    _setBgVideo: async function (previewMode, value, params) {
+        return await this.wysiwyg.withDomMutations(this.$target, async () => {
+            this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
 
-        if (previewMode !== false) {
-            return;
-        }
+            if (previewMode !== false) {
+                return;
+            }
 
-        this.videoSrc = value;
-        var target = this.$target[0];
-        target.classList.toggle('o_background_video', !!(value && value.length));
-        if (value && value.length) {
-            target.dataset.bgVideoSrc = value;
-        } else {
-            delete target.dataset.bgVideoSrc;
-        }
-        await this._refreshPublicWidgets();
+            this.videoSrc = value;
+            var target = this.$target[0];
 
-        await this.updateChangesInWysiwyg();
+            target.classList.toggle('o_background_video', !!(value && value.length));
+            if (value && value.length) {
+                target.dataset.bgVideoSrc = value;
+            } else {
+                delete target.dataset.bgVideoSrc;
+            }
+
+            await this._refreshPublicWidgets();
+        });
     },
 });
 
@@ -1327,10 +1329,10 @@ snippetOptions.registry.CarouselItem = snippetOptions.SnippetOptionWidget.extend
             const $toDelete = $items.filter('.active');
             this.$carousel.one('active_slide_targeted.carousel_item_option', async () => {
                 const carouselItemRemoveSlide = async (context) => {
-                    await this.editorHelpers.remove(context, this.$indicators.find('li:last')[0]);
-                    await this.editorHelpers.remove(context, $toDelete[0]);
+                    this.$indicators.find('li:last').remove();
+                    $toDelete.remove();
                 };
-                await this.wysiwyg.editor.execCommand(carouselItemRemoveSlide);
+                await this.wysiwyg.withDomMutations(this.$carousel, carouselItemRemoveSlide);
                 this.$controls.toggleClass('d-none', newLength === 1);
                 this.$carousel.trigger('content_changed');
                 this.removing = false;
@@ -1461,14 +1463,13 @@ snippetOptions.registry.layout_column = snippetOptions.SnippetOptionWidget.exten
      * @see this.selectClass for parameters
      */
     selectCount: async function (previewMode, widgetValue, params) {
+        console.log('selectCount');
         const previousNbColumns = this.$('> .row').children().length;
         let $row = this.$('> .row');
         if (!$row.length) {
-            const wrapperHtml = '<div class="row"><div class="col-lg-12"/></div>';
-            const context = this.wysiwyg.editor;
-            const target = this.$target[0];
-            const row = await this.editorHelpers.wrapContents(context, target, wrapperHtml);
-            $row = $(this.editorHelpers.getDomNodes(row));
+            await this.wysiwyg.withDomMutations(this.$target, () => {
+                $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
+            });
         }
 
         const nbColumns = parseInt(widgetValue);
@@ -1625,7 +1626,6 @@ snippetOptions.registry.Parallax = snippetOptions.SnippetOptionWidget.extend({
         }
 
         this._updateBackgroundOptions();
-        await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
@@ -2380,7 +2380,7 @@ snippetOptions.registry.CoverProperties = snippetOptions.SnippetOptionWidget.ext
                     class: 'oe_black',
                 });
             };
-            await this.wysiwyg.editor.execCommand(coverPropertiesFilterValue);
+            await this.wysiwyg.execCommand(coverPropertiesFilterValue);
         } else {
             this.$filter.css('opacity', widgetValue || 0);
             this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
@@ -2456,7 +2456,9 @@ snippetOptions.registry.ContainerWidth = snippetOptions.SnippetOptionWidget.exte
      * @override
      */
     cleanForSave: async function () {
-        await this.editorHelpers.removeClass(this.wysiwyg.editor, this.$target[0], 'o_container_preview');
+        await this.wysiwyg.withDomMutations(this.$target, () => {
+            this.$target.removeClass('o_container_preview');
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -2515,30 +2517,23 @@ snippetOptions.registry.SnippetMove = snippetOptions.SnippetOptionWidget.extend(
     async moveSnippet (previewMode, widgetValue, params) {
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
+        const moveSnippet = () => {
         switch (widgetValue) {
-            case 'prev':
-                const snippetMoveMoveSnippetBefore = async (context) => {
-                    if (this.$target.prev()[0]) {
-                        await this.editorHelpers.moveBefore(context, this.$target.prev()[0], this.$target[0]);
+                case 'prev':
+                    this.$target.prev().before(this.$target);
+                    if (isNavItem) {
+                        $tabPane.prev().before($tabPane);
                     }
-                    if (isNavItem && $tabPane.prev()[0]) {
-                        await this.editorHelpers.moveBefore(context, $tabPane.prev()[0], $tabPane[0]);
+                    break;
+                case 'next':
+                    this.$target.next().after(this.$target);
+                    if (isNavItem) {
+                        $tabPane.next().after($tabPane);
                     }
-                };
-                await this.wysiwyg.editor.execCommand(snippetMoveMoveSnippetBefore);
-                break;
-            case 'next':
-                const snippetMoveMoveSnippetAfter = async (context) => {
-                    if (this.$target.next()[0]) {
-                        await this.editorHelpers.moveAfter(context, this.$target.next()[0], this.$target[0]);
-                    }
-                    if (isNavItem && $tabPane.next()[0]) {
-                        await this.editorHelpers.moveAfter(context, $tabPane.next()[0], $tabPane[0]);
-                    }
-                };
-                await this.wysiwyg.editor.execCommand(snippetMoveMoveSnippetAfter);
-                break;
+                    break;
+            }
         }
+        await this.wysiwyg.withDomMutations(this.$target.parent(), moveSnippet);
         if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
@@ -2559,7 +2554,7 @@ snippetOptions.registry.ScrollButton = snippetOptions.SnippetOptionWidget.extend
         await this._super(...arguments);
         const $button = this._getButton();
         if ($button.length && this.el.offsetParent === null) {
-            await this.editorHelpers.remove(this.wysiwyg.editor, $button[0]);
+            await this.wysiwyg.withDomMutations($button, () => $button.remove());
         }
     },
 
@@ -2571,30 +2566,32 @@ snippetOptions.registry.ScrollButton = snippetOptions.SnippetOptionWidget.extend
      * Toggles the scroll down button.
      */
     toggleButton: async function (previewMode, widgetValue, params) {
-        if (widgetValue) {
-            if (!this._getButton().length) {
-                const anchor = document.createElement('a');
-                anchor.classList.add(
-                    'o_scroll_button',
-                    'mb-3',
-                    'rounded-circle',
-                    'align-items-center',
-                    'justify-content-center',
-                    'mx-auto',
-                    'bg-primary',
-                );
-                anchor.href = '#';
-                anchor.contentEditable = "false";
-                anchor.title = _t("Scroll down to next section");
-                const arrow = document.createElement('i');
-                arrow.classList.add('fa', 'fa-angle-down', 'fa-3x');
-                anchor.appendChild(arrow);
-                this.$buttonTemplate = $(anchor);
+        await this.wysiwyg.withDomMutations(this.$target, () => {
+            if (widgetValue) {
+                if (!this._getButton().length) {
+                    const anchor = document.createElement('a');
+                    anchor.classList.add(
+                        'o_scroll_button',
+                        'mb-3',
+                        'rounded-circle',
+                        'align-items-center',
+                        'justify-content-center',
+                        'mx-auto',
+                        'bg-primary',
+                    );
+                    anchor.href = '#';
+                    anchor.contentEditable = "false";
+                    anchor.title = _t("Scroll down to next section");
+                    const arrow = document.createElement('i');
+                    arrow.classList.add('fa', 'fa-angle-down', 'fa-3x');
+                    anchor.appendChild(arrow);
+                    this.$buttonTemplate = $(anchor);
+                }
+                this.$target.append(this.$buttonTemplate);
+            } else {
+                this._getButton().remove();
             }
-            await this.editorHelpers.insertHtml(this.wysiwyg.editor, this.$buttonTemplate[0].outerHTML, this.$target[0], 'INSIDE');
-        } else {
-            await this.editorHelpers.remove(this.wysiwyg.editor, this._getButton()[0]);
-        }
+        });
     },
 
     //--------------------------------------------------------------------------
