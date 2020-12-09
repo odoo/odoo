@@ -284,6 +284,44 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             cfi.destroy();
         });
 
+        QUnit.test('date/datetime custom filter in takes current locale in account', async function (assert) {
+            assert.expect(4);
+
+            const originalLocale = moment.locale();
+            moment.defineLocale('customLocale', {
+                weekdaysMin: 'Ravi_Som_Man_Bud_Gur_Suk_San'.split('_'),
+            });
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
+                },
+                env: { searchModel: new ActionModel(), },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
+
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
+
+            await testUtils.dom.click(cfi.el.querySelectorAll('.o_generator_menu_value .o_input')[0]);
+            assert.containsOnce(document.body, 'div.bootstrap-datetimepicker-widget .datepicker');
+            const daysOfWeek = document.querySelectorAll("div.bootstrap-datetimepicker-widget .datepicker .dow");
+            const daysText = [...daysOfWeek].map(day => day.innerText);
+            assert.deepEqual(daysText, ["Ravi", "Som", "Man", "Bud", "Gur", "Suk", "San"],
+                "datepicker should consider current locale in custom filter");
+
+            moment.locale(originalLocale);
+            moment.updateLocale("customLocale", null);
+            cfi.destroy();
+        });
+
         QUnit.test('input value parsing', async function (assert) {
             assert.expect(6);
 

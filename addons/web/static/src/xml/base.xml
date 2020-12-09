@@ -359,20 +359,24 @@
                     <t t-if="fieldType === 'date'">
                         <DatePicker
                             date="condition.value[0]"
+                            locale="getLocale()"
                             t-on-datetime-changed="_onDateChanged(condition, 0)"
                         />
                         <DatePicker t-if="selectedOperator.symbol === 'between'"
                             date="condition.value[1]"
+                            locale="getLocale()"
                             t-on-datetime-changed="_onDateChanged(condition, 1)"
                         />
                     </t>
                     <t t-elif="fieldType === 'datetime'">
                         <DateTimePicker
                             date="condition.value[0]"
+                            locale="getLocale()"
                             t-on-datetime-changed="_onDateChanged(condition, 0)"
                         />
                         <DateTimePicker t-if="selectedOperator.symbol === 'between'"
                             date="condition.value[1]"
+                            locale="getLocale()"
                             t-on-datetime-changed="_onDateChanged(condition, 1)"
                         />
                     </t>
