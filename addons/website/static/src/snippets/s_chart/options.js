@@ -157,8 +157,7 @@ snippetOptions.registry.InnerChart = snippetOptions.SnippetOptionWidget.extend({
     _reloadGraph: async function () {
         const jsonValue = this._matrixToChartData();
         if (this.$target[0].dataset.data !== jsonValue) {
-            await this.editorHelpers.setAttribute(this.wysiwyg.editor, this.$target[0], 'data-data', jsonValue);
-            this.$target[0].dataset.data = jsonValue;
+            await this.wysiwyg.withDomMutations(this.$target, () => this.$target[0].dataset.data = jsonValue);
             await this._refreshPublicWidgets();
         }
     },

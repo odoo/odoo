@@ -18,8 +18,7 @@ var AttributeTranslateDialog = Dialog.extend({
                 {text: _t("Close"), classes: 'btn-primary', click: this.applyAttributeChanges}
             ],
         }, options || {}));
-        this.editor = options.editor;
-        this.editorHelpers = options.editorHelpers;
+        this.wysiwyg = options.wysiwyg;
         this.node = node;
         this.translation = $(node).data('translation');
     },
@@ -49,14 +48,14 @@ var AttributeTranslateDialog = Dialog.extend({
         const attributeChange = () => {
             for (const attributeName of Object.keys(this.translation)) {
                 const domNode = this.translation[attributeName];
-                const nodes = this.editorHelpers.getNodes(this.node);
+                const nodes = this.wysiwyg.editorHelpers.getNodes(this.node);
                 for (const node of nodes) {
                     node.modifiers.get(JWEditorLib.Attributes).set(attributeName, domNode.textContent);
                 }
             }
             this.close();
         }
-        this.editor.execCommand(attributeChange);
+        this.wysiwyg.execCommand(attributeChange);
     }
 });
 
