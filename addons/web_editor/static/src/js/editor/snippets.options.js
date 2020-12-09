@@ -3649,7 +3649,8 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
             const bgImageOpt = bgImageWidget.getParent();
-            return bgImageOpt.background(false, '', {...bgImageWidget.getMethodsParams('background'), withDomMutations: params.withDomMutations});
+            const backgroundParams = Object.assign({}, bgImageWidget.getMethodsParams('background'), { withDomMutations: backgroundParams.withDomMutations });
+            return bgImageOpt.background(false, '', backgroundParams);
         } else {
             // TODO: use trigger instead of el.click when possible
             this._requestUserValueWidgets('bg_image_opt')[0].el.click();
