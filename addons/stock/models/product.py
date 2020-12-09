@@ -509,7 +509,7 @@ class Product(models.Model):
         return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
