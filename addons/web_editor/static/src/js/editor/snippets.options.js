@@ -813,7 +813,7 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
             if (widget.isActive()) {
                 // Only one select item can be true at a time, we consider the
                 // last one if multiple would be active.
-                return;
+                break;
             }
         }
         await _super(...arguments);
@@ -1807,6 +1807,237 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
+const Many2oneUserValueWidget = SelectUserValueWidget.extend({
+    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
+    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
+        'input .o_we_m2o_search input': '_onSearchInput',
+        'keydown .o_we_m2o_search input': '_onSearchKeydown',
+        'click .o_we_m2o_search_more': '_onSearchMoreClick',
+    }),
+    // Data-attributes that will be read into `this.options` on init and not
+    // transfered to inner buttons.
+    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith'],
+
+    /**
+     * @override
+     */
+    init(parent, title, options, $target) {
+        this.afterSearch = [];
+        this.displayNameCache = {};
+        const {dataAttributes} = options;
+        Object.assign(options, {
+            limit: '5',
+            fields: '[]',
+            domain: '[]',
+            callWith: 'id',
+        });
+        this.configAttributes.forEach(attr => {
+            if (dataAttributes.hasOwnProperty(attr)) {
+                options[attr] = dataAttributes[attr];
+                delete dataAttributes[attr];
+            }
+        });
+        options.limit = parseInt(options.limit);
+        options.fields = JSON.parse(options.fields);
+        if (!options.fields.includes('display_name')) {
+            options.fields.push('display_name');
+        }
+        options.domain = JSON.parse(options.domain);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        this.inputEl = document.createElement('input');
+        this.inputEl.setAttribute('placeholder', _t("Search for records..."));
+        const searchEl = document.createElement('div');
+        searchEl.classList.add('o_we_m2o_search');
+        searchEl.appendChild(this.inputEl);
+        this.menuEl.appendChild(searchEl);
+
+        this.searchMore = document.createElement('div');
+        this.searchMore.classList.add('o_we_m2o_search_more');
+        this.searchMore.textContent = _t("Search more...");
+        this.searchMore.title = _t("Search to show more records");
+        return this._search('');
+    },
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await this._super(...arguments);
+        // The currently selected value is not present in the search, need to read
+        // its display name.
+        if (this.menuTogglerEl.textContent === '/' && value !== '') {
+            this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
+        }
+    },
+    /**
+     * Prevents double widget instanciation for we-buttons that have been
+     * created manually by _search (container widgets will have their innner
+     * html searched for userValueWidgets to instanciate during option startup)
+     *
+     * @override
+     */
+    isContainer() {
+        return false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Searches the database for corresponding records and updates the dropdown
+     *
+     * @private
+     */
+    async _search(needle) {
+        const recTuples = await this._rpc({
+            model: this.options.model,
+            method: 'name_search',
+            kwargs: {
+                name: needle,
+                args: this.options.domain,
+                operator: "ilike",
+                limit: this.options.limit + 1,
+            },
+        });
+        const records = await this._rpc({
+            model: this.options.model,
+            method: 'read',
+            args: [recTuples.map(([id, _name]) => id), this.options.fields],
+        });
+        records.forEach(record => {
+            this.displayNameCache[record.id] = record.display_name;
+        });
+
+        await Promise.all(records.slice(0, this.options.limit).map(async record => {
+            // Copy over the data-attributes from the main element, and default the value
+            // to the callWith field of the record so that if it's a method, it will
+            // be called with that value
+            const buttonDataAttributes = Object.assign({}, this.options.dataAttributes);
+            Object.keys(buttonDataAttributes).forEach(key => {
+                buttonDataAttributes[key] = buttonDataAttributes[key] || record[this.options.callWith];
+            });
+            const buttonWidget = new ButtonUserValueWidget(this, undefined, {
+                dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
+                childNodes: [document.createTextNode(record.display_name)],
+            }, this.$target);
+            this.registerSubWidget(buttonWidget);
+            await buttonWidget.appendTo(this.menuEl);
+            if (this._methodsNames) {
+                buttonWidget.loadMethodsData(this._methodsNames);
+            }
+        }));
+        // Load methodsData for new buttons if possible. It will not be possible
+        // when the widget is first created (as this._methodsNames will be undefined)
+        // but the snippetOption lifecycle will load the methods data explicitely
+        // just after creating the widget
+        if (this._methodsNames) {
+            this._methodsNames.forEach(methodName => {
+                this.setValue(this._value, methodName);
+            });
+        }
+
+        const hasMore = records.length > this.options.limit;
+        if (hasMore) {
+            this.menuEl.appendChild(this.searchMore);
+            this.searchMore.classList.remove('d-none');
+        } else {
+            this.searchMore.classList.add('d-none');
+        }
+
+        this.waitingForSearch = false;
+        this.afterSearch.forEach(cb => cb());
+        this.afterSearch = [];
+    },
+    /**
+     * Returns the display name for a given record.
+     *
+     * @private
+     */
+    async _getDisplayName(recordId) {
+        if (!this.displayNameCache.hasOwnProperty(recordId)) {
+            this.displayNameCache[recordId] = (await this._rpc({
+                model: this.options.model,
+                method: 'read',
+                args: [[recordId], ['display_name']],
+            }))[0].display_name;
+        }
+        return this.displayNameCache[recordId];
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onClick(ev) {
+        // Prevent dropdown from closing if you click on the search or has_more
+        if (ev.target.closest('.o_we_m2o_search_more, .o_we_m2o_search')) {
+            ev.stopPropagation();
+            return;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Handles changes to the search bar.
+     *
+     * @private
+     */
+    _onSearchInput(ev) {
+        // maybe there is a concurrency primitive we can use instead of manual record-keeping?
+        // Basically we want to queue the enter action to go after the current search if there
+        // is one that is ongoing (ie currently waiting for the debounce or RPC)
+        clearTimeout(this.searchIntent);
+        this.waitingForSearch = true;
+        this.searchIntent = setTimeout(() => {
+            this._userValueWidgets.forEach(widget => {
+                if (widget.isPreviewed()) {
+                    widget.notifyValueChange('reset');
+                }
+                widget.destroy();
+            });
+            this._search(ev.target.value);
+        }, 500);
+    },
+    /**
+     * Selects the first option when pressing enter in the search input.
+     *
+     * @private
+     */
+    _onSearchKeydown(ev) {
+        if (ev.which !== $.ui.keyCode.ENTER) {
+            return;
+        }
+        const action = () => {
+            const firstButton = this.menuEl.querySelector('we-button');
+            if (firstButton) {
+                firstButton.click();
+            }
+        };
+        if (this.waitingForSearch) {
+            this.afterSearch.push(action);
+        } else {
+            action();
+        }
+    },
+    /**
+     * Focuses the search input when clicking on the "Search more..." button.
+     *
+     * @private
+     */
+    _onSearchMoreClick(ev) {
+        this.inputEl.focus();
+    },
+});
+
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
@@ -1820,6 +2051,7 @@ const userValueWidgetsRegistry = {
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
     'we-select-pager': SelectPagerUserValueWidget,
+    'we-many2one': Many2oneUserValueWidget,
 };
 
 /**
@@ -4577,54 +4809,62 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
  * @todo replace this mechanism with real backend m2o field ?
  */
 registry.many2one = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-
-        this.Model = this.$target.data('oe-many2one-model');
-        this.ID = +this.$target.data('oe-many2one-id');
-
-        // create search button and bind search bar
-        this.$btn = $(qweb.render('web_editor.many2one.button'))
-            .prependTo(this.$el);
-
-        this.$ul = this.$btn.find('ul');
-        this.$search = this.$ul.find('li:first');
-        this.$search.find('input').on('mousedown click mouseup keyup keydown', function (e) {
-            e.stopPropagation();
-        });
-
-        // move menu item
-        setTimeout(function () {
-            self.$btn.find('a').on('click', function (e) {
-                self._clear();
-            });
-        }, 0);
-
-        // bind search input
-        this.$search.find('input')
-            .focus()
-            .on('keyup', function (e) {
-                self.$overlay.removeClass('o_overlay_hidden');
-                self._findExisting($(this).val());
-            });
-
-        // bind result
-        this.$ul.on('click', 'li:not(:first) a', function (e) {
-            self._selectRecord($(e.currentTarget));
-        });
-
-        return this._super.apply(this, arguments);
+    async willStart() {
+        const {oeMany2oneModel, oeMany2oneId} = this.$target[0].dataset;
+        this.fields = ['name', 'display_name'];
+        return Promise.all([
+            this._super(...arguments),
+            this._rpc({
+                model: oeMany2oneModel,
+                method: 'read',
+                args: [[parseInt(oeMany2oneId)], this.fields],
+            }).then(([initialRecord]) => {
+                this.initialRecord = initialRecord;
+            }),
+        ]);
     },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
     /**
-     * @override
+     * @see this.selectClass for params
      */
-    onFocus: function () {
-        this.$target.attr('contentEditable', 'false');
-        this._clear();
+    async changeRecord(previewMode, widgetValue, params) {
+        const target = this.$target[0];
+        if (previewMode === 'reset') {
+            // Have to set the jQ data because it's used to update the record in other
+            // parts of the page, but have to set the dataset because used for saving.
+            this.$target.data('oeMany2oneId', this.prevId);
+            target.dataset.oeMany2oneId = this.prevId;
+            this.$target.empty().append(this.$prevContents);
+            return this._rerenderContacts(this.prevId, this.prevRecordName);
+        }
+
+        const record = JSON.parse(params.recordData);
+        if (previewMode === true) {
+            this.prevId = parseInt(target.dataset.oeMany2oneId);
+            this.$prevContents = this.$target.contents();
+            this.prevRecordName = this.prevRecordName || this.initialRecord.name;
+        }
+
+        this.$target.data('oeMany2oneId', record.id);
+        target.dataset.oeMany2oneId = record.id;
+
+        if (target.dataset.oeType !== 'contact') {
+            target.textContent = record.name;
+        }
+        await this._rerenderContacts(record.id, record.name);
+
+        if (previewMode === false) {
+            this.prevId = record.id;
+            this.$prevContents = this.$target.contents();
+            this.prevRecordName = record.name;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -4632,102 +4872,68 @@ registry.many2one = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Removes the input value and suggestions.
-     *
-     * @private
+     * @override
      */
-    _clear: function () {
-        var self = this;
-        this.$search.siblings().remove();
-        self.$search.find('input').val('');
-        setTimeout(function () {
-            self.$search.find('input').focus();
-        }, 0);
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'changeRecord') {
+            return this.$target[0].dataset.oeMany2oneId;
+        }
+        return this._super(...arguments);
     },
     /**
-     * Find existing record with the given name and suggest them.
-     *
-     * @private
-     * @param {string} name
-     * @returns {Promise}
+     * @override
      */
-    _findExisting: function (name) {
-        var self = this;
-        var domain = [];
-        if (!name || !name.length) {
-            self.$search.siblings().remove();
-            return;
-        }
-        if (isNaN(+name)) {
-            if (this.Model !== 'res.partner') {
-                domain.push(['name', 'ilike', name]);
-            } else {
-                domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
-            }
-        } else {
-            domain.push(['id', '=', name]);
-        }
+    async _renderCustomXML(uiFragment) {
+        const many2oneWidget = document.createElement('we-many2one');
+        many2oneWidget.dataset.changeRecord = '';
 
-        return this._rpc({
-            model: this.Model,
+        const model = this.$target[0].dataset.oeMany2oneModel;
+        const [{name: modelName}] = await this._rpc({
+            model: 'ir.model',
             method: 'search_read',
-            args: [domain, this.Model === 'res.partner' ? ['name', 'display_name', 'city', 'country_id'] : ['name', 'display_name']],
-            kwargs: {
-                order: [{name: 'name', asc: false}],
-                limit: 5,
-                context: this.options.context,
-            },
-        }).then(function (result) {
-            self.$search.siblings().remove();
-            self.$search.after(qweb.render('web_editor.many2one.search', {contacts: result}));
+            args: [[['model', '=', model]], ['name']],
         });
+        many2oneWidget.setAttribute('String', modelName);
+        many2oneWidget.dataset.model = model;
+        many2oneWidget.dataset.fields = JSON.stringify(this.fields);
+        uiFragment.appendChild(many2oneWidget);
     },
     /**
-     * Selects the given suggestion and displays it the proper way.
-     *
      * @private
-     * @param {jQuery} $li
      */
-    _selectRecord: function ($li) {
-        var self = this;
-
-        this.ID = +$li.data('id');
-        this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
-
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
-        this.$target.trigger('content_changed');
-
-        if (self.$target.data('oe-type') === 'contact') {
-            $('[data-oe-contact-options]')
-                .filter('[data-oe-model="' + self.$target.data('oe-model') + '"]')
-                .filter('[data-oe-id="' + self.$target.data('oe-id') + '"]')
-                .filter('[data-oe-field="' + self.$target.data('oe-field') + '"]')
-                .filter('[data-oe-contact-options!="' + self.$target.data('oe-contact-options') + '"]')
-                .add(self.$target)
-                .attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID)
-                .each(function () {
-                    var $node = $(this);
-                    var options = $node.data('oe-contact-options');
-                    self._rpc({
+    async _rerenderContacts(contactId, defaultText) {
+        // Rerender this same field in other places in the page (with different
+        // contact-options). Many2ones with the same contact options will just
+        // copy the HTML of the current m2o on content_changed. Not sure why we
+        // only do this for contacts, or why we do this here instead of in
+        // rte.summernote.js like we do for replacing text on content_changed
+        const selector = [
+            `[data-oe-model="${this.$target.data('oe-model')}"]`,
+            `[data-oe-id="${this.$target.data('oe-id')}"]`,
+            `[data-oe-field="${this.$target.data('oe-field')}"]`,
+            `[data-oe-contact-options!='${this.$target[0].dataset.oeContactOptions}']`,
+        ].join('');
+        let $toRerender = $(selector);
+        if (this.$target[0].dataset.oeType === 'contact') {
+            $toRerender = $toRerender.add(this.$target);
+        }
+        await Promise.all($toRerender
+            .attr('data-oe-many2one-id', contactId).data('oe-many2one-id', contactId)
+            .map(async (i, node) => {
+                if (node.dataset.oeType === 'contact') {
+                    const html = await this._rpc({
                         model: 'ir.qweb.field.contact',
                         method: 'get_record_to_html',
-                        args: [[self.ID]],
-                        kwargs: {
-                            options: options,
-                            context: self.options.context,
-                        },
-                    }).then(function (html) {
-                        $node.html(html);
+                        args: [[contactId]],
+                        kwargs: {options: JSON.parse(node.dataset.oeContactOptions)},
                     });
-                });
-        } else {
-            self.$target.text($li.data('name'));
-        }
-
-        this._clear();
-    }
+                    $(node).html(html);
+                } else {
+                    node.textContent = defaultText;
+                }
+            }));
+    },
 });
-
 /**
  * Allows to display a warning message on outdated snippets.
  */
