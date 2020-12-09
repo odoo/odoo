@@ -118,11 +118,13 @@
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_oppor')})]"/>
-             <field name="help">Pipeline Analysis gives you an instant access to
-                your opportunities with information such as the expected revenue, planned cost,
-                missed deadlines or the number of interactions per opportunity. This report is
-                mainly used by the sales manager in order to do the periodic review with the
-                teams of the sales pipeline.</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data found!
+                </p><p>
+                    Use this menu to have an overview of your Pipeline.
+                </p>
+            </field>
         </record>
 
         <record id="crm_opportunity_report_menu" model="ir.ui.menu">
@@ -143,7 +145,13 @@
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')})]"/>
-            <field name="help">This report analyses the source of your leads.</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data found!
+                </p><p>
+                    This analysis shows you how many leads have been created per month.
+                </p>
+            </field>
         </record>
 
         <record id="crm_opportunity_report_menu_lead" model="ir.ui.menu">
