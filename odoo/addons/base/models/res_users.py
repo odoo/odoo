@@ -835,6 +835,29 @@ class Users(models.Model):
     # for a few places explicitly clearing the has_group cache
     has_group.clear_cache = _has_group.clear_cache
 
+    def _action_show(self):
+        """If self is a singleton, directly access the form view. If it is a recordset, open a tree view"""
+        view_id = self.env.ref('base.view_users_form').id
+        action = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users',
+            'context': {'create': False},
+        }
+        if len(self) > 1:
+            action.update({
+                'name': _('Users'),
+                'view_mode': 'list,form',
+                'views': [[None, 'list'], [view_id, 'form']],
+                'domain': [('id', 'in', self.ids)],
+            })
+        else:
+            action.update({
+                'view_mode': 'form',
+                'views': [[view_id, 'form']],
+                'res_id': self.id,
+            })
+        return action
+
     def action_show_groups(self):
         self.ensure_one()
         return {
