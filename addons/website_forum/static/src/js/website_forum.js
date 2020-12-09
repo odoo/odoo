@@ -41,8 +41,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         this.lastsearch = [];
 
+        var $forumPostContent = $('span[data-oe-model="forum.post"][data-oe-field="content"]');
         // float-left class messes up the post layout OPW 769721
-        $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-left').removeClass('float-left');
+        $forumPostContent.find('img.float-left').removeClass('float-left');
+        // o_we_selected_image has not always been removed when
+        // saving a post so we need the line below to remove it if it is present.
+        $forumPostContent.find('img.o_we_selected_image').removeClass('o_we_selected_image');
 
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
@@ -152,6 +156,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
                 $form.on('click', 'button, .a-submit', function () {
+                    $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
                     $form.find('textarea').data('wysiwyg').save();
                 });
             });
