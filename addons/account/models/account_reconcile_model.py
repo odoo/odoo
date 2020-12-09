@@ -385,26 +385,45 @@ class AccountReconcileModel(models.Model):
         liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
         if st_line.to_check:
-            residual_balance = -liquidity_lines.balance
+            st_line_residual = -liquidity_lines.balance
         elif suspense_lines.account_id.reconcile:
-            residual_balance = sum(suspense_lines.mapped('amount_residual'))
+            st_line_residual = sum(suspense_lines.mapped('amount_residual'))
         else:
-            residual_balance = sum(suspense_lines.mapped('balance'))
+            st_line_residual = sum(suspense_lines.mapped('balance'))
 
         partner = partner or st_line.partner_id
-        lines_vals_list = [{'id': aml_id} for aml_id in aml_ids]
+
+        lines_vals_list = []
+        amls = self.env['account.move.line'].browse(aml_ids)
+        st_line_residual_before = st_line_residual
+        aml_total_residual = 0
+        for aml in amls:
+            aml_total_residual += aml.amount_residual
+
+            if aml.balance * st_line_residual > 0:
+                # Meaning they have the same signs, so they can't be reconciled together
+                assigned_balance = -aml.amount_residual
+            else:
+                assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                st_line_residual -= assigned_balance
+
+            lines_vals_list.append({
+                'id': aml.id,
+                'balance': assigned_balance,
+                'currency_id': st_line.move_id.company_id.currency_id.id,
+            })
+
+        write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
+
         reconciliation_overview, open_balance_vals = st_line._prepare_reconciliation(lines_vals_list)
 
-        for reconciliation_vals in reconciliation_overview:
-            residual_balance -= reconciliation_vals['line_vals']['debit'] - reconciliation_vals['line_vals']['credit']
-
-        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, residual_balance)
+        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, write_off_amount)
 
         for line_vals in writeoff_vals_list:
-            residual_balance -= st_line.company_currency_id.round(line_vals['balance'])
+            st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
 
         # Check we have enough information to create an open balance.
-        if not st_line.company_currency_id.is_zero(residual_balance):
+        if not st_line.company_currency_id.is_zero(st_line_residual):
             if st_line.amount > 0:
                 open_balance_account = partner.property_account_receivable_id
             else:
