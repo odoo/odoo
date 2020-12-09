@@ -1270,7 +1270,6 @@ var Wysiwyg = Widget.extend({
             }
             const isStructureDirty = node instanceof JWEditorLib.OdooStructureNode && node.dirty;
             const isFieldDirty = node instanceof JWEditorLib.OdooFieldNode && node.fieldInfo.originalValue !== node.fieldInfo.value.get();
-            console.log(isStructureDirty, isStructureDirty, isFieldDirty);
             if (isStructureDirty || isFieldDirty) {
                 const promise = this._saveViewTo($saveNode, +$saveNode[0].dataset.oeId, node.xpath);
                 promise.catch(() => { console.error('Fail to save:', $saveNode[0]); });
@@ -1481,7 +1480,7 @@ var Wysiwyg = Widget.extend({
      * If there is an editor context, grab it directly from the stack, otherwise
      * create one.
      *
-     * This method prevent deadlock situations when differents modules need to
+     * This method prevent deadlock situations when different modules need to
      * to execute an editor command.
      *
      * The pro of this technique is that it handle deadlock situation in an
