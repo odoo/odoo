@@ -6217,7 +6217,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
             });
         }
         async _withOpenMemory(commandName, params) {
-            console.warn('openMemory');
             if (!this.memory.isFrozen()) {
                 console.error('You are trying to call the external editor' +
                     ' execCommand method from within an execCommand. ' +
@@ -6307,7 +6306,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     });
                     console.error(revertError);
                 }
-                console.warn('closeMemory from catch');
                 return {
                     error: {
                         name: error.name,
@@ -6315,7 +6313,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     },
                 };
             }
-            console.warn('closeMemory');
         }
         /**
          * Execute the command or arbitrary code in `callback` in memory.
@@ -20071,7 +20068,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
             if (!node.fieldInfo.isValid.get()) {
                 classList.add('jw-odoo-field-invalid');
             }
-            if (!node.descendants(AtomicNode).length) {
+            if (!node.descendants(AtomicNode).length &&
+                // A placeholder is visible, we don't want to collapse the field if
+                // it gives the impression of having content.
+                !node.modifiers.find(Attributes).has('placeholder')) {
                 classList.add('jw-odoo-field-empty');
             }
             container.attributes.class = classList;
@@ -24078,6 +24078,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     [Iframe],
                     [Button],
                     [ReactiveEditorInfo],
+                    [Theme],
                     ...(options.plugins || []),
                 ],
             });
@@ -24451,7 +24452,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // the modified childrens.
             const addedNodes = new Map();
             const observer = new MutationObserver(async (mutations) => {
-                console.log('mutations:', mutations);
                 for (const mutation of mutations) {
                     if (mutation.type === 'attributes') {
                         const formats = getFormats(domEngine, mutation.target);
@@ -24522,7 +24522,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // ---------------------------------------------------------------------
             // Process mutation finish... Well done my friend.
             // ---------------------------------------------------------------------
-            window.activeObservers = activeObservers;
             for (const [observerNode, activeObservation] of activeObservers.entries()) {
                 // The observation might have been already removed by another call
                 // so we only delete and disconnect when it's still active.
@@ -24685,7 +24684,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
     function removeNodes(originalParents, removedDomNodes, getVNode, getFirstFormat, replacementMap) {
         for (const removedDomNode of removedDomNodes) {
             const removedVNodes = getVNode(removedDomNode);
-            if (removedVNodes) {
+            if (removedVNodes === null || removedVNodes === void 0 ? void 0 : removedVNodes.length) {
                 const firstVNode = removedVNodes[0];
                 // If we remove a text node that has a format, as no textnode will
                 // represent the format after removing it, we need to insert an
