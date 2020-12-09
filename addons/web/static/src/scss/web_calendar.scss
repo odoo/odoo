@@ -40,7 +40,7 @@ $o-cw-filter-avatar-size: 20px;
         .fc-bg {
             background-color: mix(theme-color('primary'), white); // Used for placeholder events only (on creation)
             @include size(101%); // Compensate border
-            opacity: 0.9;
+            opacity: 0.7;
             transition: opacity 0.2s;
         }
 
@@ -303,9 +303,6 @@ $o-cw-filter-avatar-size: 20px;
                 }
 
                 &.o_cw_nobg {
-                    .fc-bg {
-                        visibility: hidden;
-                    }
 
                     &.o_cw_custom_hover, &.o_cw_custom_highlight, &:hover {
                         .fc-bg {
@@ -377,8 +374,8 @@ $o-cw-filter-avatar-size: 20px;
                     margin: auto;
 
                     > .fc-toolbar.fc-header-toolbar {
-                        margin-top: 15px;
-                        margin-bottom: 5px;
+                        margin-top: 10px;
+                        margin-bottom: 4px;
                         cursor: default;
 
                         h2 {
@@ -397,7 +394,7 @@ $o-cw-filter-avatar-size: 20px;
                     }
 
                     .fc-week.fc-row {
-                        min-height: unset;
+                        min-height: 2rem;
                     }
 
                     .fc-disabled-day {
@@ -406,7 +403,7 @@ $o-cw-filter-avatar-size: 20px;
 
                     .fc-day-top {
                         text-align: center;
-                        padding: 5px;
+                        padding: 0.4vh;
                         cursor: pointer;
 
                         > .fc-day-number {
@@ -415,7 +412,7 @@ $o-cw-filter-avatar-size: 20px;
                             line-height: unset;
                             margin: auto;
                             padding: 0.1rem 0;
-                            font-size: 1.2rem;
+                            font-size: calc(11px + 0.2vh);
                         }
 
                         &.fc-today > .fc-day-number {
@@ -718,15 +715,28 @@ $o-cw-filter-avatar-size: 20px;
     $color: nth($o-colors-complete, $i);
 
     .o_calendar_view .fc-view {
+        .o_calendar_hatched_#{$i - 1} {
+            background: repeating-linear-gradient(
+                45deg,
+                $color,
+                $color 10px,
+                rgba($color, 0.4) 10px,
+                rgba($color, 0.4) 20px
+            ) !important;
+
+            .fc-bg {
+                background: rgba(white, 0.5);
+            }
+        }
         .fc-bgevent.o_calendar_color_#{$i - 1} {
             border-color: $color;
             background-color: $color;
-            opacity: 0.2;
+            opacity: 0.5;
         }
         .fc-event.o_calendar_color_#{$i - 1} {
             border-color: $color;
-            color: darken($color, 35%);
-            opacity: 0.8;
+            color: darken($color, 45%);
+            opacity: 0.75;
 
             &.o_event_hightlight {
                 opacity: 1;
@@ -736,8 +746,11 @@ $o-cw-filter-avatar-size: 20px;
                 }
             }
 
-            .fc-bg {
-                background: mix($color, white);
+            &:not(.o_calendar_hatched) {
+                background: $color;
+                .fc-bg {
+                    background: mix($color, white);
+                }
             }
 
             &.o_cw_custom_hover, &.o_cw_custom_highlight {
@@ -745,7 +758,13 @@ $o-cw-filter-avatar-size: 20px;
                 color: color-yiq($color);
 
                 .fc-bg {
-                    background: $color;
+                    background: repeating-linear-gradient(
+                        45deg,
+                        $color,
+                        $color 10px,
+                        rgba($color, 0.5) 10px,
+                        rgba($color, 0.5) 20px
+                    );
                 }
             }
         }
