@@ -731,6 +731,9 @@ var RTEWidget = Widget.extend({
 
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0])) {
             $editable.summernote(this._getConfig($editable));
+            if ($editable.is('[data-oe-many2one-id]')) {
+                $editable.attr('contenteditable', false);
+            }
 
             $editable.data('NoteHistory', history);
             this.$last = $editable;

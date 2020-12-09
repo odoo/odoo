@@ -1187,6 +1187,51 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        // Many2one search
+        .o_we_m2o_search {
+            background-color: $o-we-dropdown-item-bg;
+            flex-grow: 1 !important;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1px;
+            border-radius: $o-we-sidebar-content-field-border-radius;
+            padding: .25em .5em;
+
+            &::before {
+                content: "\f002";
+                font-size: 1.2em;
+                padding-right: .5em;
+                font-family: FontAwesome;
+            }
+
+            input {
+                flex: 1 1 auto;
+                color: inherit;
+                border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+                border-radius: $o-we-sidebar-content-field-border-radius;
+                background-color: $o-we-sidebar-content-field-input-bg;
+                padding: 1px $o-we-sidebar-content-field-clickable-spacing;
+
+                &:focus {
+                    outline: none;
+                    border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+                &::placeholder {
+                    color: $o-we-sidebar-content-field-control-item-color;
+                }
+            }
+        }
+
+        // Many2one search more indicator
+        .o_we_m2o_search_more {
+            color: var(--o-cc1-btn-primary);
+            margin-top: 1px;
+            width: 100%;
+            cursor: pointer;
+            padding-left: 2em;
+            line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
+        }
+
         //----------------------------------------------------------------------
         // Layout Utils
         //----------------------------------------------------------------------
