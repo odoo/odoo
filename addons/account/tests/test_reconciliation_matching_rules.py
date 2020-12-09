@@ -447,6 +447,27 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             {'partner_id': self.partner_2.id, 'debit': 1000.0, 'credit': 0.0},
         ])
 
+    def test_larger_invoice_auto_reconcile(self):
+        ''' Test auto reconciliation with an invoice with larger amount than the statement line's.'''
+        self.bank_line_1.amount = 40
+        self.invoice_line_1.move_id.payment_reference = self.bank_line_1.payment_ref
+
+        self.rule_1.sequence = 2
+        self.rule_1.auto_reconcile = True
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, statements=self.bank_st)
+
+        # Check first line has been well reconciled.
+        self.assertRecordValues(self.bank_line_1.line_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 40.0, 'credit': 0.0},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 40.0},
+        ])
+
+        self.assertEqual(self.invoice_line_1.amount_residual, 60.0, "The invoice should have been partially reconciled")
+
     def test_auto_reconcile_with_tax(self):
         ''' Test auto reconciliation with a tax amount included in the bank statement line'''
         self.rule_1.write({
