@@ -438,8 +438,11 @@ var ListController = BasicController.extend({
             otherActionItems.push({
                 description: _t("Archive"),
                 callback: () => {
-                    Dialog.confirm(this, _t("Are you sure that you want to archive all the selected records?"), {
-                        confirm_callback: () => this._toggleArchiveState(true),
+                    const dialog = Dialog.confirm(this, _t("Are you sure that you want to archive all the selected records?"), {
+                        confirm_callback: () => {
+                            this._toggleArchiveState(true);
+                            dialog.close();
+                        },
                     });
                 }
             }, {
