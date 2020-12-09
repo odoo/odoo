@@ -47,8 +47,10 @@ snippetOptions.registry.mailing_list_subscribe = snippetOptions.SnippetOptionWid
                 });
             },
         });
-        def.then(function (result) {
-            self.$target.attr("data-list-id", result.val);
+        def.then(async function (result) {
+            await self.wysiwyg.withDomMutations(self.$target, () => {
+                self.$target.attr("data-list-id", result.val);
+            });
         });
         return def;
     },

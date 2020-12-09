@@ -12,7 +12,9 @@ snippetOptions.registry.Channel = snippetOptions.SnippetOptionWidget.extend({
      * @override
      */
     cleanForSave: async function () {
-        await this.editorHelpers.addClass(this.wysiwyg.editor, this.$target[0], 'd-none');
+        await this.wysiwyg.withDomMutations(this.$target, () => {
+            this.$target.addClass('d-none');
+        });
     },
 
     //--------------------------------------------------------------------------
