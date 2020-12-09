@@ -9,12 +9,15 @@ class BarcodeRule(models.Model):
     _description = 'Barcode Rule'
     _order = 'sequence asc, id'
 
+    def _default_encoding(self):
+        return 'gs1-128' if self.env.context.get('is_gs1') else 'any'
+
     name = fields.Char(string='Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule')
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature')
     is_gs1_nomenclature = fields.Boolean(related="barcode_nomenclature_id.is_gs1_nomenclature")
     sequence = fields.Integer(string='Sequence', help='Used to order rules such that rules with a smaller sequence match first')
     encoding = fields.Selection(
-        string='Encoding', required=True, default='any', selection=[
+        string='Encoding', required=True, default=_default_encoding, selection=[
             ('any', 'Any'),
             ('ean13', 'EAN-13'),
             ('ean8', 'EAN-8'),

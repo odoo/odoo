@@ -30,7 +30,7 @@
                                 zeroes. 
                             </p>
                         </div>
-                        <field name="rule_ids">
+                        <field name="rule_ids" context="{'is_gs1': is_gs1_nomenclature}">
                             <tree string='Tables'>
                                 <field name="sequence" widget="handle"/>
                                 <field name="name" />

@@ -36,7 +36,7 @@ class BarcodeNomenclature(models.Model):
     @api.constrains('gs1_separator_fnc1')
     def _check_pattern(self):
         for nom in self:
-            if nom.is_gs1_nomenclature and nom.gs1_separator_fnc1 and nom.gs1_separator_fnc1.trim():
+            if nom.is_gs1_nomenclature and nom.gs1_separator_fnc1:
                 try:
                     re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
                 except re.error as error:
@@ -109,20 +109,29 @@ class BarcodeNomenclature(models.Model):
         return self.sanitize_ean('0' + upc)[1:]
 
     def gs1_date_to_date(self, gs1_date):
-        """Convert YYMMDD GS1 date into a datetime.date"""
+        """ Converts a GS1 date into a datetime.date.
+
+        :param gs1_date: A year formated as yymmdd
+        :type gs1_date: str
+        :return: converted date
+        :rtype: datetime.date
+        """
 
         # Determination of century
         # https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf#page=474&zoom=100,66,113
         now = datetime.date.today()
+        current_century = now.year // 100
         substract_year = int(gs1_date[0:2]) - (now.year % 100)
-        century = (51 <= substract_year <= 99 and (now.year // 100) - 1) or (-99 <= substract_year <= -50 and (now.year // 100) + 1) or now.year // 100
+        century = (51 <= substract_year <= 99 and current_century - 1) or\
+                  (-99 <= substract_year <= -50 and current_century + 1) or\
+                  current_century
         year = century * 100 + int(gs1_date[0:2])
 
         if gs1_date[-2:] == '00':  # Day is not mandatory, when not set -> last day of the month
             date = datetime.datetime.strptime(str(year) + gs1_date[2:4], '%Y%m')
             date = date.replace(day=calendar.monthrange(year, int(gs1_date[2:4]))[1])
         else:
-            date = datetime.datetime.strptime(str(year) + gs1_date[2:4] + gs1_date[-2:], '%Y%m%d')
+            date = datetime.datetime.strptime(str(year) + gs1_date[2:], '%Y%m%d')
         return date.date()
 
     def parse_gs1_rule_pattern(self, match, rule):
@@ -159,7 +168,7 @@ class BarcodeNomenclature(models.Model):
         """
         self.ensure_one()
         separator_group = FNC1_CHAR + "?"
-        if self.gs1_separator_fnc1 and self.gs1_separator_fnc1.trim():
+        if self.gs1_separator_fnc1:
             separator_group = "(?:%s)?" % self.gs1_separator_fnc1
         results = []
         gs1_rules = self.rule_ids.filtered(lambda r: r.encoding == 'gs1-128')
@@ -168,7 +177,7 @@ class BarcodeNomenclature(models.Model):
             for rule in gs1_rules:
                 # is_variable_length = bool(re.search(r"\{\d?\,\d*\}", rule.pattern))  # TODO: don't catch * or + => maybe a use field or try with lookbehind
                 match = re.search("^" + rule.pattern + separator_group, remaining_barcode)
-                # If match and contains 2 groups at minimun, the first one need to be the IA and the second the value
+                # If match and contains 2 groups at minimun, the first one need to be the AI and the second the value
                 # We can't use regex nammed group because in JS, it is not the same regex syntax (and not compatible in all browser)
                 if match and len(match.groups()) >= 2:
                     res = self.parse_gs1_rule_pattern(match, rule)

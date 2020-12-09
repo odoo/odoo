@@ -125,24 +125,24 @@ var BarcodeParser = Class.extend({
 
     /**
      * Convert YYMMDD GS1 date into a Date object
+     *
      * @param {string} gs1Date : YYMMDD string date, length must be 6
      * @returns {Date}
      */
     gs1_date_to_date: function(gs1Date) {
-
         // Determination of century
         // https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf#page=474&zoom=100,66,113
-        var now = new Date();
-        var substractYear = parseInt(gs1Date.slice(0, 2)) - (now.getFullYear() % 100);
-        var century = Math.floor(now.getFullYear() / 100);
-        if ((51 <= substractYear) && (substractYear <= 99)) {
+        const now = new Date();
+        const substractYear = parseInt(gs1Date.slice(0, 2)) - (now.getFullYear() % 100);
+        let century = Math.floor(now.getFullYear() / 100);
+        if (51 <= substractYear && substractYear <= 99) {
             century--;
-        } else if ((-99 <= substractYear) && (substractYear <= -50)) {
+        } else if (-99 <= substractYear && substractYear <= -50) {
             century++;
         }
-        var year = century * 100 + parseInt(gs1Date.slice(0, 2));
-        
-        var date = new Date(year, parseInt(gs1Date.slice(2, 4) - 1));
+        const year = century * 100 + parseInt(gs1Date.slice(0, 2));
+        const date = new Date(year, parseInt(gs1Date.slice(2, 4) - 1));
+
         if (gs1Date.slice(-2) === '00'){
             // Day is not mandatory, when not set -> last day of the month
             date.setDate(new Date(year, parseInt(gs1Date.slice(2, 4)), 0).getDate());
@@ -155,79 +155,77 @@ var BarcodeParser = Class.extend({
     /**
      * Perform interpretation of the barcode value depending ot the rule.gs1_content_type
      * @param {Array} match : Result of a regex match with atmost 2 groups (ia and value)
-     * @param {Object} rule : Matched Barcode Rule 
+     * @param {Object} rule : Matched Barcode Rule
      * @returns {Object|null}
      */
     parse_gs1_rule_pattern: function(match, rule) {
-        var result = {
-            'rule': Object.assign({}, rule),
-            'ai': match[1],
-            'string_value': match[2]
+        const result = {
+            rule: Object.assign({}, rule),
+            ai: match[1],
+            string_value: match[2]
         };
         if (rule.gs1_content_type === 'measure'){
-            var decimalPosition = 0; // Decimal position begin at the end, 0 means no decimal
+            let decimalPosition = 0; // Decimal position begin at the end, 0 means no decimal
             if (rule.gs1_decimal_usage){
                 decimalPosition = parseInt(match[1][match[1].length - 1]);
             }
             if (decimalPosition > 0) {
-                result['value'] = parseFloat(match[2].slice(0, match[2].length - decimalPosition) + "." + match[2].slice(match[2].length - decimalPosition));
+                const integral = match[2].slice(0, match[2].length - decimalPosition);
+                const decimal = match[2].slice(match[2].length - decimalPosition);
+                result.value = parseFloat( integral + "." + decimal);
             } else {
-                result['value'] = parseInt(match[2]);
+                result.value = parseInt(match[2]);
             }
         } else if (rule.gs1_content_type === 'identifier'){
             if (parseInt(match[2][match[2].length - 1]) !== this.get_barcode_check_digit("0".repeat(18 - match[2].length) + match[2])){
                 return null; // Warning ?
             }
-            result['value'] = match[2];
+            result.value = match[2];
         } else if (rule.gs1_content_type === 'date'){
             if (match[2].length !== 6){
                 return null; // Warning ?
             }
-            result['value'] = this.gs1_date_to_date(match[2]);
+            result.value = this.gs1_date_to_date(match[2]);
         } else {
-            result['value'] = match[2];
+            result.value = match[2];
         }
         return result;
     },
 
     /**
      * Try to decompose the gs1 extanded barcode into several unit of information using gs1 rules.
-     * 
+     *
      * @param {string} barcode
      * @returns {Array} Array of object
      */
     gs1_decompose_extanded: function(barcode) {
-        var self = this;
-        var results = [];
-        var rules = this.nomenclature.rules.filter((rule) => rule.encoding === 'gs1-128');
-        var separatorReg = FNC1_CHAR + "?";
+        const results = [];
+        const rules = this.nomenclature.rules.filter(rule => rule.encoding === 'gs1-128');
+        let separatorReg = FNC1_CHAR + "?";
         if (this.nomenclature.gs1_separator_fnc1 && this.nomenclature.gs1_separator_fnc1.trim()){
             separatorReg = `(?:${this.nomenclature.gs1_separator_fnc1})?`;
         }
-        function findNextRule(remainingBarcode) {
-            for (var i = 0; i < rules.length; i++) {
-                var match = remainingBarcode.match("^" + rules[i].pattern + separatorReg);
+
+        while (barcode.length > 0) {
+            const barcodeLength = barcode.length;
+            for (const rule of rules) {
+                const match = barcode.match("^" + rule.pattern + separatorReg);
                 if (match && match.length >= 3) {
-                    var res = self.parse_gs1_rule_pattern(match, rules[i]);
-                    if (res !== null){
-                        return {
-                            res: res, 
-                            remaining_barcode: remainingBarcode.slice(match.index + match[0].length)
-                        };
+                    const res = this.parse_gs1_rule_pattern(match, rule);
+                    if (res) {
+                        barcode = barcode.slice(match.index + match[0].length);
+                        results.push(res);
+                        if (barcode.length === 0) {
+                            return results; // Barcode completly parsed, no need to keep looping.
+                        }
+                    } else {
+                        return null;
                     }
                 }
             }
-            return null;
-        }
-
-        while (barcode.length > 0) {
-            var resBar = findNextRule(barcode);
-            // Cannot continue -> Fail to decompose gs1 and return
-            if (!resBar || resBar.remaingBarcode === barcode){
-                return null;
+            if (barcodeLength === barcode.length) {
+                return null; // Barcode cannot be fully  parsed.
             }
-            barcode = resBar.remaining_barcode;
-            results.push(resBar.res);
         }
 
         return results;
@@ -299,14 +297,15 @@ var BarcodeParser = Class.extend({
 
     /**
      * Attempts to interpret a barcode (string encoding a barcode Code-128)
+     *
      * @param {string} barcode
-     * @returns {Object|Array|null} : 
-     *  - If nomenclature is GS1 returns a array or null 
+     * @returns {Object|Array|null} :
+     *  - If nomenclature is GS1 returns a array or null
      *  - If not, it will return an object containing various information about the barcode:
-     *      - code    : the barcode
-     *      - type   : the type of the barcode (e.g. alias, unit product, weighted product...)
-     *      - value  : if the barcode encodes a numerical value, it will be put there
-     *      - base_code : the barcode with all the encoding parts set to zero; the one put on the product in the backend
+     *      - code: the barcode
+     *      - type: the type of the barcode (e.g. alias, unit product, weighted product...)
+     *      - value: if the barcode encodes a numerical value, it will be put there
+     *      - base_code: the barcode with all the encoding parts set to zero; the one put on the product in the backend
      */
     parse_barcode: function(barcode){
         var parsed_result = {

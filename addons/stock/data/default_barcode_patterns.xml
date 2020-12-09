@@ -39,6 +39,17 @@
 
         <!-- GS1 Barcodes -->
         <!-- Identifier Barcodes -->
+        <!-- TODO : SSCC 00 -> package ?  -->
+        <record id="barcode_rule_gs1_00" model="barcode.rule">
+            <field name="name">Serial Shipping Container Code</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
+            <field name="sequence">112</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(00)(\d{18})</field>
+            <field name="type">package</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
         <record id="barcode_rule_gs1_01" model="barcode.rule">
             <field name="name">Global Trade Item Number (GTIN)</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
@@ -60,7 +71,6 @@
         </record>
 
         <!-- TODO : location 4XX  -->
-        <!-- TODO : SSCC 00 -> package ?  -->
 
         <!-- Alphanumeric Barcodes -->
         <record id="barcode_rule_gs1_10" model="barcode.rule">
@@ -68,7 +78,7 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
             <field name="sequence">102</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(10)([!"%/0-9:?A-Za-z]{0,20})</field>
+            <field name="pattern">(10)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
             <field name="type">lot</field>
             <field name="gs1_content_type">alpha</field>
         </record>
@@ -78,7 +88,7 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
             <field name="sequence">105</field>
             <field name="encoding">gs1-128</field>
-            <field name="pattern">(21)([!"%/0-9:?A-Za-z]{0,20})</field>
+            <field name="pattern">(21)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
             <field name="type">lot</field>
             <field name="gs1_content_type">alpha</field>
         </record>
@@ -127,6 +137,7 @@
             <field name="gs1_decimal_usage">False</field>
 
         </record>
+
         <record id="barcode_rule_gs1_37" model="barcode.rule">
             <field name="name">Count of trade items or trade item pieces contained in a logistic unit</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_gs1_nomenclature"/>
