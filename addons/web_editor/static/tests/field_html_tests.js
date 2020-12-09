@@ -255,6 +255,7 @@ QUnit.module('web_editor', {}, function () {
 
             odoo.__DEBUG__.services['root.widget'] = rootWidget;
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
         });
 
         QUnit.test('media dialog: image', async function (assert) {
@@ -320,6 +321,7 @@ QUnit.module('web_editor', {}, function () {
             testUtils.mock.unpatch(MediaDialog);
 
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
         });
 
         QUnit.test('media dialog: icon', async function (assert) {
@@ -378,6 +380,7 @@ QUnit.module('web_editor', {}, function () {
             testUtils.mock.unpatch(MediaDialog);
 
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
         });
 
         QUnit.test('save', async function (assert) {
@@ -419,13 +422,17 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.nextTick();
             await new Promise((resolve) => wysiwyg.editor.execCommand(resolve));
             await openColorpicker();
-            await testUtils.nextTick();
 
+            await testUtils.nextTick();
             await new Promise((resolve) => wysiwyg.editor.execCommand(resolve));
             await testUtils.dom.click($('jw-toolbar .o_we_color_btn[style="background-color:#00FFFF;"]'));
+
+            await testUtils.nextTick();
+            await new Promise((resolve) => wysiwyg.editor.execCommand(resolve));
             await testUtils.form.clickSave(form);
 
-            await form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
+            form.destroy();
         });
 
         QUnit.module('cssReadonly');
