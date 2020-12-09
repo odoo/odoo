@@ -21,9 +21,9 @@ snippetOptions.registry.countdown = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    endAction: async function (previewMode, widgetValue, params) {
+    endAction: async function (previewMode, widgetValue, params, context) {
         const countdownEndAction = async (context) => {
-            await this.wysiwyg.withDomMutations(this.$target, () => {
+            await context.withDomMutations(this.$target, () => {
                 this.$target.attr('data-end-action', widgetValue);
                 if (widgetValue === 'message' || widgetValue === 'message_no_countdown') {
                     if (!this.$target.find('.s_countdown_end_message').length) {

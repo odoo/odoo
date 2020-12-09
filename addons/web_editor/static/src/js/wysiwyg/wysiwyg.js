@@ -43,7 +43,7 @@ var Wysiwyg = Widget.extend({
         this.options = options;
         this.colorPickers = [];
         this._execCommandContext = undefined;
-        this._execCommandContextArray = [];
+        this._execCommandContextPromises = [];
         this.JWEditorLib = JWEditorLib;
         if (this.options.enableTranslation) {
             this._modeConfig = {
@@ -1484,62 +1484,56 @@ var Wysiwyg = Widget.extend({
      * This method prevent deadlock situations when differents modules need to
      * to execute an editor command.
      *
-     * @param {Function} callback The callback that will receive a newly context if i.
+     * The pro of this technique is that it handle deadlock situation in an
+     * automated way. The con of this technique is that it could interpret two
+     * steps (for undo) as only one.
+     *
+     * @param {Function} callback The callback that will receive the context as
+     *                            the first argument.
      */
     async _withStackContext(callback) {
-        if (!this._execCommandContextArray.length) {
-            let resolve1;
-            const promise = new Promise((r)=>{resolve1 = r;});
+        if (!this._execCommandContext) {
+            let endCommand;
+            const endCommandPromise = new Promise((r) =>{ endCommand = r; });
 
-            let resolve2;
-            const promise2 = new Promise((r)=>{resolve2 = r;});
-            this._execCommandContextArray.push(promise);
-
-            // There is potentially multiples editor commands running at the
-            // same time. For example, a user can double click twice on a
-            // button, which will call two differents commands. If the first
-            // command finished before the second, we need to wait for the
-            // second command to finish. We create only one context for
-            // aggregated commands. We track commands called with
-            // `_execCommandContextCount`. The pro of this technique is that it
-            // handle deadlock situation in an automated way. The con of this
-            // technique is that it sometimes interpret two steps (for undo) as
-            // only one.
-            this._contextPromise = new Promise((resolve) => {
+            // Retrieve the shared context.
+            this._execCommandContext = await new Promise((resolve) => {
                 this.editor.execCommand(async (context) => {
                     resolve(context);
-
-                    await promise;
-
-                    // Because we await during the loop, the
-                    // _execCommandContextArray.length might increase in between
-                    // the loop when multiples commands are called together.
-                    for (let i = 0; i < this._execCommandContextArray.length; i++) {
-                        await this._execCommandContextArray[i];
-                    }
-
-                    this._execCommandContextArray = [];
-                    this._contextPromise = undefined;
-                    resolve2();
+                    // Wait for the command or any subcommands to be executed
+                    // before closing the jabberwock editor memory.
+                    await endCommandPromise;
                 });
             });
-            this._execCommandContext = await this._contextPromise;
 
             let result;
+            const clear = () => {
+                endCommand();
+                this._execCommandContext = undefined;
+                this._execCommandContextPromises = [];
+            }
+
             try {
                 result = await callback(this._execCommandContext);
             } catch (e) {
-                resolve1();
+                clear();
                 throw e;
             }
-            resolve1();
-            await promise2;
+
+            // Await all the subcommands (i.e. execCommand or withDomMutations
+            // called inside execCommand or withDomMutations). For any
+            // subcommand that call another subcommand,
+            // this._execCommandContextPromises will increase.
+            for (let i = 0; i < this._execCommandContextPromises.length; i++) {
+                await this._execCommandContextPromises[i];
+            }
+
+            clear();
             return result;
         } else {
             let result;
-            await this._contextPromise;
             const promise = callback(this._execCommandContext);
-            this._execCommandContextArray.push(promise);
+            this._execCommandContextPromises.push(promise);
             result = await promise;
             return result;
         }
