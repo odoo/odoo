@@ -38,6 +38,7 @@ class MailComposeMessage(models.TransientModel):
                         'body_html': self.body,
                         'mailing_model_id': self.env['ir.model']._get(self.model).id,
                         'mailing_domain': self.active_domain,
+                        'attachment_ids': [(6, 0, self.attachment_ids.ids)],
                 })
 
             # Preprocess res.partners to batch-fetch from db
