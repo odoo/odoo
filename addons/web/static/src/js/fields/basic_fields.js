@@ -1750,6 +1750,23 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     className: 'o_field_copy o_text_overflow',
 });
 
+var URLCopyClipboard = FieldChar.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
+    clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow o_field_copy_url',
+    events: _.extend({}, FieldChar.prototype.events, {
+        'click': '_onClick',
+    }),
+
+    _onClick: function(ev) {
+        if(ev.target.className.includes('o_field_copy_url')) {
+            ev.stopPropagation();
+
+            window.open(this.value, '_blank');
+        }
+    }
+});
+
 var AbstractFieldBinary = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'change .o_input_file': 'on_file_change',
@@ -3756,6 +3773,7 @@ return {
     UrlWidget: UrlWidget,
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
+    URLCopyClipboard: URLCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
     FieldColor: FieldColor,
