@@ -48,27 +48,24 @@ snippetOptions.registry.TableOfContent = snippetOptions.SnippetOptionWidget.exte
      * @private
      */
     _generateNav: async function (ev) {
-        const $nav = this.$target.find('.s_table_of_content_navbar');
-        if (!$nav.length) return;
-        const $headings = this.$target.find(this.targetedElements);
-        $nav.empty();
-        _.each($headings, el => {
-            const $el = $(el);
-            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
-            $('<a>').attr('href', "#" + id)
-                    .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
-                    .text($el.text())
-                    .appendTo($nav);
-            $el.attr('id', id);
-            $el[0].dataset.anchor = 'true';
-        });
-        $nav.find('a:first').addClass('active');
-        const tableOfContentGenerateNav = async (context) => {
-            const html = $nav[0].outerHTML;
+        await this.wysiwyg.withDomMutations(this.$target, () => {
+            const $nav = this.$target.find('.s_table_of_content_navbar');
+            if (!$nav.length) return;
+            const $headings = this.$target.find(this.targetedElements);
             $nav.empty();
-            await this.editorHelpers.replace(context, $nav[0], html);
-        };
-        await this.wysiwyg.editor.execCommand(tableOfContentGenerateNav);
+            _.each($headings, el => {
+                const $el = $(el);
+                const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
+                $('<a>')
+                        .attr('href', "#" + id)
+                        .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
+                        .text($el.text())
+                        .appendTo($nav);
+                $el.attr('id', id);
+                $el[0].dataset.anchor = 'true';
+            });
+            $nav.find('a:first').addClass('active');
+        });
     },
 });
 

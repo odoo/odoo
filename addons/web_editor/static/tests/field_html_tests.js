@@ -420,11 +420,12 @@ QUnit.module('web_editor', {}, function () {
             }
 
             await testUtils.nextTick();
-            await new Promise((resolve) => wysiwyg.editor.execCommand(resolve));
+            await new Promise((resolve) => wysiwyg.execCommand(resolve));
             await openColorpicker();
 
             await testUtils.nextTick();
-            await new Promise((resolve) => wysiwyg.editor.execCommand(resolve));
+            await new Promise((resolve) => wysiwyg.execCommand(resolve));
+            await new Promise((resolve) => wysiwyg.execCommand(resolve));
             await testUtils.dom.click($('jw-toolbar .o_we_color_btn[style="background-color:#00FFFF;"]'));
 
             await testUtils.nextTick();

@@ -105,10 +105,12 @@ snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend
             } else {
                 this.fbData.height = this.fbData.show_facepile ? 225 : 150;
             }
-            for (const [key, value] of Object.entries(this.fbData)) {
-                await this.editorHelpers.setAttribute(this.wysiwyg.editor, this.$target[0], `data-${key}`, value);
-                this.$target.data(key, value);
-            }
+            await this.wysiwyg.withDomMutations(this.$target, () => {
+                for (const [key, value] of Object.entries(this.fbData)) {
+                    this.$target.attr('data-' + key, value);
+                    this.$target.data(key, value);
+                }
+            });
         });
     },
     /**

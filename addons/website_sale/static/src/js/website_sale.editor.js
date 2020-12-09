@@ -271,7 +271,7 @@ publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
             const nodes = wysiwyg.editorHelpers.getNodes(ev.currentTarget.parentElement);
             wysiwyg.editor.selection.select(nodes[0]);
         };
-        wysiwyg.editor.execCommand(websiteSaleCurrency);
+        wysiwyg.execCommand(websiteSaleCurrency);
     },
 });
 

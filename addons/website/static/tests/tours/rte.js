@@ -47,7 +47,7 @@ tour.register('rte_translator', {
     trigger: '#wrap p',
     run: async function () {
         const wysiwyg = $('#wrapwrap').data('wysiwyg');
-        await wysiwyg.editor.execCommand(async (params)=> {
+        await wysiwyg.execCommand(async (params)=> {
             await wysiwyg.editorHelpers.replace(params, document.querySelector('#wrap p'),
                     '<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                     <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\

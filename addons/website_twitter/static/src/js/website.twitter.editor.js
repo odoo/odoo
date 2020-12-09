@@ -55,8 +55,9 @@ snippetOptions.registry.twitter = snippetOptions.SnippetOptionWidget.extend({
      * @override
      */
     cleanForSave: async function () {
-        this.$target.find('.twitter_timeline').empty();
-        await this.updateChangesInWysiwyg();
+        await this.wysiwyg.withDomMutations(this.$target, () => {
+            this.$target.find('.twitter_timeline').empty();
+        });
     },
     /**
      * @override

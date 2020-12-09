@@ -348,27 +348,32 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
      * @override
      */
     start: async function () {
-        const proms = [this._super(...arguments)];
-        // Disable text edition
-        this.$target.attr('contentEditable', false);
-        // Make button and recaptcha editable
-        this.$target.find('.s_website_form_send, .s_website_form_recaptcha').attr('contentEditable', true);
-        // Get potential message
-        this.$message = this.$target.parent().find('.s_website_form_end_message');
-        this.showEndMessage = false;
-        // If the form has no model it means a new snippet has been dropped.
-        // Apply the default model selected in willStart on it.
-        if (!this.$target[0].dataset.model_name) {
-            proms.push(this._applyFormModel());
-        }
+        const _super = this._super;
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            const proms = [_super(...arguments)];
+            // Disable text edition
+            this.$target.attr('contentEditable', false);
+            // Make button and recaptcha editable
+            this.$target.find('.s_website_form_send, .s_website_form_recaptcha').attr('contentEditable', true);
+            // Get potential message
+            this.$message = this.$target.parent().find('.s_website_form_end_message');
+            this.showEndMessage = false;
+            // If the form has no model it means a new snippet has been dropped.
+            // Apply the default model selected in willStart on it.
+            if (!this.$target[0].dataset.model_name) {
+                proms.push(this._applyFormModel());
+            }
 
-        await Promise.all(proms);
+            await Promise.all(proms);
+        });
     },
     /**
      * @override
      */
     cleanForSave: async function () {
         const model = this.$target[0].dataset.model_name;
+        await this.updateChangesInWysiwyg();
+
         // because apparently this can be called on the wrong widget and
         // we may not have a model, or fields...
         if (model) {
@@ -386,9 +391,10 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             }
         }
         if (this.$message.length) {
-            await this.editorHelpers.removeClass(this.wysiwyg.editor, this.$target[0], 'd-none');
-            await this.editorHelpers.addClass(context, this.$message[0], 'd-none');
-
+            await this.wysiwyg.withDomMutations(this.$target, async () => {
+                this.$target.removeClass('d-none');
+                this.$message.addClass('d-none');
+            });
         }
     },
     /**
@@ -418,21 +424,23 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * @override
      */
-    notify: function (name, data) {
+    notify: async function (name, data) {
         this._super(...arguments);
         if (name === 'field_mark') {
-            this._setLabelsMark();
+            await this._setLabelsMark();
         } else if (name === 'add_field') {
-            const field = this._getCustomField('char', 'Custom Text');
-            field.formatInfo = data.formatInfo;
-            field.formatInfo.requiredMark = this._isRequiredMark();
-            field.formatInfo.optionalMark = this._isOptionalMark();
-            field.formatInfo.mark = this._getMark();
-            const htmlField = this._renderField(field);
-            data.$target.after(htmlField);
-            this.trigger_up('activate_snippet', {
-                $element: $(htmlField),
-                saveTarget: true,
+            await this.wysiwyg.withDomMutations(this.$target, () => {
+                const field = this._getCustomField('char', 'Custom Text');
+                field.formatInfo = data.formatInfo;
+                field.formatInfo.requiredMark = this._isRequiredMark();
+                field.formatInfo.optionalMark = this._isOptionalMark();
+                field.formatInfo.mark = this._getMark();
+                const htmlField = this._renderField(field);
+                data.$target.after(htmlField);
+                this.trigger_up('activate_snippet', {
+                    $element: $(htmlField),
+                    saveTarget: true,
+                });
             });
         }
     },
@@ -446,75 +454,80 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
      * ie: The Job you apply for if the form is on that job's page.
      */
     addActionField: async function (previewMode, value, params) {
-        const fieldName = params.fieldName;
-        if (params.isSelect === 'true') {
-            value = parseInt(value);
-        }
-        this._addHiddenField(value, fieldName);
-
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            const fieldName = params.fieldName;
+            if (params.isSelect === 'true') {
+                value = parseInt(value);
+            }
+            await this._addHiddenField(value, fieldName);
+        });
     },
     /**
      * Changes the onSuccess event.
      */
     onSuccess: async function (previewMode, value, params) {
-        this.$target[0].dataset.successMode = value;
-        if (value === 'message') {
-            if (!this.$message.length) {
-                this.$message = $(qweb.render('website_form.s_website_form_end_message'));
+        await params.withDomMutations(this.$target, async () => {
+            this.$target[0].dataset.successMode = value;
+            if (value === 'message') {
+                if (!this.$message.length) {
+                    this.$message = $(qweb.render('website_form.s_website_form_end_message'));
+                }
+                this.$target.after(this.$message);
+            } else {
+                this.showEndMessage = false;
+                this.$message.remove();
             }
-            this.$target.after(this.$message);
-        } else {
-            this.showEndMessage = false;
-            this.$message.remove();
-        }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        });
     },
     /**
      * Select the model to create with the form.
      */
     selectAction: async function (previewMode, value, params) {
-        if (this.modelCantChange) {
-            return;
-        }
-        await this._applyFormModel(parseInt(value));
-        this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            if (this.modelCantChange) {
+                return;
+            }
+            await this._applyFormModel(parseInt(value));
+            this.rerender = true;
+        });
     },
     /**
      * @override
      */
     selectClass: async function (previewMode, value, params) {
-        await this._super(...arguments);
-        if (params.name === 'field_mark_select') {
-            this._setLabelsMark();
-        }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            await this._super(...arguments);
+            if (params.name === 'field_mark_select') {
+                await this._setLabelsMark();
+            }
+        });
     },
     /**
      * Set the mark string on the form
      */
     setMark: async function (previewMode, value, params) {
-        this.$target[0].dataset.mark = value.trim();
-        this._setLabelsMark();
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            this.$target[0].dataset.mark = value.trim();
+            await this._setLabelsMark();
+        });
     },
     /**
      * Toggle the recaptcha legal terms
      */
     toggleRecaptchaLegal: async function (previewMode, value, params) {
-        const recaptchaLegalEl = this.$target[0].querySelector('.s_website_form_recaptcha');
-        if (recaptchaLegalEl) {
-            recaptchaLegalEl.remove();
-        } else {
-            const template = document.createElement('template');
-            const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
-            template.innerHTML = qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth});
-            const legal = template.content.firstElementChild;
-            legal.setAttribute('contentEditable', true);
-            this.$target.find('.s_website_form_submit').before(legal);
-        }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            const recaptchaLegalEl = this.$target[0].querySelector('.s_website_form_recaptcha');
+            if (recaptchaLegalEl) {
+                recaptchaLegalEl.remove();
+            } else {
+                const template = document.createElement('template');
+                const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
+                template.innerHTML = qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth});
+                const legal = template.content.firstElementChild;
+                legal.setAttribute('contentEditable', true);
+                this.$target.find('.s_website_form_submit').before(legal);
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -548,7 +561,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * @override
      */
-    _renderCustomXML: function (uiFragment) {
+    _renderCustomXML: async function (uiFragment) {
         if (this.modelCantChange) {
             return;
         }
@@ -563,8 +576,8 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             return;
         }
         const proms = formInfo.fields.map(field => this._fetchFieldRecords(field));
-        return Promise.all(proms).then(() => {
-            formInfo.fields.forEach(field => {
+        return Promise.all(proms).then(async () => {
+            for (const field of formInfo.fields) {
                 let option;
                 switch (field.type) {
                     case 'many2one':
@@ -579,10 +592,10 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
                     // get default value or for many2one fields the first option.
                     const currentValue = this.$target.find(`.s_website_form_dnone input[name="${field.name}"]`).val();
                     const defaultValue = field.defaultValue || field.records[0].id;
-                    this._addHiddenField(currentValue || defaultValue, field.name);
+                    await this._addHiddenField(currentValue || defaultValue, field.name);
                 }
                 uiFragment.insertBefore(option, firstOption);
-            });
+            };
         });
     },
     /**
@@ -592,17 +605,19 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
      * @param {string} value
      * @param {string} fieldName
      */
-    _addHiddenField: function (value, fieldName) {
-        this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
-        if (value) {
-            const hiddenField = qweb.render('website_form.field_hidden', {
-                field: {
-                    name: fieldName,
-                    value: value,
-                },
-            });
-            this.$target.find('.s_website_form_submit').before(hiddenField);
-        }
+    _addHiddenField: async function (value, fieldName) {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
+            if (value) {
+                const hiddenField = qweb.render('website_form.field_hidden', {
+                    field: {
+                        name: fieldName,
+                        value: value,
+                    },
+                });
+                this.$target.find('.s_website_form_submit').before(hiddenField);
+            }
+        });
     },
     /**
      * Returns a we-input element from the field
@@ -654,65 +669,69 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
      * @param {Integer} modelId
      */
     _applyFormModel: async function (modelId) {
-        let oldFormInfo;
-        if (modelId) {
-            const oldFormKey = this.activeForm.website_form_key;
-            if (oldFormKey) {
-                oldFormInfo = FormEditorRegistry.get(oldFormKey);
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            let oldFormInfo;
+            if (modelId) {
+                const oldFormKey = this.activeForm.website_form_key;
+                if (oldFormKey) {
+                    oldFormInfo = FormEditorRegistry.get(oldFormKey);
+                }
+                this.$target.find('.s_website_form_field').remove();
+                this.activeForm = _.findWhere(this.models, {id: modelId});
             }
-            this.$target.find('.s_website_form_field').remove();
-            this.activeForm = _.findWhere(this.models, {id: modelId});
-        }
-        const formKey = this.activeForm.website_form_key;
-        const formInfo = FormEditorRegistry.get(formKey);
-        // Success page
-        if (!this.$target[0].dataset.successMode) {
-            this.$target[0].dataset.successMode = 'redirect';
-        }
-        if (this.$target[0].dataset.successMode === 'redirect') {
-            const currentSuccessPage = this.$target[0].dataset.successPage;
-            if (formInfo && formInfo.successPage) {
-                this.$target[0].dataset.successPage = formInfo.successPage;
-            } else if (!oldFormInfo || (oldFormInfo !== formInfo && oldFormInfo.successPage && currentSuccessPage === oldFormInfo.successPage)) {
-                this.$target[0].dataset.successPage = '/contactus-thank-you';
+            const formKey = this.activeForm.website_form_key;
+            const formInfo = FormEditorRegistry.get(formKey);
+            // Success page
+            if (!this.$target[0].dataset.successMode) {
+                this.$target[0].dataset.successMode = 'redirect';
             }
-        }
-        // Model name
-        this.$target[0].dataset.model_name = this.activeForm.model;
-        // Load template
-        if (formInfo) {
-            const formatInfo = this._getDefaultFormat();
-            await formInfo.formFields.forEach(async field => {
-                field.formatInfo = formatInfo;
-                await this._fetchFieldRecords(field);
-                this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
-            });
-        }
+            if (this.$target[0].dataset.successMode === 'redirect') {
+                const currentSuccessPage = this.$target[0].dataset.successPage;
+                if (formInfo && formInfo.successPage) {
+                    this.$target[0].dataset.successPage = formInfo.successPage;
+                } else if (!oldFormInfo || (oldFormInfo !== formInfo && oldFormInfo.successPage && currentSuccessPage === oldFormInfo.successPage)) {
+                    this.$target[0].dataset.successPage = '/contactus-thank-you';
+                }
+            }
+            // Model name
+            this.$target[0].dataset.model_name = this.activeForm.model;
+            // Load template
+            if (formInfo) {
+                const formatInfo = this._getDefaultFormat();
+                await formInfo.formFields.forEach(async field => {
+                    field.formatInfo = formatInfo;
+                    await this._fetchFieldRecords(field);
+                    this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
+                });
+            }
+        });
     },
     /**
      * Set the correct mark on all fields.
      *
      * @private
      */
-    _setLabelsMark: function () {
-        this.$target[0].querySelectorAll('.s_website_form_mark').forEach(el => el.remove());
-        const mark = this._getMark();
-        if (!mark) {
-            return;
-        }
-        let fieldsToMark = [];
-        const requiredSelector = '.s_website_form_model_required, .s_website_form_required';
-        const fields = Array.from(this.$target[0].querySelectorAll('.s_website_form_field'));
-        if (this._isRequiredMark()) {
-            fieldsToMark = fields.filter(el => el.matches(requiredSelector));
-        } else if (this._isOptionalMark()) {
-            fieldsToMark = fields.filter(el => !el.matches(requiredSelector));
-        }
-        fieldsToMark.forEach(field => {
-            let span = document.createElement('span');
-            span.classList.add('s_website_form_mark');
-            span.textContent = ` ${mark}`;
-            field.querySelector('.s_website_form_label').appendChild(span);
+    _setLabelsMark: async function () {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            this.$target[0].querySelectorAll('.s_website_form_mark').forEach(el => el.remove());
+            const mark = this._getMark();
+            if (!mark) {
+                return;
+            }
+            let fieldsToMark = [];
+            const requiredSelector = '.s_website_form_model_required, .s_website_form_required';
+            const fields = Array.from(this.$target[0].querySelectorAll('.s_website_form_field'));
+            if (this._isRequiredMark()) {
+                fieldsToMark = fields.filter(el => el.matches(requiredSelector));
+            } else if (this._isOptionalMark()) {
+                fieldsToMark = fields.filter(el => !el.matches(requiredSelector));
+            }
+            fieldsToMark.forEach(field => {
+                let span = document.createElement('span');
+                span.classList.add('s_website_form_mark');
+                span.textContent = ` ${mark}`;
+                field.querySelector('.s_website_form_label').appendChild(span);
+            });
         });
     },
 
@@ -788,9 +807,10 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @override
      */
     cleanForSave: async function () {
-        this.$target[0].querySelectorAll('#editable_select').forEach(el => el.remove());
-        this._renderSelect(true);
-        await this.updateChangesInWysiwyg();
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            this.$target[0].querySelectorAll('#editable_select').forEach(el => el.remove());
+            await this._renderSelect(true);
+        });
     },
     /**
      * @override
@@ -829,95 +849,104 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      * Replace the current field with the custom field selected.
      */
     customField: async function (previewMode, value, params) {
-        // Both custom Field and existingField are called when selecting an option
-        // value is '' for the method that should not be called.
-        if (!value) {
-            return;
-        }
-        const name = this.el.querySelector(`[data-custom-field="${value}"]`).textContent;
-        const field = this._getCustomField(value, `Custom ${name}`);
-        this._setActiveProperties(field);
-        await this._replaceField(field);
-        this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            // Both custom Field and existingField are called when selecting an option
+            // value is '' for the method that should not be called.
+            if (!value) {
+                return;
+            }
+            const name = this.el.querySelector(`[data-custom-field="${value}"]`).textContent;
+            const field = this._getCustomField(value, `Custom ${name}`);
+            this._setActiveProperties(field);
+            await this._replaceField(field);
+            this.rerender = true;
+        });
     },
     /**
      * Replace the current field with the existing field selected.
      */
     existingField: async function (previewMode, value, params) {
-        // see customField
-        if (!value) {
-            return;
-        }
-        const field = Object.assign({}, this.fields[value]);
-        this._setActiveProperties(field);
-        await this._replaceField(field);
-        this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            // see customField
+            if (!value) {
+                return;
+            }
+            const field = Object.assign({}, this.fields[value]);
+            this._setActiveProperties(field);
+            await this._replaceField(field);
+            this.rerender = true;
+        });
     },
     /**
      * Set the name of the field on the label
      */
     setLabelText: async function (previewMode, value, params) {
-        this.$target.find('.s_website_form_label_content').text(value);
-        if (this._isFieldCustom()) {
-            const multiple = this.$target[0].querySelector('.s_website_form_multiple');
-            if (multiple) {
-                multiple.dataset.name = value;
+        await params.withDomMutations(this.$target, async () => {
+            this.$target.find('.s_website_form_label_content').text(value);
+            if (this._isFieldCustom()) {
+                const multiple = this.$target[0].querySelector('.s_website_form_multiple');
+                if (multiple) {
+                    multiple.dataset.name = value;
+                }
+                this.$target[0].querySelectorAll('.s_website_form_input').forEach(el => el.name = value);
             }
-            this.$target[0].querySelectorAll('.s_website_form_input').forEach(el => el.name = value);
-        }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        });
     },
     /*
     * Set the placeholder of the input
     */
     setPlaceholder: async function (previewMode, value, params) {
-        this._setPlaceholder(value);
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            this._setPlaceholder(value);
+        });
     },
     /**
      * Replace the field with the same field having the label in a different position.
      */
     selectLabelPosition: async function (previewMode, value, params) {
-        const field = this._getActiveField();
-        field.formatInfo.labelPosition = value;
-        await this._replaceField(field);
-        this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
+        await params.withDomMutations(this.$target, async () => {
+            const field = this._getActiveField();
+            field.formatInfo.labelPosition = value;
+            await this._replaceField(field);
+            this.rerender = true;
+        });
     },
     selectType: async function (previewMode, value, params) {
-        const field = this._getActiveField();
-        field.type = value;
-        await this._replaceField(field);
+        await params.withDomMutations(this.$target, async () => {
+            const field = this._getActiveField();
+            field.type = value;
+            await this._replaceField(field);
+        });
     },
     /**
      * Select the display of the multicheckbox field (vertical & horizontal)
      */
     multiCheckboxDisplay: async function (previewMode, value, params) {
-        const target = this._getMultipleInputs();
-        target.querySelectorAll('.checkbox, .radio').forEach(el => {
-            if (value === 'horizontal') {
-                el.classList.add('col-lg-4', 'col-md-6');
-            } else {
-                el.classList.remove('col-lg-4', 'col-md-6');
-            }
+        await params.withDomMutations(this.$target, async () => {
+            const target = this._getMultipleInputs();
+            target.querySelectorAll('.checkbox, .radio').forEach(el => {
+                if (value === 'horizontal') {
+                    el.classList.add('col-lg-4', 'col-md-6');
+                } else {
+                    el.classList.remove('col-lg-4', 'col-md-6');
+                }
+            });
+            target.dataset.display = value;
         });
-        target.dataset.display = value;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Set the field as required or not
      */
     toggleRequired: async function (previewMode, value, params) {
-        const isRequired = this.$target[0].classList.contains(params.activeValue);
-        this.$target[0].classList.toggle(params.activeValue, !isRequired);
-        this.$target[0].querySelectorAll('input, select, textarea').forEach(el => el.toggleAttribute('required', !isRequired));
-        this.trigger_up('option_update', {
-            optionName: 'WebsiteFormEditor',
-            name: 'field_mark',
+        await params.withDomMutations(this.$target, async () => {
+            const isRequired = this.$target[0].classList.contains(params.activeValue);
+            this.$target[0].classList.toggle(params.activeValue, !isRequired);
+            this.$target[0].querySelectorAll('input, select, textarea').forEach(el => el.toggleAttribute('required', !isRequired));
+            this.trigger_up('option_update', {
+                optionName: 'WebsiteFormEditor',
+                name: 'field_mark',
+            });
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //----------------------------------------------------------------------
@@ -971,17 +1000,19 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * @override
      */
-    _renderCustomXML: function (uiFragment) {
-        const selectEl = uiFragment.querySelector('we-select[data-name="type_opt"]');
-        const currentFieldName = this._getFieldName();
-        const fieldsInForm = Array.from(this._getFormEl().querySelectorAll('.s_website_form_field:not(.s_website_form_custom) .s_website_form_input')).map(el => el.name).filter(el => el !== currentFieldName);
-        const availableFields = this.existingFields.filter(el => !fieldsInForm.includes(el.dataset.existingField));
-        if (availableFields.length) {
-            const title = document.createElement('we-title');
-            title.textContent = 'Existing fields';
-            availableFields.unshift(title);
-            availableFields.forEach(option => selectEl.append(option.cloneNode(true)));
-        }
+    _renderCustomXML: async function (uiFragment) {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            const selectEl = uiFragment.querySelector('we-select[data-name="type_opt"]');
+            const currentFieldName = this._getFieldName();
+            const fieldsInForm = Array.from(this._getFormEl().querySelectorAll('.s_website_form_field:not(.s_website_form_custom) .s_website_form_input')).map(el => el.name).filter(el => el !== currentFieldName);
+            const availableFields = this.existingFields.filter(el => !fieldsInForm.includes(el.dataset.existingField));
+            if (availableFields.length) {
+                const title = document.createElement('we-title');
+                title.textContent = 'Existing fields';
+                availableFields.unshift(title);
+                availableFields.forEach(option => selectEl.append(option.cloneNode(true)));
+            }
+        });
     },
     /**
      * Replace the target content with the field provided
@@ -991,13 +1022,15 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @returns {Promise}
      */
     _replaceField: async function (field) {
-        await this._fetchFieldRecords(field);
-        const htmlField = this._renderField(field);
-        [...this.$target[0].childNodes].forEach(node => node.remove());
-        [...htmlField.childNodes].forEach(node => this.$target[0].appendChild(node));
-        [...htmlField.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
-        [...htmlField.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
-        this.$target.addClass('o_snippet_editor_updated');
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            await this._fetchFieldRecords(field);
+            const htmlField = this._renderField(field);
+            [...this.$target[0].childNodes].forEach(node => node.remove());
+            [...htmlField.childNodes].forEach(node => this.$target[0].appendChild(node));
+            [...htmlField.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
+            [...htmlField.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
+            this.$target.addClass('o_snippet_editor_updated');
+        });
     },
 
     /**
@@ -1005,56 +1038,58 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      *
      * @private
      */
-    _renderList: function () {
-        let addItemButton, addItemTitle, listTitle;
-        const select = this._getSelect();
-        const multipleInputs = this._getMultipleInputs();
-        this.listTable = document.createElement('table');
-        const isCustomField = this._isFieldCustom();
+    _renderList: async function () {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            let addItemButton, addItemTitle, listTitle;
+            const select = this._getSelect();
+            const multipleInputs = this._getMultipleInputs();
+            this.listTable = document.createElement('table');
+            const isCustomField = this._isFieldCustom();
 
-        if (select) {
-            listTitle = 'Options List';
-            addItemTitle = 'Add new Option';
-            select.querySelectorAll('option').forEach(opt => {
-                this._addItemToTable(opt.value, opt.textContent.trim());
-            });
-            this._renderListItems();
-        } else if (multipleInputs) {
-            listTitle = multipleInputs.querySelector('.radio') ? 'Radio List' : 'Checkbox List';
-            addItemTitle = 'Add new Checkbox';
-            multipleInputs.querySelectorAll('.checkbox, .radio').forEach(opt => {
-                this._addItemToTable(opt.querySelector('input').value, opt.querySelector('.s_website_form_check_label').textContent.trim());
-            });
-        } else {
-            return;
-        }
+            if (select) {
+                listTitle = 'Options List';
+                addItemTitle = 'Add new Option';
+                select.querySelectorAll('option').forEach(opt => {
+                    this._addItemToTable(opt.value, opt.textContent.trim());
+                });
+                await this._renderListItems();
+            } else if (multipleInputs) {
+                listTitle = multipleInputs.querySelector('.radio') ? 'Radio List' : 'Checkbox List';
+                addItemTitle = 'Add new Checkbox';
+                multipleInputs.querySelectorAll('.checkbox, .radio').forEach(opt => {
+                    this._addItemToTable(opt.querySelector('input').value, opt.querySelector('.s_website_form_check_label').textContent.trim());
+                });
+            } else {
+                return;
+            }
 
-        if (isCustomField) {
-            addItemButton = document.createElement('we-button');
-            addItemButton.textContent = addItemTitle;
-            addItemButton.classList.add('o_we_list_add_optional');
-            addItemButton.dataset.noPreview = 'true';
-        } else {
-            addItemButton = document.createElement('we-select');
-            addItemButton.classList.add('o_we_user_value_widget'); // Todo dont use user value widget class
-            const togglerEl = document.createElement('we-toggler');
-            togglerEl.textContent = addItemTitle;
-            addItemButton.appendChild(togglerEl);
-            const selectMenuEl = document.createElement('we-selection-items');
-            addItemButton.appendChild(selectMenuEl);
-            this._loadListDropdown(selectMenuEl);
-        }
-        const selectInputEl = document.createElement('we-list');
-        const title = document.createElement('we-title');
-        title.textContent = listTitle;
-        selectInputEl.appendChild(title);
-        const tableWrapper = document.createElement('div');
-        tableWrapper.classList.add('oe_we_table_wraper');
-        tableWrapper.appendChild(this.listTable);
-        selectInputEl.appendChild(tableWrapper);
-        selectInputEl.appendChild(addItemButton);
-        this.el.insertBefore(selectInputEl, this.el.querySelector('[data-set-placeholder]'));
-        this._makeListItemsSortable();
+            if (isCustomField) {
+                addItemButton = document.createElement('we-button');
+                addItemButton.textContent = addItemTitle;
+                addItemButton.classList.add('o_we_list_add_optional');
+                addItemButton.dataset.noPreview = 'true';
+            } else {
+                addItemButton = document.createElement('we-select');
+                addItemButton.classList.add('o_we_user_value_widget'); // Todo dont use user value widget class
+                const togglerEl = document.createElement('we-toggler');
+                togglerEl.textContent = addItemTitle;
+                addItemButton.appendChild(togglerEl);
+                const selectMenuEl = document.createElement('we-selection-items');
+                addItemButton.appendChild(selectMenuEl);
+                await this._loadListDropdown(selectMenuEl);
+            }
+            const selectInputEl = document.createElement('we-list');
+            const title = document.createElement('we-title');
+            title.textContent = listTitle;
+            selectInputEl.appendChild(title);
+            const tableWrapper = document.createElement('div');
+            tableWrapper.classList.add('oe_we_table_wraper');
+            tableWrapper.appendChild(this.listTable);
+            selectInputEl.appendChild(tableWrapper);
+            selectInputEl.appendChild(addItemButton);
+            this.el.insertBefore(selectInputEl, this.el.querySelector('[data-set-placeholder]'));
+            await this._makeListItemsSortable();
+        });
     },
     /**
      * Load the dropdown of the list with the records missing from the list.
@@ -1062,48 +1097,52 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @private
      * @param {HTMLElement} selectMenu
      */
-    _loadListDropdown: function (selectMenu) {
-        selectMenu = selectMenu || this.el.querySelector('we-list we-selection-items');
-        if (selectMenu) {
-            selectMenu.innerHTML = '';
-            const field = Object.assign({}, this.fields[this._getFieldName()]);
-            this._fetchFieldRecords(field).then(() => {
-                let buttonItems;
-                const optionIds = Array.from(this.listTable.querySelectorAll('input')).map(opt => {
-                    return field.type === 'selection' ? opt.name : parseInt(opt.name);
-                });
-                const availableRecords = (field.records || []).filter(el => !optionIds.includes(el.id));
-                if (availableRecords.length) {
-                    buttonItems = availableRecords.map(el => {
-                        const option = document.createElement('we-button');
-                        option.classList.add('o_we_list_add_existing');
-                        option.dataset.addOption = el.id;
-                        option.dataset.noPreview = 'true';
-                        option.textContent = el.display_name;
-                        return option;
+    _loadListDropdown: async function (selectMenu) {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            selectMenu = selectMenu || this.el.querySelector('we-list we-selection-items');
+            if (selectMenu) {
+                selectMenu.innerHTML = '';
+                const field = Object.assign({}, this.fields[this._getFieldName()]);
+                this._fetchFieldRecords(field).then(() => {
+                    let buttonItems;
+                    const optionIds = Array.from(this.listTable.querySelectorAll('input')).map(opt => {
+                        return field.type === 'selection' ? opt.name : parseInt(opt.name);
                     });
-                } else {
-                    const title = document.createElement('we-title');
-                    title.textContent = 'No more records';
-                    buttonItems = [title];
-                }
-                buttonItems.forEach(button => selectMenu.appendChild(button));
-            });
-        }
+                    const availableRecords = (field.records || []).filter(el => !optionIds.includes(el.id));
+                    if (availableRecords.length) {
+                        buttonItems = availableRecords.map(el => {
+                            const option = document.createElement('we-button');
+                            option.classList.add('o_we_list_add_existing');
+                            option.dataset.addOption = el.id;
+                            option.dataset.noPreview = 'true';
+                            option.textContent = el.display_name;
+                            return option;
+                        });
+                    } else {
+                        const title = document.createElement('we-title');
+                        title.textContent = 'No more records';
+                        buttonItems = [title];
+                    }
+                    buttonItems.forEach(button => selectMenu.appendChild(button));
+                });
+            }
+        });
     },
     /**
      * @private
      */
-    _makeListItemsSortable: function () {
-        $(this.listTable).sortable({
-            axis: 'y',
-            handle: '.o_we_drag_handle',
-            items: 'tr',
-            cursor: 'move',
-            opacity: 0.6,
-            stop: (event, ui) => {
-                this._renderListItems();
-            },
+    _makeListItemsSortable: async function () {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            $(this.listTable).sortable({
+                axis: 'y',
+                handle: '.o_we_drag_handle',
+                items: 'tr',
+                cursor: 'move',
+                opacity: 0.6,
+                stop: (event, ui) => {
+                    this._renderListItems();
+                },
+            });
         });
     },
     /**
@@ -1111,80 +1150,84 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @param {string} id
      * @param {string} text
      */
-    _addItemToTable: function (id, text) {
-        const isCustomField = this._isFieldCustom();
-        const draggableEl = document.createElement('we-button');
-        draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
-        draggableEl.dataset.noPreview = 'true';
-        const inputEl = document.createElement('input');
-        inputEl.type = 'text';
-        if (text) {
-            inputEl.value = text;
-        }
-        if (!isCustomField && id) {
-            inputEl.name = id;
-        }
-        inputEl.disabled = !isCustomField;
-        const trEl = document.createElement('tr');
-        const buttonEl = document.createElement('we-button');
-        buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
-        buttonEl.dataset.removeOption = id;
-        buttonEl.dataset.noPreview = 'true';
-        const draggableTdEl = document.createElement('td');
-        const inputTdEl = document.createElement('td');
-        const buttonTdEl = document.createElement('td');
-        draggableTdEl.appendChild(draggableEl);
-        trEl.appendChild(draggableTdEl);
-        inputTdEl.appendChild(inputEl);
-        trEl.appendChild(inputTdEl);
-        buttonTdEl.appendChild(buttonEl);
-        trEl.appendChild(buttonTdEl);
-        this.listTable.appendChild(trEl);
-        if (isCustomField) {
-            inputEl.focus();
-        }
+    _addItemToTable: async function (id, text) {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            const isCustomField = this._isFieldCustom();
+            const draggableEl = document.createElement('we-button');
+            draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
+            draggableEl.dataset.noPreview = 'true';
+            const inputEl = document.createElement('input');
+            inputEl.type = 'text';
+            if (text) {
+                inputEl.value = text;
+            }
+            if (!isCustomField && id) {
+                inputEl.name = id;
+            }
+            inputEl.disabled = !isCustomField;
+            const trEl = document.createElement('tr');
+            const buttonEl = document.createElement('we-button');
+            buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
+            buttonEl.dataset.removeOption = id;
+            buttonEl.dataset.noPreview = 'true';
+            const draggableTdEl = document.createElement('td');
+            const inputTdEl = document.createElement('td');
+            const buttonTdEl = document.createElement('td');
+            draggableTdEl.appendChild(draggableEl);
+            trEl.appendChild(draggableTdEl);
+            inputTdEl.appendChild(inputEl);
+            trEl.appendChild(inputTdEl);
+            buttonTdEl.appendChild(buttonEl);
+            trEl.appendChild(buttonTdEl);
+            this.listTable.appendChild(trEl);
+            if (isCustomField) {
+                inputEl.focus();
+            }
+        });
     },
     /**
      * Apply the we-list on the target and rebuild the input(s)
      *
      * @private
      */
-    _renderListItems: function () {
-        const multiInputsWrap = this._getMultipleInputs();
-        const selectWrap = this.$target[0].querySelector('#editable_select');
-        const isRequiredField = this._isFieldRequired();
-        const name = this._getFieldName();
-        if (multiInputsWrap) {
-            const type = multiInputsWrap.querySelector('.radio') ? 'radio' : 'checkbox';
-            multiInputsWrap.innerHTML = '';
-            const params = {
-                field: {
-                    name: name,
-                    id: Math.random().toString(36).substring(2, 15), // Big unique ID
-                    required: isRequiredField,
-                    formatInfo: {
-                        multiPosition: multiInputsWrap.dataset.display,
+    _renderListItems: async function () {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            const multiInputsWrap = this._getMultipleInputs();
+            const selectWrap = this.$target[0].querySelector('#editable_select');
+            const isRequiredField = this._isFieldRequired();
+            const name = this._getFieldName();
+            if (multiInputsWrap) {
+                const type = multiInputsWrap.querySelector('.radio') ? 'radio' : 'checkbox';
+                multiInputsWrap.innerHTML = '';
+                const params = {
+                    field: {
+                        name: name,
+                        id: Math.random().toString(36).substring(2, 15), // Big unique ID
+                        required: isRequiredField,
+                        formatInfo: {
+                            multiPosition: multiInputsWrap.dataset.display,
+                        }
                     }
-                }
-            };
-            this._getListItems().forEach((record, idx) => {
-                params.record_index = idx;
-                params.record = record;
-                const template = document.createElement('template');
-                template.innerHTML = qweb.render(`website_form.${type}`, params);
-                multiInputsWrap.appendChild(template.content.firstElementChild);
-            });
-        } else if (selectWrap) {
-            selectWrap.innerHTML = '';
-            this.listTable.querySelectorAll('input').forEach(el => {
-                const option = document.createElement('div');
-                option.id = (el.name || el.value);
-                option.classList.add('s_website_form_select_item');
-                option.textContent = el.value;
-                selectWrap.appendChild(option);
-            });
-            this._renderSelect();
-        }
+                };
+                this._getListItems().forEach((record, idx) => {
+                    params.record_index = idx;
+                    params.record = record;
+                    const template = document.createElement('template');
+                    template.innerHTML = qweb.render(`website_form.${type}`, params);
+                    multiInputsWrap.appendChild(template.content.firstElementChild);
+                });
+            } else if (selectWrap) {
+                selectWrap.innerHTML = '';
+                this.listTable.querySelectorAll('input').forEach(el => {
+                    const option = document.createElement('div');
+                    option.id = (el.name || el.value);
+                    option.classList.add('s_website_form_select_item');
+                    option.textContent = el.value;
+                    selectWrap.appendChild(option);
+                });
+                await this._renderSelect();
+            }
+        });
     },
     /**
      * Returns an array based on the we-list containing the field's records
@@ -1215,19 +1258,21 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     _getSelect: function () {
         return this.$target[0].querySelector('select');
     },
-    _renderSelect: function (show = false) {
-        const select = this._getSelect();
-        if (select && this.listTable) {
-            if (show) select.style.display = '';
-            select.innerHTML = '';
-            // Rebuild the select from the we-list
-            this.listTable.querySelectorAll('input').forEach(el => {
-                const option = document.createElement('option');
-                option.textContent = el.value;
-                option.value = this._isFieldCustom() ? el.value : el.name;
-                select.appendChild(option);
-            });
-        }
+    _renderSelect: async function (show = false) {
+        await this.wysiwyg.withDomMutations(this.$target, async () => {
+            const select = this._getSelect();
+            if (select && this.listTable) {
+                if (show) select.style.display = '';
+                select.innerHTML = '';
+                // Rebuild the select from the we-list
+                this.listTable.querySelectorAll('input').forEach(el => {
+                    const option = document.createElement('option');
+                    option.textContent = el.value;
+                    option.value = this._isFieldCustom() ? el.value : el.name;
+                    select.appendChild(option);
+                });
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -1239,36 +1284,45 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @param {Event} ev
      */
     _onRemoveItemClick: function (ev) {
-        ev.target.closest('tr').remove();
-        this._loadListDropdown();
-        this._renderListItems();
+        const tr = ev.target.closest('tr');
+        this.wysiwyg.withDomMutations(tr, async () => {
+            tr.remove();
+            await this._loadListDropdown();
+            await this._renderListItems();
+        });
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onAddCustomItemClick: function (ev) {
-        this._addItemToTable();
-        this._makeListItemsSortable();
-        this._renderListItems();
+        this.wysiwyg.withDomMutations(this.$target, async () => {
+            await this._addItemToTable();
+            await this._makeListItemsSortable();
+            await this._renderListItems();
+        });
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onAddExistingItemClick: function (ev) {
-        const value = ev.currentTarget.dataset.addOption;
-        this._addItemToTable(value, ev.currentTarget.textContent);
-        this._makeListItemsSortable();
-        this._loadListDropdown();
-        this._renderListItems();
+        this.wysiwyg.withDomMutations(this.$target, async () => {
+            const value = ev.currentTarget.dataset.addOption;
+            await this._addItemToTable(value, ev.currentTarget.textContent);
+            await this._makeListItemsSortable();
+            await this._loadListDropdown();
+            await this._renderListItems();
+        });
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onAddItemSelectClick: function (ev) {
-        ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
+        this.wysiwyg.withDomMutations(this.$target, async () => {
+            ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
+        });
     },
     /**
      * @private
@@ -1291,15 +1345,16 @@ snippetOptions.registry.AddFieldForm = FormEditor.extend({
      * New field is set as active
      */
     addField: async function (previewMode, value, params) {
-        const field = this._getCustomField('char', 'Custom Text');
-        field.formatInfo = this._getDefaultFormat();
-        const htmlField = this._renderField(field);
-        this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
-        this.trigger_up('activate_snippet', {
-            $element: $(htmlField),
-            saveTarget: true,
+        await params.withDomMutations(this.$target, async () => {
+            const field = this._getCustomField('char', 'Custom Text');
+            field.formatInfo = this._getDefaultFormat();
+            const htmlField = this._renderField(field);
+            this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
+            this.trigger_up('activate_snippet', {
+                $element: $(htmlField),
+                saveTarget: true,
+            });
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 
@@ -1324,7 +1379,6 @@ snippetOptions.registry.AddField = FieldEditor.extend({
                 $target: this.$target,
             },
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 
@@ -1332,12 +1386,14 @@ snippetOptions.registry.AddField = FieldEditor.extend({
 const DisableOverlayButtonOption = snippetOptions.SnippetOptionWidget.extend({
     // Disable a button of the snippet overlay
     disableButton: function (buttonName, message) {
-        // TODO refactor in master
-        const className = 'oe_snippet_' + buttonName;
-        this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
-        const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
-        $button.attr('title', message).tooltip({delay: 0});
-        $button.removeClass(className); // Disable the functionnality
+        this.wysiwyg.withDomMutations(this.$target, async () => {
+            // TODO refactor in master
+            const className = 'oe_snippet_' + buttonName;
+            this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
+            const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
+            $button.attr('title', message).tooltip({delay: 0});
+            $button.removeClass(className); // Disable the functionnality
+        });
     },
 
     preventButton: function (event) {

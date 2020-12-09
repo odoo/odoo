@@ -86,11 +86,9 @@ snippetOptions.registry.SnippetPopup = snippetOptions.SnippetOptionWidget.extend
      */
     moveBlock: async function (previewMode, widgetValue, params) {
         const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
-        this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
-        if (previewMode === false) {
-            await this.editorHelpers.prepend(this.wysiwyg.editor, $container.find('.oe_structure:o_editable').first()[0], this.$target.closest('.s_popup')[0])
-        }
-
+        await params.withDomMutations($container.find('.oe_structure:o_editable').first(), () => {
+            this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
+        });
     },
     /**
      * @see this.selectClass for parameters

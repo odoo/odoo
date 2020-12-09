@@ -195,19 +195,19 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             size: 'medium',
         });
         this.massMailingPopup.opened().then(async function () {
-            var $modal = self.$('.modal');
-            $modal.find('header button.close').on('mouseup', function (ev) {
-                ev.stopPropagation();
-            });
-            $modal.addClass('o_newsletter_modal');
-            $modal.find('.oe_structure').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
-            $modal.find('.modal-dialog').addClass('modal-dialog-centered');
-            $modal.find('.js_subscribe').data('list-id', self.listID)
-                  .find('input.js_subscribe_email').val(email);
-
             // hack to make the modal editable in the wysiwyg internal architecture
             const snippetOption = self.$el.data('snippetOption');
-            if (snippetOption) await snippetOption.updateChangesInWysiwyg();
+            const $modal = self.$('.modal');
+            await snippetOption.wysiwyg.withDomMutations(self.$target, () => {
+                $modal.find('header button.close').on('mouseup', function (ev) {
+                    ev.stopPropagation();
+                });
+                $modal.addClass('o_newsletter_modal');
+                $modal.find('.oe_structure').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+                $modal.find('.modal-dialog').addClass('modal-dialog-centered');
+                $modal.find('.js_subscribe').data('list-id', self.listID)
+                    .find('input.js_subscribe_email').val(email);
+            });
 
             self.trigger_up('widgets_start_request', {
                 editableMode: self.editableMode,

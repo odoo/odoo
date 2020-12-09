@@ -27,10 +27,11 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
                 domain: [['module', '=', 'website_sale'], ['model', '=', 'website.snippet.filter']],
                 fields: ['id', 'res_id'],
             }
-        }).then((data) => {
-            this.$target.get(0).dataset.filterId = data[0].res_id;
-            this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
-            this.updateChangesInWysiwyg();
+        }).then(async (data) => {
+            await this.wysiwyg.withDomMutations(this.$target, () => {
+                this.$target.get(0).dataset.filterId = data[0].res_id;
+                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            });
         });
     },
 

@@ -383,7 +383,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
                     attributes.set('src', src);
                 }
             };
-            this.wysiwyg.editor.execCommand(changeTheme);
+            this.wysiwyg.execCommand(changeTheme);
         }
         this._closeThemes();
     },
