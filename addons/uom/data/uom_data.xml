@@ -27,6 +27,13 @@
         <field name="uom_type">reference</field>
     </record>
 
+    <record id="product_uom_dozen" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Dozens</field>
+        <field name="factor_inv" eval="12"/>
+        <field name="uom_type">bigger</field>
+    </record>
+
     <!-- WORKING TIME -->
     <record id="product_uom_day" model="uom.uom">
         <field name="name">Days</field>
