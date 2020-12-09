@@ -42,6 +42,7 @@ var Wysiwyg = Widget.extend({
         this.value = options.value || '';
         this.options = options;
         this.colorPickers = [];
+        this.isEditorStoppedPromise = new Promise(resolve => this._editorStoppedResolve = resolve);
         this.JWEditorLib = JWEditorLib;
         if (this.options.enableTranslation) {
             this._modeConfig = {
@@ -453,7 +454,7 @@ var Wysiwyg = Widget.extend({
         // Saving the content of the editor is not possible after destroy,
         // so there's no need to keep the pop-up warning in this case.
         window.onbeforeunload = null;
-        this.editor.stop();
+        this.editor.stop().then(this._editorStoppedResolve);
         this._super();
     },
 
