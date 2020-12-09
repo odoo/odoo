@@ -169,6 +169,9 @@
                     </span>
                     <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom"></field>
                 </xpath>
+                <xpath expr="//field[@name='sale_order_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
 
