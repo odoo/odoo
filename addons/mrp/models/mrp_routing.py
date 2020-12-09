@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class MrpRoutingWorkcenter(models.Model):
     _name = 'mrp.routing.workcenter'
     _description = 'Work Center Usage'
-    _order = 'sequence, id'
+    _order = 'bom_id, sequence, id'
     _check_company_auto = True
 
     name = fields.Char('Operation', required=True)
@@ -33,6 +33,7 @@ class MrpRoutingWorkcenter(models.Model):
         ('manual', 'Set duration manually')], string='Duration Computation',
         default='manual')
     time_mode_batch = fields.Integer('Based on', default=10)
+    time_computed_on = fields.Char('Computed on last', compute='_compute_time_computed_on')
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60,
         help="Time in minutes:"
@@ -41,6 +42,11 @@ class MrpRoutingWorkcenter(models.Model):
     time_cycle = fields.Float('Duration', compute="_compute_time_cycle")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
+
+    @api.depends('time_mode', 'time_mode_batch')
+    def _compute_time_computed_on(self):
+        for operation in self:
+            operation.time_computed_on = _('%i work orders') % operation.time_mode_batch if operation.time_mode != 'manual' else False
 
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
     def _compute_time_cycle(self):
