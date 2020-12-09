@@ -2010,7 +2010,9 @@ class IrModelData(models.Model):
             INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
             VALUES {rows}
             ON CONFLICT (module, name)
-            DO UPDATE SET write_date=(now() at time zone 'UTC') {where}
+            DO UPDATE SET (model, res_id, write_date) =
+                (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
+                {where}
         """.format(
             rows=", ".join([rowf] * len(sub_rows)),
             where="WHERE NOT ir_model_data.noupdate" if update else "",
