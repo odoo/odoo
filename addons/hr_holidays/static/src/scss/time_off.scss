@@ -1,10 +1,14 @@
 .o_timeoff_calendar .o_content {
     .o_timeoff_container {
         height: 6rem;
+
+        + .o_calendar_container {
+            height: calc(100% - 6rem);
+        }
     }
 
     .o_calendar_container {
-      height: calc(100% - 6rem);
+        height: 100%;
     }
 
     @include media-breakpoint-down(sm) {
