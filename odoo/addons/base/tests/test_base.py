@@ -4,7 +4,7 @@
 import ast
 
 from odoo import SUPERUSER_ID, Command
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
@@ -508,8 +508,10 @@ class TestBase(TransactionCase):
                                 'partner_id': test_partner.id,
                                 })
         # Cannot archive the partner
+        with self.assertRaises(RedirectWarning):
+            test_partner.with_user(self.env.ref('base.user_admin')).toggle_active()
         with self.assertRaises(ValidationError):
-            test_partner.toggle_active()
+            test_partner.with_user(self.env.ref('base.user_demo')).toggle_active()
 
         # Can archive the user but the partner stays active
         test_user.toggle_active()
