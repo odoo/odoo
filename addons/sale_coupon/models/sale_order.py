@@ -117,8 +117,13 @@ class SaleOrder(models.Model):
         free_reward_product = self.env['sale.coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
         return self.order_line.filtered(lambda x: not x.is_reward_line or x.product_id in free_reward_product)
 
+    def _get_base_order_lines(self, program):
+        """ Returns the sale order lines not linked to the given program.
+        """
+        return self.order_line.filtered(lambda x: not (x.is_reward_line and x.product_id == program.discount_line_product_id))
+
     def _get_reward_values_discount_fixed_amount(self, program):
-        total_amount = sum(self._get_paid_order_lines().mapped('price_total'))
+        total_amount = sum(self._get_base_order_lines(program).mapped('price_total'))
         fixed_amount = program._compute_program_amount('discount_fixed_amount', self.currency_id)
         if total_amount < fixed_amount:
             return total_amount
@@ -146,10 +151,11 @@ class SaleOrder(models.Model):
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
+        amount_total = sum(self._get_base_order_lines(program).mapped('price_subtotal'))
         if program.discount_apply_on == 'cheapest_product':
             line = self._get_cheapest_line()
             if line:
-                discount_line_amount = line.price_reduce * (program.discount_percentage / 100)
+                discount_line_amount = min(line.price_reduce * (program.discount_percentage / 100), amount_total)
                 if discount_line_amount:
                     taxes = line.tax_id
                     if self.fiscal_position_id:
@@ -158,7 +164,7 @@ class SaleOrder(models.Model):
                     reward_dict[line.tax_id] = {
                         'name': _("Discount: ") + program.name,
                         'product_id': program.discount_line_product_id.id,
-                        'price_unit': - discount_line_amount,
+                        'price_unit': - discount_line_amount if discount_line_amount > 0 else 0,
                         'product_uom_qty': 1.0,
                         'product_uom': program.discount_line_product_id.uom_id.id,
                         'is_reward_line': True,
@@ -170,8 +176,10 @@ class SaleOrder(models.Model):
                 free_product_lines = self.env['sale.coupon.program'].search([('reward_type', '=', 'product'), ('reward_product_id', '=', program.discount_specific_product_id.id)]).mapped('discount_line_product_id')
                 lines = lines.filtered(lambda x: x.product_id == program.discount_specific_product_id or x.product_id in free_product_lines)
 
+            # when processing lines we should not discount more than the order remaining total
+            currently_discounted_amount = 0
             for line in lines:
-                discount_line_amount = self._get_reward_values_discount_percentage_per_line(program, line)
+                discount_line_amount = min(self._get_reward_values_discount_percentage_per_line(program, line), amount_total - currently_discounted_amount)
 
                 if discount_line_amount:
 
@@ -191,12 +199,13 @@ class SaleOrder(models.Model):
                         reward_dict[line.tax_id] = {
                             'name': _("Discount: ") + program.name + tax_name,
                             'product_id': program.discount_line_product_id.id,
-                            'price_unit': - discount_line_amount,
+                            'price_unit': - discount_line_amount if discount_line_amount > 0 else 0,
                             'product_uom_qty': 1.0,
                             'product_uom': program.discount_line_product_id.uom_id.id,
                             'is_reward_line': True,
                             'tax_id': [(4, tax.id, False) for tax in taxes],
                         }
+                        currently_discounted_amount += discount_line_amount
 
         # If there is a max amount for discount, we might have to limit some discount lines or completely remove some lines
         max_amount = program._compute_program_amount('discount_max_amount', self.currency_id)
