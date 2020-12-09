@@ -24,9 +24,9 @@ snippetOptions.registry.Timeline = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    timelineCard: async function (previewMode, widgetValue, params, context) {
+    timelineCard: async function (previewMode, widgetValue, params) {
         const $timelineRow = this.$target.closest('.s_timeline_row');
-        await context.withDomMutations($timelineRow, () => {
+        await params.withDomMutations($timelineRow, () => {
             $timelineRow.toggleClass('flex-row-reverse flex-row');
         });
     },

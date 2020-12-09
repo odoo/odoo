@@ -2017,8 +2017,8 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectClass: async function (previewMode, widgetValue, params, context) {
-        await context.withDomMutations(this.$target, () => {
+    selectClass: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, () => {
             for (const classNames of params.possibleValues) {
                 if (classNames) {
                     this.$target[0].classList.remove(...classNames.trim().split(/\s+/g));
@@ -2039,9 +2039,9 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectDataAttribute: async function (previewMode, widgetValue, params, context) {
-        await context.withDomMutations(this.$target, async () => {
-            const value = await this._selectAttributeHelper(widgetValue, params, context);
+    selectDataAttribute: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, async () => {
+            const value = await this._selectAttributeHelper(widgetValue, params);
             this.$target[0].dataset[params.attributeName] = value;
         });
     },
@@ -2057,7 +2057,7 @@ const SnippetOptionWidget = Widget.extend({
      */
     selectAttribute: async function (previewMode, widgetValue, params) {
         const value = await this._selectAttributeHelper(widgetValue, params);
-        await context.withDomMutations(this.$target, async () => {
+        await params.withDomMutations(this.$target, async () => {
             this.$target.attr(params.attributeName, value);
         });
     },
@@ -2071,8 +2071,8 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectStyle: async function (previewMode, widgetValue, params, context) {
-        await context.withDomMutations(this.$target, () => {
+    selectStyle: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, () => {
             // Disable all transitions for the duration of the method as many
             // comparisons will be done on the element to know if applying a
             // property has an effect or not. Also, changing a css property via the
@@ -2709,10 +2709,10 @@ const SnippetOptionWidget = Widget.extend({
 
             const callMethod = async (option) => {
                 const optionMethod = async (context) => {
-                    // Set the context.withDomMutations depending on whether it
+                    // Set the params.withDomMutations depending on whether it
                     // should change the wysiwyg VDocument or not.
                     if (previewMode === false) {
-                        context.withDomMutations = ($el, callback) => {
+                        params.withDomMutations = ($el, callback) => {
                             return this.wysiwyg.withDomMutations($el, callback, context);
                         }
                     } else {
@@ -2723,9 +2723,10 @@ const SnippetOptionWidget = Widget.extend({
                         // a step when no changes in VDOC appears in one
                         // execCommand.
                         this.wysiwyg.editor.memoryInfo.uiCommand = true;
-                        context.withDomMutations = ($el, callback, context) => callback();
+                        params.withDomMutations = ($el, callback, context) => callback();
                     }
-                    await this[methodName].call(option, previewMode, widgetValue, params, context);
+                    console.log('_select', methodName);
+                    await this[methodName].call(option, previewMode, widgetValue, params);
                 };
                 await this.wysiwyg.execCommand(optionMethod);
             }
@@ -2760,8 +2761,8 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {string|undefined}
      */
-    async _selectAttributeHelper(value, params, context) {
-        return context.withDomMutations(this.$target, async () => {
+    async _selectAttributeHelper(value, params) {
+        return params.withDomMutations(this.$target, async () => {
             if (!params.attributeName) {
                 throw new Error('Attribute name missing');
             }
@@ -3643,12 +3644,12 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    toggleBgImage(previewMode, widgetValue, params, context) {
+    toggleBgImage(previewMode, widgetValue, params) {
         if (!widgetValue) {
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
             const bgImageOpt = bgImageWidget.getParent();
-            return bgImageOpt.background(false, '', bgImageWidget.getMethodsParams('background'), context);
+            return bgImageOpt.background(false, '', {...bgImageWidget.getMethodsParams('background'), withDomMutations: params.withDomMutations});
         } else {
             // TODO: use trigger instead of el.click when possible
             this._requestUserValueWidgets('bg_image_opt')[0].el.click();
@@ -3767,8 +3768,8 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: async function (previewMode, widgetValue, params, context) {
-        await context.withDomMutations(this.$target, () => {
+    background: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, () => {
             if (previewMode === true) {
                 this.__customImageSrc = getBgImageURL(this.$target[0]);
             } else if (previewMode === 'reset') {
@@ -3790,7 +3791,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    async dynamicColor(previewMode, widgetValue, params, context) {
+    async dynamicColor(previewMode, widgetValue, params) {
         const currentSrc = getBgImageURL(this.$target[0]);
         switch (previewMode) {
             case true:
@@ -3804,7 +3805,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
-        await context.withDomMutations(this.$target, () => this.$target.css('background-image', `url('${src}')`));
+        await params.withDomMutations(this.$target, () => this.$target.css('background-image', `url('${src}')`));
         if (!previewMode) {
             this.previousSrc = src;
         }
@@ -4028,8 +4029,8 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @param {boolean} previewMode
      * @param {function} computeShapeData function to compute the new shape data.
      */
-    async _handlePreviewState(previewMode, computeShapeData, params, context) {
-        await context.withDomMutations(this.$target, () => {
+    async _handlePreviewState(previewMode, computeShapeData, params) {
+        await params.withDomMutations(this.$target, () => {
             if (previewMode === 'reset') {
                 if (this.prevShape) {
                     this.$target[0].dataset.oeShapeData = this.prevShape;
@@ -4249,8 +4250,8 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for params
      */
-    backgroundType: async function (previewMode, widgetValue, params, context) {
-        await context.withDomMutations(this.$target, () => {
+    backgroundType: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, () => {
             this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
             this.$target.css('background-position', '');
             this.$target.css('background-size', '');
@@ -4821,7 +4822,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for params
      */
-    async color(previewMode, widgetValue, params, context) {
+    async color(previewMode, widgetValue, params) {
         const target = this.$target[0];
         switch (previewMode) {
             case true:
@@ -4835,7 +4836,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
         newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
-        await context.withDomMutations(this.$target, () => {
+        await params.withDomMutations(this.$target, () => {
             target.setAttribute('src', src);
         });
         if (!previewMode) {

@@ -717,11 +717,11 @@ snippetOptions.registry.BackgroundVideo = snippetOptions.SnippetOptionWidget.ext
      *
      * @see this.selectClass for parameters
      */
-    background: function (previewMode, widgetValue, params, context) {
+    background: function (previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {
-            return this._setBgVideo(false, this.videoSrc, undefined, context);
+            return this._setBgVideo(false, this.videoSrc, { withDomMutations: params.withDomMutations });
         }
-        return this._setBgVideo(previewMode, widgetValue, undefined, context);
+        return this._setBgVideo(previewMode, widgetValue, { withDomMutations: params.withDomMutations });
     },
 
     //--------------------------------------------------------------------------
@@ -747,8 +747,8 @@ snippetOptions.registry.BackgroundVideo = snippetOptions.SnippetOptionWidget.ext
      * @see this.selectClass for parameters
      * @returns {Promise}
      */
-    _setBgVideo: async function (previewMode, value, params, context) {
-        return await context.withDomMutations(this.$target, async () => {
+    _setBgVideo: async function (previewMode, value, params) {
+        return await params.withDomMutations(this.$target, async () => {
             this.$('> .o_bg_video_container').toggleClass('d-none', previewMode === true);
 
             if (previewMode !== false) {
@@ -1328,11 +1328,10 @@ snippetOptions.registry.CarouselItem = snippetOptions.SnippetOptionWidget.extend
         if (!this.removing && newLength > 0) {
             const $toDelete = $items.filter('.active');
             this.$carousel.one('active_slide_targeted.carousel_item_option', async () => {
-                const carouselItemRemoveSlide = async (context) => {
+                await this.wysiwyg.withDomMutations(this.$carousel, async (context) => {
                     this.$indicators.find('li:last').remove();
                     $toDelete.remove();
-                };
-                await this.wysiwyg.withDomMutations(this.$carousel, carouselItemRemoveSlide);
+                });
                 this.$controls.toggleClass('d-none', newLength === 1);
                 this.$carousel.trigger('content_changed');
                 this.removing = false;
@@ -1462,14 +1461,13 @@ snippetOptions.registry.layout_column = snippetOptions.SnippetOptionWidget.exten
      *
      * @see this.selectClass for parameters
      */
-    selectCount: async function (previewMode, widgetValue, params, context) {
-        console.warn('selectCount');
-        await context.withDomMutations(this.$target, async () => {
+    selectCount: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, async () => {
             const previousNbColumns = this.$('> .row').children().length;
             let $row = this.$('> .row');
             if (!$row.length) {
                 console.log("context:", context);
-                await context.withDomMutations(this.$target, () => {
+                await params.withDomMutations(this.$target, () => {
                     $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
                 });
             }
@@ -2516,7 +2514,7 @@ snippetOptions.registry.SnippetMove = snippetOptions.SnippetOptionWidget.extend(
      *
      * @see this.selectClass for parameters
      */
-    async moveSnippet (previewMode, widgetValue, params, context) {
+    async moveSnippet (previewMode, widgetValue, params) {
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         const moveSnippet = () => {
@@ -2535,7 +2533,7 @@ snippetOptions.registry.SnippetMove = snippetOptions.SnippetOptionWidget.extend(
                     break;
             }
         }
-        await context.withDomMutations(this.$target.parent(), moveSnippet);
+        await params.withDomMutations(this.$target.parent(), moveSnippet);
         if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
@@ -2567,8 +2565,8 @@ snippetOptions.registry.ScrollButton = snippetOptions.SnippetOptionWidget.extend
     /**
      * Toggles the scroll down button.
      */
-    toggleButton: async function (previewMode, widgetValue, params, context) {
-        await context.withDomMutations(this.$target, () => {
+    toggleButton: async function (previewMode, widgetValue, params) {
+        await params.withDomMutations(this.$target, () => {
             if (widgetValue) {
                 if (!this._getButton().length) {
                     const anchor = document.createElement('a');
