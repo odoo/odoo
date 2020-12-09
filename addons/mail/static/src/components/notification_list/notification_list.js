@@ -69,21 +69,21 @@ class NotificationList extends Component {
         if (props.filter === 'all') {
             // threads with needactions
             threadNeedactionNotifications = this.env.models['mail.thread']
-                .all(t => t.model !== 'mail.box' && t.needactionMessages.length > 0)
+                .all(t => t.model !== 'mail.box' && t.needactionMessagesAsOriginThread.length > 0)
                 .sort((t1, t2) => {
-                    if (t1.needactionMessages.length > 0 && t2.needactionMessages.length === 0) {
+                    if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
                         return -1;
                     }
-                    if (t1.needactionMessages.length === 0 && t2.needactionMessages.length > 0) {
+                    if (t1.needactionMessagesAsOriginThread.length === 0 && t2.needactionMessagesAsOriginThread.length > 0) {
                         return 1;
                     }
-                    if (t1.lastNeedactionMessage && t2.lastNeedactionMessage) {
-                        return t1.lastNeedactionMessage.date.isBefore(t2.lastNeedactionMessage.date) ? 1 : -1;
+                    if (t1.lastNeedactionMessageAsOriginThread && t2.lastNeedactionMessageAsOriginThread) {
+                        return t1.lastNeedactionMessageAsOriginThread.date.isBefore(t2.lastNeedactionMessageAsOriginThread.date) ? 1 : -1;
                     }
-                    if (t1.lastNeedactionMessage) {
+                    if (t1.lastNeedactionMessageAsOriginThread) {
                         return -1;
                     }
-                    if (t2.lastNeedactionMessage) {
+                    if (t2.lastNeedactionMessageAsOriginThread) {
                         return 1;
                     }
                     return t1.id < t2.id ? -1 : 1;
