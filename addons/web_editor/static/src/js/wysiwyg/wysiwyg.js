@@ -232,6 +232,20 @@ var Wysiwyg = Widget.extend({
                             },
                         },
                     },
+
+                    // js_language_selector
+                    {
+                        selector: [node => {
+                            const attributes = node.modifiers.find(this.JWEditorLib.Attributes);
+                            return attributes && attributes.classList.has('js_language_selector');
+                        }],
+                        properties: {
+                            editable: {
+                                value: false,
+                                cascading: true,
+                            },
+                        },
+                    },
                 ],
             };
         }
