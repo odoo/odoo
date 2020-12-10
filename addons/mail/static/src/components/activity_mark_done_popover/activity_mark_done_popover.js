@@ -69,11 +69,11 @@ class ActivityMarkDonePopover extends Component {
     /**
      * @private
      */
-    async  _onClickDone() {
+    async _onClickDone() {
         await this.activity.markAsDone({
             feedback: this._feedbackTextareaRef.el.value,
         });
-        this.trigger('reload');
+        this.trigger('reload', { keepChanges: true });
     }
 
     /**
