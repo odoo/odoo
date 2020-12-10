@@ -1234,6 +1234,9 @@ var Wysiwyg = Widget.extend({
             if ($saveNode.length === 0) {
                 $saveNode = $(renderedNode)
             }
+            if (!$saveNode[0].dataset.oeId) {
+                $saveNode = $(renderedNode).find('[data-oe-id]');
+            }
             const isStructureDirty = node instanceof JWEditorLib.OdooStructureNode && node.dirty;
             const isFieldDirty = node instanceof JWEditorLib.OdooFieldNode && node.fieldInfo.originalValue !== node.fieldInfo.value.get();
             if (isStructureDirty || isFieldDirty) {
