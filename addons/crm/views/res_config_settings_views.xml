@@ -66,32 +66,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 o_setting_box" id="crm_lead"
-                                attrs="{'invisible': [('group_use_lead','=',False)]}"
-                                title="Emails received to that address generate new leads not assigned to any Sales Team yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific Sales Teams. To do so, set an email alias on the Sales Team.">
-                            <div class="o_setting_left_pane">
-                                <field name="generate_lead_from_alias"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="generate_lead_from_alias" string="Incoming Emails"/>
-                                <div class="text-muted">
-                                    Create leads from incoming emails
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('generate_lead_from_alias','=',False)]}">
-                                    <div class="mt16">
-                                        <field name="crm_alias_prefix" class="oe_inline"
-                                            attrs="{'required': [('generate_lead_from_alias', '=', True)]}"/>
-                                        <label class="mr-0" for="alias_domain" string="@"/>
-                                        <field name="alias_domain" readonly="1" force_save="1" class="oe_inline"/>
-                                    </div>
-                                    <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
-                                        <button type="action"
-                                            name="base_setup.action_general_configuration"
-                                            string="Use an External Email Server" icon="fa-arrow-right" class="oe_link"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <h2>Lead Generation</h2>
                     <div class="row mt16 o_settings_container" name="convert_visitor_setting_container">
