@@ -526,6 +526,7 @@ class StockMove(models.Model):
                 yield values
 
         def _compute_picking_values(iterator, field_name, model_name):
+            random = populate.Random('_compute_picking_values')
             for values in iterator:
                 if values.get('picking_id'):
                     picking = self.env['stock.picking'].browse(values['picking_id'])
@@ -535,6 +536,8 @@ class StockMove(models.Model):
                     values['name'] = picking.name
                     values['date'] = picking.scheduled_date
                     values['company_id'] = picking.company_id.id
+                    if picking.picking_type_id.code == 'incoming':
+                        values['price_unit'] = random.randint(1, 100)
                 yield values
 
         return [
