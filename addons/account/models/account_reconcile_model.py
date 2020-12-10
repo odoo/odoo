@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
+from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
 import re
 from math import copysign
@@ -582,6 +583,8 @@ class AccountReconcileModel(models.Model):
         if self.rule_type != 'invoice_matching':
             raise UserError(_('Programmation Error: Can\'t call _get_invoice_matching_query() for different rules than \'invoice_matching\''))
 
+        unaccent = get_unaccent_wrapper(self._cr)
+
         # N.B: 'communication_flag' is there to distinguish invoice matching through the number/reference
         # (higher priority) from invoice matching using the partner (lower priority).
         query = r'''
@@ -641,7 +644,10 @@ class AccountReconcileModel(models.Model):
                         within the payment_ref, in any order, with any characters between them. */
 
                         aml_partner.name IS NOT NULL
-                        AND st_line.payment_ref ~* concat('(?=.*', array_to_string(regexp_split_to_array(lower(aml_partner.name), ' '),'.*)(?=.*'), '.*)')
+                        AND """ + unaccent("st_line.payment_ref") + r""" ~* ('^' || (
+                            SELECT string_agg(concat('(?=.*\m', chunk[1], '\M)'), '')
+                              FROM regexp_matches(""" + unaccent("aml_partner.name") + r""", '\w{3,}', 'g') AS chunk
+                        ))
                     )
                 """
 
