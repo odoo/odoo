@@ -15,36 +15,19 @@ class TestMassMailing(models.TransientModel):
     @api.multi
     def send_mail_test(self):
         self.ensure_one()
-        ctx = dict(self.env.context)
-        ctx.pop('default_state', None)
-        self = self.with_context(ctx)
-
         mails = self.env['mail.mail']
         mailing = self.mass_mailing_id
         test_emails = tools.email_split(self.email_to)
         mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
-
-        record = self.env[mailing.mailing_model_real].search([], limit=1)
-        body = mailing.body_html
-        subject = mailing.name
-
-        # If there is atleast 1 record for the model used in this mailing, then we use this one to render the template
-        # Downside: Jinja syntax is only tested when there is atleast one record of the mailing's model
-        if record:
-            # Returns a proper error if there is a syntax error with jinja
-            body = self.env['mail.template']._render_template(body, mailing.mailing_model_real, record.ids, post_process=True)[record.id]
-            subject = self.env['mail.template']._render_template(subject, mailing.mailing_model_real, record.ids)[record.id]
-
-        # Convert links in absolute URLs before the application of the shortener
-        body = self.env['mail.thread']._replace_local_links(body)
-        body = tools.html_sanitize(body, sanitize_attributes=True, sanitize_style=True)
-
         for test_mail in test_emails:
+            # Convert links in absolute URLs before the application of the shortener
+            body = self.env['mail.thread']._replace_local_links(mailing.body_html)
+            body = tools.html_sanitize(body, sanitize_attributes=True, sanitize_style=True)
             mail_values = {
                 'email_from': mailing.email_from,
                 'reply_to': mailing.reply_to,
                 'email_to': test_mail,
-                'subject': subject,
+                'subject': mailing.name,
                 'body_html': mass_mail_layout.render({'body': body}, engine='ir.qweb', minimal_qcontext=True),
                 'notification': True,
                 'mailing_id': mailing.id,
