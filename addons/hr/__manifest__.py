@@ -33,6 +33,7 @@
         'report/hr_employee_badge.xml',
         'views/hr_employee_views.xml',
         'views/hr_department_views.xml',
+        'views/hr_work_location_views.xml',
         'views/hr_views.xml',
         'views/hr_templates.xml',
         'views/res_config_settings_views.xml',

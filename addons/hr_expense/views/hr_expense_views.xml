@@ -20,7 +20,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='work_location']" position="after">
+                <xpath expr="//field[@name='work_location_id']" position="after">
                     <field name="expense_manager_id" optional="hide" string="Expense Approver"/>
                 </xpath>
             </field>

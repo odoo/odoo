@@ -27,7 +27,8 @@ class HrEmployeeBase(models.AbstractModel):
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
-    work_location = fields.Char('Work Location')
+    work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute="_compute_work_location_id", store=True, readonly=False,
+    domain="[('address_id', '=', address_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -161,6 +162,11 @@ class HrEmployeeBase(models.AbstractModel):
                     # We don't want non-user employee to have icon.
                     icon = 'presence_undetermined'
             employee.hr_icon_display = icon
+
+    @api.depends('address_id')
+    def _compute_work_location_id(self):
+        to_reset = self.filtered(lambda e: e.address_id != e.work_location_id.address_id)
+        to_reset.work_location_id = False
 
     @api.model
     def _get_employee_working_now(self):
