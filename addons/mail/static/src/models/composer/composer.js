@@ -291,9 +291,6 @@ function factory(dependencies) {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
                 channel_ids: this.mentionedChannels.map(channel => channel.id),
-                context: {
-                    mail_post_autofollow: true,
-                },
                 message_type: 'comment',
                 partner_ids: this.recipients.map(partner => partner.id),
             };
@@ -327,6 +324,11 @@ function factory(dependencies) {
                     Object.assign(postData, {
                         subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
                     });
+                    if (!this.isLog) {
+                        postData.context = {
+                            mail_post_autofollow: true,
+                        };
+                    }
                     messageId = await this.async(() =>
                         this.env.models['mail.thread'].performRpcMessagePost({
                             postData,
