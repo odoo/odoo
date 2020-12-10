@@ -628,6 +628,10 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         if not company:  # ultimate fallback, since company_id is required on expense
             company = self.env.company
 
+        # The expenses alias is the same for all companies, we need to set the proper context
+        # To select the product account
+        self = self.with_company(company)
+
         product, price, currency_id, expense_description = self._parse_expense_subject(expense_description, currencies)
         vals = {
             'employee_id': employee.id,
