@@ -4074,6 +4074,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         } else {
             // Remove custom bg image and let the shape class set the bg shape
             $(shapeContainer).css('background-image', '');
+            $(shapeContainer).css('background-position', '');
         }
 
         if (previewMode === false) await this.updateChangesInWysiwyg();
