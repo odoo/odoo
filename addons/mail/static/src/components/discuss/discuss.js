@@ -253,7 +253,7 @@ class Discuss extends Component {
                 this.env._t(`Message posted on "%s"`),
                 owl.utils.escape(this.discuss.replyingToMessage.originThread.displayName)
             ),
-            type: 'warning',
+            type: 'info',
         });
         this.discuss.clearReplyingToMessage();
     }
