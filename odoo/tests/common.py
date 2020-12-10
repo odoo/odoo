@@ -813,7 +813,6 @@ class ChromeBrowser():
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
             '--no-sandbox': '',
-            '--disable-crash-reporter': '',
             '--disable-gpu': '',
         }
         cmd = [self.executable]
