@@ -294,6 +294,12 @@ class ProjectTask(models.Model):
             elif not task.sale_order_id:
                 task.sale_order_id = False
 
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    def _compute_sale_line(self):
+        super(ProjectTask, self)._compute_sale_line()
+        for task in self.filtered(lambda t: not t.sale_line_id):
+            task.sale_line_id = task._get_last_sol_of_customer()
+
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
         for task in self:
@@ -351,6 +357,20 @@ class ProjectTask(models.Model):
                         current_timesheet_ids.filtered(lambda t: t.employee_id == employee).write({'project_id': project.id})
 
         return res
+
+    def _get_last_sol_of_customer(self):
+        # Get the last SOL made for the customer in the current task where we need to compute
+        self.ensure_one()
+        if not self.commercial_partner_id or not self.allow_billable:
+            return False
+        domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]
+        if self.project_id.bill_type == 'customer_type' and self.project_sale_order_id:
+            domain.append(('order_id', '=?', self.project_sale_order_id.id))
+        sale_lines = self.env['sale.order.line'].search(domain)
+        for line in sale_lines:
+            if line.remaining_hours_available and line.remaining_hours > 0:
+                return line
+        return False
 
     def action_make_billable(self):
         return {
