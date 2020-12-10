@@ -72,7 +72,7 @@ class GoogleSync(models.AbstractModel):
         if 'google_id' in vals:
             self._from_google_ids.clear_cache(self)
         synced_fields = self._get_google_synced_fields()
-        if 'need_sync' not in vals and vals.keys() & synced_fields:
+        if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
 
         result = super().write(vals)
@@ -86,6 +86,9 @@ class GoogleSync(models.AbstractModel):
     def create(self, vals_list):
         if any(vals.get('google_id') for vals in vals_list):
             self._from_google_ids.clear_cache(self)
+        if self.env.user.google_synchronization_stopped:
+            for vals in vals_list:
+                vals.update({'need_sync': False})
         records = super().create(vals_list)
 
         google_service = GoogleCalendarService(self.env['google.service'])
@@ -242,5 +245,12 @@ class GoogleSync(models.AbstractModel):
     def _get_google_synced_fields(self):
         """Return a set of field names. Changing one of these fields
         marks the record to be re-synchronized.
+        """
+        raise NotImplementedError()
+
+    @api.model
+    def _restart_google_sync(self):
+        """ Turns on the google synchronization for all the events of
+        a given user.
         """
         raise NotImplementedError()

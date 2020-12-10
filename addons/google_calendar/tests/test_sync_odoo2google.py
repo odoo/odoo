@@ -234,3 +234,53 @@ class TestSyncOdoo2Google(TransactionCase):
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
         }, timeout=3)
+
+    @patch_api
+    def test_stop_synchronization(self):
+        self.env.user.stop_google_synchronization()
+        self.assertTrue(self.env.user.google_synchronization_stopped, "The google synchronization flag should be switched on")
+        self.assertFalse(self.env.user._sync_google_calendar(self.google_service), "The google synchronization should be stopped")
+
+        # If synchronization stopped, creating a new event should not call _google_insert.
+        self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'privacy': 'private',
+        })
+        self.assertGoogleEventNotInserted()
+
+    @patch_api
+    def test_restart_synchronization(self):
+        # Test new event created after stopping synchronization are correctly patched when restarting sync.
+        google_id = 'aaaaaaaaa'
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        user = self.env['res.users'].create({
+            'name': 'Test user Calendar',
+            'login': 'jean-luc@opoo.com',
+            'partner_id': partner.id,
+        })
+        user.stop_google_synchronization()
+        event = self.env['calendar.event'].with_user(user).create({
+            'google_id': google_id,
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+        })
+
+        user.with_user(user).restart_google_synchronization()
+        self.assertGoogleEventPatched(event.google_id, {
+            'id': event.google_id,
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'visibility': 'public',
+            'guestsCanModify': True,
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': 'jean-luc@opoo.com', 'self': True},
+            'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'accepted'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}}
+        }, timeout=3)
