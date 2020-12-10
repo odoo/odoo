@@ -444,6 +444,9 @@ class HrExpense(models.Model):
             ('work_email', 'ilike', email_address),
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
+        # The expenses alias is the same for all companies, we need to set the proper context
+        company = employee.company_id or self.env.user.company_id
+        self = self.with_context(force_company=company.id)
 
         expense_description = msg_dict.get('subject', '')
 
