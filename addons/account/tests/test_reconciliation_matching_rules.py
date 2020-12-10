@@ -678,6 +678,18 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_2.id: {'aml_ids': []},
         }, self.bank_st)
 
+    def test_partner_name_with_regexp_chars(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald + Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK+Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # The query should still work
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
     def test_match_multi_currencies(self):
         ''' Ensure the matching of candidates is made using the right statement line currency.
 
