@@ -21,6 +21,7 @@ class AccountPayment(models.Model):
         string="Check Number",
         store=True,
         readonly=True,
+        copy=False,
         compute='_compute_check_number',
         inverse='_inverse_check_number',
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
@@ -48,6 +49,8 @@ class AccountPayment(models.Model):
                AND move.journal_id = other_move.journal_id
                AND payment.id != other_payment.id
                AND payment.id IN %(ids)s
+               AND move.state = 'posted'
+               AND other_move.state = 'posted'
         """, {
             'ids': tuple(self.ids),
         })
@@ -70,10 +73,10 @@ class AccountPayment(models.Model):
             else:
                 pay.check_amount_in_words = False
 
-    @api.depends('journal_id')
+    @api.depends('journal_id', 'payment_method_code')
     def _compute_check_number(self):
         for pay in self:
-            if pay.journal_id.check_manual_sequencing:
+            if pay.journal_id.check_manual_sequencing and pay.payment_method_code == 'check_printing':
                 sequence = pay.journal_id.check_sequence_id
                 pay.check_number = sequence.get_next_char(sequence.number_next_actual)
             else:
