@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import http, _
 from odoo.http import request
 from odoo.osv import expression
 
 from odoo.addons.account.controllers import portal
+from odoo.addons.hr_timesheet.controllers.portal import TimesheetCustomerPortal
 
 
 class PortalAccount(portal.PortalAccount):
@@ -38,3 +40,33 @@ class CustomerPortal(portal.CustomerPortal):
         values['timesheets'] = request.env['account.analytic.line'].sudo().search(domain)
         values['is_uom_day'] = request.env['account.analytic.line'].sudo()._is_timesheet_encode_uom_day()
         return values
+
+
+class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
+
+    def _get_searchbar_inputs(self):
+        searchbar_inputs = super()._get_searchbar_inputs()
+        searchbar_inputs.update(sol={'input': 'sol', 'label': _('Search in Sales Order Item')}, sol_id={'input': 'sol_id', 'label': _('Search in Sales Order Item ID')})
+        return searchbar_inputs
+
+    def _get_searchbar_groupby(self):
+        searchbar_groupby = super()._get_searchbar_groupby()
+        searchbar_groupby.update(sol={'input': 'sol', 'label': _('Sales Order Item')})
+        return searchbar_groupby
+
+    def _get_search_domain(self, search_in, search):
+        search_domain = super()._get_search_domain(search_in, search)
+        if search_in in ('sol', 'all'):
+            search_domain = expression.OR([search_domain, [('so_line', 'ilike', search)]])
+        if search_in == 'sol_id':
+            search_domain = expression.OR([search_domain, [('so_line.id', '=', search)]])
+        return search_domain
+
+    def _get_groupby_mapping(self):
+        groupby_mapping = super()._get_groupby_mapping()
+        groupby_mapping.update(sol='so_line')
+        return groupby_mapping
+
+    @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='sol', **kw):
+        return super().portal_my_timesheets(page, sortby, filterby, search, search_in, groupby, **kw)
