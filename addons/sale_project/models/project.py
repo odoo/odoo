@@ -48,7 +48,7 @@ class ProjectTask(models.Model):
                 task.partner_id = task.project_id.sale_line_id.order_partner_id
         super()._compute_partner_id()
 
-    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
     def _compute_sale_line(self):
         for task in self:
             if not task.sale_line_id:
