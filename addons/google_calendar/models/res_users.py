@@ -23,7 +23,8 @@ class User(models.Model):
     google_calendar_token_validity = fields.Datetime('Token Validity', copy=False)
     google_calendar_sync_token = fields.Char('Next Sync Token', copy=False)
     google_calendar_cal_id = fields.Char('Calendar ID', copy=False, help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
-
+    google_synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False)
+    
     def _set_auth_tokens(self, access_token, refresh_token, ttl):
         self.write({
             'google_calendar_rtoken': refresh_token,
@@ -79,6 +80,8 @@ class User(models.Model):
 
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
+        if self.google_synchronization_stopped:
+            return False
         full_sync = not bool(self.google_calendar_sync_token)
         with google_calendar_token(self) as token:
             try:
@@ -106,7 +109,7 @@ class User(models.Model):
     @api.model
     def _sync_all_google_calendar(self):
         """ Cron job """
-        users = self.env['res.users'].search([('google_calendar_rtoken', '!=', False)])
+        users = self.env['res.users'].search([('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)])
         google = GoogleCalendarService(self.env['google.service'])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
@@ -114,3 +117,13 @@ class User(models.Model):
                 user.with_user(user).sudo()._sync_google_calendar(google)
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+
+    def stop_google_synchronization(self):
+        self.ensure_one()
+        self.sudo().google_synchronization_stopped = True
+
+    def restart_google_synchronization(self):
+        self.ensure_one()
+        self.sudo().google_synchronization_stopped = False
+        self.env['calendar.recurrence']._restart_google_sync()
+        self.env['calendar.event']._restart_google_sync()

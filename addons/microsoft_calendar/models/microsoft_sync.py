@@ -74,7 +74,7 @@ class MicrosoftSync(models.AbstractModel):
         if 'microsoft_id' in vals:
             self._from_microsoft_ids.clear_cache(self)
         synced_fields = self._get_microsoft_synced_fields()
-        if 'need_sync_m' not in vals and vals.keys() & synced_fields:
+        if 'need_sync_m' not in vals and vals.keys() & synced_fields and not self.env.user.microsoft_synchronization_stopped:
             fields_to_sync = [x for x in vals.keys() if x in synced_fields]
             if fields_to_sync:
                 vals['need_sync_m'] = True
@@ -95,6 +95,9 @@ class MicrosoftSync(models.AbstractModel):
     def create(self, vals_list):
         if any(vals.get('microsoft_id') for vals in vals_list):
             self._from_microsoft_ids.clear_cache(self)
+        if self.env.user.microsoft_synchronization_stopped:
+            for vals in vals_list:
+                vals.update({'need_sync_m': False})
         records = super().create(vals_list)
 
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
@@ -359,5 +362,12 @@ class MicrosoftSync(models.AbstractModel):
     def _get_microsoft_synced_fields(self):
         """Return a set of field names. Changing one of these fields
         marks the record to be re-synchronized.
+        """
+        raise NotImplementedError()
+
+    @api.model
+    def _restart_microsoft_sync(self):
+        """ Turns on the microsoft synchronization for all the events of
+        a given user.
         """
         raise NotImplementedError()
