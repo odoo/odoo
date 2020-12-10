@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tools import mute_logger, float_round
+from odoo.tools import mute_logger, float_round, float_is_zero
 from odoo.exceptions import UserError
 
 class TestStockFlow(TestStockCommon):
@@ -436,6 +436,7 @@ class TestStockFlow(TestStockCommon):
         #   gB ( 525.3 g )
         # ----------------------------------------------------------------------
 
+        PUM = self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')])
         picking_in_A = self.PickingObj.create({
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
@@ -523,8 +524,8 @@ class TestStockFlow(TestStockCommon):
         # Check quants and available quantity for product gB
         quants = self.StockQuantObj.search([('product_id', '=', self.gB.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 525.3, 'Expecting 525.3 gram , got %.4f gram on location stock!' % (sum(total_qty)))
-        self.assertEqual(self.gB.qty_available, 525.3, 'Wrong quantity available (%s found instead of 525.3' % (self.gB.qty_available))
+        self.assertTrue(float_is_zero(sum(total_qty) - 525.3, precision_rounding=PUM.digits), 'Expecting 525.3 gram , got %.4f gram on location stock!' % (sum(total_qty)))
+        self.assertTrue(float_is_zero(self.gB.qty_available - 525.3, precision_rounding=PUM.digits), 'Wrong quantity available (%s found instead of 525.3' % (self.gB.qty_available))
         # Check quants and available quantity for product kgB
         quants = self.StockQuantObj.search([('product_id', '=', self.kgB.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
@@ -965,7 +966,7 @@ class TestStockFlow(TestStockCommon):
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         # Check total quantity stock location.
-        self.assertEqual(sum(total_qty), 999.9995, 'Expecting 999.9995 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertTrue(float_is_zero(sum(total_qty) - 999.9995, precision_rounding=PUM.digits), 'Expecting 999.9995 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # ---------------------------------
         # Check Back order created or not.
@@ -990,7 +991,7 @@ class TestStockFlow(TestStockCommon):
         total_qty = [quant.quantity for quant in quants]
 
         # Check total quantity stock location.
-        self.assertEqual(sum(total_qty), 999.9990, 'Expecting 999.9990 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertTrue(float_is_zero(sum(total_qty) - 999.9990, precision_rounding=PUM.digits), 'Expecting 999.9990 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # Check Back order created or not.
         # ---------------------------------
@@ -1013,7 +1014,7 @@ class TestStockFlow(TestStockCommon):
         # Check total quantity stock location of product KG.
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 999.9985, 'Expecting 999.9985 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertTrue(float_is_zero(sum(total_qty) - 999.9985, precision_rounding=PUM.digits), 'Expecting 999.9985 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # Check Back order created or not.
         # ---------------------------------
@@ -1035,7 +1036,7 @@ class TestStockFlow(TestStockCommon):
         backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 999.9980, 'Expecting 999.9980 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertTrue(float_is_zero(sum(total_qty) - 999.9980, precision_rounding=PUM.digits), 'Expecting 999.9980 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # Check Back order created or not.
         # ---------------------------------
@@ -1056,7 +1057,7 @@ class TestStockFlow(TestStockCommon):
         wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertAlmostEqual(sum(total_qty), 999.9975, msg='Expecting 999.9975 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertTrue(float_is_zero(sum(total_qty) - 999.9975, precision_rounding=PUM.digits), msg='Expecting 999.9975 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
     def test_20_create_inventory_with_different_uom(self):
         """Create inventory with different unit of measure."""

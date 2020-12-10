@@ -4,6 +4,7 @@
 from psycopg2 import OperationalError, Error
 
 from odoo import api, fields, models, _
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -45,12 +46,12 @@ class StockQuant(models.Model):
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
-        readonly=True, required=True, oldname='qty')
+        readonly=True, required=True, oldname='qty', digits=dp.get_precision('Product Unit of Measure'))
     reserved_quantity = fields.Float(
         'Reserved Quantity',
         default=0.0,
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
-        readonly=True, required=True)
+        readonly=True, required=True, digits=dp.get_precision('Product Unit of Measure'))
     in_date = fields.Datetime('Incoming Date', readonly=True)
 
     def action_view_stock_moves(self):

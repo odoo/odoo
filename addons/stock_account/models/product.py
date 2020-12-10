@@ -115,7 +115,7 @@ class ProductProduct(models.Model):
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
     qty_at_date = fields.Float(
-        'Quantity', compute='_compute_stock_value')
+        'Quantity', compute='_compute_stock_value', digits=dp.get_precision('Product Unit of Measure'))
     stock_fifo_real_time_aml_ids = fields.Many2many(
         'account.move.line', compute='_compute_stock_value')
     stock_fifo_manual_move_ids = fields.Many2many(
