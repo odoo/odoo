@@ -492,7 +492,7 @@ function factory(dependencies) {
                         owl.utils.escape(channel.name)
                     ),
                     title: this.env._t("Invitation"),
-                    type: 'warning',
+                    type: 'info',
                 });
             }
             // a new thread with unread messages could have been added
@@ -691,7 +691,7 @@ function factory(dependencies) {
             this.env.services['notification'].notify({
                 message,
                 title: this.env._t("Unsubscribed"),
-                type: 'warning',
+                type: 'info',
             });
         }
 
@@ -706,7 +706,7 @@ function factory(dependencies) {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
             // then open a chat for the current user with the new user.
-            this.env.services['bus_service'].sendNotification(title, message);
+            this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
             const chat = await this.async(() =>
                 this.env.messaging.getChat({ partnerId: partner_id }
             ));
@@ -729,7 +729,7 @@ function factory(dependencies) {
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                const authorName = author.nameOrDisplayName;
+                const escapedAuthorName = owl.utils.escape(author.nameOrDisplayName);
                 if (channel.channel_type === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
@@ -742,15 +742,19 @@ function factory(dependencies) {
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
-                        owl.utils.escape(authorName),
+                        escapedAuthorName,
                         channelNameWithIcon
                     );
                 } else {
-                    notificationTitle = owl.utils.escape(authorName);
+                    notificationTitle = escapedAuthorName;
                 }
             }
             const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
-            this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
+            this.env.services['bus_service'].sendNotification({
+                message: notificationContent,
+                title: notificationTitle,
+                type: 'info',
+            });
             messaging.update({ outOfFocusUnreadMessageCounter: messaging.outOfFocusUnreadMessageCounter + 1 });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
                 ? this.env._t("%d Message")
