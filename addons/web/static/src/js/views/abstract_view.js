@@ -23,7 +23,7 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
-const ActionModel = require("web/static/src/js/views/action_model.js");
+const ActionModel = require("web.ActionModel");
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');

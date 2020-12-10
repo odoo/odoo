@@ -1,7 +1,7 @@
 odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", function (require) {
     "use strict";
 
-    const ActionModel = require("web/static/src/js/views/action_model.js");
+    const ActionModel = require("web.ActionModel");
     const Domain = require('web.Domain');
     const pyUtils = require('web.py_utils');
 

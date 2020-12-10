@@ -19,7 +19,7 @@ odoo.define('web.test_utils_create', function (require) {
     const DebugManager = require('web.DebugManager.Backend');
     const dom = require('web.dom');
     const makeTestEnvironment = require('web.test_env');
-    const ActionModel = require('web/static/src/js/views/action_model.js');
+    const ActionModel = require('web.ActionModel');
     const Registry = require('web.Registry');
     const testUtilsMock = require('web.test_utils_mock');
     const Widget = require('web.Widget');

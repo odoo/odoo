@@ -1,7 +1,7 @@
 odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.js", function (require) {
     "use strict";
 
-    const ActionModel = require("web/static/src/js/views/action_model.js");
+    const ActionModel = require("web.ActionModel");
     const makeTestEnvironment = require('web.test_env');
 
     function createModel(params = {}) {

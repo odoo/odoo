@@ -1,7 +1,7 @@
 odoo.define("web/static/src/js/views/search_panel_model_extension.js", function (require) {
     "use strict";
 
-    const ActionModel = require("web/static/src/js/views/action_model.js");
+    const ActionModel = require("web.ActionModel");
     const { sortBy } = require("web.utils");
     const Domain = require("web.Domain");
     const pyUtils = require("web.py_utils");
