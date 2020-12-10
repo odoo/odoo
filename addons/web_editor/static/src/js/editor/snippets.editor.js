@@ -2067,7 +2067,7 @@ var SnippetsMenu = Widget.extend({
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$snippetToInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                         const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
-                        colorCustomizedURL.searchParams.forEach((key, value) => {
+                        colorCustomizedURL.searchParams.forEach((value, key) => {
                             const match = key.match(/^c([1-5])$/);
                             if (match) {
                                 colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
