@@ -1702,6 +1702,8 @@ class MailThread(models.AbstractModel):
                     continue
                 if isinstance(content, str):
                     content = content.encode('utf-8')
+                elif isinstance(content, EmailMessage):
+                    content = content.as_bytes()
                 elif content is None:
                     continue
                 attachement_values= {
