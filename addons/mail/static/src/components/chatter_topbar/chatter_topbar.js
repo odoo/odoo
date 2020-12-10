@@ -99,8 +99,7 @@ class ChatterTopbar extends Component {
             action,
             options: {
                 on_close: () => {
-                    this.chatter.thread.refreshActivities();
-                    this.chatter.thread.refresh();
+                    this.trigger('reload', { keepChanges: true });
                 },
             },
         });
