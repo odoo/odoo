@@ -152,7 +152,7 @@
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
                     <attribute name="context">{'with_remaining_hours': True}</attribute>
                     <attribute name="attrs">
-                        {'invisible': ['|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False)]}
+                        {'invisible': ['|', '|', ('allow_billable', '=', False), '&amp;', ('bill_type', '=', 'customer_project'), ('pricing_type', '=', 'employee_rate'), ('partner_id', '=', False)]}
                     </attribute>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">
