@@ -598,34 +598,6 @@ class StockQuant(TransactionCase):
         # Removal strategy is LIFO, so lot1 should be received as it was received later.
         self.assertEqual(quants[0][0].lot_id.id, lot1.id)
 
-    def test_in_date_4b(self):
-        """ Check for LIFO and max with/without in_date that it handles the LIFO NULLS LAST well
-        """
-        stock_location1 = self.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'location_id': self.stock_location.id
-        })
-        stock_location2 = self.env['stock.location'].create({
-            'name': 'Shelf 2',
-            'location_id': self.stock_location.id
-        })
-        lifo_strategy = self.env['product.removal'].search([('method', '=', 'lifo')])
-        self.stock_location.removal_strategy_id = lifo_strategy
-
-        self.env['stock.quant'].create({
-            'product_id': self.product_serial.id,
-            'location_id': stock_location1.id,
-            'quantity': 1.0,
-        })
-
-        in_date_location2 = datetime.now()
-        self.env['stock.quant']._update_available_quantity(self.product_serial, stock_location2, 1.0, in_date=in_date_location2)
-
-        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
-
-        # Removal strategy is LIFO, so the one with date is the most recent one and should be selected
-        self.assertEqual(quants[0][0].location_id.id, stock_location2.id)
-
     def test_in_date_5(self):
         """ Receive the same lot at different times, once they're in the same location, the quants
         are merged and only the earliest incoming date is kept.
