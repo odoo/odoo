@@ -81,7 +81,7 @@ class CouponProgram(models.Model):
             untaxed_amount = order_amount['amount_untaxed'] - sum(line.price_subtotal for line in lines)
             tax_amount = order_amount['amount_tax'] - sum(line.price_tax for line in lines)
             program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
-            if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and program_amount <= untaxed_amount:
+            if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program_amount <= untaxed_amount:
                 program_ids.append(program.id)
 
         return self.browse(program_ids)
