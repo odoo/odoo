@@ -233,7 +233,7 @@ var LinkDialog = Dialog.extend({
             return;
         }
         const attrs = {
-            target: data.isNewWindow ? '_blank' : '',
+            target: '_blank',
             href: data.url && data.url.length ? data.url : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
