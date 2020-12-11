@@ -697,6 +697,7 @@
                     <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash"
                         attrs="{'invisible': [('activity_date_deadline_my', '=', False)]}"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
+                    <groupby name="stage_id" create="1"></groupby>
                 </tree>
             </field>
         </record>

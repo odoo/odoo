@@ -1833,10 +1833,14 @@ Possible children elements of the list view are:
   ``name``
       the name of a many2one field (on the current model). Custom header will be
       displayed when grouping the view on this field name.
+  ``create``
+      if set to "1", each group header will display ``+`` icon to add record, if
+      listview is editable then clicking ``+`` icon will add new record in group
+      top/bottom based on editable attribute else will open form view.
 
   .. code-block:: xml
 
-    <groupby name="partner_id">
+    <groupby name="partner_id" create="1">
       <field name="name"/> <!-- name of partner_id -->
         <button type="edit" name"edit" string="Edit/>
         <button type="object" name="my_method" string="Button1"

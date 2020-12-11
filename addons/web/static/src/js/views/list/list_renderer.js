@@ -65,6 +65,10 @@ var ListRenderer = BasicRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this._preprocessColumns();
+
+        // if addPlusIconInGroups is true, the renderer will add a '+' icon
+        // at the header of each group
+        this.addPlusIconInGroups = params.addPlusIconInGroups;
         this.columnInvisibleFields = params.columnInvisibleFields || {};
         this.rowDecorations = this._extractDecorationAttrs(this.arch);
         this.fieldDecorations = {};
@@ -765,6 +769,17 @@ var ListRenderer = BasicRenderer.extend({
             this._renderGroupPager(group, lastCell);
         }
         if (group.isOpen && this.groupbys[groupBy]) {
+            if (this.groupbys[groupBy].create && this.addPlusIconInGroups) {
+                const $createButton = dom.renderButton({
+                    icon: 'fa-plus',
+                    attrs: {
+                        class: 'o_list_group_create',
+                        title: _t('Create')
+                    }
+                });
+                $createButton.on("click", this._onGroupPlusClick.bind(this, group));
+                $th.append($createButton);
+            }
             var $buttons = this._renderGroupButtons(group, this.groupbys[groupBy]);
             if ($buttons.length) {
                 var $buttonSection = $('<div>', {
@@ -1239,6 +1254,17 @@ var ListRenderer = BasicRenderer.extend({
         if (ev.keyCode === $.ui.keyCode.ENTER) {
             ev.stopPropagation();
         }
+    },
+    /**
+     *
+     * @param {Object} list
+     * @param {jQueryEvent} ev
+     */
+    _onGroupPlusClick(list, ev) {
+        ev.stopPropagation();
+        this.trigger_up('add_group_record', {
+            groupId: list.id,
+        });
     },
     /**
      * When the user clicks on the checkbox in optional fields dropdown the

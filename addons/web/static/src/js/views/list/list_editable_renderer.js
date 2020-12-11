@@ -1056,9 +1056,11 @@ ListRenderer.include({
      * @override
      * @private
      */
-    _renderGroup: function (group) {
+    _renderGroup: function (group, groupLevel) {
         var result = this._super.apply(this, arguments);
-        if (!group.groupedBy.length && this.addCreateLineInGroups) {
+        const groupBy = this.state.groupedBy[groupLevel];
+        if (!group.groupedBy.length && this.addCreateLineInGroups &&
+            !(this.groupbys[groupBy] && this.groupbys[groupBy].create && this.addPlusIconInGroups)) {
             var $groupBody = result[0];
             var $a = $('<a href="#" role="button">')
                 .text(_t("Add a line"))
@@ -1428,6 +1430,24 @@ ListRenderer.include({
                 groupId: groupId,
             });
         });
+    },
+    /**
+     *
+     * @param {Object} list
+     * @param {jQueryEvent} ev
+     * @override
+     */
+    _onGroupPlusClick(list, ev) {
+        if (this.editable) {
+            ev.stopPropagation();
+            this.unselectRow().then(() => {
+                this.trigger_up('add_record', {
+                    groupId: list.id,
+                });
+            });
+        } else {
+            this._super(...arguments);
+        }
     },
     /**
      * This method is called when we click on the 'Add a line' button in a sub

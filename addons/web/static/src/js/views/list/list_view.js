@@ -47,7 +47,7 @@ var ListView = BasicView.extend({
         this.headerButtons = [];
         this.arch.children.forEach(function (child) {
             if (child.tag === 'groupby') {
-                self._extractGroup(child);
+                self._extractGroup(child, pyevalContext);
             }
             if (child.tag === 'header') {
                 self._extractHeaderButtons(child);
@@ -75,6 +75,7 @@ var ListView = BasicView.extend({
         this.rendererParams.selectedRecords = selectedRecords;
         this.rendererParams.addCreateLine = false;
         this.rendererParams.addCreateLineInGroups = editable && this.controllerParams.activeActions.create;
+        this.rendererParams.addPlusIconInGroups = !params.readonly && this.controllerParams.activeActions.create;
         this.rendererParams.isMultiEditable = this.arch.attrs.multi_edit && !!JSON.parse(this.arch.attrs.multi_edit);
 
         this.modelParams.groupbys = this.groupbys;
@@ -94,9 +95,10 @@ var ListView = BasicView.extend({
      * @private
      * @param {Object} node
      */
-    _extractGroup: function (node) {
+    _extractGroup: function (node, pyevalContext) {
         var innerView = this.fields[node.attrs.name].views.groupby;
         this.groupbys[node.attrs.name] = this._processFieldsView(innerView, 'groupby');
+        this.groupbys[node.attrs.name]['create'] = !!JSON.parse(pyUtils.py_eval(node.attrs.create || "0", { 'context': pyevalContext }));
     },
     /**
      * Extracts action buttons definitions from the <header> node of the list

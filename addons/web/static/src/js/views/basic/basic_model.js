@@ -697,6 +697,10 @@ var BasicModel = AbstractModel.extend({
         });
         return Promise.all(proms);
     },
+    getDefaultContext(listID) {
+        const list = this.localData[listID];
+        return this._getDefaultContext(list);
+    },
     /**
      * Returns the current display_name for the record.
      *

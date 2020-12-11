@@ -4930,6 +4930,313 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('groupby node with create attribute', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree>
+                    <field name="foo"/>
+                    <groupby name="currency_id" create="1"></groupby>
+                </tree>`,
+            archs: {
+                'foo,false,form': '<form string="Foo"><field name="display_name"/></form>',
+            },
+            groupBy: ['currency_id'],
+            intercepts: {
+                do_action: function (event) {
+                    assert.deepEqual(event.data.action.views, [[false, 'form']],
+                        "'do_action' event has been triggered to switch into form view");
+                },
+            },
+        });
+
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsNone(list, '.o_list_group_create', 0,
+            "there should be no plus icon in the group headers");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsOnce(list, '.o_list_group_create',
+            "there should be plus icon on opened group header");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0) .o_list_group_create'));
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with create attribute in editable top', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="top">
+                    <field name="foo"/>
+                    <field name="currency_id"/>
+                    <groupby name="currency_id" create="1"></groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsNone(list, '.o_group_field_row_add a',
+            "Add a line should not be available in of groupby has create attribute");
+        await testUtils.dom.click(list.$('.o_group_header:eq(0) .o_list_group_create'));
+        assert.hasClass(list.$('tbody:nth(1) tr:first'), 'o_selected_row',
+            "new data row should be created at top");
+        assert.strictEqual(list.$('tbody:nth(1) tr.o_selected_row .o_field_many2one .o_input').val(), "EUR",
+            "should have EUR value in currency_id field as per current group");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with create attribute in editable bottom', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom">
+                    <field name="foo"/>
+                    <groupby name="currency_id" create="1"></groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsNone(list, '.o_group_field_row_add a',
+            "Add a line should not be available in of groupby has create attribute");
+        await testUtils.dom.click(list.$('.o_group_header:eq(0) .o_list_group_create'));
+        assert.hasClass(list.$('tbody:nth(1) .o_data_row:last'), 'o_selected_row',
+            "new data row should be created at top");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with create attribute in editable list do not show Add a Line', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom">
+                <field name="foo"/>
+                <field name="m2o"/>
+                <groupby name="currency_id" create="1"></groupby>
+            </tree>`,
+            groupBy: ['currency_id'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsNone(list, '.o_group_field_row_add a',
+            "Add a line should not be available in of groupby has create attribute");
+        await list.update({ groupBy: ['m2o'] });
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsOnce(list, '.o_group_field_row_add a',
+            "Add a line should not be available in of groupby has create attribute");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with create attribute on list with create="0"', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree create="0">
+                    <field name="foo"/>
+                    <groupby name="currency_id" create="1"></groupby>
+                </tree>`,
+            groupBy: ['currency_id'],
+        });
+
+        assert.containsNone(list, '.o_list_group_create',
+            "there should be no plus icon in the header");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsNone(list, '.o_list_group_create',
+            "there should be no plus icon on opened group header if creation is disabled");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with a create attribute based on context', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+            `<tree>
+                <field name="foo"/>
+                <groupby name="m2o" create="1"/>
+                <groupby name="currency_id" create="context.get('group_create', True)"/>
+            </tree>`,
+            groupBy: ['m2o'],
+            viewOptions: {
+                context: { group_create: false },
+            },
+        });
+
+        assert.containsN(list, '.o_group_header', 2, "there should be 2 group headers");
+        assert.containsNone(list, '.o_list_group_create',
+            "there should be no plus icon in the closed group header");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsOnce(list, '.o_list_group_create',
+            "there should be plus icon on opened group header");
+
+        await list.update({ groupBy: ['currency_id'] });
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        assert.containsNone(list, '.o_list_group_create',
+            "there should be plus icon on as context passes group_create False");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with create attribute in non editable list view', async function (assert) {
+        assert.expect(9);
+
+        const actionManager = await createActionManager({
+            actions: [{
+                id: 11,
+                name: 'Partners Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list'], [false, 'form']],
+                search_view_id: [9, 'search'],
+                context: {
+                    group_by: ['m2o', 'currency_id']
+                },
+            }],
+            archs: {
+                'foo,3,list': `<tree>
+                        <field name="foo"/>
+                        <field name="m2o"/>
+                        <groupby name="currency_id" create="1"></groupby>
+                    </tree>`,
+
+                'foo,9,search': `<search>
+                        <filter string="Currency" name="currency" context="{'group_by': 'currency_id'}"/>
+                        <filter string="M2O" name="m2o" context="{'group_by': 'm2o'}"/>
+                    '</search>`,
+
+                'foo,false,form': `<form>
+                        <field name="display_name"/>
+                        <field name="currency_id"/>
+                        <field name="m2o"/>
+                    </form>`,
+            },
+            data: this.data,
+            intercepts: {
+                do_action: function (ev) {
+                    assert.deepEqual(ev.data.action.context, {default_currency_id: 2, default_m2o: 1, group_by: ["m2o", "currency_id"]},
+                        "proper context should be passed");
+                    actionManager.doAction(ev.data.action, {});
+                },
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        assert.containsN(actionManager, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsNone(actionManager, '.o_list_group_create', 0,
+            "there should be no plus icon in the group headers");
+
+        await testUtils.dom.click(actionManager.$('.o_group_header:eq(0)'));
+        assert.containsN(actionManager, '.o_group_header', 4,
+            "there should be 4 group headers");
+        assert.containsNone(actionManager, '.o_list_group_create', 0,
+            "there should be no plus icon in the sub group headers as it is not opened yet");
+
+        await testUtils.dom.click(actionManager.$('.o_group_header:eq(1)'));
+        assert.containsOnce(actionManager, '.o_list_group_create',
+            "there should be plus icon on opened group header");
+
+        await testUtils.dom.click(actionManager.$('.o_group_header:eq(1) .o_list_group_create'));
+        assert.containsOnce(actionManager, '.o_form_view', "should be in form view");
+        assert.strictEqual(actionManager.$(".o_field_widget[name='currency_id'] .o_input").val(), "EUR",
+            "Value in currency_id should be EUR, should passed from list group");
+        assert.strictEqual(actionManager.$(".o_field_widget[name='m2o'] .o_input").val(), "Value 1",
+            "Value in m2o should be Value 1, should passed from list group");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('groupby node with create attribute in dialog', async function (assert) {
+        assert.expect(5);
+
+        this.data.bar.fields.bar_m2o = {
+            string: "bar_m2o",
+            type: "many2one",
+            relation: "bar",
+            default: 1,
+        };
+
+        // create records to have the search more button
+        for (let i = 0; i < 8; i++) {
+            this.data.bar.records.push({ id: 5 + i, display_name: "Value " + (5 + i), bar_m2o: 2});
+        }
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+            `<tree editable="top">
+                <field name="m2o"/>
+                <field name="foo"/>
+                <groupby name="m2o" create="1"/>
+            </tree>`,
+            archs: {
+                'bar,false,list': `<tree>
+                        <field name="display_name"/>
+                        <groupby name="bar_m2o" create="1"></groupby>
+                    </tree>`,
+                'bar,false,search': `<search>
+                        <filter string="Bar" name="bar_m2o" context="{'group_by': 'bar_m2o'}"/>
+                    '</search>`,
+            },
+            groupBy: ['m2o'],
+        });
+
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsNone(list, '.o_list_group_create', 0,
+            "there should be no plus icon in the group headers");
+
+        await testUtils.dom.click(list.$('.o_group_header:eq(0)'));
+        await testUtils.dom.clickFirst(list.$('.o_data_cell'));
+        await testUtils.fields.many2one.clickOpenDropdown('m2o');
+        await testUtils.fields.many2one.clickItem('m2o', 'Search More...');
+        assert.containsOnce($('body'), '.modal-content');
+
+        // open group by dropdown
+        await testUtils.dom.click($('.modal .o_control_panel .o_cp_bottom_right button:contains(Group By)'));
+        // click on first groupby item
+        await testUtils.dom.click($('.modal .o_control_panel .o_group_by_menu a:first'));
+        assert.containsN($('.modal'), '.o_group_header', 2,
+            "there should be 2 group headers in modal");
+
+        await testUtils.dom.click($('.modal .o_group_header:eq(0)'));
+        assert.containsNone($('.modal'), '.o_list_group_create',
+            "there should be no plus icon");
+
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, without data', async function (assert) {
         assert.expect(12);
 

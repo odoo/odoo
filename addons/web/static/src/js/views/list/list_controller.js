@@ -31,6 +31,7 @@ var ListController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
+        add_group_record: '_onAddGroupRecord',
         button_clicked: '_onButtonClicked',
         group_edit_button_clicked: '_onEditGroupClicked',
         edit_line: '_onEditLine',
@@ -671,6 +672,22 @@ var ListController = BasicController.extend({
     _onActivateNextWidget: function (ev) {
         ev.stopPropagation();
         this.renderer.editFirstRecord(ev);
+    },
+    /**
+     *
+     * @param {OdooEvent} ev
+     */
+    async _onAddGroupRecord(ev) {
+        const state = this.model.get(this.handle);
+        const recordContext = state.getContext();
+        const defaultContext = this.model.getDefaultContext(ev.data.groupId);
+        Object.assign(recordContext, defaultContext);
+        this.do_action({
+            context: recordContext,
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+            res_model: this.modelName,
+        });
     },
     /**
      * Add a record to the list
