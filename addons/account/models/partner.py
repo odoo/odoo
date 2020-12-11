@@ -56,8 +56,19 @@ class AccountFiscalPosition(models.Model):
             return taxes
         result = self.env['account.tax']
         for tax in taxes:
+<<<<<<< HEAD
             taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax)
             result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
+=======
+            tax_count = 0
+            for t in self.tax_ids:
+                if t.tax_src_id.id == (tax._origin or tax).id:
+                    tax_count += 1
+                    if t.tax_dest_id:
+                        result |= t.tax_dest_id
+            if not tax_count:
+                result |= tax
+>>>>>>> b783991fbbf... temp
         return result
 
     def map_account(self, account):
