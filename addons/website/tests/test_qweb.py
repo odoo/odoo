@@ -3,7 +3,7 @@
 
 import re
 
-from odoo import tools
+from odoo import http, tools
 from odoo.addons.website.tools import MockRequest
 from odoo.modules.module import get_module_resource
 from odoo.tests.common import TransactionCase
@@ -138,15 +138,12 @@ class TestQwebProcessAtt(TransactionCase):
             self._test_att('/my-page', {'href': '/fr_FR/my-page'})
 
     def test_process_att_url_crap(self):
-        with MockRequest(self.env, website=self.website) as request:
+        with MockRequest(self.env, website=self.website):
+            match = http.root.get_db_router.return_value.bind.return_value.match
             # #{fragment} is stripped from URL when testing route
             self._test_att('/x#y?z', {'href': '/x#y?z'})
-            self.assertEqual(
-                request.httprequest.app._log_call[-1],
-                (('/x',), {'method': 'POST', 'query_args': None})
-            )
+            match.assert_called_with('/x', method='POST', query_args=None)
+
+            match.reset_calls()
             self._test_att('/x?y#z', {'href': '/x?y#z'})
-            self.assertEqual(
-                request.httprequest.app._log_call[-1],
-                (('/x',), {'method': 'POST', 'query_args': 'y'})
-            )
+            match.assert_called_with('/x', method='POST', query_args='y')
