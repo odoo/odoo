@@ -55,6 +55,7 @@ var CrashManagerDialog = Dialog.extend({
         this._super.apply(this, [parent, options]);
         this.message = error.message;
         this.traceback = error.traceback;
+        core.bus.off('close_dialogs', this);
     },
 });
 
