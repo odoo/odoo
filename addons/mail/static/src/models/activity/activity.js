@@ -43,7 +43,7 @@ function factory(dependencies) {
             if ('can_write' in data) {
                 data2.canWrite = data.can_write;
             }
-            if ('create_data' in data) {
+            if ('create_date' in data) {
                 data2.dateCreate = data.create_date;
             }
             if ('date_deadline' in data) {
