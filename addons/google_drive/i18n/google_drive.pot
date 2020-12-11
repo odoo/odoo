@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -133,11 +133,6 @@ msgid "Creating google drive may only be done by one at a time."
 msgstr ""
 
 #. module: google_drive
-#: model:ir.filters,name:google_drive.filter_partner
-msgid "Customer"
-msgstr ""
-
-#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__display_name
 msgid "Display Name"
@@ -192,6 +187,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__id
 msgid "ID"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
 msgstr ""
 
 #. module: google_drive
