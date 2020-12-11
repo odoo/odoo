@@ -18,6 +18,8 @@ class MailTemplate(models.Model):
     _description = 'Email Templates'
     _order = 'name'
 
+    _unrestricted_rendering = True
+
     @api.model
     def default_get(self, fields):
         res = super(MailTemplate, self).default_get(fields)

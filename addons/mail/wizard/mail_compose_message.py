@@ -167,6 +167,14 @@ class MailComposer(models.TransientModel):
         for fname, value in values.items():
             setattr(self, fname, value)
 
+    def _compute_can_edit_body(self):
+        """Can edit the body if we are not in "mass_mail" mode because the template is
+        rendered before it's modified.
+        """
+        non_mass_mail = self.filtered(lambda m: m.composition_mode != 'mass_mail')
+        non_mass_mail.can_edit_body = True
+        super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
+
     @api.model
     def get_record_data(self, values):
         """ Returns a defaults-like dict with initial values for the composition
