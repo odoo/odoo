@@ -11,4 +11,9 @@
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/product_product_time_product.png"/>
         </record>
     </data>
+    <data>
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('uom.group_uom'))]"/>
+        </record>
+    </data>
 </odoo>
