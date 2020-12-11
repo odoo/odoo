@@ -244,7 +244,8 @@ class Inventory(models.Model):
         locations_ids = [l['id'] for l in self.env['stock.location'].search_read(domain_loc, ['id'])]
 
         domain = [('company_id', '=', self.company_id.id),
-                  ('location_id', 'in', locations_ids)]
+                  ('location_id', 'in', locations_ids),
+                  ('product_id.type', '=', 'product')]
         if self.prefill_counted_quantity == 'zero':
             domain.append(('product_id.active', '=', True))
         if self.lot_ids:
@@ -397,7 +398,8 @@ class Inventory(models.Model):
         neg_quants = self.env['stock.quant'].search(expression.AND([
             [
                 ('quantity', '<', 0.0),
-                ('location_id.usage', 'in', ['internal', 'transit'])
+                ('location_id.usage', 'in', ['internal', 'transit']),
+                ('product_id.type', '=', 'product')
             ], company_domain]))
         company_ids = neg_quants.mapped('company_id')
         warehouse_ids = self.env['stock.warehouse'].search([('company_id', 'in', company_ids.ids)])

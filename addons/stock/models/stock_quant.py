@@ -147,6 +147,10 @@ class StockQuant(models.Model):
         """ Override to handle the "inventory mode" and create a quant as
         superuser the conditions are met.
         """
+        product = self.env['product.product'].browse(vals['product_id'])
+        # only produce quants for consumable products in packages so we can view them
+        if product.type == 'consu' and not vals['package_id']:
+            return self.env['stock.quant']
         if self._is_inventory_mode() and 'inventory_quantity' in vals:
             allowed_fields = self._get_inventory_fields_create()
             if any(field for field in vals.keys() if field not in allowed_fields):
@@ -154,7 +158,6 @@ class StockQuant(models.Model):
             inventory_quantity = vals.pop('inventory_quantity')
 
             # Create an empty quant or write on a similar one.
-            product = self.env['product.product'].browse(vals['product_id'])
             location = self.env['stock.location'].browse(vals['location_id'])
             lot_id = self.env['stock.production.lot'].browse(vals.get('lot_id'))
             package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
@@ -234,8 +237,8 @@ class StockQuant(models.Model):
 
     @api.constrains('product_id')
     def check_product_id(self):
-        if any(elem.product_id.type != 'product' for elem in self):
-            raise ValidationError(_('Quants cannot be created for consumables or services.'))
+        if any(elem.product_id.type != 'product' and not (elem.product_id.type == 'consu' and elem.package_id) for elem in self):
+            raise ValidationError(_('Quants cannot be created for services or consumables not in a package.'))
 
     @api.constrains('quantity')
     def check_quantity(self):
@@ -609,6 +612,10 @@ class StockQuant(models.Model):
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
         self._quant_tasks()
+        if domain:
+            domain = expression.AND([domain, [('product_id.type', '=', 'product')]])
+        else:
+            domain = [('product_id.type', '=', 'product')]
         ctx = dict(self.env.context or {})
         ctx.pop('group_by', None)
         action = {
@@ -618,7 +625,7 @@ class StockQuant(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': domain or [],
+            'domain': domain,
             'help': """
                 <p class="o_view_nocontent_empty_folder">No Stock On Hand</p>
                 <p>This analysis gives you an overview of the current stock

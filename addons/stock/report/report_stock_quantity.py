@@ -73,7 +73,10 @@ WITH forecast_qty AS (
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
+    LEFT JOIN product_product pp on pp.id=q.product_id
+    LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
+        pt.type = 'product' AND
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
         l.usage = 'transit'
     UNION

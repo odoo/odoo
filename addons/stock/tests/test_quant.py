@@ -163,8 +163,13 @@ class StockQuant(TransactionCase):
         """
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_consu, self.stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product_consu, self.stock_location)), 0)
-        with self.assertRaises(ValidationError):
-            self.env['stock.quant']._update_available_quantity(self.product_consu, self.stock_location, 1.0)
+        # consumable without package shouldn't have quants
+        self.env['stock.quant']._update_available_quantity(self.product_consu, self.stock_location, 1.0)
+        self.assertEqual(len(self.gather_relevant(self.product_consu, self.stock_location)), 0)
+        # consumable with package should have quants
+        package = self.env['stock.quant.package'].create({'name': 'consumable_pack'})
+        self.env['stock.quant']._update_available_quantity(self.product_consu, self.stock_location, 1.0, package_id=package)
+        self.assertEqual(len(self.gather_relevant(self.product_consu, self.stock_location)), 1)
 
     def test_get_available_quantity_9(self):
         """ Quantity availability by a demo user with access rights/rules.

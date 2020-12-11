@@ -28,7 +28,8 @@ class StockQuant(models.Model):
                 return
 
             if not quant.location_id._should_be_valued() or\
-                    (quant.owner_id and quant.owner_id != quant.company_id.partner_id):
+                    (quant.owner_id and quant.owner_id != quant.company_id.partner_id) or\
+                    quant.product_id.type != 'product':
                 quant.value = 0
                 continue
             if quant.product_id.cost_method == 'fifo':

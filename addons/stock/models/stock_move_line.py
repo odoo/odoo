@@ -321,7 +321,7 @@ class StockMoveLine(models.Model):
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
             next_moves = self.env['stock.move']
-            mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product')
+            mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type in ['product', 'consu'])
             if not updates:  # we can skip those where qty_done is already good up to UoM rounding
                 mls = mls.filtered(lambda ml: not float_is_zero(ml.qty_done - vals['qty_done'], precision_rounding=ml.product_uom_id.rounding))
             for ml in mls:
@@ -398,7 +398,7 @@ class StockMoveLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for ml in self:
             # Unlinking a move line should unreserve.
-            if ml.product_id.type == 'product' and not ml._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.product_qty, precision_digits=precision):
+            if not ml._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.product_qty, precision_digits=precision):
                 try:
                     self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                 except UserError:
@@ -492,7 +492,7 @@ class StockMoveLine(models.Model):
         # Now, we can actually move the quant.
         done_ml = self.env['stock.move.line']
         for ml in self - ml_to_delete:
-            if ml.product_id.type == 'product':
+            if ml.product_id.type in ['product', 'consu']:
                 rounding = ml.product_uom_id.rounding
 
                 # if this move line is force assigned, unreserve elsewhere if needed
@@ -501,7 +501,7 @@ class StockMoveLine(models.Model):
                     extra_qty = qty_done_product_uom - ml.product_qty
                     ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, ml_to_ignore=done_ml)
                 # unreserve what's been reserved
-                if not ml._should_bypass_reservation(ml.location_id) and ml.product_id.type == 'product' and ml.product_qty:
+                if not ml._should_bypass_reservation(ml.location_id) and ml.product_qty:
                     try:
                         Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     except UserError:
@@ -644,7 +644,8 @@ class StockMoveLine(models.Model):
 
     def _should_bypass_reservation(self, location):
         self.ensure_one()
-        return location.should_bypass_reservation() or self.product_id.type != 'product'
+        # consumables within a package have quants that need to be reserved/unreserved
+        return location.should_bypass_reservation() or (self.product_id.type != 'product' and not self.package_id)
 
     def _get_aggregated_product_quantities(self, **kwargs):
         """ Returns a dictionary of products (key = id+name+description+uom) and corresponding values of interest.
