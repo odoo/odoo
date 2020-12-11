@@ -480,7 +480,10 @@ class AccountPaymentRegister(models.TransientModel):
                 if payment.currency_id != lines.currency_id:
                     liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
                     source_balance = abs(sum(lines.mapped('amount_residual')))
-                    payment_rate = liquidity_lines[0].amount_currency / liquidity_lines[0].balance
+                    try:
+                      payment_rate = liquidity_lines[0].amount_currency / liquidity_lines[0].balance
+                    except ZeroDivisionError:
+                      continue
                     source_balance_converted = abs(source_balance) * payment_rate
 
                     # Translate the balance into the payment currency is order to be able to compare them.
