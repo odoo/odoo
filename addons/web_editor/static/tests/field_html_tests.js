@@ -128,12 +128,14 @@ QUnit.module('web_editor', {}, function () {
 
             await testUtils.form.clickEdit(form);
             await testUtils.nextTick();
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>toto toto toto</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
         });
         QUnit.test('check if required field is set', async function (assert) {
             assert.expect(1);
@@ -162,11 +164,12 @@ QUnit.module('web_editor', {}, function () {
 
             await testUtils.form.clickEdit(form);
             await testUtils.nextTick();
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
             await testUtils.dom.click(form.$('.o_form_button_save'));
 
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
         });
-
         QUnit.test('colorpicker', async function (assert) {
             assert.expect(5);
 
@@ -192,7 +195,7 @@ QUnit.module('web_editor', {}, function () {
             var $field = $('.oe_form_field[name="body"]');
             var pText = $field.find('.note-editable p').first().contents()[0];
 
-            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
 
             await testUtils.nextTick();
             // select the text
@@ -257,7 +260,57 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
             await wysiwyg.isEditorStoppedPromise;
         });
+        QUnit.test('save', async function (assert) {
+            assert.expect(1);
 
+            var form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === "write") {
+                        assert.strictEqual(args.args[1].body,
+                            '<p>t<span style="background-color:#00FFFF;">oto toto </span>toto</p><p>tata</p>',
+                            "should save the content");
+
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            var $field = form.$('.oe_form_field[name="body"]');
+
+            // select the text
+            var pText = $field.find('.note-editable p').first().contents()[0];
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
+            await Wysiwyg.setRange(wysiwyg, pText, 1, pText, 9);
+            // text is selected
+
+            async function openColorpicker() {
+                const $colorpickerButton = $('jw-toolbar jw-button[name=backgroundcolorpicker]');
+                await testUtils.dom.click($colorpickerButton);
+            }
+
+            await testUtils.nextTick();
+            await new Promise((resolve) => wysiwyg.execCommand(resolve));
+            await openColorpicker();
+
+            await testUtils.nextTick();
+            await new Promise((resolve) => wysiwyg.execCommand(resolve));
+            await testUtils.dom.click($('jw-toolbar .o_we_color_btn[style="background-color:#00FFFF;"]'));
+
+            await testUtils.nextTick();
+            await new Promise((resolve) => wysiwyg.execCommand(resolve));
+            await testUtils.form.clickSave(form);
+
+            await wysiwyg.isEditorStoppedPromise;
+            form.destroy();
+        });
         QUnit.test('media dialog: image', async function (assert) {
             assert.expect(1);
 
@@ -290,7 +343,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.nextTick();
             var $field = form.$('.oe_form_field[name="body"]');
-            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
 
 
             // the dialog load some xml assets
@@ -323,7 +376,6 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
             await wysiwyg.isEditorStoppedPromise;
         });
-
         QUnit.test('media dialog: icon', async function (assert) {
             assert.expect(1);
 
@@ -348,7 +400,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.nextTick();
             var $field = form.$('.oe_form_field[name="body"]');
-            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
 
             // the dialog load some xml assets
             var defMediaDialog = testUtils.makeTestPromise();
@@ -383,59 +435,6 @@ QUnit.module('web_editor', {}, function () {
             await wysiwyg.isEditorStoppedPromise;
         });
 
-        QUnit.test('save', async function (assert) {
-            assert.expect(1);
-
-            var form = await testUtils.createView({
-                View: FormView,
-                model: 'note.note',
-                data: this.data,
-                arch: '<form>' +
-                    '<field name="body" widget="html" style="height: 100px"/>' +
-                    '</form>',
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    if (args.method === "write") {
-                        assert.strictEqual(args.args[1].body,
-                            '<p>t<span style="background-color:#00FFFF;">oto toto </span>toto</p><p>tata</p>',
-                            "should save the content");
-
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
-            await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
-            var $field = form.$('.oe_form_field[name="body"]');
-
-            // select the text
-            var pText = $field.find('.note-editable p').first().contents()[0];
-            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg
-            await Wysiwyg.setRange(wysiwyg, pText, 1, pText, 9);
-            // text is selected
-
-            async function openColorpicker() {
-                const $colorpickerButton = $('jw-toolbar jw-button[name=backgroundcolorpicker]');
-                await testUtils.dom.click($colorpickerButton);
-            }
-
-            await testUtils.nextTick();
-            await new Promise((resolve) => wysiwyg.execCommand(resolve));
-            await openColorpicker();
-
-            await testUtils.nextTick();
-            await new Promise((resolve) => wysiwyg.execCommand(resolve));
-            await new Promise((resolve) => wysiwyg.execCommand(resolve));
-            await testUtils.dom.click($('jw-toolbar .o_we_color_btn[style="background-color:#00FFFF;"]'));
-
-            await testUtils.nextTick();
-            await new Promise((resolve) => wysiwyg.editor.execCommand(resolve));
-            await testUtils.form.clickSave(form);
-
-            await wysiwyg.isEditorStoppedPromise;
-            form.destroy();
-        });
-
         QUnit.module('cssReadonly');
 
         QUnit.test('rendering with iframe for readonly mode', async function (assert) {
@@ -457,6 +456,7 @@ QUnit.module('web_editor', {}, function () {
 
             await testUtils.form.clickEdit(form);
             await testUtils.nextTick();
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
 
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.find('.note-editable').html(),
@@ -464,6 +464,7 @@ QUnit.module('web_editor', {}, function () {
                 "should have rendered the field correctly in edit");
 
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
         });
 
         QUnit.module('translation');
@@ -502,12 +503,15 @@ QUnit.module('web_editor', {}, function () {
                 "should not have a translate button in readonly mode");
 
             await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            var wysiwyg = form.renderer.allFieldWidgets["note.note_1"][0].wysiwyg;
             var $button = form.$('.oe_form_field_html .o_field_translate');
             assert.strictEqual($button.length, 1, "should have a translate button");
             await testUtils.dom.click($button);
             assert.containsOnce($(document), '.o_translation_dialog', 'should have a modal to translate');
 
             form.destroy();
+            await wysiwyg.isEditorStoppedPromise;
             _t.database.multi_lang = multiLang;
         });
     });
