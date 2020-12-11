@@ -23,5 +23,9 @@ professional emails and reuse templates.</field>
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('mass_mailing.group_mass_mailing_user'))]"/>
         </record>
+
+        <record id="group_mass_mailing_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
     </data>
 </odoo>
