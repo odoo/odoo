@@ -167,6 +167,29 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 2)
 
+    def test_notification_has_error_filter(self):
+        """Ensure message_has_error filter is only returning threads for which
+        the current user is author of a failed message."""
+        message = self.test_record.with_user(self.user_admin).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.user_employee.partner_id.id]
+        )
+        self.assertFalse(message.has_error)
+        with self.mock_mail_gateway(sim_error='connect_smtp_notfound'):
+            self.user_admin.notification_type = 'email'
+            message2 = self.test_record.with_user(self.user_employee).message_post(
+                body='Test', message_type='comment', subtype_xmlid='mail.mt_comment',
+                partner_ids=[self.user_admin.partner_id.id]
+            )
+            self.assertTrue(message2.has_error)
+        # employee is author of message which has a failure
+        threads_employee = self.test_record.with_user(self.user_employee).search([('message_has_error', '=', True)])
+        self.assertEqual(len(threads_employee), 1)
+        # admin is also author of a message, but it doesn't have a failure
+        # and the failure from employee's message should not be taken into account for admin
+        threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
+        self.assertEqual(len(threads_admin), 0)
+
 
 @tagged('-at_install', 'post_install')
 class TestMultiCompany(HttpCase):
