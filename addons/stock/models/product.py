@@ -251,31 +251,24 @@ class Product(models.Model):
                 location_ids = _search_ids('stock.location', location)
             else:
                 location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
-
+        self._get_domain_locations_new(location_ids, compute_child=self.env.context.get('compute_child', True))
         return self._get_domain_locations_new(location_ids, compute_child=self.env.context.get('compute_child', True))
 
     def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):
-        operator = compute_child and 'child_of' or 'in'
         domain = company_id and ['&', ('company_id', '=', company_id)] or []
         locations = self.env['stock.location'].browse(location_ids)
-        # TDE FIXME: should move the support of child_of + auto_join directly in expression
-        hierarchical_locations = locations if operator == 'child_of' else locations.browse()
-        other_locations = locations - hierarchical_locations
         loc_domain = []
         dest_loc_domain = []
-        # this optimizes [('location_id', 'child_of', hierarchical_locations.ids)]
-        # by avoiding the ORM to search for children locations and injecting a
-        # lot of location ids into the main query
-        for location in hierarchical_locations:
-            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
-            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
-        if other_locations:
-            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
-            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
+        if compute_child:
+            child_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+                [('id', 'child_of', locations.ids)],
+                ['id'],
+            )]
+            loc_domain.append(('location_id', 'in', child_ids))
+            dest_loc_domain.append(('location_dest_id', 'in', child_ids))
+        else:
+            loc_domain.append(('location_id', 'in', locations.ids))
+            dest_loc_domain.append(('location_dest_id', 'in', locations.ids))
         return (
             domain + loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
