@@ -528,7 +528,8 @@ class Channel(models.Model):
         notifications = []
         for partner in self.env['res.partner'].browse(partner_ids):
             user_id = partner.user_ids and partner.user_ids[0] or False
-            if user_id:
+            # Send notifications to internal users
+            if user_id and user_id.has_group('base.group_user'):
                 for channel_info in self.sudo(user_id).channel_info():
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
