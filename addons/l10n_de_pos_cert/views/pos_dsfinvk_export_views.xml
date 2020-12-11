@@ -15,7 +15,7 @@
                         <button name="action_download_export" string="Download export" class="oe_highlight" type="object"
                                 attrs="{'invisible':[('state', '!=', 'completed')]} " icon="fa-download"
                         />
-                        <span class="text-warning mb4 mt16" attrs="{'invisible': ['|',('state','=',False),('state','=','completed')]}">
+                        <span class="text-warning mb4 mt16" attrs="{'invisible': ['|','|',('state','=',False),('state','=','completed'), ('state','=','pending')]}">
                             The export is not available, please create a new one.
                         </span>
                     </div>
