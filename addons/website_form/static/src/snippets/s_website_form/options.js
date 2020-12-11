@@ -466,7 +466,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
      * Changes the onSuccess event.
      */
     onSuccess: async function (previewMode, value, params) {
-        await params.withDomMutations(this.$target, async () => {
+        await params.withDomMutations(this.$target.parent(), async () => {
             this.$target[0].dataset.successMode = value;
             if (value === 'message') {
                 if (!this.$message.length) {
