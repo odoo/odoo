@@ -105,7 +105,7 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     # slides: promote, statistics
-    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories", context={'active_test': False})
+    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
     slide_content_ids = fields.One2many('slide.slide', string='Slides', compute="_compute_category_and_slide_ids")
     slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
