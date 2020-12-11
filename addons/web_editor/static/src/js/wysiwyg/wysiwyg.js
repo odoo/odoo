@@ -99,6 +99,21 @@ var Wysiwyg = Widget.extend({
                     {
                         selector: [
                             (node) => {
+                                return !node.closest(ancestor => {
+                                    return (
+                                        ancestor instanceof this.JWEditorLib.OdooStructureNode ||
+                                        ancestor instanceof this.JWEditorLib.OdooFieldNode
+                                    );
+                                });
+                            },
+                        ],
+                        properties: {
+                            editable: { value: false },
+                        },
+                    },
+                    {
+                        selector: [
+                            (node) => {
                                 const attributes = node.modifiers.find(this.JWEditorLib.Attributes);
                                 const isWrapper = attributes && attributes.classList.has('oe_structure') ;
                                 return isWrapper;
