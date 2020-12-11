@@ -618,6 +618,7 @@ class ProductProduct(models.Model):
             uom = self.env['uom.uom'].browse(self._context['uom'])
         if not currency and self._context.get('currency'):
             currency = self.env['res.currency'].browse(self._context['currency'])
+        template_prices = self._context.get('template_prices', {})
 
         products = self
         if price_type == 'standard_price':
@@ -628,7 +629,11 @@ class ProductProduct(models.Model):
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in products:
-            prices[product.id] = product[price_type] or 0.0
+            prices[product.id] = (
+                template_prices[product.id]
+                if price_type == 'list_price' and product.id in template_prices
+                else product[price_type] or 0.0
+            )
             if price_type == 'list_price':
                 prices[product.id] += product.price_extra
                 # we need to add the price from the attributes that do not generate variants

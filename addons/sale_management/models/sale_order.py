@@ -76,7 +76,8 @@ class SaleOrder(models.Model):
             if line.product_id:
                 discount = 0
                 if self.pricelist_id:
-                    price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                    template_prices = {line.product_id.id: line.price_unit} if line.price_unit != line.product_id.list_price else {}
+                    price = self.pricelist_id.with_context(uom=line.product_uom_id.id, template_prices=template_prices).get_product_price(line.product_id, 1, False)
                     if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
                         discount = (line.price_unit - price) / line.price_unit * 100
                         # negative discounts (= surcharge) are included in the display price
@@ -84,8 +85,6 @@ class SaleOrder(models.Model):
                             discount = 0
                         else:
                             price = line.price_unit
-                    elif line.price_unit:
-                        price = line.price_unit
 
                 else:
                     price = line.price_unit

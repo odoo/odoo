@@ -141,6 +141,7 @@ class Pricelist(models.Model):
             products_qty_partner = [(products[index], data_struct[1], data_struct[2]) for index, data_struct in enumerate(products_qty_partner)]
         else:
             products = [item[0] for item in products_qty_partner]
+        template_prices = self._context.get('template_prices', {})
 
         if not products:
             return {}
@@ -167,6 +168,8 @@ class Pricelist(models.Model):
 
         results = {}
         for product, qty, partner in products_qty_partner:
+            if product.id in template_prices:
+                product = product.with_context(template_prices={product.id: template_prices[product.id]})
             results[product.id] = 0.0
             suitable_rule = False
 
