@@ -431,8 +431,8 @@ class StockMove(models.Model):
                 [('id', 'child_of', warehouse.view_location_id.id)],
                 ['id'],
             )]
-            forecast_lines = self.env['report.stock.report_product_product_replenishment']\
-                ._get_report_lines(None, product_variant_ids, wh_location_ids)
+            ForecastedReport = self.env['report.stock.report_product_product_replenishment']
+            forecast_lines = ForecastedReport.with_context(warehouse=warehouse.id)._get_report_lines(None, product_variant_ids, wh_location_ids)
             for move in moves:
                 lines = [l for l in forecast_lines if l["move_out"] == move._origin and l["replenishment_filled"] is True]
                 if lines:
