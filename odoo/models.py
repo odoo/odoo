@@ -3116,7 +3116,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     def _filter_access_rules(self, operation):
         """ Return the subset of ``self`` for which ``operation`` is allowed. """
-        if self._uid == SUPERUSER_ID:
+        if not self.ids or self._uid == SUPERUSER_ID:
             return self
 
         if self.is_transient():
