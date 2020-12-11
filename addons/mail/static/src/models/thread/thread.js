@@ -1744,6 +1744,13 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * Determines whether the add attachment file explorer should be opened
+         * automatically at next render of an attachment box for this thread.
+         */
+        isDoAddAttachment: attr({
+            default: false,
+        }),
+        /**
          * States whether `this` is currently loading attachments.
          */
         isLoadingAttachments: attr({

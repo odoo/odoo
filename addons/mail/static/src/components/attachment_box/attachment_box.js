@@ -8,6 +8,7 @@ const components = {
 };
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -23,11 +24,27 @@ class AttachmentBox extends Component {
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             return {
-                attachments: thread
-                    ? thread.allAttachments.map(attachment => attachment.__state)
-                    : [],
-                thread: thread ? thread.__state : undefined,
+                thread,
+                threadAllAttachments: thread ? thread.allAttachments : [],
+                threadId: thread && thread.id,
+                threadIsDoAddAttachment: thread && thread.isDoAddAttachment,
+                threadModel: thread && thread.model,
             };
+        }, {
+            compareDepth: {
+                threadAllAttachments: 1,
+            },
+        });
+        useUpdate({
+            func: () => {
+                if (!this.thread) {
+                    return;
+                }
+                if (this.thread.isDoAddAttachment && this._fileUploaderRef.comp) {
+                    this.thread.update({ isDoAddAttachment: false });
+                    this._fileUploaderRef.comp.openBrowserFileUploader();
+                }
+            }
         });
         /**
          * Reference of the file uploader.

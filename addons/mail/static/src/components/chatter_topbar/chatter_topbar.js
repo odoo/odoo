@@ -40,6 +40,23 @@ class ChatterTopbar extends Component {
         return this.env.models['mail.chatter'].get(this.props.chatterLocalId);
     }
 
+    /**
+     * @returns {string}
+     */
+    getAttachmentButtonText() {
+        if (
+            !this.chatter ||
+            !this.chatter.thread ||
+            this.chatter.thread.allAttachments.length === 0
+        ) {
+            return this.env._t("0 Attachment");
+        }
+        if (this.chatter.thread.allAttachments.length === 1) {
+            return this.env._t("1 Attachment");
+        }
+        return _.str.sprintf(this.env._t("%s Attachments"), this.chatter.thread.allAttachments.length);
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -49,6 +66,9 @@ class ChatterTopbar extends Component {
      * @param {MouseEvent} ev
      */
     _onClickAttachments(ev) {
+        if (!this.chatter.isAttachmentBoxVisible && this.chatter.thread.allAttachments.length === 0) {
+            this.chatter.thread.update({ isDoAddAttachment: true });
+        }
         this.chatter.update({
             isAttachmentBoxVisible: !this.chatter.isAttachmentBoxVisible,
         });

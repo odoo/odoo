@@ -136,8 +136,8 @@ QUnit.test('base disabled rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '0',
-        "attachments button counter should be 0"
+        '0 Attachment',
+        "attachments button counter should be '0 Attachment'"
     );
 });
 
@@ -285,7 +285,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 });
 
 QUnit.test('attachment counter without attachments', async function (assert) {
-    assert.expect(4);
+    assert.expect(1);
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
@@ -294,31 +294,40 @@ QUnit.test('attachment counter without attachments', async function (assert) {
         threadModel: 'res.partner',
     });
     await this.createChatterTopbarComponent(chatter);
-
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar`).length,
-        1,
-        "should have a chatter topbar"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
-        1,
-        "should have an attachments button in chatter menu"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCount`).length,
-        1,
-        "attachments button should have a counter"
-    );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '0',
-        'attachment counter should contain "0"'
+        '0 Attachment',
+        'attachment counter should contain "0 Attachment"'
     );
 });
 
-QUnit.test('attachment counter with attachments', async function (assert) {
-    assert.expect(4);
+QUnit.test('attachment counter with one attachment', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['ir.attachment'].records.push(
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+    );
+    await this.start();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterTopbarComponent(chatter);
+    assert.strictEqual(
+        document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
+        '1 Attachment',
+        'attachment counter should contain "1 Attachment"'
+    );
+});
+
+QUnit.test('attachment counter with multiple attachments', async function (assert) {
+    assert.expect(1);
 
     this.data['res.partner'].records.push({ id: 100 });
     this.data['ir.attachment'].records.push(
@@ -341,26 +350,10 @@ QUnit.test('attachment counter with attachments', async function (assert) {
         threadModel: 'res.partner',
     });
     await this.createChatterTopbarComponent(chatter);
-
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar`).length,
-        1,
-        "should have a chatter topbar"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
-        1,
-        "should have an attachments button in chatter menu"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCount`).length,
-        1,
-        "attachments button should have a counter"
-    );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '2',
-        'attachment counter should contain "2"'
+        '2 Attachments',
+        'attachment counter should contain "2 Attachments"'
     );
 });
 
