@@ -24023,6 +24023,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
     class OdooWebsiteEditor extends JWEditor {
         constructor(options) {
             super();
+            if (typeof options.wrapMain === 'undefined') {
+                options.wrapMain = true;
+            }
             class CustomPlugin extends JWPlugin {
                 constructor() {
                     super(...arguments);
@@ -24152,14 +24155,23 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     {
                         id: 'main',
                         render: async () => {
-                            const div = new DividerNode();
-                            div.modifiers.get(Attributes).set('contentEditable', 'true');
-                            div.modifiers.get(Attributes).classList.add('note-editable', 'o_editable');
-                            div.modifiers.get(Attributes).style.set('width', '100%');
-                            const zone = new ZoneNode({ managedZones: ['editable'] });
-                            zone.editable = true;
-                            div.append(zone);
-                            return [div];
+                            if (options.wrapMain) {
+                                const div = new DividerNode();
+                                div.modifiers.get(Attributes).set('contentEditable', 'true');
+                                div.modifiers
+                                    .get(Attributes)
+                                    .classList.add('note-editable', 'o_editable');
+                                div.modifiers.get(Attributes).style.set('width', '100%');
+                                const zone = new ZoneNode({ managedZones: ['editable'] });
+                                zone.editable = true;
+                                div.append(zone);
+                                return [div];
+                            }
+                            else {
+                                const zone = new ZoneNode({ managedZones: ['editable'] });
+                                zone.editable = true;
+                                return [zone];
+                            }
                         },
                     },
                     {
