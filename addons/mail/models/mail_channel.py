@@ -107,6 +107,7 @@ class Channel(models.Model):
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
+    is_channel_admin = fields.Boolean('Is the admin', compute='_compute_is_channel_admin')
     # access
     public = fields.Selection([
         ('public', 'Everyone'),
@@ -200,6 +201,11 @@ class Channel(models.Model):
             record.is_member = record in membership_ids
 
     @api.multi
+    def _compute_is_channel_admin(self):
+        for record in self:
+            record.is_channel_admin = not record.is_chat and record.create_uid == self.env.user
+
+    @api.multi
     def _compute_is_chat(self):
         for record in self:
             if record.channel_type == 'chat':
@@ -280,6 +286,15 @@ class Channel(models.Model):
             if not self.env.user.has_group('base.group_system'):
                 raise UserError(_("You do not have the rights to modify fields related to moderation on one of the channels you are modifying."))
 
+        # If users tries to remove themselves from 'Members' of a private channel, read access will be revoked
+        # immediately and they won't be able to save the changes due to ACL warning. In this case, simply ask
+        # them to leave the channel from the header button.
+        if len(self) == 1 and self.public == 'private' and vals.get('channel_last_seen_partner_ids'):
+            parter_ids_to_remove = [rec[1] for rec in vals.get('channel_last_seen_partner_ids') if rec[0] == 2]
+            if self.channel_last_seen_partner_ids.filtered(lambda r: r.id in parter_ids_to_remove and r.partner_id == self.env.user.partner_id):
+                raise UserError(_('You are trying to leave the channel that you are currently viewing. '\
+                    'Discard the changes and click on the "Leave Channel" button to unsubscribe.'))
+
         tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
 
@@ -314,6 +329,16 @@ class Channel(models.Model):
     @api.multi
     def action_unfollow(self):
         return self._action_unfollow(self.env.user.partner_id)
+
+    @api.multi
+    def action_unfollow_reload(self):
+        """ Unsubscribe logged in user and redirect to 'Discuss' """
+        self.ensure_one()
+        self._action_unfollow(self.env.user.partner_id)
+        discuss_action = self.env.ref('mail.action_discuss').read()[0]
+        # clear the breadcrumb
+        discuss_action['target'] = 'main'
+        return discuss_action
 
     @api.multi
     def _action_unfollow(self, partner):

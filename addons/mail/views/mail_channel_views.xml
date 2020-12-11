@@ -84,8 +84,17 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
+                    <field name="is_member" invisible="1"/>
+                    <field name="is_channel_admin" invisible="1"/>
                     <header>
                         <button name="send_guidelines" type="object" string="Send guidelines" confirm="You are going to send the guidelines to all the subscribers. Do you confirm the action?" attrs="{'invisible':['|',('moderation_guidelines','=',False), ('is_moderator', '=', False)]}"/>
+                        <button name="action_unfollow_reload" string="Leave channel"
+                            type="object" class="oe_read_only"
+                            confirm="You are the administrator of this channel. Are you sure you want to unsubscribe?"
+                            attrs="{'invisible': ['|', ('is_member', '=', False), '&amp;', ('is_member', '=', True), ('is_channel_admin', '=', False)]}"/>
+                        <button name="action_unfollow_reload" string="Leave channel"
+                            type="object" class="oe_read_only"
+                            attrs="{'invisible': ['|', ('is_member', '=', False), '&amp;', ('is_member', '=', True), ('is_channel_admin', '=', True)]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
