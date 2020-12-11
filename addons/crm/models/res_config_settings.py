@@ -59,9 +59,14 @@ class ResConfigSettings(models.TransientModel):
                 setting.predictive_lead_scoring_start_date_str = fields.Date.to_string(setting.predictive_lead_scoring_start_date)
 
     def set_values(self):
+        group_lead_before = self.env.ref('crm.group_use_lead') in self.env.user.groups_id
         super(ResConfigSettings, self).set_values()
-        for team in self.env['crm.team'].search([]):
-            team.alias_id.write(team._alias_get_creation_values())
+        group_lead_after = self.env.ref('crm.group_use_lead') in self.env.user.groups_id
+        if group_lead_before != group_lead_after:
+            teams = self.env['crm.team'].search([])
+            teams.filtered('use_opportunities').use_leads = group_lead_after
+            for team in teams:
+                team.alias_id.write(team._alias_get_creation_values())
 
     # ACTIONS
     def action_reset_lead_probabilities(self):
