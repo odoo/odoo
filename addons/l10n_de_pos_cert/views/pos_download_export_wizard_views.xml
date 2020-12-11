@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="download_export_wizard_view" model="ir.ui.view">
+        <field name="name">pos.download_export_wizard.form.view</field>
+        <field name="model">pos.download_dsfinvk_export_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export download">
+                <group cols="2">
+                    <div>
+                        <field name="file_name" invisible="1"/>
+                        <span>The export has been successfully generated: </span>
+                        <field name="file" filename="file_name" nolabel="1"/>
+                    </div>
+                </group>
+                <footer>
+                    <button special="cancel" string="Close" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

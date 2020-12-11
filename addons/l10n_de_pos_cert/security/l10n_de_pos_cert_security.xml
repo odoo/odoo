@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_dsfinvk_export" model="ir.rule">
+        <field name="name">dsfinvk_export_no_update</field>
+        <field name="model_id" ref="model_pos_dsfinvk_export"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="1" name="perm_create"/>
+        <field name="domain_force">[('fiskaly_export_uuid','!=',False)]</field>
+    </record>
+</odoo>

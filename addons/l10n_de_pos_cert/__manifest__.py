@@ -24,8 +24,11 @@
 
     'data': [
         'data/ir_config_param.xml',
+        'security/ir.model.access.csv',
         'views/l10n_de_pos_cert_templates.xml',
         'views/pos_config_views.xml',
+        'views/pos_download_export_wizard_views.xml',
+        'views/pos_dsfinvk_export_views.xml',
         'views/pos_order_views.xml',
         'views/res_company_views.xml',
     ],
