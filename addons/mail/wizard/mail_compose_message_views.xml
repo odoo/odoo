@@ -68,7 +68,8 @@
                             attrs="{'invisible':['|', ('reply_to_mode', '=', 'update'), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('reply_to_mode', '!=', 'update'), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
-                    <field name="body" options="{'style-inline': true}"/>
+                    <field name="can_edit_body" invisible="1"/>
+                    <field name="body" options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
                     <group col="4">
                         <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                         <field name="template_id" options="{'no_create': True}"
@@ -78,8 +79,7 @@
                         <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="action_send_mail" type="object" class="btn-primary o_mail_send" data-hotkey="q"/>
                         <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
-
-                        <button icon="fa-lg fa-save" type="object"
+                        <button icon="fa-lg fa-save" type="object" groups="mail.group_mail_template_editor"
                                 name="action_save_as_template" string="Save as new template"
                                 class="float-right btn-secondary" help="Save as a new template"/>
                     </footer>

@@ -10,6 +10,8 @@ class SMSTemplate(models.Model):
     _inherit = ['mail.render.mixin']
     _description = 'SMS Templates'
 
+    _unrestricted_rendering = True
+
     @api.model
     def default_get(self, fields):
         res = super(SMSTemplate, self).default_get(fields)

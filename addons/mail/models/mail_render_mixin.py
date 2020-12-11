@@ -3,18 +3,17 @@
 
 import babel
 import copy
-import functools
 import logging
 import re
 
-import dateutil.relativedelta as relativedelta
 from lxml import html
 from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.tools import is_html_empty, safe_eval
+from odoo.tools.jinja import jinja_safe_template_env, jinja_template_env, template_env_globals
 
 _logger = logging.getLogger(__name__)
 
@@ -38,60 +37,14 @@ def format_time(env, time, tz=False, time_format='medium', lang_code=False):
     except babel.core.UnknownLocaleError:
         return time
 
-def relativedelta_proxy(*args, **kwargs):
-    # dateutil.relativedelta is an old-style class and cannot be directly
-    # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
-    # is needed, apparently
-    return relativedelta.relativedelta(*args, **kwargs)
-
-template_env_globals = {
-    'str': str,
-    'quote': urls.url_quote,
-    'urlencode': urls.url_encode,
-    'datetime': safe_eval.datetime,
-    'len': len,
-    'abs': abs,
-    'min': min,
-    'max': max,
-    'sum': sum,
-    'filter': filter,
-    'reduce': functools.reduce,
-    'map': map,
-    'relativedelta': relativedelta_proxy,
-    'round': round,
-}
-
-try:
-    # We use a jinja2 sandboxed environment to render mako templates.
-    # Note that the rendering does not cover all the mako syntax, in particular
-    # arbitrary Python statements are not accepted, and not all expressions are
-    # allowed: only "public" attributes (not starting with '_') of objects may
-    # be accessed.
-    # This is done on purpose: it prevents incidental or malicious execution of
-    # Python code that may break the security of the server.
-    from jinja2.sandbox import SandboxedEnvironment
-    jinja_template_env = SandboxedEnvironment(
-        block_start_string="<%",
-        block_end_string="%>",
-        variable_start_string="${",
-        variable_end_string="}",
-        comment_start_string="<%doc>",
-        comment_end_string="</%doc>",
-        line_statement_prefix="%",
-        line_comment_prefix="##",
-        trim_blocks=True,               # do not output newline after blocks
-        autoescape=True,                # XML/HTML automatic escaping
-    )
-    jinja_template_env.globals.update(template_env_globals)
-    jinja_safe_template_env = copy.copy(jinja_template_env)
-    jinja_safe_template_env.autoescape = False
-except ImportError:
-    _logger.warning("jinja2 not available, templating features will not work!")
-
 
 class MailRenderMixin(models.AbstractModel):
     _name = 'mail.render.mixin'
     _description = 'Mail Render Mixin'
+
+    # If True, we trust the value on the model for rendering
+    # If False, we need the group "Template Editor" to render the model fields
+    _unrestricted_rendering = False
 
     # language for rendering
     lang = fields.Char(
@@ -420,6 +373,19 @@ class MailRenderMixin(models.AbstractModel):
         except Exception:
             _logger.info("Failed to load template %r", template_txt, exc_info=True)
             return results
+
+        if (not self._unrestricted_rendering and template.is_dynamic and not self.env.is_admin() and
+           not self.env.user.has_group('mail.group_mail_template_editor')):
+            group = self.env.ref('mail.group_mail_template_editor')
+            raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+
+        if not template.is_dynamic:
+            # Either the content is a raw text without placeholders, either we fail to
+            # detect placeholders code. In both case we skip the rendering and return
+            # the raw content, so even if we failed to detect dynamic code,
+            # non "mail_template_editor" users will not gain rendering tools available
+            # only for template specific group users
+            return {record_id: template_txt for record_id in res_ids}
 
         # prepare template variables
         variables = self._render_jinja_eval_context()

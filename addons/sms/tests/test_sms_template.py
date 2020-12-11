@@ -14,7 +14,7 @@ class TestSmsTemplateAccessRights(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_admin = mail_new_test_user(cls.env, login='user_system', groups='base.group_system')
+        cls.user_admin = mail_new_test_user(cls.env, login='user_system', groups='base.group_user,base.group_system')
         cls.basic_user = mail_new_test_user(cls.env, login='user_employee', groups='base.group_user')
         sms_enabled_models = cls.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
         vals = []
@@ -25,6 +25,13 @@ class TestSmsTemplateAccessRights(TransactionCase):
                 'model_id': model.id,
             })
         cls.sms_templates = cls.env['sms.template'].create(vals)
+
+        cls.sms_dynamic_template = cls.env['sms.template'].sudo().create({
+            'body': '${object.name}',
+            'model_id': cls.env['ir.model'].sudo().search([('model', '=', 'res.partner')]).id,
+        })
+
+        cls.partner = cls.env['res.partner'].create({'name': 'Test Partner'})
 
     @users('user_employee')
     @mute_logger('odoo.models.unlink')
@@ -61,3 +68,41 @@ class TestSmsTemplateAccessRights(TransactionCase):
             self.assertTrue(bool(self.env['sms.template'].with_user(admin).browse(sms_template.ids).name))
 
             sms_template.unlink()
+
+    @users('user_employee')
+    def test_sms_template_rendering_restricted(self):
+        self.env['ir.config_parameter'].sudo().set_param('mail.restrict.template.rendering', True)
+        self.basic_user.groups_id -= self.env.ref('mail.group_mail_template_editor')
+
+        sms_composer = self.env['sms.composer'].create({
+            'composition_mode': 'comment',
+            'template_id': self.sms_dynamic_template.id,
+            'res_id': self.partner.id,
+            'res_model': 'res.partner',
+        })
+
+        self.assertEqual(sms_composer.body, self.partner.name, 'Simple user should be able to render SMS template')
+
+        sms_composer.composition_mode = 'mass'
+        self.assertEqual(sms_composer.body, '${object.name}', 'In mass mode, we should not render the template')
+
+        body = sms_composer._prepare_body_values(self.partner)[self.partner.id]
+        self.assertEqual(body, self.partner.name, 'In mass mode, if the user did not change the body, he should be able to render it')
+
+        sms_composer.body = 'New body: ${4 + 9}'
+        with self.assertRaises(AccessError, msg='User should not be able to write new Jinja code'):
+            sms_composer._prepare_body_values(self.partner)
+
+    @users('user_system')
+    def test_sms_template_rendering_unrestricted(self):
+        self.env['ir.config_parameter'].sudo().set_param('mail.restrict.template.rendering', True)
+
+        sms_composer = self.env['sms.composer'].create({
+            'composition_mode': 'comment',
+            'template_id': self.sms_dynamic_template.id,
+            'res_id': self.partner.id,
+            'res_model': 'res.partner',
+        })
+
+        body = sms_composer._prepare_body_values(self.partner)[self.partner.id]
+        self.assertIn(self.partner.name, body, 'Template Editor should be able to write new Jinja code')

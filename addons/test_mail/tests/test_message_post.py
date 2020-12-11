@@ -405,3 +405,30 @@ class TestMessagePost(TestMailCommon, TestRecipients):
                 subject='About %s' % test_record.name,
                 body_content=test_record.name,
                 attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_post_w_template_mass_mode(self):
+        test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        self.user_employee.write({
+            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+        })
+
+        self._create_template('mail.test.simple', {
+            'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
+            'email_to': 'test@example.com',
+            'email_cc': self.partner_1.email,
+            # After the HTML sanitizer, it will become "<p>Body for: ${object.name}<a href="">link</a></p>"
+            'body_html': 'Body for: ${object.name}<script>test</script><a href="javascript:alert(1)">link</a>',
+        })
+
+        with self.mock_mail_gateway():
+            test_record.with_user(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='mass_mail')
+
+        new_partner = self.env['res.partner'].search([('email', '=', 'test@example.com')])
+
+        self.assertSentEmail(
+            self.user_employee.partner_id,
+            [new_partner],
+            subject='About %s' % test_record.name,
+            body_content=test_record.name,
+            attachments=[])

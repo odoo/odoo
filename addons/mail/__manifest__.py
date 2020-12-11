@@ -10,6 +10,7 @@
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
+        'data/mail_groups.xml',
         'wizard/mail_blacklist_remove_views.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mail_resend_cancel_views.xml',

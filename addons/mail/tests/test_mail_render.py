@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests import common
+from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 
 
@@ -37,7 +38,17 @@ class TestMailRender(common.MailCommon):
 % else
     <span>Other Speaker</span>
 % endif
-</p>"""
+</p>""",
+            """
+            <p>${13 + 13}</p>
+            <h1>This is a test</h1>
+            """,
+            """
+            <b>Test</b>
+            % if False:
+                <b>Code not executed</b>
+            % endif
+            """,
         ]
         cls.base_jinja_bits_fr = [
             '<p>Bonjour</p>',
@@ -126,6 +137,20 @@ class TestMailRender(common.MailCommon):
             'res_id': cls.test_template_jinja.id,
         })
 
+        # Enable group-based template management
+        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+
+        # User without the group "mail.group_mail_template_editor"
+        cls.user_rendering_restricted = common.mail_new_test_user(
+            cls.env, login='user_rendering_restricted',
+            groups='base.group_user',
+            company_id=cls.company_admin.id,
+            name='Jinja Restricted User',
+            notification_type='inbox',
+            signature='--\nErnest'
+        )
+        cls.user_rendering_restricted.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+
     @users('employee')
     def test_evaluation_context(self):
         """ Test evaluation context and various ways of tweaking it. """
@@ -210,12 +235,16 @@ class TestMailRender(common.MailCommon):
         )[partner.id]
         self.assertIn(expected, result)
 
-    @users('employee')
+    @users('user_rendering_restricted')
     def test_template_rendering_function_call(self):
         """Test the case when the template call a custom function.
+
         This function should not be called when the template is not rendered.
         """
-        partner = self.env['res.partner'].browse(self.render_object.ids)
+        model = 'res.partner'
+        res_ids = self.env[model].search([], limit=1).ids
+        partner = self.env[model].browse(res_ids)
+        MailRenderMixin = self.env['mail.render.mixin']
 
         def cust_function():
             # Can not use "MagicMock" in a Jinja sand-boxed environment
@@ -231,12 +260,39 @@ class TestMailRender(common.MailCommon):
 <p>return value</p>"""
         context = {'cust_function': cust_function}
 
-        result = self.env['mail.render.mixin']._render_template_jinja(
+        result = self.env['mail.render.mixin'].with_user(self.user_admin)._render_template_jinja(
             src, partner._name, partner.ids,
             add_context=context
         )[partner.id]
         self.assertEqual(expected, result)
         self.assertTrue(cust_function.call)
+
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render Jinja code'):
+            MailRenderMixin._render_template_jinja(src, model, res_ids, add_context=context)
+
+    @users('user_rendering_restricted')
+    def test_template_render_static(self):
+        """Test that we render correctly static templates (without placeholders)."""
+        model = 'res.partner'
+        res_ids = self.env[model].search([], limit=1).ids
+        MailRenderMixin = self.env['mail.render.mixin']
+
+        result = MailRenderMixin._render_template_jinja(self.base_jinja_bits[0], model, res_ids)[res_ids[0]]
+        self.assertEqual(result, self.base_jinja_bits[0])
+
+    @users('user_rendering_restricted')
+    def test_template_rendering_restricted(self):
+        """Test if we correctly detect static template."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render Jinja code'):
+            self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[3], 'res.partner', res_ids)
+
+    @users('employee')
+    def test_template_rendering_unrestricted(self):
+        """Test if we correctly detect static template."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+        result = self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[3], 'res.partner', res_ids)[res_ids[0]]
+        self.assertIn('26', result, 'Template Editor should be able to render Jinja code')
 
     @users('employee')
     def test_template_rendering_various(self):
@@ -319,3 +375,17 @@ class TestMailRender(common.MailCommon):
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
             self.assertEqual(result, expected)
+
+    @users('user_rendering_restricted')
+    def test_is_jinja_template_condition_block_restricted(self):
+        """Test if we correctly detect condition block (which might contains code)."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render Jinja code'):
+            self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[4], 'res.partner', res_ids)
+
+    @users('employee')
+    def test_is_jinja_template_condition_block_unrestricted(self):
+        """Test if we correctly detect condition block (which might contains code)."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+        result = self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[4], 'res.partner', res_ids)[res_ids[0]]
+        self.assertNotIn('Code not executed', result, 'The condition block did not work')
