@@ -8,6 +8,7 @@
 # elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2020
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2020
 # Amir Fayaz <amirfayaz13@gmail.com>, 2020
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
 # hamid hvbnet <hvbnet@yahoo.com>, 2020
 # Maziar Niaki <maziarmn@gmail.com>, 2020
 # Sepehr Khoshnood <sepehr.kho@gmail.com>, 2020
@@ -15,7 +16,6 @@
 # Arash Sardari <arashss77@gmail.com>, 2020
 # Zahed Alfak <tamass4116@gmail.com>, 2020
 # mohammad rahmani <mohammadrahmani2o0@gmail.com>, 2020
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
 # arya sadeghi <aryasadeghy@gmail.com>, 2020
 # Ali Alikhani <a.alikhani@gmail.com>, 2020
 # Martin Trigaux, 2020
@@ -83,7 +83,7 @@ msgstr "#سکه ها/قبض ها"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
-msgstr ""
+msgstr "#ایجاد توسط: %s"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -106,13 +106,13 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "%(action)s for journal %(journal)s"
-msgstr ""
+msgstr "%(action)s برای روزنامه %(journal)s"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "%d moves"
-msgstr ""
+msgstr "%d انتقالها"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -140,7 +140,7 @@ msgstr "%s (گرد کردن)"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "%s یک فیلد ذخیره شده نیست"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -151,12 +151,12 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "مرور ورودی های به طور کامل تهاتر نشده"
+msgstr "-> مرور ثبت سندهای جزئی تهاتر شده"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". شما می‌توانید عددی بزرگتر اینجا بخواهید."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -214,6 +214,23 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        گرامی ${object.partner_id.name}<br/><br/>\n"
+"        سپاس از پرداخت شما.\n"
+"        این رسید پرداخت شماست <strong>${(object.name or '').replace('/','-')}</strong> به\n"
+"        میزان <strong>${format_amount(object.amount, object.currency_id)}</strong> از ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        در صورت سوال لطفا با ما تماس بگیرید.\n"
+"        <br/><br/>\n"
+"        با احترام,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1507,7 +1524,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "آیکون نوع فعالیت"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_user_id
@@ -7405,7 +7422,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
-msgstr ""
+msgstr "علامت به عنوان کامل پرداخت شده"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -7466,7 +7483,7 @@ msgstr "آیتم هام روزنامه تطبیق شده"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Statements"
-msgstr ""
+msgstr "صورتحساب های تطبیق شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -7558,7 +7575,7 @@ msgstr "پیام‌ها"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Methods"
-msgstr ""
+msgstr "روش ها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -7622,12 +7639,12 @@ msgstr "حاشیه های محصول خود را از فاکتورها زیر ن
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Move"
-msgstr "جابجایی"
+msgstr "انتقال"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
 msgid "Move Data"
-msgstr ""
+msgstr "داده انتقال"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_line_ids
@@ -7683,7 +7700,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__name
 msgid "Name of this tax report"
-msgstr ""
+msgstr "نام این گزارش مالیات"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7709,12 +7726,12 @@ msgstr "نام روزنامه جدید"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
-msgstr ""
+msgstr "انتقال جدید"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transaction"
-msgstr ""
+msgstr "تراکنش جدید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -7725,7 +7742,7 @@ msgstr "مقادیر جدید"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "جدیدترین اول"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -7774,6 +7791,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"هیچ روزنامه ای در شرکت %(company_name)s برای هیچ کدام از آن نوع ها یافت نشد:"
+" %(journal_types)s"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -7787,7 +7806,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "No possible action found with the selected lines."
-msgstr ""
+msgstr "هیچ عمل امکن پذیر برای سطرهای انتخاب شده یافت نشد."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
@@ -7801,6 +7820,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
+"هیچ کاربری نمی تواند ثبت سندهای مربوط به یک مالیات قبل و شامل این تاریخ را "
+"ویرایش کند."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -7887,7 +7908,7 @@ msgstr "یادداشت"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_note_param
 msgid "Note Parameter"
-msgstr ""
+msgstr "یادداشت پارامتر"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -7935,7 +7956,7 @@ msgstr "نوامبر"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Now, we'll create your first invoice."
-msgstr ""
+msgstr "اکنون، اولین فاکتور شما را ایجاد می‌کنیم."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
@@ -7968,7 +7989,7 @@ msgstr "تعداد روزها"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
 msgid "Number of entries related to this model"
-msgstr "تعداد ورودی ها مربوط به این مدل"
+msgstr "تعداد وثبت سندها مربوط به این مدل"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error_counter
@@ -7986,7 +8007,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:account.field_account_move__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به کنش دارد"
+msgstr "تعداد پیام ها که نیاز به اقدام دارد"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_has_error_counter
@@ -8026,7 +8047,7 @@ msgstr "اکتبر"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Odoo"
-msgstr "Odoo"
+msgstr "اودو"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
@@ -8078,14 +8099,14 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Once done, press continue."
-msgstr ""
+msgstr "وقتی انجام شده، ادامه را فشار بده"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once everything is as you want it, validate."
-msgstr ""
+msgstr "هنگامی که هر چیز جوری است که می‌خواهید، تایید کنید."
 
 #. module: account
 #. openerp-web
@@ -8108,7 +8129,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, press CONFIRM."
-msgstr ""
+msgstr "وقتی فاکتور آماده است، تایید را بزنید."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -8120,7 +8141,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Only administrators can load a chart of accounts"
-msgstr "فقط مدیران می توانند جدول حساب ها بارگزاری کنند."
+msgstr "فقط مدیران می توانند درخت حساب ها بارگزاری کنند."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8160,7 +8181,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
-msgstr "باز"
+msgstr "باز کردن"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -8459,7 +8480,7 @@ msgstr "فاکتورهای پرداخت شده"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Paid on"
-msgstr "پرداخت شده بر اساس"
+msgstr "پرداخت شده در"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_id
@@ -8509,7 +8530,7 @@ msgstr "استرداد جزئی"
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Partially Paid"
-msgstr ""
+msgstr "جزئی پرداخت شده"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -8560,12 +8581,12 @@ msgstr "دفتر همکار"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr ""
+msgstr "نگاشت همکار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr ""
+msgstr "سطرهای نگاشت همکار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -8634,7 +8655,7 @@ msgstr "پرداخت"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr ""
+msgstr "ارتباطات پرداخت"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
@@ -8683,7 +8704,7 @@ msgstr "روشهای پرداخت"
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code_method
 msgid "Payment QR-code"
-msgstr ""
+msgstr "کد QR پرداخت"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
@@ -8726,7 +8747,7 @@ msgstr "وضعیت پرداخت"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_tree
 msgid "Payment Terms"
-msgstr "شروط پرداخت"
+msgstr "شرایط پرداخت"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -8806,7 +8827,7 @@ msgstr "پرداخت‌ها"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payments Configuration"
-msgstr ""
+msgstr "پیکربندی پرداختها"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -8972,7 +8993,7 @@ msgstr "ارسال"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "ارسال همه ورودی ها"
+msgstr "ارسال همه ثبت سندها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post
@@ -9064,7 +9085,7 @@ msgstr "پیشوند حساب های انتقالی"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
 msgid "Prepayments"
-msgstr "پرداخت ها"
+msgstr "پیش پرداخت ها"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model
@@ -9090,7 +9111,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__preview_moves
 msgid "Preview Moves"
-msgstr ""
+msgstr "مرور انتقالها"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -9100,7 +9121,7 @@ msgstr "پیشنمایش پی دی اف"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__previous_statement_id
 msgid "Previous Statement"
-msgstr ""
+msgstr "صورتحساب قبلی"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9138,7 +9159,7 @@ msgstr "چاپ چک برای پرداخت به فروشندگان"
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__posted
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Processing"
-msgstr ""
+msgstr "در حال پردازش"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -9276,12 +9297,12 @@ msgstr "ورود از فایل QIF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code"
-msgstr ""
+msgstr "کد QR"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QR Codes"
-msgstr ""
+msgstr "کدهای QR"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__qr_code
@@ -9315,7 +9336,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 #: model:ir.model.fields,field_description:account.field_cash_box_out__name
 msgid "Reason"
-msgstr "علت"
+msgstr "دلیل"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -9351,7 +9372,7 @@ msgstr "حساب های دریافتنی"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Receivables"
-msgstr "دریافتی"
+msgstr "دریافتنی ها"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -9363,7 +9384,7 @@ msgstr "دریافت پول"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr ""
+msgstr "بانک دریافت کننده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -9379,7 +9400,7 @@ msgstr "گیرندگان"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
-msgstr ""
+msgstr "تاریخ تشخیص"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
@@ -9668,7 +9689,7 @@ msgstr "بازنشانی به جدید"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Reset to Processing"
-msgstr ""
+msgstr "برگشت به در حال پردازش"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -9715,7 +9736,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_ids
 msgid "Restrict Partners to"
-msgstr ""
+msgstr "همکاران محدود کن به"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
@@ -9907,7 +9928,7 @@ msgstr "فروش"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
 #: model:res.groups,name:account.group_sale_receipts
 msgid "Sale Receipt"
-msgstr ""
+msgstr "رسید فروش"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
@@ -10005,7 +10026,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_type_id
 msgid "Schedule Activity"
-msgstr ""
+msgstr "برنامه ریزی فعالیت"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -10178,7 +10199,7 @@ msgstr "یک صورتحساب فروشنده قدیمی انتخاب کن"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
-msgstr ""
+msgstr "انتخا اولین همکار"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -10271,19 +10292,19 @@ msgstr "ارسال رسید با ایمیل"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr ""
+msgstr "ارسال رسید توسط ایمیل"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Send the invoice and check what the customer will receive."
-msgstr ""
+msgstr "فاکتور را ارسال کن و چک کن مشتری چه چیزی دریافت می‌کند."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Send your email to"
-msgstr ""
+msgstr "ایمیل خود بفرست به"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -10326,12 +10347,12 @@ msgstr "دنباله"
 #: model:ir.model.fields,field_description:account.field_account_payment__sequence_number
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_number
 msgid "Sequence Number"
-msgstr ""
+msgstr "عدد دنباله"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
 msgid "Sequence Number Reset"
-msgstr ""
+msgstr "بازنشانی عدد دنباله"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
@@ -10345,7 +10366,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__sequence_prefix
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 msgid "Sequence Prefix"
-msgstr ""
+msgstr "پیشوند دنباله"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
@@ -10376,7 +10397,7 @@ msgstr "خدمات"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
-msgstr ""
+msgstr "تعیین یک قیمت"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -10463,7 +10484,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr ""
+msgstr "نمایش جداکننده اعداد"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -10547,7 +10568,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show unposted entries"
-msgstr ""
+msgstr "نمایش ثبت سند های ارسال نشده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -10586,7 +10607,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
 msgid "Source Currency"
-msgstr ""
+msgstr "ارز مبدا"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -10604,7 +10625,7 @@ msgstr "ایمیل منبع"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__custom
 msgid "Specific"
-msgstr ""
+msgstr "بخصوص"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -10631,7 +10652,7 @@ msgstr "تاریخ آغاز"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "با بررسی اطلاعات شرکت خود شروع کن."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -10696,13 +10717,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Statement"
-msgstr "توضیحات"
+msgstr "صورتحساب"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed."
-msgstr ""
+msgstr "صورتحساب %s تایید شد."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -10728,7 +10749,7 @@ msgstr "صورتحسابها"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_ids
 msgid "Statements matched to this payment"
-msgstr ""
+msgstr "صورتحساب ها با این پرداخت تطبیق داده شد"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -10814,7 +10835,7 @@ msgstr "جمع جزء"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subtype_id
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__subtype_id
 msgid "Subtype"
-msgstr "زیرنوع"
+msgstr "نوع جزء"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
@@ -10978,7 +10999,7 @@ msgstr "سررسید مالیات"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
-msgstr "با مالیات"
+msgstr "بدون مالیات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
@@ -11022,7 +11043,7 @@ msgstr "پیام تاریخ قفل مالیات"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr ""
+msgstr "نگاشت مالیات"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -11105,7 +11126,7 @@ msgstr "قالبهای مالیات"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr ""
+msgstr "نوع مالیات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_by_group
@@ -11232,7 +11253,7 @@ msgstr "مالیات ها"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Taxes Applied"
-msgstr ""
+msgstr "مالیات های اعمال شده"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -11609,6 +11630,8 @@ msgid ""
 "The account %(account_name)s can't be shared between multiple journals: "
 "%(journals)s"
 msgstr ""
+"حساب %(account_name)s نمی‌تواند بین چند روزنامه به اشتراک گذاشته شود: "
+"%(journals)s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11685,13 +11708,13 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "مقدار یک عدد نیست"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a percentage"
-msgstr ""
+msgstr "مقدار یک درصد نیست"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_residual
@@ -11799,7 +11822,7 @@ msgstr "ارز مورد استفاده برای ورود به صورتحساب"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "بیشترین عدد فعلی عبارت است از"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -11879,7 +11902,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "ثبت سندهای روزنامه زیر تولید خواهند شد"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12126,7 +12149,7 @@ msgstr "شماره پیگیری برای تعیین بر آیتم های روز�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "پرداختی که این ثبت سند را ایجاد کرده است"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -12134,7 +12157,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
-msgstr ""
+msgstr "ارز پرداخت."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12370,7 +12393,7 @@ msgstr "در حال حاضر فاکتور و پرداختی برای حساب ش
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr ""
+msgstr "هیچ آیتم روزنامه‌ای در حالت پیشنویس برای ارسال نیست."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -12434,6 +12457,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
+"این حساب به عنوان حساب پرداختنی به جای پیشفرض برای این همکار استفاده خواهد "
+"شد"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -12650,7 +12675,7 @@ msgstr "به"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Check"
-msgstr ""
+msgstr "برای بررسی"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -12684,7 +12709,7 @@ msgstr "مبلغ کل"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Total Balance"
-msgstr ""
+msgstr "تراز کل"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
@@ -12789,19 +12814,19 @@ msgstr "انتقال"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr ""
+msgstr "تاریخ انتقال"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr ""
+msgstr "طرف حساب انتقال"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
-msgstr ""
+msgstr "انتقال ثبت سند به %s"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12925,7 +12950,7 @@ msgstr "واحد اندازه گیری"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
-msgstr ""
+msgstr "علامت نزدن به عنوان ارسال شده"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -13174,7 +13199,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "تایید اعتبار."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -13285,7 +13310,7 @@ msgstr "فروشندگان"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "View"
-msgstr "نما"
+msgstr "نمایش"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -13956,7 +13981,7 @@ msgstr "دامنه زیپ از"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_to
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__zip_to
 msgid "Zip Range To"
-msgstr ""
+msgstr "دامنه زیپ تا"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

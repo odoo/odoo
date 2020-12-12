@@ -10,20 +10,20 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
 # Jesper Carstensen <info@danodoo.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,11 +40,6 @@ msgstr "Data Hentet"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
 msgid "# of Invoices"
 msgstr "# fakturaer"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
@@ -119,13 +114,6 @@ msgstr "<i class=\"fa fa-plus-circle\"/> Tilføj nyt kort"
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/> Slet"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr "<p>Dette kort er i øjebliket forbundet med følgende datasæt:<p/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -367,8 +355,8 @@ msgstr "Autoriserings besked"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
-msgid "Authorize.net"
-msgstr "Authorize.net"
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
@@ -1316,7 +1304,6 @@ msgstr "Partner navn"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
-#: model:payment.acquirer,name:payment.payment_acquirer_paypal
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -1473,6 +1460,11 @@ msgstr "Fejlede betalinger"
 #, python-format
 msgid "Payments received"
 msgstr "Modtaget betalinger"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_paypal
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -1834,6 +1826,13 @@ msgstr ""
 "nyt kreditkort."
 
 #. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "This card is currently linked to the following records:"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
 msgid ""
 "This field holds the image used for this payment icon, limited to "
@@ -2002,17 +2001,10 @@ msgstr "Advarsel!"
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
 msgstr "Vi er i øjeblikket ikke i stand til at tilføje din betalingsmetode."
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
-"Vi er i øjeblikket ikke i stand til at tilføje din betalingsmetode.</p>"
 
 #. module: payment
 #. openerp-web

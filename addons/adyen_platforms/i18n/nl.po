@@ -7,8 +7,8 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-11-16 13:49+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,13 @@ msgid ""
 "            authorities for unregistered or inappropriate use of payment services which will in\n"
 "            such case be payable by you."
 msgstr ""
+". Als wij of onze\n"
+"Verwerker te allen tijde ontdekken dat de door u verstrekte informatie over uw\n"
+"zaken onjuist zijn of zijn gewijzigd zonder ons hiervan op de hoogte te stellen of als u een van\n"
+"deze voorwaarden schent, kunnen de diensten met onmiddellijke ingang worden opgeschort en/of beëindigd.\n"
+"Boetes kunnen worden opgelegd door de creditcardmaatschappijen en/of de autoriteiten\n"
+"voor niet-geregistreerde of ongepast gebruik van betalingsdiensten\n"
+"welke in een dergelijk geval komt voor uw rekening."
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
@@ -155,7 +162,7 @@ msgstr "Adyen voor Platforms-rekening"
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_address_mixin
 msgid "Adyen for Platforms Address Mixin"
-msgstr ""
+msgstr "Adyen for Platforms"
 
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_bank_account
@@ -165,12 +172,12 @@ msgstr "Adyen for Platforms-bankrekening"
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_id_mixin
 msgid "Adyen for Platforms ID Mixin"
-msgstr ""
+msgstr "Adyen ID for Platforms"
 
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_payout
 msgid "Adyen for Platforms Payout"
-msgstr ""
+msgstr "Adyen voor Platforms uitbetalingen"
 
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_shareholder
@@ -640,14 +647,14 @@ msgstr "ID-nummer"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back_filename
 msgid "Id Back Filename"
-msgstr ""
+msgstr "Id achter bestandsnaam"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front_filename
 msgid "Id Front Filename"
-msgstr ""
+msgstr "Id voor bestandsnaam"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_needaction
@@ -906,7 +913,7 @@ msgstr "Uitbetalingsverzoek verzonden"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payoutreversed
 msgid "Payout Reversed"
-msgstr ""
+msgstr "Uitbetalingen gereserveerd"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__payout_ids
@@ -997,7 +1004,7 @@ msgstr "Lijst met verboden producten en services van onze verwerker."
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__proxy_token
 msgid "Proxy Token"
-msgstr ""
+msgstr "Proxy Token"
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
@@ -1152,6 +1159,11 @@ msgid ""
 "Italy: Codice fiscale\n"
 "Australia: Document Number"
 msgstr ""
+"Het vereiste type ID-nummer is afhankelijk van het land:\n"
+"VS: burgerservicenummer (9 cijfers of de laatste 4 cijfers)\n"
+"Canada: Social Insurance Number\n"
+"Italië: Codice fiscal\n"
+"Australië: documentnummer"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0

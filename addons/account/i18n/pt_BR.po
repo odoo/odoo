@@ -9721,12 +9721,14 @@ msgid ""
 "QR-code report URL to use to generate the QR-code to scan with a banking app"
 " to perform this payment."
 msgstr ""
+"URL do relatório de código QR a ser usado para gerar o código QR para "
+"digitalizar com um aplicativo bancário para realizar este pagamento."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "QR-codes can only be generated for invoice entries."
-msgstr ""
+msgstr "Códigos QR podem ser gerados apenas para entradas de diários."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
@@ -11116,7 +11118,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__start_bank_stmt_ids
 msgid "Start Bank Stmt"
-msgstr ""
+msgstr "Iniciar Extrato Bancário"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__date_start
@@ -11677,6 +11679,9 @@ msgid ""
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
 msgstr ""
+"As linhas de distribuição de impostos devem ser aplicadas a faturas ou "
+"reembolsos, não a ambos ao mesmo tempo. invoice_tax_id e refund_tax_id não "
+"devem ser definidos juntos."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
@@ -11695,6 +11700,8 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Linhas de relatório de imposto cuja marca '+' será atribuída para mover "
+"linhas por esta linha de repartição"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -11702,11 +11709,13 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Linhas de relatório de imposto cuja marca '-' será atribuída para mover "
+"linhas por esta linha de repartição"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__tag_ids
 msgid "Tax tags populating this line"
-msgstr ""
+msgstr "Tags de impostos preenchendo esta linha"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -11786,7 +11795,7 @@ msgstr "Campo técnico para propósito de Experiência do Usuário."
 #: model:ir.model.fields,help:account.field_account_move__posted_before
 #: model:ir.model.fields,help:account.field_account_payment__posted_before
 msgid "Technical field for knowing if the move has been posted before"
-msgstr ""
+msgstr "Campo técnico para conhecimento se o movimento foi postado antes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__balance
@@ -11802,6 +11811,8 @@ msgstr ""
 msgid ""
 "Technical field indicating if all statement lines are fully reconciled."
 msgstr ""
+"Campo técnico que indica se todos as linhas do extrato estão completamente "
+"reconciliadas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_matched
@@ -11809,17 +11820,19 @@ msgid ""
 "Technical field indicating if the payment has been matched with a statement "
 "line."
 msgstr ""
+"Campo técnico que indica se o pagamento foi correspondido com uma linha de "
+"extrato."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_reconciled
 msgid "Technical field indicating if the payment is already reconciled."
-msgstr ""
+msgstr "Campo técnico que indica se o pagamento já está reconciliado."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_reconciled
 msgid ""
 "Technical field indicating if the statement line is already reconciled."
-msgstr ""
+msgstr "Campo técnico que indica se a linha do extrato já está reconciliada."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__show_decimal_separator
@@ -11827,6 +11840,8 @@ msgid ""
 "Technical field to decide if we should show the decimal separator for the "
 "regex matching field."
 msgstr ""
+"Campo técnico para decidir se devemos mostrar o separador decimal para o "
+"campo de correspondência de regex."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_valid_balance_start
@@ -11834,13 +11849,15 @@ msgid ""
 "Technical field to display a warning message in case starting balance is "
 "different than previous ending balance"
 msgstr ""
+"Campo técnico para exibir uma mensagem de aviso caso o saldo inicial seja "
+"diferente do saldo final anterior"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_move__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_payment__bank_partner_id
 msgid "Technical field to get the domain on the bank"
-msgstr ""
+msgstr "Campo técnico para obter o domínio do banco"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__journal_type
@@ -11872,6 +11889,8 @@ msgid ""
 "Technical field used to display a message when the invoice's accounting date"
 " is prior of the tax lock date."
 msgstr ""
+"Campo técnico usado para exibir uma mensagem quando a a data contábil da "
+"fatura é anterior à data de bloqueio fiscal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_has_matching_suspense_amount
@@ -11881,6 +11900,8 @@ msgid ""
 "Technical field used to display an alert on invoices if there is at least a "
 "matching amount in any supsense account."
 msgstr ""
+"Campo técnico usado para exibir um alerta em faturas se houver pelo menos um"
+" valor correspondente em qualquer conta suspensa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -11890,6 +11911,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"Campo técnico usado para impor a composição de sequência complexa que o sistema normalmente não entenderia.\n"
+"Este é um regex que pode incluir todos os seguintes grupos de captura: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
+"Os grupos de prefixo * são os separadores entre o ano, mês e o número de sequência real crescente (seq).\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab
@@ -11897,6 +11922,8 @@ msgid ""
 "Technical field used to exclude some lines from the invoice_line_ids tab in "
 "the form view."
 msgstr ""
+"Campo técnico usado para excluir algumas linhas da aba invoice_line_ids na "
+"visualização de formulário."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__user_id
@@ -11904,6 +11931,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
 msgstr ""
+"Campo técnico usado para ajustar o comportamento genérico em modelos de "
+"correio."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -11913,6 +11942,8 @@ msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
 msgstr ""
+"Campo técnico utilizado para ter um domínio dinâmico em diário / impostos na"
+" visualização de formulário."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -11930,12 +11961,16 @@ msgid ""
 "Technical field used to indicate the user can edit the wizard content such "
 "as the amount."
 msgstr ""
+"Campo técnico usado para indicar que o usuário pode editar o conteúdo do "
+"assistente, como a quantidade."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__can_group_payments
 msgid ""
 "Technical field used to indicate the user can see the 'group_payments' box."
 msgstr ""
+"Campo técnico usado para indicar que o usuário pode ver a caixa "
+"'group_payments'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_rec_id
@@ -11955,6 +11990,8 @@ msgstr ""
 msgid ""
 "Technical field used to know on which lines the taxes must be recomputed."
 msgstr ""
+"Campo técnico utilizado para saber em quais linhas os impostos devem ser "
+"recalculados."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__show_partner_bank_account
@@ -11963,6 +12000,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_id` needs to be"
 " displayed or not in the payments form views"
 msgstr ""
+"Campo técnico usado para saber se o campo `partner_bank_id` precisa ser "
+"exibido ou não nas visualizações do formulário de pagamentos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__require_partner_bank_account
@@ -11971,6 +12010,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_id` needs to be"
 " required or not in the payments form views"
 msgstr ""
+"Campo técnico usado para saber se o campo `partner_bank_id` precisa ser "
+"obrigatório ou não nas visualizações do formulário de pagamentos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_exigible
@@ -11990,6 +12031,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tax_fiscal_country_id
 msgid "Technical field used to restrict tags domain in form view."
 msgstr ""
+"Campo técnico usado para restringir o domínio das tags na visualização do "
+"formulário."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_fiscal_country_id
@@ -11997,16 +12040,19 @@ msgid ""
 "Technical field used to restrict the domain of account tags for tax "
 "repartition lines created for this tax."
 msgstr ""
+"Campo técnico usado para restringir o domínio de tags de conta para linhas "
+"de repartição de impostos criadas para esse imposto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_rounding_line
 msgid "Technical field used to retrieve the cash rounding line."
 msgstr ""
+"Campo técnico usado para recuperar a linha de arredondamento de caixa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Technical field used to show the force tax included button"
-msgstr ""
+msgstr "Campo técnico usado para mostrar o botão forçar imposto incluído"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__account_number
@@ -12024,6 +12070,9 @@ msgid ""
 "conversion tooltip. The tooltip informs a currency conversion will be "
 "performed with the transfer."
 msgstr ""
+"Campo técnico. Usado para indicar se deve ou não exibir a dica de conversão "
+"de moeda. A dica informa que uma conversão de moeda será realizada com a "
+"transferência."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -12032,11 +12081,14 @@ msgid ""
 "warning. The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Campo técnico. Usado para informar se deve ou não exibir o aviso de "
+"arredondamento. O aviso informa que uma alteração do fator de arredondamento"
+" pode ser perigosa no modo de exibição de formulário res.currency."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount
 msgid "Technical shortcut to parse the amount to a float"
-msgstr ""
+msgstr "Atalho técnico para analisar o valor em um float"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -12046,7 +12098,7 @@ msgstr "Modelo"
 #. module: account
 #: model:ir.model,name:account.model_account_group_template
 msgid "Template for Account Groups"
-msgstr ""
+msgstr "Modelo para Grupos de Conta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -12091,7 +12143,7 @@ msgstr "Termos e Condições"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "Essa é a data da entrada de abertura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
@@ -12141,6 +12193,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Advisor can change it."
 msgstr ""
+"A sequência da Entrada de Diário não está de acordo com o formato atual. "
+"Apenas o Consultor pode alterá-lo."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -12149,6 +12203,8 @@ msgid ""
 "The account %(account_name)s can't be shared between multiple journals: "
 "%(journals)s"
 msgstr ""
+"A conta %(account_name)s não pode ser compartilhada entre múltiplos diários;"
+" %(journals)s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12163,6 +12219,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"A conta já está em uso em um diário 'venda' ou 'compra'. Isto significa que "
+"o tipo de conta não pode ser 'a receber' ou 'a pagar'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12171,6 +12229,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"A conta selecionada em seu lançamento no diário força a fornecer uma moeda "
+"secundária. Você deve remover a moeda secundária da conta."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12180,6 +12240,9 @@ msgid ""
 "Hence, the accounting date will be changed to the next available date when "
 "posting."
 msgstr ""
+"A data contábil é definida antes da data de bloqueio fiscal, que é definida "
+"em %s. Portanto, a data contábil será alterada para a próxima data "
+"disponível durante o lançamento."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -12214,6 +12277,9 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
+"O montante expresso na moeda secundária deve ser positivo quando a conta é "
+"debitada e negativo quando a conta é creditada. Se a moeda for a mesma da "
+"empresa, este valor deve ser estritamente igual ao saldo."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12222,18 +12288,20 @@ msgid ""
 "The amount in foreign currency must be set if the amount is not equal to "
 "zero."
 msgstr ""
+"O valor em moeda estrangeira deve ser definido se o valor não for igual a "
+"zero."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "O montante não é um número"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a percentage"
-msgstr ""
+msgstr "O montante não é uma porcentagem"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_residual
@@ -12242,12 +12310,15 @@ msgid ""
 " its move lines' balance), expressed in its currency. This is a technical "
 "field use to speedup the application of reconciliation models."
 msgstr ""
+"O montante a ser reconciliado nesta linha do extrato (assinado de acordo com"
+" o saldo das suas linhas de movimentação), expresso em sua moeda. Este é um "
+"campo técnico usado para acelerar a aplicação de modelos de reconciliação."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The amount of a statement line can't be equal to zero."
-msgstr ""
+msgstr "O montante de uma linha de extrato não pode ser igual a zero."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -12281,7 +12352,7 @@ msgstr "O modelo de gráfico para a empresa (se houver)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "O tipo de código QR escolhido não é elegível para esta fatura."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -12305,22 +12376,25 @@ msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
 msgstr ""
+"A combinação de modelo de referência e tipo de referência no diário não foi "
+"implementada"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr ""
+msgstr "A empresa à qual esta linha de distribuição pertence."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_tax_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "O país de onde usar os relatórios de impostos para esta empresa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
 msgstr ""
+"A nota de crédito é validada automaticamente e reconciliada com a fatura."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12336,6 +12410,8 @@ msgstr ""
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
 msgstr ""
+"A nota de crédito é criada em rascunho e pode ser editada antes de ser "
+"emitida."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -12345,7 +12421,7 @@ msgstr "A moeda utilizada para entradas no informe/demonstrativo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "O número mais alto atual é"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -12368,19 +12444,21 @@ msgid ""
 "The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
 "You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
 msgstr ""
+"O/a %(date_field)s (%(date)s) não corresponde à %(sequence_field)s (%(sequence)s).\n"
+"Você pode querer limpar o campo %(sequence_field)s antes de proceder à alteração da data."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
-msgstr ""
+msgstr "O dia do mês usado para este termo deve ser estritamente positivo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr ""
+msgstr "O(s) documento(s) que geraram a fatura."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12389,6 +12467,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
+"O saldo final está incorreto!\n"
+"O saldo experado (%(real_balance)s) é diferente do calculado (%(computed_balance)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -12410,6 +12490,8 @@ msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
 msgstr ""
+"O campo 'Cliente' é obrigatório. complete-o para validar a Fatura de "
+"Cliente."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12418,6 +12500,8 @@ msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
+"O campo 'Fornecedor' é obrigatório, complete-o para validar a Conta de "
+"Fornecedor."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -12430,7 +12514,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "A seguinte Entrada de Diário será gerada"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12439,6 +12523,8 @@ msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
 msgstr ""
+"O seguinte erro impediu a geração do QR-code %s, embora tenha sido detectado"
+" como elegível:"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -12458,12 +12544,16 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
+"As seguintes linhas de relatório de impostos são usadas em alguns modelos de"
+" distribuição de impostos, embora não gerem nenhuma tag: %s Isso "
+"provavelmente significa que você se esqueceu de definir um tag_name nessas "
+"linhas."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr ""
+msgstr "A moeda estrangeira deve ser diferente daquela do diário: %s"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12472,6 +12562,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"A moeda estrangeira definida no diário '%(journal)s' e a conta '%(account)s'"
+" devem ser a mesma."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12479,6 +12571,8 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
+"A cadeia de hash é compatível: não é possível alterar os\n"
+"                                            dados sem quebrar a cadeia hash para as partes subsequentes."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -12493,6 +12587,9 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"A entrada do diário %s atingiu um estado inválido em relação à linha de "
+"extrato relacionada. Para ser consistente, o entrada de diário deve sempre "
+"ter exatamente um item do diário envolvendo o banco/conta de caixa."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12501,6 +12598,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
+"A entrada de diário %s atingiu um estado inválido em relação ao seu pagamento.\n"
+"Para ser consistente, todos os itens do diário de baixa devem compartilhar a mesma conta."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12513,6 +12612,12 @@ msgid ""
 "- optional journal items, all sharing the same account.\n"
 "\n"
 msgstr ""
+"A entrada do diário %s alcançou um estado inválido em relação a este pagamento.\n"
+"Para ser consistente, o lançamento no diário deve sempre conter:\n"
+"- um item de diário envolvendo a conta de recebimentos/pagamentos pendentes.\n"
+"- um item de diário envolvendo uma conta a receber/a pagar.\n"
+"- itens de diário opcionais, todos compartilhando a mesma conta.\n"
+"\n"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12521,6 +12626,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same currency."
 msgstr ""
+"O lançamento no diário %s atingiu um estado inválido em relação ao seu pagamento.\n"
+"Para ser consistente, os itens de diário devem compartilhar a mesma moeda."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12529,6 +12636,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same partner."
 msgstr ""
+"O lançamento no diário %s atingiu um estado inválido em relação ao seu pagamento.\n"
+"Para ser consistente, os itens de diário devem compartilhar o mesmo parceiro."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -12547,6 +12656,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
+"A entrada de diário a partir do qual esse lançamento contábil manual de "
+"regime de caixa de imposto foi criado."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12555,6 +12666,8 @@ msgid ""
 "The journal of a bank statement line must always be the same as the bank "
 "statement one."
 msgstr ""
+"O diário de uma linha do extrato bancário deve ser sempre igual à linha do "
+"extrato bancário."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12563,13 +12676,15 @@ msgid ""
 "The journal of a statement line must always be the same as the bank "
 "statement one."
 msgstr ""
+"O diário de uma linha de extrato deve ser sempre igual ao de um extrato "
+"bancário."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid ""
 "The last day of the month will be used if the chosen day doesn't exist."
-msgstr ""
+msgstr "O último dia do mês será usado se o dia escolhido não existir."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -12589,7 +12704,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
 msgid "The length of the starting and the ending code prefix must be the same"
-msgstr ""
+msgstr "O comprimento do prefixo do código inicial e final deve ser o mesmo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -12599,6 +12714,9 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"O mapeamento usa expressões regulares.\n"
+"- Para combinar o texto no início da linha (no rótulo ou notas), basta preencher o seu texto.\n"
+"- Para coincidir com o texto em qualquer lugar (no rótulo ou notas), coloque o texto entre . * por exemplo: .*N°48748 abc123.*"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -12620,6 +12738,9 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
+"A operação é recusada porque teria impacto em uma declaração fiscal já "
+"emitida. Altere a data da entrada de diário ou a data de bloqueio de imposto"
+" definida nas configurações (%s) para continuar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_action_id
@@ -12627,6 +12748,8 @@ msgid ""
 "The optional action to call when clicking on this line in accounting "
 "reports."
 msgstr ""
+"A ação opcional para chamar quando clicado nesta linha em relatórios de "
+"contabilidade."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -12650,12 +12773,16 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
+"A ordem em que as linhas de distribuição são exibidas e combinadas. Para que"
+" os reembolsos funcionem corretamente, as linhas de distribuição de faturas "
+"devem ser organizadas na mesma ordem que as linhas de distribuição de notas "
+"de crédito às quais correspondem."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__report_id
 msgid "The parent tax report of this line"
-msgstr ""
+msgstr "O relatório fiscal pai desta linha"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -12685,12 +12812,12 @@ msgstr "O total de pagamento não pode ser negativo."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr ""
+msgstr "A referência de pagamento a ser definida em itens de diário."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "O pagamento que criou esta entrada"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -12698,7 +12825,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
-msgstr ""
+msgstr "A moeda do pagamento"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12776,6 +12903,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"O modelo de reconciliação só será aplicado quando a nota:\n"
+" * Contém: A nota de proposição deve conter esta string (não diferencia maiúsculas de minúsculas).\n"
+" * Não contém: Negação de \"Contém\".\n"
+" * Combinar Regex: Defina sua própria expressão regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
@@ -12786,6 +12917,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"O modelo de reconciliação só será aplicado quando o tipo de transação:\n"
+"        * Contém: O tipo de transação proposta deve conter esta string (não diferencia maiúsculas de minúsculas).\n"
+"        * Não contém: Negação de \"Contém\".\n"
+"        * Combinar Regex: defina sua própria expressão regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -12799,7 +12934,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The regex is not valid"
-msgstr ""
+msgstr "O regex não é válido"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -12808,11 +12943,13 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"O assistente de registro de pagamento só deve ser chamado nos registros "
+"account.move ou account.move.line."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
 msgid "The report line to make an adjustment for."
-msgstr ""
+msgstr "A linha do relatório para a qual fazer um ajuste."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -14272,6 +14409,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Você não pode registrar um pagamento porque não há mais nada a pagar nos "
+"itens de diário selecionados."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
