@@ -110,6 +110,10 @@ def _create_empty_database(name):
                 """CREATE DATABASE "%s" ENCODING 'unicode' %s TEMPLATE "%s" """ %
                 (name, collate, chosen_template)
             )
+        from_fs = odoo.tools.config.filestore(chosen_template)
+        to_fs = odoo.tools.config.filestore(name)
+        if os.path.exists(from_fs) and not os.path.exists(to_fs):
+            shutil.copytree(from_fs, to_fs)
 
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):
