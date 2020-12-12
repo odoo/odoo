@@ -215,7 +215,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<b>Post Exchange difference entries in:</b>"
-msgstr "<b>Výmena rozdielových položiek v systéme:</b>"
+msgstr "<b>Zaúčtovať kurzové rozdiely v:</b>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -953,7 +953,7 @@ msgstr "Na linke bola vykonaná úprava %s."
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
-msgstr "Platba musí vždy patriť banke alebo peňažnému denníku."
+msgstr "Platba musí byť vždy priradená banke alebo peňažnému denníku."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1595,6 +1595,8 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with"
 " their mobile banking application."
 msgstr ""
+"Pridajte k svojim faktúram QR kód, aby vaši zákazníci mohli okamžite platiť "
+"pomocou svojej aplikácie pre mobilné bankovníctvo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -2449,7 +2451,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Bank"
-msgstr "Banka"
+msgstr "Bankové doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2616,7 +2618,7 @@ msgstr "Banka: bilancia"
 #. module: account
 #: model:ir.ui.menu,name:account.account_banks_menu
 msgid "Banks"
-msgstr "Banky"
+msgstr "Bankové doklady"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
@@ -2970,7 +2972,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Cash"
-msgstr "Hotovosť"
+msgstr "Hotovostné doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -2991,7 +2993,7 @@ msgstr "Účtovná kniha hotovostného základu"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Basis Taxes"
-msgstr "Dane v hotovosti"
+msgstr "Dane na hotovostnom základe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
@@ -3061,7 +3063,7 @@ msgstr "Zaokrúhľovania hotovosti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
-msgstr "Výkaz v hotovosti"
+msgstr "Výkaz hotovosti"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -5171,7 +5173,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Exchange Difference"
-msgstr "Kurzový rozdiel"
+msgstr "Kurzové rozdiely"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__currency_exchange_journal_id
@@ -7799,7 +7801,7 @@ msgstr "Rôzne"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "Rôzne operácie"
+msgstr "Interné účtovné doklady"
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
@@ -9910,7 +9912,7 @@ msgstr "Vyžadovať partnerský bankový účet"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr "Res Partner Bank"
+msgstr "Res partnerská banka"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
@@ -10933,7 +10935,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__start_bank_stmt_ids
 msgid "Start Bank Stmt"
-msgstr "začat bankový stmt"
+msgstr "Začat bankový stmt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__date_start
@@ -10958,7 +10960,7 @@ msgstr "Počiatočný zostatok"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__cashbox_start_id
 msgid "Starting Cashbox"
-msgstr "Počiatočná pokladnica"
+msgstr "Počiatočný stav pokladne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
@@ -12372,6 +12374,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"Záznam v denníku %s dosiahol neplatný stav, pokiaľ ide o súvisiaci riadok výpisu.\n"
+"Kvôli konzistentnosti musí mať záznam v denníku vždy presne jednu položku denníka, ktorá sa týka bankového alebo hotovostného účtu."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13100,7 +13104,7 @@ msgid ""
 "storage space of your Odoo database."
 msgstr ""
 "Táto možnosť natrvalo odstráni všetky stopy e-mailov po ich odoslaní, a to "
-"aj z ponuky Technické v ponuke Nastavenia, aby sa zachoval úložný priestor "
+"aj z ponuky technické v ponuke nastavenia, aby sa zachoval úložný priestor "
 "vašej databázy Odoo."
 
 #. module: account
@@ -14470,8 +14474,8 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
-"Nemôžete resetovať, aby ste vytvorili koncept zápisu denníka výmenného "
-"rozdielu."
+"Nemôžete resetovať, aby ste vytvorili koncept zápisu denníka kurzových "
+"rozdielov."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0

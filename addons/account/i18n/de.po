@@ -31,8 +31,8 @@
 # Achraf (abz) <abz@odoo.com>, 2020
 # spilymp <visessa+github@gmail.com>, 2020
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
-# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
+"Last-Translator: EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2639,7 +2639,7 @@ msgstr "Grundbetrag"
 #: model:ir.model.fields,field_description:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr "Konto für erhaltenen Steuerbetrag"
+msgstr "Konto für die Steuerbasis"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -2999,7 +2999,7 @@ msgstr "Steuern auf Kassenbasis"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "Cash-Basis-Übergangskonto"
+msgstr "Übergangskonto für die Steuer"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -7575,7 +7575,7 @@ msgstr ""
 "Manuell: Lassen Sie sich per Bargeld, Scheck oder einer anderen Methode außerhalb von Odoo bezahlen.\n"
 "Elektronisch: Lassen Sie sich automatisch durch einen Zahlungserwerber bezahlen, indem Sie eine Transaktion auf einer Karte anfordern, die vom Kunden beim Kauf oder bei der Anmeldung im Internet gespeichert ist (Zahlungstoken).\n"
 "Überprüfen: Bezahlen Sie die Rechnung per Scheck und drucken Sie sie bei Odoo aus.\n"
-"Batch-Einzahlung: Verpacken Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Einzahlung generieren, die Sie an Ihre Bank senden. Bei der Kodierung des Kontoauszugs in Odoo wird Ihnen vorgeschlagen, die Transaktion mit der Chargeneinzahlung abzustimmen, da für die Chargeneinzahlung das Modul account_batch_payment installiert sein muss.\n"
+"Batch-Zahlung: Verpacken Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Zahlung generieren, die Sie an Ihre Bank senden. Bei der Kodierung des Kontoauszugs in Odoo wird Ihnen vorgeschlagen, die Transaktion mit der Chargeneinzahlung abzustimmen, da für die Chargeneinzahlung das Modul account_batch_payment installiert sein muss.\n"
 "SEPA-Überweisung: Zahlen Sie die Rechnung aus einer SEPA-Überweisungsdatei, die Sie an Ihre Bank senden. Um eine sepa-Überweisung zu ermöglichen, muss das Modul account_sepa installiert sein"
 
 #. module: account
@@ -11282,7 +11282,7 @@ msgstr "Steuererklärung"
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_exigibility
 msgid "Tax Due"
-msgstr "Fällige Steuer"
+msgstr "Steuerfälligkeit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree

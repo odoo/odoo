@@ -23,11 +23,12 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
 # Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Martin Trigaux, 2020
 # Carolina Gonzalez <cgo@odoo.com>, 2020
 # Susanna Pujol, 2020
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Oscar Tejada <oscar.tejada@epvsaisa.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Rick Hunter <rick.hunter.ec@gmail.com>, 2020\n"
+"Last-Translator: Oscar Tejada <oscar.tejada@epvsaisa.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -766,6 +767,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Países como Colombia, Perú y México deben poder utilizar la\n"
+"        Código UNSPSC para sus productos y unidades de medida.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -786,6 +791,8 @@ msgid ""
 "\n"
 "        Define default purchase journal on the warehouse"
 msgstr ""
+"\n"
+"        Definir el diario de compras predeterminado en el almacén"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -797,6 +804,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Defina el diario de compra predeterminado en el almacén,\n"
+"        ayudarle a elegir el diario de compra correcto en el pedido de compra cuando\n"
+"        cambiar la operación de picking.\n"
+"        útil al configurar las múltiples unidades GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -804,6 +817,8 @@ msgid ""
 "\n"
 "        Define default sales journal on the warehouse"
 msgstr ""
+"\n"
+"        Definir el diario de ventas predeterminado en el almacén"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -815,6 +830,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Defina el diario de ventas predeterminado en el almacén,\n"
+"        ayudarle a elegir el diario de ventas correcto en el pedido de ventas cuando\n"
+"        cambias el almacén.\n"
+"        útil al configurar las múltiples unidades GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -823,6 +844,9 @@ msgid ""
 "        Disallowed Expenses Data for Belgium\n"
 "    "
 msgstr ""
+"\n"
+"        Datos de gastos no permitidos para Bélgica\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -851,6 +875,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"        Menú E-Faktur (Indonesia)\n"
+"        Formato: 010.000-16.00000001\n"
+"        * 2 (dua) dígitos pertama adalah Kode Transaksi\n"
+"        * 1 (satu) dígito berikutnya adalah Kode Status\n"
+"        * 3 (tiga) dígitos berikutnya adalah Kode Cabang\n"
+"        * 2 (dua) dígitos pertama adalah Tahun Penerbitan\n"
+"        * 8 (delapan) dígitos berikutnya adalah Nomor Urut\n"
+"\n"
+"        Para poder exportar facturas de clientes como e-Faktur,\n"
+"        necesitas poner los rangos de números que te asignaron\n"
+"        por el gobierno en Contabilidad> Clientes> e-Faktur\n"
+"\n"
+"        Cuando valida una factura, donde el socio tiene el ID PKP\n"
+"        campo marcado, se asignará un número de impuesto a esa factura.\n"
+"        Posteriormente, puede filtrar las facturas que quedan por exportar en el\n"
+"        lista de facturas y haga clic en Acción> Descargar e-Faktur para descargar\n"
+"        el csv y cárguelo en el sitio del gobierno.\n"
+"\n"
+"        Puede sustituir una factura ya enviada por otra indicando\n"
+"        la factura reemplazada y la nueva y puede restablecer una factura\n"
+"        aún no ha enviado al gobierno para reutilizar su número.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -876,6 +923,9 @@ msgid ""
 "        Enterprise digest data\n"
 "    "
 msgstr ""
+"\n"
+"        Datos de resumen empresarial\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -887,6 +937,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Genere órdenes de pago según lo recomendado por la norma SEPA, gracias a los mensajes pain.001. Las versiones compatibles con el dolor (países) son pain.001.001.03 (genérico), pain.001.001.03.ch.02 (Suiza) y pain.001.003.03 (Alemania). El archivo XML generado se puede cargar en su banco.\n"
+"\n"
+"        Este módulo sigue las pautas de implementación emitidas por el Consejo Europeo de Pagos.\n"
+"        Para obtener más información sobre los estándares SEPA: http://www.iso20022.org/ y http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -895,6 +951,9 @@ msgid ""
 "        Import Data From Winbooks\n"
 "    "
 msgstr ""
+"\n"
+"        Importar datos de Winbooks\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -966,6 +1025,9 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo puente se instala automáticamente cuando se instalan los módulos stock_barcode y mrp_subcontracting.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -985,6 +1047,9 @@ msgid ""
 "        This module adds support for SEPA Credit Transfer QR-code generation.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo agrega soporte para la generación de códigos QR de SEPA Credit Transfer.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -994,6 +1059,10 @@ msgid ""
 "        RFQ from an approval purchase request.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo agrega al flujo de trabajo de aprobaciones la posibilidad de generar\n"
+"        RFQ de una solicitud de compra de aprobación.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -1032,6 +1101,13 @@ msgid ""
 "        but aims to connect with all European banks later on\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo se conecta a myponto.com para recuperar extractos bancarios.\n"
+"\n"
+"        Actualmente, ese servicio permite conectarse solo a bancos belgas\n"
+"        (BNP Paribas Fortis, KBC, CBC, KBC Bruselas, Fintro, Hello Bank, ING Bélgica, AXA Bélgica)\n"
+"        pero apunta a conectarse con todos los bancos europeos más adelante\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1067,6 +1143,36 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo permite la generación de archivos XML compatibles con SEPA Direct Debit (SDD) (coherente\n"
+"        con especificación pain.008.001.02) para enviar a su banco con el fin de\n"
+"        cobrar un conjunto de pagos.\n"
+"\n"
+"        Para ser elegible para este método de pago, el cliente debe tener primero\n"
+"        devolvió un mandato a la empresa, dando su consentimiento para utilizar la domiciliación bancaria.\n"
+"        Este consentimiento debe haber sido codificado como un \"mandato del cliente\" en Odoo.\n"
+"\n"
+"        También debe cumplir con los siguientes requisitos para poder\n"
+"        generar un archivo SDD:\n"
+"        - La cuenta de su empresa debe estar configurada con un número IBAN válido\n"
+"        - Su empresa debe haber recibido un identificador de acreedor (esto se puede hacer en el menú 'configuración' del módulo de contabilidad)\n"
+"        - Su empresa debe haber definido un diario para recibir pagos SDD (nuevamente, en 'configuración' del módulo de contabilidad)\n"
+"        - Todos los clientes para los que genere un pago deben tener un número de cuenta IBAN válido.\n"
+"\n"
+"        Odoo le informará si alguno de estos requisitos no se cumple.\n"
+"\n"
+"        Cualquier factura que se valide para un cliente con un mandato será\n"
+"        se establece automáticamente en estado 'pagado' y se generará un pago. Un\n"
+"        La opción en el panel le permitirá ver todos los pagos generados.\n"
+"        a través de SDD y generar un archivo de colección XML para ellos, agrupándolos como\n"
+"        le parezca conveniente.\n"
+"\n"
+"        También hay disponible un método de pago de 'Débito directo SEPA' para\n"
+"        facturas abiertas, al seleccionar una cuenta bancaria en el asistente 'registrar pago'.\n"
+"        Úselo para generar un pago SDD para las facturas si agregó un mandato\n"
+"        para su propietario después de su validación. Verá un mensaje de error si\n"
+"        intente utilizar este método en una factura cuyo pago no se pueda utilizar.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1075,6 +1181,9 @@ msgid ""
 "        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo implementa reCaptchaV3 para que pueda evitar el spam de bots en sus módulos públicos.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -1177,6 +1286,9 @@ msgid ""
 "       Add variants to your purchase orders through an Order Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Agregue variantes a sus pedidos de compra a través de una entrada de cuadrícula de pedidos.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -1223,6 +1335,8 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders with IoT.\n"
 msgstr ""
+"\n"
+"    Agrega control de calidad a las órdenes de trabajo con IoT.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1320,6 +1434,24 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestionar descuentos en cómputos de impuestos de taxclouds.\n"
+"    Consulte https://taxcloud.com/support/discounts o\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Resumen: todos los descuentos proporcionados por el vendedor deben aplicarse al precio de venta antes de calcular el impuesto a las ventas.\n"
+"    Los vendedores deben revelar su metodología a los clientes en una Política de solicitud de descuento.\n"
+"\n"
+"    El algoritmo es como sigue:\n"
+"     - Los descuentos específicos de línea se aplican primero, en las líneas a las que se supone que deben aplicarse.\n"
+"       Esto significa descuentos específicos del producto o descuentos en la línea más barata.\n"
+"     - Luego, los descuentos globales se aplican de manera uniforme en todas las líneas pagas, tanto como sea posible.\n"
+"       Si queda remanente, se aplica secuencialmente, en el orden de las líneas,\n"
+"       hasta que no quede ningún descuento o no quede ninguna línea con descuento.\n"
+"\n"
+"    Tenga en cuenta que las líneas de descuento (con un precio negativo) no tendrán impuestos aplicados,\n"
+"    sino que el monto de estas líneas se deducirá de las líneas a las que se apliquen durante el cálculo del impuesto.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1333,6 +1465,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestionar descuentos con entregas en cómputos de taxcloud.\n"
+"    Este módulo sigue la misma lógica que \"Cuenta Taxcloud - Venta (cupón)\".\n"
+"    Allí puede encontrar más información sobre cómo se realizan los cálculos de descuento para TaxCloud.\n"
+"\n"
+"    Existe una opción adicional de descuento (envío gratuito) en las entregas.\n"
+"    Con la entrega de cupones de venta, el cálculo del descuento no se aplica a las líneas de entrega.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1385,6 +1525,9 @@ msgid ""
 "    Schedule your teams and employees with shift.\n"
 "    "
 msgstr ""
+"\n"
+"    Programe sus equipos y empleados con turno.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -1477,6 +1620,13 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"Un impuesto definido como código Python consta de dos fragmentos de código python que se ejecutan en un entorno local que contiene datos como el precio unitario, el producto o el asociado.\n"
+"\n"
+"\"Código aplicable\" define si se va a aplicar el impuesto.\n"
+"\n"
+"\"Código Python\" define la cantidad del impuesto.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1588,6 +1738,11 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Transferencias automáticas de cuenta\n"
+"===========================\n"
+"Gestione transferencias automáticas entre sus cuentas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -1598,6 +1753,11 @@ msgid ""
 "Demo data for account automatic transfers module\n"
 "    "
 msgstr ""
+"\n"
+"Demostración de transferencias automáticas de cuenta\n"
+"================================\n"
+"Datos de demostración para el módulo de transferencias automáticas de cuentas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_us_consolidation_demo
@@ -1606,6 +1766,9 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"Datos de demostración de consolidación de cuenta\n"
+"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -1671,6 +1834,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Dinamarca\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1681,6 +1848,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Finlandia\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -1734,6 +1906,13 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Singapur\n"
+"================================\n"
+"Este módulo permite generar la devolución GST (F5) y el archivo de auditoría IRAS.\n"
+" - Para generar la devolución de GST, vaya a Contabilidad -> Informes -> Retorno de GST\n"
+" - Para generar el archivo de auditoría de IRAS, vaya a Contabilidad -> Informes -> Archivo de auditoría IRAS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_ocr
@@ -1750,6 +1929,17 @@ msgid ""
 "For Vendor Bill support, Default Vendor Specific OCR and validation for OCR are added.\n"
 "    "
 msgstr ""
+"\n"
+"Agregue comunicación estructurada a las facturas del cliente y la factura del proveedor.\n"
+"-------------------------------------------------- ----------------\n"
+"\n"
+"El uso de la comunicación estructurada OCR simplifica la conciliación entre facturas y pagos.\n"
+"\n"
+"Para soporte de facturación al cliente para OCR de nivel 1 a 4. El número de OCR puede basarse en el socio o\n"
+"la factura.\n"
+"\n"
+"Para la compatibilidad con la factura del proveedor, se agregan OCR predeterminado del proveedor específico y validación para OCR.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -1769,6 +1959,9 @@ msgid ""
 "Add a dynamic report about recruitment.\n"
 "    "
 msgstr ""
+"\n"
+"Agregue un informe dinámico sobre contratación.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
@@ -1915,6 +2108,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"Agregue información de relación entre Órdenes de venta y Órdenes de compra si Hacer sobre pedido (MTO) está activado en un producto vendido.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -1932,6 +2127,9 @@ msgid ""
 "Add the ability to create signatures from the document module.\n"
 "The first element of the selection (in DRM) will be used as the signature attachment.\n"
 msgstr ""
+"\n"
+"Agregue la capacidad de crear firmas desde el módulo de documento.\n"
+"El primer elemento de la selección (en DRM) se utilizará como archivo adjunto de firma.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_recruitment
@@ -1981,6 +2179,8 @@ msgid ""
 "\n"
 "Adds fleet data to documents\n"
 msgstr ""
+"\n"
+"Agrega datos de flota a los documentos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -1989,6 +2189,9 @@ msgid ""
 "Adds the ability to create products from the document module and adds the\n"
 "option to send products' attachments to the documents app.\n"
 msgstr ""
+"\n"
+"Agrega la capacidad de crear productos desde el módulo de documentos y agrega la\n"
+"opción para enviar archivos adjuntos de productos a la aplicación de documentos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -2043,6 +2246,19 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Permitir pagos de TPV con tarjeta de crédito\n"
+"==============================\n"
+"\n"
+"Este módulo permite a los clientes pagar sus pedidos con crédito\n"
+"Tarjetas. Las transacciones son procesadas por Vantiv (desarrollado por Wells\n"
+"Fargo Bank). Es necesaria una cuenta de comerciante de Vantiv. Permite que el\n"
+"Siguientes:\n"
+"\n"
+"* Pago rápido con sólo deslizar una tarjeta de crédito mientras está en la pantalla de pago\n"
+"* Combinación de pagos en efectivo y pagos con tarjeta de crédito\n"
+"* Cashback\n"
+"* Tarjetas compatibles: Visa, MasterCard, American Express, Discover"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -2086,6 +2302,9 @@ msgid ""
 "Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.\n"
 "    "
 msgstr ""
+"\n"
+"Permitir a los visitantes del sitio web chatear con los colaboradores. Este módulo también trae una herramienta de retroalimentación para el livechat y las páginas web para mostrar su canal con sus calificaciones en el sitio web.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -2119,6 +2338,10 @@ msgid ""
 "=============================================\n"
 "This module allows to generate a project/task from sales orders.\n"
 msgstr ""
+"\n"
+"Permite crear tareas desde su pedido de cliente.\n"
+"=============================================\n"
+"Este módulo permite generar un proyecto / tarea a partir de pedidos de venta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -2127,6 +2350,9 @@ msgid ""
 "Allows to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"\n"
+"Permite realizar llamadas desde próximas actividades o con clic para marcar.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -2152,6 +2378,9 @@ msgid ""
 "Allows to use in the Point of Sale the devices that are connected to an IoT Box.\n"
 "Supported devices include payment terminals, receipt printers, scales and customer displays.\n"
 msgstr ""
+"\n"
+"Permite utilizar en el Punto de Venta los dispositivos que están conectados a un IoT Box.\n"
+"Los dispositivos compatibles incluyen terminales de pago, impresoras de recibos, básculas y pantallas para clientes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_amazon_delivery
@@ -2171,6 +2400,9 @@ msgid ""
 "Allows use of stock application to manage rentals inventory\n"
 "        "
 msgstr ""
+"\n"
+"Permite el uso de la aplicación de stock para gestionar el inventario de alquileres\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail
@@ -2204,6 +2436,8 @@ msgid ""
 "\n"
 "Allows using IoT devices, such as scales and printers, for delivery operations.\n"
 msgstr ""
+"\n"
+"Permite el uso de dispositivos IoT, como básculas e impresoras, para operaciones de entrega.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -2251,6 +2485,16 @@ msgid ""
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"Contabilidad analítica en MRP\n"
+"==========================\n"
+"\n"
+"* Informe de estructura de costes\n"
+"\n"
+"Además, permite calcular el coste del producto en función de su BoM, utilizando los costes de sus componentes y las operaciones del puesto de trabajo.\n"
+"Agrega un botón en el propio producto, pero también una acción en la vista de lista de los productos.\n"
+"Si la valoración de inventario automatizada está activa, se crearán los movimientos contables necesarios.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -2310,6 +2554,13 @@ msgid ""
 "\n"
 "The `pdfminer.six` Python library has to be installed in order to index PDF files\n"
 msgstr ""
+"\n"
+"Lista de anexos e indexación de documentos\n"
+"========================================\n"
+"* Mostrar archivo adjunto en la parte superior de los formularios\n"
+"* Indexación de documentos: odt, pdf, xlsx, docx\n"
+"\n"
+"La biblioteca de Python `pdfminer.six` debe estar instalada para indexar archivos PDF\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au
@@ -2363,6 +2614,30 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
+"\n"
+"Módulo de contabilidad australiana\n"
+"============================\n"
+"\n"
+"Informes anuales de pagos imponibles (TPAR) para Australia\n"
+"\n"
+"El informe anual de pagos imponibles (TPAR) permite:\n"
+"\n"
+"    • Pagos hechos a contratistas (o subcontratistas) por servicios, o\n"
+"    • Subvenciones pagadas por entidades gubernamentales a titulares de ABN\n"
+"\n"
+"para ser reportado cuando sea requerido bajo el Sistema de Información de Pagos Gravables (TPRS) y la medida de reporte de Subvenciones y Pagos del Gobierno Gravable.\n"
+"\n"
+"El TPAR vence el 28 de agosto de cada año.\n"
+"\n"
+"Se pueden aplicar sanciones si no presenta su TPAR a tiempo.\n"
+"\n"
+"Para obtener más información sobre quién debe presentar un informe anual de pagos sujetos a impuestos, consulte\n"
+"https://softwaredevelopers.ato.gov.au/tprs\n"
+"\n"
+"El informe anual debe entregarse al Comisionado a más tardar el 28 de agosto después del final del ejercicio financiero. Los informes se pueden enviar con más frecuencia para aquellos que lo deseen.\n"
+"\n"
+"El informe utiliza etiquetas de impuestos `` Servicio '' e `` Impuestos retenidos '' para encontrar elementos de diario adecuados. Estos se establecen utilizando las posiciones fiscales y el tipo correcto de producto (Servicios).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2597,6 +2872,7 @@ msgstr ""
 "\n"
 " Puente para añadir el calendario del contrato en las acciones automatizadas\n"
 "====================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports_cash_basis
@@ -2864,6 +3140,8 @@ msgid ""
 "Create Credit Notes from Helpdesk tickets\n"
 "    "
 msgstr ""
+"\n"
+"Crear notas de crédito a partir de tickets de la Mesa de Ayuda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -2902,6 +3180,8 @@ msgid ""
 "Create Sales order with timesheets and products from tasks\n"
 "    "
 msgstr ""
+"\n"
+"Crear órdenes de Venta con hojas de tiempo y productos a partir de tareas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -3248,6 +3528,8 @@ msgid ""
 "\n"
 "Employee contracts files will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Los archivos de contratos de empleados serán integrados a la app Documentos automáticamente\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_payroll
@@ -3255,6 +3537,8 @@ msgid ""
 "\n"
 "Employee payslips will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Los recibos de pagos para empleados serán integrados a la app Documentos automáticamente\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -3734,6 +4018,8 @@ msgid ""
 "Hides the attendance presence button when an employee is on leave.\n"
 "    "
 msgstr ""
+"\n"
+"Esconde el botón de asistencia cuando un empleado está de permiso."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -4301,6 +4587,8 @@ msgid ""
 "Manage the after sale of the products from helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"Gestionar la postventa de los productos a partir de tickets de la mesa de ayuda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -5078,6 +5366,8 @@ msgid ""
 "Please refer to Sale Matrix or Purchase Matrix for the use of this module.\n"
 "    "
 msgstr ""
+"\n"
+"Por favor refiérase a la Matriz de Ventas o la Matriz de Compras para el uso adecuado de éste módulo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
@@ -9836,7 +10126,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "Se requiere un correo electrónico para que find_or_create funcione"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -20790,7 +21080,67 @@ msgid ""
 "accounting valuation and deeper reporting on costs and revenues on your\n"
 "manufacturing operations.\n"
 "\n"
-msgstr "<a href=\"https://www.odoo.com/page/manufacturing\"/>"
+msgstr ""
+"Planificación de recursos de fabricación de Odoo\n"
+"------------------------------------\n"
+"\n"
+"Gestionar lista de materiales, planificar órdenes de fabricación, realizar un seguimiento de las órdenes de trabajo con el\n"
+"Aplicación <a href=\"https://www.odoo.com/page/manufacturing\">MRP de código abierto</a> de Odoo.\n"
+"\n"
+"Obtenga todas sus operaciones de montaje o fabricación administradas por Odoo. Horario\n"
+"órdenes de fabricación y órdenes de trabajo automáticamente. Revisar la propuesta\n"
+"planificación con las vistas kanban y gantt inteligentes. Utilice los análisis avanzados\n"
+"para detectar cuellos de botella en las capacidades de recursos y ubicaciones de inventario.\n"
+"\n"
+"Programar órdenes de fabricación de manera eficiente\n"
+"-----------------------------------------\n"
+"\n"
+"Obtenga órdenes de fabricación y órdenes de trabajo programadas automáticamente en función de su\n"
+"las normas de contratación, las cantidades previstas y la demanda dependiente (demanda de este\n"
+"parte basada en otra parte que lo consume).\n"
+"\n"
+"Definir datos maestros flexibles\n"
+"---------------------------\n"
+"\n"
+"Obtenga la flexibilidad para crear una lista de materiales de varios niveles, enrutamiento opcional,\n"
+"cambios de versión y una lista fantasma de materiales. Puede utilizar BoM para kits o para\n"
+"órdenes de fabricación.\n"
+"\n"
+"Obtenga flexibilidad en todas las operaciones\n"
+"---------------------------------\n"
+"\n"
+"Edite manualmente todas las operaciones propuestas en cualquier nivel del progreso. Con Odoo,\n"
+"no se frustrará por un sistema rígido.\n"
+"\n"
+"Programar órdenes de trabajo\n"
+"--------------------\n"
+"\n"
+"Compruebe las capacidades de los recursos y corrija los cuellos de botella.  Definir rutas y planificar la\n"
+"tiempo de trabajo y capacidad de sus recursos. Identifique rápidamente los recursos\n"
+"requisitos y cuellos de botella para garantizar que su producción cumpla con su entrega\n"
+"horarios.\n"
+"\n"
+"Una interfaz de usuario productiva\n"
+"---------------------------\n"
+"\n"
+"Organice las órdenes de fabricación y las órdenes de trabajo de la manera que le guste. Proceso siguiente\n"
+"órdenes de la vista de lista, el control en la vista de calendario y editar la propuesta\n"
+"horario en la vista de Gantt.\n"
+"\n"
+"Análisis de inventario y fabricación\n"
+"-----------------------------------\n"
+"\n"
+"Realizar un seguimiento de la evolución del valor de las acciones, de acuerdo con el nivel de fabricación\n"
+"a medida que avanzan en el proceso de transformación.\n"
+"\n"
+"Totalmente integrado con las operaciones\n"
+"--------------------------------\n"
+"\n"
+"Obtenga su planificación de recursos de fabricación precisa con su integración completa\n"
+"con aplicaciones de ventas y compras. La integración contable permite\n"
+"valoración contable y informes más profundos sobre los costos e ingresos de su\n"
+"operaciones de fabricación.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -21172,7 +21522,69 @@ msgid ""
 "receptions, create invoices manually and import lines from purchase orders,\n"
 "etc.\n"
 "\n"
-msgstr "<a href=\"https://www.odoo.com/page/purchase\"/>"
+msgstr ""
+"Cadena de suministro de Odoo\n"
+"-----------------\n"
+"\n"
+"Automatice la facturación de solicitud a pago y controle con el Odoo\n"
+"<a href=\"https://www.odoo.com/page/purchase\">Cadena de suministro de código abierto</a>.\n"
+"\n"
+"Automatice las propuestas de adquisición, inicie la solicitud de presupuestos, realice un seguimiento\n"
+"órdenes de compra, gestionar la información de los proveedores, controlar la recepción de productos y\n"
+"consultar las facturas de los proveedores.\n"
+"\n"
+"Propuestas de adquisiciones automatizadas\n"
+"----------------------------------\n"
+"\n"
+"Reduzca el nivel de inventario con reglas de compras. Obtenga la compra correcta\n"
+"propuesta en el momento adecuado para reducir su nivel de inventario. Mejore su\n"
+"rendimiento de compras e inventarios con reglas de adquisición dependiendo del stock\n"
+"normas logísticas, órdenes de venta, órdenes de fabricación previstas, etc.\n"
+"\n"
+"Envíe solicitudes de presupuestos o pedidos de compra a su proveedor con un solo clic.\n"
+"Obtenga acceso a recepciones de productos y facturas de su pedido de compra.\n"
+"\n"
+"Ofertas de compra\n"
+"----------------\n"
+"\n"
+"Lanzar licitaciones de compra, integrar las respuestas de los proveedores en el proceso y\n"
+"comparar propuestas. Elija la mejor oferta y envíe pedidos de compra fácilmente.\n"
+"Utilice los informes para analizar la calidad de sus proveedores después.\n"
+"\n"
+"Integraciones de correo electrónico\n"
+"------------------\n"
+"\n"
+"Integre todas las comunicaciones del proveedor en los pedidos de compra (o RfQ) para obtener\n"
+"una fuerte trazabilidad en los problemas de negociación o del servicio postventa. Utilice el\n"
+"módulo de gestión de reclamaciones para realizar un seguimiento de los problemas relacionados con los proveedores.\n"
+"\n"
+"Precio estándar, Precio medio, FIFO\n"
+"-----------------------------------\n"
+"\n"
+"Utilice el método de cálculo del coste que refleja su negocio: precio estándar, promedio\n"
+"precio, fifo o lifo. Obtenga sus entradas contables y el inventario adecuado\n"
+"valoración en tiempo real; Odoo gestiona todo por ti, de forma transparente.\n"
+"\n"
+"Importar listas de precios de proveedores\n"
+"--------------------------\n"
+"\n"
+"Tome decisiones de compra inteligentes utilizando los mejores precios.  Importe fácilmente los proveedores\n"
+"listas de precios para tomar decisiones de compra más inteligentes basadas en promociones, precios\n"
+"dependiendo de las cantidades y condiciones especiales del contrato. Incluso puede basar su\n"
+"precio de venta dependiendo de los precios de su proveedor.\n"
+"\n"
+"Controlar productos y facturas\n"
+"-----------------------------\n"
+"\n"
+"Ningún producto o pedido se queda atrás, el control de inventario le permite administrar\n"
+"pedidos pendientes, reembolsos, recepción de productos y control de calidad. Elija lo correcto\n"
+"método de control de acuerdo a su necesidad.\n"
+"\n"
+"Controle las facturas de los proveedores sin esfuerzo. Elija el método correcto de acuerdo con\n"
+"su necesidad: generar previamente borradores de facturas basadas en órdenes de compra, en productos\n"
+"recepciones, crear facturas manualmente e importar líneas de pedidos de compra,\n"
+"etcetera.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
