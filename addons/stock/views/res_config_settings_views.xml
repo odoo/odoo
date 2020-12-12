@@ -34,6 +34,13 @@
                                     <div class="text-muted">
                                         Process transfers in batch per worker
                                     </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('module_stock_picking_batch','=',False)]}">
+                                        <field name="group_stock_picking_wave" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="group_stock_picking_wave"/>
+                                            <div class="text-muted">Process operations in wave transfers</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="warning_info">
