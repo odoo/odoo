@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class StockPicking(models.Model):
@@ -29,6 +29,27 @@ class StockPicking(models.Model):
                 self.batch_id.picking_type_id = self.picking_type_id[0]
             self.batch_id._sanity_check()
         return res
+
+    def action_add_operations(self):
+        view = self.env.ref('stock_picking_batch.view_move_line_tree_detailed_wave')
+        return {
+            'name': _('Add Operations'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list',
+            'view': view,
+            'views': [(view.id, 'tree')],
+            'res_model': 'stock.move.line',
+            'target': 'new',
+            'domain': [
+                ('picking_id', 'in', self.ids),
+                ('state', '!=', 'done')
+            ],
+            'context': dict(
+                self.env.context,
+                picking_to_wave=self.ids,
+                active_wave_id=self.env.context.get('active_wave_id').id,
+                search_default_by_location=True,
+            )}
 
     def _should_show_transfers(self):
         if len(self.batch_id) == 1 and self == self.batch_id.picking_ids:
