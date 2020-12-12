@@ -59,6 +59,7 @@ class StockPickingBatch(models.Model):
               - If manually set then scheduled date for all transfers in batch will automatically update to this date.
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
                 but this scheduled date will not be set for all transfers in batch.""")
+    is_wave = fields.Boolean('This batch is a wave')
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
@@ -127,7 +128,10 @@ class StockPickingBatch(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('picking.batch') or '/'
+            if vals.get('is_wave'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('picking.wave') or '/'
+            else:
+                vals['name'] = self.env['ir.sequence'].next_by_code('picking.batch') or '/'
         return super().create(vals)
 
     def write(self, vals):
