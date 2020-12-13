@@ -1077,10 +1077,10 @@ class Field(MetaField('DummyField', (object,), {})):
             # new records: no business logic
             new_records = records.browse(new_ids)
             with records.env.protecting(records._field_computed.get(self, [self]), records):
-                new_records.modified([self.name])
-                self.write(new_records, value)
                 if self.relational:
-                    new_records.modified([self.name])
+                    new_records.modified([self.name], before=True)
+                self.write(new_records, value)
+                new_records.modified([self.name])
 
         if other_ids:
             # base case: full business logic
