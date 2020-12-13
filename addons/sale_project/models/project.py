@@ -40,6 +40,7 @@ class ProjectTask(models.Model):
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     invoice_count = fields.Integer("Number of invoices", related='sale_order_id.invoice_count')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
+    is_fsm = fields.Boolean('Is FSM', default=False, readonly=True)
 
     @api.depends('project_id.sale_line_id.order_partner_id')
     def _compute_partner_id(self):
