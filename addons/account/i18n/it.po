@@ -1182,7 +1182,7 @@ msgstr "Gruppo imposta conto"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr ""
+msgstr "Riga dichiarazione IVA contabilità"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1724,7 +1724,7 @@ msgstr "I conti sulle righe devono essere tutti dello stesso tipo."
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "All entries are hashed."
-msgstr ""
+msgstr "Tutte le registrazioni hanno un hash."
 
 #. module: account
 #. openerp-web
@@ -2498,7 +2498,7 @@ msgstr "Conto di credito per la tassa"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__repartition_type
 msgid "Base on which the factor will be applied."
-msgstr ""
+msgstr "Base sulla quale viene applicato il fattore."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__repartition_type
@@ -2867,7 +2867,7 @@ msgstr "Arrotondamenti di cassa"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
-msgstr ""
+msgstr "Situazione di cassa"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -3040,6 +3040,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
+"Selezionare la casella per rendere negativo, nel calcolo della dichiarazione"
+" IVA, il valore assoluto del saldo delle righe associate all'etichetta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -4746,7 +4748,7 @@ msgstr "Registrazioni ordinate per"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Entries are hashed from %s (%s)"
-msgstr ""
+msgstr "Registrazioni con hash da %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4960,7 +4962,7 @@ msgstr "Prima registrazione"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Hash"
-msgstr ""
+msgstr "Primo hash"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -5815,7 +5817,7 @@ msgstr "Non attivo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__inalterable_hash
 msgid "Inalterability Hash"
-msgstr ""
+msgstr "Hash di inalterabilità"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6688,7 +6690,7 @@ msgstr "Ultima registrazione"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Hash"
-msgstr ""
+msgstr "Ultimo hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account____last_update
@@ -9274,7 +9276,7 @@ msgstr "Conto di gestione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
 msgid "Reversal Move"
-msgstr ""
+msgstr "Movimento di storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -10406,12 +10408,12 @@ msgstr "Imposta inclusa nel prezzo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Lock Date"
-msgstr ""
+msgstr "Data chiusura fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr ""
+msgstr "Messaggio data chiusura fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -10454,7 +10456,7 @@ msgstr "Resoconto fiscale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_report_line_ids
 msgid "Tax Report Lines"
-msgstr ""
+msgstr "Righe dichiarazione IVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -10730,6 +10732,8 @@ msgid ""
 "Technical field used to display a message when the invoice's accounting date"
 " is prior of the tax lock date."
 msgstr ""
+"Campo tecnico usato per visualizzare un messaggio quando la data contabile "
+"della fattura è antecedente a quella della chiusura fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_has_matching_suspense_amount
@@ -11111,6 +11115,8 @@ msgstr ""
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
 msgstr ""
+"La nota di credito viene creata in bozza e può essere modificata prima di "
+"essere emessa."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11325,6 +11331,10 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
+"L'operazione è stata rifiutata in quanto avrebbe effetto su una "
+"dichiarazione fiscale già emessa. Per proseguire, cambiare la data della "
+"registrazione contabile o quella di chiusura fiscale definite nelle "
+"impostazioni (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_action_id
@@ -11559,7 +11569,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
 msgid "The tax report lines using this tag"
-msgstr ""
+msgstr "Righe della dichiarazione IVA che usano l'etichetta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__invoice_tax_id

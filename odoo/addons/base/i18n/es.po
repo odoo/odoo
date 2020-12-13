@@ -74,8 +74,9 @@
 # Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
 # Carolina Gonzalez <cgo@odoo.com>, 2020
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Susanna Pujol, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Oscar Tejada <oscar.tejada@epvsaisa.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -83,7 +84,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Susanna Pujol, 2020\n"
+"Last-Translator: Oscar Tejada <oscar.tejada@epvsaisa.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -837,6 +838,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Países como Colombia, Perú y México deben poder utilizar la\n"
+"        Código UNSPSC para sus productos y unidades de medida.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -857,6 +862,8 @@ msgid ""
 "\n"
 "        Define default purchase journal on the warehouse"
 msgstr ""
+"\n"
+"        Definir el diario de compras predeterminado en el almacén"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -868,6 +875,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Defina el diario de compra predeterminado en el almacén,\n"
+"        ayudarle a elegir el diario de compra correcto en el pedido de compra cuando\n"
+"        cambiar la operación de picking.\n"
+"        útil al configurar las múltiples unidades GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -875,6 +888,8 @@ msgid ""
 "\n"
 "        Define default sales journal on the warehouse"
 msgstr ""
+"\n"
+"        Definir el diario de ventas predeterminado en el almacén"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -886,6 +901,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Defina el diario de ventas predeterminado en el almacén,\n"
+"        ayudarle a elegir el diario de ventas correcto en el pedido de ventas cuando\n"
+"        cambias el almacén.\n"
+"        útil al configurar las múltiples unidades GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -956,6 +977,9 @@ msgid ""
 "        Import Data From Winbooks\n"
 "    "
 msgstr ""
+"\n"
+"        Importar datos de Winbooks\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -1092,6 +1116,13 @@ msgid ""
 "        but aims to connect with all European banks later on\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo se conecta a myponto.com para recuperar extractos bancarios.\n"
+"\n"
+"        Actualmente, ese servicio permite conectarse solo a bancos belgas\n"
+"        (BNP Paribas Fortis, KBC, CBC, KBC Bruselas, Fintro, Hello Bank, ING Bélgica, AXA Bélgica)\n"
+"        pero apunta a conectarse con todos los bancos europeos más adelante\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1257,6 +1288,9 @@ msgid ""
 "       Add variants to your purchase orders through an Order Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Agregue variantes a sus pedidos de compra a través de una entrada de cuadrícula de pedidos.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -1303,6 +1337,8 @@ msgid ""
 "\n"
 "    Adds Quality Control to workorders with IoT.\n"
 msgstr ""
+"\n"
+"    Agrega control de calidad a las órdenes de trabajo con IoT.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1400,6 +1436,24 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestionar descuentos en cómputos de impuestos de taxclouds.\n"
+"    Consulte https://taxcloud.com/support/discounts o\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Resumen: todos los descuentos proporcionados por el vendedor deben aplicarse al precio de venta antes de calcular el impuesto a las ventas.\n"
+"    Los vendedores deben revelar su metodología a los clientes en una Política de solicitud de descuento.\n"
+"\n"
+"    El algoritmo es como sigue:\n"
+"     - Los descuentos específicos de línea se aplican primero, en las líneas a las que se supone que deben aplicarse.\n"
+"       Esto significa descuentos específicos del producto o descuentos en la línea más barata.\n"
+"     - Luego, los descuentos globales se aplican de manera uniforme en todas las líneas pagas, tanto como sea posible.\n"
+"       Si queda remanente, se aplica secuencialmente, en el orden de las líneas,\n"
+"       hasta que no quede ningún descuento o no quede ninguna línea con descuento.\n"
+"\n"
+"    Tenga en cuenta que las líneas de descuento (con un precio negativo) no tendrán impuestos aplicados,\n"
+"    sino que el monto de estas líneas se deducirá de las líneas a las que se apliquen durante el cálculo del impuesto.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1465,6 +1519,9 @@ msgid ""
 "    Schedule your teams and employees with shift.\n"
 "    "
 msgstr ""
+"\n"
+"    Programe sus equipos y empleados con turno.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -1535,6 +1592,13 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"Un impuesto definido como código Python consta de dos fragmentos de código python que se ejecutan en un entorno local que contiene datos como el precio unitario, el producto o el asociado.\n"
+"\n"
+"\"Código aplicable\" define si se va a aplicar el impuesto.\n"
+"\n"
+"\"Código Python\" define la cantidad del impuesto.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1646,6 +1710,11 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Transferencias automáticas de cuenta\n"
+"===========================\n"
+"Gestione transferencias automáticas entre sus cuentas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -1656,6 +1725,11 @@ msgid ""
 "Demo data for account automatic transfers module\n"
 "    "
 msgstr ""
+"\n"
+"Demostración de transferencias automáticas de cuenta\n"
+"================================\n"
+"Datos de demostración para el módulo de transferencias automáticas de cuentas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_us_consolidation_demo
@@ -1664,6 +1738,9 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"Datos de demostración de consolidación de cuenta\n"
+"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -1729,6 +1806,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Dinamarca\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1739,6 +1820,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Finlandia\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -1792,6 +1878,13 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Singapur\n"
+"================================\n"
+"Este módulo permite generar la devolución GST (F5) y el archivo de auditoría IRAS.\n"
+" - Para generar la devolución de GST, vaya a Contabilidad -> Informes -> Retorno de GST\n"
+" - Para generar el archivo de auditoría de IRAS, vaya a Contabilidad -> Informes -> Archivo de auditoría IRAS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_ocr
@@ -1986,6 +2079,9 @@ msgid ""
 "Add the ability to create signatures from the document module.\n"
 "The first element of the selection (in DRM) will be used as the signature attachment.\n"
 msgstr ""
+"\n"
+"Agregue la capacidad de crear firmas desde el módulo de documento.\n"
+"El primer elemento de la selección (en DRM) se utilizará como archivo adjunto de firma.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_recruitment
@@ -2035,6 +2131,8 @@ msgid ""
 "\n"
 "Adds fleet data to documents\n"
 msgstr ""
+"\n"
+"Agrega datos de flota a los documentos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -2043,6 +2141,9 @@ msgid ""
 "Adds the ability to create products from the document module and adds the\n"
 "option to send products' attachments to the documents app.\n"
 msgstr ""
+"\n"
+"Agrega la capacidad de crear productos desde el módulo de documentos y agrega la\n"
+"opción para enviar archivos adjuntos de productos a la aplicación de documentos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -2097,6 +2198,19 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Permitir pagos de TPV con tarjeta de crédito\n"
+"==============================\n"
+"\n"
+"Este módulo permite a los clientes pagar sus pedidos con crédito\n"
+"Tarjetas. Las transacciones son procesadas por Vantiv (desarrollado por Wells\n"
+"Fargo Bank). Es necesaria una cuenta de comerciante de Vantiv. Permite que el\n"
+"Siguientes:\n"
+"\n"
+"* Pago rápido con sólo deslizar una tarjeta de crédito mientras está en la pantalla de pago\n"
+"* Combinación de pagos en efectivo y pagos con tarjeta de crédito\n"
+"* Cashback\n"
+"* Tarjetas compatibles: Visa, MasterCard, American Express, Discover"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -2140,6 +2254,9 @@ msgid ""
 "Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.\n"
 "    "
 msgstr ""
+"\n"
+"Permitir a los visitantes del sitio web chatear con los colaboradores. Este módulo también trae una herramienta de retroalimentación para el livechat y las páginas web para mostrar su canal con sus calificaciones en el sitio web.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -2172,6 +2289,9 @@ msgid ""
 "Allows to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"\n"
+"Permite realizar llamadas desde próximas actividades o con clic para marcar.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -2208,6 +2328,9 @@ msgid ""
 "Allows use of stock application to manage rentals inventory\n"
 "        "
 msgstr ""
+"\n"
+"Permite el uso de la aplicación de stock para gestionar el inventario de alquileres\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail
@@ -2281,6 +2404,16 @@ msgid ""
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"Contabilidad analítica en MRP\n"
+"==========================\n"
+"\n"
+"* Informe de estructura de costes\n"
+"\n"
+"Además, permite calcular el coste del producto en función de su BoM, utilizando los costes de sus componentes y las operaciones del puesto de trabajo.\n"
+"Agrega un botón en el propio producto, pero también una acción en la vista de lista de los productos.\n"
+"Si la valoración de inventario automatizada está activa, se crearán los movimientos contables necesarios.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -2930,6 +3063,8 @@ msgid ""
 "Create Credit Notes from Helpdesk tickets\n"
 "    "
 msgstr ""
+"\n"
+"Crear notas de crédito a partir de tickets de la Mesa de Ayuda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -3321,6 +3456,8 @@ msgid ""
 "\n"
 "Employee contracts files will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Los archivos de contratos de empleados serán integrados a la app Documentos automáticamente\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_payroll
@@ -3328,6 +3465,8 @@ msgid ""
 "\n"
 "Employee payslips will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Los recibos de pagos para empleados serán integrados a la app Documentos automáticamente\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -3839,6 +3978,8 @@ msgid ""
 "Hides the attendance presence button when an employee is on leave.\n"
 "    "
 msgstr ""
+"\n"
+"Esconde el botón de asistencia cuando un empleado está de permiso."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -4421,6 +4562,8 @@ msgid ""
 "Manage the after sale of the products from helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"Gestionar la postventa de los productos a partir de tickets de la mesa de ayuda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -5224,6 +5367,8 @@ msgid ""
 "Please refer to Sale Matrix or Purchase Matrix for the use of this module.\n"
 "    "
 msgstr ""
+"\n"
+"Por favor refiérase a la Matriz de Ventas o la Matriz de Compras para el uso adecuado de éste módulo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm

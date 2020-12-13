@@ -1885,6 +1885,8 @@ msgid ""
 "An error occured when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Đã xảy ra lỗi khi tính toán khả năng không thay đổi được. Impossible to get "
+"the unique previous posted journal entry."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2660,6 +2662,8 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
+"Không thể tạo bút toán không có số dư. Ids: %s\n"
+"Chênh lệch nợ - có: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3327,7 +3331,7 @@ msgstr "Kiểm soát truy cập"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
-msgstr ""
+msgstr "Dữ liệu bị hỏng ở trên bút toán có id %s."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
@@ -3936,12 +3940,12 @@ msgstr "GIẢM"
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
 msgid "Data Inalterability Check"
-msgstr ""
+msgstr "Kiểm tra tính vô hiệu của dữ liệu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data consistency check"
-msgstr ""
+msgstr "Kiểm tra tính nhất quán của dữ liệu"
 
 #. module: account
 #. openerp-web
@@ -4192,7 +4196,7 @@ msgstr "Khấu hao"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.cash_box_out_form
 msgid "Describe why you put/take money from the cash register:"
-msgstr ""
+msgstr "Mô tả tại sao bạn lại thu/chi tiền từ quỹ:"
 
 #. module: account
 #. openerp-web
@@ -4270,6 +4274,8 @@ msgid ""
 "Digitalize your scanned or PDF vendor bills with OCR and Artificial "
 "Intelligence"
 msgstr ""
+"Số hóa hóa đơn của nhà cung cấp được quét hoặc PDF của bạn bằng OCR và Trí "
+"tuệ nhân tạo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4688,6 +4694,8 @@ msgid ""
 "Every character that is nor a digit nor this separator will be removed from "
 "the matching string"
 msgstr ""
+"Mọi ký tự không phải là chữ số cũng như dấu phân tách này sẽ bị xóa khỏi "
+"chuỗi tương ứng"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7256,7 +7264,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
 msgid "Negate Tax Balance"
-msgstr ""
+msgstr "Số có vấn đề"
 
 #. module: account
 #. openerp-web
@@ -8908,7 +8916,7 @@ msgstr "Ngày hoàn tiền"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__refund_tax_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__refund_tax_id
 msgid "Refund Tax"
-msgstr ""
+msgstr "Hoàn thuế"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -8963,7 +8971,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Invoices"
-msgstr ""
+msgstr "Phân vùng lại cho hóa đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
@@ -9831,7 +9839,7 @@ msgstr "Hiển thị Thành tiền từng dòng với thuế không bao gồm (B
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on invoices/orders"
-msgstr ""
+msgstr "Hiển thị điều khoản &amp; điều kiện tiêu chuẩn trên hóa đơn/đơn hàng"
 
 #. module: account
 #. openerp-web
@@ -10961,7 +10969,7 @@ msgstr "Đơn vị tiền được sử dụng để nhập bảng kê khai"
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
-msgstr ""
+msgstr "Ngày của tháng được dùng trong điều khoản này phải là số dương."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
@@ -11613,7 +11621,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "Sổ nhật ký này không ở chế độ hạn chế."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -11730,6 +11738,8 @@ msgid ""
 "Those options will be selected by default when clicking \"Send &amp; Print\""
 " on invoices"
 msgstr ""
+"Các cài đặt đó sẽ được chọn mặc định khi nhấp vào \"Gửi &amp; In\" trên hóa "
+"đơn"
 
 #. module: account
 #. openerp-web
@@ -12548,6 +12558,8 @@ msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
 msgstr ""
+"Bạn chỉ có thể cài tài khoản có loại phải trả trên các dòng điều khoản thanh"
+" toán cho hóa đơn của nhà cung cấp."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12556,6 +12568,8 @@ msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
 msgstr ""
+"Bạn chỉ có thể cài tài khoản có loại phải thu trên các dòng điều khoản thanh"
+" toán cho hóa đơn của khách hàng."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -12716,6 +12730,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
+"Bạn không thể sửa sổ nhật ký của bút toán nếu một khi nó đã vào sổ rồi."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12752,6 +12767,7 @@ msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
 msgstr ""
+"Bạn không thể sửa bút toán trong sổ nhật ký này vì nó đang ở chế độ hạn chế."
 
 #. module: account
 #: code:addons/account/models/account.py:0

@@ -16,7 +16,7 @@
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Yip132 <yannick.renders@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6238,6 +6238,12 @@ msgid ""
 "speakers..\n"
 "        "
 msgstr ""
+"\n"
+"SMS-marketing op event track-sprekers\n"
+"======================================\n"
+"\n"
+"Bridge-module die UX-vereisten toevoegt om sms-marketing op evenemententrack te vergemakkelijken\n"
+"luidsprekers .."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -7364,6 +7370,8 @@ msgid ""
 "This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt een Twitter-scroller-bouwsteen toe aan de websitebouwer, zodat je Twitter-feeds op elke pagina van je website kunt weergeven."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -7564,6 +7572,8 @@ msgid ""
 "This module allows to configure commissions for resellers.\n"
 "    "
 msgstr ""
+"\n"
+"Met deze module kunnen commissies voor wederverkopers worden geconfigureerd"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -9921,7 +9931,7 @@ msgstr "Consolidatie demogegevens"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_us_consolidation_demo
 msgid "Account Consolidation Demo Data using a Belgium and a US company"
-msgstr ""
+msgstr "Consolidatie demogegevens voor bedrijven in Belgie en USA. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -10424,6 +10434,41 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
+"Voegt ondersteuning toe voor authenticatie met LDAP server. =============================================== \n"
+"Deze module laat gebruikers toe om aan te melden met hun LDAP gebruikersnaam en wachtwoord, en zal automatisch Odoo gebruikers vanuit deze gebruikers aanmaken, direct. \n"
+"\n"
+"**Opmerkingen:** Deze module werkt alleen op servers die de Python ``ldap`` module geïnstalleerd hebben. \n"
+"\n"
+"Configuratie:\n"
+" -------------- \n"
+"Na het installeren van deze module moet u de LDAP parameters configureren in het\n"
+"Configuratie tabblad van de bedrijfsgegevens. Verschillende bedrijven\n"
+"hebben mogelijk verschillende LDAP servers, zolang ze unieke gebruikersnamen hebben (gebruikersnamen moeten uniek zijn in Odoo, zelfs doorheen meerdere bedrijven). \n"
+"\n"
+"Anonieme LDAP binding is ook ondersteund (voor LDAP servers die het toestaan), door simpelweg de LDAP gebruikersnaam en wachtwoord leeg te laten in de LDAP configuratie. Dit staat geen anonieme authenticatie toe voor gebruikers, het is enkel voor het hoofd LDAP account dat gebruikt wordt om te verifiëren of een gebruiker bestaat voor deze te proberen te authenticeren. \n"
+"\n"
+"De connectie beveiligen met STARTTLS is beschikbaar voor LDAP servers die het ondersteunen, door de optie te activeren in de LDAP configuratie. Voor verdere opties om de LDAP te configureren kijkt u best op de ldap.config manpage: manpage:`ldap.conf(5)` \n"
+"\n"
+"Veiligheidsoverwegingen \n"
+"------------------------\n"
+"LDAP wachtwoorden wordt nooit bewaard in de Odoo database, de LDAP server wordt gequeried wanneer een gebruiker zich moet authenticeren. Er gebeurt geen duplicatie van de wachtwoorden, en wachtwoorden worden slechts op één plaats beheerd (voor LDAP gebruikers). \n"
+"\n"
+"Het is ook mogelijk om lokale Odoo gebruikers in uw database te hebben samen met LDAP-geauthenticeerde gebruikers (de administrator is een voor de hand liggend voorbeeld). \n"
+"\n"
+"Dit is hoe het werkt: \n"
+"--------------------- \n"
+"* Het systeem probeert eerst de gebruiker te authenticeren tegen de lokale Odoo database; \n"
+"* Als de authenticatie mislukt (bijvoorbeeld omdat de gebruiker geen lokaal wachtwoord heeft), probeert het systeem vervolgens tegen LDAP te authenticeren;\n"
+"\n"
+"Omdat een LDAP gebruiker standaard geen wachtwoord in de lokale Odoo database heeft opgeslagen (wat betekend geen toegang), mislukt de eerste stap altijd en de LDAP server wordt gequeried om te authenticeren. \n"
+"\n"
+"STARTTLS activeren verzekert u dat de authenticatie query naar de LDAP server geëncrypteerd is. \n"
+"\n"
+"Gebruikersjabloon: \n"
+"-------------- \n"
+"In de LDAP configuratie van uw bedrijfsformulier is het mogelijk om een \"Gebruikersjabloon\" te selecteren. Indien ingesteld zal deze gebruiker gebruikt worden als sjabloon om de lokale gebruikers aan te maken wanneer iemand voor het eerste authenticeert met de LDAP authenticatie. Dit staat pre-configuratie van de standaard groepen en menu's toe voor eerste keer gebruikers. \n"
+"\n"
+"**Waarschuwing:** Indien u een wachtwoord instelt voor de gebruikersjabloon zal dit wachtwoord worden toegewezen aan elke nieuwe LDAP gebruiker, wat effectief een *master password* instelt voor deze gebruiker (tot deze handmatig gewijzigd is). U wilt dit normaal niet. Een gemakkelijke manier om een sjabloongebruiker op te zetten is om in te loggen met een valide LDAP gebruiker, Odoo een lege lokale gebruiker aan te maken met dezelfde login (en een blanco wachtwoord), hernoem vervolgens deze nieuwe gebruiker naar een gebruikersnaam die niet bestaat in LDAP, en zet de groepen op\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -10702,6 +10747,8 @@ msgstr "Staat versturen van SMS naar website bezoeker toe"
 msgid ""
 "Allows to send sms to website visitor if the visitor is linked to a lead."
 msgstr ""
+"Maakt het mogelijk om sms naar de websitebezoeker te sturen als de bezoeker "
+"aan een lead is gekoppeld."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sms
@@ -12022,6 +12069,7 @@ msgstr ""
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
 msgstr ""
+"Kan een taal die momenteel door contacten wordt gebruikt, niet deactiveren."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -15628,7 +15676,7 @@ msgstr "Boekhoudkundige rapporten voor Finland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi
 msgid "Finnish Localization"
-msgstr ""
+msgstr "Fiscale lokalisatie voor Finlans"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
@@ -19200,7 +19248,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
 msgid "Manage discounts in taxclouds computations with delivery."
-msgstr ""
+msgstr "Beheer kortingen in taxclouds-berekeningen met bezorging."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
@@ -21543,6 +21591,102 @@ msgid ""
 "emails directly into the application.\n"
 "\n"
 msgstr ""
+"Odoo Mass Mailing\n"
+"-----------------\n"
+"\n"
+"Verzend eenvoudig massamails naar uw leads, opportunities of klanten\n"
+"met Odoo <a href=\"https://www.odoo.com/page/mailing#\">e-mailmarketing</a>. Track\n"
+"marketingcampagnes om de conversieratio's te verbeteren. Ontwerp\n"
+"professionele e-mails en hergebruik sjablonen in een paar klikken.\n"
+"\n"
+"Stuur professionele e-mails\n"
+"------------------------\n"
+"\n"
+"Importeer database met prospects of filter op bestaande leads, opportunities en\n"
+"klanten in slechts een paar klikken.\n"
+"\n"
+"Definieer e-mailsjablonen om inhoud of specifiek ontwerp voor uw nieuwsbrief te hergebruiken.\n"
+"Stel verschillende e-mailservers in met hun eigen IP / domein om de openingsratio te optimaliseren.\n"
+"\n"
+"Organiseer marketingcampagnes\n"
+"----------------------------\n"
+"\n"
+"Ontwerp, verzend en volg campagnes met onze <a href=\"https://www.odoo.com/page/mailing\">Lead Automation</a>-app.\n"
+"\n"
+"Ontvang realtime statistieken over campagneprestaties om uw conversie te verbeteren\n"
+"gemist. Houd verzonden, ontvangen, geopende en beantwoorde e-mails bij.\n"
+"\n"
+"Beheer eenvoudig uw marketingcampagnes, discussiegroepen, leads en\n"
+"kansen in één eenvoudig en krachtig platform.\n"
+"\n"
+"Geïntegreerd met Odoo Apps\n"
+"-------------------------\n"
+"\n"
+"Krijg toegang tot massa-mailfuncties van elke Odoo-app om de manier waarop uw\n"
+"gebruikers communiceren.\n"
+"\n"
+"Verzend een sjabloon met e-mails van Odoo <a href=\"https://www.odoo.com/page/mailing\">CRM verkoopkansen</a>, selecteer op basis van leads\n"
+"op marketingsegmenten, <a href=\"https://www.odoo.com/page/recruitment\">vacatures</a> versturen en automatiseren\n"
+"antwoorden aan sollicitanten, hergebruik e-mailsjabloon in de leadautomatiseringsmarketing\n"
+"campagnes.\n"
+"\n"
+"Antwoorden op uw e-mails verschijnen automatisch in de geschiedenis van elk document\n"
+"met de sociale netwerkmodule.\n"
+"\n"
+"Maak uw leaddatabase schoon\n"
+"------------------------\n"
+"\n"
+"Krijg een schone leaddatabase die in de loop van de tijd verbetert met behulp van de prestaties van\n"
+"uw mails. Odoo verwerkt bounce mails efficiënt, markeert foutieve leads\n"
+"dienovereenkomstig en geeft u statistieken over de kwaliteit van uw leads.\n"
+"\n"
+"E-mails met één klik verzenden\n"
+"---------------------\n"
+"\n"
+"De marketingafdeling zal het geweldig vinden om aan campagnes te werken. Maar je kunt ook geven\n"
+"een massamailingfaciliteit met één klik naar alle andere gebruikers op hun eigen prospects of\n"
+"documenten.\n"
+"\n"
+"Selecteer een paar documenten (bijv. Leads, supporttickets, leveranciers, sollicitanten,\n"
+"...) en stuur e-mails met één klik naar hun contacten, waarbij bestaande e-mails opnieuw worden gebruikt\n"
+"Sjablonen.\n"
+"\n"
+"Follow-up van antwoorden\n"
+"--------------------\n"
+"\n"
+"Met de chatter-functie kunt u sneller en efficiënter communiceren met\n"
+"uw klant. Laat automatisch documenten maken (leads, opportunities,\n"
+"taken, ...) op basis van antwoorden op uw massa-mailcampagnes Volg de\n"
+"discussie rechtstreeks op de zakelijke documenten binnen Odoo of via e-mail.\n"
+"\n"
+"Zorg dat alle onderhandelingen en discussies aan het juiste document en\n"
+"Relevante managers worden op de hoogte gebracht van specifieke evenementen.\n"
+"\n"
+"Dashboard-campagnes\n"
+"-------------------\n"
+"\n"
+"Krijg de inzichten die u nodig hebt om een ​​slimmere marketingcampagne te maken. Houd statistieken bij\n"
+"per campagne: bouncepercentages, verzonden mails, beste inhoud, etc. De duidelijke dashboards\n"
+"geeft u een direct overzicht van uw campagneprestaties.\n"
+"\n"
+"Volledig geïntegreerd met andere apps\n"
+"---------------------------------\n"
+"\n"
+"Definieer geautomatiseerde acties (bijv. Een verkoper vragen om te bellen, een e-mail te sturen, ...)\n"
+"op basis van triggers (geen activiteit sinds 20 dagen, een promotionele e-mail beantwoord,\n"
+"enzovoort.)\n"
+"\n"
+"Optimaliseer campagnes van lead tot close, op elk kanaal. Maak slimmere beslissingen\n"
+"over waar u kunt investeren en de impact van uw marketingactiviteiten op uw\n"
+"bedrijfsresultaten.\n"
+"\n"
+"Integreer eenvoudig een contactformulier in uw website. Inzendingen van formulieren creëren leads\n"
+"automatisch in Odoo CRM. Leads kunnen worden gebruikt in marketingcampagnes.\n"
+"\n"
+"Beheer uw <a href=\"https://www.odoo.com/page/crm\">verkoop pijplijn zonder\n"
+"inspanning. Trek leads aan, volg telefoongesprekken en vergaderingen op. Analyseer het\n"
+"kwaliteit van uw leads om weloverwogen beslissingen te nemen en tijd te besparen door te integreren\n"
+"e-mails rechtstreeks naar de applicatie.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
@@ -28091,7 +28235,7 @@ msgstr "Rondleidingen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr ""
+msgstr "Volg Sprekers SMS Marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -29361,7 +29505,7 @@ msgstr "Web routing"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_cohort
 msgid "Web cohort Test"
-msgstr ""
+msgstr "Web cohort Test"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
