@@ -450,20 +450,42 @@ class TestFields(TransactionCaseWithUserDemo):
         b = self.env['test_new_api.recursive'].create({'name': 'B', 'parent': a.id})
         c = self.env['test_new_api.recursive'].create({'name': 'C', 'parent': b.id})
         d = self.env['test_new_api.recursive'].create({'name': 'D', 'parent': c.id})
+        self.assertEqual(a.full_name, 'A')
+        self.assertEqual(b.full_name, 'A / B')
+        self.assertEqual(c.full_name, 'A / B / C')
+        self.assertEqual(d.full_name, 'A / B / C / D')
         self.assertEqual(a.display_name, 'A')
         self.assertEqual(b.display_name, 'A / B')
         self.assertEqual(c.display_name, 'A / B / C')
         self.assertEqual(d.display_name, 'A / B / C / D')
 
+        a.name = 'A1'
+        self.assertEqual(a.full_name, 'A1')
+        self.assertEqual(b.full_name, 'A1 / B')
+        self.assertEqual(c.full_name, 'A1 / B / C')
+        self.assertEqual(d.full_name, 'A1 / B / C / D')
+        self.assertEqual(a.display_name, 'A1')
+        self.assertEqual(b.display_name, 'A1 / B')
+        self.assertEqual(c.display_name, 'A1 / B / C')
+        self.assertEqual(d.display_name, 'A1 / B / C / D')
+
         b.parent = False
-        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(a.full_name, 'A1')
+        self.assertEqual(b.full_name, 'B')
+        self.assertEqual(c.full_name, 'B / C')
+        self.assertEqual(d.full_name, 'B / C / D')
+        self.assertEqual(a.display_name, 'A1')
         self.assertEqual(b.display_name, 'B')
         self.assertEqual(c.display_name, 'B / C')
         self.assertEqual(d.display_name, 'B / C / D')
 
         # rename several records to trigger several recomputations at once
         (d + c + b).write({'name': 'X'})
-        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(a.full_name, 'A1')
+        self.assertEqual(b.full_name, 'X')
+        self.assertEqual(c.full_name, 'X / X')
+        self.assertEqual(d.full_name, 'X / X / X')
+        self.assertEqual(a.display_name, 'A1')
         self.assertEqual(b.display_name, 'X')
         self.assertEqual(c.display_name, 'X / X')
         self.assertEqual(d.display_name, 'X / X / X')
@@ -1130,6 +1152,32 @@ class TestFields(TransactionCaseWithUserDemo):
         bar.name = 'B'
         self.assertEqual(bar.foo, oof)
         self.assertIn(bar, bar.search([('foo', 'in', oof.ids)]))
+
+    def test_25_one2many_inverse_related(self):
+        left = self.env['test_new_api.trigger.left'].create({})
+        right = self.env['test_new_api.trigger.right'].create({})
+        self.assertFalse(left.right_id)
+        self.assertFalse(right.left_ids)
+        self.assertFalse(right.left_size)
+
+        # create middle: this should trigger left.right_id by traversing
+        # middle.left_id, and right.left_size by traversing left.right_id
+        # after its computation!
+        middle = self.env['test_new_api.trigger.middle'].create({
+            'left_id': left.id,
+            'right_id': right.id,
+        })
+        self.assertEqual(left.right_id, right)
+        self.assertEqual(right.left_ids, left)
+        self.assertEqual(right.left_size, 1)
+
+        # delete middle: this should trigger left.right_id by traversing
+        # middle.left_id, and right.left_size by traversing left.right_id
+        # before its computation!
+        middle.unlink()
+        self.assertFalse(left.right_id)
+        self.assertFalse(right.left_ids)
+        self.assertFalse(right.left_size)
 
     def test_26_inherited(self):
         """ test inherited fields. """

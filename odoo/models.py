@@ -3437,7 +3437,7 @@ Fields:
         # mark fields that depend on 'self' to recompute them after 'self' has
         # been deleted (like updating a sum of lines after deleting one line)
         self.flush()
-        self.modified(self._fields)
+        self.modified(self._fields, before=True)
 
         with self.env.norecompute():
             self.check_access_rule('unlink')
@@ -3618,8 +3618,25 @@ Fields:
 
         # protect fields being written against recomputation
         with env.protecting(protected, self):
-            # determine records depending on values
-            self.modified(relational_names)
+            # Determine records depending on values. When modifying a relational
+            # field, you have to recompute what depends on the field's values
+            # before and after modification.  This is because the modification
+            # has an impact on the "data path" between a computed field and its
+            # dependency.  Note that this double call to modified() is only
+            # necessary for relational fields.
+            #
+            # It is best explained with a simple example: consider two sales
+            # orders SO1 and SO2.  The computed total amount on sales orders
+            # indirectly depends on the many2one field 'order_id' linking lines
+            # to their sales order.  Now consider the following code:
+            #
+            #   line = so1.line_ids[0]      # pick a line from SO1
+            #   line.order_id = so2         # move the line to SO2
+            #
+            # In this situation, the total amount must be recomputed on *both*
+            # sales order: the line's order before the modification, and the
+            # line's order after the modification.
+            self.modified(relational_names, before=True)
 
             real_recs = self.filtered('id')
 
@@ -5707,14 +5724,14 @@ Fields:
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.cache.invalidate(spec)
 
-    def modified(self, fnames, create=False):
-        """ Notify that fields have been modified on ``self``. This invalidates
-            the cache, and prepares the recomputation of stored function fields
-            (new-style fields only).
+    def modified(self, fnames, create=False, before=False):
+        """ Notify that fields will be or have been modified on ``self``. This
+        invalidates the cache where necessary, and prepares the recomputation of
+        dependent stored fields.
 
-            :param fnames: iterable of field names that have been modified on
-                records ``self``
-            :param create: whether modified is called in the context of record creation
+        :param fnames: iterable of field names modified on records ``self``
+        :param create: whether called in the context of record creation
+        :param before: whether called before modifying records ``self``
         """
         if not self or not fnames:
             return
@@ -5747,34 +5764,59 @@ Fields:
                 node = self.pool.field_triggers.get(self._fields[fname])
                 if node:
                     trigger_tree_merge(tree, node)
+
         if tree:
-            self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
+            # determine what to compute (through an iterator)
+            tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
+
+            # When called after modification, one should traverse backwards
+            # dependencies by taking into account all fields already known to be
+            # recomputed.  In that case, we mark fieds to compute as soon as
+            # possible.
+            #
+            # When called before modification, one should mark fields to compute
+            # after having inversed all dependencies.  This is because we
+            # determine what currently depends on self, and it should not be
+            # recomputed before the modification!
+            if before:
+                tocompute = list(tocompute)
+
+            # process what to compute
+            for field, records in tocompute:
+                records -= self.env.protected(field)
+                if not records:
+                    continue
+                # Dont force the recomputation of compute fields which are
+                # not stored as this is not really necessary.
+                recursive = not create and field.recursive
+                if field.compute and field.store:
+                    if recursive:
+                        marked_records = self.env.not_to_compute(field, records)
+                    self.env.add_to_compute(field, records)
+                else:
+                    if recursive:
+                        marked_records = records & self.env.cache.get_records(records, field)
+                    self.env.cache.invalidate([(field, records._ids)])
+                # recursively trigger recomputation of field's dependents
+                if recursive:
+                    marked_records.modified([field.name])
 
     def _modified_triggers(self, tree, create=False):
-        """ Process a tree of field triggers on ``self``. """
+        """ Return an iterator traversing a tree of field triggers on ``self``,
+        traversing backwards field dependencies along the way, and yielding
+        pairs ``(field, records)`` to recompute.
+        """
         if not self:
             return
+
+        # first yield what to compute
+        for field in tree.get(None, ()):
+            yield field, self
+
+        # then traverse dependencies backwards, and proceed recursively
         for key, val in tree.items():
             if key is None:
-                # val is a list of fields to mark as todo
-                for field in val:
-                    records = self - self.env.protected(field)
-                    if not records:
-                        continue
-                    # Dont force the recomputation of compute fields which are
-                    # not stored as this is not really necessary.
-                    recursive = not create and field.recursive
-                    if field.compute and field.store:
-                        if recursive:
-                            added = self.env.not_to_compute(field, records)
-                        self.env.add_to_compute(field, records)
-                    else:
-                        if recursive:
-                            added = self & self.env.cache.get_records(self, field)
-                        self.env.cache.invalidate([(field, records._ids)])
-                    # recursively trigger recomputation of field's dependents
-                    if recursive:
-                        added.modified([field.name])
+                continue
             elif create and key.type in ('many2one', 'many2one_reference'):
                 # upon creation, no other record has a reference to self
                 continue
@@ -5814,7 +5856,7 @@ Fields:
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
-                records._modified_triggers(val)
+                yield from records._modified_triggers(val)
 
     @api.model
     def recompute(self, fnames=None, records=None):

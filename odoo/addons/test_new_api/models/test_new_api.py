@@ -493,7 +493,16 @@ class ComputeRecursive(models.Model):
 
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
+    full_name = fields.Char(compute='_compute_full_name')
     display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'parent.full_name')
+    def _compute_full_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.full_name = rec.parent.full_name + " / " + rec.name
+            else:
+                rec.full_name = rec.name
 
     @api.depends('name', 'parent.display_name')
     def _compute_display_name(self):
@@ -792,7 +801,7 @@ class Attachment(models.Model):
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
     # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, create=False):
+    def modified(self, fnames, *args, **kwargs):
         if not self:
             return
         comodel = self.env[self.res_model]
@@ -801,7 +810,7 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             self.env.cache.invalidate([(field, record._ids)])
             record.modified(['attachment_ids'])
-        return super(Attachment, self).modified(fnames, create)
+        return super(Attachment, self).modified(fnames, *args, **kwargs)
 
 
 class AttachmentHost(models.Model):
@@ -1209,3 +1218,32 @@ class ConstrainedUnlinks(models.Model):
         for rec in self:
             if rec.foo and rec.foo == 'prosciutto':
                 raise ValueError("You didn't say if you wanted it crudo or cotto...")
+
+
+class TriggerLeft(models.Model):
+    _name = 'test_new_api.trigger.left'
+    _description = 'model with a related many2one'
+
+    middle_ids = fields.One2many('test_new_api.trigger.middle', 'left_id')
+    right_id = fields.Many2one(related='middle_ids.right_id', store=True)
+
+
+class TriggerMiddle(models.Model):
+    _name = 'test_new_api.trigger.middle'
+    _description = 'model linking test_new_api.trigger.left and test_new_api.trigger.right'
+
+    left_id = fields.Many2one('test_new_api.trigger.left', required=True)
+    right_id = fields.Many2one('test_new_api.trigger.right', required=True)
+
+
+class TriggerRight(models.Model):
+    _name = 'test_new_api.trigger.right'
+    _description = 'model with a dependency on the inverse of the related many2one'
+
+    left_ids = fields.One2many('test_new_api.trigger.left', 'right_id')
+    left_size = fields.Integer(compute='_compute_left_size', store=True)
+
+    @api.depends('left_ids')
+    def _compute_left_size(self):
+        for record in self:
+            record.left_size = len(record.left_ids)
