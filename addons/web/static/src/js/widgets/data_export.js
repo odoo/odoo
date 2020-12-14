@@ -265,7 +265,6 @@ var DataExport = Dialog.extend({
             var $el = $(el);
             $el.find('.o_tree_column').first().toggleClass('o_required', !!self.records[$el.data('id')].required);
         });
-        this.$('#o-export-search-filter').val('');
     },
     /**
      * @private
@@ -319,7 +318,6 @@ var DataExport = Dialog.extend({
                 $child.show();
             }
         }
-        this.$('#o-export-search-filter').val('');
     },
     /**
      * Fetches the saved export list for the current model
