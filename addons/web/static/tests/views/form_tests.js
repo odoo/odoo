@@ -6,6 +6,7 @@ var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
+var basicFields = require('web.basic_fields');
 const fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
@@ -2252,6 +2253,40 @@ QUnit.module('Views', {
         assert.containsOnce(form, '.o_field_cell[title="New name"]', 'should not crash and value must be edited');
 
         form.destroy();
+    });
+
+    QUnit.test("modal should not use the widget footer elements", async function (assert) {
+        assert.expect(2);
+
+        var MyWidget = basicFields.FieldChar.extend({
+            _renderEdit: function () {
+                var $el = $(`<div class="oe_form_field">Coucou<footer>this should not be moved</footer></div>`);
+                this.$el.replaceWith($el);
+                this.$el = $el;
+
+            },
+        });
+        fieldRegistry.add('test', MyWidget);
+
+        var form = await createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: '<form><field name="partner_ids"/></form>',
+            archs: {
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,form': '<form><field name="display_name" widget="test"/></form>',
+            },
+            res_id: 17,
+        });
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('table td[title="yop"]'));
+
+        assert.strictEqual($('.modal-content main.modal-body div footer').html(), 'this should not be moved', "modal should display the custom widget");
+        assert.strictEqual($('.modal-content footer.modal-footer button').text(), 'SaveDiscard', "modal footer should contains 2 buttons");
+
+        form.destroy();
+        delete fieldRegistry.map.test;
     });
 
     QUnit.test('toolbar is hidden when switching to edit mode', async function (assert) {
