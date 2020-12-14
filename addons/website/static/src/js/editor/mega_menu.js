@@ -58,6 +58,12 @@ Wysiwyg.include({
                 });
         });
 
+        // TODO remove this code in master by migrating users who did not
+        // receive the XML change about the 'oe_structure_solo' class (the
+        // header original XML is now correct but we changed specs after
+        // release to not allow multi snippets drop zones in the header).
+        $('header#top').find('.oe_structure[id*="oe_structure"]:not(.oe_structure_multi)') // oe_structure_multi to ease custo in stable
+            .addClass('oe_structure_solo');
     }
 });
 
