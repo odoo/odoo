@@ -44,6 +44,14 @@ class DisplayDriver(Driver):
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
 
+        self._actions.update({
+            'update_url': self._action_update_url,
+            'display_refresh': self._action_display_refresh,
+            'take_control': self._action_take_control,
+            'customer_facing_display': self._action_customer_facing_display,
+            'get_owner': self._action_get_owner,
+        })
+
     @classmethod
     def supported(cls, device):
         return True  # All devices with connection_type == 'display' are supported
@@ -52,22 +60,6 @@ class DisplayDriver(Driver):
     def get_default_display(cls):
         displays = list(filter(lambda d: iot_devices[d].device_type == 'display', iot_devices))
         return len(displays) and iot_devices[displays[0]]
-
-    def action(self, data):
-        if data.get('action') == "update_url" and self.device_identifier != 'distant_display':
-            self.update_url(data.get('url'))
-        elif data.get('action') == "display_refresh" and self.device_identifier != 'distant_display':
-            self.call_xdotools('F5')
-        elif data.get('action') == "take_control":
-            self.take_control(self.data['owner'], data.get('html'))
-        elif data.get('action') == "customer_facing_display":
-            self.update_customer_facing_display(self.data['owner'], data.get('html'))
-        elif data.get('action') == "get_owner":
-            self.data = {
-                'value': '',
-                'owner': self.owner,
-            }
-            event_manager.device_changed(self)
 
     def run(self):
         while self.device_identifier != 'distant_display' and not self._stopped.isSet():
@@ -136,6 +128,27 @@ class DisplayDriver(Driver):
         }
         event_manager.device_changed(self)
         self.event_data.set()
+
+    def _action_update_url(self, data):
+        if self.device_identifier != 'distant_display':
+            self.update_url(data.get('url'))
+
+    def _action_display_refresh(self, data):
+        if self.device_identifier != 'distant_display':
+            self.call_xdotools('F5')
+
+    def _action_take_control(self, data):
+        self.take_control(self.data.get('owner'), data.get('html'))
+
+    def _action_customer_facing_display(self, data):
+        self.update_customer_facing_display(self.data.get('owner'), data.get('html'))
+
+    def _action_get_owner(self, data):
+        self.data = {
+            'value': '',
+            'owner': self.owner,
+        }
+        event_manager.device_changed(self)
 
 class DisplayController(http.Controller):
 

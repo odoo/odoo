@@ -32,6 +32,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         self.device_type = ''
         self.device_manufacturer = ''
         self.data = {'value': ''}
+        self._actions = {}
         self._stopped = Event()
 
     @classmethod
@@ -43,10 +44,12 @@ class Driver(Thread, metaclass=DriverMetaClass):
         return False
 
     def action(self, data):
+        """Helper function that calls a specific action method on the device.
+
+        :param data: the `_actions` key mapped to the action method we want to call
+        :type data: string
         """
-        On specific driver override this method to make a action with device (take picture, printing,...)
-        """
-        raise NotImplementedError()
+        self._actions[data['action']](data)
 
     def disconnect(self):
         self._stopped.set()
