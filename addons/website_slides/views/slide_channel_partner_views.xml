@@ -8,7 +8,8 @@
                 <search string="Channel Member">
                     <field name="partner_id"/>
                     <field name="partner_email"/>
-                    <field name="channel_id"/>
+                    <field name="channel_id" string="Course Name"
+                           filter_domain="['|', ('channel_id.name','ilike',self),('channel_id', 'ilike', self)]"/>
                 </search>
             </field>
         </record>
@@ -17,22 +18,142 @@
             <field name="name">slide.channel.partner.tree</field>
             <field name="model">slide.channel.partner</field>
             <field name="arch" type="xml">
-                <tree string="Attendees" editable="top">
-                    <field name="create_date"/>
+                <tree string="Attendees" editable="bottom">
+                    <field name="create_date" string="Created On"/>
+                    <field name="write_date" string="Last Action On" widget="date"/>
                     <field name="partner_id" string="Contact"/>
                     <field name="partner_email"/>
-                    <field name="channel_id" string="Channel" invisible="context.get('default_channel_id',False)" />
-                    <field name="completion" string="Progress" widget="progressbar" />
+                    <field name="channel_id" string="Channel" invisible="context.get('default_channel_id', False)"/>
+                    <field name="completion" string="Progress" widget="progressbar"/>
                     <button name="unlink" title="Remove" icon="fa-times" type="object"/>
                 </tree>
             </field>
         </record>
 
+        <record id="slide_channel_view_contact_tree" model="ir.ui.view">
+            <field name="name">slide.channel.view.tree</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Courses" sample="1" editable="bottom">
+                    <field name="channel_id" string="Course Name"/>
+                    <field name="user_id" string="Responsible"/>
+                    <field name="create_date" string="Enrolled On" widget="date"/>
+                    <field name="write_date" string="Last Action On" widget="date"/>
+                    <field name="completion" string="Progress" widget="progressbar"/>
+                    <field name="channel_type" optional="hide"/>
+                    <field name="visibility" optional="hide"/>
+                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'"
+                           decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'"
+                           optional="hide"/>
+                    <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_view_kanban" model="ir.ui.view">
+            <field name="name">slide.channel.partner.view.kanban</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <kanban string="Attendees Overview" class="o_res_partner_kanban">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title mb16">
+                                        <div class="o_primary">
+                                            <a type="edit" class="mr-auto">
+                                                <span class="font-weight-bold">
+                                                    <field name="partner_id" class="o_primary"/>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content">
+                                    <div>
+                                        <span class="font-weight-bold">
+                                            <label for="channel_id" class="mb0">Course</label>
+                                        </span>
+                                        <field name="channel_id"/>
+                                    </div>
+                                    <div>
+                                        <span class="font-weight-bold">
+                                            <label for="user_id" class="mb0">Responsible</label>
+                                        </span>
+                                        <field name="user_id"/>
+                                    </div>
+                                    <div>
+                                        <span class="font-weight-bold">
+                                            <label for="completion" class="mb0">Progress</label>
+                                        </span>
+                                        <div>
+                                            <field name="completion" widget="progressbar"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record id="slide_channel_partner_view_report" model="ir.ui.view">
+            <field name="name">slide.channel.partner.tree.report</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Attendees" create="0">
+                    <field name="create_date" string="Created On"/>
+                    <field name="partner_id" string="Contact"/>
+                    <field name="partner_email"/>
+                    <field name="channel_id" string="Course Name"/>
+                    <field name="user_id" string="Responsible"/>
+                    <field name="create_date" string="Enrolled On" widget="date"/>
+                    <field name="write_date" string="Last Action On" widget="date"/>
+                    <field name="completion" string="Progress" widget="progressbar"/>
+                    <button name="unlink" title="Remove" icon="fa-times" type="object"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="slide_channel_contact_action_overview" model="ir.actions.act_window">
+            <field name="name">Followed Courses</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree,kanban</field>
+            <field name="view_id" ref="slide_channel_view_contact_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create a course</p>
+            </field>
+        </record>
+
+
         <record id="slide_channel_partner_action" model="ir.actions.act_window">
             <field name="name">Attendees</field>
             <field name="res_model">slide.channel.partner</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="slide_channel_partner_view_tree"/>
             <field name="search_view_id" ref="website_slides.slide_channel_partner_view_search"/>
+        </record>
+
+
+        <record id="slide_channel_partner_action_report" model="ir.actions.act_window">
+            <field name="name">Attendees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.channel.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="slide_channel_partner_view_report"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    There are no attendees
+                </p>
+                <p>
+                    Add Attendees to your course.
+                </p>
+            </field>
         </record>
     </data>
 </odoo>

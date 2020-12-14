@@ -19,6 +19,8 @@ class ChannelUsersRelation(models.Model):
     _name = 'slide.channel.partner'
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
+    _rec_name = 'channel_id'
+
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True, ondelete='cascade')
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
@@ -26,6 +28,11 @@ class ChannelUsersRelation(models.Model):
     completed_slides_count = fields.Integer('# Completed Slides')
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
+    user_id = fields.Many2one('res.users', string='Responsible', related='channel_id.user_id')
+    channel_type = fields.Selection(related='channel_id.channel_type')
+    visibility = fields.Selection(related='channel_id.visibility')
+    enroll = fields.Selection(related='channel_id.enroll')
+    website_id=fields.Many2one('website', string='Website', related='channel_id.website_id')
 
     def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
@@ -457,7 +464,6 @@ class Channel(models.Model):
             channel._action_add_members(channel.user_id.partner_id)
         if 'enroll_group_ids' in vals:
             channel._add_groups_members()
-
         return channel
 
     def write(self, vals):
@@ -517,14 +523,14 @@ class Channel(models.Model):
     # Business / Actions
     # ---------------------------------------------------------
 
-    def action_redirect_to_members(self, state=None):
+    def action_redirect_to_members(self,state=None):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
-        action['domain'] = [('channel_id', 'in', self.ids)]
+        action['context'] = {'search_default_channel_id': self.ids}
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
-            action['context'] = {'active_test': False, 'default_channel_id': self.id}
+            action['context'].update({'active_test': False})
         if state:
-            action['domain'] += [('completed', '=', state == 'completed')]
+            action['domain'] = [('completed', '=', state == 'completed')]
         return action
 
     def action_redirect_to_running_members(self):
