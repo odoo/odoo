@@ -3238,7 +3238,7 @@ exports.Order = Backbone.Model.extend({
             tax_set[tax_id[i]] = true;
         }
 
-        this.orderlines.each(function(line){
+        this.orderlines.each(line => {
             var taxes_ids = this.tax_ids || line.get_product().taxes_id;
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
