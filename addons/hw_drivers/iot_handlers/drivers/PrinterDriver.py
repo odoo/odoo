@@ -80,6 +80,12 @@ class PrinterDriver(Driver):
         }
         self.send_status()
 
+        self._actions.update({
+            'cashbox': self.open_cashbox,
+            'print_receipt': self.print_receipt,
+            '': self._action_default,
+        })
+
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
         if 'direct' in self.device_connection and any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.print_status()
@@ -127,14 +133,6 @@ class PrinterDriver(Driver):
         status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
         return {'status': status, 'messages': ''}
 
-    def action(self, data):
-        if data.get('action') == 'cashbox':
-            self.open_cashbox()
-        elif data.get('action') == 'print_receipt':
-            self.print_receipt(b64decode(data['receipt']))
-        else:
-            self.print_raw(b64decode(data['document']))
-
     def disconnect(self):
         self.update_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
@@ -168,7 +166,8 @@ class PrinterDriver(Driver):
         process = subprocess.Popen(["lp", "-d", self.device_identifier], stdin=subprocess.PIPE)
         process.communicate(data)
 
-    def print_receipt(self, receipt):
+    def print_receipt(self, data):
+        receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
         # Convert to greyscale then to black and white
@@ -256,6 +255,9 @@ class PrinterDriver(Driver):
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
+
+    def _action_default(self, data):
+        self.print_raw(b64decode(data['document']))
 
 
 class PrinterController(http.Controller):

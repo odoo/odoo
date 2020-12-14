@@ -66,9 +66,9 @@ class SerialDriver(Driver):
         """
 
         super(SerialDriver, self).__init__(identifier, device)
-        self._actions = {
+        self._actions.update({
             'get_status': self._push_status,
-        }
+        })
         self.device_connection = 'serial'
         self._device_lock = Lock()
         self._status = {'status': self.STATUS_CONNECTING, 'message_title': '', 'message_body': ''}
