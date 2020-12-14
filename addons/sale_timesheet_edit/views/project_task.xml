@@ -12,7 +12,7 @@
             </xpath>
             <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='so_line']" position="attributes">
                 <attribute name="readonly">0</attribute>
-                <attribute name="domain">[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]</attribute>
+                <attribute name="domain">[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', parent.project_sale_order_id)]</attribute>
                 <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
             </xpath>
         </field>
