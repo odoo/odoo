@@ -69,7 +69,6 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             return this.config.is_company_country_germany;
         },
         initVatRates(url) {
-            console.log(this);
             const data = {
                 'api_key': this.getApiKey(),
                 'api_secret': this.getApiSecret()
@@ -257,12 +256,14 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             const rateIds = {
                 'NORMAL': [],
                 'REDUCED_1': [],
+                'SPECIAL_RATE_1': [],
+                'SPECIAL_RATE_2': [],
                 'NULL': [],
             };
             this.get_tax_details().forEach((detail) => {
                 rateIds[this.pos.vatRateMapping[detail.tax.amount]].push(detail.tax.id);
             });
-            const amountPerVatRate = { 'NORMAL': 0, 'REDUCED_1': 0, 'NULL': 0 };
+            const amountPerVatRate = { 'NORMAL': 0, 'REDUCED_1': 0, 'SPECIAL_RATE_1': 0, 'SPECIAL_RATE_2': 0, 'NULL': 0 };
             for (var rate in rateIds) {
                 rateIds[rate].forEach((id) => {
                     amountPerVatRate[rate] += this.get_total_for_taxes(id);
