@@ -95,12 +95,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (this.mode === "readonly" || !this.wysiwyg) {
             return _super();
         }
-        // todo: make this work
-        const promise = this.wysiwyg.getValue(this.nodeOptions['style-inline'] ? 'text/mail' : 'text/html');
-        promise.catch(error => {
-            console.error(error);
-        });
-        const value = await promise;
+        const value = await this._getWysiwygValue();
         this._isDirty = value !== this._value;
         this._value = value;
         return _super();
@@ -163,9 +158,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _createWysiwygIntance: async function () {
         this.wysiwyg = await wysiwygLoader.createWysiwyg(this, await this._getWysiwygOptions());
-        return this.wysiwyg.attachTo(this).then(() => {
-            this._appendTranslateButton();
-        });
+        await this.wysiwyg.attachTo(this);
+        this._appendTranslateButton();
+        this._value = await this._getWysiwygValue();
     },
     /**
      * Get wysiwyg options to create wysiwyg instance.
@@ -226,6 +221,20 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 </div>` +
                 (this.enableResizer ? ` <t t-zone="resizer"/>` : ''),
         });
+    },
+    /**
+     * Returns the value of the Wysiwyg instance.
+     * @private
+     * @returns {Promise<any>}
+     */
+    async _getWysiwygValue() {
+        const options = this.nodeOptions['style-inline'] ? 'text/mail' : 'text/html';
+        try {
+            return await this.wysiwyg.getValue(options);
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
     },
     /**
      * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
