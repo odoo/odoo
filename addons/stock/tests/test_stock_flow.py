@@ -537,8 +537,8 @@ class TestStockFlow(TestStockCommon):
         # Check quants and available quantity for product gB
         quants = self.StockQuantObj.search([('product_id', '=', self.gB.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 525.3, 'Expecting 525.3 gram , got %.4f gram on location stock!' % (sum(total_qty)))
-        self.assertEqual(self.gB.qty_available, 525.3, 'Wrong quantity available (%s found instead of 525.3' % (self.gB.qty_available))
+        self.assertAlmostEqual(sum(total_qty), 525.3, msg='Expecting 525.3 gram , got %.4f gram on location stock!' % (sum(total_qty)))
+        self.assertAlmostEqual(self.gB.qty_available, 525.3, msg='Wrong quantity available (%s found instead of 525.3' % (self.gB.qty_available))
         # Check quants and available quantity for product kgB
         quants = self.StockQuantObj.search([('product_id', '=', self.kgB.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
@@ -957,7 +957,7 @@ class TestStockFlow(TestStockCommon):
         self.MoveObj.create({
             'name': productKG.name,
             'product_id': productKG.id,
-            'product_uom_qty': 2.5,
+            'product_uom_qty': 25,
             'product_uom': self.uom_gm.id,
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
@@ -965,7 +965,7 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_confirm()
         picking_out.action_assign()
         pack_opt = self.StockPackObj.search([('product_id', '=', productKG.id), ('picking_id', '=', picking_out.id)], limit=1)
-        pack_opt.write({'product_uom_qty': 0.5})
+        pack_opt.write({'product_uom_qty': 5})
         res_dict = picking_out.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
@@ -974,7 +974,7 @@ class TestStockFlow(TestStockCommon):
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         # Check total quantity stock location.
-        self.assertEqual(sum(total_qty), 999.9995, 'Expecting 999.9995 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertEqual(sum(total_qty), 999.995, 'Expecting 999.995 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # ---------------------------------
         # Check Back order created or not.
@@ -985,11 +985,11 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(len(bo_out_1.move_lines), 1, 'Wrong number of move lines')
         moves_KG = self.MoveObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_1.id)], limit=1)
         # Check back order created with correct quantity and uom or not.
-        self.assertEqual(moves_KG.product_uom_qty, 2.0, 'Wrong move quantity (%s found instead of 2.0)' % (moves_KG.product_uom_qty))
+        self.assertEqual(moves_KG.product_uom_qty, 20, 'Wrong move quantity (%s found instead of 20)' % (moves_KG.product_uom_qty))
         self.assertEqual(moves_KG.product_uom.id, self.uom_gm.id, 'Wrong uom in move for product KG.')
         bo_out_1.action_assign()
         pack_opt = self.StockPackObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_1.id)], limit=1)
-        pack_opt.write({'product_uom_qty': 0.5})
+        pack_opt.write({'product_uom_qty': 5})
         res_dict = bo_out_1.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
@@ -999,7 +999,7 @@ class TestStockFlow(TestStockCommon):
         total_qty = [quant.quantity for quant in quants]
 
         # Check total quantity stock location.
-        self.assertEqual(sum(total_qty), 999.9990, 'Expecting 999.9990 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertEqual(sum(total_qty), 999.990, 'Expecting 999.990 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # Check Back order created or not.
         # ---------------------------------
@@ -1009,11 +1009,11 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(len(bo_out_2.move_lines), 1, 'Wrong number of move lines')
         # Check back order created with correct move quantity and uom or not.
         moves_KG = self.MoveObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_2.id)], limit=1)
-        self.assertEqual(moves_KG.product_uom_qty, 1.5, 'Wrong move quantity (%s found instead of 1.5)' % (moves_KG.product_uom_qty))
+        self.assertEqual(moves_KG.product_uom_qty, 15, 'Wrong move quantity (%s found instead of 15)' % (moves_KG.product_uom_qty))
         self.assertEqual(moves_KG.product_uom.id, self.uom_gm.id, 'Wrong uom in move for product KG.')
         bo_out_2.action_assign()
         pack_opt = self.StockPackObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_2.id)], limit=1)
-        pack_opt.write({'product_uom_qty': 0.5})
+        pack_opt.write({'product_uom_qty': 5})
         res_dict = bo_out_2.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
@@ -1022,7 +1022,7 @@ class TestStockFlow(TestStockCommon):
         # Check total quantity stock location of product KG.
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 999.9985, 'Expecting 999.9985 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertEqual(sum(total_qty), 999.985, 'Expecting 999.985 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # Check Back order created or not.
         # ---------------------------------
@@ -1032,17 +1032,19 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(len(bo_out_3.move_lines), 1, 'Wrong number of move lines')
         # Check back order created with correct quantity and uom or not.
         moves_KG = self.MoveObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_3.id)], limit=1)
-        self.assertEqual(moves_KG.product_uom_qty, 1, 'Wrong move quantity (%s found instead of 1.0)' % (moves_KG.product_uom_qty))
+        self.assertEqual(moves_KG.product_uom_qty, 10, 'Wrong move quantity (%s found instead of 10)' % (moves_KG.product_uom_qty))
         self.assertEqual(moves_KG.product_uom.id, self.uom_gm.id, 'Wrong uom in move for product KG.')
         bo_out_3.action_assign()
         pack_opt = self.StockPackObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_3.id)], limit=1)
-        pack_opt.write({'product_uom_qty': 0.5})
+        pack_opt.write({'product_uom_qty': 5})
         res_dict = bo_out_3.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
+        backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 999.9980, 'Expecting 999.9980 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertEqual(sum(total_qty), 999.980, 'Expecting 999.980 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
         # Check Back order created or not.
         # ---------------------------------
@@ -1053,17 +1055,17 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(len(bo_out_4.move_lines), 1, 'Wrong number of move lines')
         # Check back order created with correct quantity and uom or not.
         moves_KG = self.MoveObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_4.id)], limit=1)
-        self.assertEqual(moves_KG.product_uom_qty, 0.5, 'Wrong move quantity (%s found instead of 0.5)' % (moves_KG.product_uom_qty))
+        self.assertEqual(moves_KG.product_uom_qty, 5, 'Wrong move quantity (%s found instead of 5)' % (moves_KG.product_uom_qty))
         self.assertEqual(moves_KG.product_uom.id, self.uom_gm.id, 'Wrong uom in move for product KG.')
         bo_out_4.action_assign()
         pack_opt = self.StockPackObj.search([('product_id', '=', productKG.id), ('picking_id', '=', bo_out_4.id)], limit=1)
-        pack_opt.write({'product_uom_qty': 0.5})
+        pack_opt.write({'product_uom_qty': 5})
         res_dict = bo_out_4.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertAlmostEqual(sum(total_qty), 999.9975, msg='Expecting 999.9975 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertAlmostEqual(sum(total_qty), 999.975, msg='Expecting 999.975 kg , got %.4f kg on location stock!' % (sum(total_qty)))
 
     def test_20_create_inventory_with_packs_and_lots(self):
         # --------------------------------------------------------
