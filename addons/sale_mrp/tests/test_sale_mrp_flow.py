@@ -254,7 +254,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 line.product_uom_id = self.uom_unit
             with f.bom_line_ids.new() as line:
                 line.product_id = product_c
-                line.product_qty = 300.5
+                line.product_qty = 300.0
                 line.product_uom_id = self.uom_gm
             with f.bom_line_ids.new() as line:
                 line.product_id = product_d
@@ -310,10 +310,10 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         #
         #                [15 * 400 gm ( 6 kg product C)] = 6 kg product C
         #
-        #        Product C  1502.5 gm.
+        #        Product C  1500.0 gm.
         #                [
-        #                  For 2 Dozen product A will consume 300.5 gm product C
-        #                  then for 10 Dozen product A will consume 1502.5 gm product C.
+        #                  For 2 Dozen product A will consume 300.0 gm product C
+        #                  then for 10 Dozen product A will consume 1500.0 gm product C.
         #                ]
         #
         #        product D  20 Unit.
@@ -367,8 +367,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         # Check total consume line of product c with gm.
         self.assertEqual(len(move), 1, 'Production move lines are not generated proper.')
-        # Check quantity should be with 1502.5 ( 2 Dozen product A consume 300.5 gm then 10 Dozen (300.5 * (10/2)).
-        self.assertEqual(move.product_uom_qty, 1502.5, "Wrong product quantity in 'To consume line' of manufacturing order.")
+        # Check quantity should be with 1500.0 ( 2 Dozen product A consume 300.0 gm then 10 Dozen (300.0 * (10/2)).
+        self.assertEqual(move.product_uom_qty, 1500.0, "Wrong product quantity in 'To consume line' of manufacturing order.")
         # Check state of consume line with product c with and uom gm.
         self.assertEqual(move.state, 'confirmed', "Wrong state in 'To consume line' of manufacturing order.")
 
@@ -451,7 +451,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         # Create inventory for product C.
         # ------------------------------
-        # Need product C ( 20 kg + 6 kg + 1502.5 gm = 27.5025 kg)
+        # Need product C ( 20 kg + 6 kg + 1500.0 gm = 27.500 kg)
         # -------------------------------------------------------
         inventory = self.Inventory.create({
             'name': 'Inventory Product C KG',
@@ -463,7 +463,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'inventory_id': inventory.id,
             'product_id': product_c.id,
             'product_uom_id': self.uom_kg.id,
-            'product_qty': 27.5025,
+            'product_qty': 27.500,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id})
         inventory.action_validate()
 
