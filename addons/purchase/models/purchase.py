@@ -753,7 +753,7 @@ class PurchaseOrderLine(models.Model):
 
         return name
 
-    def _prepare_account_move_line(self, move):
+    def _get_to_bill_quantity(self):
         self.ensure_one()
         if self.product_id.purchase_method == 'purchase':
             qty = self.product_qty - self.qty_invoiced
@@ -761,6 +761,11 @@ class PurchaseOrderLine(models.Model):
             qty = self.qty_received - self.qty_invoiced
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) <= 0:
             qty = 0.0
+        return qty
+
+    def _prepare_account_move_line(self, move):
+        self.ensure_one()
+        qty = self._get_to_bill_quantity()
 
         if self.currency_id == move.company_id.currency_id:
             currency = False

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_is_zero
 
 
 class AccountMove(models.Model):
@@ -52,7 +53,7 @@ class AccountMove(models.Model):
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
         new_lines = self.env['account.move.line']
-        for line in po_lines.filtered(lambda l: not l.display_type):
+        for line in po_lines.filtered(lambda l: not l.display_type and not float_is_zero(l._get_to_bill_quantity(), precision_rounding=l.product_uom.rounding)):
             new_line = new_lines.new(line._prepare_account_move_line(self))
             new_line.account_id = new_line._get_computed_account()
             new_line._onchange_price_subtotal()
