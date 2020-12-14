@@ -228,11 +228,10 @@ class Mailing(models.Model):
         for mailing in self:
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
-            if not res_ids:
-                raise UserError(_('There are no recipients selected.'))
+            if res_ids:
+                composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
+                composer._action_send_sms()
 
-            composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
-            composer._action_send_sms()
             mailing.write({
                 'state': 'done',
                 'sent_date': fields.Datetime.now(),
