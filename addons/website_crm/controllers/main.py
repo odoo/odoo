@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.http import request
+from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.website_form.controllers import main
+from odoo.http import request
 
 
 class WebsiteForm(main.WebsiteForm):
@@ -20,7 +21,11 @@ class WebsiteForm(main.WebsiteForm):
     # Check and insert values from the form on the model <model> + validation phone fields
     def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
-        if model_record and hasattr(request.env[model_name], 'phone_format'):
+        if model_record and hasattr(request.env[model_name], '_phone_format') or hasattr(request.env[model_name], 'phone_get_sanitized_number'):
+            # filter on either custom _phone_format method, either phone_get_sanitized_number but directly
+            # call phone_format from phone validation herebelow to simplify things as we don't have real
+            # records but a dictionary of value at this point (record.phone_get_sanitized_number would
+            # not work)
             try:
                 data = self.extract_data(model_record, request.params)
             except:
@@ -30,12 +35,17 @@ class WebsiteForm(main.WebsiteForm):
                 record = data.get('record', {})
                 phone_fields = self._get_phone_fields_to_validate()
                 country = request.env['res.country'].browse(record.get('country_id'))
-                contact_country = country.exists() and country or self._get_country()
+                contact_country = country if country.exists() else self._get_country()
                 for phone_field in phone_fields:
                     if not record.get(phone_field):
                         continue
                     number = record[phone_field]
-                    fmt_number = request.env[model_name].phone_format(number, contact_country)
+                    fmt_number = phone_validation.phone_format(
+                        number, contact_country.code if contact_country else None,
+                        contact_country.phone_code if contact_country else None,
+                        force_format='INTERNATIONAL',
+                        raise_exception=False
+                    )
                     request.params.update({phone_field: fmt_number})
 
         if model_name == 'crm.lead' and not request.params.get('state_id'):

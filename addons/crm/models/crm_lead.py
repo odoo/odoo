@@ -7,11 +7,11 @@ from datetime import date, datetime, timedelta
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.addons.phone_validation.tools import phone_validation
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
-from odoo.addons.phone_validation.tools import phone_validation
 from collections import OrderedDict, defaultdict
 
 from . import crm_stage
@@ -82,7 +82,7 @@ class Lead(models.Model):
                 'mail.activity.mixin',
                 'utm.mixin',
                 'format.address.mixin',
-                'phone.validation.mixin']
+               ]
     _primary_email = 'email_from'
 
     # Description
@@ -330,8 +330,8 @@ class Lead(models.Model):
                     lead.partner_id.phone = lead.phone
                 # compare formatted values as we may have encoding differences between equivalent numbers
                 else:
-                    lead_phone_formatted = lead.phone_format(lead.phone)
-                    partner_phone_formatted = lead.phone_format(lead.partner_id.phone)
+                    lead_phone_formatted = lead.phone_get_sanitized_number(number_fname='phone')
+                    partner_phone_formatted = lead.partner_id.phone_get_sanitized_number(number_fname='phone')
                     if lead_phone_formatted != partner_phone_formatted:
                         lead.partner_id.phone = lead.phone
 
@@ -414,8 +414,8 @@ class Lead(models.Model):
                     will_write_phone = True
                 # otherwise compare formatted values as we may have encoding differences
                 else:
-                    lead_phone_formatted = lead.phone_format(lead.phone)
-                    partner_phone_formatted = lead.phone_format(lead.partner_id.phone)
+                    lead_phone_formatted = lead.phone_get_sanitized_number(number_fname='phone')
+                    partner_phone_formatted = lead.partner_id.phone_get_sanitized_number(number_fname='phone')
                     if lead_phone_formatted != partner_phone_formatted:
                         will_write_phone = True
 
@@ -456,12 +456,12 @@ class Lead(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self.phone_format(self.phone)
+            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='INTERNATIONAL') or self.phone
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self.phone_format(self.mobile)
+            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
 
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
