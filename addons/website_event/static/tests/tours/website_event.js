@@ -6,7 +6,8 @@ odoo.define("website_event.tour", function (require) {
 
     var _t = core._t;
 
-    tour.register("event", {
+    tour.register("website_event_tour", {
+        test: true,
         url: "/",
     }, [{
         content: _t("Click here to add new content to your website."),
