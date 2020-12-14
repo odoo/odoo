@@ -342,16 +342,7 @@ var Wysiwyg = Widget.extend({
             this._setupTranslation();
         }
 
-        // Make sure to warn the user if they're about to leave the page and
-        // they have changes that would be lost if they did.
-        let flag = false;
-        window.onbeforeunload = () => {
-            if (!flag) {
-                flag = true;
-                _.defer(() => (flag = false));
-                return _t('This document is not saved!');
-            }
-        };
+        this._setBeforeUnload();
 
         if (this.options.snippets) {
             this.$webEditorToolbar = $('<div id="web_editor-toolbars">');
@@ -516,8 +507,8 @@ var Wysiwyg = Widget.extend({
             } else {
                 resolve();
             }
-        }).then(function () {
-            window.onbeforeunload = null;
+        }).then(() => {
+            this._unsetBeforeUnload();
             window.location.reload();
         });
     },
@@ -783,7 +774,7 @@ var Wysiwyg = Widget.extend({
         return this._saveWebsiteContent(context)
             .then(() => {
                 this.trigger_up('edition_was_stopped');
-                window.onbeforeunload = null;
+                this._unsetBeforeUnload();
                 if (reload) {
                     window.location.reload();
                 }
@@ -1339,6 +1330,20 @@ var Wysiwyg = Widget.extend({
             });
         });
     },
+    /**
+     * Adds a listener on the 'beforeunload' event to make sure to warn the
+     * user if they're about to leave the page while they may have changes that
+     * would be lost if they did.
+     * This is only applicable in website or translation mode.
+     */
+    _setBeforeUnload() {
+        if (this.options.enableWebsite || this.options.enableTranslation) {
+            window.onbeforeunload = () => {
+                window.onbeforeunload = null;
+                return _t('This document is not saved!');
+            };
+        }
+    },
     _setColor(colorpicker, setCommandId, unsetCommandId, color, $dropDownToToggle, closeColorPicker = false) {
         if(color === "") {
             this.execCommand(unsetCommandId);
@@ -1486,6 +1491,14 @@ var Wysiwyg = Widget.extend({
             this._updateAttributes($image[0])
         };
         $(document).on('mousedown', mousedown);
+    },
+    /**
+     * Unbinds the action set by '_setBeforeUnload'.
+     */
+    _unsetBeforeUnload() {
+        if (this.options.enableWebsite || this.options.enableTranslation) {
+            window.onbeforeunload = null;
+        }
     },
     _updateAttributes(node) {
         const attributes = {}
