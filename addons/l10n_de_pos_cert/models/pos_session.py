@@ -125,7 +125,7 @@ class PosSession(models.Model):
         if cash_point_closing_resp.status_code == 200:
             self.write({'fiskaly_cash_point_closing_uuid': cash_point_closing_uuid})
         else:
-            raise ValidationError(_("There is an unknown error happening with Fiskaly, please try again later or " +
+            raise ValidationError(_("There is an unknown error happening with Fiskaly, please try again later or " \
                                     "contact the support."))
 
     def fiskaly_authentication(self):
@@ -137,7 +137,7 @@ class PosSession(models.Model):
             'api_key': self.company_id.fiskaly_key
         }, timeout=timeout)
         if auth_response.status_code == 401:  # Todo to remove later
-            raise ValidationError(_("The combination of your Fiskaly API key and secret is incorrect. " +
+            raise ValidationError(_("The combination of your Fiskaly API key and secret is incorrect. " \
                                     "Please update them in your company settings"))
         headers = {'Authorization': 'Bearer ' + auth_response.json()['access_token']}
         return headers
@@ -158,9 +158,8 @@ class PosSession(models.Model):
             }
         }
 
-        resp = requests.put('{0}cash_registers/{1}'.format(url, self.config_id.fiskaly_client_id),
+        requests.put('{0}cash_registers/{1}'.format(url, self.config_id.fiskaly_client_id),
                      headers=headers, timeout=timeout, json=payload)
-        print(resp)
 
     def fiskaly_get_vat_definitions(self, headers):
         url = self.env['ir.config_parameter'].sudo().get_param('fiskaly_dsfinvk_api_url')

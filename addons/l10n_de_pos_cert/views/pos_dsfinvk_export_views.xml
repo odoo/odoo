@@ -10,13 +10,13 @@
                     <div class="oe_button_box" name="buttons">
                         <field name="state" invisible="1"/>
                         <button name="action_refresh_state" string="Refresh state" class="oe_highlight" type="object"
-                                attrs="{'invisible':[('state', '!=', 'pending')]}"
+                                attrs="{'invisible':[('state', 'not in', ['pending','working'])]}"
                         />
                         <button name="action_download_export" string="Download export" class="oe_highlight" type="object"
                                 attrs="{'invisible':[('state', '!=', 'completed')]} " icon="fa-download"
                         />
-                        <span class="text-warning mb4 mt16" attrs="{'invisible': ['|','|',('state','=',False),('state','=','completed'), ('state','=','pending')]}">
-                            The export is not available, please create a new one.
+                        <span class="text-warning mb4 mt16" attrs="{'invisible': [('state','in',[False,'completed','pending','working'])]}">
+                            The export is not available, please create a new one sale.
                         </span>
                     </div>
                     <group>

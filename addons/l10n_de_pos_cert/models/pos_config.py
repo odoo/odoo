@@ -105,7 +105,7 @@ class PosConfig(models.Model):
             'api_key': key
         }, timeout=timeout)
         if auth_response.status_code == 401:
-            raise ValidationError(_("The combination of your Fiskaly API key and secret is incorrect. " +
+            raise ValidationError(_("The combination of your Fiskaly API key and secret is incorrect. " \
                                     "Please update them in your company settings"))
         headers = {'Authorization': 'Bearer ' + auth_response.json()['access_token']}
         return headers
