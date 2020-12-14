@@ -194,6 +194,7 @@ class StockPickingBatch(models.Model):
                     picking.batch_id.name))
         return pickings.button_validate()
 
+<<<<<<< HEAD
     def action_assign(self):
         self.ensure_one()
         self.picking_ids.action_assign()
@@ -219,6 +220,22 @@ class StockPickingBatch(models.Model):
                 if not res:
                     res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
                 return res
+=======
+        picking_to_backorder = self.env['stock.picking']
+        picking_without_qty_done = self.env['stock.picking']
+        for picking in pickings:
+            if all([x.qty_done == 0.0 for x in picking.move_line_ids]):
+                # If no lots when needed, raise error
+                picking_type = picking.picking_type_id
+                if (picking_type.use_create_lots or picking_type.use_existing_lots):
+                    for ml in picking.move_line_ids:
+                        if ml.product_id.tracking != 'none' and not ml.lot_id and not ml.lot_name:
+                            raise UserError(_('Some products require lots/serial numbers.'))
+                # Check if we need to set some qty done.
+                picking_without_qty_done |= picking
+            elif picking._check_backorder():
+                picking_to_backorder |= picking
+>>>>>>> d849ab6d2be... temp
             else:
                 raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
 
