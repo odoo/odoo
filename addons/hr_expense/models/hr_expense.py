@@ -74,6 +74,7 @@ class HrExpense(models.Model):
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True)
+    amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
@@ -125,6 +126,20 @@ class HrExpense(models.Model):
             expense.untaxed_amount = expense.unit_amount * expense.quantity
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.total_amount = taxes.get('total_included')
+
+    @api.depends("sheet_id.account_move_id.line_ids")
+    def _compute_amount_residual(self):
+        for expense in self:
+            if not expense.sheet_id:
+                expense.amount_residual = expense.total_amount
+                continue
+            if not expense.currency_id or expense.currency_id == expense.company_id.currency_id:
+                residual_field = 'amount_residual'
+            else:
+                residual_field = 'amount_residual_currency'
+            payment_term_lines = expense.sheet_id.account_move_id.line_ids \
+                .filtered(lambda line: line.expense_id == self and line.account_internal_type in ('receivable', 'payable'))
+            expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
     @api.depends('date', 'total_amount', 'company_currency_id')
     def _compute_total_amount_company(self):
