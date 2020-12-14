@@ -294,10 +294,11 @@ class ProjectTask(models.Model):
             elif not task.sale_order_id:
                 task.sale_order_id = False
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
-        super(ProjectTask, self)._compute_sale_line()
-        for task in self.filtered(lambda t: not t.sale_line_id):
+        billable_tasks = self.filtered('allow_billable')
+        super(ProjectTask, billable_tasks)._compute_sale_line()
+        for task in billable_tasks.filtered(lambda t: not t.sale_line_id):
             task.sale_line_id = task._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')
@@ -325,22 +326,6 @@ class ProjectTask(models.Model):
             project_dest = self.env['project.project'].browse(values['project_id'])
             if project_dest.bill_type == 'customer_project' and project_dest.pricing_type == 'employee_rate':
                 self.write({'sale_line_id': False})
-        if 'sale_line_id' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
-            so = self.env['sale.order.line'].browse(values['sale_line_id']).order_id
-            if so and not so.analytic_account_id:
-                so.analytic_account_id = self.project_id.analytic_account_id
-            timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
-                lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
-            )
-            timesheet_ids.write({'so_line': values['sale_line_id']})
-            if 'project_id' in values:
-
-                # Special case when we edit SOL an project in same time, as we edit SOL of
-                # timesheet lines, function '_get_timesheet' won't find the right timesheet
-                # to edit so we must edit those here.
-                project = self.env['project.project'].browse(values.get('project_id'))
-                if project.allow_timesheets:
-                    timesheet_ids.write({'project_id': values.get('project_id')})
         if 'non_allow_billable' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
             timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
                 lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')

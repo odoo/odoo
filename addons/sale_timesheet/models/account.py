@@ -57,10 +57,10 @@ class AccountAnalyticLine(models.Model):
             else:
                 self.so_line = False
 
-    @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id')
+    @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
         for timesheet in self._get_not_billed():  # Get only the timesheets are not yet invoiced
-            timesheet.so_line = timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
+            timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
 
     def _get_not_billed(self):
         return self.filtered(lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
@@ -94,8 +94,6 @@ class AccountAnalyticLine(models.Model):
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
         # task implies so line (at create)
         if any([field_name in values for field_name in ['task_id', 'project_id']]) and not values.get('so_line') and (values.get('employee_id') or self.mapped('employee_id')):
-            if not values.get('employee_id') and len(self.mapped('employee_id')) > 1:
-                raise UserError(_('You can not modify timesheets from different employees'))
             task = self.env['project.task'].sudo().browse(values['task_id']) if values.get('task_id') else self.env['project.task']
             employee = self.env['hr.employee'].sudo().browse(values['employee_id']) if values.get('employee_id') else self.mapped('employee_id')
             project = self.env['project.project'].sudo().browse(values['project_id']) if values.get('project_id') else task.project_id
