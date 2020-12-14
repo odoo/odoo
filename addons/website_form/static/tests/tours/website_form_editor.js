@@ -91,7 +91,37 @@ odoo.define('website_form_editor.tour', function (require) {
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop #wrap',
         }, {
-            content: "Check dropped snippet and select it",
+            content: "Select form by clicking on an input field",
+            extra_trigger: '.s_website_form_field',
+            trigger: 'section.s_website_form input',
+        }, {
+            content: "Verify that the form editor appeared",
+            trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
+            run: () => null,
+        }, {
+            content: "Go back to blocks to unselect form",
+            trigger: '.o_we_add_snippet_btn',
+        }, {
+            content: "Select form by clicking on a text area",
+            extra_trigger: '.s_website_form_field',
+            trigger: 'section.s_website_form textarea',
+        }, {
+            content: "Verify that the form editor appeared",
+            trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
+            run: () => null,
+        }, {
+            content: "Rename the field label",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Renamed",
+        }, {
+            content: "Leave the rename options",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text_blur",
+        }, {
+            content: "Go back to blocks to unselect form",
+            trigger: '.o_we_add_snippet_btn',
+        }, {
+            content: "Select form itself (not a specific field)",
             extra_trigger: '.s_website_form_field',
             trigger: 'section.s_website_form',
         },
