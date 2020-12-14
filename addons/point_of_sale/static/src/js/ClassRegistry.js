@@ -134,7 +134,7 @@ odoo.define('point_of_sale.ClassRegistry', function (require) {
          * // |B| => B -> A1 -> A
          *
          * let B1 = x => class extends x {};
-         * Registry.extend(B);
+         * Registry.extend(B, B1);
          * // |B| => B1 -> B -> |A|
          *
          * let C = x => class extends x {};
