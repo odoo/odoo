@@ -534,8 +534,9 @@ class PurchaseOrderLine(models.Model):
 
     def _update_date_planned(self, updated_date):
         move_to_update = self.move_ids.filtered(lambda m: m.state not in ['done', 'cancel'])
-        if move_to_update:
+        if not self.move_ids or move_to_update:  # Only change the date if there is no move done or none
             super()._update_date_planned(updated_date)
+        if move_to_update:
             self._update_move_date_deadline(updated_date)
 
     @api.model
