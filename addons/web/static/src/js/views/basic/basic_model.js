@@ -4632,7 +4632,7 @@ var BasicModel = AbstractModel.extend({
             return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
         });
         var openGroupsLimit = list.groupsLimit || self.OPEN_GROUP_LIMIT;
-        var expand = list.openGroupByDefault && options.fetchRecordsWithGroups;
+        var expand = list.openGroupByDefault && options.fetchRecordsWithGroups || options.unfoldGroups;
         return this._rpc({
                 model: list.model,
                 method: 'web_read_group',
@@ -4710,7 +4710,7 @@ var BasicModel = AbstractModel.extend({
                         // form view) are reloaded
                         newGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         self.localData[newGroup.id] = newGroup;
-                    } else if (!newGroup.openGroupByDefault || openGroupCount >= openGroupsLimit) {
+                    } else if ((!newGroup.openGroupByDefault && !options.unfoldGroups) || openGroupCount >= openGroupsLimit) {
                         newGroup.isOpen = false;
                     } else if ('__fold' in group) {
                         newGroup.isOpen = !group.__fold;

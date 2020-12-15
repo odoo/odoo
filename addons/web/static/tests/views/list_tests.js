@@ -4842,6 +4842,61 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('groupby node with a unfold attribute', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree>
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <groupby name="currency_id" unfold="1"/>
+                </tree>`,
+            groupBy: ['m2o'],
+        });
+
+        assert.containsN(list, '.o_group_header', 2, "there should be 2 group headers");
+        assert.containsNone(list, '.o_data_row', "groups should not be expaned");
+
+        await list.update({ groupBy: ['currency_id'] });
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsN(list, '.o_data_row', 4, "groups should be expaned");
+
+        list.destroy();
+    });
+
+    QUnit.test('groupby node with a unfold attribute based on context', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree>
+                <field name="foo"/>
+                <groupby name="m2o" unfold="1"/>
+                <groupby name="currency_id" unfold="context.get('unfold', True)"/>
+            </tree>`,
+            groupBy: ['m2o'],
+            viewOptions: {
+                context: { unfold: false },
+            },
+        });
+
+        assert.containsN(list, '.o_group_header', 2, "there should be 2 group headers");
+        assert.containsN(list, '.o_data_row', 4, "groups should not be expaned");
+
+        await list.update({ groupBy: ['currency_id'] });
+        assert.containsN(list, '.o_group_header', 2,
+            "there should be 2 group headers");
+        assert.containsNone(list, '.o_data_row', "groups should not be expaned");
+
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, without data', async function (assert) {
         assert.expect(12);
 

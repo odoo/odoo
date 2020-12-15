@@ -48,7 +48,7 @@ var ListView = BasicView.extend({
         this.headerButtons = [];
         this.arch.children.forEach(function (child) {
             if (child.tag === 'groupby') {
-                self._extractGroup(child);
+                self._extractGroup(child, pyevalContext);
             }
             if (child.tag === 'header') {
                 self._extractHeaderButtons(child);
@@ -95,9 +95,10 @@ var ListView = BasicView.extend({
      * @private
      * @param {Object} node
      */
-    _extractGroup: function (node) {
+    _extractGroup: function (node, pyevalContext) {
         var innerView = this.fields[node.attrs.name].views.groupby;
         this.groupbys[node.attrs.name] = this._processFieldsView(innerView, 'groupby');
+        this.groupbys[node.attrs.name]['unfold'] = !!JSON.parse(pyUtils.py_eval(node.attrs.unfold || "0", { 'context': pyevalContext }));
     },
     /**
      * Extracts action buttons definitions from the <header> node of the list

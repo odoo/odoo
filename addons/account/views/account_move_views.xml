@@ -171,7 +171,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" expand="context.get('expand', False)" multi_edit="1">
+                <tree string="Journal Items" create="false" multi_edit="1">
                     <field name="date" optional="show" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="move_id" optional="show"/>
@@ -199,7 +199,7 @@
                     <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide" string="Tax Grids"
                            options="{'no_open': True, 'no_create': True}"
                            domain="[('applicability', '=', 'taxes')]"/>
-                    <groupby name="move_id">
+                    <groupby name="move_id" unfold="context.get('expand', False)">
                         <field name="state" invisible="1"/>
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
                         <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>

@@ -102,6 +102,13 @@ odoo.define('web.ListModel', function (require) {
             var self = this;
             options = options || {};
             options.fetchRecordsWithGroups = true;
+            const unfoldGroups = Object.keys(this.groupbys).filter(key => {
+                return !!this.groupbys[key].unfold;
+            });
+            const groupByField = list.groupedBy[0].split(':')[0];
+            if (unfoldGroups.includes(groupByField)) {
+                options.unfoldGroups = true;
+            }
             return this._super(list, options).then(function (result) {
                 return self._readGroupExtraFields(list).then(_.constant(result));
             });

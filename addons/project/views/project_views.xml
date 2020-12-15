@@ -924,6 +924,7 @@
                     <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
                     <field name="recurrence_id" invisible="1" />
+                    <groupby name="stage_id" unfold="context.get('unfold',True)"/>
                 </tree>
             </field>
         </record>
@@ -1022,7 +1023,7 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="context">{'search_default_my_tasks': 1, 'all_task': 0}</field>
+            <field name="context">{'search_default_my_tasks': 1, 'all_task': 0, 'unfold': False}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
