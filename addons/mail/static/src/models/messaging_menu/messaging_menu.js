@@ -16,11 +16,7 @@ function factory(dependencies) {
          * Close the messaging menu. Should reset its internal state.
          */
         close() {
-            this.update({
-                activeTabId: 'all',
-                isMobileNewMessageToggled: false,
-                isOpen: false,
-            });
+            this.update({ isOpen: false });
         }
 
         /**
