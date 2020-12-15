@@ -40,10 +40,10 @@ class AlarmManager(models.AbstractModel):
     _inherit = 'calendar.alarm_manager'
 
     @api.model
-    def get_next_mail(self):
+    def _get_next_mail(self):
         """ Cron method, overridden here to send SMS reminders as well
         """
-        result = super(AlarmManager, self).get_next_mail()
+        result = super()._get_next_mail()
         now = fields.Datetime.to_string(fields.Datetime.now())
         last_sms_cron = self.env['ir.config_parameter'].get_param('calendar_sms.last_sms_cron', default=now)
         cron = self.env['ir.model.data'].get_object('calendar', 'ir_cron_scheduler_alarm')

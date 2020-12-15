@@ -35,7 +35,7 @@ For more specific needs, you may also assign custom-defined actions
 (technically: Server Actions) to be triggered for each incoming mail.
     """,
     'data': [
-        'data/fetchmail_data.xml',
+        'data/ir_cron.xml',
         'security/ir.model.access.csv',
         'views/fetchmail_views.xml',
         'views/mail_mail_views.xml',

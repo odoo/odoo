@@ -223,9 +223,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
     def _update_cron(self):
         if self.env.context.get('fetchmail_cron_running'):
             return
-        try:
-            # Enabled/Disable cron based on the number of 'done' server of type pop or imap
-            cron = self.env.ref('fetchmail.ir_cron_mail_gateway_action')
-            cron.toggle(model=self._name, domain=[('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])])
-        except ValueError:
-            pass
+        # Enabled/Disable cron based on the number of 'done' server of type pop or imap
+        cron = self.env.ref('fetchmail.ir_cron_mail_gateway_action', raise_if_not_found=False)
+        cron and cron.toggle(
+            model=self._name,
+            domain=[('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])]
+        )

@@ -205,7 +205,7 @@ class ResUsers(models.Model):
                 template.send_mail(user.id, force_send=force_send, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
 
-    def send_unregistered_user_reminder(self, after_days=5):
+    def _send_unregistered_user_reminder(self, after_days=5):
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
         datetime_max = datetime_min + relativedelta(hours=23, minutes=59, seconds=59)
 

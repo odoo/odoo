@@ -129,7 +129,7 @@ class AlarmManager(models.AbstractModel):
         return result
 
     @api.model
-    def get_next_mail(self):
+    def _get_next_mail(self):
         return self._get_partner_next_mail(partners=None)
 
     @api.model

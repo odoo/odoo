@@ -9,7 +9,7 @@
     'depends': ['google_account', 'calendar'],
     'qweb': ['static/src/xml/*.xml'],
     'data': [
-        'data/google_calendar_data.xml',
+        'data/ir_cron.xml',
         'security/ir.model.access.csv',
         'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',

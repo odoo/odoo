@@ -14,17 +14,16 @@ class ResPartnerAutocompleteSync(models.Model):
     synched = fields.Boolean('Is synched', default=False)
 
     @api.model
-    def start_sync(self):
+    def _start_sync(self):
         to_sync_items = self.search([('synched', '=', False)])
         for to_sync_item in to_sync_items:
             partner = to_sync_item.partner_id
 
-            params = {
-                'partner_gid': partner.partner_gid,
-            }
-
             if partner.vat and partner._is_vat_syncable(partner.vat):
-                params['vat'] = partner.vat
+                params = {
+                    'partner_gid': partner.partner_gid,
+                    'vat': partner.vat,
+                }
                 result, error = partner._rpc_remote_api('update', params)
                 if error:
                     _logger.error('Send Partner to sync failed: %s' % str(error))

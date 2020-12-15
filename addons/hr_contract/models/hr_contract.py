@@ -134,7 +134,7 @@ class Contract(models.Model):
                 ))
 
     @api.model
-    def update_state(self):
+    def _update_state(self):
         contracts = self.search([
             ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'),
             '|',

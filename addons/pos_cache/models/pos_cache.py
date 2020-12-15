@@ -19,8 +19,11 @@ class pos_cache(models.Model):
     config_id = fields.Many2one('pos.config', ondelete='cascade', required=True)
     compute_user_id = fields.Many2one('res.users', 'Cache compute user', required=True)
 
+    # VFE FIXME we clear the caches every hour? :O
+    # Shouldn't we automatically call the cron everytime changes happen to products
+    # usable in POS ?
     @api.model
-    def refresh_all_caches(self):
+    def _refresh_all_caches(self):
         self.env['pos.cache'].search([]).refresh_cache()
 
     def refresh_cache(self):
