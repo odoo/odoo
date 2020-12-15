@@ -13,6 +13,18 @@
         </field>
     </record>
 
+    <record id="view_edit_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.project.view.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_sale_project_inherit_form" model="ir.ui.view">
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>
