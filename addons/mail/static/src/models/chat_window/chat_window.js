@@ -50,6 +50,13 @@ function factory(dependencies) {
             if (thread && notifyServer) {
                 thread.notifyFoldStateToServer('closed');
             }
+            if (this.env.device.isMobile && !this.env.messaging.discuss.isOpen) {
+                // If we are in mobile and discuss is not open, it means the
+                // chat window was opened from the messaging menu. In that
+                // case it should be re-opened to simulate it was always
+                // there in the background.
+                this.env.messaging.messagingMenu.update({ isOpen: true });
+            }
         }
 
         expand() {
