@@ -334,7 +334,7 @@ var Wysiwyg = Widget.extend({
 
         this.editorHelpers = this.editor.plugins.get(JWEditorLib.DomHelpers);
         const domLayout = this.editor.plugins.get(JWEditorLib.Layout).engines.dom;
-        this.zoneMain = domLayout.root.firstDescendant(node => node.managedZones && node.managedZones.includes('main'));
+        this.zoneMain = JWEditorLib.withIntangibles.firstDescendant(domLayout.root, node => node.managedZones && node.managedZones.includes('main'));
         const rootElement = this.editorHelpers.getDomNodes(domLayout.root.firstDescendant(JWEditorLib.ContainerNode))[0];
         this.editorEditable = this.editorHelpers.getDomNodes(this.zoneMain)[0] || this.editorHelpers.getDomNodes(this.zoneMain.parent)[0];
 
