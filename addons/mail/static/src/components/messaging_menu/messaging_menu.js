@@ -111,12 +111,6 @@ class MessagingMenu extends Component {
              */
             return;
         }
-        // in mobile: keeps the messaging menu open in background
-        // TODO: maybe need to move this to a mobile component?
-        // task-2089887
-        if (this.env.messaging.device.isMobile) {
-            return;
-        }
         // ignore click inside the menu
         if (this.el.contains(ev.target)) {
             return;
