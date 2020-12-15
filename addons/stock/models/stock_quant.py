@@ -92,7 +92,7 @@ class StockQuant(models.Model):
         'Available Quantity',
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
         compute='_compute_available_quantity')
-    in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now())
+    in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
 
