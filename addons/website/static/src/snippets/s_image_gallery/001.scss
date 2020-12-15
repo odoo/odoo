@@ -238,10 +238,18 @@
 }
 
 %image-gallery-slideshow-styles {
-    &:not(.s_image_gallery_cover) .carousel-item > img {
-        max-height: 100%;
-        max-width: 100%;
-        margin: auto;
+    &:not(.s_image_gallery_cover) .carousel-item {
+        > a {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        > a > img,
+        > img {
+            max-height: 100%;
+            max-width: 100%;
+            margin: auto;
+        }
     }
     .carousel {
         height: 100%;
