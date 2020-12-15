@@ -110,7 +110,10 @@ snippetOptions.registry.SnippetPopup = snippetOptions.SnippetOptionWidget.extend
      * @private
      */
     _assignUniqueID: function () {
-        this.$target.closest('.s_popup').attr('id', 'sPopup' + Date.now());
+        const $popup = this.$target.closest('.s_popup');
+        this.wysiwyg.withDomMutations($popup, () => {
+            $popup.attr('id', 'sPopup' + Date.now());
+        });
     },
     /**
      * @override
