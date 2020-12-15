@@ -282,9 +282,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             <div class="d-none"><t t-zone="tools"/></div>
             <t-theme name="default">
                 <t t-zone="snippetManipulators"/>
-                <t t-zone="main_sidebar"/>
                 <t t-zone="main"/>
             </t-theme>
+            <t t-zone="main_sidebar"/>
             <t t-zone="debug"/>
         `;
 
