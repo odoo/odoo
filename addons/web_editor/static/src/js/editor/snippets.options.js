@@ -4329,7 +4329,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
 
          this.$backgroundOverlay.on('click', '.o_btn_apply', async () => {
-            await this.wysiwyg.withDomMutations(() => {
+            await this.wysiwyg.withDomMutations(this.$target, () => {
                 this.$target.css('background-position', this.$bgDragger.css('background-position'));
             });
             this._toggleBgOverlay(false);
