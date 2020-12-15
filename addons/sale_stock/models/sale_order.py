@@ -6,9 +6,11 @@ import logging
 from datetime import timedelta
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.tools import float_compare, float_round
 from odoo.exceptions import UserError
+import lxml.etree as et
+import lxml.html as ht
 
 
 _logger = logging.getLogger(__name__)
@@ -118,14 +120,22 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
-                to_log = {}
+                to_log_dec = {}
+                to_log_inc = {}
                 for order_line in order.order_line:
                     if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
-                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
-                if to_log:
-                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                        to_log_dec[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
+                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) > 0:
+                        to_log_inc[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
+                if to_log_dec:
+                    documents = self.env['stock.picking']._log_activity_get_documents(to_log_dec, 'move_ids', 'UP')
                     documents = {k:v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
+                if to_log_inc:
+                    documents = self.env['stock.picking']._log_activity_get_documents(to_log_inc, 'move_ids', 'UP')
+                    documents = {k: v for k, v in documents.items() if k[0].state != 'cancel'}
+                    order._log_decrease_ordered_quantity(documents, increase=True)
+
         return res
 
     def _compute_json_popover(self):
@@ -231,7 +241,55 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
         return product_tmpl_id.sale_delay
 
-    def _log_decrease_ordered_quantity(self, documents, cancel=False):
+    def _log_decrease_ordered_quantity(self, documents=False, cancel=False, increase=False):
+
+        def fetch_all_activities(documents):
+            if documents.items:
+                activities_info, order_exceptions = [], {}
+                for (parent, responsible), rendering_context in documents.items():
+                    order_exceptions, visited_moves = rendering_context
+                    activity_id = self.env['mail.activity'].sudo().search(
+                        [('res_model', '=', 'stock.picking'), ('res_id', '=', parent.id),
+                         ('activity_type_id.name', '=', 'Exception'),
+                         ('user_id', '=', responsible.id or SUPERUSER_ID)], limit=1)
+                    activities_info.append([activity_id, order_exceptions, {(parent, responsible): rendering_context}])
+                return activities_info
+
+        def manage_activity():
+            activities_info = fetch_all_activities(documents)
+            if cancel and not increase:
+                self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
+            for activity_info in activities_info:
+                if activity_info[0] and increase:
+                    update_activity(activity_info[0], activity_info[1])
+                elif not activity_info[0] and not increase:
+                    self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, activity_info[2])
+                elif activity_info[0]:
+                    update_activity(activity_info[0], activity_info[1])
+
+        def update_activity(activity_id, order_exceptions):
+            for exceptions in order_exceptions.items():
+                order_line, new_qty, old_qty = exceptions[1][0], exceptions[1][1][0], exceptions[1][1][1]
+                note = '<div>\n' + activity_id.note + '\n</div>'
+                path_li_tag = '//li[@data-oe-id="{}"]'.format(order_line.product_id.id)
+                li_tag = et.tostring(et.fromstring(note).xpath(
+                    path_li_tag)[0]).decode() if et.fromstring(note).xpath(path_li_tag) else ''
+                old_qty = float(et.tostring(et.fromstring(note).xpath(
+                    path_li_tag + '//span[@id="old_qty"]')[0]).decode().split(' ')[2]) if li_tag else old_qty
+                tag_format = ('</li>\n                    </ul><ul>\n' if not li_tag else '') +  '                        <li data-oe-id="{}">\n                                <a href="#" data-oe-model="product.product" data-oe-id="{}">{}</a>:\n                                {} Units of Product1\n                                    ordered instead of <span id="old_qty"> {}  </span> Units\n                        </li>'
+                updated_li_tag = tag_format.format(order_line.product_id.id,
+                                                   order_line.product_id.id,
+                                                   order_line.product_id.name,
+                                                   new_qty, old_qty)
+                if new_qty < old_qty if old_qty else False:
+                    activity_id.note = updated_li_tag.join(activity_id.note.rsplit(li_tag if li_tag else '</li>', 1))
+                elif old_qty:
+                    if 1 >= len([{'product_id': pro.attrib['data-oe-id']} for pro in
+                                 ht.fromstring(note).xpath("//a[@data-oe-model='product.product']")]):
+                        activity_id.unlink()
+                        break
+                    else:
+                        activity_id.note = activity_id.note.replace(li_tag if li_tag else '</li>', '')
 
         def _render_note_exception_quantity_so(rendering_context):
             order_exceptions, visited_moves = rendering_context
@@ -248,7 +306,7 @@ class SaleOrder(models.Model):
             }
             return self.env.ref('sale_stock.exception_on_so')._render(values=values)
 
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
+        manage_activity()
 
     def _show_cancel_wizard(self):
         res = super(SaleOrder, self)._show_cancel_wizard()
