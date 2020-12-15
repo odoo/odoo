@@ -176,11 +176,11 @@ var BasicActivity = AbstractField.extend({
                 if (rslt_action) {
                     self.do_action(rslt_action, {
                         on_close: function () {
-                            self.trigger_up('reload');
+                            self.trigger_up('reload', { keepChanges: true });
                         },
                     });
                 } else {
-                    self.trigger_up('reload');
+                    self.trigger_up('reload', { keepChanges: true });
                 }
             }
         );
@@ -398,7 +398,7 @@ var BasicActivity = AbstractField.extend({
             },
         };
         return this.do_action(action, { on_close: function () {
-            self.trigger_up('reload');
+            self.trigger_up('reload', { keepChanges: true });
         } });
     },
     /**
@@ -571,7 +571,7 @@ var KanbanActivity = BasicActivity.extend({
      * @private
      */
     _reload: function () {
-        this.trigger_up('reload', { db_id: this.record_id });
+        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
     },
     /**
      * @override
