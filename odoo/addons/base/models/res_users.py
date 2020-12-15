@@ -56,7 +56,7 @@ def name_boolean_group(id):
     return 'in_group_' + str(id)
 
 def name_selection_groups(ids):
-    return 'sel_groups_' + '_'.join(str(it) for it in ids)
+    return 'sel_groups_' + '_'.join(str(it) for it in sorted(ids))
 
 def is_boolean_group(name):
     return name.startswith('in_group_')
