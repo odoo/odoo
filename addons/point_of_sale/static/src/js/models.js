@@ -1747,7 +1747,7 @@ exports.Orderline = Backbone.Model.extend({
             this.order.remove_orderline(this);
             return;
         }else{
-            var quant = field_utils.parse.float('' + quantity) || 0;
+            var quant = typeof(quantity) === 'number' ? quantity : (field_utils.parse.float('' + quantity) || 0);
             var unit = this.get_unit();
             if(unit){
                 if (unit.rounding) {
