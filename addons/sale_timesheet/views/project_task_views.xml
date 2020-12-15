@@ -167,7 +167,7 @@
                         <label class="font-weight-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
                                attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
                     </span>
-                    <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom"></field>
+                    <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"></field>
                 </xpath>
                 <xpath expr="//field[@name='sale_order_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
