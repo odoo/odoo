@@ -49,6 +49,23 @@ class Coupon(models.Model):
         for coupon in self.filtered(lambda x: x.program_id.validity_duration > 0):
             coupon.expiration_date = (coupon.create_date + relativedelta(days=coupon.program_id.validity_duration)).date()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        coupons = super().create(vals_list)
+        coupons and coupons._update_cron()
+        return coupons
+
+    def write(self, values):
+        res = super().write(values)
+        if 'state' in values:
+            self and self._update_cron()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self and self._update_cron()
+        return res
+
     def _get_default_template(self):
         return False
 
@@ -83,7 +100,8 @@ class Coupon(models.Model):
     def action_coupon_cancel(self):
         self.state = 'cancel'
 
-    def cron_expire_coupon(self):
+    @api.model
+    def _cron_expire_coupon(self):
         self._cr.execute("""
             SELECT C.id FROM COUPON_COUPON as C
             INNER JOIN COUPON_PROGRAM as P ON C.program_id = P.id
@@ -93,6 +111,17 @@ class Coupon(models.Model):
 
         expired_ids = [res[0] for res in self._cr.fetchall()]
         self.browse(expired_ids).write({'state': 'expired'})
+
+    @api.model
+    def _update_cron(self):
+        cron = self.env.ref('coupon.expire_coupon_cron', raise_if_not_found=False)
+        cron and cron.toggle(
+            model=self._name,
+            domain=[
+                ('state', 'in', ['reserved', 'new', 'sent']),
+                ('program_id.validity_duration', '>', 0),
+            ],
+        )
 
     def _check_coupon_code(self, order_date, partner_id, **kwargs):
         """ Check the validity of this single coupon.

@@ -13,6 +13,23 @@ class ResPartnerAutocompleteSync(models.Model):
     partner_id = fields.Many2one('res.partner', string="Partner", ondelete='cascade')
     synched = fields.Boolean('Is synched', default=False)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        syncs = super().create(vals_list)
+        syncs and syncs._update_cron()
+        return syncs
+
+    def write(self, values):
+        res = super().write(values)
+        if 'state' in values:
+            self and self._update_cron()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self and self._update_cron()
+        return res
+
     @api.model
     def _start_sync(self):
         to_sync_items = self.search([('synched', '=', False)])
@@ -35,3 +52,11 @@ class ResPartnerAutocompleteSync(models.Model):
         if not to_sync:
             to_sync = self.create({'partner_id': partner_id})
         return to_sync
+
+    @api.model
+    def _update_cron(self):
+        cron = self.env.ref('partner_autocomplete.ir_cron_partner_autocomplete', raise_if_not_found=False)
+        cron and cron.toggle(
+            model=self._name,
+            domain=[],
+        )

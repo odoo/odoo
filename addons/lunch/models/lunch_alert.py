@@ -84,6 +84,29 @@ class LunchAlert(models.Model):
             ])
         ])
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        alerts = super().create(vals_list)
+        alerts and alerts._update_cron()
+        return alerts
+
+    def unlink(self):
+        res = super().unlink()
+        self and self._update_cron()
+        return res
+
+    @api.model
+    def _update_cron(self):
+        cron = self.env.ref('lunch.ir_cron_lunch_alerts', raise_if_not_found=False)
+        cron and cron.toggle(
+            model=self._name,
+            domain=[
+                ('mode' , '=', 'chat'),
+                ('active', '=', True),
+            ],
+        )
+
+    @api.model
     def _notify_chat(self):
         records = self.search([('mode', '=', 'chat'), ('active', '=', True)])
 

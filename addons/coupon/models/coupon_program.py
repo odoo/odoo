@@ -51,6 +51,7 @@ class CouponProgram(models.Model):
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     validity_duration = fields.Integer(default=30,
         help="Validity duration for a coupon after its generation")
+    # VFE TODO SQL constraint to enforce validity_duration is positive ?
     total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
 
     @api.constrains('promo_code')
@@ -107,6 +108,8 @@ class CouponProgram(models.Model):
         ]
         if any(field in reward_fields for field in vals):
             self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
+        if 'validity_duration' in vals:
+            self and self.env['coupon.coupon']._update_cron()
         return res
 
     @api.ondelete(at_uninstall=False)

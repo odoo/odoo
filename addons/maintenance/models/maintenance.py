@@ -205,12 +205,26 @@ class MaintenanceEquipment(models.Model):
         equipment = super(MaintenanceEquipment, self).create(vals)
         if equipment.owner_user_id:
             equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
+        if equipment.period > 0:
+            self._update_cron()
         return equipment
 
     def write(self, vals):
         if vals.get('owner_user_id'):
             self.message_subscribe(partner_ids=self.env['res.users'].browse(vals['owner_user_id']).partner_id.ids)
+        if 'period' in vals:
+            self and self._update_cron()
         return super(MaintenanceEquipment, self).write(vals)
+
+    @api.model
+    def _update_cron(self):
+        cron = self.env.ref('maintenance.maintenance_requests_cron', raise_if_not_found=False)
+        cron and cron.toggle(
+            model=self._name,
+            domain=[
+                ('period', '>', 0),
+            ],
+        )
 
     @api.model
     def _read_group_category_ids(self, categories, domain, order):

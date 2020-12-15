@@ -8,15 +8,15 @@
     'version': '1.0',
     'depends': ['account'],
     'data': [
-        'wizard/coupon_generate_views.xml',
+        'data/ir_cron.xml',
         'security/ir.model.access.csv',
         'security/coupon_security.xml',
+        'wizard/coupon_generate_views.xml',
         'views/assets.xml',
         'views/coupon_views.xml',
         'views/coupon_program_views.xml',
         'report/coupon_report.xml',
         'report/coupon_report_templates.xml',
-        'data/expire_coupon_cron.xml',
     ],
     'demo': [
         'demo/coupon_demo.xml',

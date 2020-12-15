@@ -103,6 +103,8 @@ class LunchSupplier(models.Model):
                 res.append((supplier.id, supplier.name))
         return res
 
+    # TODO schedule cron execution when an order is effectively created ?
+    # instead of every 20 minutes ?
     @api.model
     def _auto_email_send(self):
         """
@@ -111,14 +113,22 @@ class LunchSupplier(models.Model):
             automatically to the supplier if the supplier is configured for it and we are ready
             to send it (usually at 11am or so)
         """
-        records = self.search([('send_by', '=', 'mail')])
+        records = self.search([('send_by', '=', 'mail'), ('available_today', '=', True)])
+        mail_template = self.env.ref('lunch.lunch_order_mail_supplier', raise_if_not_found=False)
+        if not mail_template:
+            return
 
         for supplier in records:
-            send_at = datetime.combine(fields.Date.today(),
-                                       float_to_time(supplier.automatic_email_time, supplier.moment, supplier.tz)).astimezone(pytz.UTC).replace(tzinfo=None)
-            if supplier.available_today and fields.Datetime.now() > send_at:
-                lines = self.env['lunch.order'].search([('supplier_id', '=', supplier.id),
-                                                             ('state', '=', 'ordered'), ('date', '=', fields.Date.today())])
+            send_at = datetime.combine(
+                fields.Date.today(),
+                float_to_time(supplier.automatic_email_time, supplier.moment, supplier.tz)
+            ).astimezone(pytz.UTC).replace(tzinfo=None)
+            if fields.Datetime.now() > send_at:
+                lines = self.env['lunch.order'].search([
+                    ('supplier_id', '=', supplier.id),
+                    ('state', '=', 'ordered'),
+                    ('date', '=', fields.Date.today()),
+                ])
 
                 if lines:
                     order = {
@@ -127,6 +137,7 @@ class LunchSupplier(models.Model):
                         'supplier_id': supplier.partner_id.id,
                         'supplier_name': supplier.name,
                         'email_from': supplier.responsible_id.email_formatted,
+                        'amount_total': sum(lines.mapped('price')),
                     }
 
                     _lines = [{
@@ -138,9 +149,7 @@ class LunchSupplier(models.Model):
                         'username': line.user_id.name,
                     } for line in lines]
 
-                    order['amount_total'] = sum(line.price for line in lines)
-
-                    self.env.ref('lunch.lunch_order_mail_supplier').with_context(order=order, lines=_lines).send_mail(supplier.id)
+                    mail_template.with_context(order=order, lines=_lines).send_mail(supplier.id)
 
                     lines.action_confirm()
 

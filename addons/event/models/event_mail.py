@@ -163,6 +163,7 @@ You receive this email because you are:
                 _logger.error("Exception while sending traceback by email: %s.\n Original Traceback:\n%s", e, exception)
                 pass
 
+    # VFE TODO only enable cron when needed ?
     @api.model
     def run(self, autocommit=False):
         schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))])

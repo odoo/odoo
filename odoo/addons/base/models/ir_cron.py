@@ -364,7 +364,7 @@ class ir_cron(models.Model):
 
     @api.model
     def toggle(self, model, domain):
-        active = bool(self.env[model].search_count(domain))
+        active = bool(self.env[model].search(domain, limit=1))
         return self.try_write({'active': active})
 
     @api.model

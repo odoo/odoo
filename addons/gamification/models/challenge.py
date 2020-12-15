@@ -199,6 +199,8 @@ class Challenge(models.Model):
 
     ##### Update #####
 
+    # VFE FIXME disable if no draft/inprogress challenges ?
+    # See modules installing gamification
     @api.model # FIXME: check how cron functions are called to see if decorator necessary
     def _cron_update(self, ids=False, commit=True):
         """Daily cron check.

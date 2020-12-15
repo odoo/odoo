@@ -42,6 +42,8 @@ class Employee(models.AbstractModel):
 
     @api.model
     def _check_presence(self):
+        # VFE FIXME this is kinda strange
+        # This CRON will only be executed on the main company of the superuser
         company = self.env.company
         if not company.hr_presence_last_compute_date or \
                 company.hr_presence_last_compute_date.day != Datetime.now().day:
