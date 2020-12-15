@@ -349,6 +349,7 @@ var SnippetEditor = Widget.extend({
         this.toggleOverlay(false);
         this.toggleOptions(false);
 
+        let removableParent;
         const removeSnippet = async (context) => {
             await new Promise(resolve => {
                 this.trigger_up('call_for_each_child_snippet', {
@@ -386,9 +387,7 @@ var SnippetEditor = Widget.extend({
                     editor = $parent.data('snippet-editor');
                 }
                 if (isEmptyAndRemovable($parent, editor)) {
-                    await new Promise((resolve)=> {
-                        setTimeout(() => editor.removeSnippet().then(resolve));
-                    });
+                    removableParent = editor;
                 }
             }
 
@@ -410,6 +409,11 @@ var SnippetEditor = Widget.extend({
             }
         };
         await this.wysiwyg.withDomMutations($('#wrapwrap'), removeSnippet);
+        if (removableParent) {
+            await new Promise((resolve)=> {
+                setTimeout(() => removableParent.removeSnippet().then(resolve));
+            });
+        }
     },
     /**
      * Displays/Hides the editor overlay.
