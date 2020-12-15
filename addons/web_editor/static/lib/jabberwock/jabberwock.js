@@ -131,15 +131,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
         RelativePosition["AFTER"] = "AFTER";
         RelativePosition["INSIDE"] = "INSIDE";
     })(RelativePosition || (RelativePosition = {}));
-    /**
-     * Return true if the given node is a leaf in the VDocument, that is a node that
-     * has no children.
-     *
-     * @param node node to check
-     */
-    function isLeaf(node) {
-        return !node.hasChildren();
-    }
 
     /**
      * Creates an instance representing a custom error adapting to the constructor
@@ -3254,6 +3245,476 @@ odoo.define('web_editor.jabberwock', (function(require) {
         }
     }
 
+    class Walker {
+        constructor(_configuration = {}) {
+            this._configuration = _configuration;
+        }
+        /**
+         * Test the given node against this walker configured filter.
+         *
+         * @param node The node to test
+         */
+        isValid(node) {
+            if (!node || (this._configuration.ignoreIntangibles && !node.tangible)) {
+                return false;
+            }
+            return true;
+        }
+        /**
+         * Test the given node against the given predicate.
+         *
+         * If the predicate is falsy, return true. If the predicate is a
+         * constructor of a VNode class, return whether the given node is an
+         * instance of that class.
+         * If the predicate is a standard function, return the result of this
+         * function when called with the node as parameter.
+         *
+         * @param node The node to test
+         * @param predicate The predicate to test the given node against.
+         */
+        test(node, predicate) {
+            if (!predicate) {
+                return true;
+            }
+            else if (AbstractNode.isConstructor(predicate)) {
+                return node instanceof predicate;
+            }
+            else {
+                return predicate(node);
+            }
+        }
+        /**
+         * Return true if the given node is a leaf in the VDocument, that is a node
+         * that has no children.
+         *
+         * @param node node to check
+         */
+        isLeaf(node) {
+            return !this.hasChildren(node);
+        }
+        children(thisNode, predicate) {
+            const children = [];
+            const stack = [...thisNode.childVNodes];
+            while (stack.length) {
+                const node = stack.shift();
+                if (this._configuration.ignoreIntangibles && !node.tangible) {
+                    stack.unshift(...node.childVNodes);
+                }
+                else if (this.isValid(node) && this.test(node, predicate)) {
+                    children.push(node);
+                }
+            }
+            return children;
+        }
+        /**
+         * Return true if the given VNode has children.
+         *
+         * @param thisNode
+         */
+        hasChildren(thisNode) {
+            if (this._configuration.ignoreIntangibles) {
+                const stack = [...thisNode.childVNodes];
+                for (const child of stack) {
+                    if (child.tangible) {
+                        return true;
+                    }
+                    else {
+                        stack.push(...child.childVNodes);
+                    }
+                }
+            }
+            else {
+                return !!thisNode.childVNodes.length;
+            }
+            return false;
+        }
+        /**
+         * Return true if the given VNode comes before the given VNode in the pre-order
+         * traversal.
+         *
+         * @param thisNode
+         * @param node
+         */
+        isBefore(thisNode, node) {
+            const thisPath = [thisNode];
+            let parent = thisNode.parentVNode;
+            while (parent) {
+                thisPath.push(parent);
+                parent = parent.parentVNode;
+            }
+            const nodePath = [node];
+            parent = node.parentVNode;
+            while (parent) {
+                nodePath.push(parent);
+                parent = parent.parentVNode;
+            }
+            // Find the last distinct ancestors in the path to the root.
+            let thisAncestor;
+            let nodeAncestor;
+            do {
+                thisAncestor = thisPath.pop();
+                nodeAncestor = nodePath.pop();
+            } while (thisAncestor && nodeAncestor && thisAncestor === nodeAncestor);
+            if (thisAncestor && nodeAncestor) {
+                const thisParent = thisAncestor.parentVNode;
+                const nodeParent = nodeAncestor.parentVNode;
+                if (thisParent && thisParent === nodeParent) {
+                    // Compare the indices of both ancestors in their shared parent.
+                    const thisIndex = thisParent.childVNodes.indexOf(thisAncestor);
+                    const nodeIndex = nodeParent.childVNodes.indexOf(nodeAncestor);
+                    return thisIndex < nodeIndex;
+                }
+                else {
+                    // The very first ancestor of both nodes are different so
+                    // they actually come from two different trees altogether.
+                    return false;
+                }
+            }
+            else {
+                // One of the nodes was in the ancestors path of the other.
+                return !thisAncestor && !!nodeAncestor;
+            }
+        }
+        /**
+         * Return true if the given VNode comes after the given VNode in the pre-order
+         * traversal.
+         *
+         * @param thisNode
+         * @param node
+         */
+        isAfter(thisNode, node) {
+            return this.isBefore(node, thisNode);
+        }
+        closest(thisNode, predicate) {
+            if (this.isValid(thisNode) && this.test(thisNode, predicate)) {
+                return thisNode;
+            }
+            else {
+                return this.ancestor(thisNode, predicate);
+            }
+        }
+        parent(thisNode) {
+            let ancestor = thisNode.parentVNode;
+            while (ancestor && this._configuration.ignoreIntangibles && !ancestor.tangible) {
+                ancestor = ancestor.parentVNode;
+            }
+            return ancestor;
+        }
+        ancestor(thisNode, predicate) {
+            let ancestor = thisNode.parentVNode;
+            while (ancestor && !(this.isValid(ancestor) && this.test(ancestor, predicate))) {
+                ancestor = ancestor.parentVNode;
+            }
+            return ancestor;
+        }
+        ancestors(thisNode, predicate) {
+            const ancestors = [];
+            let ancestor = thisNode.parentVNode;
+            while (ancestor) {
+                if (this.isValid(ancestor) && this.test(ancestor, predicate)) {
+                    ancestors.push(ancestor);
+                }
+                ancestor = ancestor.parentVNode;
+            }
+            return ancestors;
+        }
+        commonAncestor(thisNode, node, predicate) {
+            const thisNodePath = this.ancestors(thisNode, predicate);
+            if (thisNode !== node &&
+                thisNode.childVNodes.length &&
+                this.isValid(thisNode) &&
+                this.test(thisNode, predicate)) {
+                thisNodePath.unshift(thisNode);
+            }
+            let commonAncestor = node;
+            while (commonAncestor && !thisNodePath.includes(commonAncestor)) {
+                commonAncestor = commonAncestor.parentVNode;
+            }
+            return commonAncestor;
+        }
+        siblings(thisNode, predicate) {
+            const parent = this.parent(thisNode);
+            if (!parent)
+                return [];
+            const siblings = this.children(parent, predicate);
+            const index = siblings.indexOf(thisNode);
+            if (index !== -1) {
+                siblings.splice(index, 1);
+            }
+            return siblings;
+        }
+        adjacents(thisNode, predicate) {
+            const adjacents = [];
+            const previousSiblings = this.previousSiblings(thisNode);
+            let sibling;
+            while ((sibling = previousSiblings.shift()) && this.test(sibling, predicate)) {
+                // Skip ignored siblings and those failing the predicate test.
+                adjacents.unshift(sibling);
+            }
+            if (this.isValid(thisNode) && this.test(thisNode, predicate)) {
+                // Skip ignored siblings and those failing the predicate test.
+                adjacents.push(thisNode);
+            }
+            const nextSiblings = this.nextSiblings(thisNode);
+            while ((sibling = nextSiblings.shift()) && this.test(sibling, predicate)) {
+                // Skip ignored siblings and those failing the predicate test.
+                adjacents.push(sibling);
+            }
+            return adjacents;
+        }
+        previousSibling(thisNode, predicate) {
+            do {
+                const parentVNode = thisNode.parentVNode;
+                if (!parentVNode)
+                    return;
+                const childVNodes = parentVNode.childVNodes;
+                const index = childVNodes.indexOf(thisNode);
+                if (index === 0) {
+                    if (this._configuration.ignoreIntangibles && !parentVNode.tangible) {
+                        // If it has no siblings either then climb up to the closest
+                        // parent which has a previous sibiling.
+                        thisNode = parentVNode;
+                        continue;
+                    }
+                    return;
+                }
+                thisNode = childVNodes[index - 1];
+                if (this._configuration.ignoreIntangibles && !thisNode.tangible) {
+                    thisNode = this.lastChild(thisNode) || thisNode;
+                }
+                // Skip ignored siblings and those failing the predicate test.
+            } while (!this.isValid(thisNode) || !this.test(thisNode, predicate));
+            return thisNode;
+        }
+        nextSibling(thisNode, predicate) {
+            do {
+                const parentVNode = thisNode.parentVNode;
+                if (!parentVNode)
+                    return;
+                const childVNodes = parentVNode.childVNodes;
+                const len = childVNodes.length;
+                const index = childVNodes.indexOf(thisNode);
+                if (index >= len - 1) {
+                    if (this._configuration.ignoreIntangibles && !parentVNode.tangible) {
+                        // If it has no siblings either then climb up to the closest
+                        // parent which has a next sibiling.
+                        thisNode = parentVNode;
+                        continue;
+                    }
+                    return;
+                }
+                thisNode = childVNodes[index + 1];
+                if (this._configuration.ignoreIntangibles && !thisNode.tangible) {
+                    thisNode = this.firstChild(thisNode) || thisNode;
+                }
+                // Skip ignored siblings and those failing the predicate test.
+            } while (!this.isValid(thisNode) || !this.test(thisNode, predicate));
+            return thisNode;
+        }
+        previous(thisNode, predicate) {
+            let previous;
+            do {
+                const node = previous || thisNode;
+                previous = this.previousSibling(node);
+                if (previous) {
+                    // The previous node is the last leaf of the previous sibling.
+                    previous = this.lastLeaf(previous);
+                }
+                else {
+                    // If it has no siblings either then climb up to the closest parent
+                    // which has a next sibiling.
+                    previous = this.parent(node);
+                }
+            } while (previous && !(this.isValid(previous) && this.test(previous, predicate)));
+            return previous;
+        }
+        next(thisNode, predicate) {
+            let next;
+            do {
+                const node = next || thisNode;
+                // The node after node is its first child.
+                next = this.firstChild(node);
+                if (!next) {
+                    // If it has no children then it is its next sibling.
+                    next = this.nextSibling(node);
+                }
+                if (!next) {
+                    // If it has no siblings either then climb up to the closest parent
+                    // which has a next sibiling.
+                    let ancestor = this.parent(node);
+                    while (ancestor && !(next = this.nextSibling(ancestor))) {
+                        ancestor = this.parent(ancestor);
+                    }
+                    if (!ancestor)
+                        next = undefined;
+                }
+            } while (next && !(this.isValid(next) && this.test(next, predicate)));
+            return next;
+        }
+        previousLeaf(thisNode, predicate) {
+            return this.previous(thisNode, (node) => this.isLeaf(node) && this.test(node, predicate));
+        }
+        nextLeaf(thisNode, predicate) {
+            return this.next(thisNode, (node) => this.isLeaf(node) && this.test(node, predicate));
+        }
+        previousSiblings(thisNode, predicate) {
+            const siblings = [];
+            let current = thisNode;
+            do {
+                const parentVNode = current.parentVNode;
+                if (!parentVNode)
+                    return siblings;
+                const children = parentVNode.childVNodes;
+                for (let index = children.indexOf(current) - 1; index >= 0; index--) {
+                    const sibling = children[index];
+                    if (this._configuration.ignoreIntangibles && !sibling.tangible) {
+                        // If it is an intangible container take all valid children.
+                        siblings.push(...this.children(sibling, predicate).reverse());
+                    }
+                    else if (this.isValid(sibling) && this.test(sibling, predicate)) {
+                        siblings.push(sibling);
+                    }
+                }
+                // If the parent is an intangible container climb up and looking the
+                // other previous sibiling.
+                current = this._configuration.ignoreIntangibles && !parentVNode.tangible && parentVNode;
+            } while (current);
+            return siblings;
+        }
+        nextSiblings(thisNode, predicate) {
+            const siblings = [];
+            let current = thisNode;
+            do {
+                const parentVNode = current.parentVNode;
+                if (!parentVNode)
+                    return siblings;
+                const children = parentVNode.childVNodes;
+                const len = children.length;
+                for (let index = children.indexOf(current) + 1; index < len; index++) {
+                    const sibling = children[index];
+                    if (this._configuration.ignoreIntangibles && !sibling.tangible) {
+                        // If it is an intangible container take all valid children.
+                        siblings.push(...this.children(sibling, predicate));
+                    }
+                    else if (this.isValid(sibling) && this.test(sibling, predicate)) {
+                        siblings.push(sibling);
+                    }
+                }
+                // If the parent is an intangible container climb up and looking the
+                // other previous sibiling.
+                current = this._configuration.ignoreIntangibles && !parentVNode.tangible && parentVNode;
+            } while (current);
+            return siblings;
+        }
+        /**
+         * Return the nth child of the given node. The given `n` argument is the 1-based
+         * index of the position of the child inside the given node, excluding markers.
+         *
+         * Examples:
+         * nthChild(1) returns the first (1st) child.
+         * nthChild(2) returns the second (2nd) child.
+         * nthChild(3) returns the second (3rd) child.
+         * nthChild(4) returns the second (4th) child.
+         * ...
+         *
+         * @param thisNode
+         * @param n
+         */
+        nthChild(thisNode, n) {
+            return this.children(thisNode)[n - 1];
+        }
+        firstChild(thisNode, predicate) {
+            thisNode = thisNode.childVNodes[0];
+            while (thisNode &&
+                this._configuration.ignoreIntangibles &&
+                !thisNode.tangible &&
+                thisNode.childVNodes.length) {
+                thisNode = thisNode.childVNodes[0];
+            }
+            if (thisNode) {
+                if (this.isValid(thisNode) && this.test(thisNode, predicate)) {
+                    return thisNode;
+                }
+                return this.nextSibling(thisNode, predicate);
+            }
+        }
+        lastChild(thisNode, predicate) {
+            thisNode = thisNode.childVNodes[thisNode.childVNodes.length - 1];
+            while (thisNode &&
+                this._configuration.ignoreIntangibles &&
+                !thisNode.tangible &&
+                thisNode.childVNodes.length) {
+                thisNode = thisNode.childVNodes[thisNode.childVNodes.length - 1];
+            }
+            if (thisNode) {
+                if (this.isValid(thisNode) && this.test(thisNode, predicate)) {
+                    return thisNode;
+                }
+                return this.previousSibling(thisNode, predicate);
+            }
+        }
+        firstLeaf(thisNode, predicate) {
+            const isValidLeaf = (node) => {
+                return this.isLeaf(node) && this.test(node, predicate);
+            };
+            if (isValidLeaf(thisNode)) {
+                return thisNode;
+            }
+            else {
+                return this.firstDescendant(thisNode, isValidLeaf);
+            }
+        }
+        lastLeaf(thisNode, predicate) {
+            const isValidLeaf = (node) => {
+                return this.isLeaf(node) && this.test(node, predicate);
+            };
+            if (isValidLeaf(thisNode)) {
+                return thisNode;
+            }
+            else {
+                return this.lastDescendant(thisNode, isValidLeaf);
+            }
+        }
+        descendants(thisNode, predicate) {
+            const descendants = [];
+            const stack = [...thisNode.childVNodes];
+            while (stack.length) {
+                const node = stack.shift();
+                if (this.isValid(node) && this.test(node, predicate)) {
+                    descendants.push(node);
+                }
+                stack.unshift(...node.childVNodes);
+            }
+            return descendants;
+        }
+        firstDescendant(thisNode, predicate) {
+            const stack = [...thisNode.childVNodes];
+            while (stack.length) {
+                const node = stack.shift();
+                if (this.isValid(node) && this.test(node, predicate)) {
+                    return node;
+                }
+                stack.unshift(...node.childVNodes);
+            }
+        }
+        lastDescendant(thisNode, predicate) {
+            const childrenFetched = new Set();
+            const stack = [...thisNode.childVNodes];
+            while (stack.length) {
+                const node = stack.pop();
+                if (!childrenFetched.has(node) && node.childVNodes.length) {
+                    childrenFetched.add(node);
+                    stack.push(node, ...node.childVNodes);
+                }
+                else if (this.isValid(node) && this.test(node, predicate)) {
+                    return node;
+                }
+            }
+        }
+    }
+    const withoutIntangibles = new Walker({ ignoreIntangibles: true });
+    const withIntangibles = new Walker();
+
     let id = 0;
     class AbstractNode extends EventMixin {
         constructor(params) {
@@ -3308,6 +3769,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this._editable = state;
         }
         /**
+         * First tangible parent of the VNode.
+         */
+        get parent() {
+            return withoutIntangibles.parent(this);
+        }
+        /**
          * Return whether the given predicate is a constructor of a VNode class.
          *
          * @param predicate The predicate to check.
@@ -3332,7 +3799,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Return the text content of this node.
          */
         get textContent() {
-            return this.children()
+            return withIntangibles
+                .children(this)
                 .map(child => child.textContent)
                 .join('');
         }
@@ -3385,240 +3853,67 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Return the length of this VNode.
          */
         get length() {
-            return this.children().length;
+            return withIntangibles.children(this).length;
         }
         /**
-         * Test this node against the given predicate.
-         *
-         * If the predicate is falsy, return true. If the predicate is a constructor
-         * of a VNode class, return whether this node is an instance of that class.
-         * If the predicate is a standard function, return the result of this
-         * function when called with the node as parameter.
-         *
-         *
-         * @param predicate The predicate to test this node against.
+         * See {@link Walker.testPredicate}.
          */
         test(predicate) {
-            if (!predicate) {
-                return true;
-            }
-            else if (AbstractNode.isConstructor(predicate)) {
-                return this instanceof predicate;
-            }
-            else {
-                return predicate(this);
-            }
+            return withoutIntangibles.test(this, predicate);
         }
         /**
-         * Return true if this VNode comes before the given VNode in the pre-order
-         * traversal.
-         *
-         * @param vNode
+         * See {@link Walker.isBefore}.
          */
         isBefore(vNode) {
-            const thisPath = [this, ...this.ancestors()];
-            const nodePath = [vNode, ...vNode.ancestors()];
-            // Find the last distinct ancestors in the path to the root.
-            let thisAncestor;
-            let nodeAncestor;
-            do {
-                thisAncestor = thisPath.pop();
-                nodeAncestor = nodePath.pop();
-            } while (thisAncestor && nodeAncestor && thisAncestor === nodeAncestor);
-            if (thisAncestor && nodeAncestor) {
-                const thisParent = thisAncestor.parent;
-                const nodeParent = nodeAncestor.parent;
-                if (thisParent && thisParent === nodeParent) {
-                    // Compare the indices of both ancestors in their shared parent.
-                    const thisIndex = thisParent.childVNodes.indexOf(thisAncestor);
-                    const nodeIndex = nodeParent.childVNodes.indexOf(nodeAncestor);
-                    return thisIndex < nodeIndex;
-                }
-                else {
-                    // The very first ancestor of both nodes are different so
-                    // they actually come from two different trees altogether.
-                    return false;
-                }
-            }
-            else {
-                // One of the nodes was in the ancestors path of the other.
-                return !thisAncestor && !!nodeAncestor;
-            }
+            return withoutIntangibles.isBefore(this, vNode);
         }
         /**
-         * Return true if this VNode comes after the given VNode in the pre-order
-         * traversal.
-         *
-         * @param vNode
+         * See {@link Walker.isAfter}.
          */
         isAfter(vNode) {
-            return vNode.isBefore(this);
+            return withoutIntangibles.isAfter(this, vNode);
         }
         closest(predicate) {
-            if (this.test(predicate)) {
-                return this;
-            }
-            else {
-                return this.ancestor(predicate);
-            }
+            return withoutIntangibles.closest(this, predicate);
         }
         ancestor(predicate) {
-            let ancestor = this.parent;
-            while (ancestor && !ancestor.test(predicate)) {
-                ancestor = ancestor.parent;
-            }
-            return ancestor;
+            return withoutIntangibles.ancestor(this, predicate);
         }
         ancestors(predicate) {
-            const ancestors = [];
-            let parent = this.parent;
-            while (parent) {
-                if (parent.test(predicate)) {
-                    ancestors.push(parent);
-                }
-                parent = parent.parent;
-            }
-            return ancestors;
+            return withoutIntangibles.ancestors(this, predicate);
         }
         commonAncestor(node, predicate) {
-            if (!this.parent) {
-                return;
-            }
-            else if (this.parent === node.parent && this.parent.test(predicate)) {
-                return this.parent;
-            }
-            const thisPath = [this, ...this.ancestors(predicate)];
-            const nodePath = [node, ...node.ancestors(predicate)];
-            let commonAncestor;
-            while (thisPath[thisPath.length - 1] === nodePath.pop()) {
-                commonAncestor = thisPath.pop();
-            }
-            return commonAncestor;
+            return withoutIntangibles.commonAncestor(this, node, predicate);
         }
         siblings(predicate) {
-            const siblings = [];
-            let sibling = this.previousSibling();
-            while (sibling) {
-                if (sibling.test(predicate)) {
-                    siblings.unshift(sibling);
-                }
-                sibling = sibling.previousSibling();
-            }
-            sibling = this.nextSibling();
-            while (sibling) {
-                if (sibling.test(predicate)) {
-                    siblings.push(sibling);
-                }
-                sibling = sibling.nextSibling();
-            }
-            return siblings;
+            return withoutIntangibles.siblings(this, predicate);
         }
         adjacents(predicate) {
-            const adjacents = [];
-            let sibling = this.previousSibling();
-            while (sibling && sibling.test(predicate)) {
-                adjacents.unshift(sibling);
-                sibling = sibling.previousSibling();
-            }
-            if (this.test(predicate)) {
-                adjacents.push(this);
-            }
-            sibling = this.nextSibling();
-            while (sibling && sibling.test(predicate)) {
-                adjacents.push(sibling);
-                sibling = sibling.nextSibling();
-            }
-            return adjacents;
+            return withoutIntangibles.adjacents(this, predicate);
         }
         previousSibling(predicate) {
-            if (!this.parent)
-                return;
-            const index = this.parent.childVNodes.indexOf(this);
-            let sibling = this.parent.childVNodes[index - 1];
-            // Skip ignored siblings and those failing the predicate test.
-            while (sibling && !(sibling.tangible && sibling.test(predicate))) {
-                sibling = sibling.previousSibling();
-            }
-            return sibling;
+            return withoutIntangibles.previousSibling(this, predicate);
         }
         nextSibling(predicate) {
-            if (!this.parent)
-                return;
-            const index = this.parent.childVNodes.indexOf(this);
-            let sibling = this.parent.childVNodes[index + 1];
-            // Skip ignored siblings and those failing the predicate test.
-            while (sibling && !(sibling.tangible && sibling.test(predicate))) {
-                sibling = sibling.nextSibling();
-            }
-            return sibling;
+            return withoutIntangibles.nextSibling(this, predicate);
         }
         previous(predicate) {
-            let previous = this.previousSibling();
-            if (previous) {
-                // The previous node is the last leaf of the previous sibling.
-                previous = previous.lastLeaf();
-            }
-            else {
-                // If it has no previous sibling then climb up to the parent.
-                previous = this.parent;
-            }
-            while (previous && !previous.test(predicate)) {
-                previous = previous.previous();
-            }
-            return previous;
+            return withoutIntangibles.previous(this, predicate);
         }
         next(predicate) {
-            // The node after node is its first child.
-            let next = this.firstChild();
-            if (!next) {
-                // If it has no children then it is its next sibling.
-                next = this.nextSibling();
-            }
-            if (!next) {
-                // If it has no siblings either then climb up to the closest parent
-                // which has a next sibiling.
-                let ancestor = this.parent;
-                while (ancestor && !ancestor.nextSibling()) {
-                    ancestor = ancestor.parent;
-                }
-                next = ancestor && ancestor.nextSibling();
-            }
-            while (next && !next.test(predicate)) {
-                next = next.next();
-            }
-            return next;
+            return withoutIntangibles.next(this, predicate);
         }
         previousLeaf(predicate) {
-            return this.previous((node) => {
-                return isLeaf(node) && node.test(predicate);
-            });
+            return withoutIntangibles.previousLeaf(this, predicate);
         }
         nextLeaf(predicate) {
-            return this.next((node) => {
-                return isLeaf(node) && node.test(predicate);
-            });
+            return withoutIntangibles.nextLeaf(this, predicate);
         }
         previousSiblings(predicate) {
-            const previousSiblings = [];
-            let sibling = this.previousSibling();
-            while (sibling) {
-                if (sibling.test(predicate)) {
-                    previousSiblings.push(sibling);
-                }
-                sibling = sibling.previousSibling();
-            }
-            return previousSiblings;
+            return withoutIntangibles.previousSiblings(this, predicate);
         }
         nextSiblings(predicate) {
-            const nextSiblings = [];
-            let sibling = this.nextSibling();
-            while (sibling) {
-                if (sibling.test(predicate)) {
-                    nextSiblings.push(sibling);
-                }
-                sibling = sibling.nextSibling();
-            }
-            return nextSiblings;
+            return withoutIntangibles.nextSiblings(this, predicate);
         }
         //--------------------------------------------------------------------------
         // Updating
@@ -3629,10 +3924,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param node
          */
         before(node) {
-            if (!this.parent) {
+            if (!this.parentVNode) {
                 throw new Error('Cannot insert a VNode before a VNode with no parent.');
             }
-            this.parent.insertBefore(node, this);
+            this.parentVNode.insertBefore(node, this);
         }
         /**
          * Insert the given VNode after this VNode.
@@ -3640,10 +3935,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param node
          */
         after(node) {
-            if (!this.parent) {
+            if (!this.parentVNode) {
                 throw new Error('Cannot insert a VNode after a VNode with no parent.');
             }
-            this.parent.insertAfter(node, this);
+            this.parentVNode.insertAfter(node, this);
         }
         /**
          * Wrap this node in the given node by inserting the given node at this
@@ -3659,8 +3954,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Remove this node.
          */
         remove() {
-            if (this.parent) {
-                this.parent.removeChild(this);
+            const parent = this.parent || this.parentVNode;
+            if (parent) {
+                parent.removeChild(this);
             }
         }
         /**
@@ -3675,6 +3971,42 @@ odoo.define('web_editor.jabberwock', (function(require) {
         removeBackward() {
             this.remove();
         }
+        children(predicate) {
+            return withoutIntangibles.children(this, predicate);
+        }
+        /**
+         * See {@link Walker.hasChildren}.
+         */
+        hasChildren() {
+            return withoutIntangibles.hasChildren(this);
+        }
+        /**
+         * See {@link Walker.nthChild}.
+         */
+        nthChild(n) {
+            return withoutIntangibles.nthChild(this, n);
+        }
+        firstChild(predicate) {
+            return withoutIntangibles.firstChild(this, predicate);
+        }
+        lastChild(predicate) {
+            return withoutIntangibles.lastChild(this, predicate);
+        }
+        firstLeaf(predicate) {
+            return withoutIntangibles.firstLeaf(this, predicate);
+        }
+        lastLeaf(predicate) {
+            return withoutIntangibles.lastLeaf(this, predicate);
+        }
+        descendants(predicate) {
+            return withoutIntangibles.descendants(this, predicate);
+        }
+        firstDescendant(predicate) {
+            return withoutIntangibles.firstDescendant(this, predicate);
+        }
+        lastDescendant(predicate) {
+            return withoutIntangibles.lastDescendant(this, predicate);
+        }
         //--------------------------------------------------------------------------
         // Events.
         //--------------------------------------------------------------------------
@@ -3683,8 +4015,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
          */
         async trigger(eventName, args) {
             super.trigger(eventName, args);
-            if (this.parent) {
-                await this.parent.trigger(eventName, args);
+            if (this.parentVNode) {
+                await this.parentVNode.trigger(eventName, args);
             }
         }
         //--------------------------------------------------------------------------
@@ -3706,6 +4038,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
         }
     }
 
+    const emptyChildren = [];
+    Object.freeze(emptyChildren);
     /**
      * This class provides typing overrides for multiple VNode methods which are
      * supposed to take parameters but that are unused in the case of atomic nodes.
@@ -3713,47 +4047,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     class AtomicNode extends AbstractNode {
         get childVNodes() {
-            return [];
-        }
-        children(predicate) {
-            return [];
-        }
-        /**
-         * See {@link AbstractNode.hasChildren}.
-         *
-         * @return Returns `false` since an atomic node cannot have children.
-         */
-        hasChildren() {
-            return false;
-        }
-        /**
-         * See {@link AbstractNode.nthChild}.
-         *
-         * @return Returns `undefined` since an atomic node cannot have children.
-         */
-        nthChild(n) {
-            return undefined;
-        }
-        firstChild(predicate) {
-            return undefined;
-        }
-        lastChild(predicate) {
-            return undefined;
-        }
-        firstLeaf(predicate) {
-            return this;
-        }
-        lastLeaf(predicate) {
-            return this;
-        }
-        firstDescendant(predicate) {
-            return undefined;
-        }
-        lastDescendant(predicate) {
-            return undefined;
-        }
-        descendants(predicate) {
-            return [];
+            return emptyChildren;
         }
         //--------------------------------------------------------------------------
         // Updating children.
@@ -3844,94 +4138,6 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // children.
             this.mayContainContainers = true;
         }
-        children(predicate) {
-            const children = [];
-            this.childVNodes.forEach(child => {
-                if (child.tangible && (!predicate || child.test(predicate))) {
-                    children.push(child);
-                }
-            });
-            return children;
-        }
-        /**
-         * See {@link AbstractNode.hasChildren}.
-         */
-        hasChildren() {
-            return !!this.childVNodes.find(child => child.tangible);
-        }
-        /**
-         * See {@link AbstractNode.nthChild}.
-         */
-        nthChild(n) {
-            return this.children()[n - 1];
-        }
-        firstChild(predicate) {
-            let child = this.childVNodes[0];
-            while (child && !(child.tangible && (!predicate || child.test(predicate)))) {
-                child = child.nextSibling();
-            }
-            return child;
-        }
-        lastChild(predicate) {
-            let child = this.childVNodes[this.childVNodes.length - 1];
-            while (child && !(child.tangible && (!predicate || child.test(predicate)))) {
-                child = child.previousSibling();
-            }
-            return child;
-        }
-        firstLeaf(predicate) {
-            const isValidLeaf = (node) => {
-                return isLeaf(node) && (!predicate || node.test(predicate));
-            };
-            if (isValidLeaf(this)) {
-                return this;
-            }
-            else {
-                return this.firstDescendant((node) => isValidLeaf(node));
-            }
-        }
-        lastLeaf(predicate) {
-            const isValidLeaf = (node) => {
-                return isLeaf(node) && (!predicate || node.test(predicate));
-            };
-            if (isValidLeaf(this)) {
-                return this;
-            }
-            else {
-                return this.lastDescendant((node) => isValidLeaf(node));
-            }
-        }
-        firstDescendant(predicate) {
-            let firstDescendant = this.firstChild();
-            while (firstDescendant && predicate && !firstDescendant.test(predicate)) {
-                firstDescendant = this._descendantAfter(firstDescendant);
-            }
-            return firstDescendant;
-        }
-        lastDescendant(predicate) {
-            let lastDescendant = this.lastChild();
-            while (lastDescendant && lastDescendant.hasChildren()) {
-                lastDescendant = lastDescendant.lastChild();
-            }
-            while (lastDescendant && predicate && !lastDescendant.test(predicate)) {
-                lastDescendant = this._descendantBefore(lastDescendant);
-            }
-            return lastDescendant;
-        }
-        descendants(predicate) {
-            const descendants = [];
-            const stack = [...this.childVNodes];
-            while (stack.length) {
-                const node = stack.shift();
-                if (node.tangible && (!predicate || node.test(predicate))) {
-                    descendants.push(node);
-                }
-                if (node instanceof ContainerNode) {
-                    stack.unshift(...node.childVNodes);
-                }
-            }
-            return descendants;
-        }
         //--------------------------------------------------------------------------
         // Updating
         //--------------------------------------------------------------------------
@@ -3973,26 +4179,34 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * See {@link AbstractNode.insertBefore}.
          */
         insertBefore(node, reference) {
-            const index = this.childVNodes.indexOf(reference);
-            if (index < 0) {
-                throw new ChildError(this, node);
+            this._ensureChild(reference);
+            const parentVNode = reference.parentVNode;
+            if (parentVNode !== this) {
+                parentVNode.insertBefore(node, reference);
             }
-            this._insertAtIndex(node, index);
-            if (node.tangible) {
-                this.trigger('childList');
+            else {
+                const index = this.childVNodes.indexOf(reference);
+                this._insertAtIndex(node, index);
+                if (node.tangible) {
+                    this.trigger('childList');
+                }
             }
         }
         /**
          * See {@link AbstractNode.insertAfter}.
          */
         insertAfter(node, reference) {
-            const index = this.childVNodes.indexOf(reference);
-            if (index < 0) {
-                throw new ChildError(this, node);
+            this._ensureChild(reference);
+            const parentVNode = reference.parentVNode;
+            if (parentVNode !== this) {
+                parentVNode.insertAfter(node, reference);
             }
-            this._insertAtIndex(node, index + 1);
-            if (node.tangible) {
-                this.trigger('childList');
+            else {
+                const index = this.childVNodes.indexOf(reference);
+                this._insertAtIndex(node, index + 1);
+                if (node.tangible) {
+                    this.trigger('childList');
+                }
             }
         }
         /**
@@ -4007,25 +4221,32 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * See {@link AbstractNode.removeChild}.
          */
         removeChild(child) {
-            const index = this.childVNodes.indexOf(child);
-            if (index < 0) {
-                throw new ChildError(this, child);
+            this._ensureChild(child);
+            const parentVNode = child.parentVNode;
+            if (parentVNode !== this) {
+                parentVNode.removeChild(child);
             }
-            this._removeAtIndex(index);
+            else {
+                const index = this.childVNodes.indexOf(child);
+                this._removeAtIndex(index);
+            }
         }
         /**
          * See {@link AbstractNode.splitAt}.
          */
         splitAt(child) {
-            if (child.parent !== this) {
-                throw new ChildError(this, child);
+            this._ensureChild(child);
+            while (child.parentVNode !== this) {
+                // If the child is in not tangible container.
+                const parentVNode = child.parentVNode;
+                child = parentVNode.splitAt(child);
             }
             const duplicate = this.clone();
             const index = this.childVNodes.indexOf(child);
             const children = this.childVNodes.splice(index);
             duplicate.childVNodes.push(...children);
             for (const child of children) {
-                child.parent = duplicate;
+                child.parentVNode = duplicate;
             }
             this.after(duplicate);
             return duplicate;
@@ -4059,68 +4280,31 @@ odoo.define('web_editor.jabberwock', (function(require) {
         // Private
         //--------------------------------------------------------------------------
         /**
-         * Return the descendant of this node that directly precedes the given node
-         * in depth-first pre-order traversal.
-         *
-         * @param node
-         */
-        _descendantBefore(node) {
-            let previous = node.previousSibling();
-            if (previous) {
-                // The node before node is the last leaf of its previous sibling.
-                previous = previous.lastLeaf();
-            }
-            else if (node.parent !== this) {
-                // If it has no previous sibling then climb up to the parent.
-                // This is similar to `previous` but can't go further than `this`.
-                previous = node.parent;
-            }
-            return previous;
-        }
-        /**
-         * Return the descendant of this node that directly follows the given node
-         * in depth-first pre-order traversal.
-         *
-         * @param node
-         */
-        _descendantAfter(node) {
-            // The node after node is its first child.
-            let next = node.firstChild();
-            if (!next) {
-                // If it has no children then it is its next sibling.
-                next = node.nextSibling();
-            }
-            if (!next) {
-                // If it has no siblings either then climb up to the closest parent
-                // which has a next sibiling.
-                // This is similar to `next` but can't go further than `this`.
-                let ancestor = node.parent;
-                while (ancestor !== this && !ancestor.nextSibling()) {
-                    ancestor = ancestor.parent;
-                }
-                if (ancestor !== this) {
-                    next = ancestor.nextSibling();
-                }
-            }
-            return next;
-        }
-        /**
          * Insert a VNode at the given index within this VNode's children.
          *
          * @param child
          * @param index The index at which the insertion must take place within this
-         * VNode's parent, holding marker nodes into account.
+         * VNode's parentVNode, holding marker nodes into account.
          */
         _insertAtIndex(child, index) {
-            // TODO: checking `this.parent` is a hack so it will go directly to
-            // `else` when parsing.
-            if (this.parent && !this.mayContainContainers && child instanceof ContainerNode) {
-                if (!this.parent) {
+            // TODO: FIX: remove `this.parentVNode` is a hack so it will go
+            // directly to `else` when parsing. But it's false to have a div in a p
+            // when whe parse the DOM.
+            if (this.parentVNode &&
+                !this.mayContainContainers &&
+                child instanceof ContainerNode &&
+                (child.tangible || child.children(ContainerNode).length)) {
+                if (!this.parentVNode) {
                     console.warn(`Cannot insert a container within a ${this.name}. ` +
                         'This container having no parent, can also not be split.');
                     return;
                 }
                 if (this.hasChildren()) {
+                    if (!this.breakable) {
+                        console.warn(`Cannot insert a container within a ${this.name}. ` +
+                            'This container is not breakable.');
+                        return;
+                    }
                     const childAtIndex = this.childVNodes[index];
                     const duplicate = childAtIndex && this.splitAt(childAtIndex);
                     if (!this.hasChildren()) {
@@ -4138,19 +4322,20 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
             }
             else {
-                if (child.parent) {
-                    const currentIndex = child.parent.childVNodes.indexOf(child);
-                    if (index && child.parent === this && currentIndex < index) {
+                const parentVNode = child.parentVNode;
+                if (parentVNode) {
+                    const currentIndex = parentVNode.childVNodes.indexOf(child);
+                    if (index && parentVNode === this && currentIndex < index) {
                         index--;
                     }
-                    child.parent.removeChild(child);
+                    parentVNode.removeChild(child);
                 }
                 this.childVNodes.splice(index, 0, child);
-                child.parent = this;
+                child.parentVNode = this;
             }
         }
         /**
-         * Remove the nth child from this node.
+         * Remove the direct nth child from this node.
          *
          * @param index The index of the child to remove including marker nodes.
          */
@@ -4160,7 +4345,22 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 this.trigger('childList');
             }
             child.modifiers.off('update');
-            child.parent = undefined;
+            child.parentVNode = undefined;
+        }
+        /**
+         * Throw a child error if the node is not a children (or a children of an
+         * not tangible child)
+         *
+         * @param child
+         */
+        _ensureChild(child) {
+            let parentVNode = child.parentVNode;
+            while (parentVNode && parentVNode !== this && !parentVNode.tangible) {
+                parentVNode = parentVNode.parentVNode;
+            }
+            if (parentVNode !== this) {
+                throw new ChildError(this, child);
+            }
         }
     }
 
@@ -4830,7 +5030,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param property
          */
         is(node, property) {
-            const hierarchy = [node, ...node.ancestors()];
+            const hierarchy = [node, ...withIntangibles.ancestors(node)];
             const entries = this._entries[property] || [];
             const result = ContextManager.getRankedMatches(hierarchy, entries);
             // For each result from a non-cascading rule property, keep only the
@@ -5533,19 +5733,19 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 else if (range.mode.is(range.startContainer, RuleProperty.BREAKABLE) &&
                     range.mode.is(range.startContainer, RuleProperty.EDITABLE)) {
                     // Otherwise set range start at previous valid leaf.
-                    let ancestor = range.start.parent;
+                    let ancestor = range.start.parentVNode;
                     while (ancestor &&
                         range.mode.is(ancestor, RuleProperty.BREAKABLE) &&
                         range.mode.is(ancestor, RuleProperty.EDITABLE) &&
                         !ancestor.previousSibling()) {
-                        ancestor = ancestor.parent;
+                        ancestor = ancestor.parentVNode;
                     }
                     if (ancestor &&
                         range.mode.is(ancestor, RuleProperty.BREAKABLE) &&
                         range.mode.is(ancestor, RuleProperty.EDITABLE)) {
                         const previousSibling = ancestor.previousSibling();
                         if (previousSibling instanceof AtomicNode) {
-                            ancestor.mergeWith(previousSibling.parent);
+                            ancestor.mergeWith(previousSibling.parentVNode);
                         }
                         else {
                             const previousLeaf = previousSibling.lastLeaf();
@@ -5589,12 +5789,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 else if (range.mode.is(range.endContainer, RuleProperty.BREAKABLE) &&
                     range.mode.is(range.endContainer, RuleProperty.EDITABLE)) {
                     // Otherwise set range end at next valid leaf.
-                    let ancestor = range.end.parent;
+                    let ancestor = range.end.parentVNode;
                     while (ancestor &&
                         range.mode.is(ancestor, RuleProperty.BREAKABLE) &&
                         range.mode.is(ancestor, RuleProperty.EDITABLE) &&
                         !ancestor.nextSibling()) {
-                        ancestor = ancestor.parent;
+                        ancestor = ancestor.parentVNode;
                     }
                     if (ancestor &&
                         range.mode.is(ancestor, RuleProperty.BREAKABLE) &&
@@ -5945,7 +6145,21 @@ odoo.define('web_editor.jabberwock', (function(require) {
             this.modes = {
                 default: new Mode({
                     id: 'default',
-                    rules: [],
+                    rules: [
+                        {
+                            selector: [
+                                (node) => node instanceof ContainerNode &&
+                                    (node.allowEmpty === true ||
+                                        (node.allowEmpty !== false &&
+                                            !this.mode.is(node, RuleProperty.EDITABLE))),
+                            ],
+                            properties: {
+                                allowEmpty: {
+                                    value: true,
+                                },
+                            },
+                        },
+                    ],
                 }),
             };
             this.mode = this.modes.default;
@@ -6512,7 +6726,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // If the node could not be parsed, create a generic element node with
             // the HTML tag of the DOM Node. This way we may not support the node
             // but we don't break it either.
-            const element = new TagNode({ htmlTag: nodeName(item) });
+            const htmlTag = nodeName(item);
+            const element = new TagNode({ htmlTag: htmlTag });
             if (item instanceof Element) {
                 const attributes = this.engine.parseAttributes(item);
                 if (attributes.length) {
@@ -6717,7 +6932,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             const promises = this.renderBatched(cache, nodes.filter(node => !cache.renderingPromises.get(node)));
             await Promise.all(promises); // wait the newest promises
-            await Promise.all(nodes.map(node => cache.renderingPromises.get(node))); // wait indifidual promise
+            await Promise.all(nodes.map(node => cache.renderingPromises.get(node))); // wait individual promise
             return cache;
         }
         /**
@@ -6957,6 +7172,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     };
                 }
             }
+            else if (node.hasChildren()) {
+                domObject = {
+                    children: await this.engine.renderChildren(node),
+                };
+            }
             else {
                 domObject = { children: [] };
             }
@@ -7017,10 +7237,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
          */
         async renderChildren(node) {
             const children = node.children();
-            if (!children.length && this.editor.mode.is(node, RuleProperty.ALLOW_EMPTY) !== true) {
-                children.push({ tag: 'BR' });
+            if (!children.length && !this.editor.mode.is(node, RuleProperty.ALLOW_EMPTY)) {
+                return [{ tag: 'BR' }];
             }
-            return children;
+            return [...node.childVNodes];
         }
         /**
          * Render a placeholder for the given child node.
@@ -7095,7 +7315,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     let nextUnit;
                     const mods = [modifier];
                     while ((nextUnit = renderingUnits[nextUnitIndex + 1]) &&
-                        lastUnit[0].parent === nextUnit[0].parent &&
+                        lastUnit[0].parentVNode === nextUnit[0].parentVNode &&
                         nextUnit[1].length &&
                         this._modifierIsSameAs(cache, modifier, (_a = nextUnit[1]) === null || _a === void 0 ? void 0 : _a[0])) {
                         mods.push(nextUnit[1][0]);
@@ -7162,7 +7382,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
                             (!renderingUnit[1].length &&
                                 currentRenderer === renderingUnit[2] &&
                                 (!siblings.length ||
-                                    siblings[siblings.length - 1].parent === renderingUnit[0].parent)))) {
+                                    siblings[siblings.length - 1].parentVNode ===
+                                        renderingUnit[0].parentVNode)))) {
                         nextUnitIndex++;
                         siblings.push(renderingUnit[0]);
                         currentRenderer = renderingUnit[2];
@@ -7212,19 +7433,13 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 if (selected.has(node)) {
                     continue;
                 }
-                const parent = node.parent;
+                const parent = node.parentVNode;
                 if (parent) {
                     const markers = [];
                     parent.childVNodes.forEach(sibling => {
                         // Filter and sort the nodes.
                         if (setNodes.has(sibling)) {
-                            if (sibling.tangible) {
-                                renderingUnits.push(this._createUnit(cache, sibling, rendered));
-                            }
-                            else {
-                                // Not tangible node are add after other nodes (don't cut text node).
-                                markers.push(sibling);
-                            }
+                            renderingUnits.push(this._createUnit(cache, sibling, rendered));
                             selected.add(sibling);
                         }
                         else if (sibling.tangible) {
@@ -13172,6 +13387,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             super(params);
             this.editable = false;
             this.breakable = false;
+            this.tangible = false;
+            this.allowEmpty = true;
             this.managedZones = makeVersionable(params.managedZones);
         }
         get name() {
@@ -13190,7 +13407,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             if ((_a = this.hidden) === null || _a === void 0 ? void 0 : _a[id]) {
                 this.hidden[id] = false;
             }
-            const parentZone = this.ancestor(ZoneNode);
+            const parentZone = withIntangibles.ancestor(this, ZoneNode);
             if (parentZone) {
                 parentZone.show(this);
             }
@@ -13491,9 +13708,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * Automatically intanciate the components in available zones.
          */
         async start() {
-            let allZones = [this.root, ...this.root.descendants(ZoneNode)];
+            let allZones = [this.root, ...withIntangibles.descendants(this.root, ZoneNode)];
             await this.fillZones(allZones);
-            allZones = [this.root, ...this.root.descendants(ZoneNode)];
+            allZones = [this.root, ...withIntangibles.descendants(this.root, ZoneNode)];
             if (!allZones.find(zone => zone.managedZones.includes('default'))) {
                 // Add into the default zone if no valid zone could be found.
                 throw new Error('Please define a "default" zone in your template.');
@@ -13507,7 +13724,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
         async stop() {
             for (const id in this.components) {
                 for (const node of this.components[id]) {
-                    const zone = node.ancestor(ZoneNode);
+                    const zone = withIntangibles.ancestor(node, ZoneNode);
                     if (zone) {
                         zone.hide(node);
                     }
@@ -13547,7 +13764,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param props
          */
         async prepend(componentId, zoneId, props) {
-            const allZones = [this.root, ...this.root.descendants(ZoneNode)];
+            const allZones = [this.root, ...withIntangibles.descendants(this.root, ZoneNode)];
             let matchingZones = allZones.filter(node => node.managedZones.includes(zoneId));
             if (!matchingZones.length) {
                 matchingZones = allZones.filter(zone => zone.managedZones.includes('default'));
@@ -13565,7 +13782,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param zoneId
          */
         async append(componentId, zoneId, props) {
-            const allZones = [this.root, ...this.root.descendants(ZoneNode)];
+            const allZones = [this.root, ...withIntangibles.descendants(this.root, ZoneNode)];
             let matchingZones = allZones.filter(node => node.managedZones.includes(zoneId));
             if (!matchingZones.length) {
                 matchingZones = allZones.filter(zone => zone.managedZones.includes('default'));
@@ -13589,11 +13806,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
             while ((component = components.pop())) {
                 // filter by zone if needed
                 if (!zoneId ||
-                    component.ancestor(ancestor => ancestor instanceof ZoneNode && ancestor.managedZones.includes(zoneId))) {
+                    withIntangibles.ancestor(component, ancestor => ancestor instanceof ZoneNode && ancestor.managedZones.includes(zoneId))) {
                     // Remove all instances in the zone children.
                     this._clear(component);
                     // Remove the instance.
-                    const zone = component.ancestor(ZoneNode);
+                    const zone = withIntangibles.ancestor(component, ZoneNode);
                     if (zone && !zones.includes(zone)) {
                         zones.push(zone);
                     }
@@ -13603,8 +13820,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             return zones;
         }
         async clear(zoneId) {
-            const zones = this.root
-                .descendants(ZoneNode)
+            const zones = withIntangibles
+                .descendants(this.root, ZoneNode)
                 .filter(zone => zone.managedZones.includes(zoneId));
             for (const zone of zones) {
                 this._clear(zone);
@@ -13624,7 +13841,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             else {
                 for (const component of components) {
-                    const zone = component.ancestor(ZoneNode);
+                    const zone = withIntangibles.ancestor(component, ZoneNode);
                     zone.show(component);
                 }
             }
@@ -13643,7 +13860,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             else {
                 for (const component of components) {
-                    const zone = component.ancestor(ZoneNode);
+                    const zone = withIntangibles.ancestor(component, ZoneNode);
                     zone.hide(component);
                 }
             }
@@ -13677,7 +13894,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const stack = [...nodes];
             while (stack.length) {
                 const node = stack.pop();
-                const zones = node.descendants(ZoneNode);
+                const zones = withIntangibles.descendants(node, ZoneNode);
                 if (node instanceof ZoneNode) {
                     zones.push(node);
                 }
@@ -13691,7 +13908,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     if (components) {
                         // Excluding the ones that are contained within the given node.
                         // Avoid loop with child in itself.
-                        matchingZones = matchingZones.filter(zone => !zone.closest(ancestor => components.includes(ancestor)));
+                        matchingZones = matchingZones.filter(zone => !withIntangibles.closest(zone, ancestor => components.includes(ancestor)));
                     }
                     if (matchingZones.length) {
                         stack.push(...(await this._instantiateComponent(layoutComponent, matchingZones)));
@@ -13728,7 +13945,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             return newComponents;
         }
         _clear(component) {
-            const zones = component.descendants(ZoneNode);
+            const zones = withIntangibles.descendants(component, ZoneNode);
             if (component instanceof ZoneNode) {
                 zones.push(component);
             }
@@ -13842,7 +14059,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         !this._rendererTreated.has(parentObject) ||
                         oldIds.size > 1) {
                         // If the rendering change, we must check if we redraw the parent.
-                        const ancestorWithRendering = node.ancestor(ancestor => !!this._fromItem.get(ancestor));
+                        const ancestorWithRendering = withIntangibles.ancestor(node, ancestor => !!this._fromItem.get(ancestor));
                         if (!updatedNodes.includes(ancestorWithRendering)) {
                             const ancestorObjectId = this._fromItem.get(ancestorWithRendering);
                             if (ancestorObjectId && !this._diff[ancestorObjectId]) {
@@ -14150,12 +14367,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
          * @param domNode
          * @param modifierLocations The cache of the modifiers locations
          */
-        modifierFromDom(domNode, modifierLocations) {
+        modifierFromDom(domNode, modifierLocations, loose = true) {
             let object;
             object = this._objects[this._fromDom.get(domNode)];
             while (object) {
                 const modifiers = modifierLocations.get(object.object);
-                if (modifiers) {
+                if (modifiers || !loose) {
                     return modifiers;
                 }
                 object = this._objects[object.parent];
@@ -14638,7 +14855,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         if (oldChildId) {
                             childId = oldChildId;
                         }
-                        else {
+                        else if (child.tangible) {
                             console.error('No rendering for the node(' + child.id + '): ' + child.name);
                         }
                     }
@@ -14967,12 +15184,12 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         }
                     }
                     else if (objectA.dom) {
-                        if (itemB.dom.length && !objectB.tag && !objectB.text) {
+                        if (objectB.dom) {
                             currentRatio = 1;
                         }
                     }
                     else if (objectA.children) {
-                        if (itemB.children && !objectB.text && !objectB.tag) {
+                        if (objectB.children && !objectB.text && !objectB.tag) {
                             currentRatio = 1;
                         }
                     }
@@ -15602,6 +15819,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 id: 'editor',
                 async render() {
                     const editor = new TagNode({ htmlTag: 'JW-EDITOR' });
+                    editor.editable = false;
                     editor.append(new ZoneNode({ managedZones: ['main'] }));
                     editor.append(new ZoneNode({ managedZones: ['default'] }));
                     return [editor];
@@ -15674,8 +15892,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
          *
          * @param domNode
          */
-        getModifiers(domNode) {
-            return this._domReconciliationEngine.modifierFromDom(domNode, this._rendererCache.modifierLocations);
+        getModifiers(domNode, loose = true) {
+            return this._domReconciliationEngine.modifierFromDom(domNode, this._rendererCache.modifierLocations, loose);
         }
         /**
          * Return the DOM Node(s) corresponding to the given VNode.
@@ -15752,7 +15970,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             remove: [],
             update: [],
         }) {
-            const updatedNodes = [...this._getInvalidNodes(params)];
+            const updatedNodes = [...this._getInvalidNodes(params)].filter(node => node !== this.editor.selection.anchor && node !== this.editor.selection.focus);
             const layout = this.editor.plugins.get(Renderer);
             const engine = layout.engines['object/html'];
             const cache = (this._rendererCache = await engine.render(updatedNodes, this._rendererCache, !!this._rendererCache));
@@ -15797,21 +16015,21 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // Can be marked as moved because its elements still contain references.
             for (const object of diff.move) {
                 if (object instanceof AbstractNode &&
-                    object.parent &&
+                    object.parentVNode &&
                     !add.has(object) &&
                     !(cache === null || cache === void 0 ? void 0 : cache.renderings.get(object))) {
                     add.add(object);
-                    for (const child of object.descendants()) {
+                    for (const child of withIntangibles.descendants(object)) {
                         add.add(child);
                     }
                 }
             }
             for (const node of add) {
-                if (!node.parent) {
+                if (!node.parentVNode) {
                     add.delete(node);
                     remove.add(node);
                     if (node.childVNodes) {
-                        for (const child of node.descendants()) {
+                        for (const child of withIntangibles.descendants(node)) {
                             add.delete(node);
                             remove.add(child);
                         }
@@ -15844,7 +16062,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     update.delete(node);
                     remove.add(node);
                     if (node.childVNodes) {
-                        for (const child of node.descendants()) {
+                        for (const child of withIntangibles.descendants(node)) {
                             remove.add(child);
                         }
                     }
@@ -15857,9 +16075,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const paramsUpdate = [];
                 diff.update.filter(up => {
                     const object = up[0];
-                    if (up[1] && object instanceof AbstractNode && !object.parent) {
+                    if (up[1] && object instanceof AbstractNode && !object.parentVNode) {
                         remove.add(object);
-                        for (const child of object.descendants()) {
+                        for (const child of withIntangibles.descendants(object)) {
                             remove.add(child);
                         }
                     }
@@ -15889,11 +16107,11 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         for (const [parent, parentProp] of this.editor.memory.getParents(object)) {
                             if (parent instanceof AbstractNode) {
                                 if (remove.has(parent)) ;
-                                else if (!parent.parent) {
+                                else if (!parent.parentVNode) {
                                     // An old removed node can change. For eg: move a children
                                     // into the active VDocument.
                                     remove.add(parent);
-                                    for (const child of parent.descendants()) {
+                                    for (const child of withIntangibles.descendants(parent)) {
                                         remove.add(child);
                                         update.delete(child);
                                     }
@@ -15913,7 +16131,14 @@ odoo.define('web_editor.jabberwock', (function(require) {
                                                 mayBeAlreadyRemoved.push(child);
                                             }
                                             if (changes[i - 1] !== index - 1) {
-                                                const previous = child.previousSibling();
+                                                let previous = child.previousSibling();
+                                                if (previous &&
+                                                    !add.has(previous) &&
+                                                    !update.has(previous)) {
+                                                    updatedSiblings.add(previous);
+                                                    mayBeAlreadyRemoved.push(previous);
+                                                }
+                                                previous = withIntangibles.previousSibling(child);
                                                 if (previous &&
                                                     !add.has(previous) &&
                                                     !update.has(previous)) {
@@ -15922,17 +16147,20 @@ odoo.define('web_editor.jabberwock', (function(require) {
                                                 }
                                             }
                                             if (changes[i + 1] !== index + 1) {
-                                                const next = child.nextSibling();
+                                                let next = child.nextSibling();
                                                 if (next && !add.has(next) && !update.has(next)) {
-                                                    if (next) {
-                                                        updatedSiblings.add(next);
-                                                        mayBeAlreadyRemoved.push(next);
-                                                    }
+                                                    updatedSiblings.add(next);
+                                                    mayBeAlreadyRemoved.push(next);
+                                                }
+                                                next = withIntangibles.nextSibling(child);
+                                                if (next && !add.has(next) && !update.has(next)) {
+                                                    updatedSiblings.add(next);
+                                                    mayBeAlreadyRemoved.push(next);
                                                 }
                                             }
                                         }
                                         else {
-                                            const children = parent.children();
+                                            const children = withIntangibles.children(parent);
                                             if (children.length) {
                                                 const last = children[children.length - 1];
                                                 if (last && !add.has(last) && !update.has(last)) {
@@ -15966,10 +16194,10 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 }
                 // If any change invalidate the siblings.
                 for (const node of needSiblings) {
-                    const next = node.nextSibling();
+                    const next = withIntangibles.nextSibling(node);
                     if (next)
                         updatedSiblings.add(next);
-                    const previous = node.previousSibling();
+                    const previous = withIntangibles.previousSibling(node);
                     if (previous)
                         updatedSiblings.add(previous);
                 }
@@ -16110,7 +16338,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                         nodesInRoot.add(node);
                         break;
                     }
-                    ancestor = ancestor.parent;
+                    ancestor = ancestor.parentVNode;
                     if (!ancestor || !ancestor.id || notRoot.has(ancestor)) {
                         // A VNode without an id does not exist yet/anymore in the
                         // current memory slice.
@@ -16149,21 +16377,23 @@ odoo.define('web_editor.jabberwock', (function(require) {
             }
             if (selection.range.isCollapsed()) {
                 // Prevent rendering a collapsed selection in a non-editable context.
-                const target = range.start.previousSibling() || range.end.nextSibling() || range.startContainer;
+                const target = withIntangibles.previousSibling(range.start) ||
+                    withIntangibles.nextSibling(range.end) ||
+                    range.startContainer;
                 const isEditable = this.editor.mode.is(target, RuleProperty.EDITABLE);
-                const isInMain = target.ancestor(node => node instanceof ZoneNode && node.managedZones.includes('main'));
+                const isInMain = withIntangibles.ancestor(target, node => node instanceof ZoneNode && node.managedZones.includes('main'));
                 if ((!isEditable && !isContentEditable(target)) || !isInMain) {
                     document.getSelection().removeAllRanges();
                     return;
                 }
             }
-            const domNodes = this._domReconciliationEngine.toDom(selection.anchor.parent);
+            const domNodes = this._domReconciliationEngine.toDom(selection.anchor.parentVNode);
             if (!domNodes.length) {
                 document.getSelection().removeAllRanges();
                 return;
             }
-            if (selection.anchor.ancestors().pop() !== this.root ||
-                selection.focus.ancestors().pop() !== this.root) {
+            if (withIntangibles.ancestors(selection.anchor).pop() !== this.root ||
+                withIntangibles.ancestors(selection.focus).pop() !== this.root) {
                 console.warn('Cannot render a selection that is outside the Layout.');
                 document.getSelection().removeAllRanges();
             }
@@ -16755,7 +16985,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // the editable part of Jabberwock.
             return (node &&
                 this.editor.isInEditable(node) &&
-                !!node.ancestor(node => node instanceof ZoneNode && node.managedZones.includes('main')));
+                !!withIntangibles.ancestor(node, node => node instanceof ZoneNode && node.managedZones.includes('main')));
         }
         /**
          * Return true if the target node is inside a Jabberwock's editor componant.
@@ -20565,15 +20795,17 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     async function parseEditable(editor, element, autofocus = false) {
         const nodes = await parseElement(editor, element);
-        nodes[0].editable = false;
-        nodes[0].breakable = false;
-        nodes[0].modifiers.get(Attributes).set('contentEditable', 'true');
+        const editableNode = nodes[0];
+        editableNode.allowEmpty = !!editableNode.allowEmpty;
+        editableNode.editable = false;
+        editableNode.breakable = false;
+        editableNode.modifiers.get(Attributes).set('contentEditable', 'true');
         if (autofocus && !editor.selection.anchor.parent) {
-            if (nodes[0].hasChildren()) {
-                editor.selection.setAt(nodes[0].firstChild(), RelativePosition.BEFORE);
+            if (editableNode.hasChildren()) {
+                editor.selection.setAt(editableNode.firstChild(), RelativePosition.BEFORE);
             }
             else {
-                editor.selection.setAt(nodes[0], RelativePosition.INSIDE);
+                editor.selection.setAt(editableNode, RelativePosition.INSIDE);
             }
         }
         return nodes;
@@ -20584,6 +20816,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
         // We need to guarantee it's a block so it can contain
         // other blocks.
         root.modifiers.get(Attributes).set('style', 'display: block;');
+        root.allowEmpty = false;
         root.editable = false;
         root.breakable = false;
         root.modifiers.get(Attributes).set('contentEditable', 'true');
@@ -21148,6 +21381,46 @@ odoo.define('web_editor.jabberwock', (function(require) {
     }
     Quote.dependencies = [Inline];
 
+    class SmallFormat extends Format {
+        constructor() {
+            super('SMALL');
+        }
+    }
+
+    class SmallXmlDomParser extends FormatXmlDomParser {
+        constructor() {
+            super(...arguments);
+            this.predicate = (item) => {
+                return item instanceof Element && nodeName(item) === 'SMALL';
+            };
+        }
+        /**
+         * Parse a small node.
+         *
+         * @param item
+         */
+        async parse(item) {
+            const small = new SmallFormat();
+            const attributes = this.engine.parseAttributes(item);
+            if (attributes.length) {
+                small.modifiers.append(attributes);
+            }
+            const children = await this.engine.parse(...item.childNodes);
+            this.applyFormat(small, children);
+            return children;
+        }
+    }
+
+    class Small extends JWPlugin {
+        constructor() {
+            super(...arguments);
+            this.loadables = {
+                parsers: [SmallXmlDomParser],
+            };
+        }
+    }
+    Small.dependencies = [Inline];
+
     class BasicEditor extends JWEditor {
         constructor(params) {
             super();
@@ -21181,6 +21454,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     [Quote],
                     [Underline],
                     [Strikethrough],
+                    [Small],
                     [Link],
                     [Divider],
                     [HorizontalRule],
@@ -22962,7 +23236,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const domObject = {
                 tag: 'JW-SHADOW',
                 shadowRoot: true,
-                children: shadow.childVNodes.filter(child => child.tangible || child instanceof MetadataNode),
+                children: [...shadow.childVNodes],
             };
             return domObject;
         }
@@ -23343,19 +23617,13 @@ odoo.define('web_editor.jabberwock', (function(require) {
         }
         async render(iframeNode) {
             let onload;
-            const children = [];
-            iframeNode.childVNodes.forEach(child => {
-                if (child.tangible || child instanceof MetadataNode) {
-                    children.push(child);
-                }
-            });
             let wrap;
             const domObject = {
                 children: [
                     {
                         tag: 'JW-IFRAME',
                         shadowRoot: true,
-                        children: children,
+                        children: [...iframeNode.childVNodes],
                     },
                     {
                         tag: 'IFRAME',
@@ -23811,7 +24079,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
     class TemplateActionableDomObjectRenderer extends ActionableDomObjectRenderer {
         constructor() {
             super(...arguments);
-            this.predicate = (node) => node instanceof ActionableNode && !!node.ancestor(TemplateThumbnailSelectorNode);
+            this.predicate = (node) => node instanceof ActionableNode &&
+                !!withIntangibles.ancestor(node, TemplateThumbnailSelectorNode);
         }
         async render(node, worker) {
             const domObject = await super.render(node, worker);
@@ -23922,8 +24191,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
             for (const templateName in templateConfigurations) {
                 const config = templateConfigurations[templateName];
                 for (const engine of Object.values(layout.engines)) {
-                    const zones = engine.root
-                        .descendants(ZoneNode)
+                    const zones = withIntangibles
+                        .descendants(engine.root, ZoneNode)
                         .filter(zone => zone.managedZones.includes(config.zoneId));
                     if (zones.length && !zones.find(zone => zone.firstChild())) {
                         templateToSelect.add(templateName);
@@ -24057,6 +24326,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                     [Quote],
                     [Underline],
                     [Strikethrough],
+                    [Small],
                     [Input],
                     [FontSize],
                     [Link],
@@ -24248,7 +24518,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
                 const renderer = this.plugins.get(Renderer);
                 const layout = this.plugins.get(Layout);
                 const domLayout = layout.engines.dom;
-                const editable = domLayout.root.firstDescendant(node => node instanceof ZoneNode && node.managedZones.includes('editable'));
+                const editable = withIntangibles.firstDescendant(domLayout.root, node => node instanceof ZoneNode && node.managedZones.includes('editable'));
                 const promise = renderer.render(format, editable);
                 promise.then(value => {
                     clearTimeout(timeout);
@@ -24343,7 +24613,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // Problem: We don't yet have a way to do this properly.
             if (this.targetToResize)
                 return;
-            const mainZone = this.domEngine.root.descendants(node => node instanceof ZoneNode && node.managedZones.includes('main'))[0];
+            const mainZone = withIntangibles.descendants(this.domEngine.root, node => node instanceof ZoneNode && node.managedZones.includes('main'))[0];
             const domMain = this.domEngine.getDomNodes(mainZone)[0];
             this.targetToResize = (domMain === null || domMain === void 0 ? void 0 : domMain.parentElement) || domMain;
             // Force the overflow on the targetElement.
@@ -24450,9 +24720,9 @@ odoo.define('web_editor.jabberwock', (function(require) {
             // Map a vnode that has been removed to the node that replace it.
             const replacementMap = new Map();
             const charDataChanged = new Set();
-            const getFirstFormat = (domNode) => {
+            const getFirstFormat = (domNode, loose = true) => {
                 var _a;
-                return (_a = getFormats(domEngine, domNode)) === null || _a === void 0 ? void 0 : _a[0];
+                return (_a = getFormats(domEngine, domNode, loose)) === null || _a === void 0 ? void 0 : _a[0];
             };
             const getVNodes = (domNode) => {
                 const vnodes = domEngine.getNodes(domNode, false);
@@ -24470,7 +24740,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
             const observer = new MutationObserver(async (mutations) => {
                 for (const mutation of mutations) {
                     if (mutation.type === 'attributes') {
-                        const formats = getFormats(domEngine, mutation.target);
+                        const formats = getFormats(domEngine, mutation.target, false);
                         let vnodesOrFormats = ((formats === null || formats === void 0 ? void 0 : formats.length) && formats) || domEngine.getNodes(mutation.target, false);
                         const value = mutation.target.getAttribute(mutation.attributeName);
                         if (vnodesOrFormats.length) {
@@ -24613,8 +24883,8 @@ odoo.define('web_editor.jabberwock', (function(require) {
     /**
      * Get all the formats for a node.
      */
-    function getFormats(domEngine, domNode) {
-        const modifiers = domEngine.getModifiers(domNode);
+    function getFormats(domEngine, domNode, loose = true) {
+        const modifiers = domEngine.getModifiers(domNode, loose);
         return modifiers === null || modifiers === void 0 ? void 0 : modifiers.filter(x => x instanceof Format);
     }
     /**
@@ -24759,6 +25029,7 @@ odoo.define('web_editor.jabberwock', (function(require) {
     exports.TagNode = TagNode;
     exports.VRange = VRange;
     exports.withDomMutations = withDomMutations;
+    exports.withIntangibles = withIntangibles;
 
 }(this.jabberwock = this.jabberwock || {}, owl));
 return this.jabberwock;
