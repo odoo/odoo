@@ -1053,10 +1053,16 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_tax_id(self):
         for line in self:
-            fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
-            # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
+            if not self.is_tax_readonly:
+                fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
+                # If company_id is set, always filter taxes by the company
+                taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+                line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
+
+    @api.multi
+    def _compute_is_tax_readonly(self):
+        for line in self:
+            line.is_tax_readonly = line.qty_invoiced > 0
 
     @api.model
     def _get_purchase_price(self, pricelist, product, product_uom, date):
@@ -1217,6 +1223,7 @@ class SaleOrderLine(models.Model):
     is_downpayment = fields.Boolean(
         string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
         " They are not copied when duplicating a sales order.")
+    is_tax_readonly = fields.Boolean('Is Tax Read-only?', compute='_compute_is_tax_readonly')
 
     state = fields.Selection([
         ('draft', 'Quotation'),

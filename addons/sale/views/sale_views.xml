@@ -354,8 +354,9 @@
                                             <field name="sequence" invisible="1"/>
                                         </group>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                                            <field name="is_tax_readonly" invisible="1"/>
                                             <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                                attrs="{'readonly': [('is_tax_readonly', '=', True)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
