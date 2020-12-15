@@ -219,7 +219,6 @@ body.editor_enable.editor_has_snippets {
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
-    overflow: auto;
 
     width: 100%;
     display: flex;
@@ -294,6 +293,7 @@ body.editor_enable.editor_has_snippets {
     }
 
     > #o_scroll {
+        overflow: auto;
         background-color: $o-we-sidebar-blocks-content-bg;
         padding: 0 $o-we-sidebar-blocks-content-spacing;
         z-index: 1;
@@ -379,6 +379,7 @@ body.editor_enable.editor_has_snippets {
     }
 
     > .o_we_customize_panel {
+        overflow: auto;
         position: relative;
 
         @mixin we-icon-button($icon, $color: $o-we-sidebar-content-field-control-item-color, $align: right) {
