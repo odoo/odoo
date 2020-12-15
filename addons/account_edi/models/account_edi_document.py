@@ -35,13 +35,13 @@ class AccountEdiDocument(models.Model):
     def write(self, vals):
         ''' If account_edi_extended is not installed, a default behaviour is used instead.
         '''
-        if 'blocked_level' in vals and 'blocked_level' not in self.env['account.edi.document']._fields:
-            vals.pop('blocked_level')
+        if 'blocking_level' in vals and 'blocking_level' not in self.env['account.edi.document']._fields:
+            vals.pop('blocking_level')
 
         return super().write(vals)
 
     def _check_move_configuration(self):
-        # TO OVERRIDE in account_edi_extended. We don't want to block an edi here, so blocked_level is required.
+        # TO OVERRIDE in account_edi_extended. We don't want to block an edi here, so blocking_level is required.
         pass
 
     def _prepare_jobs(self):
@@ -55,10 +55,10 @@ class AccountEdiDocument(models.Model):
         * doc_type:       Are the moves of this job invoice or payments ?
         """
 
-        # Classify jobs by (edi_format, edi_doc.state, doc_type, move.company_id)
+        # Classify jobs by (edi_format, edi_doc.state, doc_type, move.company_id, custom_key)
         to_process = {}
-        if 'blocked_level' in self.env['account.edi.document']._fields:
-            documents = self.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocked_level != 'error')
+        if 'blocking_level' in self.env['account.edi.document']._fields:
+            documents = self.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
         else:
             documents = self.filtered(lambda d: d.state in ('to_send', 'to_cancel'))
         for edi_doc in documents:
@@ -71,7 +71,7 @@ class AccountEdiDocument(models.Model):
             else:
                 continue
 
-            custom_key = edi_format._get_batch_key(edi_doc.move_id)
+            custom_key = edi_format._get_batch_key(edi_doc.move_id, edi_doc.state)
             key = (edi_format, edi_doc.state, doc_type, move.company_id, custom_key)
             to_process.setdefault(key, self.env['account.edi.document'])
             to_process[key] |= edi_doc
@@ -82,10 +82,14 @@ class AccountEdiDocument(models.Model):
         for key, documents in to_process.items():
             edi_format, state, doc_type, company_id, custom_key = key
             target = result if doc_type == 'invoice' else payments
-            if edi_format._support_batching(documents.move_id, state, company_id):
-                target.append((documents, doc_type))
-            else:
-                target.extend((doc, doc_type) for doc in documents)
+            batch = self.env['account.edi.document']
+            for doc in documents:
+                if edi_format._support_batching(move=doc.move_id, state=state, company=company_id):
+                    batch |= doc
+                else:
+                    target.append((doc, doc_type))
+            if batch:
+                target.append((batch, doc_type))
         result.extend(payments)
         return result
 
@@ -137,7 +141,7 @@ class AccountEdiDocument(models.Model):
                     values = {
                         'attachment_id': move_result['attachment'].id,
                         'error': move_result.get('error', False),
-                        'blocked_level': move_result.get('blocked_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
+                        'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
                     }
                     if not values.get('error'):
                         values.update({'state': 'sent'})
@@ -147,7 +151,7 @@ class AccountEdiDocument(models.Model):
                 else:
                     document.write({
                         'error': move_result.get('error', False),
-                        'blocked_level': move_result.get('blocked_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
+                        'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
                     })
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
@@ -166,7 +170,7 @@ class AccountEdiDocument(models.Model):
                         'state': 'cancelled',
                         'error': False,
                         'attachment_id': False,
-                        'blocked_level': False,
+                        'blocking_level': False,
                     })
 
                     if move.is_invoice(include_receipts=True) and move.state == 'posted':
@@ -180,7 +184,7 @@ class AccountEdiDocument(models.Model):
                 elif not move_result.get('success'):
                     document.write({
                         'error': move_result.get('error', False),
-                        'blocked_level': move_result.get('blocked_level', DEFAULT_BLOCKING_LEVEL) if document.error else False,
+                        'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if document.error else False,
                     })
 
             if invoice_ids_to_cancel:

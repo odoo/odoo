@@ -14,10 +14,10 @@ def _generate_mocked_needs_web_services(needs_web_services):
 
 
 def _generate_mocked_support_batching(support_batching):
-    return lambda edi_format, moves, state, company_id: support_batching
+    return lambda edi_format, move, state, company: support_batching
 
 
-def _mocked_get_batch_key(edi_format, move):
+def _mocked_get_batch_key(edi_format, move, state):
     return ()
 
 

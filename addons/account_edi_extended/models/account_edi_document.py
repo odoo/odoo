@@ -10,7 +10,7 @@ DEFAULT_BLOCKING_LEVEL = 'warning'  # Keep previous behavior. TODO : when accoun
 class AccountEdiDocument(models.Model):
     _inherit = 'account.edi.document'
 
-    blocked_level = fields.Selection(selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')],
+    blocking_level = fields.Selection(selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')],
                                      help="Blocks the document current operation depending on the error severity :\n"
                                           "  * Info: the document is not blocked and everything is working as it should.\n"
                                           "  * Warning : there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
@@ -23,4 +23,4 @@ class AccountEdiDocument(models.Model):
             if errors:
                 # Errors are just informative at this point, _process_job will still be called on these documents
                 document.error = self.env['account.edi.format']._format_error_message(_('Invalid configuration:'), errors)
-                document.blocked_level = 'info'
+                document.blocking_level = 'info'

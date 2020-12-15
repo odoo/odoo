@@ -9,17 +9,19 @@ class AccountMove(models.Model):
 
     edi_show_abandon_cancel_button = fields.Boolean(
         compute='_compute_edi_show_abandon_cancel_button')
+    edi_error_message = fields.Html(compute='_compute_edi_error_count_message')
+    edi_error_level = fields.Selection(selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')], compute='_compute_edi_error_count_message')
 
     @api.depends(
         'edi_document_ids',
         'edi_document_ids.state',
-        'edi_document_ids.blocked_level',
+        'edi_document_ids.blocking_level',
         'edi_document_ids.edi_format_id',
         'edi_document_ids.edi_format_id.name')
     def _compute_edi_web_services_to_process(self):
-        # OVERRIDE to take blocked_level into account
+        # OVERRIDE to take blocking_level into account
         for move in self:
-            to_process = move.edi_document_ids.filtered(lambda d: d.state in ['to_send', 'to_cancel'] and d.blocked_level != 'error')
+            to_process = move.edi_document_ids.filtered(lambda d: d.state in ['to_send', 'to_cancel'] and d.blocking_level != 'error')
             format_web_services = to_process.edi_format_id.filtered(lambda f: f._needs_web_services())
             move.edi_web_services_to_process = ', '.join(f.name for f in format_web_services)
 
@@ -35,12 +37,34 @@ class AccountMove(models.Model):
                                                        and doc.edi_format_id._is_required_for_invoice(move)
                                                        for doc in move.edi_document_ids])
 
+    @api.depends('edi_error_count', 'edi_document_ids.error', 'edi_document_ids.blocking_level')
+    def _compute_edi_error_count_message(self):
+        for move in self:
+            if move.edi_error_count == 0:
+                move.edi_error_message = None
+                move.edi_error_level = None
+            elif move.edi_error_count == 1:
+                error_doc = move.edi_document_ids.filtered(lambda d: d.error)
+                move.edi_error_message = error_doc.error
+                move.edi_error_level = error_doc.blocking_level
+            else:
+                error_levels = set([doc.blocking_level for doc in move.edi_document_ids])
+                if 'error' in error_levels:
+                    move.edi_error_message = str(move.edi_error_count) + _(" Electronic invoicing error(s)")
+                    move.edi_error_level = 'error'
+                elif 'warning' in error_levels:
+                    move.edi_error_message = str(move.edi_error_count) + _(" Electronic invoicing warning(s)")
+                    move.edi_error_level = 'warning'
+                else:
+                    move.edi_error_message = str(move.edi_error_count) + _(" Electronic invoicing info(s)")
+                    move.edi_error_level = 'info'
+
     def action_retry_edi_documents_error(self):
-        self.edi_document_ids.write({'error': False, 'blocked_level': False})
+        self.edi_document_ids.write({'error': False, 'blocking_level': False})
         self.action_process_edi_web_services()
 
     def button_abandon_cancel_posted_posted_moves(self):
-        '''Mark the edi.document related to this move to be canceled.
+        '''Cancel the request for cancellation of the EDI.
         '''
         documents = self.env['account.edi.document']
         for move in self:

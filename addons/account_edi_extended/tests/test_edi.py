@@ -129,7 +129,7 @@ class TestAccountEdi(AccountEdiExtendedTestCommon):
             self.assertEqual(doc.state, 'sent')
 
     def test_batches(self):
-        def _get_batch_key_method(edi_format, move):
+        def _get_batch_key_method(edi_format, move, state):
             return (move.ref)
 
         with self.mock_edi(_get_batch_key_method=_get_batch_key_method,

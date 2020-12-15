@@ -98,7 +98,7 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
-    def _support_batching(self, moves=None, state=None, company_id=None):
+    def _support_batching(self, move=None, state=None, company=None):
         """ Indicate if we can send multiple documents in the same time to the web services.
         If True, the _post_%s_edi methods will get multiple documents in the same time.
         Otherwise, these methods will be called with only one record at a time.
@@ -108,7 +108,7 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
-    def _get_batch_key(self, move):
+    def _get_batch_key(self, move, state):
         """ Returns a tuple that will be used as key to partitionnate the invoices/payments when creating batches
         with multiple invoices/payments.
         The type of move (invoice or payment), its company_id, its edi state and the edi_format are used by default, if
@@ -136,7 +136,7 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
-        * blocked_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+        * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -150,7 +150,7 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * success:          True if the invoice was successfully cancelled.
         * error:            An error if the edi was not successfully cancelled.
-        * blocked_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+        * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -164,7 +164,7 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the payment as key and as value, another dictionary:
         * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
-        * blocked_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+        * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -178,7 +178,7 @@ class AccountEdiFormat(models.Model):
         :returns:         A dictionary with the payment as key and as value, another dictionary:
         * success:        True if the payment was successfully cancelled.
         * error:          An error if the edi was not successfully cancelled.
-        * blocked_level:  (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+        * blocking_level:  (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()

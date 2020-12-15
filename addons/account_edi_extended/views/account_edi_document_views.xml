@@ -7,12 +7,12 @@
             <field name="inherit_id" ref="account_edi.view_tree_account_edi_document"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="inside">
-                    <field name="blocked_level" invisible="1" />
+                    <field name="blocking_level" invisible="1" />
                 </xpath>
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-info">blocked_level == 'info'</attribute>
-                    <attribute name="decoration-warning">blocked_level == 'warning'</attribute>
-                    <attribute name="decoration-danger">blocked_level == 'error'</attribute>
+                    <attribute name="decoration-info">blocking_level == 'info'</attribute>
+                    <attribute name="decoration-warning">blocking_level == 'warning'</attribute>
+                    <attribute name="decoration-danger">blocking_level == 'error'</attribute>
                 </xpath>
                 
             </field>
