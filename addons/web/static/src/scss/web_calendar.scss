@@ -532,6 +532,7 @@ $o-cw-filter-avatar-size: 20px;
     min-width: 256px;
     max-width: 328px;
     font-size: $font-size-base;
+    direction: ltr;
 
     .card-header, .card-header .popover-header {
         font-size: 1.05em;
@@ -572,7 +573,7 @@ $o-cw-filter-avatar-size: 20px;
     }
 
     .fc-rtl & {
-        text-align: right;
+        text-align: right#{"/*rtl:ignore*/"};
         .o_calendar_avatars {
             > div {
                 justify-content: flex-end;

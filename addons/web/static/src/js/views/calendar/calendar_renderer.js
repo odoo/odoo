@@ -746,7 +746,8 @@ return AbstractRenderer.extend({
             title: eventData.record.display_name,
             template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.color_index)}),
             container: eventData.allDay ? '.fc-view' : '.fc-scroller',
-        }
+            placement: _t.database.parameters.direction === "rtl" ? 'top' : 'right', // FIXME: remove fix placement 'top' once popper.js handles rtl
+        };
     },
     /**
      * Render event popover

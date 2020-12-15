@@ -799,6 +799,36 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('render popover in RTL language', async function (assert) {
+        assert.expect(2);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            `<calendar
+                date_start="start"
+                date_stop="stop">
+                <field name="name" string="Custom Name"/>
+            '</calendar>`,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            translateParameters: {
+                direction: 'rtl',
+            },
+        });
+
+        await testUtils.dom.click($('.fc-event:contains(event 4)'));
+
+        assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
+        const popoverPlacement = calendar.$(".o_cw_popover").attr("x-placement");
+        assert.ok(['top', 'bottom'].includes(popoverPlacement));
+
+        calendar.destroy();
+    });
+
     QUnit.test('render popover with modifiers', async function (assert) {
         assert.expect(3);
 
