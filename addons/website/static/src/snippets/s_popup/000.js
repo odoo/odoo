@@ -10,6 +10,7 @@ const PopupWidget = publicWidget.Widget.extend({
     events: {
         'click .js_close_popup': '_onCloseClick',
         'hide.bs.modal': '_onHideModal',
+        'show.bs.modal': '_onShowModal',
     },
 
     /**
@@ -92,6 +93,19 @@ const PopupWidget = publicWidget.Widget.extend({
         const nbDays = this.$el.find('.modal').data('consentsDuration');
         utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
         this._popupAlreadyShown = true;
+
+        this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
+            iframe.src = '';
+        });
+    },
+    /**
+     * @private
+     */
+    _onShowModal() {
+        this.el.querySelectorAll('.media_iframe_video').forEach(media => {
+            const iframe = media.querySelector('iframe');
+            iframe.src = media.dataset.oeExpression || media.dataset.src; // TODO still oeExpression to remove someday
+        });
     },
 });
 

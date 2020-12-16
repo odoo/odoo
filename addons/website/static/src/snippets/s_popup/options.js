@@ -17,10 +17,21 @@ options.registry.SnippetPopup = options.Class.extend({
         });
         this.$target.on('shown.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: true});
+            // TODO duplicated code from the popup public widget, this should
+            // be moved to a *video* public widget and be reviewed in master
+            this.$target[0].querySelectorAll('.media_iframe_video').forEach(media => {
+                const iframe = media.querySelector('iframe');
+                iframe.src = media.dataset.oeExpression || media.dataset.src; // TODO still oeExpression to remove someday
+            });
         });
         this.$target.on('hidden.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: false});
+            this._removeIframeSrc();
         });
+        // The video might be playing before entering edit mode (possibly with
+        // sound). Stop the video, as the user can't do it (no button on video
+        // in edit mode).
+        this._removeIframeSrc();
         return this._super(...arguments);
     },
     /**
@@ -28,6 +39,9 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     destroy: function () {
         this._super(...arguments);
+        // The video should not start before the modal opens, remove it from the
+        // DOM. It will be added back on modal open to start the video.
+        this._removeIframeSrc();
         this.$target.off('.SnippetPopup');
     },
     /**
@@ -109,6 +123,17 @@ options.registry.SnippetPopup = options.Class.extend({
                 return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
         }
         return this._super(...arguments);
+    },
+    /**
+     * Removes the iframe `src` attribute (a copy of the src is already on the
+     * parent `oe-expression` attribute).
+     *
+     * @private
+     */
+    _removeIframeSrc() {
+        this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
+            iframe.src = '';
+        });
     },
 });
 });
