@@ -872,6 +872,59 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('graph view with string attribute on view architecture fields', async function (assert) {
+        assert.expect(4);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+            <graph string="Partners">
+                <field name="product_id" type="measure" string="Jethalal"/>
+                <field name="foo" type="measure"/>
+            </graph>`,
+        });
+
+        checkLegend(assert, graph, 'Foo');
+        let chart = graph.renderer.componentRef.comp.chart;
+        let yAxisLabel = chart.config.options.scales.yAxes[0].scaleLabel.labelString;
+        assert.strictEqual(yAxisLabel, "Foo");
+
+        await cpHelpers.toggleMenu(graph, "Measures");
+        await cpHelpers.toggleMenuItem(graph, "Jethalal");
+        checkLegend(assert, graph, 'Jethalal');
+
+        chart = graph.renderer.componentRef.comp.chart;
+        yAxisLabel = chart.config.options.scales.yAxes[0].scaleLabel.labelString;
+        assert.strictEqual(yAxisLabel, "Jethalal");
+
+        graph.destroy();
+    });
+
+    QUnit.test('graph view "graph_measure" field in context not in measures', async function (assert) {
+        assert.expect(2);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph><field name="product_id"/></graph>',
+            viewOptions: {
+                context: {
+                    graph_measure: 'product_id',
+                },
+            },
+        });
+
+        checkLegend(assert, graph, 'Product');
+        let chart = graph.renderer.componentRef.comp.chart;
+        let yAxisLabel = chart.config.options.scales.yAxes[0].scaleLabel.labelString;
+        assert.strictEqual(yAxisLabel, "Product");
+
+        graph.destroy();
+    });
+
     QUnit.test('Undefined should appear in bar, pie graph but not in line graph', async function (assert) {
         assert.expect(3);
 
