@@ -2077,6 +2077,34 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return groupby_terms, orderby_terms
 
     @api.model
+    def _read_group_temporal_display_formats(self):
+        return {
+            # Careful with week/year formats:
+            #  - yyyy (lower) must always be used, *except* for week+year formats
+            #  - YYYY (upper) must always be used for week+year format
+            #         e.g. 2006-01-01 is W52 2005 in some locales (de_DE),
+            #                         and W1 2006 for others
+            #
+            # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
+            # such as 2006-01-01 being formatted as "January 2005" in some locales.
+            # Cfr: http://babel.pocoo.org/en/latest/dates.html#date-fields
+            'hour': 'hh:00 dd MMM',
+            'day': 'dd MMM yyyy', # yyyy = normal year
+            'week': "'W'w YYYY",  # w YYYY = ISO week-year
+            'month': 'MMMM yyyy',
+            'quarter': 'QQQ yyyy',
+            'year': 'yyyy',
+        }
+
+    def _read_group_temporal_qualified_field(self, gb_function, qualified_field):
+        return "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
+
+    def _read_group_temporal_shift(self, gb, value):
+        # Can be extended to implement shifted grouping, e.g. grouping by week starting on Sunday
+        # See https://github.com/odoo/odoo/pull/25086
+        return value
+
+    @api.model
     def _read_group_process_groupby(self, gb, query):
         """
             Helper method to collect important information about groupbys: raw
@@ -2092,23 +2120,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
         qualified_field = self._inherits_join_calc(self._table, split[0], query)
         if temporal:
-            display_formats = {
-                # Careful with week/year formats:
-                #  - yyyy (lower) must always be used, *except* for week+year formats
-                #  - YYYY (upper) must always be used for week+year format
-                #         e.g. 2006-01-01 is W52 2005 in some locales (de_DE),
-                #                         and W1 2006 for others
-                #
-                # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
-                # such as 2006-01-01 being formatted as "January 2005" in some locales.
-                # Cfr: http://babel.pocoo.org/en/latest/dates.html#date-fields
-                'hour': 'hh:00 dd MMM',
-                'day': 'dd MMM yyyy', # yyyy = normal year
-                'week': "'W'w YYYY",  # w YYYY = ISO week-year
-                'month': 'MMMM yyyy',
-                'quarter': 'QQQ yyyy',
-                'year': 'yyyy',
-            }
+            display_formats = self._read_group_temporal_display_formats()
             time_intervals = {
                 'hour': dateutil.relativedelta.relativedelta(hours=1),
                 'day': dateutil.relativedelta.relativedelta(days=1),
@@ -2119,7 +2131,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
+            qualified_field = self._read_group_temporal_qualified_field(gb_function, qualified_field)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
@@ -2173,6 +2185,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if ftype == 'many2one':
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
+                    value = self._read_group_temporal_shift(value)
                     locale = get_lang(self.env).code
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
