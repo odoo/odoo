@@ -25,7 +25,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
         },
         //@Override
         after_load_server_data() {
-            if (this.isCountryGermany) {
+            if (this.isCountryGermany()) {
                 this.rpc({
                     model: 'ir.config_parameter',
                     method: 'get_param',
