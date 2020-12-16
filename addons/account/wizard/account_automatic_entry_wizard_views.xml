@@ -9,85 +9,34 @@
                     <field name="account_type" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="display_currency_helper" invisible="1"/>
-
                     <div attrs="{'invisible': [('display_currency_helper', '=', False)]}"  class="alert alert-info text-center" role="status">
                         The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing
                         the loss of any pre-existing foreign currency amount.
                     </div>
-
-                    <div class="alert alert-warning"
-                         role="alert"
-                         style="margin-bottom:0px;"
-                         attrs="{'invisible': ['|', ('action', '!=', 'change_period'), ('chg_period_warning_message', '=', False)]}">
-                        <field name="chg_period_warning_message" nolabel="1"/>
-                    </div>
-
                     <field name="action" invisible="context.get('hide_automatic_options')" widget="radio" options="{'horizontal': true}"/>
-
                     <group>
-                        <group>
-                            <field name="total_amount"/>
-                            <field name="journal_id"/>
-                        </group>
                         <group attrs="{'invisible': [('action', '!=', 'change_period')]}">
-                            <field name="expense_accrual_account"
-                                   string="Accrued Account"
+                            <field name="date" string="Recognition Date"/>
+                            <field name="expense_accrual_account" string="Accrued Account"
                                    attrs="{'invisible': [('account_type', '!=', 'expense')], 'required': [('account_type', '=', 'expense'), ('action', '=', 'change_period')]}"/>
-                            <field name="revenue_accrual_account"
-                                   string="Accrued Account"
+                            <field name="revenue_accrual_account" string="Accrued Account"
                                    attrs="{'invisible': [('account_type', '!=', 'income')], 'required': [('account_type', '=', 'income'), ('action', '=', 'change_period')]}"/>
                         </group>
                         <group attrs="{'invisible': [('action', '!=', 'change_account')]}">
-                            <field name="date"/>
-                            <field name="destination_account_id"
-                                   attrs="{'required': [('action', '=', 'change_account')]}"
-                                   domain="[('company_id', '=', company_id)]"/>
+                            <field name="date" string="Transfer Date"/>
+                            <field name="destination_account_id" attrs="{'required': [('action', '=', 'change_account')]}" domain="[('company_id', '=', company_id)]"/>
+                        </group>
+                        <group>
+                            <label for="total_amount" string="Adjusting Amount" attrs="{'invisible': [('action', '!=', 'change_period')]}"/>
+                            <div attrs="{'invisible': [('action', '!=', 'change_period')]}">
+                                <field name="percentage" style="width:40% !important" class="oe_inline" attrs="{'readonly': [('action', '!=', 'change_period')]}"/>%<span class="px-3"></span>(<field name="total_amount" class="oe_inline"/>)
+                            </div>
+                            <field name="total_amount" readonly="1" attrs="{'invisible': [('action', '=', 'change_period')]}"/>
+                            <field name="journal_id"/>
                         </group>
                     </group>
-
-                    <notebook>
-                        <page string="Automatic re-allocation"
-                              attrs="{'invisible': [('action', '!=', 'change_period')]}">
-                                <span>Create one journal entry per month automatically</span>
-
-                            <group>
-                                <group>
-                                    <label for="chg_period_date_from" string="From"/>
-                                    <div class="d-flex">
-                                        <field name="chg_period_date_from"/>
-                                        <span class="oe_inline o_form_label mx-3"> to </span>
-                                        <field name="chg_period_date_to"/>
-                                    </div>
-                                    <field name="chg_period_time_division"/>
-                                </group>
-                                <group>
-                                    <label for="chg_period_percentage" string="Re-allocation percentage"/>
-                                    <div class="d-flex">
-                                        <field name="chg_period_percentage"/>
-                                        <span class="oe_inline o_form_label mx-3">%</span>
-                                    </div>
-                                </group>
-                            </group>
-                        </page>
-
-                        <page string="Manual re-allocation" attrs="{'invisible': [('action', '!=', 'change_period')]}">
-                            <field name="chg_period_line_ids">
-                                <tree editable="bottom" default_order="date desc">
-                                    <field name="company_currency_id" invisible="1"/>
-
-                                    <field name="date"/>
-                                    <field name="percentage" sum="Total Percentage"/>
-                                    <field name="balance" sum="Total Balance"/>
-                                </tree>
-                            </field>
-                        </page>
-
-                        <page string="Preview">
-                            <label for="preview_move_data" string="The following Journal Entries will be generated"/>
-                            <field name="preview_move_data" widget="grouped_view_widget"/>
-                        </page>
-                    </notebook>
-
+                    <label for="preview_move_data" string="The following Journal Entries will be generated"/>
+                    <field name="preview_move_data" widget="grouped_view_widget"/>
                     <footer>
                         <button string="Create Journal Entries" name="do_action" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
