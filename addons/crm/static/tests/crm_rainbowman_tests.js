@@ -114,6 +114,30 @@ odoo.define('crm.form_rainbowman_tests', function (require) {
             form.destroy();
         });
 
+        QUnit.test("first lead won, click on statusbar in edit mode then save", async function (assert) {
+            assert.expect(3);
+
+            const form = await createView(_.extend(this.testFormView, {
+                res_id: 6,
+                mockRPC: async function (route, args) {
+                    const result = await this._super(...arguments);
+                    if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
+                        assert.step(result || "no rainbowman");
+                    }
+                    return result;
+                },
+                viewOptions: {mode: 'edit'}
+            }));
+
+            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
+            assert.verifySteps([]); // no message displayed yet
+
+            await testUtils.form.clickSave(form);
+            assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
+
+            form.destroy();
+        });
+
         QUnit.test("team record 30 days, click on statusbar", async function (assert) {
             assert.expect(2);
 
