@@ -282,17 +282,18 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'bill_type', 'pricing_type', 'non_allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'non_allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
-            if task.allow_billable and task.bill_type == 'customer_project' and task.pricing_type == 'employee_rate' and task.non_allow_billable:
+            if not task.allow_billable or task.non_allow_billable:
                 task.sale_order_id = False
-            elif task.allow_billable and task.bill_type == 'customer_project':
-                task.sale_order_id = task.project_id.sale_order_id
-            elif task.allow_billable and task.bill_type == 'customer_task':
-                task.sale_order_id = task.sale_line_id.sudo().order_id
-            elif not task.sale_order_id:
-                task.sale_order_id = False
+            elif task.allow_billable:
+                if task.sale_line_id:
+                    task.sale_order_id = task.sale_line_id.sudo().order_id
+                elif task.project_id.sale_order_id:
+                    task.sale_order_id = task.project_id.sale_order_id
+                if task.sale_order_id and not task.partner_id:
+                    task.partner_id = task.sale_order_id.partner_id
 
     @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
