@@ -74,20 +74,6 @@ tour.register('event_tour', {
     content: _t("Use the <b>breadcrumbs</b> to go back to your kanban overview."),
     position: 'bottom',
     run: 'click',
-}, {
-    trigger: '.o_event_kanban_view div.o_quick_create_folded',
-    content: _t("This pipeline can be customized on the fly to fit your organizational needs. For example, let's create a new stage."),
-    position: 'bottom',
-    run: function (actions) {
-        actions.click();
-        $('div.o_kanban_header input[type="text"]').val('New Stage');
-    },
-}, {
-    trigger: '.o_event_kanban_view button.o_kanban_add',
-    content: _t("Click <b>add</b> to create a new stage."),
-    position: 'bottom',
-    width: 200,
-    run: 'click',
 }].filter(Boolean));
 
 });
