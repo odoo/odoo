@@ -5,7 +5,7 @@ except:
     pass
 
 def transpile(content: str, url: str) -> str:
-    transpiler = transpiler_js.TranspilerJS(content, url)
+    transpiler = transpiler_js.TranspilerJS(content, url, True)
     return transpiler.convert()
 
 def compare(result: str, expectation: str) -> bool:
