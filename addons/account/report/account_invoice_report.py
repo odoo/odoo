@@ -105,6 +105,9 @@ class AccountInvoiceReport(models.Model):
 
     @api.model
     def _from(self):
+        # In normal report options, multi_company contains lists the available companies
+        # but here the list is obtained by ResCurrency._get_query_currency_table()
+        is_multi_company = len(self.env.companies) > 1
         return '''
             FROM account_move_line line
                 LEFT JOIN res_partner partner ON partner.id = line.partner_id
@@ -118,7 +121,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
                 JOIN {currency_table} ON currency_table.company_id = line.company_id
         '''.format(
-            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
+            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': is_multi_company, 'date': {'date_to': fields.Date.today()}}),
         )
 
     @api.model
