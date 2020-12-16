@@ -503,6 +503,9 @@ def route(route=None, **kw):
           to implement other methods of request validation (to ensure
           it is not called by an unrelated third-party).
 
+          Note that CSRF tokens are *not* validated for JSON routes.
+          If `csrf_token` is passed in a JSON request, even if it is
+          a `POST` request, the value will be ignored.
     """
     routing = kw.copy()
     assert 'type' not in routing or routing['type'] in ("http", "json")
