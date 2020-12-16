@@ -132,6 +132,9 @@ class Attachment extends Component {
      */
     _onClickUnlink(ev) {
         ev.stopPropagation();
+        if (!this.attachment) {
+            return;
+        }
         if (this.attachment.isLinkedToComposer) {
             this.attachment.remove();
             this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
