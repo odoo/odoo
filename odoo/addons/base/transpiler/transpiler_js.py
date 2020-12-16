@@ -1,12 +1,12 @@
 import re
 
-
 class TranspilerJS:
 
-    def __init__(self, content, url):
+    def __init__(self, content, url, generate = False):
         super().__init__()
         self.content = content
         self.url = url
+        self.generate = generate
 
     def convert(self):
         new_content = self.content
@@ -23,9 +23,11 @@ class TranspilerJS:
         new_content = self.add_odoo_def(new_content, self.url)
         if legacy_odoo_define:
             new_content += legacy_odoo_define
-        # TODO TO REMOVE
-        with open('test_transpiler/' + self.url.split("/")[-1], 'w') as f:
-            f.write(new_content)
+
+        if self.generate:
+            with open('generated_test_transpiler_files/' + self.url.split("/")[-1], 'w') as f:
+                f.write(new_content)
+
         return new_content
 
     def get_define_url(self, url):

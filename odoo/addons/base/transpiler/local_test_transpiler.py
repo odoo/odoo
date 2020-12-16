@@ -1,7 +1,8 @@
-import unittest
 import glob
-import transpiler_js
-import os
+try:
+    import transpiler_js
+except:
+    pass
 
 def transpile(content: str, url: str) -> str:
     transpiler = transpiler_js.TranspilerJS(content, url)
