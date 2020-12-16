@@ -37,7 +37,7 @@ class ResPartnerBank(models.Model):
         return super().write(vals)
 
     def _is_qr_iban(self):
-        return super()._is_qr_iban() or self.l10n_ch_qr_iban
+        return super(ResPartnerBank, self)._is_qr_iban() or self.l10n_ch_qr_iban
 
     def _prepare_swiss_code_url_vals(self, amount, currency_name, debtor_partner, reference_type, reference, comment):
         qr_code_vals = super()._prepare_swiss_code_url_vals(amount, currency_name, debtor_partner, reference_type, reference, comment)
