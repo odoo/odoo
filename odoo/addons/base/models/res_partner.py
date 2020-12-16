@@ -533,7 +533,9 @@ class Partner(models.Model):
                 if company_id and partner.user_ids:
                     company = self.env['res.company'].browse(company_id)
                     companies = set(user.company_id for user in partner.user_ids)
-                    if len(companies) > 1 or company not in companies:
+                    if len(companies) > 1:
+                        raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
+                    elif company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
                 if partner.child_ids:
