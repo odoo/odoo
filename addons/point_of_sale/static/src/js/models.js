@@ -2319,6 +2319,13 @@ exports.Orderline = Backbone.Model.extend({
       this.product.lst_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
       this.trigger('change',this);
     },
+    is_last_line: function() {
+        var order = this.pos.get_order();
+        var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+        var selectedLine = order? order.selected_orderline: null;
+
+        return !selectedLine ? false : last_id === selectedLine.cid;
+    },
 });
 
 var OrderlineCollection = Backbone.Collection.extend({
