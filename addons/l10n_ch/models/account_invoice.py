@@ -246,10 +246,7 @@ class AccountMove(models.Model):
         for inv in self:
             if inv.move_type == 'in_invoice' and inv.company_id.country_id.code == "CH":
                 partner_bank = inv.partner_bank_id
-                if partner_bank:
-                    needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
-                else:
-                    needs_isr_ref = False
+                needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
                 if needs_isr_ref and not inv._has_isr_ref():
                     inv.l10n_ch_isr_needs_fixing = True
                     continue
