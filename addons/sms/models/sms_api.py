@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import _, api, models
 from odoo.addons.iap.tools import iap_tools
 
 DEFAULT_ENDPOINT = 'https://iap-sms.odoo.com'
@@ -56,3 +56,21 @@ class SmsApi(models.AbstractModel):
             'messages': messages
         }
         return self._contact_iap('/iap/sms/2/send', params)
+
+    @api.model
+    def _get_sms_api_error_messages(self):
+        """ Returns a dict containing the error message to display for every known error 'state'
+        resulting from the '_send_sms_batch' method.
+        We prefer a dict instead of a message-per-error-state based method so we only call
+        the 'get_credits_url' once, to avoid extra RPC calls. """
+
+        buy_credits_url = self.sudo().env['iap.account'].get_credits_url(service_name='sms')
+        buy_credits = '<a href="%s" target="_blank">%s</a>' % (
+            buy_credits_url,
+            _('Buy credits.')
+        )
+        return {
+            'unregistered': _("You don't have an eligible IAP account."),
+            'insufficient_credit': ' '.join([_('You don\'t have enough credits on your IAP account.'), buy_credits]),
+            'wrong_number_format': _("The number you're trying to reach is not correctly formatted."),
+        }

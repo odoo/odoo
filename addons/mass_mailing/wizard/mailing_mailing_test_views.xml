@@ -7,13 +7,13 @@
             <field name="arch" type="xml">
                 <form string="Send a Sample Mail">
                     <p class="text-muted">
-                        Send a sample email for testing purpose to the address below.
+                        Send a sample mailing for testing purpose to the address below.
                     </p>
                     <group>
-                        <field name="email_to"/>
+                        <field name="email_to" placeholder="email1@example.com&#10;email2@example.com"/>
                     </group>
                     <footer>
-                        <button string="Send Sample Mail" name="send_mail_test" type="object" class="btn-primary"/>
+                        <button string="Send" name="send_mail_test" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
