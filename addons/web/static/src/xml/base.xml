@@ -444,7 +444,7 @@
         </button>
         <div t-if="state.open" class="dropdown-item-text">
             <select class="w-auto o_input o_group_by_selector" t-model="state.fieldName">
-                <option t-foreach="props.fields" t-as="field" t-key="field.name"
+                <option t-foreach="state.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
                     t-esc="field.string"
                 />
