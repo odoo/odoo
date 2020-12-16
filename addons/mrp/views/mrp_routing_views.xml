@@ -111,6 +111,7 @@
                 Each operation is done at a specific Work Center and has a specific duration.
               </p>
             </field>
+            <field name="domain">['|', ('bom_id', '=', False), ('bom_id.active', '=', True)]</field>
         </record>
 
         <record id="mrp_routing_workcenter_filter" model="ir.ui.view">
