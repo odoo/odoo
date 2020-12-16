@@ -106,7 +106,7 @@ class AccountReconcileModel(models.Model):
     decimal_separator = fields.Char(default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point, help="Every character that is nor a digit nor this separator will be removed from the matching string")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="[('company_id', '=', company_id)]",
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
                                         relation='account_reconcile_model_analytic_tag_rel')
     # Second part fields.
     has_second_line = fields.Boolean(string='Add a second line', default=False)
@@ -125,7 +125,7 @@ class AccountReconcileModel(models.Model):
     second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
     second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
-    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="[('company_id', '=', company_id)]",
+    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
                                                relation='account_reconcile_model_second_analytic_tag_rel')
 
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
